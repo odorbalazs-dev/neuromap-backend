@@ -1,48 +1,44 @@
-export function buildAnalysisPrompt(payload) {
-  const {
-    name,
-    ageGroup,
-    lang,
-    type,
-    score,
-    triageAnswers,
-    answers,
-    askedSpecificQuestions
-  } = payload;
+function escapeHtml(value = "") {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
 
-  return `
-You are a careful, parent-friendly developmental screening assistant.
+export function buildReportEmail({ lang, name, reportText }) {
+  const subjectMap = {
+    hu: "NeuroMap Kids – elkészült a kiértékelés",
+    en: "NeuroMap Kids – your evaluation is ready"
+  };
 
-Write the full report in this language code: ${lang}
+  const introMap = {
+    hu: `Kedves Szülő! Elkészült ${escapeHtml(name || "")} kérdőíves kiértékelése.`,
+    en: `Dear Parent, the questionnaire-based evaluation for ${escapeHtml(name || "")} is ready.`
+  };
 
-Important rules:
-- This is NOT a diagnosis.
-- Do not claim certainty.
-- Be calm, structured, and readable for parents.
-- Do not use alarming wording.
-- Mention strengths and protective factors too.
-- End with supportive next-step suggestions.
+  const footerMap = {
+    hu: "Ez az anyag nem minősül diagnózisnak, és nem helyettesíti a személyes szakértői vizsgálatot.",
+    en: "This material is not a diagnosis and does not replace an in-person specialist assessment."
+  };
 
-Child name: ${name}
-Age group: ${ageGroup}
-Suggested focus type: ${type}
-Weighted score: ${score}
+  const safeLang = subjectMap[lang] ? lang : "en";
+  const safeReport = escapeHtml(reportText || "").replaceAll("\n", "<br />");
 
-Triage answers:
-${JSON.stringify(triageAnswers)}
-
-Detailed answers:
-${JSON.stringify(answers)}
-
-Questions shown:
-${JSON.stringify(askedSpecificQuestions)}
-
-Required sections:
-1. Brief summary
-2. Main observed patterns
-3. Strengths / preserved areas
-4. Areas that may deserve attention
-5. Practical parent-friendly next steps
-6. Disclaimer that this is not a diagnosis and does not replace specialist assessment
-`.trim();
+  return {
+    subject: subjectMap[safeLang],
+    html: `
+      <div style="font-family:Inter,Arial,sans-serif;color:#111827;line-height:1.7;max-width:720px;margin:0 auto;padding:24px;">
+        <h1 style="margin:0 0 16px 0;font-size:24px;">NeuroMap Kids</h1>
+        <p>${introMap[safeLang]}</p>
+        <div style="margin-top:20px;padding:20px;border:1px solid rgba(17,24,39,0.08);border-radius:16px;background:#ffffff;">
+          ${safeReport}
+        </div>
+        <p style="margin-top:24px;font-size:12px;color:#667085;">
+          ${footerMap[safeLang]}
+        </p>
+      </div>
+    `.trim()
+  };
 }
