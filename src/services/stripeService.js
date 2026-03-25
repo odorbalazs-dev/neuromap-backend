@@ -30,3 +30,11 @@ export async function createCheckoutSession(payload) {
 
   return session;
 }
+
+export function constructStripeEvent(rawBody, signature) {
+  return stripe.webhooks.constructEvent(
+    rawBody,
+    signature,
+    env.stripeWebhookSecret
+  );
+}
