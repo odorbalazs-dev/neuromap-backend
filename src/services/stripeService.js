@@ -9,7 +9,6 @@ export async function createCheckoutSession(payload) {
   const session = await stripe.checkout.sessions.create({
     mode: "payment",
     payment_method_types: ["card"],
-
     line_items: [
       {
         price_data: {
@@ -17,15 +16,13 @@ export async function createCheckoutSession(payload) {
           product_data: {
             name: "NeuroMap Kids – AI kiértékelés"
           },
-          unit_amount: 200 // 2 USD
+          unit_amount: 200
         },
         quantity: 1
       }
     ],
-
     success_url: env.successUrl + "?session_id={CHECKOUT_SESSION_ID}",
     cancel_url: env.cancelUrl,
-
     metadata: {
       payload: JSON.stringify(payload)
     }
