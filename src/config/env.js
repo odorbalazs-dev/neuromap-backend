@@ -3,7 +3,6 @@ import dotenv from "dotenv";
 dotenv.config();
 
 function required(name) {
-  console.log("ENV CHECK:", name, process.env[name]);
   const value = process.env[name];
   if (!value) {
     throw new Error(`Missing required env var: ${name}`);
@@ -11,13 +10,17 @@ function required(name) {
   return value;
 }
 
+function optional(name, fallback) {
+  return process.env[name] || fallback;
+}
+
 export const env = {
   port: Number(process.env.PORT || 3000),
   nodeEnv: process.env.NODE_ENV || "development",
 
-  appBaseUrl: required("APP_BASE_URL"),
-  successUrl: required("SUCCESS_URL"),
-  cancelUrl: required("CANCEL_URL"),
+  appBaseUrl: optional("APP_BASE_URL", "https://example.com"),
+  successUrl: optional("SUCCESS_URL", "https://example.com/success"),
+  cancelUrl: optional("CANCEL_URL", "https://example.com/cancel"),
 
   databaseUrl: required("DATABASE_URL"),
 
