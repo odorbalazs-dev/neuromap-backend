@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 function required(name) {
+  console.log("ENV CHECK:", name, process.env[name]);
   const value = process.env[name];
   if (!value) {
     throw new Error(`Missing required env var: ${name}`);
