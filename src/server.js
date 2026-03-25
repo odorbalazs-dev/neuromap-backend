@@ -34,6 +34,13 @@ app.post("/analyze", async (req, res) => {
   });
 });
 
+app.get("/version-check", (_req, res) => {
+  res.status(200).json({
+    ok: true,
+    marker: "VERSION_CHECK_2026_03_25_A",
+    time: new Date().toISOString()
+  });
+});
 app.use((err, _req, res, _next) => {
   console.error("unhandled express error:", err);
   res.status(500).json({
