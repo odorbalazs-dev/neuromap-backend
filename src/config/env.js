@@ -10,7 +10,7 @@ function required(name) {
   return value;
 }
 
-function optional(name, fallback) {
+function optional(name, fallback = "") {
   return process.env[name] || fallback;
 }
 
@@ -22,7 +22,7 @@ export const env = {
   successUrl: optional("SUCCESS_URL", "https://example.com/success"),
   cancelUrl: optional("CANCEL_URL", "https://example.com/cancel"),
 
-  databaseUrl: required("DATABASE_URL"),
+  databaseUrl: optional("DATABASE_URL", ""),
 
   stripeSecretKey: required("STRIPE_SECRET_KEY"),
   stripeWebhookSecret: required("STRIPE_WEBHOOK_SECRET"),
