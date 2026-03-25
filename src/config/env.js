@@ -1,3 +1,4 @@
+console.log("STRIPE ENV:", process.env.STRIPE_SECRET_KEY);
 import dotenv from "dotenv";
 
 dotenv.config();
