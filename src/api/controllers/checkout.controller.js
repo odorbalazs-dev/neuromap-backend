@@ -1,10 +1,10 @@
 import {
   createSession,
   updateStripeSessionId
-} from "../../services/sessionService.js";
+} from "../../services/session.service.js";
 import { createCheckoutSession } from "../../services/stripe.service.js";
 
-export const createCheckout = async (req, res) => {
+export async function createCheckout(req, res) {
   try {
     const { email, name, lang, payload } = req.body;
 
@@ -67,4 +67,4 @@ export const createCheckout = async (req, res) => {
       error: error.message || "Failed to create checkout session"
     });
   }
-};
+}
