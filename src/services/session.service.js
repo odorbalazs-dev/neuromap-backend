@@ -1,4 +1,4 @@
-import { db } from "../infrastructure/db/db.js";
+import { db } from "../db/db.js";
 import { randomUUID } from "crypto";
 
 /**
