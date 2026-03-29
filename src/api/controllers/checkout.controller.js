@@ -2,7 +2,7 @@ import {
   createSession,
   updateStripeSessionId
 } from "../../services/sessionService.js";
-import { createCheckoutSession } from "../../services/stripeService.js";
+import { createCheckoutSession } from "../../services/stripe.service.js";
 
 export const createCheckout = async (req, res) => {
   try {

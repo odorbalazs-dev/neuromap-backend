@@ -1,142 +1,110 @@
-import { db } from "../config/db.js";
+import { db } from "../infrastructure/db/db.js";
+import { randomUUID } from "crypto";
 
-export async function createSession({
-  email,
-  name,
-  lang,
-  payload
-}) {
+/**
+ * Session létrehozása
+ */
+export async function createSession({ email, name, lang, payload }) {
+  const id = randomUUID();
+
   const result = await db.query(
     `
-      INSERT INTO sessions (
-        email,
-        name,
-        lang,
-        payload,
-        payment_status,
-        analysis_status
-      )
-      VALUES ($1, $2, $3, $4, 'pending', 'pending')
-      RETURNING *
+    INSERT INTO sessions (id, email, name, lang, payload)
+    VALUES ($1, $2, $3, $4, $5)
+    RETURNING *
     `,
-    [email, name, lang, payload]
+    [id, email, name, lang, payload]
   );
 
   return result.rows[0];
 }
 
-export async function getSessionById(sessionId) {
-  const result = await db.query(
-    `
-      SELECT
-        id,
-        email,
-        name,
-        lang,
-        stripe_session_id,
-        payment_status,
-        analysis_status,
-        payload,
-        analysis_result,
-        error_message,
-        paid_at,
-        analysis_started_at,
-        analysis_completed_at,
-        created_at,
-        updated_at
-      FROM sessions
-      WHERE id = $1
-      LIMIT 1
-    `,
-    [sessionId]
-  );
-
-  return result.rows[0] || null;
-}
-
+/**
+ * Stripe session ID mentése
+ */
 export async function updateStripeSessionId(sessionId, stripeSessionId) {
-  const result = await db.query(
+  await db.query(
     `
-      UPDATE sessions
-      SET
-        stripe_session_id = $2,
-        updated_at = NOW()
-      WHERE id = $1
-      RETURNING *
+    UPDATE sessions
+    SET stripe_session_id = $2
+    WHERE id = $1
     `,
     [sessionId, stripeSessionId]
   );
+}
+
+/**
+ * Session lekérdezése ID alapján
+ */
+export async function getSessionById(sessionId) {
+  const result = await db.query(
+    `
+    SELECT *
+    FROM sessions
+    WHERE id = $1
+    LIMIT 1
+    `,
+    [sessionId]
+  );
 
   return result.rows[0] || null;
 }
 
+/**
+ * Payment státusz: paid
+ */
 export async function markSessionPaid(sessionId) {
-  const result = await db.query(
+  await db.query(
     `
-      UPDATE sessions
-      SET
-        payment_status = 'paid',
-        paid_at = NOW(),
-        updated_at = NOW()
-      WHERE id = $1
-      RETURNING *
+    UPDATE sessions
+    SET payment_status = 'paid'
+    WHERE id = $1
     `,
     [sessionId]
   );
-
-  return result.rows[0] || null;
 }
 
+/**
+ * Analysis státusz: processing
+ */
 export async function markAnalysisProcessing(sessionId) {
-  const result = await db.query(
+  await db.query(
     `
-      UPDATE sessions
-      SET
-        analysis_status = 'processing',
-        error_message = NULL,
-        analysis_started_at = NOW(),
-        updated_at = NOW()
-      WHERE id = $1
-      RETURNING *
+    UPDATE sessions
+    SET analysis_status = 'processing'
+    WHERE id = $1
     `,
     [sessionId]
   );
-
-  return result.rows[0] || null;
 }
 
-export async function markAnalysisDone(sessionId, analysisResult) {
-  const result = await db.query(
+/**
+ * Analysis kész + eredmény mentése
+ */
+export async function markAnalysisDone(sessionId, resultText) {
+  await db.query(
     `
-      UPDATE sessions
-      SET
-        analysis_status = 'done',
-        analysis_result = $2,
-        error_message = NULL,
-        analysis_completed_at = NOW(),
-        updated_at = NOW()
-      WHERE id = $1
-      RETURNING *
+    UPDATE sessions
+    SET analysis_status = 'done',
+        result_text = $2,
+        error_message = NULL
+    WHERE id = $1
     `,
-    [sessionId, analysisResult]
+    [sessionId, resultText]
   );
-
-  return result.rows[0] || null;
 }
 
+/**
+ * Analysis hiba mentése
+ */
 export async function markAnalysisFailed(sessionId, errorMessage) {
-  const result = await db.query(
+  await db.query(
     `
-      UPDATE sessions
-      SET
-        analysis_status = 'failed',
-        error_message = $2,
-        updated_at = NOW()
-      WHERE id = $1
-      RETURNING *
+    UPDATE sessions
+    SET analysis_status = 'failed',
+        error_message = $2
+    WHERE id = $1
     `,
     [sessionId, errorMessage]
   );
-
-  return result.rows[0] || null;
 }
