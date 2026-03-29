@@ -1,4 +1,3 @@
-console.log("STRIPE ENV:", process.env.STRIPE_SECRET_KEY);
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -6,31 +5,39 @@ dotenv.config();
 function required(name) {
   const value = process.env[name];
   if (!value) {
-    throw new Error(`Missing required env var: ${name}`);
+    throw new Error(`Missing required env variable: ${name}`);
   }
   return value;
 }
 
-function optional(name, fallback = "") {
-  return process.env[name] || fallback;
+function optional(name, defaultValue) {
+  return process.env[name] || defaultValue;
 }
 
 export const env = {
-  port: Number(process.env.PORT || 3000),
-  nodeEnv: process.env.NODE_ENV || "development",
+  // App
+  NODE_ENV: optional("NODE_ENV", "development"),
+  PORT: optional("PORT", 3000),
 
-  appBaseUrl: optional("APP_BASE_URL", "https://example.com"),
-  successUrl: optional("SUCCESS_URL", "https://example.com/success"),
-  cancelUrl: optional("CANCEL_URL", "https://example.com/cancel"),
+  // Database
+  DATABASE_URL: required("DATABASE_URL"),
 
-  databaseUrl: optional("DATABASE_URL", ""),
+  // OpenAI
+  OPENAI_API_KEY: required("OPENAI_API_KEY"),
+  OPENAI_MODEL: optional("OPENAI_MODEL", "gpt-4.1-mini"),
 
-  stripeSecretKey: required("STRIPE_SECRET_KEY"),
-  stripeWebhookSecret: required("STRIPE_WEBHOOK_SECRET"),
+  // Stripe
+  STRIPE_SECRET_KEY: required("STRIPE_SECRET_KEY"),
+  STRIPE_WEBHOOK_SECRET: required("STRIPE_WEBHOOK_SECRET"),
 
-  openaiApiKey: required("OPENAI_API_KEY"),
-  openaiModel: process.env.OPENAI_MODEL || "gpt-4.1-mini",
+  // Email (Resend)
+  RESEND_API_KEY: required("RESEND_API_KEY"),
+  EMAIL_FROM: required("EMAIL_FROM"),
 
-  resendApiKey: required("RESEND_API_KEY"),
-  resendFromEmail: required("RESEND_FROM_EMAIL")
+  // Frontend URLs (checkout redirect)
+  SUCCESS_URL: required("SUCCESS_URL"),
+  CANCEL_URL: required("CANCEL_URL"),
+
+  // App domain (optional but useful)
+  APP_URL: optional("APP_URL", "http://localhost:3000")
 };
