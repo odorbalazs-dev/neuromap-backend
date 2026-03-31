@@ -11,11 +11,16 @@ const app = express();
 
 app.use(cors());
 
-// Stripe webhookhoz RAW body kell, ezt a JSON parser ELŐTT kell feltenni
 app.use("/webhook", express.raw({ type: "application/json" }));
-
-// Minden más route JSON body-t kap
 app.use(express.json({ limit: "2mb" }));
+
+app.get("/", (_req, res) => {
+  return res.status(200).json({
+    ok: true,
+    service: "neuromap-backend",
+    message: "API is running"
+  });
+});
 
 app.use("/checkout", checkoutRoutes);
 app.use("/session", sessionRoutes);
