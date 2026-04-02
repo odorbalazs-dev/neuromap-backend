@@ -13,11 +13,6 @@ ALTER TABLE sessions
 ALTER TABLE sessions
   ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW();
 
-UPDATE sessions
-SET analysis_result = result_text
-WHERE analysis_result IS NULL
-  AND result_text IS NOT NULL;
-
 ALTER TABLE sessions
   ADD COLUMN IF NOT EXISTS stripe_session_id TEXT;
 
