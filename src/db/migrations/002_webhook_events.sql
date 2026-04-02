@@ -1,4 +1,6 @@
-CREATE TABLE IF NOT EXISTS webhook_events (
+DROP TABLE IF EXISTS webhook_events;
+
+CREATE TABLE webhook_events (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   provider TEXT NOT NULL,
   event_id TEXT NOT NULL UNIQUE,
@@ -10,11 +12,35 @@ CREATE TABLE IF NOT EXISTS webhook_events (
   processed_at TIMESTAMPTZ
 );
 
-CREATE INDEX IF NOT EXISTS idx_webhook_events_provider
-  ON webhook_events(provider);
+DO $
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_indexes
+    WHERE indexname = 'idx_webhook_events_provider'
+  ) THEN
+    CREATE INDEX idx_webhook_events_provider
+      ON webhook_events(provider);
+  END IF;
+END $;
 
-CREATE INDEX IF NOT EXISTS idx_webhook_events_event_type
-  ON webhook_events(event_type);
+DO $
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_indexes
+    WHERE indexname = 'idx_webhook_events_event_type'
+  ) THEN
+    CREATE INDEX idx_webhook_events_event_type
+      ON webhook_events(event_type);
+  END IF;
+END $;
 
-CREATE INDEX IF NOT EXISTS idx_webhook_events_status
-  ON webhook_events(status);
+DO $
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_indexes
+    WHERE indexname = 'idx_webhook_events_status'
+  ) THEN
+    CREATE INDEX idx_webhook_events_status
+      ON webhook_events(status);
+  END IF;
+END $;
