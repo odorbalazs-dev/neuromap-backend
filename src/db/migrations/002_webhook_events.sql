@@ -12,7 +12,7 @@ CREATE TABLE webhook_events (
   processed_at TIMESTAMPTZ
 );
 
-DO $
+DO $$
 BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM pg_indexes
@@ -21,9 +21,9 @@ BEGIN
     CREATE INDEX idx_webhook_events_provider
       ON webhook_events(provider);
   END IF;
-END $;
+END $$;
 
-DO $
+DO $$
 BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM pg_indexes
@@ -32,9 +32,9 @@ BEGIN
     CREATE INDEX idx_webhook_events_event_type
       ON webhook_events(event_type);
   END IF;
-END $;
+END $$;
 
-DO $
+DO $$
 BEGIN
   IF NOT EXISTS (
     SELECT 1 FROM pg_indexes
@@ -43,4 +43,4 @@ BEGIN
     CREATE INDEX idx_webhook_events_status
       ON webhook_events(status);
   END IF;
-END $;
+END $$;
