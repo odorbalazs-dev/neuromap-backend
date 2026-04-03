@@ -86,7 +86,7 @@ export async function markAnalysisDone(sessionId, resultText) {
     `
     UPDATE sessions
     SET analysis_status = 'done',
-        result_text = $2,
+        analysis_result = $2,
         error_message = NULL
     WHERE id = $1
     `,
