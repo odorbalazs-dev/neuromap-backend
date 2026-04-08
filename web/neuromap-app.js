@@ -802,28 +802,29 @@ window.NeuroMapApp = (() => {
   }
 
   function init() {
-    const langSwitch = document.getElementById("langSwitch");
-    if (langSwitch) {
-      langSwitch.addEventListener("click", showLanguageModal);
-    }
+    function init() {
+  const langSwitch = document.getElementById("langSwitch");
+  if (langSwitch) {
+    langSwitch.addEventListener("click", showLanguageModal);
+  }
 
-    window.selectLang = setLanguage;
-    window.startTest = startTest;
-    window.finishTriage = finishTriage;
-    window.startSpecificTest = startSpecificTest;
-    window.finishSpecific = finishSpecific;
-    window.finishExtraSpecific = finishExtraSpecific;
-    window.startCheckout = startCheckout;
+  window.selectLang = setLanguage;
+  window.startTest = startTest;
+  window.finishTriage = finishTriage;
+  window.startSpecificTest = startSpecificTest;
+  window.finishSpecific = finishSpecific;
+  window.finishExtraSpecific = finishExtraSpecific;
+  window.startCheckout = startCheckout;
 
-    if (!currentLang || !SUPPORTED_LANGS.includes(currentLang)) {
-      showLanguageModal();
-      return;
-    }
+  showLanguageModal();
 
+  if (currentLang && SUPPORTED_LANGS.includes(currentLang)) {
     applyDirection(currentLang);
     renderUI();
     renderAgeOptions();
     renderTriage();
+  }
+}
   }
 
   return { init };
