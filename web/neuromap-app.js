@@ -830,8 +830,14 @@ window.NeuroMapApp = (() => {
   return { init };
 })();
 
-window.addEventListener("load", () => {
+if (document.readyState === "complete" || document.readyState === "interactive") {
   if (window.NeuroMapApp) {
     window.NeuroMapApp.init();
   }
-});
+} else {
+  window.addEventListener("DOMContentLoaded", () => {
+    if (window.NeuroMapApp) {
+      window.NeuroMapApp.init();
+    }
+  });
+}
