@@ -841,3 +841,18 @@ if (document.readyState === "complete" || document.readyState === "interactive")
     }
   });
 }
+function safeInit() {
+  if (window.NeuroMapApp && typeof window.NeuroMapApp.init === "function") {
+    window.NeuroMapApp.init();
+  } else {
+    console.warn("NeuroMapApp not ready");
+  }
+}
+
+if (document.readyState === "complete" || document.readyState === "interactive") {
+  setTimeout(safeInit, 50);
+} else {
+  document.addEventListener("DOMContentLoaded", () => {
+    setTimeout(safeInit, 50);
+  });
+}
