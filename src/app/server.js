@@ -10,7 +10,14 @@ import healthRoutes from "../api/routes/health.js";
 
 const app = express();
 
-app.use(cors());
+const corsOptions = {
+  origin: ["https://neuromap-kids.webflow.io"],
+  methods: ["GET", "POST", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 app.use("/webhook", express.raw({ type: "application/json" }));
 app.use(express.json({ limit: "2mb" }));
