@@ -137,7 +137,6 @@ if (dbResult.error) {
 }
 
 export const env = {
-  export const env = {
   NODE_ENV: process.env.NODE_ENV || "development",
   PORT: process.env.PORT || 3000,
 
