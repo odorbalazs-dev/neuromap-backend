@@ -156,5 +156,5 @@ export const env = {
   CANCEL_URL: required("CANCEL_URL"),
 
   APP_URL: required("APP_URL"),
-  APP_BASE_URL: required("APP_BASE_URL"),
+  APP_BASE_URL: process.env.APP_BASE_URL || (process.env.RAILWAY_PUBLIC_DOMAIN ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}` : "http://localhost:3000"),
 };
