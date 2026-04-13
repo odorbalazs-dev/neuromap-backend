@@ -14,7 +14,7 @@ function getSafeLang(lang) {
 
 function getSuccessUrl(lang) {
   const safeLang = getSafeLang(lang);
-  return `${env.APP_BASE_URL}/${safeLang}-checkout-success?session_id=%7BCHECKOUT_SESSION_ID%7D`;
+  return `${env.APP_BASE_URL}/${safeLang}-checkout-success?session_id={CHECKOUT_SESSION_ID}`;
 }
 
 function getCancelUrl(lang) {
