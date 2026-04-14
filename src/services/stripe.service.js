@@ -21,7 +21,7 @@ function getCancelUrl(lang) {
   const safeLang = getSafeLang(lang);
   return `https://neuromap-kids.webflow.io/${safeLang}-checkout-cancel`;
 }
-}
+
 
 function getProductName(lang) {
   const names = {
