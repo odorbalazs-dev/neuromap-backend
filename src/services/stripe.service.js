@@ -14,12 +14,13 @@ function getSafeLang(lang) {
 
 function getSuccessUrl(lang) {
   const safeLang = getSafeLang(lang);
-  return `${env.APP_BASE_URL}/${safeLang}-checkout-success?session_id={CHECKOUT_SESSION_ID}`;
+  return `https://neuromap-kids.webflow.io/${safeLang}-checkout-success?session_id={CHECKOUT_SESSION_ID}`;
 }
 
 function getCancelUrl(lang) {
   const safeLang = getSafeLang(lang);
-  return `${env.APP_BASE_URL}/${safeLang}-checkout-cancel`;
+  return `https://neuromap-kids.webflow.io/${safeLang}-checkout-cancel`;
+}
 }
 
 function getProductName(lang) {
