@@ -57,7 +57,8 @@ export async function markSessionPaid(sessionId) {
   await db.query(
     `
     UPDATE sessions
-    SET payment_status = 'paid'
+    SET payment_status = 'paid',
+        paid_at = NOW()
     WHERE id = $1
     `,
     [sessionId]
@@ -87,7 +88,8 @@ export async function markAnalysisDone(sessionId, resultText) {
     UPDATE sessions
     SET analysis_status = 'done',
         analysis_result = $2,
-        error_message = NULL
+        error_message = NULL,
+        analysis_completed_at = NOW()
     WHERE id = $1
     `,
     [sessionId, resultText]
