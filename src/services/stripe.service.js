@@ -31,7 +31,7 @@ function getStripeCheckoutLocale(lang) {
     ar: "en"
   };
 
-  return localeMap[safeLang] || "auto";
+  return localeMap[safeLang] || "en";
 }
 
 function getSuccessUrl(lang) {
@@ -59,15 +59,14 @@ function getProductName(lang) {
     fr: "NeuroMap Kids – Évaluation IA"
   };
 
-  return names[lang] || names.hu;
+  return names[safeLang] || names.hu;
 }
 
 export async function createCheckoutSession({
   internalSessionId,
   email,
   name,
-  lang,
-  payload
+  lang
 }) {
   if (!internalSessionId) {
     throw new Error("Missing internalSessionId for Stripe checkout session.");
