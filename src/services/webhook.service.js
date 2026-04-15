@@ -97,19 +97,19 @@ export async function handleStripeWebhook(rawBody, signature) {
 
     await markAnalysisProcessing(internalSessionId);
 
-    const resultText = await generateAnalysis({
+const resultText = await generateAnalysis({
   ...sessionRow.payload,
   lang: sessionRow.lang
 });
 
-    await markAnalysisDone(internalSessionId, resultText);
+await markAnalysisDone(internalSessionId, resultText);
 
-    await sendReportEmail({
-      to: sessionRow.email,
-      lang: sessionRow.lang,
-      name: sessionRow.name,
-      reportText: resultText
-    });
+await sendReportEmail({
+  to: sessionRow.email,
+  lang: sessionRow.lang,
+  name: sessionRow.name,
+  reportText: resultText
+});
 
     await markWebhookProcessed(event.id);
 
