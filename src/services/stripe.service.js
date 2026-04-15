@@ -5,6 +5,8 @@ const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
   apiVersion: "2024-06-20"
 });
 
+const WEBFLOW_BASE_URL = "https://neuromap-kids.webflow.io";
+
 const ALLOWED_LANGS = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];
 
 function getSafeLang(lang) {
@@ -12,16 +14,35 @@ function getSafeLang(lang) {
   return ALLOWED_LANGS.includes(lang) ? lang : "hu";
 }
 
+function getStripeCheckoutLocale(lang) {
+  const safeLang = getSafeLang(lang);
+
+  const localeMap = {
+    hu: "hu",
+    en: "en",
+    de: "de",
+    it: "it",
+    es: "es",
+    zh: "zh",
+    ja: "ja",
+    pl: "pl",
+    pt: "pt",
+    fr: "fr",
+    ar: "en"
+  };
+
+  return localeMap[safeLang] || "auto";
+}
+
 function getSuccessUrl(lang) {
   const safeLang = getSafeLang(lang);
-  return `https://neuromap-kids.webflow.io/${safeLang}-checkout-success?session_id={CHECKOUT_SESSION_ID}`;
+  return `${WEBFLOW_BASE_URL}/${safeLang}-checkout-success?session_id={CHECKOUT_SESSION_ID}`;
 }
 
 function getCancelUrl(lang) {
   const safeLang = getSafeLang(lang);
-  return `https://neuromap-kids.webflow.io/${safeLang}-checkout-cancel`;
+  return `${WEBFLOW_BASE_URL}/${safeLang}-checkout-cancel`;
 }
-
 
 function getProductName(lang) {
   const names = {
@@ -59,33 +80,35 @@ export async function createCheckoutSession({
   const safeLang = getSafeLang(lang);
 
   const session = await stripe.checkout.sessions.create({
-  mode: "payment",
-  payment_method_types: ["card"],
-  customer_email: email,
+    mode: "payment",
+    payment_method_types: ["card"],
+    customer_email: email,
 
-  line_items: [
-    {
-      price_data: {
-        currency: "usd",
-        product_data: {
-          name: getProductName(safeLang)
+    line_items: [
+      {
+        price_data: {
+          currency: "usd",
+          product_data: {
+            name: getProductName(safeLang)
+          },
+          unit_amount: 200
         },
-        unit_amount: 200
-      },
-      quantity: 1
+        quantity: 1
+      }
+    ],
+
+    locale: getStripeCheckoutLocale(safeLang),
+
+    success_url: getSuccessUrl(safeLang),
+    cancel_url: getCancelUrl(safeLang),
+
+    metadata: {
+      internalSessionId,
+      email,
+      name: name || "",
+      lang: safeLang
     }
-  ],
-
-  success_url: getSuccessUrl(safeLang),
-  cancel_url: getCancelUrl(safeLang),
-
-  metadata: {
-    internalSessionId,
-    email,
-    name: name || "",
-    lang: safeLang
-  }
-});
+  });
 
   return session;
 }
