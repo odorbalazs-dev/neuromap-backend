@@ -59,34 +59,33 @@ export async function createCheckoutSession({
   const safeLang = getSafeLang(lang);
 
   const session = await stripe.checkout.sessions.create({
-    mode: "payment",
-    payment_method_types: ["card"],
-    customer_email: email,
+  mode: "payment",
+  payment_method_types: ["card"],
+  customer_email: email,
 
-    line_items: [
-      {
-        price_data: {
-          currency: "usd",
-          product_data: {
-            name: getProductName(safeLang)
-          },
-          unit_amount: 200
+  line_items: [
+    {
+      price_data: {
+        currency: "usd",
+        product_data: {
+          name: getProductName(safeLang)
         },
-        quantity: 1
-      }
-    ],
-
-    success_url: getSuccessUrl(safeLang),
-    cancel_url: getCancelUrl(safeLang),
-
-    metadata: {
-      internalSessionId,
-      email,
-      name: name || "",
-      lang: safeLang,
-      payload: JSON.stringify(payload || {})
+        unit_amount: 200
+      },
+      quantity: 1
     }
-  });
+  ],
+
+  success_url: getSuccessUrl(safeLang),
+  cancel_url: getCancelUrl(safeLang),
+
+  metadata: {
+    internalSessionId,
+    email,
+    name: name || "",
+    lang: safeLang
+  }
+});
 
   return session;
 }
