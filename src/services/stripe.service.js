@@ -45,6 +45,8 @@ function getCancelUrl(lang) {
 }
 
 function getProductName(lang) {
+  const safeLang = getSafeLang(lang);
+
   const names = {
     hu: "NeuroMap Kids – AI kiértékelés",
     en: "NeuroMap Kids – AI Assessment",
@@ -61,6 +63,9 @@ function getProductName(lang) {
 
   return names[safeLang] || names.hu;
 }
+
+  return names[safeLang] || names.hu;
+
 
 export async function createCheckoutSession({
   internalSessionId,
