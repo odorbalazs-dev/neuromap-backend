@@ -5,13 +5,11 @@ const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
   apiVersion: "2024-06-20"
 });
 
-const WEBFLOW_BASE_URL = "https://neuromap-kids.webflow.io";
-
-const ALLOWED_LANGS = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];
+const SUPPORTED_LANGS = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];
 
 function getSafeLang(lang) {
-  if (!lang) return "hu";
-  return ALLOWED_LANGS.includes(lang) ? lang : "hu";
+  if (!lang) return "en";
+  return SUPPORTED_LANGS.includes(lang) ? lang : "en";
 }
 
 function getStripeCheckoutLocale(lang) {
@@ -34,14 +32,24 @@ function getStripeCheckoutLocale(lang) {
   return localeMap[safeLang] || "en";
 }
 
+function getWebBaseUrl() {
+  return (
+    env.APP_BASE_URL ||
+    env.WEBFLOW_BASE_URL ||
+    "https://neuromap-kids.webflow.io"
+  );
+}
+
 function getSuccessUrl(lang) {
   const safeLang = getSafeLang(lang);
-  return `${WEBFLOW_BASE_URL}/${safeLang}-checkout-success?session_id={CHECKOUT_SESSION_ID}`;
+  const base = getWebBaseUrl();
+  return `${base}/${safeLang}-checkout-success?session_id={CHECKOUT_SESSION_ID}`;
 }
 
 function getCancelUrl(lang) {
   const safeLang = getSafeLang(lang);
-  return `${WEBFLOW_BASE_URL}/${safeLang}-checkout-cancel`;
+  const base = getWebBaseUrl();
+  return `${base}/${safeLang}-checkout-cancel`;
 }
 
 function getProductName(lang) {
@@ -61,11 +69,8 @@ function getProductName(lang) {
     fr: "NeuroMap Kids – Évaluation IA"
   };
 
-  return names[safeLang] || names.hu;
+  return names[safeLang] || names.en;
 }
-
-  return names[safeLang] || names.hu;
-
 
 export async function createCheckoutSession({
   internalSessionId,
@@ -91,11 +96,11 @@ export async function createCheckoutSession({
     line_items: [
       {
         price_data: {
-          currency: "usd",
+          currency: "eur",
           product_data: {
             name: getProductName(safeLang)
           },
-          unit_amount: 200
+          unit_amount: 4900
         },
         quantity: 1
       }
