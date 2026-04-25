@@ -12,22 +12,39 @@ function isUnexpandedRef(value) {
 }
 
 /**
- * Require an env variable.  Throws with a clear message that includes the
+ * Require an env variable. Throws with a clear message that includes the
  * actual value received so unexpanded Railway reference variables are
  * immediately visible in the crash log.
  */
 function required(name) {
   const value = process.env[name];
+
   if (!value) {
     throw new Error(`Missing required env variable: ${name} (received: ${JSON.stringify(value)})`);
   }
+
   if (isUnexpandedRef(value)) {
     throw new Error(
       `Env variable ${name} contains an unexpanded Railway reference variable: "${value}". ` +
         `Check that the variable is correctly linked in the Railway dashboard and that the ` +
-        `referenced service (e.g. Postgres) is deployed and healthy.`
+        `referenced service is deployed and healthy.`
     );
   }
+
+  return value;
+}
+
+function optional(name, fallback = null) {
+  const value = process.env[name];
+
+  if (!value) return fallback;
+
+  if (isUnexpandedRef(value)) {
+    throw new Error(
+      `Env variable ${name} contains an unexpanded Railway reference variable: "${value}".`
+    );
+  }
+
   return value;
 }
 
@@ -35,18 +52,9 @@ function required(name) {
 // Database URL resolution
 // ---------------------------------------------------------------------------
 
-/**
- * Resolve the Postgres connection string from either DATABASE_URL or the
- * individual PG* variables.
- *
- * Returns { url: string } on success, or { error: string } when the config is
- * missing / contains unexpanded Railway reference variables.  A deferred error
- * lets the process start so the /health endpoint can report what it actually
- * received, making remote debugging much easier.
- */
 function resolveDatabaseUrl() {
-  // --- Prefer an explicit DATABASE_URL ---
   const explicit = process.env.DATABASE_URL;
+
   if (explicit) {
     if (isUnexpandedRef(explicit)) {
       return {
@@ -55,10 +63,10 @@ function resolveDatabaseUrl() {
           `Ensure the Postgres service is running and the variable is correctly linked.`,
       };
     }
+
     return { url: explicit };
   }
 
-  // --- Fall back to individual PG* variables ---
   const vars = {
     PGHOST: process.env.PGHOST,
     PGPORT: process.env.PGPORT,
@@ -67,7 +75,6 @@ function resolveDatabaseUrl() {
     PGDATABASE: process.env.PGDATABASE,
   };
 
-  // Detect unexpanded reference variables and report each one explicitly.
   const unexpanded = Object.entries(vars)
     .filter(([, v]) => isUnexpandedRef(v))
     .map(([k, v]) => `  ${k}="${v}"`);
@@ -85,7 +92,9 @@ function resolveDatabaseUrl() {
   const { PGHOST, PGPORT, PGUSER, PGPASSWORD, PGDATABASE } = vars;
 
   if (PGHOST && PGPORT && PGUSER && PGPASSWORD && PGDATABASE) {
-    return { url: `postgresql://${PGUSER}:${PGPASSWORD}@${PGHOST}:${PGPORT}/${PGDATABASE}` };
+    return {
+      url: `postgresql://${PGUSER}:${PGPASSWORD}@${PGHOST}:${PGPORT}/${PGDATABASE}`,
+    };
   }
 
   const missing = Object.entries(vars)
@@ -101,24 +110,25 @@ function resolveDatabaseUrl() {
 }
 
 // ---------------------------------------------------------------------------
-// Diagnostic dump — always printed at startup so Railway logs show exactly
-// what the container received, even when variables look correct on the dashboard.
+// Diagnostic dump
 // ---------------------------------------------------------------------------
 
 function logEnvDiagnostics() {
   const dbVars = ["DATABASE_URL", "PGHOST", "PGPORT", "PGUSER", "PGDATABASE"];
-  // Redact secrets but show whether they are set and whether they look like
-  // unexpanded reference variables.
+
   const summary = dbVars.map((k) => {
     const v = process.env[k];
+
     if (!v) return `  ${k}=<not set>`;
     if (isUnexpandedRef(v)) return `  ${k}=<UNEXPANDED REF: "${v}">`;
+
     if (k === "DATABASE_URL") {
-      // Redact password in connection string
       return `  ${k}=${v.replace(/:([^:@]+)@/, ":***@")}`;
     }
+
     return `  ${k}=${v}`;
   });
+
   console.log("[env] Database variable diagnostics at startup:\n" + summary.join("\n"));
 }
 
@@ -131,8 +141,6 @@ logEnvDiagnostics();
 const dbResult = resolveDatabaseUrl();
 
 if (dbResult.error) {
-  // Log clearly but do NOT throw — the process will start and /health will
-  // surface the error so it is visible without needing to inspect crash logs.
   console.error(`[env] DATABASE configuration error (app will start in degraded mode):\n${dbResult.error}`);
 }
 
@@ -156,5 +164,11 @@ export const env = {
   CANCEL_URL: required("CANCEL_URL"),
 
   APP_URL: required("APP_URL"),
-  APP_BASE_URL: process.env.APP_BASE_URL || (process.env.RAILWAY_PUBLIC_DOMAIN ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}` : "http://localhost:3000"),
+  APP_BASE_URL:
+    process.env.APP_BASE_URL ||
+    (process.env.RAILWAY_PUBLIC_DOMAIN
+      ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`
+      : "http://localhost:3000"),
+
+  ADMIN_TOKEN: optional("ADMIN_TOKEN", null),
 };
