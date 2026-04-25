@@ -7,13 +7,16 @@ import checkoutRoutes from "../api/routes/checkout.js";
 import sessionRoutes from "../api/routes/session.js";
 import webhookRoutes from "../api/routes/webhook.js";
 import healthRoutes from "../api/routes/health.js";
+import adminRoutes from "../api/routes/admin.js";
 
 const app = express();
 
 const corsOptions = {
-  origin: ["https://neuromap-kids.webflow.io"],
+  origin: [
+    "https://neuromap-kids.webflow.io"
+  ],
   methods: ["GET", "POST", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
+  allowedHeaders: ["Content-Type", "Authorization", "x-admin-token"]
 };
 
 app.use(cors(corsOptions));
@@ -34,9 +37,11 @@ app.use("/checkout", checkoutRoutes);
 app.use("/session", sessionRoutes);
 app.use("/webhook", webhookRoutes);
 app.use("/health", healthRoutes);
+app.use("/admin", adminRoutes);
 
 async function start() {
   await runMigrations();
+
   app.listen(Number(env.PORT), () => {
     console.log(`Server running on port ${env.PORT}`);
   });
