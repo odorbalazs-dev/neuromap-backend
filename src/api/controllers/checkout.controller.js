@@ -3,38 +3,23 @@ import {
   updateStripeSessionId
 } from "../../services/session.service.js";
 import { createCheckoutSession } from "../../services/stripe.service.js";
+import { validateCheckoutPayload } from "../../utils/validateCheckoutPayload.js";
 
 export async function createCheckout(req, res) {
   try {
+    const validation = validateCheckoutPayload(req.body);
+
+    if (!validation.ok) {
+      console.error("❌ Invalid checkout payload:", validation.errors);
+
+      return res.status(400).json({
+        ok: false,
+        error: "Invalid checkout payload",
+        details: validation.errors
+      });
+    }
+
     const { email, name, lang, payload } = req.body;
-
-    if (!email) {
-      return res.status(400).json({
-        ok: false,
-        error: "Missing required field: email"
-      });
-    }
-
-    if (!name) {
-      return res.status(400).json({
-        ok: false,
-        error: "Missing required field: name"
-      });
-    }
-
-    if (!lang) {
-      return res.status(400).json({
-        ok: false,
-        error: "Missing required field: lang"
-      });
-    }
-
-    if (!payload) {
-      return res.status(400).json({
-        ok: false,
-        error: "Missing required field: payload"
-      });
-    }
 
     const sessionRow = await createSession({
       email,

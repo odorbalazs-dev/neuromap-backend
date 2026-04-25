@@ -1,611 +1,1869 @@
-function makeId(prefix, n) {
-  return `${prefix}_${String(n).padStart(4, "0")}`;
-}
-
-function makeQuestion(id, subdomain, text) {
-  return {
-    id,
-    domain: "ANXIETY",
-    subdomain,
-    weight: 1,
-    text
-  };
-}
-
-const CONTEXTS = [
-  {
-    key: "home_morning",
-    text: {
-      hu: "reggeli otthoni helyzetekben",
-      en: "during morning routines at home",
-      de: "während der morgendlichen Abläufe zu Hause",
-      it: "durante la routine del mattino a casa",
-      es: "durante las rutinas matutinas en casa",
-      zh: "在家里的晨间日常中",
-      ja: "家庭での朝の場面で",
-      ar: "أثناء الروتين الصباحي في المنزل",
-      pl: "podczas porannych czynności w domu",
-      pt: "durante a rotina da manhã em casa",
-      fr: "pendant les routines du matin à la maison"
-    }
-  },
-  {
-    key: "home_evening",
-    text: {
-      hu: "esti otthoni helyzetekben",
-      en: "during evening routines at home",
-      de: "während der abendlichen Abläufe zu Hause",
-      it: "durante la routine serale a casa",
-      es: "durante las rutinas nocturnas en casa",
-      zh: "在家里的晚间日常中",
-      ja: "家庭での夕方の場面で",
-      ar: "أثناء الروتين المسائي في المنزل",
-      pl: "podczas wieczornych czynności w domu",
-      pt: "durante a rotina da noite em casa",
-      fr: "pendant les routines du soir à la maison"
-    }
-  },
-  {
-    key: "school_tasks",
-    text: {
-      hu: "iskolai vagy tanulási feladatoknál",
-      en: "during school or learning tasks",
-      de: "bei schulischen oder lernbezogenen Aufgaben",
-      it: "durante i compiti scolastici o di apprendimento",
-      es: "durante tareas escolares o de aprendizaje",
-      zh: "在学校或学习任务中",
-      ja: "学校や学習課題の場面で",
-      ar: "أثناء المهام المدرسية أو التعليمية",
-      pl: "podczas zadań szkolnych lub edukacyjnych",
-      pt: "durante tarefas escolares ou de aprendizagem",
-      fr: "pendant les tâches scolaires ou d'apprentissage"
-    }
-  },
-  {
-    key: "group_settings",
-    text: {
-      hu: "csoportos helyzetekben",
-      en: "in group situations",
-      de: "in Gruppensituationen",
-      it: "nelle situazioni di gruppo",
-      es: "en situaciones de grupo",
-      zh: "在群体情境中",
-      ja: "集団場面で",
-      ar: "في المواقف الجماعية",
-      pl: "w sytuacjach grupowych",
-      pt: "em situações de grupo",
-      fr: "dans les situations de groupe"
-    }
-  },
-  {
-    key: "with_peers",
-    text: {
-      hu: "kortársakkal együtt",
-      en: "when interacting with peers",
-      de: "im Umgang mit Gleichaltrigen",
-      it: "quando è con i coetanei",
-      es: "al interactuar con sus compañeros",
-      zh: "与同龄人互动时",
-      ja: "同年代の子どもと関わるときに",
-      ar: "عند التفاعل مع الأقران",
-      pl: "podczas kontaktu z rówieśnikami",
-      pt: "ao interagir com colegas",
-      fr: "lors des interactions avec les pairs"
-    }
-  },
-  {
-    key: "with_adults",
-    text: {
-      hu: "felnőttekkel való helyzetekben",
-      en: "when interacting with adults",
-      de: "im Umgang mit Erwachsenen",
-      it: "quando interagisce con adulti",
-      es: "al interactuar con adultos",
-      zh: "与成年人互动时",
-      ja: "大人と関わるときに",
-      ar: "عند التفاعل مع البالغين",
-      pl: "podczas kontaktu z dorosłymi",
-      pt: "ao interagir com adultos",
-      fr: "lors des interactions avec des adultes"
-    }
-  },
-  {
-    key: "under_stress",
-    text: {
-      hu: "stresszes vagy terhelt helyzetekben",
-      en: "in stressful or demanding situations",
-      de: "in stressigen oder belastenden Situationen",
-      it: "in situazioni stressanti o impegnative",
-      es: "en situaciones estresantes o exigentes",
-      zh: "在有压力或要求较高的情境中",
-      ja: "ストレスの高い場面で",
-      ar: "في المواقف الضاغطة أو المجهدة",
-      pl: "w stresujących lub wymagających sytuacjach",
-      pt: "em situações estressantes ou exigentes",
-      fr: "dans les situations stressantes ou exigeantes"
-    }
-  },
-  {
-    key: "during_transitions",
-    text: {
-      hu: "átmeneteknél vagy váltásoknál",
-      en: "during transitions or changes",
-      de: "bei Übergängen oder Veränderungen",
-      it: "durante i cambiamenti o le transizioni",
-      es: "durante transiciones o cambios",
-      zh: "在过渡或变化时",
-      ja: "切り替えや変化の場面で",
-      ar: "أثناء الانتقالات أو التغييرات",
-      pl: "podczas zmian i przejść",
-      pt: "durante transições ou mudanças",
-      fr: "lors des transitions ou changements"
-    }
-  },
-  {
-    key: "free_play",
-    text: {
-      hu: "szabad játék vagy kötetlen helyzetek során",
-      en: "during free play or unstructured situations",
-      de: "beim freien Spiel oder in unstrukturierten Situationen",
-      it: "durante il gioco libero o situazioni poco strutturate",
-      es: "durante el juego libre o situaciones poco estructuradas",
-      zh: "在自由游戏或非结构化情境中",
-      ja: "自由遊びや構造化されていない場面で",
-      ar: "أثناء اللعب الحر أو المواقف غير المنظمة",
-      pl: "podczas swobodnej zabawy lub nieustrukturyzowanych sytuacji",
-      pt: "durante brincadeiras livres ou situações pouco estruturadas",
-      fr: "pendant le jeu libre ou les situations peu structurées"
-    }
-  },
-  {
-    key: "daily_life",
-    text: {
-      hu: "a mindennapi élet különböző helyzeteiben",
-      en: "across different everyday situations",
-      de: "in verschiedenen Alltagssituationen",
-      it: "in diverse situazioni quotidiane",
-      es: "en diferentes situaciones cotidianas",
-      zh: "在日常生活的不同情境中",
-      ja: "日常生活のさまざまな場面で",
-      ar: "في مواقف الحياة اليومية المختلفة",
-      pl: "w różnych codziennych sytuacjach",
-      pt: "em diferentes situações do dia a dia",
-      fr: "dans différentes situations du quotidien"
-    }
-  }
-];
-
-const GENERAL_WORRY_BASE = [
-  {
-    text: {
-      hu: "sokat aggódik hétköznapi dolgok miatt",
-      en: "worries a lot about everyday things",
-      de: "sich viele Sorgen über alltägliche Dinge macht",
-      it: "si preoccupa molto per le cose quotidiane",
-      es: "se preocupa mucho por cosas cotidianas",
-      zh: "经常为日常事情过度担心",
-      ja: "日常のことについて強く心配することが多い",
-      ar: "يقلق كثيرًا بشأن الأمور اليومية",
-      pl: "bardzo martwi się codziennymi sprawami",
-      pt: "preocupa-se muito com coisas do dia a dia",
-      fr: "s'inquiète beaucoup pour des choses du quotidien"
-    }
-  },
-  {
-    text: {
-      hu: "nehezen engedi el a nyugtalanító gondolatokat",
-      en: "has difficulty letting go of worrying thoughts",
-      de: "Schwierigkeiten hat, beunruhigende Gedanken loszulassen",
-      it: "ha difficoltà a lasciar andare pensieri preoccupanti",
-      es: "tiene dificultad para soltar pensamientos preocupantes",
-      zh: "难以放下令人担忧的想法",
-      ja: "不安な考えを手放すのが難しい",
-      ar: "يجد صعوبة في التخلص من الأفكار المقلقة",
-      pl: "ma trudność z odpuszczeniem niepokojących myśli",
-      pt: "tem dificuldade em deixar de lado pensamentos preocupantes",
-      fr: "a du mal à se détacher de pensées inquiétantes"
-    }
-  },
-  {
-    text: {
-      hu: "akkor is számol lehetséges problémákkal, amikor erre kevés ok van",
-      en: "expects possible problems even when there is little reason",
-      de: "mit möglichen Problemen rechnet, auch wenn es wenig Anlass dafür gibt",
-      it: "si aspetta possibili problemi anche quando ci sono pochi motivi",
-      es: "anticipa posibles problemas incluso cuando hay poca razón para ello",
-      zh: "即使理由不多也会预想可能出现问题",
-      ja: "大きな理由がなくても問題を予想しやすい",
-      ar: "يتوقع مشكلات محتملة حتى عندما لا يوجد سبب كبير لذلك",
-      pl: "spodziewa się problemów nawet wtedy, gdy jest ku temu niewiele powodów",
-      pt: "espera possíveis problemas mesmo quando há pouco motivo",
-      fr: "anticipe des problèmes possibles même quand il y a peu de raisons de le faire"
-    }
-  },
-  {
-    text: {
-      hu: "sokszor nehezen nyugszik meg, ha valami bizonytalan",
-      en: "has trouble calming down when something feels uncertain",
-      de: "sich schwer beruhigt, wenn etwas ungewiss erscheint",
-      it: "fa fatica a calmarsi quando qualcosa appare incerto",
-      es: "le cuesta calmarse cuando algo se siente incierto",
-      zh: "当事情不确定时很难平静下来",
-      ja: "何かが不確かだと落ち着くのが難しい",
-      ar: "يجد صعوبة في الهدوء عندما يكون هناك أمر غير مؤكد",
-      pl: "ma trudność z uspokojeniem się, gdy coś jest niepewne",
-      pt: "tem dificuldade em se acalmar quando algo parece incerto",
-      fr: "a du mal à se calmer quand quelque chose semble incertain"
-    }
-  },
-  {
-    text: {
-      hu: "könnyen ráfókuszál a veszély vagy kudarc lehetőségére",
-      en: "easily focuses on the possibility of danger or failure",
-      de: "sich leicht auf die Möglichkeit von Gefahr oder Misserfolg fokussiert",
-      it: "si concentra facilmente sulla possibilità di pericolo o fallimento",
-      es: "se enfoca fácilmente en la posibilidad de peligro o fracaso",
-      zh: "容易把注意力放在危险或失败的可能性上",
-      ja: "危険や失敗の可能性に注意が向きやすい",
-      ar: "يركز بسهولة على احتمال الخطر أو الفشل",
-      pl: "łatwo koncentruje się na możliwości zagrożenia lub porażki",
-      pt: "foca facilmente na possibilidade de perigo ou fracasso",
-      fr: "se focalise facilement sur la possibilité de danger ou d'échec"
-    }
-  }
-];
-
-const UNCERTAINTY_BASE = [
-  {
-    text: {
-      hu: "új vagy kiszámíthatatlan helyzetekben gyorsan feszültté válik",
-      en: "becomes tense quickly in new or unpredictable situations",
-      de: "in neuen oder unvorhersehbaren Situationen schnell angespannt wird",
-      it: "diventa rapidamente teso in situazioni nuove o imprevedibili",
-      es: "se pone tenso rápidamente en situaciones nuevas o impredecibles",
-      zh: "在新的或不可预测的情境中很快变得紧张",
-      ja: "新しい、または予測しにくい状況で緊張しやすい",
-      ar: "يتوتر بسرعة في المواقف الجديدة أو غير المتوقعة",
-      pl: "szybko się napina w nowych lub nieprzewidywalnych sytuacjach",
-      pt: "fica tenso rapidamente em situações novas ou imprevisíveis",
-      fr: "devient rapidement tendu dans des situations nouvelles ou imprévisibles"
-    }
-  },
-  {
-    text: {
-      hu: "nehezen viseli, ha nem tudja előre, mi fog történni",
-      en: "struggles when not knowing in advance what will happen",
-      de: "es schwer erträgt, nicht im Voraus zu wissen, was passieren wird",
-      it: "fatica quando non sa in anticipo cosa accadrà",
-      es: "le cuesta no saber de antemano qué va a pasar",
-      zh: "当无法提前知道会发生什么时会很难受",
-      ja: "何が起こるか前もってわからないとつらさが強い",
-      ar: "يجد صعوبة عندما لا يعرف مسبقًا ما الذي سيحدث",
-      pl: "trudno mu znieść brak wcześniejszej wiedzy o tym, co się wydarzy",
-      pt: "tem dificuldade quando não sabe antecipadamente o que vai acontecer",
-      fr: "supporte difficilement de ne pas savoir à l'avance ce qui va se passer"
-    }
-  },
-  {
-    text: {
-      hu: "biztonságosabban érzi magát, ha mindent előre tisztázni tud",
-      en: "feels safer when everything can be clarified in advance",
-      de: "sich sicherer fühlt, wenn alles im Voraus geklärt werden kann",
-      it: "si sente più al sicuro quando tutto può essere chiarito in anticipo",
-      es: "se siente más seguro cuando todo puede aclararse de antemano",
-      zh: "当一切都能提前讲清楚时会更有安全感",
-      ja: "あらかじめすべてが明確だと安心しやすい",
-      ar: "يشعر بأمان أكبر عندما يمكن توضيح كل شيء مسبقًا",
-      pl: "czuje się bezpieczniej, gdy wszystko można wyjaśnić wcześniej",
-      pt: "sente-se mais seguro quando tudo pode ser esclarecido com antecedência",
-      fr: "se sent plus en sécurité quand tout peut être clarifié à l'avance"
-    }
-  },
-  {
-    text: {
-      hu: "váratlan változások fokozott nyugtalanságot váltanak ki belőle",
-      en: "unexpected changes trigger heightened unease",
-      de: "unerwartete Veränderungen verstärkte Unruhe auslösen",
-      it: "i cambiamenti inattesi provocano maggiore inquietudine",
-      es: "los cambios inesperados desencadenan mayor inquietud",
-      zh: "突发变化会引发更强的不安",
-      ja: "予期しない変化で不安が強まりやすい",
-      ar: "تثير التغييرات غير المتوقعة توترًا متزايدًا لديه",
-      pl: "nieoczekiwane zmiany wywołują zwiększony niepokój",
-      pt: "mudanças inesperadas desencadeiam maior inquietação",
-      fr: "les changements imprévus déclenchent une inquiétude accrue"
-    }
-  },
-  {
-    text: {
-      hu: "sok energiát fordít arra, hogy előre felkészüljön a bizonytalan helyzetekre",
-      en: "puts a lot of energy into preparing for uncertain situations",
-      de: "viel Energie darauf verwendet, sich auf ungewisse Situationen vorzubereiten",
-      it: "impiega molta energia per prepararsi a situazioni incerte",
-      es: "dedica mucha energía a prepararse para situaciones inciertas",
-      zh: "会花很多精力为不确定情境做准备",
-      ja: "不確かな状況に備えることに多くのエネルギーを使う",
-      ar: "يبذل الكثير من الطاقة للاستعداد للمواقف غير المؤكدة",
-      pl: "wkłada dużo energii w przygotowanie się do niepewnych sytuacji",
-      pt: "gasta muita energia para se preparar para situações incertas",
-      fr: "consacre beaucoup d'énergie à se préparer aux situations incertaines"
-    }
-  }
-];
-
-const PHYSICAL_BASE = [
-  {
-    text: {
-      hu: "stresszhelyzetekben testi panaszokat mutat",
-      en: "shows physical complaints in stressful situations",
-      de: "in Stresssituationen körperliche Beschwerden zeigt",
-      it: "mostra disturbi fisici in situazioni stressanti",
-      es: "presenta molestias físicas en situaciones estresantes",
-      zh: "在压力情境下会出现身体不适",
-      ja: "ストレス状況で身体症状が出やすい",
-      ar: "تظهر عليه شكاوى جسدية في المواقف الضاغطة",
-      pl: "w stresujących sytuacjach ma objawy somatyczne",
-      pt: "apresenta queixas físicas em situações de estresse",
-      fr: "présente des plaintes physiques en situation stressante"
-    }
-  },
-  {
-    text: {
-      hu: "szorongáskor gyomor-, fej- vagy egyéb testi tünetei erősödnek",
-      en: "shows stronger stomach, headache, or other bodily symptoms when anxious",
-      de: "bei Angst verstärkte Magen-, Kopf- oder andere körperliche Symptome zeigt",
-      it: "mostra sintomi fisici più forti quando è ansioso, come mal di stomaco o mal di testa",
-      es: "muestra síntomas físicos más intensos al estar ansioso, como dolor de estómago o cabeza",
-      zh: "焦虑时胃痛、头痛或其他身体症状会加重",
-      ja: "不安が強いと腹痛や頭痛などの身体症状が強まる",
-      ar: "تشتد لديه أعراض جسدية مثل ألم المعدة أو الرأس عند القلق",
-      pl: "przy lęku nasilają się u niego bóle brzucha, głowy lub inne objawy somatyczne",
-      pt: "apresenta sintomas físicos mais fortes quando ansioso, como dor de barriga ou de cabeça",
-      fr: "présente des symptômes physiques plus marqués quand il est anxieux, comme des maux de ventre ou de tête"
-    }
-  },
-  {
-    text: {
-      hu: "feszültség esetén nehezen lazul el testileg",
-      en: "has difficulty relaxing physically when tense",
-      de: "sich körperlich schwer entspannen kann, wenn Spannung da ist",
-      it: "ha difficoltà a rilassarsi fisicamente quando è teso",
-      es: "tiene dificultad para relajarse físicamente cuando está tenso",
-      zh: "紧张时身体很难放松下来",
-      ja: "緊張していると身体的にリラックスしにくい",
-      ar: "يجد صعوبة في الاسترخاء الجسدي عند التوتر",
-      pl: "ma trudność z fizycznym rozluźnieniem się, gdy jest spięty",
-      pt: "tem dificuldade em relaxar fisicamente quando está tenso",
-      fr: "a du mal à se détendre physiquement lorsqu'il est tendu"
-    }
-  },
-  {
-    text: {
-      hu: "szorongáskor alvás, étvágy vagy testi komfort terén változások látszanak",
-      en: "shows changes in sleep, appetite, or physical comfort when anxious",
-      de: "bei Angst Veränderungen in Schlaf, Appetit oder körperlichem Wohlbefinden zeigt",
-      it: "mostra cambiamenti nel sonno, appetito o benessere fisico quando è ansioso",
-      es: "muestra cambios en sueño, apetito o bienestar físico cuando está ansioso",
-      zh: "焦虑时睡眠、食欲或身体舒适感会发生变化",
-      ja: "不安時に睡眠・食欲・身体の快適さに変化が見られる",
-      ar: "تظهر تغيرات في النوم أو الشهية أو الراحة الجسدية عند القلق",
-      pl: "przy lęku pojawiają się zmiany w śnie, apetycie lub komforcie fizycznym",
-      pt: "apresenta mudanças no sono, apetite ou conforto físico quando ansioso",
-      fr: "présente des changements de sommeil, d'appétit ou de confort physique lorsqu'il est anxieux"
-    }
-  },
-  {
-    text: {
-      hu: "testileg is erősen reagál a megterhelő helyzetekre",
-      en: "reacts strongly on a bodily level to demanding situations",
-      de: "auch körperlich stark auf belastende Situationen reagiert",
-      it: "reagisce fortemente a livello fisico alle situazioni impegnative",
-      es: "reacciona con fuerza a nivel corporal ante situaciones exigentes",
-      zh: "在高要求情境下身体反应也很强烈",
-      ja: "負担の大きい状況に身体的にも強く反応する",
-      ar: "يتفاعل جسديًا بقوة مع المواقف المجهدة",
-      pl: "silnie reaguje fizycznie na obciążające sytuacje",
-      pt: "reage fortemente no corpo a situações exigentes",
-      fr: "réagit fortement au niveau corporel dans les situations exigeantes"
-    }
-  }
-];
-
-const AVOIDANCE_BASE = [
-  {
-    text: {
-      hu: "kerüli azokat a helyzeteket, ahol hibázhat vagy megítélhetik",
-      en: "avoids situations where mistakes or judgment are possible",
-      de: "Situationen vermeidet, in denen Fehler oder Bewertung möglich sind",
-      it: "evita situazioni in cui potrebbe sbagliare o essere giudicato",
-      es: "evita situaciones en las que podría equivocarse o ser juzgado",
-      zh: "回避可能犯错或被评价的情境",
-      ja: "失敗したり評価されたりする場面を避ける",
-      ar: "يتجنب المواقف التي قد يخطئ فيها أو يتعرض فيها للتقييم",
-      pl: "unika sytuacji, w których może popełnić błąd lub zostać oceniony",
-      pt: "evita situações em que pode errar ou ser julgado",
-      fr: "évite les situations dans lesquelles il pourrait se tromper ou être jugé"
-    }
-  },
-  {
-    text: {
-      hu: "biztonságosabbnak érzi a helyzeteket, ha vannak megnyugtató kapaszkodói",
-      en: "feels safer when there are reassuring supports or routines",
-      de: "sich sicherer fühlt, wenn beruhigende Sicherheiten oder Routinen vorhanden sind",
-      it: "si sente più al sicuro quando ci sono appigli rassicuranti o routine",
-      es: "se siente más seguro cuando hay apoyos o rutinas tranquilizadoras",
-      zh: "当有让人安心的依靠或固定做法时会更有安全感",
-      ja: "安心できる手がかりや決まったやり方があると安全に感じやすい",
-      ar: "يشعر بأمان أكبر عندما توجد عوامل أو روتينات مطمئنة",
-      pl: "czuje się bezpieczniej, gdy ma uspokajające punkty odniesienia lub rutyny",
-      pt: "sente-se mais seguro quando há apoios ou rotinas tranquilizadoras",
-      fr: "se sent plus en sécurité lorsqu'il existe des repères ou routines rassurants"
-    }
-  },
-  {
-    text: {
-      hu: "gyakran keres megerősítést vagy biztosítékot, mielőtt belekezd valamibe",
-      en: "often seeks reassurance before starting something",
-      de: "häufig Rückversicherung sucht, bevor etwas begonnen wird",
-      it: "cerca spesso rassicurazione prima di iniziare qualcosa",
-      es: "busca con frecuencia confirmación antes de empezar algo",
-      zh: "在开始做事前经常需要反复确认或安慰",
-      ja: "何かを始める前に安心材料を求めることが多い",
-      ar: "غالبًا ما يطلب طمأنة قبل البدء بشيء ما",
-      pl: "często szuka upewnienia, zanim coś zacznie",
-      pt: "frequentemente procura confirmação antes de começar algo",
-      fr: "cherche souvent à être rassuré avant de commencer quelque chose"
-    }
-  },
-  {
-    text: {
-      hu: "inkább elkerül kihívást jelentő helyzeteket, mintsem megpróbálja kezelni őket",
-      en: "is more likely to avoid challenging situations than face them",
-      de: "herausfordernde Situationen eher meidet, als sich ihnen zu stellen",
-      it: "tende più a evitare situazioni difficili che ad affrontarle",
-      es: "tiende más a evitar situaciones desafiantes que a afrontarlas",
-      zh: "相比面对挑战，更倾向于回避",
-      ja: "難しい状況に向き合うより避ける傾向が強い",
-      ar: "يميل إلى تجنب المواقف الصعبة بدلًا من مواجهتها",
-      pl: "częściej unika trudnych sytuacji, niż próbuje im sprostać",
-      pt: "tende a evitar situações desafiadoras em vez de enfrentá-las",
-      fr: "a tendance à éviter les situations difficiles plutôt qu'à les affronter"
-    }
-  },
-  {
-    text: {
-      hu: "láthatóan megkönnyebbül, ha ki tud kerülni egy szorongáskeltő helyzetből",
-      en: "shows visible relief when able to avoid an anxiety-provoking situation",
-      de: "sichtbar erleichtert ist, wenn eine angstauslösende Situation vermieden werden kann",
-      it: "mostra sollievo evidente quando riesce a evitare una situazione ansiogena",
-      es: "muestra alivio visible cuando logra evitar una situación que le genera ansiedad",
-      zh: "当成功避开令人焦虑的情境时会明显松一口气",
-      ja: "不安を引き起こす状況を避けられると明らかに安心する",
-      ar: "يُظهر ارتياحًا واضحًا عندما يتمكن من تجنب موقف مثير للقلق",
-      pl: "wyraźnie odczuwa ulgę, gdy uda mu się uniknąć sytuacji wywołującej lęk",
-      pt: "mostra alívio visível quando consegue evitar uma situação ansiogênica",
-      fr: "montre un soulagement visible lorsqu'il peut éviter une situation anxiogène"
-    }
-  }
-];
-
-const PERFORMANCE_BASE = [
-  {
-    text: {
-      hu: "teljesítményhelyzetek előtt erősen szorongóvá válik",
-      en: "becomes strongly anxious before performance situations",
-      de: "vor Leistungssituationen stark ängstlich wird",
-      it: "diventa molto ansioso prima di situazioni di prestazione",
-      es: "se vuelve muy ansioso antes de situaciones de rendimiento",
-      zh: "在需要表现的情境前会明显焦虑",
-      ja: "評価や発表の場面の前に強く不安になる",
-      ar: "يصبح قلقًا بشدة قبل مواقف الأداء أو التقييم",
-      pl: "silnie się niepokoi przed sytuacjami oceny lub występu",
-      pt: "fica muito ansioso antes de situações de desempenho",
-      fr: "devient très anxieux avant les situations de performance"
-    }
-  },
-  {
-    text: {
-      hu: "érzékeny arra, hogyan értékelik vagy mit gondolnak róla mások",
-      en: "is highly sensitive to how others evaluate or think about them",
-      de: "empfindlich darauf reagiert, wie andere ihn/sie bewerten oder über ihn/sie denken",
-      it: "è molto sensibile a come gli altri lo valutano o lo percepiscono",
-      es: "es muy sensible a cómo lo evalúan o qué piensan de él los demás",
-      zh: "对他人如何评价自己非常敏感",
-      ja: "他人がどう評価するか、どう思うかにとても敏感である",
-      ar: "حساس جدًا لكيفية تقييم الآخرين له أو لما يعتقدونه عنه",
-      pl: "jest bardzo wrażliwy na to, jak inni go oceniają lub co o nim myślą",
-      pt: "é muito sensível a como os outros o avaliam ou pensam sobre ele",
-      fr: "est très sensible à la façon dont les autres l'évaluent ou pensent à son sujet"
-    }
-  },
-  {
-    text: {
-      hu: "csoportos vagy nyilvános helyzetekben könnyebben visszahúzódik",
-      en: "withdraws more easily in group or public situations",
-      de: "sich in Gruppen- oder öffentlichen Situationen leichter zurückzieht",
-      it: "si ritira più facilmente in situazioni di gruppo o pubbliche",
-      es: "se retrae con más facilidad en situaciones grupales o públicas",
-      zh: "在群体或公开场合中更容易退缩",
-      ja: "集団や人前の場面で引っ込みやすい",
-      ar: "ينسحب بسهولة أكبر في المواقف الجماعية أو العلنية",
-      pl: "łatwiej wycofuje się w sytuacjach grupowych lub publicznych",
-      pt: "retrai-se mais facilmente em situações de grupo ou públicas",
-      fr: "se retire plus facilement dans les situations de groupe ou en public"
-    }
-  },
-  {
-    text: {
-      hu: "félhet attól, hogy hibázik vagy kellemetlen helyzetbe kerül mások előtt",
-      en: "may fear making mistakes or feeling embarrassed in front of others",
-      de: "Angst haben kann, Fehler zu machen oder sich vor anderen zu blamieren",
-      it: "può temere di sbagliare o sentirsi in imbarazzo davanti agli altri",
-      es: "puede temer equivocarse o sentirse avergonzado delante de otros",
-      zh: "可能担心在别人面前出错或出丑",
-      ja: "人前で失敗したり恥ずかしい思いをしたりすることを恐れることがある",
-      ar: "قد يخاف من ارتكاب الأخطاء أو الشعور بالإحراج أمام الآخرين",
-      pl: "może obawiać się popełnienia błędu lub zawstydzenia przy innych",
-      pt: "pode ter medo de errar ou passar vergonha diante dos outros",
-      fr: "peut craindre de faire des erreurs ou de se sentir gêné devant les autres"
-    }
-  },
-  {
-    text: {
-      hu: "nehezen mutatja meg, mit tud, ha figyelik vagy értékelik",
-      en: "has difficulty showing what they know when observed or evaluated",
-      de: "Schwierigkeiten hat zu zeigen, was er/sie kann, wenn Beobachtung oder Bewertung stattfindet",
-      it: "ha difficoltà a mostrare ciò che sa quando viene osservato o valutato",
-      es: "le cuesta mostrar lo que sabe cuando lo observan o evalúan",
-      zh: "在被观察或评价时难以展示自己的能力",
-      ja: "見られたり評価されたりすると力を発揮しにくい",
-      ar: "يجد صعوبة في إظهار ما يعرفه عندما يكون تحت الملاحظة أو التقييم",
-      pl: "ma trudność z pokazaniem, co potrafi, gdy jest obserwowany lub oceniany",
-      pt: "tem dificuldade em mostrar o que sabe quando está sendo observado ou avaliado",
-      fr: "a du mal à montrer ce qu'il sait lorsqu'il est observé ou évalué"
-    }
-  }
-];
-
-function buildQuestions(prefix, subdomain, baseItems, startIndex) {
-  const out = [];
-  let n = startIndex;
-
-  baseItems.forEach((base) => {
-    CONTEXTS.forEach((context) => {
-      out.push(
-        makeQuestion(
-          makeId(prefix, n++),
-          subdomain,
-          {
-            hu: `${base.text.hu} ${context.text.hu}.`,
-            en: `${base.text.en} ${context.text.en}.`,
-            de: `${base.text.de} ${context.text.de}.`,
-            it: `${base.text.it} ${context.text.it}.`,
-            es: `${base.text.es} ${context.text.es}.`,
-            zh: `${base.text.zh}${context.text.zh}。`,
-            ja: `${base.text.ja}${context.text.ja}。`,
-            ar: `${base.text.ar} ${context.text.ar}.`,
-            pl: `${base.text.pl} ${context.text.pl}.`,
-            pt: `${base.text.pt} ${context.text.pt}.`,
-            fr: `${base.text.fr} ${context.text.fr}.`
-          }
-        )
-      );
-    });
-  });
-
-  return out;
-}
-
-const GENERAL_WORRY_QUESTIONS = buildQuestions("anxiety", "general_worry", GENERAL_WORRY_BASE, 1);           // 50
-const UNCERTAINTY_QUESTIONS = buildQuestions("anxiety", "uncertainty_intolerance", UNCERTAINTY_BASE, 51);    // 50
-const PHYSICAL_QUESTIONS = buildQuestions("anxiety", "physical_anxiety", PHYSICAL_BASE, 101);                // 50
-const AVOIDANCE_QUESTIONS = buildQuestions("anxiety", "avoidance_safety", AVOIDANCE_BASE, 151);             // 50
-const PERFORMANCE_QUESTIONS = buildQuestions("anxiety", "performance_social_anxiety", PERFORMANCE_BASE, 201); // 50
-
 export const ANXIETY_BANK = [
-  ...GENERAL_WORRY_QUESTIONS,
-  ...UNCERTAINTY_QUESTIONS,
-  ...PHYSICAL_QUESTIONS,
-  ...AVOIDANCE_QUESTIONS,
-  ...PERFORMANCE_QUESTIONS
+  /* =========================
+     CORE 1-120
+  ========================= */
+
+  {
+    id: "ANX_001",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "persistent_worry",
+    text: {
+      hu: "Gyakran akkor is aggódik, amikor nincs nyilvánvaló ok rá.",
+      en: "Often worries even when there is no obvious reason."
+    }
+  },
+  {
+    id: "ANX_002",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "future_concern",
+    text: {
+      hu: "Sokat foglalkoztatja, mi mehet rosszul a jövőben.",
+      en: "Spends a lot of time thinking about what might go wrong in the future."
+    }
+  },
+  {
+    id: "ANX_003",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "small_issue_escalation",
+    text: {
+      hu: "Apró problémákat is könnyen nagy jelentőségűnek él meg.",
+      en: "Tends to experience small problems as more serious than they are."
+    }
+  },
+  {
+    id: "ANX_004",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "difficulty_switching_off_worry",
+    text: {
+      hu: "Nehéz számára leállítani az aggodalmas gondolatokat.",
+      en: "Has difficulty stopping worried thoughts."
+    }
+  },
+  {
+    id: "ANX_005",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "calm_baseline_reverse",
+    text: {
+      hu: "A legtöbb helyzetben viszonylag nyugodt tud maradni.",
+      en: "Can remain relatively calm in most situations."
+    }
+  },
+  {
+    id: "ANX_006",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "worry_carryover",
+    text: {
+      hu: "Egy-egy aggodalom hosszabb ideig is benne marad.",
+      en: "A single worry may stay with them for a long time."
+    }
+  },
+  {
+    id: "ANX_007",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "multiple_worry_topics",
+    text: {
+      hu: "Egyszerre több dolog miatt is hajlamos aggódni.",
+      en: "Tends to worry about several things at the same time."
+    }
+  },
+  {
+    id: "ANX_008",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "everyday_worry_load",
+    text: {
+      hu: "A hétköznapi helyzetek is gyakran feszültséget keltenek benne.",
+      en: "Everyday situations often create tension."
+    }
+  },
+  {
+    id: "ANX_009",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "worry_perspective_reverse",
+    text: {
+      hu: "Többnyire arányosan tudja kezelni a felmerülő problémákat.",
+      en: "Usually keeps problems in reasonable perspective."
+    }
+  },
+  {
+    id: "ANX_010",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "worry_without_clear_reason",
+    text: {
+      hu: "Néha úgy tűnik, akkor is feszült, ha nincs konkrét kiváltó ok.",
+      en: "Sometimes seems tense even without a clear trigger."
+    }
+  },
+
+  {
+    id: "ANX_011",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "uncertainty_distress",
+    text: {
+      hu: "Erősen megviseli, ha nem tudja előre, mi fog történni.",
+      en: "Becomes highly distressed when not knowing what will happen."
+    }
+  },
+  {
+    id: "ANX_012",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "need_for_predictability",
+    text: {
+      hu: "Erősen igényli, hogy a dolgok kiszámíthatóak legyenek.",
+      en: "Strongly needs things to be predictable."
+    }
+  },
+  {
+    id: "ANX_013",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "unknown_outcome_stress",
+    text: {
+      hu: "Különösen nehéz neki azokat a helyzeteket viselni, ahol bizonytalan a kimenet.",
+      en: "Finds it especially hard to tolerate situations with uncertain outcomes."
+    }
+  },
+  {
+    id: "ANX_014",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "waiting_difficulty",
+    text: {
+      hu: "A várakozás és bizonytalanság erősen fokozza a feszültségét.",
+      en: "Waiting and uncertainty greatly increase tension."
+    }
+  },
+  {
+    id: "ANX_015",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "uncertainty_tolerance_reverse",
+    text: {
+      hu: "Viszonylag jól tud együtt élni azzal, ha nem ismert minden részlet.",
+      en: "Can cope relatively well even when not all details are known."
+    }
+  },
+  {
+    id: "ANX_016",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "overplanning",
+    text: {
+      hu: "Hajlamos túl sokat tervezni azért, hogy csökkentse a bizonytalanságot.",
+      en: "Tends to overplan in order to reduce uncertainty."
+    }
+  },
+  {
+    id: "ANX_017",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "need_for_definite_answers",
+    text: {
+      hu: "Nehezen viseli, ha valamire nincs egyértelmű válasz.",
+      en: "Has difficulty tolerating situations without clear answers."
+    }
+  },
+  {
+    id: "ANX_018",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "last_minute_change_stress",
+    text: {
+      hu: "Az utolsó pillanatban történő változások könnyen felzaklatják.",
+      en: "Last-minute changes can easily upset them."
+    }
+  },
+  {
+    id: "ANX_019",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "open_ended_situation_reverse",
+    text: {
+      hu: "Nyitottabb, ha egy helyzet nem teljesen kiszámítható.",
+      en: "Can stay open even when a situation is not fully predictable."
+    }
+  },
+  {
+    id: "ANX_020",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "certainty_seeking",
+    text: {
+      hu: "Sokszor próbál meg teljes bizonyosságot szerezni, mielőtt döntene.",
+      en: "Often tries to gain complete certainty before making decisions."
+    }
+  },
+
+  {
+    id: "ANX_021",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "somatic_tension",
+    text: {
+      hu: "A feszültség testi tünetekben is megjelenik nála.",
+      en: "Tension also appears through physical symptoms."
+    }
+  },
+  {
+    id: "ANX_022",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "heart_racing",
+    text: {
+      hu: "Izgalom vagy aggodalom hatására gyorsabban verhet a szíve.",
+      en: "Heart may race in response to stress or worry."
+    }
+  },
+  {
+    id: "ANX_023",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "stomach_discomfort",
+    text: {
+      hu: "Feszültebb helyzetekben gyomortáji kellemetlenséget élhet át.",
+      en: "May experience stomach discomfort in stressful situations."
+    }
+  },
+  {
+    id: "ANX_024",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "breathing_tension",
+    text: {
+      hu: "A feszültség a légzésén is érződik.",
+      en: "Tension can also be noticeable in breathing."
+    }
+  },
+  {
+    id: "ANX_025",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "physical_calm_reverse",
+    text: {
+      hu: "A legtöbb helyzetben teste viszonylag nyugodt marad.",
+      en: "Body usually stays relatively calm in most situations."
+    }
+  },
+  {
+    id: "ANX_026",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "physical_alarm_response",
+    text: {
+      hu: "Néha a teste úgy reagál, mintha veszély lenne, még akkor is, ha mások ezt nem érzik így.",
+      en: "Body sometimes reacts as if there is danger even when others do not see it that way."
+    }
+  },
+  {
+    id: "ANX_027",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "shakiness_under_stress",
+    text: {
+      hu: "Stresszhelyzetben remegés vagy belső reszketés jelenhet meg.",
+      en: "Stress may bring shakiness or internal trembling."
+    }
+  },
+  {
+    id: "ANX_028",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "sweating_tension",
+    text: {
+      hu: "A feszültség izzadással vagy fokozott testi készenléttel járhat.",
+      en: "Tension may involve sweating or heightened bodily alertness."
+    }
+  },
+  {
+    id: "ANX_029",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "body_recovery_reverse",
+    text: {
+      hu: "Feszültség után viszonylag gyorsan meg tud nyugodni testileg.",
+      en: "Can physically settle down relatively quickly after stress."
+    }
+  },
+  {
+    id: "ANX_030",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "physical_stress_build_up",
+    text: {
+      hu: "A testi feszültség könnyen felhalmozódik benne a nap során.",
+      en: "Physical tension tends to build up easily over the day."
+    }
+  },
+
+  {
+    id: "ANX_031",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "inner_restlessness",
+    text: {
+      hu: "Gyakran belső nyugtalanság jellemzi.",
+      en: "Often experiences inner restlessness."
+    }
+  },
+  {
+    id: "ANX_032",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "difficulty_relaxing",
+    text: {
+      hu: "Nehezen tud igazán ellazulni.",
+      en: "Has difficulty truly relaxing."
+    }
+  },
+  {
+    id: "ANX_033",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "muscle_tension",
+    text: {
+      hu: "Izmai gyakran feszesek vagy megterheltek.",
+      en: "Muscles are often tense or tight."
+    }
+  },
+  {
+    id: "ANX_034",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "constant_alertness",
+    text: {
+      hu: "Nehezen kapcsol ki, mintha állandó készenlétben lenne.",
+      en: "Has difficulty switching off, as if constantly on alert."
+    }
+  },
+  {
+    id: "ANX_035",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "relaxed_pacing_reverse",
+    text: {
+      hu: "Többnyire nyugodt tempóban tud jelen lenni a helyzetekben.",
+      en: "Usually remains present at a calm pace in situations."
+    }
+  },
+  {
+    id: "ANX_036",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "irritability_under_stress",
+    text: {
+      hu: "Feszültség alatt ingerlékenyebbé válhat.",
+      en: "May become more irritable under stress."
+    }
+  },
+  {
+    id: "ANX_037",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "settling_difficulty",
+    text: {
+      hu: "Nehéz számára megállni és megnyugodni egy feszültebb időszakban.",
+      en: "Has difficulty settling down during stressful periods."
+    }
+  },
+  {
+    id: "ANX_038",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "anticipatory_tension",
+    text: {
+      hu: "Már előre feszültté válhat egy közelgő helyzet miatt.",
+      en: "May become tense in advance of an upcoming situation."
+    }
+  },
+  {
+    id: "ANX_039",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "tension_release_reverse",
+    text: {
+      hu: "Képes észrevenni és oldani a felgyülemlett feszültséget.",
+      en: "Can notice and release accumulated tension."
+    }
+  },
+  {
+    id: "ANX_040",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "persistent_tension_state",
+    text: {
+      hu: "Úgy tűnhet, mintha gyakran feszültségi állapotban lenne.",
+      en: "May often seem to remain in a state of tension."
+    }
+  },
+
+  {
+    id: "ANX_041",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "avoidance_of_stressful_situations",
+    text: {
+      hu: "Igyekszik elkerülni azokat a helyzeteket, amelyek aggodalmat keltenek benne.",
+      en: "Tries to avoid situations that trigger worry."
+    }
+  },
+  {
+    id: "ANX_042",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "safety_checking",
+    text: {
+      hu: "Gyakran ellenőriz dolgokat, hogy megnyugtassa magát.",
+      en: "Often checks things to feel reassured."
+    }
+  },
+  {
+    id: "ANX_043",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "escape_preference",
+    text: {
+      hu: "Feszültséget keltő helyzetben inkább kivonulna vagy távol maradna.",
+      en: "In stressful situations, would rather withdraw or stay away."
+    }
+  },
+  {
+    id: "ANX_044",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "risk_avoidance",
+    text: {
+      hu: "A kockázatosnak érzett helyzeteket gyakran túlzottan kerüli.",
+      en: "Often avoids situations that feel risky."
+    }
+  },
+  {
+    id: "ANX_045",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "facing_discomfort_reverse",
+    text: {
+      hu: "Képes szembenézni enyhébb kényelmetlenséggel anélkül, hogy rögtön elkerülné azt.",
+      en: "Can face mild discomfort without immediately avoiding it."
+    }
+  },
+  {
+    id: "ANX_046",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "comfort_zone_dependence",
+    text: {
+      hu: "Biztonságosnak érzett helyzetekben sokkal könnyebben működik.",
+      en: "Functions much more easily in situations that feel safe."
+    }
+  },
+  {
+    id: "ANX_047",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "reassurance_before_action",
+    text: {
+      hu: "Gyakran csak akkor mer belevágni valamibe, ha előtte megnyugtatják.",
+      en: "Often proceeds only after being reassured."
+    }
+  },
+  {
+    id: "ANX_048",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "situation_exit_readiness",
+    text: {
+      hu: "Feszültebb helyzetben fontos számára tudni, hogyan tudna gyorsan kilépni belőle.",
+      en: "In stressful situations, it feels important to know how to leave quickly."
+    }
+  },
+  {
+    id: "ANX_049",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "uncertain_task_reverse",
+    text: {
+      hu: "A bizonytalan helyzeteket is képes vállalni, ha szükséges.",
+      en: "Can take on uncertain situations when necessary."
+    }
+  },
+  {
+    id: "ANX_050",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "preventive_avoidance",
+    text: {
+      hu: "Már előre elkerülhet dolgokat, hogy ne kelljen később feszültséget átélnie.",
+      en: "May avoid things in advance to prevent later stress."
+    }
+  },
+
+  {
+    id: "ANX_051",
+    domain: "ANXIETY",
+    subdomain: "social_evaluative_anxiety",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "fear_of_judgment",
+    text: {
+      hu: "Gyakran tart attól, hogy mások negatívan ítélik meg.",
+      en: "Often fears being judged negatively by others."
+    }
+  },
+  {
+    id: "ANX_052",
+    domain: "ANXIETY",
+    subdomain: "social_evaluative_anxiety",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "performance_worry",
+    text: {
+      hu: "Teljesítményhelyzetben különösen erős feszültséget él át.",
+      en: "Experiences strong tension in performance situations."
+    }
+  },
+  {
+    id: "ANX_053",
+    domain: "ANXIETY",
+    subdomain: "social_evaluative_anxiety",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "embarrassment_anticipation",
+    text: {
+      hu: "Előre aggódik amiatt, hogy kínos helyzetbe kerülhet.",
+      en: "Worries in advance about becoming embarrassed."
+    }
+  },
+  {
+    id: "ANX_054",
+    domain: "ANXIETY",
+    subdomain: "social_evaluative_anxiety",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "post_social_overthinking",
+    text: {
+      hu: "Társas helyzetek után sokáig elemezheti, mit mondott vagy tett.",
+      en: "May spend a long time analyzing what was said or done after social situations."
+    }
+  },
+  {
+    id: "ANX_055",
+    domain: "ANXIETY",
+    subdomain: "social_evaluative_anxiety",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "social_confidence_reverse",
+    text: {
+      hu: "Társas helyzetekben többnyire magabiztosan tud jelen lenni.",
+      en: "Can usually be present with confidence in social situations."
+    }
+  },
+  {
+    id: "ANX_056",
+    domain: "ANXIETY",
+    subdomain: "social_evaluative_anxiety",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "social_mistake_sensitivity",
+    text: {
+      hu: "Erősen megviseli, ha úgy érzi, társas helyzetben hibázott.",
+      en: "Is strongly affected by feeling they made a social mistake."
+    }
+  },
+  {
+    id: "ANX_057",
+    domain: "ANXIETY",
+    subdomain: "social_evaluative_anxiety",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "speaking_up_anxiety",
+    text: {
+      hu: "Nehezére esik megszólalni, ha több ember figyel rá.",
+      en: "Finds it difficult to speak up when several people are paying attention."
+    }
+  },
+  {
+    id: "ANX_058",
+    domain: "ANXIETY",
+    subdomain: "social_evaluative_anxiety",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "attention_focus_discomfort",
+    text: {
+      hu: "Kellemetlen számára, ha a figyelem középpontjába kerül.",
+      en: "Feels uncomfortable when becoming the center of attention."
+    }
+  },
+  {
+    id: "ANX_059",
+    domain: "ANXIETY",
+    subdomain: "social_evaluative_anxiety",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "being_seen_reverse",
+    text: {
+      hu: "Általában jól elviseli, ha mások figyelik vagy hallgatják.",
+      en: "Usually tolerates being watched or listened to quite well."
+    }
+  },
+  {
+    id: "ANX_060",
+    domain: "ANXIETY",
+    subdomain: "social_evaluative_anxiety",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "social_anticipatory_worry",
+    text: {
+      hu: "Már egy közelgő társas helyzet gondolatára is feszültté válhat.",
+      en: "May become tense just by thinking about an upcoming social situation."
+    }
+  },
+
+  {
+    id: "ANX_061",
+    domain: "ANXIETY",
+    subdomain: "concentration_sleep",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "worry_interrupts_focus",
+    text: {
+      hu: "Az aggodalom megnehezíti a figyelem fenntartását.",
+      en: "Worry makes it difficult to maintain focus."
+    }
+  },
+  {
+    id: "ANX_062",
+    domain: "ANXIETY",
+    subdomain: "concentration_sleep",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "sleep_onset_worry",
+    text: {
+      hu: "Elalvás előtt nehezen csendesednek le a gondolatai.",
+      en: "Thoughts are hard to settle before falling asleep."
+    }
+  },
+  {
+    id: "ANX_063",
+    domain: "ANXIETY",
+    subdomain: "concentration_sleep",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "nighttime_overthinking",
+    text: {
+      hu: "Éjszaka hajlamos túl sokat gondolkodni a problémákon.",
+      en: "At night tends to overthink problems."
+    }
+  },
+  {
+    id: "ANX_064",
+    domain: "ANXIETY",
+    subdomain: "concentration_sleep",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "fatigue_from_worry",
+    text: {
+      hu: "Az állandó aggodalom kifáraszthatja.",
+      en: "Constant worry may leave them tired."
+    }
+  },
+  {
+    id: "ANX_065",
+    domain: "ANXIETY",
+    subdomain: "concentration_sleep",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "mental_settling_reverse",
+    text: {
+      hu: "Többnyire képes lecsendesíteni a gondolatait pihenéskor.",
+      en: "Can usually settle thoughts when it is time to rest."
+    }
+  },
+  {
+    id: "ANX_066",
+    domain: "ANXIETY",
+    subdomain: "concentration_sleep",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "mental_preoccupation",
+    text: {
+      hu: "Gondolatai gyakran lekötöttek a lehetséges problémák miatt.",
+      en: "Thoughts are often occupied by possible problems."
+    }
+  },
+  {
+    id: "ANX_067",
+    domain: "ANXIETY",
+    subdomain: "concentration_sleep",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "task_focus_drop",
+    text: {
+      hu: "Feszültség alatt könnyebben elveszíti a feladatra irányuló fókuszt.",
+      en: "Under stress, focus on tasks drops more easily."
+    }
+  },
+  {
+    id: "ANX_068",
+    domain: "ANXIETY",
+    subdomain: "concentration_sleep",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "sleep_quality_impact",
+    text: {
+      hu: "Az aggodalom az alvás minőségére is ráterhelődhet.",
+      en: "Worry can also interfere with sleep quality."
+    }
+  },
+  {
+    id: "ANX_069",
+    domain: "ANXIETY",
+    subdomain: "concentration_sleep",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "focus_recovery_reverse",
+    text: {
+      hu: "Zavaró gondolatok után is viszonylag könnyen visszatalál a feladathoz.",
+      en: "Can return to a task relatively easily after distracting thoughts."
+    }
+  },
+  {
+    id: "ANX_070",
+    domain: "ANXIETY",
+    subdomain: "concentration_sleep",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "bedtime_anticipation_worry",
+    text: {
+      hu: "Lefekvéskor könnyen elindul benne az aggodalmi gondolatok sora.",
+      en: "At bedtime, worry thoughts can easily start up."
+    }
+  },
+
+  {
+    id: "ANX_071",
+    domain: "ANXIETY",
+    subdomain: "reassurance_control",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "reassurance_seeking",
+    text: {
+      hu: "Gyakran kér megerősítést másoktól, hogy minden rendben lesz-e.",
+      en: "Often seeks reassurance from others that things will be okay."
+    }
+  },
+  {
+    id: "ANX_072",
+    domain: "ANXIETY",
+    subdomain: "reassurance_control",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "need_for_control",
+    text: {
+      hu: "Nyugodtabb, ha kézben tarthatja a történéseket.",
+      en: "Feels calmer when able to stay in control of what is happening."
+    }
+  },
+  {
+    id: "ANX_073",
+    domain: "ANXIETY",
+    subdomain: "reassurance_control",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "checking_for_certainty",
+    text: {
+      hu: "Többször is visszaellenőrizhet dolgokat, hogy biztos lehessen bennük.",
+      en: "May repeatedly recheck things to be sure."
+    }
+  },
+  {
+    id: "ANX_074",
+    domain: "ANXIETY",
+    subdomain: "reassurance_control",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "repeated_confirmation",
+    text: {
+      hu: "Egy válasz után is újra megkérdezheti, hogy valóban jól értett-e valamit.",
+      en: "May ask again for confirmation even after receiving an answer."
+    }
+  },
+  {
+    id: "ANX_075",
+    domain: "ANXIETY",
+    subdomain: "reassurance_control",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "letting_go_control_reverse",
+    text: {
+      hu: "El tud engedni helyzeteket akkor is, ha nincs minden részlet teljesen kézben tartva.",
+      en: "Can let go even when not every detail is fully under control."
+    }
+  },
+  {
+    id: "ANX_076",
+    domain: "ANXIETY",
+    subdomain: "reassurance_control",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "difficulty_delegating_due_to_worry",
+    text: {
+      hu: "Nehezére eshet másra bízni valamit, ha aggódik a végeredmény miatt.",
+      en: "May find it hard to delegate when worried about the outcome."
+    }
+  },
+  {
+    id: "ANX_077",
+    domain: "ANXIETY",
+    subdomain: "reassurance_control",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "preparation_for_safety",
+    text: {
+      hu: "Sokat készülhet előre, hogy elkerülje a későbbi bizonytalanságot.",
+      en: "May prepare excessively in advance to avoid later uncertainty."
+    }
+  },
+  {
+    id: "ANX_078",
+    domain: "ANXIETY",
+    subdomain: "reassurance_control",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "double_checking_outcomes",
+    text: {
+      hu: "Szeretné többször is ellenőrizni, hogy biztosan nem maradt-e hiba.",
+      en: "Likes to check more than once that no mistake has been left behind."
+    }
+  },
+  {
+    id: "ANX_079",
+    domain: "ANXIETY",
+    subdomain: "reassurance_control",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "good_enough_tolerance_reverse",
+    text: {
+      hu: "El tud fogadni olyan helyzeteket is, amelyek nem teljesen tökéletesek.",
+      en: "Can accept situations that are not completely perfect."
+    }
+  },
+  {
+    id: "ANX_080",
+    domain: "ANXIETY",
+    subdomain: "reassurance_control",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "certainty_dependency",
+    text: {
+      hu: "A megnyugvása gyakran attól függ, hogy kap-e elég biztosítékot kívülről.",
+      en: "Relief often depends on getting enough reassurance from outside."
+    }
+  },
+
+  {
+    id: "ANX_081",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "future_concern",
+    text: {
+      hu: "Könnyen előre lát lehetséges negatív forgatókönyveket.",
+      en: "Easily imagines possible negative future scenarios."
+    }
+  },
+  {
+    id: "ANX_082",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "difficulty_switching_off_worry",
+    text: {
+      hu: "Aggodalom esetén nehéz másra terelnie a figyelmét.",
+      en: "When worried, finds it hard to shift attention elsewhere."
+    }
+  },
+  {
+    id: "ANX_083",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "problem_release_reverse",
+    text: {
+      hu: "Többnyire el tudja engedni azokat a dolgokat, amelyeket nem tud befolyásolni.",
+      en: "Can usually let go of things that cannot be controlled."
+    }
+  },
+  {
+    id: "ANX_084",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "worry_spread",
+    text: {
+      hu: "Egy probléma könnyen átterjedhet más aggodalmakra is.",
+      en: "One concern can easily spread into several others."
+    }
+  },
+  {
+    id: "ANX_085",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "baseline_apprehension",
+    text: {
+      hu: "Úgy tűnhet, mintha alapból is sok benne a készenléti feszültség.",
+      en: "May seem to carry a baseline level of apprehensive tension."
+    }
+  },
+
+  {
+    id: "ANX_086",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "waiting_difficulty",
+    text: {
+      hu: "A bizonytalan várakozás különösen megterhelő számára.",
+      en: "Uncertain waiting is especially difficult to tolerate."
+    }
+  },
+  {
+    id: "ANX_087",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "certainty_seeking",
+    text: {
+      hu: "Döntés előtt hajlamos túl sok információt gyűjteni a bizonytalanság csökkentésére.",
+      en: "May gather excessive information before deciding in order to reduce uncertainty."
+    }
+  },
+  {
+    id: "ANX_088",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "flexible_unknown_reverse",
+    text: {
+      hu: "Viszonylag rugalmas tud maradni akkor is, ha nincs minden előre tisztázva.",
+      en: "Can stay relatively flexible even when not everything is clarified in advance."
+    }
+  },
+  {
+    id: "ANX_089",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "uncertainty_distress",
+    text: {
+      hu: "A bizonytalanság önmagában is feszültséget kelt benne.",
+      en: "Uncertainty itself creates tension."
+    }
+  },
+  {
+    id: "ANX_090",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "need_for_predictability",
+    text: {
+      hu: "Könnyebben működik, ha előre tudja a lépéseket és a kereteket.",
+      en: "Functions more easily when steps and expectations are known in advance."
+    }
+  },
+
+  {
+    id: "ANX_091",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "somatic_tension",
+    text: {
+      hu: "A testi feszültség sokszor gyorsabban jelenik meg nála, mint másoknál.",
+      en: "Physical tension often appears more quickly than it does in others."
+    }
+  },
+  {
+    id: "ANX_092",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "stomach_discomfort",
+    text: {
+      hu: "Aggódáskor gyomortáji szorítás vagy kellemetlenség jelenhet meg.",
+      en: "Worry may bring stomach tightness or discomfort."
+    }
+  },
+  {
+    id: "ANX_093",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "body_signal_tolerance_reverse",
+    text: {
+      hu: "A testi stresszjeleket többnyire jól kezeli anélkül, hogy tovább fokoznák a félelmét.",
+      en: "Usually handles bodily stress signals without them escalating fear."
+    }
+  },
+  {
+    id: "ANX_094",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "breathing_tension",
+    text: {
+      hu: "Nyomás alatt a légzése feszesebbé vagy felületesebbé válhat.",
+      en: "Under pressure, breathing may become tighter or shallower."
+    }
+  },
+  {
+    id: "ANX_095",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "physical_stress_build_up",
+    text: {
+      hu: "A nap végére erős testi kimerültséget okozhat a tartós feszültség.",
+      en: "Prolonged tension may lead to strong physical exhaustion by the end of the day."
+    }
+  },
+
+  {
+    id: "ANX_096",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "inner_restlessness",
+    text: {
+      hu: "Nyugalmi helyzetben is érezhető lehet benne belső feszültség.",
+      en: "Inner tension may be noticeable even in calm situations."
+    }
+  },
+  {
+    id: "ANX_097",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "constant_alertness",
+    text: {
+      hu: "Olykor nehéz neki valóban biztonságban éreznie magát és leengednie.",
+      en: "At times it is hard to truly feel safe and let the guard down."
+    }
+  },
+  {
+    id: "ANX_098",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "slowdown_reverse",
+    text: {
+      hu: "Képes lelassítani akkor is, ha előtte feszültebb volt.",
+      en: "Can slow down even after being tense."
+    }
+  },
+  {
+    id: "ANX_099",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "anticipatory_tension",
+    text: {
+      hu: "Egy közelgő esemény miatt már órákkal korábban feszült lehet.",
+      en: "May become tense hours before an upcoming event."
+    }
+  },
+  {
+    id: "ANX_100",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "difficulty_relaxing",
+    text: {
+      hu: "A pihenéshez is idő kell, mert nehezebben áll át nyugodt állapotba.",
+      en: "Needs time to relax because shifting into a calm state is harder."
+    }
+  },
+
+  {
+    id: "ANX_101",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "safety_checking",
+    text: {
+      hu: "Előfordulhat, hogy többször is ellenőriz valamit, csak hogy biztosra menjen.",
+      en: "May check something more than once just to be safe."
+    }
+  },
+  {
+    id: "ANX_102",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "preventive_avoidance",
+    text: {
+      hu: "Előre visszaléphet olyan helyzetektől, amelyek túl megterhelőnek tűnnek.",
+      en: "May back away in advance from situations that seem too stressful."
+    }
+  },
+  {
+    id: "ANX_103",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "gradual_exposure_reverse",
+    text: {
+      hu: "Lépésről lépésre képes bemenni kevésbé komfortos helyzetekbe is.",
+      en: "Can gradually enter less comfortable situations step by step."
+    }
+  },
+  {
+    id: "ANX_104",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "comfort_zone_dependence",
+    text: {
+      hu: "Erősen támaszkodik a számára biztonságosnak ismert környezetre.",
+      en: "Relies heavily on environments that feel familiar and safe."
+    }
+  },
+  {
+    id: "ANX_105",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "escape_preference",
+    text: {
+      hu: "Nehéz helyzetben gyorsan a visszavonulás vagy kilépés jut eszébe.",
+      en: "In difficult situations, retreating or leaving comes to mind quickly."
+    }
+  },
+
+  {
+    id: "ANX_106",
+    domain: "ANXIETY",
+    subdomain: "social_evaluative_anxiety",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "fear_of_judgment",
+    text: {
+      hu: "Fontos számára, hogyan látják mások, és ez könnyen feszültséget kelt benne.",
+      en: "How others see them matters a lot and can easily create tension."
+    }
+  },
+  {
+    id: "ANX_107",
+    domain: "ANXIETY",
+    subdomain: "social_evaluative_anxiety",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "post_social_overthinking",
+    text: {
+      hu: "Egy társas helyzet után sokáig visszapörgetheti a beszélgetést fejben.",
+      en: "May mentally replay a social interaction for a long time afterward."
+    }
+  },
+  {
+    id: "ANX_108",
+    domain: "ANXIETY",
+    subdomain: "social_evaluative_anxiety",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "social_recovery_reverse",
+    text: {
+      hu: "Egy kevésbé jól sikerült társas helyzet után is viszonylag gyorsan továbblép.",
+      en: "Can move on relatively quickly even after a less successful social situation."
+    }
+  },
+  {
+    id: "ANX_109",
+    domain: "ANXIETY",
+    subdomain: "social_evaluative_anxiety",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "speaking_up_anxiety",
+    text: {
+      hu: "Nehezére esik megszólalni, ha attól tart, hogy hibázik.",
+      en: "Finds it difficult to speak up when worried about making a mistake."
+    }
+  },
+  {
+    id: "ANX_110",
+    domain: "ANXIETY",
+    subdomain: "social_evaluative_anxiety",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "embarrassment_anticipation",
+    text: {
+      hu: "Már előre elképzelheti, milyen lenne egy kellemetlen társas pillanat.",
+      en: "May imagine an embarrassing social moment in advance."
+    }
+  },
+
+  {
+    id: "ANX_111",
+    domain: "ANXIETY",
+    subdomain: "concentration_sleep",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "worry_interrupts_focus",
+    text: {
+      hu: "Aggodalom közben könnyen megszakad a figyelmi folyamat.",
+      en: "Worry can easily interrupt the flow of attention."
+    }
+  },
+  {
+    id: "ANX_112",
+    domain: "ANXIETY",
+    subdomain: "concentration_sleep",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "mental_preoccupation",
+    text: {
+      hu: "A gondolatai gyakran visszatérnek ugyanazokra a lehetséges problémákra.",
+      en: "Thoughts often return to the same possible problems."
+    }
+  },
+  {
+    id: "ANX_113",
+    domain: "ANXIETY",
+    subdomain: "concentration_sleep",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "sleep_settle_reverse",
+    text: {
+      hu: "Általában képes elalvás előtt megnyugodni és lecsendesedni.",
+      en: "Can usually calm down and settle before sleep."
+    }
+  },
+  {
+    id: "ANX_114",
+    domain: "ANXIETY",
+    subdomain: "concentration_sleep",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "bedtime_anticipation_worry",
+    text: {
+      hu: "Lefekvéskor gyakran felerősödnek a máskor háttérben lévő aggodalmak.",
+      en: "At bedtime, worries that stayed in the background during the day often become stronger."
+    }
+  },
+  {
+    id: "ANX_115",
+    domain: "ANXIETY",
+    subdomain: "concentration_sleep",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "fatigue_from_worry",
+    text: {
+      hu: "A mentális feszültség a nap végére jelentős kifáradást okozhat.",
+      en: "Mental tension may cause significant fatigue by the end of the day."
+    }
+  },
+
+  {
+    id: "ANX_116",
+    domain: "ANXIETY",
+    subdomain: "reassurance_control",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "reassurance_seeking",
+    text: {
+      hu: "Megnyugtató számára, ha mások többször is megerősítik ugyanazt.",
+      en: "It feels reassuring when others confirm the same thing more than once."
+    }
+  },
+  {
+    id: "ANX_117",
+    domain: "ANXIETY",
+    subdomain: "reassurance_control",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "checking_for_certainty",
+    text: {
+      hu: "Nehéz lezárnia valamit anélkül, hogy még egyszer ellenőrizné.",
+      en: "Finds it hard to consider something finished without checking once more."
+    }
+  },
+  {
+    id: "ANX_118",
+    domain: "ANXIETY",
+    subdomain: "reassurance_control",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "trust_process_reverse",
+    text: {
+      hu: "Képes megbízni a folyamatban akkor is, ha nincs minden végig ellenőrizve.",
+      en: "Can trust the process even when not every part has been checked."
+    }
+  },
+  {
+    id: "ANX_119",
+    domain: "ANXIETY",
+    subdomain: "reassurance_control",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "need_for_control",
+    text: {
+      hu: "A kontroll elvesztésének lehetősége önmagában is feszültséget okozhat.",
+      en: "The possibility of losing control can itself create tension."
+    }
+  },
+  {
+    id: "ANX_120",
+    domain: "ANXIETY",
+    subdomain: "reassurance_control",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "certainty_dependency",
+    text: {
+      hu: "Könnyebben nyugszik meg, ha valaki kívülről egyértelmű megerősítést ad.",
+      en: "Calms down more easily when someone else gives clear reassurance."
+    }
+  },
+
+  /* =========================
+     121-250
+  ========================= */
+
+  ...(() => {
+    const items = [];
+    let num = 121;
+
+    function makeId() {
+      return `ANX_${String(num++).padStart(3, "0")}`;
+    }
+
+    function add(subdomain, weight, reverse, stemKey, hu, en) {
+      items.push({
+        id: makeId(),
+        domain: "ANXIETY",
+        subdomain,
+        weight,
+        reverse,
+        stemKey,
+        text: { hu, en }
+      });
+    }
+
+    const contexts = [
+      { hu: "otthoni helyzetekben", en: "at home" },
+      { hu: "iskolai vagy munkahelyi helyzetekben", en: "in school or work situations" },
+      { hu: "társas helyzetekben", en: "in social situations" },
+      { hu: "váratlan vagy bizonytalan helyzetekben", en: "in unexpected or uncertain situations" },
+      { hu: "teljesítményhelyzetekben", en: "in performance situations" }
+    ];
+
+    function contextualize(subdomain, weight, reverse, stemKey, huStem, enStem) {
+      contexts.forEach((ctx) => {
+        add(
+          subdomain,
+          weight,
+          reverse,
+          stemKey,
+          `${huStem} ${ctx.hu}.`,
+          `${enStem} ${ctx.en}.`
+        );
+      });
+    }
+
+    contextualize(
+      "general_worry",
+      1.5,
+      false,
+      "persistent_worry",
+      "Az aggodalmai nehezen csendesednek le",
+      "Worries are difficult to settle"
+    );
+
+    contextualize(
+      "general_worry",
+      1.4,
+      false,
+      "future_concern",
+      "Sokat foglalkoztatja, mi történhet rosszul",
+      "Spends a lot of time thinking about what might go wrong"
+    );
+
+    contextualize(
+      "general_worry",
+      1.2,
+      true,
+      "worry_regulation_reverse",
+      "Képes viszonylag jól keretek között tartani az aggodalmait",
+      "Can keep worries relatively contained"
+    );
+
+    contextualize(
+      "general_worry",
+      1.4,
+      false,
+      "difficulty_switching_off_worry",
+      "Nehéz számára leállítani a feszültséget fenntartó gondolatokat",
+      "Has difficulty switching off thoughts that maintain tension"
+    );
+
+    contextualize(
+      "general_worry",
+      1.3,
+      false,
+      "small_issue_escalation",
+      "Kisebb problémák is könnyen nagyobb aggodalommá nőhetnek",
+      "Smaller issues can easily grow into bigger worries"
+    );
+
+    contextualize(
+      "intolerance_of_uncertainty",
+      1.5,
+      false,
+      "uncertainty_distress",
+      "Erős feszültséget él át, ha nem tudja pontosan, mire számíthat",
+      "Experiences strong tension when not knowing exactly what to expect"
+    );
+
+    contextualize(
+      "intolerance_of_uncertainty",
+      1.4,
+      false,
+      "need_for_predictability",
+      "Nyugodtabb, ha a dolgok előre kiszámíthatóak",
+      "Feels calmer when things are predictable in advance"
+    );
+
+    contextualize(
+      "intolerance_of_uncertainty",
+      1.2,
+      true,
+      "uncertainty_tolerance_reverse",
+      "Viszonylag jól tud működni akkor is, ha nem ismert minden részlet",
+      "Can function relatively well even when not every detail is known"
+    );
+
+    contextualize(
+      "intolerance_of_uncertainty",
+      1.4,
+      false,
+      "waiting_difficulty",
+      "A várakozás és a nyitva maradó kérdések különösen megterhelik",
+      "Waiting and unresolved questions are especially hard to tolerate"
+    );
+
+    contextualize(
+      "intolerance_of_uncertainty",
+      1.3,
+      false,
+      "certainty_seeking",
+      "Szeretne biztos válaszokat kapni, mielőtt továbblép",
+      "Wants definite answers before moving forward"
+    );
+
+    contextualize(
+      "physical_arousal",
+      1.4,
+      false,
+      "somatic_tension",
+      "A feszültség testileg is erősen megjelenik",
+      "Tension shows up strongly in the body"
+    );
+
+    contextualize(
+      "physical_arousal",
+      1.4,
+      false,
+      "physical_alarm_response",
+      "A teste néha úgy reagál, mintha fokozott veszély lenne jelen",
+      "The body sometimes reacts as if there were increased danger"
+    );
+
+    contextualize(
+      "physical_arousal",
+      1.2,
+      true,
+      "physical_calm_reverse",
+      "Teste többnyire viszonylag nyugodt tud maradni terhelőbb helyzetekben is",
+      "The body can usually stay relatively calm even in more demanding situations"
+    );
+
+    contextualize(
+      "physical_arousal",
+      1.3,
+      false,
+      "breathing_tension",
+      "A légzésén is érződik a feszültség",
+      "Tension can also be noticed in breathing"
+    );
+
+    contextualize(
+      "physical_arousal",
+      1.3,
+      false,
+      "stomach_discomfort",
+      "A feszültség gyomortáji kellemetlenséget vagy testi nyomást okozhat",
+      "Tension may cause stomach discomfort or bodily pressure"
+    );
+
+    contextualize(
+      "restlessness_tension",
+      1.4,
+      false,
+      "inner_restlessness",
+      "Belső nyugtalanság jellemzi",
+      "Is characterized by inner restlessness"
+    );
+
+    contextualize(
+      "restlessness_tension",
+      1.4,
+      false,
+      "difficulty_relaxing",
+      "Nehezen tud valóban ellazulni és lelassulni",
+      "Has difficulty truly relaxing and slowing down"
+    );
+
+    contextualize(
+      "restlessness_tension",
+      1.2,
+      true,
+      "calming_down_reverse",
+      "Képes visszatalálni egy nyugodtabb belső állapothoz",
+      "Can return to a calmer inner state"
+    );
+
+    contextualize(
+      "restlessness_tension",
+      1.4,
+      false,
+      "constant_alertness",
+      "Mintha folyamatos készenlétben lenne",
+      "Seems to remain in a continuous state of alertness"
+    );
+
+    contextualize(
+      "restlessness_tension",
+      1.3,
+      false,
+      "anticipatory_tension",
+      "Már előre feszültté válhat egy közelgő helyzet miatt",
+      "May become tense in advance because of an upcoming situation"
+    );
+
+    contextualize(
+      "avoidance_safety",
+      1.5,
+      false,
+      "avoidance_of_stressful_situations",
+      "Hajlamos kerülni azokat a helyzeteket, amelyek feszültséget keltenek benne",
+      "Tends to avoid situations that create tension"
+    );
+
+    contextualize(
+      "avoidance_safety",
+      1.4,
+      false,
+      "safety_checking",
+      "Megnyugvás céljából többször is ellenőrizhet dolgokat",
+      "May check things repeatedly in order to feel reassured"
+    );
+
+    contextualize(
+      "avoidance_safety",
+      1.2,
+      true,
+      "facing_discomfort_reverse",
+      "Képes vállalni enyhébb kellemetlenséget is anélkül, hogy rögtön visszahúzódna",
+      "Can tolerate mild discomfort without immediately withdrawing"
+    );
+
+    contextualize(
+      "avoidance_safety",
+      1.4,
+      false,
+      "comfort_zone_dependence",
+      "Sokkal könnyebben működik, ha biztonságosnak érzi a közeget",
+      "Functions much more easily when the environment feels safe"
+    );
+
+    contextualize(
+      "avoidance_safety",
+      1.3,
+      false,
+      "escape_preference",
+      "Legszívesebben kilépne vagy visszavonulna, ha túl nagy lesz a feszültség",
+      "Would most like to leave or withdraw when tension becomes too high"
+    );
+
+    contextualize(
+      "social_evaluative_anxiety",
+      1.4,
+      false,
+      "fear_of_judgment",
+      "Tart attól, hogy mások kedvezőtlenül ítélik meg",
+      "Fears being judged negatively by others"
+    );
+
+    contextualize(
+      "social_evaluative_anxiety",
+      1.4,
+      false,
+      "performance_worry",
+      "Teljesítményhelyzetben erősen megemelkedhet a feszültsége",
+      "Tension may rise strongly in performance situations"
+    );
+
+    contextualize(
+      "social_evaluative_anxiety",
+      1.2,
+      true,
+      "social_confidence_reverse",
+      "Viszonylag magabiztos tud maradni akkor is, ha mások figyelik",
+      "Can remain relatively confident even when others are watching"
+    );
+
+    contextualize(
+      "social_evaluative_anxiety",
+      1.4,
+      false,
+      "post_social_overthinking",
+      "Egy társas helyzet után sokáig elemezheti, mi történt",
+      "May analyze what happened for a long time after a social situation"
+    );
+
+    contextualize(
+      "social_evaluative_anxiety",
+      1.3,
+      false,
+      "embarrassment_anticipation",
+      "Előre félhet attól, hogy zavarba jön vagy hibázik",
+      "May fear in advance becoming embarrassed or making a mistake"
+    );
+
+    contextualize(
+      "concentration_sleep",
+      1.4,
+      false,
+      "worry_interrupts_focus",
+      "Az aggodalom megnehezíti a figyelmének összpontosítását",
+      "Worry makes it difficult to focus attention"
+    );
+
+    contextualize(
+      "concentration_sleep",
+      1.4,
+      false,
+      "bedtime_anticipation_worry",
+      "Lefekvéskor könnyen felerősödnek az aggodalmi gondolatai",
+      "Worry thoughts can easily intensify at bedtime"
+    );
+
+    contextualize(
+      "concentration_sleep",
+      1.2,
+      true,
+      "mental_settling_reverse",
+      "Viszonylag jól le tudja csendesíteni a gondolatait, amikor pihenésre lenne szükség",
+      "Can settle thoughts relatively well when rest is needed"
+    );
+
+    contextualize(
+      "concentration_sleep",
+      1.3,
+      false,
+      "mental_preoccupation",
+      "Gondolatai gyakran lekötöttek a lehetséges problémákkal",
+      "Thoughts are often occupied by possible problems"
+    );
+
+    contextualize(
+      "concentration_sleep",
+      1.3,
+      false,
+      "fatigue_from_worry",
+      "A tartós aggodalom a nap végére erősen kifáraszthatja",
+      "Ongoing worry may leave them strongly fatigued by the end of the day"
+    );
+
+    contextualize(
+      "reassurance_control",
+      1.4,
+      false,
+      "reassurance_seeking",
+      "Szeretne külső megerősítést kapni arról, hogy minden rendben lesz",
+      "Wants external reassurance that things will be okay"
+    );
+
+    contextualize(
+      "reassurance_control",
+      1.4,
+      false,
+      "need_for_control",
+      "Nyugodtabb, ha kézben tudja tartani a részleteket",
+      "Feels calmer when able to keep details under control"
+    );
+
+    contextualize(
+      "reassurance_control",
+      1.2,
+      true,
+      "letting_go_control_reverse",
+      "El tud engedni helyzeteket akkor is, ha nem minden alakul pontosan a tervei szerint",
+      "Can let go even when things do not unfold exactly as planned"
+    );
+
+    contextualize(
+      "reassurance_control",
+      1.3,
+      false,
+      "checking_for_certainty",
+      "Szeretne még egyszer megbizonyosodni róla, hogy minden rendben van",
+      "Wants to make sure one more time that everything is okay"
+    );
+
+    contextualize(
+      "reassurance_control",
+      1.3,
+      false,
+      "certainty_dependency",
+      "A megnyugvása gyakran attól függ, kap-e elég egyértelmű visszajelzést",
+      "Relief often depends on getting sufficiently clear feedback"
+    );
+
+    return items.slice(0, 130);
+})()
 ];

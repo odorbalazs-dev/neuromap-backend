@@ -2,10 +2,12 @@ function makeId(prefix, n) {
   return `${prefix}_${String(n).padStart(4, "0")}`;
 }
 
-function makeQuestion(id, tags, text) {
+function makeQuestion(id, domain, subdomain, stemKey, text) {
   return {
     id,
-    tags,
+    domain,
+    subdomain,
+    stemKey,
     weight: 1,
     text
   };
@@ -176,6 +178,8 @@ const CONTEXTS = [
 
 const ADHD_BASE = [
   {
+    subdomain: "attention_regulation",
+    stemKey: "distractibility",
     text: {
       hu: "gyakran elterelődik a figyelme",
       en: "often gets distracted",
@@ -191,6 +195,8 @@ const ADHD_BASE = [
     }
   },
   {
+    subdomain: "attention_regulation",
+    stemKey: "sustained_attention",
     text: {
       hu: "nehezen tartja fenn a figyelmét egy feladaton",
       en: "has difficulty sustaining attention on a task",
@@ -206,6 +212,8 @@ const ADHD_BASE = [
     }
   },
   {
+    subdomain: "task_completion",
+    stemKey: "unfinished_tasks",
     text: {
       hu: "gyakran félbehagyja a megkezdett tevékenységeket",
       en: "often leaves started activities unfinished",
@@ -221,6 +229,8 @@ const ADHD_BASE = [
     }
   },
   {
+    subdomain: "impulse_control",
+    stemKey: "impulsive_reacting",
     text: {
       hu: "impulzívan reagál, mielőtt végiggondolná a helyzetet",
       en: "reacts impulsively before thinking through the situation",
@@ -236,6 +246,8 @@ const ADHD_BASE = [
     }
   },
   {
+    subdomain: "impulse_control",
+    stemKey: "waiting_turn",
     text: {
       hu: "nehezen várja ki a sorát vagy a megfelelő pillanatot",
       en: "has difficulty waiting for their turn or the right moment",
@@ -254,6 +266,8 @@ const ADHD_BASE = [
 
 const ASD_BASE = [
   {
+    subdomain: "social_communication",
+    stemKey: "eye_contact",
     text: {
       hu: "kerüli vagy ritkán keresi a szemkontaktust",
       en: "avoids or rarely seeks eye contact",
@@ -269,6 +283,8 @@ const ASD_BASE = [
     }
   },
   {
+    subdomain: "social_communication",
+    stemKey: "nonverbal_cues",
     text: {
       hu: "nehezen értelmezi mások nonverbális jelzéseit",
       en: "has difficulty interpreting others' nonverbal cues",
@@ -284,6 +300,8 @@ const ASD_BASE = [
     }
   },
   {
+    subdomain: "restricted_patterns",
+    stemKey: "routine_reliance",
     text: {
       hu: "erősen ragaszkodik a megszokott rutinokhoz",
       en: "strongly relies on familiar routines",
@@ -299,6 +317,8 @@ const ASD_BASE = [
     }
   },
   {
+    subdomain: "restricted_patterns",
+    stemKey: "intense_interests",
     text: {
       hu: "szűk, intenzív érdeklődést mutat bizonyos témák iránt",
       en: "shows narrow and intense interests in certain topics",
@@ -314,6 +334,8 @@ const ASD_BASE = [
     }
   },
   {
+    subdomain: "social_reciprocity",
+    stemKey: "sharing_interest",
     text: {
       hu: "nehezen oszt meg örömöt, érdeklődést vagy élményt másokkal",
       en: "has difficulty sharing joy, interest, or experiences with others",
@@ -332,6 +354,8 @@ const ASD_BASE = [
 
 const ANXIETY_BASE = [
   {
+    subdomain: "general_worry",
+    stemKey: "everyday_worry",
     text: {
       hu: "sokat aggódik hétköznapi dolgok miatt",
       en: "worries a lot about everyday things",
@@ -347,6 +371,8 @@ const ANXIETY_BASE = [
     }
   },
   {
+    subdomain: "uncertainty_stress",
+    stemKey: "novelty_tension",
     text: {
       hu: "új helyzetekben vagy ismeretlen környezetben könnyen feszültté válik",
       en: "becomes tense in new or unfamiliar situations",
@@ -362,6 +388,8 @@ const ANXIETY_BASE = [
     }
   },
   {
+    subdomain: "reassurance_control",
+    stemKey: "reassurance_seeking",
     text: {
       hu: "gyakran kér ismételt megnyugtatást",
       en: "frequently seeks repeated reassurance",
@@ -377,6 +405,8 @@ const ANXIETY_BASE = [
     }
   },
   {
+    subdomain: "physical_arousal",
+    stemKey: "somatic_stress",
     text: {
       hu: "stresszhelyzetekben testi panaszokat mutat",
       en: "shows physical complaints in stressful situations",
@@ -392,6 +422,8 @@ const ANXIETY_BASE = [
     }
   },
   {
+    subdomain: "avoidance",
+    stemKey: "fear_of_judgment",
     text: {
       hu: "kerüli azokat a helyzeteket, ahol hibázhat vagy megítélhetik",
       en: "avoids situations where mistakes or judgment are possible",
@@ -410,6 +442,8 @@ const ANXIETY_BASE = [
 
 const DEPRESSION_BASE = [
   {
+    subdomain: "low_mood",
+    stemKey: "sad_low_mood",
     text: {
       hu: "gyakran szomorúnak, lehangoltnak vagy örömtelennek tűnik",
       en: "often seems sad, down, or joyless",
@@ -425,6 +459,8 @@ const DEPRESSION_BASE = [
     }
   },
   {
+    subdomain: "interest_loss",
+    stemKey: "reduced_interest",
     text: {
       hu: "kevesebb érdeklődést mutat a korábban kedvelt tevékenységek iránt",
       en: "shows less interest in activities once enjoyed",
@@ -440,6 +476,8 @@ const DEPRESSION_BASE = [
     }
   },
   {
+    subdomain: "self_worth",
+    stemKey: "negative_self_talk",
     text: {
       hu: "gyakran negatívan beszél magáról",
       en: "often speaks negatively about self",
@@ -455,6 +493,8 @@ const DEPRESSION_BASE = [
     }
   },
   {
+    subdomain: "emotional_regulation",
+    stemKey: "tearful_irritable",
     text: {
       hu: "könnyen elsírja magát vagy ingerlékennyé válik",
       en: "cries easily or becomes irritable",
@@ -470,6 +510,8 @@ const DEPRESSION_BASE = [
     }
   },
   {
+    subdomain: "energy_motivation",
+    stemKey: "low_energy_motivation",
     text: {
       hu: "fáradékonynak vagy motiválatlannak tűnik",
       en: "seems tired or unmotivated",
@@ -488,6 +530,8 @@ const DEPRESSION_BASE = [
 
 const LEARNING_BASE = [
   {
+    subdomain: "reading",
+    stemKey: "reading_difficulty",
     text: {
       hu: "nehezen boldogul az olvasási feladatokkal",
       en: "has difficulty with reading tasks",
@@ -503,6 +547,8 @@ const LEARNING_BASE = [
     }
   },
   {
+    subdomain: "writing",
+    stemKey: "writing_errors",
     text: {
       hu: "sok hibát vét írásban vagy másoláskor",
       en: "makes many mistakes in writing or copying",
@@ -518,6 +564,8 @@ const LEARNING_BASE = [
     }
   },
   {
+    subdomain: "instruction_understanding",
+    stemKey: "instruction_difficulty",
     text: {
       hu: "nehezen érti meg a feladatutasításokat",
       en: "has difficulty understanding task instructions",
@@ -533,6 +581,8 @@ const LEARNING_BASE = [
     }
   },
   {
+    subdomain: "math",
+    stemKey: "basic_math_uncertainty",
     text: {
       hu: "bizonytalan az alapvető matematikai műveletekben",
       en: "shows uncertainty in basic math operations",
@@ -548,6 +598,8 @@ const LEARNING_BASE = [
     }
   },
   {
+    subdomain: "academic_performance",
+    stemKey: "below_expected_performance",
     text: {
       hu: "teljesítménye feltűnően elmarad az életkorától elvárttól",
       en: "performs noticeably below age expectations",
@@ -564,7 +616,7 @@ const LEARNING_BASE = [
   }
 ];
 
-function buildDomainQuestions(prefix, tag, baseItems, startIndex) {
+function buildDomainQuestions(prefix, domain, baseItems, startIndex) {
   const out = [];
   let n = startIndex;
 
@@ -573,7 +625,9 @@ function buildDomainQuestions(prefix, tag, baseItems, startIndex) {
       out.push(
         makeQuestion(
           makeId(prefix, n++),
-          [tag],
+          domain,
+          base.subdomain,
+          `${base.stemKey}__${context.key}`,
           {
             hu: `${base.text.hu} ${context.text.hu}.`,
             en: `${base.text.en} ${context.text.en}.`,
@@ -595,8 +649,8 @@ function buildDomainQuestions(prefix, tag, baseItems, startIndex) {
   return out;
 }
 
-const ADHD_QUESTIONS = buildDomainQuestions("triage", "ADHD", ADHD_BASE, 1);          // 50
-const ASD_QUESTIONS = buildDomainQuestions("triage", "ASD", ASD_BASE, 51);            // 50
+const ADHD_QUESTIONS = buildDomainQuestions("triage", "ADHD", ADHD_BASE, 1);            // 50
+const ASD_QUESTIONS = buildDomainQuestions("triage", "ASD", ASD_BASE, 51);              // 50
 const ANXIETY_QUESTIONS = buildDomainQuestions("triage", "ANXIETY", ANXIETY_BASE, 101); // 50
 const DEPRESSION_QUESTIONS = buildDomainQuestions("triage", "DEPRESSION", DEPRESSION_BASE, 151); // 50
 const LEARNING_QUESTIONS = buildDomainQuestions("triage", "LEARNING", LEARNING_BASE, 201); // 50
@@ -608,3 +662,7 @@ export const TRIAGE_BANK = [
   ...DEPRESSION_QUESTIONS,
   ...LEARNING_QUESTIONS
 ];
+
+if (typeof window !== "undefined") {
+  window.NM_TRIAGE_BANK = TRIAGE_BANK;
+}

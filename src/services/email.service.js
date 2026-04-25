@@ -4,58 +4,45 @@ import { buildReportEmail } from "../templates/reportEmail.js";
 
 const resend = new Resend(env.RESEND_API_KEY);
 
-const ALLOWED_LANGS = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];
-
 function getSafeLang(lang) {
-  if (!lang) return "hu";
-  return ALLOWED_LANGS.includes(lang) ? lang : "hu";
+  const allowed = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];
+  return allowed.includes(lang) ? lang : "en";
 }
 
 function normalizeRecipients(to) {
+  if (!to) return [];
   if (Array.isArray(to)) {
-    return to.map((item) => String(item).trim()).filter(Boolean);
+    return to.map((v) => String(v).trim()).filter(Boolean);
   }
-
-  if (typeof to === "string") {
-    return to
-      .split(",")
-      .map((item) => item.trim())
-      .filter(Boolean);
-  }
-
-  return [];
-}
-
-function stripHtml(html) {
-  return html
-    .replace(/<style[\s\S]*?<\/style>/gi, "")
-    .replace(/<script[\s\S]*?<\/script>/gi, "")
-    .replace(/<br\s*\/?>/gi, "\n")
-    .replace(/<\/p>/gi, "\n\n")
-    .replace(/<\/div>/gi, "\n")
-    .replace(/<li>/gi, "• ")
-    .replace(/<\/li>/gi, "\n")
-    .replace(/<[^>]+>/g, "")
-    .replace(/\n{3,}/g, "\n\n")
-    .trim();
+  return String(to)
+    .split(",")
+    .map((v) => v.trim())
+    .filter(Boolean);
 }
 
 export async function sendReportEmail({ to, lang, name, reportText }) {
-  try {
-    const safeLang = getSafeLang(lang);
-    const recipients = normalizeRecipients(to);
-    const safeName = typeof name === "string" ? name.trim() : "";
+  const recipients = normalizeRecipients(to);
+  const safeLang = getSafeLang(lang);
 
+  try {
     console.log("[email] start", {
       recipients,
       lang: safeLang,
-      name: safeName,
-      hasReportText: Boolean(reportText),
+      name,
+      hasReportText: !!reportText,
       reportLength: reportText ? reportText.length : 0,
       from: env.EMAIL_FROM
     });
 
-    if (!recipients.length) {
+    if (!env.RESEND_API_KEY) {
+      throw new Error("Missing RESEND_API_KEY.");
+    }
+
+    if (!env.EMAIL_FROM) {
+      throw new Error("Missing EMAIL_FROM.");
+    }
+
+    if (recipients.length === 0) {
       throw new Error("Missing recipient email address.");
     }
 
@@ -65,16 +52,14 @@ export async function sendReportEmail({ to, lang, name, reportText }) {
 
     const { subject, html, text } = buildReportEmail({
       lang: safeLang,
-      name: safeName,
+      name,
       reportText: String(reportText).trim()
     });
-
-    const finalText = text && text.trim() ? text.trim() : stripHtml(html);
 
     console.log("[email] template built", {
       subjectLength: subject.length,
       htmlLength: html.length,
-      textLength: finalText.length
+      textLength: text.length
     });
 
     const response = await resend.emails.send({
@@ -82,19 +67,18 @@ export async function sendReportEmail({ to, lang, name, reportText }) {
       to: recipients,
       subject,
       html,
-      text: finalText
+      text
     });
 
-    console.log("[email] send success", {
-      id: response?.data?.id || response?.id || null,
-      recipients
-    });
+    console.log("[email] send success", response);
 
     return response;
   } catch (error) {
     console.error("[email] send failed", {
-      message: error.message,
-      stack: error.stack
+      message: error?.message || "Unknown email error",
+      stack: error?.stack || null,
+      recipients,
+      lang: safeLang
     });
 
     throw error;

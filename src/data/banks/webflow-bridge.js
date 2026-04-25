@@ -5,87 +5,297 @@ import { ANXIETY_BANK } from "./anxiety.bank.js";
 import { DEPRESSION_BANK } from "./depression.bank.js";
 import { LEARNING_BANK } from "./learning.bank.js";
 
-function makeExtraQuestion(domain, index) {
-  const labels = {
-    ADHD: {
-      hu: `ADHD kiegészítő kérdés ${index}: ez a figyelmi vagy impulzivitási minta mennyire következetes különböző helyzetekben?`,
-      en: `ADHD extra question ${index}: how consistent is this attention or impulsivity pattern across situations?`,
-      de: `ADHS-Zusatzfrage ${index}: Wie konsistent ist dieses Aufmerksamkeits- oder Impulsivitätsmuster in verschiedenen Situationen?`,
-      it: `Domanda aggiuntiva ADHD ${index}: quanto è coerente questo schema di attenzione o impulsività in situazioni diverse?`,
-      es: `Pregunta adicional TDAH ${index}: ¿qué tan consistente es este patrón de atención o impulsividad en distintas situaciones?`,
-      zh: `ADHD 补充问题 ${index}：这种注意力或冲动模式在不同情境中有多一致？`,
-      ja: `ADHD 追加質問 ${index}：この注意や衝動性の傾向は異なる場面でもどの程度一貫していますか？`,
-      ar: `سؤال إضافي ADHD رقم ${index}: ما مدى ثبات هذا النمط المتعلق بالانتباه أو الاندفاع عبر المواقف المختلفة؟`,
-      pl: `Dodatkowe pytanie ADHD ${index}: na ile spójny jest ten wzorzec uwagi lub impulsywności w różnych sytuacjach?`,
-      pt: `Pergunta extra TDAH ${index}: quão consistente é esse padrão de atenção ou impulsividade em diferentes situações?`,
-      fr: `Question supplémentaire TDAH ${index} : dans quelle mesure ce schéma d'attention ou d'impulsivité est-il cohérent selon les situations ?`
+const EXTRA_BANKS = {
+  ADHD: [
+    {
+      id: "adhd_extra_1",
+      domain: "ADHD",
+      subdomain: "attention_regulation",
+      stemKey: "cross_context_attention",
+      weight: 1.1,
+      text: {
+        hu: "A figyelmi nehézségek többféle helyzetben is hasonlóan megjelennek.",
+        en: "Attention difficulties appear similarly across different situations."
+      }
     },
-    ASD: {
-      hu: `ASD kiegészítő kérdés ${index}: ez a társas vagy rugalmatlansági minta mennyire következetes különböző helyzetekben?`,
-      en: `ASD extra question ${index}: how consistent is this social or flexibility-related pattern across situations?`,
-      de: `ASD-Zusatzfrage ${index}: Wie konsistent ist dieses soziale oder flexibilitätsbezogene Muster in verschiedenen Situationen?`,
-      it: `Domanda aggiuntiva ASD ${index}: quanto è coerente questo schema sociale o legato alla flessibilità in situazioni diverse?`,
-      es: `Pregunta adicional TEA ${index}: ¿qué tan consistente es este patrón social o de flexibilidad en distintas situaciones?`,
-      zh: `ASD 补充问题 ${index}：这种社交或灵活性相关模式在不同情境中有多一致？`,
-      ja: `ASD 追加質問 ${index}：この社会性または柔軟性に関する傾向は異なる場面でもどの程度一貫していますか？`,
-      ar: `سؤال إضافي ASD رقم ${index}: ما مدى ثبات هذا النمط الاجتماعي أو المرتبط بالمرونة عبر المواقف المختلفة؟`,
-      pl: `Dodatkowe pytanie ASD ${index}: na ile spójny jest ten wzorzec społeczny lub związany z elastycznością w różnych sytuacjach?`,
-      pt: `Pergunta extra TEA ${index}: quão consistente é esse padrão social ou de flexibilidade em diferentes situações?`,
-      fr: `Question supplémentaire TSA ${index} : dans quelle mesure ce schéma social ou lié à la flexibilité est-il cohérent selon les situations ?`
+    {
+      id: "adhd_extra_2",
+      domain: "ADHD",
+      subdomain: "impulse_control",
+      stemKey: "cross_context_impulsivity",
+      weight: 1.1,
+      text: {
+        hu: "Az impulzív reakciók nem csak egyetlen helyzetben vagy környezetben jelentkeznek.",
+        en: "Impulsive reactions appear across more than one setting or context."
+      }
     },
-    ANXIETY: {
-      hu: `Szorongás kiegészítő kérdés ${index}: ez az aggodalmi vagy elkerülő minta mennyire következetes különböző helyzetekben?`,
-      en: `Anxiety extra question ${index}: how consistent is this worry or avoidance pattern across situations?`,
-      de: `Angst-Zusatzfrage ${index}: Wie konsistent ist dieses Sorgen- oder Vermeidungsmuster in verschiedenen Situationen?`,
-      it: `Domanda aggiuntiva ansia ${index}: quanto è coerente questo schema di preoccupazione o evitamento in situazioni diverse?`,
-      es: `Pregunta adicional ansiedad ${index}: ¿qué tan consistente es este patrón de preocupación o evitación en distintas situaciones?`,
-      zh: `焦虑补充问题 ${index}：这种担忧或回避模式在不同情境中有多一致？`,
-      ja: `不安 追加質問 ${index}：この心配や回避の傾向は異なる場面でもどの程度一貫していますか？`,
-      ar: `سؤال إضافي للقلق رقم ${index}: ما مدى ثبات نمط القلق أو التجنب هذا عبر المواقف المختلفة؟`,
-      pl: `Dodatkowe pytanie lękowe ${index}: na ile spójny jest ten wzorzec zamartwiania się lub unikania w różnych sytuacjach?`,
-      pt: `Pergunta extra ansiedade ${index}: quão consistente é esse padrão de preocupação ou evitação em diferentes situações?`,
-      fr: `Question supplémentaire anxiété ${index} : dans quelle mesure ce schéma d'inquiétude ou d'évitement est-il cohérent selon les situations ?`
+    {
+      id: "adhd_extra_3",
+      domain: "ADHD",
+      subdomain: "task_completion",
+      stemKey: "unfinished_pattern",
+      weight: 1,
+      text: {
+        hu: "A befejezetlenül maradó feladatok többféle tevékenységnél is visszatérő mintát mutatnak.",
+        en: "Leaving tasks unfinished appears as a recurring pattern across different activities."
+      }
     },
-    DEPRESSION: {
-      hu: `Depresszió kiegészítő kérdés ${index}: ez a hangulati vagy motivációs minta mennyire következetes különböző helyzetekben?`,
-      en: `Depression extra question ${index}: how consistent is this mood or motivation pattern across situations?`,
-      de: `Depressions-Zusatzfrage ${index}: Wie konsistent ist dieses Stimmungs- oder Motivationsmuster in verschiedenen Situationen?`,
-      it: `Domanda aggiuntiva depressione ${index}: quanto è coerente questo schema dell'umore o della motivazione in situazioni diverse?`,
-      es: `Pregunta adicional depresión ${index}: ¿qué tan consistente es este patrón de ánimo o motivación en distintas situaciones?`,
-      zh: `抑郁补充问题 ${index}：这种情绪或动机模式在不同情境中有多一致？`,
-      ja: `抑うつ 追加質問 ${index}：この気分や意欲の傾向は異なる場面でもどの程度一貫していますか？`,
-      ar: `سؤال إضافي للاكتئاب رقم ${index}: ما مدى ثبات هذا النمط المزاجي أو التحفيزي عبر المواقف المختلفة؟`,
-      pl: `Dodatkowe pytanie depresyjne ${index}: na ile spójny jest ten wzorzec nastroju lub motywacji w różnych sytuacjach?`,
-      pt: `Pergunta extra depressão ${index}: quão consistente é esse padrão de humor ou motivação em diferentes situações?`,
-      fr: `Question supplémentaire dépression ${index} : dans quelle mesure ce schéma d'humeur ou de motivation est-il cohérent selon les situations ?`
+    {
+      id: "adhd_extra_4",
+      domain: "ADHD",
+      subdomain: "attention_regulation",
+      stemKey: "distraction_vs_difficulty",
+      weight: 1,
+      text: {
+        hu: "A teljesítményromlás inkább figyelemelterelődésből ered, mint a feladat megértésének hiányából.",
+        en: "Performance difficulties seem to come more from distractibility than from not understanding the task."
+      }
     },
-    LEARNING: {
-      hu: `Tanulási zavar kiegészítő kérdés ${index}: ez a tanulási nehézség mennyire következetes különböző feladatokban és helyzetekben?`,
-      en: `Learning disorder extra question ${index}: how consistent is this learning difficulty across different tasks and situations?`,
-      de: `Lernstörungs-Zusatzfrage ${index}: Wie konsistent ist diese Lernschwierigkeit in verschiedenen Aufgaben und Situationen?`,
-      it: `Domanda aggiuntiva disturbo dell'apprendimento ${index}: quanto è coerente questa difficoltà di apprendimento in compiti e situazioni diverse?`,
-      es: `Pregunta adicional trastorno del aprendizaje ${index}: ¿qué tan consistente es esta dificultad de aprendizaje en distintas tareas y situaciones?`,
-      zh: `学习障碍补充问题 ${index}：这种学习困难在不同任务和情境中有多一致？`,
-      ja: `学習障害 追加質問 ${index}：この学習の難しさは異なる課題や場面でもどの程度一貫していますか？`,
-      ar: `سؤال إضافي لصعوبات التعلم رقم ${index}: ما مدى ثبات هذه الصعوبة التعليمية عبر المهام والمواقف المختلفة؟`,
-      pl: `Dodatkowe pytanie o trudności w uczeniu się ${index}: na ile spójna jest ta trudność w różnych zadaniach i sytuacjach?`,
-      pt: `Pergunta extra transtorno de aprendizagem ${index}: quão consistente é essa dificuldade de aprendizagem em diferentes tarefas e situações?`,
-      fr: `Question supplémentaire troubles des apprentissages ${index} : dans quelle mesure cette difficulté d'apprentissage est-elle cohérente selon les tâches et les situations ?`
+    {
+      id: "adhd_extra_5",
+      domain: "ADHD",
+      subdomain: "impulse_control",
+      stemKey: "timing_self_control",
+      weight: 1,
+      text: {
+        hu: "Gyakran a megfelelő időzítés vagy önkontroll hiánya okozza a nehézséget.",
+        en: "The difficulty often comes from poor timing or limited self-control."
+      }
     }
-  };
+  ],
 
-  return {
-    id: `${domain.toLowerCase()}_extra_${index}`,
-    domain,
-    subdomain: "extra",
-    weight: 1,
-    text: labels[domain]
-  };
-}
+  ASD: [
+    {
+      id: "asd_extra_1",
+      domain: "ASD",
+      subdomain: "social_communication",
+      stemKey: "social_pattern_consistency",
+      weight: 1.1,
+      text: {
+        hu: "A társas-kommunikációs nehézségek többféle kapcsolatban is következetesen megjelennek.",
+        en: "Social-communication difficulties appear consistently across different relationships."
+      }
+    },
+    {
+      id: "asd_extra_2",
+      domain: "ASD",
+      subdomain: "restricted_patterns",
+      stemKey: "routine_need_consistency",
+      weight: 1.1,
+      text: {
+        hu: "A megszokott rutinokhoz való ragaszkodás több helyzetben is erősen jelen van.",
+        en: "Reliance on familiar routines is strongly present across different situations."
+      }
+    },
+    {
+      id: "asd_extra_3",
+      domain: "ASD",
+      subdomain: "social_reciprocity",
+      stemKey: "sharing_difference",
+      weight: 1,
+      text: {
+        hu: "A közös öröm, érdeklődés vagy élmény megosztása a vártnál nehezebben megy.",
+        en: "Sharing joy, interest, or experiences is more difficult than expected."
+      }
+    },
+    {
+      id: "asd_extra_4",
+      domain: "ASD",
+      subdomain: "social_communication",
+      stemKey: "nonverbal_mismatch",
+      weight: 1,
+      text: {
+        hu: "A nehézség inkább a társas jelek megértésében vagy használatában látszik, mint puszta félénkségben.",
+        en: "The difficulty appears more in understanding or using social cues than in simple shyness."
+      }
+    },
+    {
+      id: "asd_extra_5",
+      domain: "ASD",
+      subdomain: "restricted_patterns",
+      stemKey: "interest_rigidity",
+      weight: 1,
+      text: {
+        hu: "Az érdeklődési vagy viselkedési minták rugalmatlanabbak a vártnál.",
+        en: "Interest or behavior patterns are more rigid than expected."
+      }
+    }
+  ],
 
-function makeExtraBank(domain) {
-  return Array.from({ length: 5 }, (_, i) => makeExtraQuestion(domain, i + 1));
-}
+  ANXIETY: [
+    {
+      id: "anxiety_extra_1",
+      domain: "ANXIETY",
+      subdomain: "general_worry",
+      stemKey: "worry_consistency",
+      weight: 1.1,
+      text: {
+        hu: "Az aggodalmaskodás többféle hétköznapi helyzetben is visszatérően megjelenik.",
+        en: "Worry appears repeatedly across different everyday situations."
+      }
+    },
+    {
+      id: "anxiety_extra_2",
+      domain: "ANXIETY",
+      subdomain: "avoidance",
+      stemKey: "avoidance_pattern",
+      weight: 1.1,
+      text: {
+        hu: "A feszültség inkább elkerüléshez vagy visszahúzódáshoz vezet, mint impulzív reagáláshoz.",
+        en: "Tension leads more to avoidance or withdrawal than to impulsive reacting."
+      }
+    },
+    {
+      id: "anxiety_extra_3",
+      domain: "ANXIETY",
+      subdomain: "physical_arousal",
+      stemKey: "body_signal_under_stress",
+      weight: 1,
+      text: {
+        hu: "Stressz alatt testi jelek is megjelennek, nem csak belső aggodalom.",
+        en: "Under stress, physical signs appear, not just internal worry."
+      }
+    },
+    {
+      id: "anxiety_extra_4",
+      domain: "ANXIETY",
+      subdomain: "uncertainty_stress",
+      stemKey: "novelty_uncertainty_tension",
+      weight: 1,
+      text: {
+        hu: "Az ismeretlen vagy bizonytalan helyzetek különösen megterhelőek számára.",
+        en: "Unfamiliar or uncertain situations are especially stressful."
+      }
+    },
+    {
+      id: "anxiety_extra_5",
+      domain: "ANXIETY",
+      subdomain: "reassurance_control",
+      stemKey: "reassurance_need",
+      weight: 1,
+      text: {
+        hu: "Megnyugtatás nélkül nehezebben csillapodik a feszültsége.",
+        en: "Without reassurance, tension is harder to reduce."
+      }
+    }
+  ],
+
+  DEPRESSION: [
+    {
+      id: "depression_extra_1",
+      domain: "DEPRESSION",
+      subdomain: "low_mood",
+      stemKey: "mood_consistency",
+      weight: 1.1,
+      text: {
+        hu: "A lehangoltság vagy kedvetlenség többféle helyzetben is tartósan jelen van.",
+        en: "Low mood or loss of enjoyment is present persistently across different situations."
+      }
+    },
+    {
+      id: "depression_extra_2",
+      domain: "DEPRESSION",
+      subdomain: "interest_loss",
+      stemKey: "loss_of_interest_pattern",
+      weight: 1.1,
+      text: {
+        hu: "A korábban kedvelt dolgok iránti érdeklődés csökkenése több területen is látható.",
+        en: "Reduced interest in previously enjoyed things is visible across multiple areas."
+      }
+    },
+    {
+      id: "depression_extra_3",
+      domain: "DEPRESSION",
+      subdomain: "self_worth",
+      stemKey: "negative_self_view",
+      weight: 1,
+      text: {
+        hu: "A negatív önmagáról alkotott kép nem csak átmeneti rossz hangulathoz kapcsolódik.",
+        en: "A negative self-view seems to be more than a brief bad mood."
+      }
+    },
+    {
+      id: "depression_extra_4",
+      domain: "DEPRESSION",
+      subdomain: "energy_motivation",
+      stemKey: "low_drive_pattern",
+      weight: 1,
+      text: {
+        hu: "A csökkent energia vagy motiváció többféle tevékenységben is megjelenik.",
+        en: "Lower energy or motivation appears across different activities."
+      }
+    },
+    {
+      id: "depression_extra_5",
+      domain: "DEPRESSION",
+      subdomain: "emotional_regulation",
+      stemKey: "sad_irritable_mix",
+      weight: 1,
+      text: {
+        hu: "A hangulati nehézség inkább lehangoltságban vagy ingerlékenységben látszik, mint puszta fáradtságban.",
+        en: "The mood difficulty appears more as sadness or irritability than as simple tiredness."
+      }
+    }
+  ],
+
+  LEARNING: [
+    {
+      id: "learning_extra_1",
+      domain: "LEARNING",
+      subdomain: "academic_performance",
+      stemKey: "task_specific_learning_pattern",
+      weight: 1.1,
+      text: {
+        hu: "A nehézség főként tanulási feladatokban jelenik meg, nem minden működési területen.",
+        en: "The difficulty appears mainly in learning tasks, not across every area of functioning."
+      }
+    },
+    {
+      id: "learning_extra_2",
+      domain: "LEARNING",
+      subdomain: "instruction_understanding",
+      stemKey: "instruction_barrier",
+      weight: 1.1,
+      text: {
+        hu: "A gyengébb teljesítmény mögött gyakran a feladat megértésének nehézsége áll.",
+        en: "Difficulty understanding the task often seems to underlie the weaker performance."
+      }
+    },
+    {
+      id: "learning_extra_3",
+      domain: "LEARNING",
+      subdomain: "reading",
+      stemKey: "reading_specificity",
+      weight: 1,
+      text: {
+        hu: "A probléma különösen az olvasási jellegű feladatokban tűnik erősebbnek.",
+        en: "The problem seems especially strong in reading-related tasks."
+      }
+    },
+    {
+      id: "learning_extra_4",
+      domain: "LEARNING",
+      subdomain: "writing",
+      stemKey: "writing_output_pattern",
+      weight: 1,
+      text: {
+        hu: "Az írásos teljesítmény jobban érintett lehet, mint a szóbeli megértés.",
+        en: "Written performance may be more affected than verbal understanding."
+      }
+    },
+    {
+      id: "learning_extra_5",
+      domain: "LEARNING",
+      subdomain: "math",
+      stemKey: "math_specific_pattern",
+      weight: 1,
+      text: {
+        hu: "A nehézség bizonyos tanulási területeken kifejezettebb, mint másokban.",
+        en: "The difficulty is more pronounced in some learning areas than in others."
+      }
+    }
+  ]
+};
 
 const SPECIFIC_BANKS = {
   ADHD: ADHD_BANK,
@@ -95,13 +305,7 @@ const SPECIFIC_BANKS = {
   LEARNING: LEARNING_BANK
 };
 
-const EXTRA_BANKS = {
-  ADHD: makeExtraBank("ADHD"),
-  ASD: makeExtraBank("ASD"),
-  ANXIETY: makeExtraBank("ANXIETY"),
-  DEPRESSION: makeExtraBank("DEPRESSION"),
-  LEARNING: makeExtraBank("LEARNING")
-};
+
 
 if (typeof window !== "undefined") {
   window.NM_TRIAGE_BANK = TRIAGE_BANK;

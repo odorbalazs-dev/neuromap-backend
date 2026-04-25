@@ -1,611 +1,1769 @@
-function makeId(prefix, n) {
-  return `${prefix}_${String(n).padStart(4, "0")}`;
-}
+export const ASD_BANK = [
+  /* =========================
+     CORE 1-50
+  ========================= */
 
-function makeQuestion(id, subdomain, text) {
-  return {
-    id,
-    domain: "ASD",
-    subdomain,
-    weight: 1,
-    text
-  };
-}
-
-const CONTEXTS = [
   {
-    key: "home_morning",
-    text: {
-      hu: "reggeli otthoni helyzetekben",
-      en: "during morning routines at home",
-      de: "während der morgendlichen Abläufe zu Hause",
-      it: "durante la routine del mattino a casa",
-      es: "durante las rutinas matutinas en casa",
-      zh: "在家里的晨间日常中",
-      ja: "家庭での朝の場面で",
-      ar: "أثناء الروتين الصباحي في المنزل",
-      pl: "podczas porannych czynności w domu",
-      pt: "durante a rotina da manhã em casa",
-      fr: "pendant les routines du matin à la maison"
-    }
-  },
-  {
-    key: "home_evening",
-    text: {
-      hu: "esti otthoni helyzetekben",
-      en: "during evening routines at home",
-      de: "während der abendlichen Abläufe zu Hause",
-      it: "durante la routine serale a casa",
-      es: "durante las rutinas nocturnas en casa",
-      zh: "在家里的晚间日常中",
-      ja: "家庭での夕方の場面で",
-      ar: "أثناء الروتين المسائي في المنزل",
-      pl: "podczas wieczornych czynności w domu",
-      pt: "durante a rotina da noite em casa",
-      fr: "pendant les routines du soir à la maison"
-    }
-  },
-  {
-    key: "school_tasks",
-    text: {
-      hu: "iskolai vagy tanulási feladatoknál",
-      en: "during school or learning tasks",
-      de: "bei schulischen oder lernbezogenen Aufgaben",
-      it: "durante i compiti scolastici o di apprendimento",
-      es: "durante tareas escolares o de aprendizaje",
-      zh: "在学校或学习任务中",
-      ja: "学校や学習課題の場面で",
-      ar: "أثناء المهام المدرسية أو التعليمية",
-      pl: "podczas zadań szkolnych lub edukacyjnych",
-      pt: "durante tarefas escolares ou de aprendizagem",
-      fr: "pendant les tâches scolaires ou d'apprentissage"
-    }
-  },
-  {
-    key: "group_settings",
-    text: {
-      hu: "csoportos helyzetekben",
-      en: "in group situations",
-      de: "in Gruppensituationen",
-      it: "nelle situazioni di gruppo",
-      es: "en situaciones de grupo",
-      zh: "在群体情境中",
-      ja: "集団場面で",
-      ar: "في المواقف الجماعية",
-      pl: "w sytuacjach grupowych",
-      pt: "em situações de grupo",
-      fr: "dans les situations de groupe"
-    }
-  },
-  {
-    key: "with_peers",
-    text: {
-      hu: "kortársakkal együtt",
-      en: "when interacting with peers",
-      de: "im Umgang mit Gleichaltrigen",
-      it: "quando è con i coetanei",
-      es: "al interactuar con sus compañeros",
-      zh: "与同龄人互动时",
-      ja: "同年代の子どもと関わるときに",
-      ar: "عند التفاعل مع الأقران",
-      pl: "podczas kontaktu z rówieśnikami",
-      pt: "ao interagir com colegas",
-      fr: "lors des interactions avec les pairs"
-    }
-  },
-  {
-    key: "with_adults",
-    text: {
-      hu: "felnőttekkel való helyzetekben",
-      en: "when interacting with adults",
-      de: "im Umgang mit Erwachsenen",
-      it: "quando interagisce con adulti",
-      es: "al interactuar con adultos",
-      zh: "与成年人互动时",
-      ja: "大人と関わるときに",
-      ar: "عند التفاعل مع البالغين",
-      pl: "podczas kontaktu z dorosłymi",
-      pt: "ao interagir com adultos",
-      fr: "lors des interactions avec des adultes"
-    }
-  },
-  {
-    key: "under_stress",
-    text: {
-      hu: "stresszes vagy terhelt helyzetekben",
-      en: "in stressful or demanding situations",
-      de: "in stressigen oder belastenden Situationen",
-      it: "in situazioni stressanti o impegnative",
-      es: "en situaciones estresantes o exigentes",
-      zh: "在有压力或要求较高的情境中",
-      ja: "ストレスの高い場面で",
-      ar: "في المواقف الضاغطة أو المجهدة",
-      pl: "w stresujących lub wymagających sytuacjach",
-      pt: "em situações estressantes ou exigentes",
-      fr: "dans les situations stressantes ou exigeantes"
-    }
-  },
-  {
-    key: "during_transitions",
-    text: {
-      hu: "átmeneteknél vagy váltásoknál",
-      en: "during transitions or changes",
-      de: "bei Übergängen oder Veränderungen",
-      it: "durante i cambiamenti o le transizioni",
-      es: "durante transiciones o cambios",
-      zh: "在过渡或变化时",
-      ja: "切り替えや変化の場面で",
-      ar: "أثناء الانتقالات أو التغييرات",
-      pl: "podczas zmian i przejść",
-      pt: "durante transições ou mudanças",
-      fr: "lors des transitions ou changements"
-    }
-  },
-  {
-    key: "free_play",
-    text: {
-      hu: "szabad játék vagy kötetlen helyzetek során",
-      en: "during free play or unstructured situations",
-      de: "beim freien Spiel oder in unstrukturierten Situationen",
-      it: "durante il gioco libero o situazioni poco strutturate",
-      es: "durante el juego libre o situaciones poco estructuradas",
-      zh: "在自由游戏或非结构化情境中",
-      ja: "自由遊びや構造化されていない場面で",
-      ar: "أثناء اللعب الحر أو المواقف غير المنظمة",
-      pl: "podczas swobodnej zabawy lub nieustrukturyzowanych sytuacji",
-      pt: "durante brincadeiras livres ou situações pouco estruturadas",
-      fr: "pendant le jeu libre ou les situations peu structurées"
-    }
-  },
-  {
-    key: "daily_life",
-    text: {
-      hu: "a mindennapi élet különböző helyzeteiben",
-      en: "across different everyday situations",
-      de: "in verschiedenen Alltagssituationen",
-      it: "in diverse situazioni quotidiane",
-      es: "en diferentes situaciones cotidianas",
-      zh: "在日常生活的不同情境中",
-      ja: "日常生活のさまざまな場面で",
-      ar: "في مواقف الحياة اليومية المختلفة",
-      pl: "w różnych codziennych sytuacjach",
-      pt: "em diferentes situações do dia a dia",
-      fr: "dans différentes situations du quotidien"
-    }
+  id: "ASD_001",
+  domain: "ASD",
+  subdomain: "social_reciprocity",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "social_initiation",
+  text: {
+    hu: "Ritkán kezdeményez spontán beszélgetést másokkal.",
+    en: "Rarely initiates spontaneous conversations with others."
   }
-];
-
-const SOCIAL_COMMUNICATION_BASE = [
-  {
-    text: {
-      hu: "nehezen kezdeményez kölcsönös társas kapcsolatot",
-      en: "has difficulty initiating reciprocal social interaction",
-      de: "Schwierigkeiten hat, wechselseitige soziale Kontakte zu beginnen",
-      it: "ha difficoltà a iniziare interazioni sociali reciproche",
-      es: "tiene dificultad para iniciar interacciones sociales recíprocas",
-      zh: "难以主动发起互相交流的社交互动",
-      ja: "相互的な社会的やり取りを始めるのが難しい",
-      ar: "يجد صعوبة في بدء التفاعل الاجتماعي المتبادل",
-      pl: "ma trudność z inicjowaniem wzajemnych interakcji społecznych",
-      pt: "tem dificuldade em iniciar interações sociais recíprocas",
-      fr: "a du mal à initier des interactions sociales réciproques"
-    }
-  },
-  {
-    text: {
-      hu: "nehezen oszt meg örömöt, érdeklődést vagy élményt másokkal",
-      en: "has difficulty sharing joy, interest, or experiences with others",
-      de: "Schwierigkeiten hat, Freude, Interesse oder Erlebnisse mit anderen zu teilen",
-      it: "ha difficoltà a condividere gioia, interesse o esperienze con gli altri",
-      es: "tiene dificultad para compartir alegría, interés o experiencias con los demás",
-      zh: "难以与他人分享快乐、兴趣或经历",
-      ja: "喜びや興味、経験を他者と共有するのが難しい",
-      ar: "يجد صعوبة في مشاركة الفرح أو الاهتمام أو الخبرات مع الآخرين",
-      pl: "ma trudność z dzieleniem się radością, zainteresowaniem lub doświadczeniami z innymi",
-      pt: "tem dificuldade em compartilhar alegria, interesse ou experiências com os outros",
-      fr: "a du mal à partager la joie, l'intérêt ou les expériences avec les autres"
-    }
-  },
-  {
-    text: {
-      hu: "nehézséget mutat a társas helyzetek kölcsönösségének fenntartásában",
-      en: "shows difficulty maintaining reciprocity in social situations",
-      de: "Schwierigkeiten zeigt, Gegenseitigkeit in sozialen Situationen aufrechtzuerhalten",
-      it: "mostra difficoltà nel mantenere reciprocità nelle situazioni sociali",
-      es: "muestra dificultad para mantener la reciprocidad en situaciones sociales",
-      zh: "在社交情境中难以维持互动的相互性",
-      ja: "社会的場面で相互性を保つことに難しさがある",
-      ar: "يُظهر صعوبة في الحفاظ على التبادلية في المواقف الاجتماعية",
-      pl: "ma trudność z utrzymaniem wzajemności w sytuacjach społecznych",
-      pt: "mostra dificuldade em manter reciprocidade em situações sociais",
-      fr: "montre une difficulté à maintenir la réciprocité dans les situations sociales"
-    }
-  },
-  {
-    text: {
-      hu: "beszélgetésekben nehezen hangolódik rá mások nézőpontjára",
-      en: "has difficulty tuning into others' perspectives during conversations",
-      de: "sich in Gesprächen schwer auf die Perspektive anderer einstellt",
-      it: "ha difficoltà a sintonizzarsi sul punto di vista degli altri durante le conversazioni",
-      es: "le cuesta conectar con la perspectiva de los demás durante las conversaciones",
-      zh: "在对话中难以体会他人的视角",
-      ja: "会話の中で相手の視点に合わせるのが難しい",
-      ar: "يجد صعوبة في فهم منظور الآخرين أثناء المحادثات",
-      pl: "ma trudność z dostrojeniem się do perspektywy innych podczas rozmowy",
-      pt: "tem dificuldade em perceber a perspectiva dos outros durante conversas",
-      fr: "a du mal à s'ajuster au point de vue des autres pendant les conversations"
-    }
-  },
-  {
-    text: {
-      hu: "társas helyzetekben kevésbé keresi a spontán kapcsolódást",
-      en: "shows reduced spontaneous social engagement",
-      de: "in sozialen Situationen weniger spontane Kontaktaufnahme zeigt",
-      it: "mostra una ridotta partecipazione sociale spontanea",
-      es: "muestra menor vinculación social espontánea",
-      zh: "在社交情境中较少自发地寻求互动",
-      ja: "社会的場面で自発的な関わりが少ない",
-      ar: "يُظهر تفاعلًا اجتماعيًا عفويًا أقل",
-      pl: "wykazuje mniejsze spontaniczne zaangażowanie społeczne",
-      pt: "apresenta menor envolvimento social espontâneo",
-      fr: "montre moins d'engagement social spontané"
-    }
+},
+{
+  id: "ASD_002",
+  domain: "ASD",
+  subdomain: "social_reciprocity",
+  weight: 1.4,
+  reverse: false,
+  stemKey: "social_emotional_interest",
+  text: {
+    hu: "Úgy tűnik, nem igazán érdekli mások véleménye vagy érzései.",
+    en: "Seems uninterested in other people's opinions or feelings."
   }
-];
-
-const NONVERBAL_BASE = [
-  {
-    text: {
-      hu: "kerüli vagy ritkán keresi a szemkontaktust",
-      en: "avoids or rarely seeks eye contact",
-      de: "Blickkontakt vermeidet oder selten sucht",
-      it: "evita o cerca raramente il contatto visivo",
-      es: "evita o rara vez busca contacto visual",
-      zh: "回避或很少主动进行眼神交流",
-      ja: "視線を合わせることを避ける、またはあまり求めない",
-      ar: "يتجنب التواصل البصري أو نادرًا ما يسعى إليه",
-      pl: "unika kontaktu wzrokowego lub rzadko go nawiązuje",
-      pt: "evita ou raramente busca contato visual",
-      fr: "évite ou recherche rarement le contact visuel"
-    }
-  },
-  {
-    text: {
-      hu: "nehezen értelmezi mások mimikáját vagy testbeszédét",
-      en: "has difficulty interpreting others' facial expressions or body language",
-      de: "Schwierigkeiten hat, Mimik oder Körpersprache anderer zu deuten",
-      it: "ha difficoltà a interpretare espressioni facciali o linguaggio del corpo degli altri",
-      es: "tiene dificultad para interpretar expresiones faciales o lenguaje corporal de los demás",
-      zh: "难以理解他人的表情或肢体语言",
-      ja: "他者の表情やボディランゲージを読み取るのが難しい",
-      ar: "يجد صعوبة في تفسير تعابير الوجه أو لغة الجسد لدى الآخرين",
-      pl: "ma trudność z interpretowaniem mimiki lub mowy ciała innych osób",
-      pt: "tem dificuldade em interpretar expressões faciais ou linguagem corporal dos outros",
-      fr: "a du mal à interpréter les expressions faciales ou le langage corporel des autres"
-    }
-  },
-  {
-    text: {
-      hu: "saját nonverbális jelzései kevésbé illeszkednek a helyzethez",
-      en: "shows nonverbal signals that are less fitted to the situation",
-      de: "nonverbale Signale zeigt, die weniger zur Situation passen",
-      it: "mostra segnali non verbali meno adeguati alla situazione",
-      es: "muestra señales no verbales menos ajustadas a la situación",
-      zh: "自己的非语言表达与情境的匹配度较低",
-      ja: "自分の非言語サインが状況に合いにくいことがある",
-      ar: "تكون إشاراته غير اللفظية أقل ملاءمة للموقف",
-      pl: "jego niewerbalne sygnały są mniej dopasowane do sytuacji",
-      pt: "apresenta sinais não verbais menos adequados à situação",
-      fr: "montre des signaux non verbaux moins adaptés à la situation"
-    }
-  },
-  {
-    text: {
-      hu: "gesztusai vagy arckifejezései korlátozottabbnak tűnnek",
-      en: "shows more limited gestures or facial expressions",
-      de: "begrenztere Gestik oder Mimik zeigt",
-      it: "mostra gesti o espressioni facciali più limitati",
-      es: "muestra gestos o expresiones faciales más limitados",
-      zh: "手势或面部表情显得较少或较局限",
-      ja: "身振りや表情がやや限られているように見える",
-      ar: "تبدو إيماءاته أو تعابير وجهه أكثر محدودية",
-      pl: "jego gesty lub mimika wydają się bardziej ograniczone",
-      pt: "apresenta gestos ou expressões faciais mais limitados",
-      fr: "montre des gestes ou expressions faciales plus limités"
-    }
-  },
-  {
-    text: {
-      hu: "nehézséget mutat a szemkontaktus, gesztusok és beszéd összehangolásában",
-      en: "shows difficulty coordinating eye contact, gestures, and speech",
-      de: "Schwierigkeiten bei der Abstimmung von Blickkontakt, Gestik und Sprache zeigt",
-      it: "mostra difficoltà nel coordinare contatto visivo, gesti e linguaggio",
-      es: "muestra dificultad para coordinar contacto visual, gestos y habla",
-      zh: "难以协调眼神、手势和语言表达",
-      ja: "視線、ジェスチャー、発話をうまく組み合わせるのが難しい",
-      ar: "يُظهر صعوبة في تنسيق التواصل البصري والإيماءات والكلام",
-      pl: "ma trudność z koordynacją kontaktu wzrokowego, gestów i mowy",
-      pt: "mostra dificuldade em coordenar contato visual, gestos e fala",
-      fr: "montre une difficulté à coordonner regard, gestes et parole"
-    }
+},
+{
+  id: "ASD_003",
+  domain: "ASD",
+  subdomain: "social_reciprocity",
+  weight: 1.2,
+  reverse: true,
+  stemKey: "shared_activity_reverse",
+  text: {
+    hu: "Könnyen bekapcsolódik másokkal közös tevékenységekbe.",
+    en: "Easily joins shared activities with others."
   }
-];
-
-const FLEXIBILITY_BASE = [
-  {
-    text: {
-      hu: "erősen ragaszkodik a megszokott rutinokhoz",
-      en: "strongly relies on familiar routines",
-      de: "stark an vertrauten Routinen festhält",
-      it: "si affida fortemente a routine familiari",
-      es: "se apoya mucho en rutinas conocidas",
-      zh: "强烈依赖熟悉的固定惯例",
-      ja: "慣れたルーティンに強くこだわる",
-      ar: "يتمسك بشدة بالروتينات المألوفة",
-      pl: "silnie trzyma się znanych rutyn",
-      pt: "depende fortemente de rotinas familiares",
-      fr: "s'appuie fortement sur des routines familières"
-    }
-  },
-  {
-    text: {
-      hu: "váratlan változások erős feszültséget okoznak nála",
-      en: "unexpected changes create marked tension",
-      de: "unerwartete Veränderungen starke Anspannung auslösen",
-      it: "i cambiamenti inattesi generano forte tensione",
-      es: "los cambios inesperados generan mucha tensión",
-      zh: "突发变化会引发明显紧张",
-      ja: "予期しない変化で強い緊張が生じる",
-      ar: "تسبب التغييرات غير المتوقعة توترًا واضحًا",
-      pl: "nieoczekiwane zmiany powodują u niego silne napięcie",
-      pt: "mudanças inesperadas geram forte tensão",
-      fr: "les changements imprévus provoquent une forte tension"
-    }
-  },
-  {
-    text: {
-      hu: "nehezen vált egyik tevékenységről a másikra",
-      en: "has difficulty shifting from one activity to another",
-      de: "Schwierigkeiten hat, von einer Tätigkeit zur anderen zu wechseln",
-      it: "ha difficoltà a passare da un'attività all'altra",
-      es: "tiene dificultad para pasar de una actividad a otra",
-      zh: "难以从一项活动切换到另一项活动",
-      ja: "一つの活動から別の活動へ切り替えるのが難しい",
-      ar: "يجد صعوبة في الانتقال من نشاط إلى آخر",
-      pl: "ma trudność z przechodzeniem z jednej aktywności do drugiej",
-      pt: "tem dificuldade em mudar de uma atividade para outra",
-      fr: "a du mal à passer d'une activité à une autre"
-    }
-  },
-  {
-    text: {
-      hu: "erősen igényli, hogy a dolgok megszokott módon történjenek",
-      en: "strongly needs things to happen in familiar ways",
-      de: "stark darauf angewiesen ist, dass Dinge auf vertraute Weise ablaufen",
-      it: "ha un forte bisogno che le cose avvengano in modi familiari",
-      es: "necesita mucho que las cosas ocurran de forma conocida",
-      zh: "强烈需要事情按熟悉的方式发生",
-      ja: "物事が慣れたやり方で進むことを強く求める",
-      ar: "يحتاج بشدة إلى أن تسير الأمور بطريقة مألوفة",
-      pl: "silnie potrzebuje, aby rzeczy działy się w znany sposób",
-      pt: "tem forte necessidade de que as coisas aconteçam de formas familiares",
-      fr: "a fortement besoin que les choses se passent de manière familière"
-    }
-  },
-  {
-    text: {
-      hu: "rugalmatlanabbnak tűnik, amikor a helyzet eltér a várttól",
-      en: "seems less flexible when situations differ from expectations",
-      de: "weniger flexibel wirkt, wenn Situationen von den Erwartungen abweichen",
-      it: "sembra meno flessibile quando le situazioni differiscono dalle aspettative",
-      es: "parece menos flexible cuando las situaciones difieren de lo esperado",
-      zh: "当情境与预期不同时显得不够灵活",
-      ja: "予想と違う状況になると柔軟に対応しにくい",
-      ar: "يبدو أقل مرونة عندما تختلف المواقف عن التوقعات",
-      pl: "wydaje się mniej elastyczny, gdy sytuacje odbiegają od oczekiwań",
-      pt: "parece menos flexível quando as situações diferem do esperado",
-      fr: "semble moins flexible quand les situations diffèrent des attentes"
-    }
+},
+{
+  id: "ASD_004",
+  domain: "ASD",
+  subdomain: "social_reciprocity",
+  weight: 1.5,
+  reverse: false,
+  stemKey: "response_to_approach",
+  text: {
+    hu: "Nehezen reagál természetesen mások közeledésére.",
+    en: "Has difficulty responding naturally to social approaches."
   }
-];
-
-const RESTRICTED_INTERESTS_BASE = [
-  {
-    text: {
-      hu: "szűk, intenzív érdeklődést mutat bizonyos témák iránt",
-      en: "shows narrow and intense interests in certain topics",
-      de: "enge und intensive Interessen an bestimmten Themen zeigt",
-      it: "mostra interessi ristretti e intensi per certi temi",
-      es: "muestra intereses estrechos e intensos por ciertos temas",
-      zh: "对某些主题表现出狭窄而强烈的兴趣",
-      ja: "特定のテーマに狭く強い関心を示す",
-      ar: "يُظهر اهتمامات ضيقة ومكثفة تجاه مواضيع معينة",
-      pl: "wykazuje wąskie i intensywne zainteresowania określonymi tematami",
-      pt: "mostra interesses restritos e intensos por certos temas",
-      fr: "montre des intérêts étroits et intenses pour certains sujets"
-    }
-  },
-  {
-    text: {
-      hu: "hosszan és részletesen foglalkozik kevés számú témával",
-      en: "spends extended time focused on a small number of topics",
-      de: "sich lange und intensiv mit wenigen Themen beschäftigt",
-      it: "si concentra a lungo su un numero limitato di temi",
-      es: "dedica mucho tiempo a un número reducido de temas",
-      zh: "长时间专注于少数几个主题",
-      ja: "少数のテーマに長く深く集中する",
-      ar: "يقضي وقتًا طويلًا في التركيز على عدد قليل من المواضيع",
-      pl: "spędza dużo czasu, koncentrując się na niewielu tematach",
-      pt: "passa longos períodos focado em poucos temas",
-      fr: "passe beaucoup de temps centré sur un petit nombre de sujets"
-    }
-  },
-  {
-    text: {
-      hu: "nehezen tér át más érdeklődési területekre",
-      en: "has difficulty shifting to other interests",
-      de: "Schwierigkeiten hat, zu anderen Interessengebieten zu wechseln",
-      it: "ha difficoltà a passare ad altri interessi",
-      es: "tiene dificultad para pasar a otros intereses",
-      zh: "难以转向其他兴趣领域",
-      ja: "他の興味へ移るのが難しい",
-      ar: "يجد صعوبة في الانتقال إلى اهتمامات أخرى",
-      pl: "ma trudność z przechodzeniem do innych zainteresowań",
-      pt: "tem dificuldade em mudar para outros interesses",
-      fr: "a du mal à passer à d'autres centres d'intérêt"
-    }
-  },
-  {
-    text: {
-      hu: "bizonyos témák vagy tárgyak aránytalanul lekötik",
-      en: "is disproportionately absorbed by certain topics or objects",
-      de: "von bestimmten Themen oder Objekten übermäßig in Anspruch genommen ist",
-      it: "è assorbito in modo sproporzionato da certi temi o oggetti",
-      es: "queda absorbido de forma desproporcionada por ciertos temas u objetos",
-      zh: "对某些主题或物体投入程度明显过高",
-      ja: "特定のテーマや物に過度に没頭する",
-      ar: "ينشغل بشكل غير متناسب بمواضيع أو أشياء معينة",
-      pl: "jest nieproporcjonalnie pochłonięty określonymi tematami lub przedmiotami",
-      pt: "fica desproporcionalmente absorvido por certos temas ou objetos",
-      fr: "est absorbé de manière disproportionnée par certains sujets ou objets"
-    }
-  },
-  {
-    text: {
-      hu: "kevésbé érdeklődik a kortársak tipikus témái iránt",
-      en: "shows less interest in topics typical for peers",
-      de: "weniger Interesse an für Gleichaltrige typischen Themen zeigt",
-      it: "mostra meno interesse per temi tipici dei coetanei",
-      es: "muestra menos interés por temas típicos de sus compañeros",
-      zh: "对同龄人常见的话题兴趣较低",
-      ja: "同年代の子どもに一般的な話題への関心が少ない",
-      ar: "يُظهر اهتمامًا أقل بالموضوعات المعتادة لدى الأقران",
-      pl: "wykazuje mniejsze zainteresowanie tematami typowymi dla rówieśników",
-      pt: "mostra menos interesse por temas típicos dos colegas",
-      fr: "montre moins d'intérêt pour les sujets typiques des pairs"
-    }
+},
+{
+  id: "ASD_005",
+  domain: "ASD",
+  subdomain: "social_reciprocity",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "shared_experience",
+  text: {
+    hu: "Nem osztja meg spontán módon az élményeit másokkal.",
+    en: "Does not spontaneously share experiences with others."
   }
-];
-
-const SENSORY_BASE = [
-  {
-    text: {
-      hu: "bizonyos hangokra, fényekre vagy érintésekre szokatlanul érzékeny",
-      en: "is unusually sensitive to certain sounds, lights, or touches",
-      de: "ungewöhnlich empfindlich auf bestimmte Geräusche, Lichter oder Berührungen reagiert",
-      it: "è insolitamente sensibile a certi suoni, luci o contatti",
-      es: "es inusualmente sensible a ciertos sonidos, luces o contactos",
-      zh: "对某些声音、光线或触碰异常敏感",
-      ja: "特定の音、光、触覚刺激に対して非常に敏感である",
-      ar: "يكون حساسًا بشكل غير معتاد لبعض الأصوات أو الأضواء أو اللمس",
-      pl: "jest niezwykle wrażliwy na określone dźwięki, światła lub dotyk",
-      pt: "é incomumente sensível a certos sons, luzes ou toques",
-      fr: "est inhabituellement sensible à certains sons, lumières ou contacts"
-    }
-  },
-  {
-    text: {
-      hu: "erősen reagál a szenzoros ingerek változásaira",
-      en: "reacts strongly to changes in sensory input",
-      de: "stark auf Veränderungen sensorischer Reize reagiert",
-      it: "reagisce fortemente ai cambiamenti degli stimoli sensoriali",
-      es: "reacciona fuertemente a cambios en estímulos sensoriales",
-      zh: "对感觉刺激变化反应很强烈",
-      ja: "感覚刺激の変化に強く反応する",
-      ar: "يتفاعل بقوة مع التغيرات في المدخلات الحسية",
-      pl: "silnie reaguje na zmiany bodźców sensorycznych",
-      pt: "reage fortemente a mudanças em estímulos sensoriais",
-      fr: "réagit fortement aux changements de stimulations sensorielles"
-    }
-  },
-  {
-    text: {
-      hu: "bizonyos ruhák, ételek vagy textúrák fokozott ellenállást váltanak ki nála",
-      en: "shows strong resistance to certain clothes, foods, or textures",
-      de: "starke Ablehnung gegenüber bestimmten Kleidungsstücken, Speisen oder Oberflächen zeigt",
-      it: "mostra forte resistenza verso certi vestiti, cibi o consistenze",
-      es: "muestra fuerte rechazo hacia ciertas prendas, alimentos o texturas",
-      zh: "对某些衣物、食物或质地表现出明显抗拒",
-      ja: "特定の服、食べ物、触感に強い抵抗を示す",
-      ar: "يُظهر مقاومة شديدة لبعض الملابس أو الأطعمة أو الملمس",
-      pl: "wykazuje silny opór wobec niektórych ubrań, potraw lub faktur",
-      pt: "apresenta forte resistência a certas roupas, alimentos ou texturas",
-      fr: "montre une forte résistance à certains vêtements, aliments ou textures"
-    }
-  },
-  {
-    text: {
-      hu: "keres vagy kerül bizonyos szenzoros élményeket",
-      en: "actively seeks or avoids certain sensory experiences",
-      de: "bestimmte sensorische Erfahrungen aktiv sucht oder meidet",
-      it: "cerca o evita attivamente certe esperienze sensoriali",
-      es: "busca o evita activamente ciertas experiencias sensoriales",
-      zh: "会主动寻求或回避某些感觉体验",
-      ja: "特定の感覚体験を求めたり避けたりする",
-      ar: "يسعى أو يتجنب بشكل واضح بعض الخبرات الحسية",
-      pl: "aktywnie poszukuje lub unika pewnych doznań sensorycznych",
-      pt: "busca ou evita ativamente certas experiências sensoriais",
-      fr: "recherche ou évite activement certaines expériences sensorielles"
-    }
-  },
-  {
-    text: {
-      hu: "szenzoros terhelés hatására gyorsabban kibillen az egyensúlyából",
-      en: "becomes dysregulated more quickly under sensory load",
-      de: "unter sensorischer Belastung schneller aus dem Gleichgewicht gerät",
-      it: "si destabilizza più rapidamente sotto carico sensoriale",
-      es: "se desregula más rápidamente bajo carga sensorial",
-      zh: "在感觉负荷下更容易失去平衡和稳定",
-      ja: "感覚負荷が高いとより早く不安定になる",
-      ar: "يفقد اتزانه بشكل أسرع تحت العبء الحسي",
-      pl: "przy przeciążeniu sensorycznym szybciej traci równowagę",
-      pt: "desregula-se mais rapidamente sob carga sensorial",
-      fr: "se désorganise plus rapidement sous charge sensorielle"
-    }
+},
+{
+  id: "ASD_006",
+  domain: "ASD",
+  subdomain: "nonverbal_communication",
+  weight: 1.5,
+  reverse: false,
+  stemKey: "eye_contact",
+  text: {
+    hu: "Kevés szemkontaktust használ beszélgetés közben.",
+    en: "Uses limited eye contact during conversations."
   }
-];
+},
+{
+  id: "ASD_007",
+  domain: "ASD",
+  subdomain: "nonverbal_communication",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "expressive_clarity",
+  text: {
+    hu: "Gesztusai vagy arckifejezései nehezen értelmezhetők.",
+    en: "Facial expressions or gestures are difficult to interpret."
+  }
+},
+{
+  id: "ASD_008",
+  domain: "ASD",
+  subdomain: "nonverbal_communication",
+  weight: 1.2,
+  reverse: true,
+  stemKey: "body_language_reverse",
+  text: {
+    hu: "Természetesen használ testbeszédet kommunikáció közben.",
+    en: "Uses body language naturally while communicating."
+  }
+},
+{
+  id: "ASD_009",
+  domain: "ASD",
+  subdomain: "nonverbal_communication",
+  weight: 1.4,
+  reverse: false,
+  stemKey: "facial_expression_reading",
+  text: {
+    hu: "Nehezen érti meg mások arckifejezéseit.",
+    en: "Has difficulty understanding others' facial expressions."
+  }
+},
+{
+  id: "ASD_010",
+  domain: "ASD",
+  subdomain: "nonverbal_communication",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "prosody_tone",
+  text: {
+    hu: "Hangszíne vagy beszédritmusa szokatlannak tűnik.",
+    en: "Tone of voice or speech rhythm may seem unusual."
+  }
+},
+{
+  id: "ASD_011",
+  domain: "ASD",
+  subdomain: "relationships",
+  weight: 1.4,
+  reverse: false,
+  stemKey: "friendship_formation",
+  text: {
+    hu: "Kevés baráti kapcsolatot alakít ki.",
+    en: "Forms few friendships."
+  }
+},
+{
+  id: "ASD_012",
+  domain: "ASD",
+  subdomain: "relationships",
+  weight: 1.5,
+  reverse: false,
+  stemKey: "social_rules",
+  text: {
+    hu: "Nehezen érti a társas szabályokat.",
+    en: "Struggles to understand social rules."
+  }
+},
+{
+  id: "ASD_013",
+  domain: "ASD",
+  subdomain: "relationships",
+  weight: 1.2,
+  reverse: true,
+  stemKey: "social_adaptation_reverse",
+  text: {
+    hu: "Képes alkalmazkodni különböző társas helyzetekhez.",
+    en: "Can adapt to different social situations."
+  }
+},
+{
+  id: "ASD_014",
+  domain: "ASD",
+  subdomain: "relationships",
+  weight: 1.4,
+  reverse: false,
+  stemKey: "relationship_maintenance",
+  text: {
+    hu: "Nem érti, hogyan kell kapcsolatot fenntartani másokkal.",
+    en: "Has difficulty maintaining relationships."
+  }
+},
+{
+  id: "ASD_015",
+  domain: "ASD",
+  subdomain: "relationships",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "social_uncertainty",
+  text: {
+    hu: "Szociális helyzetekben gyakran bizonytalan.",
+    en: "Often appears unsure in social situations."
+  }
+},
+{
+  id: "ASD_016",
+  domain: "ASD",
+  subdomain: "restricted_patterns",
+  weight: 1.5,
+  reverse: false,
+  stemKey: "routine_adherence",
+  text: {
+    hu: "Erősen ragaszkodik bizonyos rutinokhoz.",
+    en: "Strongly attached to specific routines."
+  }
+},
+{
+  id: "ASD_017",
+  domain: "ASD",
+  subdomain: "restricted_patterns",
+  weight: 1.4,
+  reverse: false,
+  stemKey: "repetitive_behavior",
+  text: {
+    hu: "Ismétlődő viselkedéseket mutat.",
+    en: "Shows repetitive behaviors."
+  }
+},
+{
+  id: "ASD_018",
+  domain: "ASD",
+  subdomain: "restricted_patterns",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "narrow_interest",
+  text: {
+    hu: "Nagyon beszűkült érdeklődési köre van.",
+    en: "Has very narrow interests."
+  }
+},
+{
+  id: "ASD_019",
+  domain: "ASD",
+  subdomain: "restricted_patterns",
+  weight: 1.2,
+  reverse: true,
+  stemKey: "novelty_reverse",
+  text: {
+    hu: "Könnyen kipróbál új dolgokat.",
+    en: "Willing to try new things."
+  }
+},
+{
+  id: "ASD_020",
+  domain: "ASD",
+  subdomain: "restricted_patterns",
+  weight: 1.4,
+  reverse: false,
+  stemKey: "activity_switching",
+  text: {
+    hu: "Nehezen vált egyik tevékenységről a másikra.",
+    en: "Has difficulty switching between activities."
+  }
+},
+   {
+  id: "ASD_021",
+  domain: "ASD",
+  subdomain: "sensory_processing",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "sensory_general_reactivity",
+  text: {
+    hu: "Erősen reagál különböző érzékszervi ingerekre.",
+    en: "Shows strong reactions to sensory stimuli."
+  }
+},
+{
+  id: "ASD_022",
+  domain: "ASD",
+  subdomain: "sensory_processing",
+  weight: 1.4,
+  reverse: false,
+  stemKey: "sensory_avoidance",
+  text: {
+    hu: "Kerül bizonyos hangokat, fényeket vagy érintéseket.",
+    en: "Avoids certain sounds, lights, or touches."
+  }
+},
+{
+  id: "ASD_023",
+  domain: "ASD",
+  subdomain: "sensory_processing",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "sensory_seeking",
+  text: {
+    hu: "Kifejezetten keresi az erős érzékszervi ingereket.",
+    en: "Actively seeks strong sensory input."
+  }
+},
+{
+  id: "ASD_024",
+  domain: "ASD",
+  subdomain: "sensory_processing",
+  weight: 1.2,
+  reverse: true,
+  stemKey: "sensory_typical_reverse",
+  text: {
+    hu: "Általában átlagosan reagál érzékszervi ingerekre.",
+    en: "Typically responds to sensory input in an average way."
+  }
+},
+{
+  id: "ASD_025",
+  domain: "ASD",
+  subdomain: "sensory_processing",
+  weight: 1.4,
+  reverse: false,
+  stemKey: "noise_sensitivity",
+  text: {
+    hu: "Különösen érzékeny bizonyos zajokra.",
+    en: "Is particularly sensitive to certain sounds."
+  }
+},
+{
+  id: "ASD_026",
+  domain: "ASD",
+  subdomain: "flexibility",
+  weight: 1.4,
+  reverse: false,
+  stemKey: "change_tolerance",
+  text: {
+    hu: "Nehezen viseli a változásokat.",
+    en: "Has difficulty tolerating change."
+  }
+},
+{
+  id: "ASD_027",
+  domain: "ASD",
+  subdomain: "flexibility",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "sameness_preference",
+  text: {
+    hu: "Előnyben részesíti az állandó, kiszámítható helyzeteket.",
+    en: "Prefers predictable and consistent situations."
+  }
+},
+{
+  id: "ASD_028",
+  domain: "ASD",
+  subdomain: "flexibility",
+  weight: 1.2,
+  reverse: true,
+  stemKey: "flexibility_reverse",
+  text: {
+    hu: "Rugalmasan alkalmazkodik új helyzetekhez.",
+    en: "Adapts flexibly to new situations."
+  }
+},
+{
+  id: "ASD_029",
+  domain: "ASD",
+  subdomain: "pragmatic_language",
+  weight: 1.4,
+  reverse: false,
+  stemKey: "pragmatic_social_language",
+  text: {
+    hu: "Nehezen igazítja beszédét a társas helyzethez.",
+    en: "Has difficulty adjusting speech to social context."
+  }
+},
+{
+  id: "ASD_030",
+  domain: "ASD",
+  subdomain: "pragmatic_language",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "literal_interpretation",
+  text: {
+    hu: "Hajlamos szó szerint értelmezni a mondatokat.",
+    en: "Tends to interpret language literally."
+  }
+},
+{
+  id: "ASD_031",
+  domain: "ASD",
+  subdomain: "social_reciprocity",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "emotional_response_to_others",
+  text: {
+    hu: "Nehezen reagál mások érzelmi megnyilvánulásaira.",
+    en: "Has difficulty responding to others' emotions."
+  }
+},
+{
+  id: "ASD_032",
+  domain: "ASD",
+  subdomain: "social_reciprocity",
+  weight: 1.2,
+  reverse: false,
+  stemKey: "social_seeking",
+  text: {
+    hu: "Ritkán keresi mások társaságát.",
+    en: "Rarely seeks out social interaction."
+  }
+},
+{
+  id: "ASD_033",
+  domain: "ASD",
+  subdomain: "social_reciprocity",
+  weight: 1.4,
+  reverse: false,
+  stemKey: "joint_attention",
+  text: {
+    hu: "Ritkán mutat rá dolgokra, hogy másokkal megossza a figyelmét.",
+    en: "Rarely points things out to share attention."
+  }
+},
+{
+  id: "ASD_034",
+  domain: "ASD",
+  subdomain: "restricted_patterns",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "topic_fixation",
+  text: {
+    hu: "Gyakran ragaszkodik egy-egy témához beszélgetés közben.",
+    en: "Often fixates on specific topics during conversation."
+  }
+},
+{
+  id: "ASD_035",
+  domain: "ASD",
+  subdomain: "sensory_processing",
+  weight: 1.4,
+  reverse: false,
+  stemKey: "texture_sensitivity",
+  text: {
+    hu: "Érzékeny bizonyos anyagok vagy felületek érintésére.",
+    en: "Sensitive to certain textures or surfaces."
+  }
+},
+{
+  id: "ASD_036",
+  domain: "ASD",
+  subdomain: "restricted_patterns",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "routine_adherence_daily",
+  text: {
+    hu: "Ragaszkodik a napi rutinok pontos betartásához.",
+    en: "Insists on strict adherence to daily routines."
+  }
+},
+{
+  id: "ASD_037",
+  domain: "ASD",
+  subdomain: "pragmatic_language",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "humor_irony_understanding",
+  text: {
+    hu: "Nehezen érti a humort vagy az iróniát.",
+    en: "Has difficulty understanding humor or irony."
+  }
+},
+{
+  id: "ASD_038",
+  domain: "ASD",
+  subdomain: "relationships",
+  weight: 1.4,
+  reverse: false,
+  stemKey: "friendship_dynamics",
+  text: {
+    hu: "Nehezen alakít ki kölcsönös barátságokat.",
+    en: "Struggles to form mutual friendships."
+  }
+},
+{
+  id: "ASD_039",
+  domain: "ASD",
+  subdomain: "social_reciprocity",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "response_to_others_joy",
+  text: {
+    hu: "Ritkán reagál mások örömére vagy lelkesedésére.",
+    en: "Rarely responds to others' excitement or joy."
+  }
+},
+{
+  id: "ASD_040",
+  domain: "ASD",
+  subdomain: "nonverbal_communication",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "facial_variability",
+  text: {
+    hu: "Arckifejezése kevéssé változatos.",
+    en: "Shows limited variation in facial expressions."
+  }
+},
+{
+  id: "ASD_041",
+  domain: "ASD",
+  subdomain: "restricted_patterns",
+  weight: 1.4,
+  reverse: false,
+  stemKey: "repetitive_movement",
+  text: {
+    hu: "Ismétlődő mozdulatokat végez.",
+    en: "Engages in repetitive movements."
+  }
+},
+{
+  id: "ASD_042",
+  domain: "ASD",
+  subdomain: "sensory_processing",
+  weight: 1.4,
+  reverse: false,
+  stemKey: "sound_specific_sensitivity",
+  text: {
+    hu: "Bizonyos hangokra különösen érzékenyen reagál.",
+    en: "Is particularly sensitive to specific sounds."
+  }
+},
+{
+  id: "ASD_043",
+  domain: "ASD",
+  subdomain: "flexibility",
+  weight: 1.4,
+  reverse: false,
+  stemKey: "frustration_with_change",
+  text: {
+    hu: "Könnyen frusztrálódik, ha valami megváltozik.",
+    en: "Becomes easily frustrated when things change."
+  }
+},
+{
+  id: "ASD_044",
+  domain: "ASD",
+  subdomain: "pragmatic_language",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "context_adjustment",
+  text: {
+    hu: "Nehezen igazítja kommunikációját a helyzethez.",
+    en: "Has difficulty adjusting communication to context."
+  }
+},
+{
+  id: "ASD_045",
+  domain: "ASD",
+  subdomain: "nonverbal_communication",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "emotional_reaction_reading",
+  text: {
+    hu: "Nehezen értelmezi mások érzelmi reakcióit.",
+    en: "Has difficulty interpreting others' emotional reactions."
+  }
+},
+{
+  id: "ASD_046",
+  domain: "ASD",
+  subdomain: "social_reciprocity",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "interest_sharing",
+  text: {
+    hu: "Ritkán oszt meg érdeklődést másokkal.",
+    en: "Rarely shares interests with others."
+  }
+},
+{
+  id: "ASD_047",
+  domain: "ASD",
+  subdomain: "nonverbal_communication",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "pointing_gesture_use",
+  text: {
+    hu: "Ritkán használ mutató gesztusokat kommunikáció közben.",
+    en: "Rarely uses pointing gestures while communicating."
+  }
+},
+{
+  id: "ASD_048",
+  domain: "ASD",
+  subdomain: "restricted_patterns",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "restricted_play",
+  text: {
+    hu: "Játéka gyakran ismétlődő vagy beszűkült.",
+    en: "Play tends to be repetitive or restricted."
+  }
+},
+{
+  id: "ASD_049",
+  domain: "ASD",
+  subdomain: "sensory_processing",
+  weight: 1.4,
+  reverse: false,
+  stemKey: "touch_avoidance",
+  text: {
+    hu: "Kerüli az érintést vagy testi kontaktust.",
+    en: "Avoids touch or physical contact."
+  }
+},
+{
+  id: "ASD_050",
+  domain: "ASD",
+  subdomain: "flexibility",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "new_situation_adjustment",
+  text: {
+    hu: "Nehezen alkalmazkodik új helyzetekhez.",
+    en: "Has difficulty adjusting to new situations."
+  }
+},
 
-function buildQuestions(prefix, subdomain, baseItems, startIndex) {
-  const out = [];
-  let n = startIndex;
+  /* =========================
+     51-80
+  ========================= */
 
-  baseItems.forEach((base) => {
-    CONTEXTS.forEach((context) => {
-      out.push(
-        makeQuestion(
-          makeId(prefix, n++),
-          subdomain,
-          {
-            hu: `${base.text.hu} ${context.text.hu}.`,
-            en: `${base.text.en} ${context.text.en}.`,
-            de: `${base.text.de} ${context.text.de}.`,
-            it: `${base.text.it} ${context.text.it}.`,
-            es: `${base.text.es} ${context.text.es}.`,
-            zh: `${base.text.zh}${context.text.zh}。`,
-            ja: `${base.text.ja}${context.text.ja}。`,
-            ar: `${base.text.ar} ${context.text.ar}.`,
-            pl: `${base.text.pl} ${context.text.pl}.`,
-            pt: `${base.text.pt} ${context.text.pt}.`,
-            fr: `${base.text.fr} ${context.text.fr}.`
-          }
-        )
+  {
+  id: "ASD_051",
+  domain: "ASD",
+  subdomain: "social_reciprocity",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "response_to_approach",
+  text: {
+    hu: "Nem reagál mindig mások közeledésére.",
+    en: "Does not consistently respond to others' social approaches."
+  }
+},
+{
+  id: "ASD_052",
+  domain: "ASD",
+  subdomain: "social_reciprocity",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "shared_enjoyment",
+  text: {
+    hu: "Ritkán oszt meg örömteli élményeket másokkal.",
+    en: "Rarely shares enjoyment with others."
+  }
+},
+{
+  id: "ASD_053",
+  domain: "ASD",
+  subdomain: "social_reciprocity",
+  weight: 1.2,
+  reverse: true,
+  stemKey: "social_seeking_reverse",
+  text: {
+    hu: "Aktívan keresi mások társaságát.",
+    en: "Actively seeks social interaction."
+  }
+},
+{
+  id: "ASD_054",
+  domain: "ASD",
+  subdomain: "social_reciprocity",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "response_to_others_emotions",
+  text: {
+    hu: "Nehezen reagál mások érzelmeire.",
+    en: "Has difficulty responding to others' emotions."
+  }
+},
+{
+  id: "ASD_055",
+  domain: "ASD",
+  subdomain: "social_reciprocity",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "help_seeking",
+  text: {
+    hu: "Ritkán kér segítséget másoktól.",
+    en: "Rarely seeks help from others."
+  }
+},
+{
+  id: "ASD_056",
+  domain: "ASD",
+  subdomain: "nonverbal_communication",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "facial_expression_use",
+  text: {
+    hu: "Arckifejezése kevéssé tükrözi érzelmeit.",
+    en: "Facial expressions do not clearly reflect emotions."
+  }
+},
+{
+  id: "ASD_057",
+  domain: "ASD",
+  subdomain: "nonverbal_communication",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "body_posture_communication",
+  text: {
+    hu: "Testtartása kevéssé fejezi ki szándékait.",
+    en: "Body posture does not clearly convey intentions."
+  }
+},
+{
+  id: "ASD_058",
+  domain: "ASD",
+  subdomain: "nonverbal_communication",
+  weight: 1.2,
+  reverse: true,
+  stemKey: "gaze_following_reverse",
+  text: {
+    hu: "Követi mások tekintetét.",
+    en: "Follows others' gaze."
+  }
+},
+{
+  id: "ASD_059",
+  domain: "ASD",
+  subdomain: "nonverbal_communication",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "body_language_reading",
+  text: {
+    hu: "Nehezen értelmezi mások testbeszédét.",
+    en: "Has difficulty interpreting body language."
+  }
+},
+{
+  id: "ASD_060",
+  domain: "ASD",
+  subdomain: "nonverbal_communication",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "gesture_use",
+  text: {
+    hu: "Kevés gesztust használ kommunikáció során.",
+    en: "Uses few gestures when communicating."
+  }
+},
+{
+  id: "ASD_061",
+  domain: "ASD",
+  subdomain: "relationships",
+  weight: 1.4,
+  reverse: false,
+  stemKey: "social_intention_reading",
+  text: {
+    hu: "Nehezen érti mások szándékait.",
+    en: "Has difficulty understanding others' intentions."
+  }
+},
+{
+  id: "ASD_062",
+  domain: "ASD",
+  subdomain: "relationships",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "lasting_relationships",
+  text: {
+    hu: "Nehezen tart fenn tartós kapcsolatokat.",
+    en: "Struggles to maintain long-term relationships."
+  }
+},
+{
+  id: "ASD_063",
+  domain: "ASD",
+  subdomain: "relationships",
+  weight: 1.2,
+  reverse: true,
+  stemKey: "social_adaptation_reverse",
+  text: {
+    hu: "Képes alkalmazkodni mások elvárásaihoz.",
+    en: "Can adapt to others' expectations."
+  }
+},
+{
+  id: "ASD_064",
+  domain: "ASD",
+  subdomain: "relationships",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "friendship_initiation",
+  text: {
+    hu: "Nehezen kezdeményez barátságokat.",
+    en: "Has difficulty initiating friendships."
+  }
+},
+{
+  id: "ASD_065",
+  domain: "ASD",
+  subdomain: "relationships",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "social_feedback",
+  text: {
+    hu: "Nem mindig reagál mások visszajelzéseire.",
+    en: "Does not always respond to social feedback."
+  }
+},
+{
+  id: "ASD_066",
+  domain: "ASD",
+  subdomain: "restricted_patterns",
+  weight: 1.4,
+  reverse: false,
+  stemKey: "repetitive_vocalization",
+  text: {
+    hu: "Ismétlődő hangokat vagy szavakat használ.",
+    en: "Uses repetitive sounds or words."
+  }
+},
+{
+  id: "ASD_067",
+  domain: "ASD",
+  subdomain: "restricted_patterns",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "arrangement_rigidity",
+  text: {
+    hu: "Ragaszkodik tárgyak meghatározott elrendezéséhez.",
+    en: "Insists on specific arrangements of objects."
+  }
+},
+{
+  id: "ASD_068",
+  domain: "ASD",
+  subdomain: "restricted_patterns",
+  weight: 1.2,
+  reverse: true,
+  stemKey: "routine_change_reverse",
+  text: {
+    hu: "Képes elfogadni a rutinok változását.",
+    en: "Can accept changes in routines."
+  }
+},
+{
+  id: "ASD_069",
+  domain: "ASD",
+  subdomain: "restricted_patterns",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "topic_fixation",
+  text: {
+    hu: "Hajlamos egy témára túlzottan ráfókuszálni.",
+    en: "Tends to become overly focused on one topic."
+  }
+},
+{
+  id: "ASD_070",
+  domain: "ASD",
+  subdomain: "restricted_patterns",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "letting_go_routines",
+  text: {
+    hu: "Nehezen engedi el a megszokott rutinokat.",
+    en: "Has difficulty letting go of routines."
+  }
+},
+{
+  id: "ASD_071",
+  domain: "ASD",
+  subdomain: "sensory_processing",
+  weight: 1.4,
+  reverse: false,
+  stemKey: "sound_specific_sensitivity",
+  text: {
+    hu: "Bizonyos hangokra különösen érzékeny.",
+    en: "Is especially sensitive to specific sounds."
+  }
+},
+{
+  id: "ASD_072",
+  domain: "ASD",
+  subdomain: "sensory_processing",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "light_sensitivity",
+  text: {
+    hu: "Erős fények zavarják.",
+    en: "Is disturbed by bright lights."
+  }
+},
+{
+  id: "ASD_073",
+  domain: "ASD",
+  subdomain: "sensory_processing",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "sensory_seeking",
+  text: {
+    hu: "Keresi az intenzív érzékszervi élményeket.",
+    en: "Seeks intense sensory experiences."
+  }
+},
+{
+  id: "ASD_074",
+  domain: "ASD",
+  subdomain: "sensory_processing",
+  weight: 1.2,
+  reverse: true,
+  stemKey: "environmental_input_reverse",
+  text: {
+    hu: "Jól kezeli a különböző környezeti ingereket.",
+    en: "Handles environmental input well."
+  }
+},
+{
+  id: "ASD_075",
+  domain: "ASD",
+  subdomain: "sensory_processing",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "texture_sensitivity",
+  text: {
+    hu: "Bizonyos anyagokat kellemetlennek érez.",
+    en: "Finds certain textures uncomfortable."
+  }
+},
+{
+  id: "ASD_076",
+  domain: "ASD",
+  subdomain: "social_reciprocity",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "spontaneous_attention_sharing",
+  text: {
+    hu: "Ritkán osztja meg spontán módon a figyelmét másokkal.",
+    en: "Rarely shares attention spontaneously."
+  }
+},
+{
+  id: "ASD_077",
+  domain: "ASD",
+  subdomain: "social_reciprocity",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "shared_experience",
+  text: {
+    hu: "Nem osztja meg élményeit másokkal.",
+    en: "Does not share experiences with others."
+  }
+},
+{
+  id: "ASD_078",
+  domain: "ASD",
+  subdomain: "social_reciprocity",
+  weight: 1.2,
+  reverse: true,
+  stemKey: "reciprocal_conversation_reverse",
+  text: {
+    hu: "Képes oda-vissza kommunikációra.",
+    en: "Able to engage in back-and-forth communication."
+  }
+},
+{
+  id: "ASD_079",
+  domain: "ASD",
+  subdomain: "social_reciprocity",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "expected_social_response",
+  text: {
+    hu: "Nem mindig reagál a helyzethez illően.",
+    en: "Does not always respond appropriately to situations."
+  }
+},
+{
+  id: "ASD_080",
+  domain: "ASD",
+  subdomain: "social_reciprocity",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "social_withdrawal",
+  text: {
+    hu: "Hajlamos visszahúzódni társas helyzetekben.",
+    en: "Tends to withdraw in social situations."
+  }
+},
+  {
+  id: "ASD_081",
+  domain: "ASD",
+  subdomain: "social_reciprocity",
+  weight: 1.4,
+  reverse: false,
+  stemKey: "social_engagement_passive",
+  text: {
+    hu: "Társas helyzetekben passzívnak vagy nehezen bevonhatónak tűnik.",
+    en: "Appears passive or difficult to engage in social situations."
+  }
+},
+{
+  id: "ASD_082",
+  domain: "ASD",
+  subdomain: "social_reciprocity",
+  weight: 1.2,
+  reverse: true,
+  stemKey: "response_to_others_interest_reverse",
+  text: {
+    hu: "Természetesen reagál arra, ha mások érdeklődést vagy örömöt mutatnak.",
+    en: "Responds naturally when others show interest or joy."
+  }
+},
+{
+  id: "ASD_083",
+  domain: "ASD",
+  subdomain: "social_reciprocity",
+  weight: 1.4,
+  reverse: false,
+  stemKey: "joint_attention",
+  text: {
+    hu: "Kevéssé osztja meg a figyelmét másokkal közös helyzetekben.",
+    en: "Shows limited shared attention with others in joint situations."
+  }
+},
+{
+  id: "ASD_084",
+  domain: "ASD",
+  subdomain: "social_reciprocity",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "noticing_social_bid",
+  text: {
+    hu: "Nem mindig veszi észre, ha valaki kapcsolódni szeretne hozzá.",
+    en: "Does not always notice when someone wants to connect."
+  }
+},
+{
+  id: "ASD_085",
+  domain: "ASD",
+  subdomain: "social_reciprocity",
+  weight: 1.5,
+  reverse: false,
+  stemKey: "reciprocity_one_sided",
+  text: {
+    hu: "Társas kölcsönössége gyakran egyoldalúnak tűnik.",
+    en: "Social reciprocity often appears one-sided."
+  }
+},
+{
+  id: "ASD_086",
+  domain: "ASD",
+  subdomain: "nonverbal_communication",
+  weight: 1.4,
+  reverse: false,
+  stemKey: "eye_contact_timing",
+  text: {
+    hu: "Szemkontaktusa rövid vagy szokatlan időzítésű.",
+    en: "Eye contact is brief or unusually timed."
+  }
+},
+{
+  id: "ASD_087",
+  domain: "ASD",
+  subdomain: "nonverbal_communication",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "nonverbal_coordination",
+  text: {
+    hu: "Nehezen hangolja össze a tekintetet, a mimikát és a beszédet.",
+    en: "Has difficulty coordinating gaze, facial expression, and speech."
+  }
+},
+{
+  id: "ASD_088",
+  domain: "ASD",
+  subdomain: "nonverbal_communication",
+  weight: 1.2,
+  reverse: true,
+  stemKey: "facial_expression_reverse",
+  text: {
+    hu: "Jól és természetesen használ arckifejezést kommunikáció közben.",
+    en: "Uses facial expressions naturally during communication."
+  }
+},
+{
+  id: "ASD_089",
+  domain: "ASD",
+  subdomain: "nonverbal_communication",
+  weight: 1.5,
+  reverse: false,
+  stemKey: "facial_posture_reading",
+  text: {
+    hu: "Nem mindig érti, mit fejez ki mások arca vagy testtartása.",
+    en: "Does not always understand what others' facial expressions or posture mean."
+  }
+},
+{
+  id: "ASD_090",
+  domain: "ASD",
+  subdomain: "nonverbal_communication",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "gesture_support_communication",
+  text: {
+    hu: "Gesztusai nem mindig segítik jól a mondanivalóját.",
+    en: "Gestures do not always support communication effectively."
+  }
+},
+{
+  id: "ASD_091",
+  domain: "ASD",
+  subdomain: "nonverbal_communication",
+  weight: 1.4,
+  reverse: false,
+  stemKey: "formal_communication_style",
+  text: {
+    hu: "Kommunikációja merevnek vagy szokatlanul formálisnak tűnhet.",
+    en: "Communication may seem rigid or unusually formal."
+  }
+},
+{
+  id: "ASD_092",
+  domain: "ASD",
+  subdomain: "nonverbal_communication",
+  weight: 1.2,
+  reverse: true,
+  stemKey: "visual_social_cue_reverse",
+  text: {
+    hu: "Könnyen követi mások mutatásait és vizuális jelzéseit.",
+    en: "Easily follows others' pointing and visual cues."
+  }
+},
+{
+  id: "ASD_093",
+  domain: "ASD",
+  subdomain: "nonverbal_communication",
+  weight: 1.4,
+  reverse: false,
+  stemKey: "prosody_adjustment",
+  text: {
+    hu: "Nehezen igazítja a hanghordozását a helyzethez.",
+    en: "Has difficulty adjusting tone of voice to the situation."
+  }
+},
+{
+  id: "ASD_094",
+  domain: "ASD",
+  subdomain: "nonverbal_communication",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "gaze_social_feedback",
+  text: {
+    hu: "Nem mindig használja a tekintetét társas irányításra vagy visszajelzésre.",
+    en: "Does not consistently use gaze for social guidance or feedback."
+  }
+},
+{
+  id: "ASD_095",
+  domain: "ASD",
+  subdomain: "nonverbal_communication",
+  weight: 1.5,
+  reverse: false,
+  stemKey: "nonverbal_emotion_readability",
+  text: {
+    hu: "Mások számára nehéz lehet leolvasni az érzelmi állapotát a nonverbális jelekből.",
+    en: "Others may find it hard to read emotional state from nonverbal cues."
+  }
+},
+{
+  id: "ASD_096",
+  domain: "ASD",
+  subdomain: "relationships",
+  weight: 1.4,
+  reverse: false,
+  stemKey: "relationship_adaptation",
+  text: {
+    hu: "Nehezen alkalmazkodik különböző emberekhez kapcsolati helyzetekben.",
+    en: "Has difficulty adapting to different people in relationship situations."
+  }
+},
+{
+  id: "ASD_097",
+  domain: "ASD",
+  subdomain: "relationships",
+  weight: 1.5,
+  reverse: false,
+  stemKey: "context_meaning_difference",
+  text: {
+    hu: "Nem mindig érti, hogy ugyanaz a viselkedés más helyzetben mást jelenthet.",
+    en: "Does not always understand that the same behavior may mean different things in different contexts."
+  }
+},
+{
+  id: "ASD_098",
+  domain: "ASD",
+  subdomain: "relationships",
+  weight: 1.2,
+  reverse: true,
+  stemKey: "social_rejection_awareness_reverse",
+  text: {
+    hu: "Képes felismerni, ha valaki nem szeretne kapcsolódni.",
+    en: "Can recognize when someone does not want to interact."
+  }
+},
+{
+  id: "ASD_099",
+  domain: "ASD",
+  subdomain: "relationships",
+  weight: 1.4,
+  reverse: false,
+  stemKey: "friendship_intention_reading",
+  text: {
+    hu: "Baráti helyzetekben gyakran félreérti mások szándékait.",
+    en: "Often misreads others' intentions in friendship situations."
+  }
+},
+{
+  id: "ASD_100",
+  domain: "ASD",
+  subdomain: "relationships",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "social_distance_signals",
+  text: {
+    hu: "Kevéssé érti a társas közeledés és távolodás finom jelzéseit.",
+    en: "Has limited understanding of subtle signals of social closeness and distance."
+  }
+},
+{
+  id: "ASD_101",
+  domain: "ASD",
+  subdomain: "relationships",
+  weight: 1.4,
+  reverse: false,
+  stemKey: "boredom_interest_detection",
+  text: {
+    hu: "Nehezen veszi észre, ha mások unatkoznak vagy elveszítik az érdeklődésüket.",
+    en: "Has difficulty noticing when others are bored or losing interest."
+  }
+},
+{
+  id: "ASD_102",
+  domain: "ASD",
+  subdomain: "relationships",
+  weight: 1.2,
+  reverse: true,
+  stemKey: "social_rules_new_context_reverse",
+  text: {
+    hu: "Képes viszonylag jól alkalmazkodni a társas szabályokhoz új helyzetekben is.",
+    en: "Can adapt relatively well to social rules even in new situations."
+  }
+},
+{
+  id: "ASD_103",
+  domain: "ASD",
+  subdomain: "relationships",
+  weight: 1.5,
+  reverse: false,
+  stemKey: "unwritten_peer_rules",
+  text: {
+    hu: "Nehezen érti a kortárs kapcsolatok íratlan szabályait.",
+    en: "Struggles to understand the unwritten rules of peer relationships."
+  }
+},
+{
+  id: "ASD_104",
+  domain: "ASD",
+  subdomain: "relationships",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "relationship_distance_balance",
+  text: {
+    hu: "Kapcsolataiban gyakran túl közelinek vagy túl távolinak tűnik.",
+    en: "May seem either too close or too distant in relationships."
+  }
+},
+{
+  id: "ASD_105",
+  domain: "ASD",
+  subdomain: "relationships",
+  weight: 1.4,
+  reverse: false,
+  stemKey: "peer_group_fit",
+  text: {
+    hu: "Nehézséget okoz számára a kortárs helyzetekhez való igazodás.",
+    en: "Has difficulty fitting into peer-group situations."
+  }
+},
+{
+  id: "ASD_106",
+  domain: "ASD",
+  subdomain: "restricted_patterns",
+  weight: 1.4,
+  reverse: false,
+  stemKey: "strong_topic_attachment",
+  text: {
+    hu: "Bizonyos témákhoz vagy tárgyakhoz szokatlanul erősen kötődik.",
+    en: "Shows unusually strong attachment to certain topics or objects."
+  }
+},
+{
+  id: "ASD_107",
+  domain: "ASD",
+  subdomain: "restricted_patterns",
+  weight: 1.5,
+  reverse: false,
+  stemKey: "sameness_comfort",
+  text: {
+    hu: "Megnyugszik, ha a dolgok pontosan ugyanúgy történnek, mint korábban.",
+    en: "Feels calmer when things happen exactly the same way as before."
+  }
+},
+{
+  id: "ASD_108",
+  domain: "ASD",
+  subdomain: "restricted_patterns",
+  weight: 1.2,
+  reverse: true,
+  stemKey: "routine_change_tolerance_reverse",
+  text: {
+    hu: "Jól tolerálja, ha egy megszokott rutin megváltozik.",
+    en: "Tolerates changes in familiar routines well."
+  }
+},
+{
+  id: "ASD_109",
+  domain: "ASD",
+  subdomain: "restricted_patterns",
+  weight: 1.4,
+  reverse: false,
+  stemKey: "missing_step_distress",
+  text: {
+    hu: "A megszokott tárgyak vagy lépések hiánya erős feszültséget okozhat nála.",
+    en: "Missing familiar objects or steps may cause strong distress."
+  }
+},
+{
+  id: "ASD_110",
+  domain: "ASD",
+  subdomain: "restricted_patterns",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "sequence_insistence",
+  text: {
+    hu: "Ragaszkodik ahhoz, hogy bizonyos dolgokat mindig ugyanabban a sorrendben csináljon.",
+    en: "Insists on doing certain things in the same order every time."
+  }
+},
+{
+  id: "ASD_111",
+  domain: "ASD",
+  subdomain: "restricted_patterns",
+  weight: 1.4,
+  reverse: false,
+  stemKey: "narrow_interest_dominance",
+  text: {
+    hu: "Érdeklődése néha annyira beszűkül, hogy más témák háttérbe szorulnak.",
+    en: "Interests may become so narrow that other topics fade into the background."
+  }
+},
+{
+  id: "ASD_112",
+  domain: "ASD",
+  subdomain: "restricted_patterns",
+  weight: 1.2,
+  reverse: true,
+  stemKey: "shifting_preferred_topic_reverse",
+  text: {
+    hu: "Könnyen el tud mozdulni egy kedvelt témától vagy tevékenységtől.",
+    en: "Can shift away from a preferred topic or activity without much difficulty."
+  }
+},
+{
+  id: "ASD_113",
+  domain: "ASD",
+  subdomain: "restricted_patterns",
+  weight: 1.5,
+  reverse: false,
+  stemKey: "detail_focus",
+  text: {
+    hu: "Szokatlan részletekre összpontosít ahelyett, hogy az egész képet nézné.",
+    en: "Focuses on unusual details rather than the bigger picture."
+  }
+},
+{
+  id: "ASD_114",
+  domain: "ASD",
+  subdomain: "restricted_patterns",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "interruption_distress",
+  text: {
+    hu: "Nehézséget okoz számára, ha megszakítják egy preferált tevékenység közben.",
+    en: "Has difficulty when interrupted during a preferred activity."
+  }
+},
+{
+  id: "ASD_115",
+  domain: "ASD",
+  subdomain: "restricted_patterns",
+  weight: 1.4,
+  reverse: false,
+  stemKey: "repetitive_pattern_need",
+  text: {
+    hu: "Bizonyos ismétlődő mintázatok megnyugtatóak vagy szükségesek számára.",
+    en: "Certain repetitive patterns seem calming or necessary."
+  }
+},
+{
+  id: "ASD_116",
+  domain: "ASD",
+  subdomain: "sensory_processing",
+  weight: 1.5,
+  reverse: false,
+  stemKey: "background_noise_sensitivity",
+  text: {
+    hu: "Erősen zavarhatják a háttérzajok, még akkor is, ha másokat nem.",
+    en: "Background noise may be very distressing even when it does not bother others."
+  }
+},
+{
+  id: "ASD_117",
+  domain: "ASD",
+  subdomain: "sensory_processing",
+  weight: 1.4,
+  reverse: false,
+  stemKey: "multisensory_sensitivity",
+  text: {
+    hu: "Bizonyos fények, szagok vagy anyagok szokatlanul intenzív reakciót váltanak ki belőle.",
+    en: "Certain lights, smells, or textures may trigger unusually strong reactions."
+  }
+},
+{
+  id: "ASD_118",
+  domain: "ASD",
+  subdomain: "sensory_processing",
+  weight: 1.2,
+  reverse: true,
+  stemKey: "everyday_sensory_reverse",
+  text: {
+    hu: "Általában jól kezeli a hétköznapi érzékszervi ingereket.",
+    en: "Generally handles everyday sensory input well."
+  }
+},
+{
+  id: "ASD_119",
+  domain: "ASD",
+  subdomain: "sensory_processing",
+  weight: 1.3,
+  reverse: false,
+  stemKey: "sensory_seek_avoid_pattern",
+  text: {
+    hu: "Úgy tűnik, bizonyos érzékszervi élményeket tudatosan keres vagy kerül.",
+    en: "Seems to actively seek or avoid certain sensory experiences."
+  }
+},
+{
+  id: "ASD_120",
+  domain: "ASD",
+  subdomain: "sensory_processing",
+  weight: 1.4,
+  reverse: false,
+  stemKey: "sensory_overload",
+  text: {
+    hu: "Szenzoros túlterhelés esetén gyorsan kibillenhet az egyensúlyából.",
+    en: "May become dysregulated quickly during sensory overload."
+  }
+},
+
+  /* =========================
+     121-250
+  ========================= */
+
+  ...(() => {
+  const items = [];
+  let num = 121;
+
+  function makeId() {
+    return `ASD_${String(num++).padStart(3, "0")}`;
+  }
+
+  function add(subdomain, weight, reverse, stemKey, hu, en) {
+    items.push({
+      id: makeId(),
+      domain: "ASD",
+      subdomain,
+      weight,
+      reverse,
+      stemKey,
+      text: { hu, en }
+    });
+  }
+
+  const contexts = [
+    { hu: "otthoni helyzetekben", en: "at home" },
+    { hu: "iskolai vagy tanulási helyzetekben", en: "in school or learning situations" },
+    { hu: "kortársakkal együtt", en: "with peers" },
+    { hu: "változó vagy kiszámíthatatlan helyzetekben", en: "in changing or unpredictable situations" },
+    { hu: "közös játék vagy közös tevékenység közben", en: "during shared play or shared activities" }
+  ];
+
+  function contextualize(subdomain, weight, reverse, stemKey, huStem, enStem) {
+    contexts.forEach((ctx) => {
+      add(
+        subdomain,
+        weight,
+        reverse,
+        stemKey,
+        `${huStem} ${ctx.hu}.`,
+        `${enStem} ${ctx.en}.`
       );
     });
-  });
+  }
 
-  return out;
-}
+  contextualize(
+    "flexibility",
+    1.5,
+    false,
+    "routine_change_tolerance",
+    "Nehezen viseli, ha a megszokott rend megváltozik",
+    "Has difficulty tolerating changes in familiar routines"
+  );
 
-const SOCIAL_COMMUNICATION_QUESTIONS = buildQuestions("asd", "social_communication", SOCIAL_COMMUNICATION_BASE, 1);   // 50
-const NONVERBAL_QUESTIONS = buildQuestions("asd", "nonverbal_signals", NONVERBAL_BASE, 51);                         // 50
-const FLEXIBILITY_QUESTIONS = buildQuestions("asd", "flexibility_routines", FLEXIBILITY_BASE, 101);                // 50
-const RESTRICTED_INTERESTS_QUESTIONS = buildQuestions("asd", "restricted_interests", RESTRICTED_INTERESTS_BASE, 151); // 50
-const SENSORY_QUESTIONS = buildQuestions("asd", "sensory_processing", SENSORY_BASE, 201);                          // 50
+  contextualize(
+    "flexibility",
+    1.4,
+    false,
+    "sameness_frustration",
+    "Frusztrálttá válik, ha a dolgok nem a megszokott módon történnek",
+    "Becomes frustrated when things do not happen in the usual way"
+  );
 
-export const ASD_BANK = [
-  ...SOCIAL_COMMUNICATION_QUESTIONS,
-  ...NONVERBAL_QUESTIONS,
-  ...FLEXIBILITY_QUESTIONS,
-  ...RESTRICTED_INTERESTS_QUESTIONS,
-  ...SENSORY_QUESTIONS
+  contextualize(
+    "flexibility",
+    1.2,
+    true,
+    "adaptation_reverse",
+    "Viszonylag rugalmasan tud alkalmazkodni új helyzetekhez",
+    "Can adapt relatively flexibly to new situations"
+  );
+
+  contextualize(
+    "flexibility",
+    1.4,
+    false,
+    "transition_shift",
+    "Nehézséget okoz számára egyik tevékenységről a másikra váltani",
+    "Has difficulty shifting from one activity to another"
+  );
+
+  contextualize(
+    "flexibility",
+    1.3,
+    false,
+    "sequence_dependence",
+    "Erősen ragaszkodik a megszokott lépésekhez és sorrendekhez",
+    "Strongly relies on familiar steps and sequences"
+  );
+
+  contextualize(
+    "pragmatic_language",
+    1.4,
+    false,
+    "hidden_meaning",
+    "Nehezen érti a társas kommunikáció rejtett jelentéseit",
+    "Has difficulty understanding hidden meanings in social communication"
+  );
+
+  contextualize(
+    "pragmatic_language",
+    1.3,
+    false,
+    "literal_interpretation",
+    "Gyakran szó szerint értelmezi, amit mások mondanak",
+    "Often interprets what others say very literally"
+  );
+
+  contextualize(
+    "pragmatic_language",
+    1.2,
+    true,
+    "style_adjustment_reverse",
+    "Képes a beszédstílusát a helyzethez és a partnerhez igazítani",
+    "Can adjust communication style to the situation and communication partner"
+  );
+
+  contextualize(
+    "pragmatic_language",
+    1.4,
+    false,
+    "speech_amount_timing",
+    "Nem mindig érzi, mikor kellene többet vagy kevesebbet mondania",
+    "Does not always sense when to say more or less"
+  );
+
+  contextualize(
+    "pragmatic_language",
+    1.3,
+    false,
+    "conversation_reciprocity",
+    "Beszélgetésben nehezen követi a kölcsönös oda-vissza ritmust",
+    "Has difficulty following the mutual back-and-forth rhythm of conversation"
+  );
+
+  contextualize(
+    "social_reciprocity",
+    1.4,
+    false,
+    "expected_social_response",
+    "Nem mindig reagál úgy, ahogy a helyzet társas szempontból indokolná",
+    "Does not always respond in the socially expected way"
+  );
+
+  contextualize(
+    "social_reciprocity",
+    1.3,
+    false,
+    "shared_attention",
+    "Kevéssé keresi a közös figyelmi fókuszt másokkal",
+    "Shows limited interest in shared attention with others"
+  );
+
+  contextualize(
+    "social_reciprocity",
+    1.2,
+    true,
+    "interest_sharing_reverse",
+    "Természetesen megosztja az érdeklődését és örömét másokkal",
+    "Naturally shares interest and enjoyment with others"
+  );
+
+  contextualize(
+    "social_reciprocity",
+    1.4,
+    false,
+    "low_reciprocity",
+    "Társas helyzetben kevéssé kölcsönösnek tűnik a kapcsolódása",
+    "May appear less reciprocal in social interaction"
+  );
+
+  contextualize(
+    "social_reciprocity",
+    1.5,
+    false,
+    "social_rhythm",
+    "Nehezen veszi fel vagy tartja fenn a társas kapcsolat ritmusát",
+    "Has difficulty initiating or maintaining the rhythm of social interaction"
+  );
+
+  contextualize(
+    "nonverbal_communication",
+    1.4,
+    false,
+    "nonverbal_fit",
+    "Nonverbális jelzései nem mindig illeszkednek a helyzethez",
+    "Nonverbal signals do not always match the situation"
+  );
+
+  contextualize(
+    "nonverbal_communication",
+    1.3,
+    false,
+    "body_language_reading",
+    "Nehezen értelmezi mások testbeszédét és hangsúlyait",
+    "Has difficulty interpreting others' body language and vocal emphasis"
+  );
+
+  contextualize(
+    "nonverbal_communication",
+    1.2,
+    true,
+    "gaze_expression_gesture_reverse",
+    "Jól használja a tekintetet, mimikát és gesztusokat a kapcsolódásban",
+    "Uses gaze, facial expression, and gestures well in interaction"
+  );
+
+  contextualize(
+    "nonverbal_communication",
+    1.4,
+    false,
+    "unusual_nonverbal_style",
+    "Tekintete, arckifejezése vagy hanghordozása szokatlannak tűnhet",
+    "Gaze, facial expression, or tone of voice may seem unusual"
+  );
+
+  contextualize(
+    "nonverbal_communication",
+    1.3,
+    false,
+    "nonverbal_cue_detection",
+    "Nem mindig észleli pontosan a nonverbális társas jelzéseket",
+    "Does not always accurately detect nonverbal social cues"
+  );
+
+  contextualize(
+    "relationships",
+    1.4,
+    false,
+    "peer_expectation_fit",
+    "Nehezen igazodik a kortárs kapcsolatok elvárásaihoz",
+    "Has difficulty adjusting to expectations in peer relationships"
+  );
+
+  contextualize(
+    "relationships",
+    1.3,
+    false,
+    "relationship_initiation_maintenance",
+    "Nem mindig érti, hogyan lehet kapcsolatot kezdeményezni vagy fenntartani",
+    "Does not always understand how to initiate or maintain relationships"
+  );
+
+  contextualize(
+    "relationships",
+    1.2,
+    true,
+    "social_role_navigation_reverse",
+    "Viszonylag jól eligazodik különböző társas szerepek között",
+    "Navigates different social roles relatively well"
+  );
+
+  contextualize(
+    "relationships",
+    1.4,
+    false,
+    "relationship_uncertainty",
+    "Másokkal való kapcsolatai gyakran egyoldalúnak vagy bizonytalannak tűnnek",
+    "Relationships may seem one-sided or uncertain"
+  );
+
+  contextualize(
+    "relationships",
+    1.5,
+    false,
+    "friendship_rules",
+    "Nehézséget okoz számára a barátságok finom szabályainak megértése",
+    "Has difficulty understanding the subtle rules of friendship"
+  );
+
+  add(
+    "sensory_processing",
+    1.4,
+    false,
+    "sensory_intensity",
+    "Bizonyos hétköznapi érzékszervi ingerek túl intenzívnek tűnnek számára.",
+    "Certain everyday sensory inputs seem excessively intense."
+  );
+
+  add(
+    "sensory_processing",
+    1.2,
+    true,
+    "sensory_tolerance_reverse",
+    "A szokásos zajokat, fényeket és érintéseket többnyire jól tolerálja.",
+    "Generally tolerates ordinary sounds, lights, and touch well."
+  );
+
+  add(
+    "restricted_patterns",
+    1.4,
+    false,
+    "interest_attachment",
+    "Erősen ragaszkodik bizonyos érdeklődési témákhoz vagy ismétlődő mintákhoz.",
+    "Shows strong attachment to certain interests or repetitive patterns."
+  );
+
+  add(
+    "restricted_patterns",
+    1.3,
+    false,
+    "preferred_activity_interruption",
+    "Megterhelő lehet számára, ha egy kedvelt téma vagy tevékenység megszakad.",
+    "It may be distressing when a preferred topic or activity is interrupted."
+  );
+
+  add(
+    "restricted_patterns",
+    1.2,
+    true,
+    "new_idea_openness_reverse",
+    "Képes új ötletek vagy tevékenységek felé nyitni, ha megfelelő támogatást kap.",
+    "Can open up to new ideas or activities when given appropriate support."
+  );
+
+  return items;
+})()
 ];
