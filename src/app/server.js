@@ -29,7 +29,9 @@ app.get("/", (_req, res) => {
   return res.status(200).json({
     ok: true,
     service: "neuromap-backend",
-    message: "API is running"
+    message: "API is running",
+    adminTokenConfigured: Boolean(env.ADMIN_TOKEN),
+    nodeEnv: env.NODE_ENV
   });
 });
 
