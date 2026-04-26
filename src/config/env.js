@@ -170,5 +170,5 @@ export const env = {
       ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`
       : "http://localhost:3000"),
 
-  ADMIN_TOKEN: optional("ADMIN_TOKEN", null),
+  ADMIN_TOKEN: process.env.ADMIN_TOKEN || null
 };
