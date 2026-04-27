@@ -59,7 +59,8 @@ export async function sendReportEmail({ to, lang, name, reportText, payload }) {
 });
 const pdfBuffer = await generatePdfBuffer({
   name,
-  reportText: String(reportText).trim()
+  reportText: String(reportText).trim(),
+  lang: safeLang
 });
 
     console.log("[email] template built", {
@@ -75,11 +76,11 @@ const pdfBuffer = await generatePdfBuffer({
   html,
   text,
   attachments: [
-    {
-      filename: "neuromap-report.html",
-      content: pdfBuffer
-    }
-  ]
+  {
+    filename: "neuromap-report.pdf",
+    content: pdfBuffer
+  }
+]
 });
 
     console.log("[email] send success", response);
