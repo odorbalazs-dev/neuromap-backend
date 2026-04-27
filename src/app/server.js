@@ -8,6 +8,7 @@ import sessionRoutes from "../api/routes/session.js";
 import webhookRoutes from "../api/routes/webhook.js";
 import healthRoutes from "../api/routes/health.js";
 import adminRoutes from "../api/routes/admin.js";
+import adminStatusRoutes from "../api/routes/admin-status.js";
 
 const app = express();
 
@@ -49,6 +50,7 @@ app.use("/checkout", checkoutRoutes);
 app.use("/session", sessionRoutes);
 app.use("/webhook", webhookRoutes);
 app.use("/health", healthRoutes);
+app.use("/admin/status", adminStatusRoutes);
 app.use("/admin", adminRoutes);
 
 async function start() {
