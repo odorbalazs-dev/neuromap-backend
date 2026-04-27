@@ -8,7 +8,6 @@ import sessionRoutes from "../api/routes/session.js";
 import webhookRoutes from "../api/routes/webhook.js";
 import healthRoutes from "../api/routes/health.js";
 import adminRoutes from "../api/routes/admin.js";
-import adminStatusRoutes from "../api/routes/admin-status.js";
 
 const app = express();
 
@@ -23,25 +22,16 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
 
+app.use("/public", express.static("public"));
+
 app.use("/webhook", express.raw({ type: "application/json" }));
 app.use(express.json({ limit: "2mb" }));
 
 app.get("/", (_req, res) => {
-  const adminTokenRaw = process.env.ADMIN_TOKEN;
-
   return res.status(200).json({
     ok: true,
     service: "neuromap-backend",
-    message: "API is running",
-    nodeEnv: env.NODE_ENV,
-
-    adminTokenFromEnvObject: Boolean(env.ADMIN_TOKEN),
-    adminTokenFromProcessEnv: Boolean(adminTokenRaw),
-    adminTokenLength: adminTokenRaw ? adminTokenRaw.length : 0,
-    hasAdminTokenKey: Object.prototype.hasOwnProperty.call(
-      process.env,
-      "ADMIN_TOKEN"
-    )
+    message: "API is running"
   });
 });
 
@@ -49,7 +39,6 @@ app.use("/checkout", checkoutRoutes);
 app.use("/session", sessionRoutes);
 app.use("/webhook", webhookRoutes);
 app.use("/health", healthRoutes);
-app.use("/admin/status", adminStatusRoutes);
 app.use("/admin", adminRoutes);
 
 async function start() {
