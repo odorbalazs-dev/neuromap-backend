@@ -38,7 +38,6 @@ app.get("/", (_req, res) => {
     adminTokenFromEnvObject: Boolean(env.ADMIN_TOKEN),
     adminTokenFromProcessEnv: Boolean(adminTokenRaw),
     adminTokenLength: adminTokenRaw ? adminTokenRaw.length : 0,
-
     hasAdminTokenKey: Object.prototype.hasOwnProperty.call(
       process.env,
       "ADMIN_TOKEN"
