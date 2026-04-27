@@ -20,7 +20,7 @@ function normalizeRecipients(to) {
     .filter(Boolean);
 }
 
-export async function sendReportEmail({ to, lang, name, reportText }) {
+export async function sendReportEmail({ to, lang, name, reportText, payload }) {
   const recipients = normalizeRecipients(to);
   const safeLang = getSafeLang(lang);
 
@@ -51,10 +51,11 @@ export async function sendReportEmail({ to, lang, name, reportText }) {
     }
 
     const { subject, html, text } = buildReportEmail({
-      lang: safeLang,
-      name,
-      reportText: String(reportText).trim()
-    });
+  lang: safeLang,
+  name,
+  reportText: String(reportText).trim(),
+  payload
+});
 
     console.log("[email] template built", {
       subjectLength: subject.length,

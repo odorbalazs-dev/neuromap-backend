@@ -12,7 +12,42 @@ function getSafeLang(lang) {
   return allowed.includes(lang) ? lang : "en";
 }
 
-export function buildReportEmail({ lang, name, reportText }) {
+function getDomainLabel(domain, lang) {
+  const labels = {
+    hu: {
+      ADHD: "figyelem és impulzivitás",
+      ASD: "társas kommunikáció és rugalmasság",
+      ANXIETY: "szorongásos jelzések",
+      DEPRESSION: "hangulati jelzések",
+      LEARNING: "tanulási nehézségek"
+    },
+    en: {
+      ADHD: "attention and impulsivity",
+      ASD: "social communication and flexibility",
+      ANXIETY: "anxiety signals",
+      DEPRESSION: "mood-related signals",
+      LEARNING: "learning difficulties"
+    }
+  };
+
+  const safeLang = getSafeLang(lang);
+  return labels[safeLang]?.[domain] || labels.en[domain] || null;
+}
+
+function buildSubject(baseSubject, payload, lang) {
+  const domain = payload?.detectedRisk || payload?.specificProfile?.kind || null;
+  const label = getDomainLabel(domain, lang);
+
+  if (!label) return baseSubject;
+
+  if (getSafeLang(lang) === "hu") {
+    return `NeuroMap Kids – elkészült a kiértékelés: ${label}`;
+  }
+
+  return `NeuroMap Kids – report ready: ${label}`;
+}
+
+export function buildReportEmail({ lang, name, reportText, payload = null }) {
   const safeLang = getSafeLang(lang);
   const safeName = escapeHtml(name || "");
   const safeReport = escapeHtml(reportText || "").replaceAll("\n", "<br />");
@@ -21,7 +56,7 @@ export function buildReportEmail({ lang, name, reportText }) {
     hu: {
       subject: "NeuroMap Kids – elkészült a kiértékelés",
       preheader: "A részletes összefoglaló elkészült és ebben az emailben találod.",
-      greeting: safeName ? `Kedves Szülő,` : "Kedves Szülő,",
+      greeting: "Kedves Szülő,",
       intro: safeName
         ? `${safeName} kérdőíves kiértékelése elkészült. Az alábbi összefoglaló egy strukturált, előzetes értelmezés, amely segíthet jobban átlátni a megfigyelt mintázatokat.`
         : "A kérdőíves kiértékelés elkészült. Az alábbi összefoglaló egy strukturált, előzetes értelmezés, amely segíthet jobban átlátni a megfigyelt mintázatokat.",
@@ -196,6 +231,7 @@ export function buildReportEmail({ lang, name, reportText }) {
   };
 
   const t = content[safeLang] || content.en;
+  const subject = buildSubject(t.subject, payload, safeLang);
 
   const html = `
 <!doctype html>
@@ -203,7 +239,7 @@ export function buildReportEmail({ lang, name, reportText }) {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>${escapeHtml(t.subject)}</title>
+    <title>${escapeHtml(subject)}</title>
   </head>
   <body style="margin:0;padding:0;background:#f5f7fb;">
     <div style="display:none;max-height:0;overflow:hidden;opacity:0;">
@@ -221,7 +257,7 @@ export function buildReportEmail({ lang, name, reportText }) {
                   NeuroMap Kids
                 </div>
                 <div style="font-family:Arial,sans-serif;font-size:28px;line-height:1.25;font-weight:700;margin-top:10px;">
-                  ${escapeHtml(t.subject)}
+                  ${escapeHtml(subject)}
                 </div>
               </td>
             </tr>
@@ -284,7 +320,7 @@ ${t.footer}
   `.trim();
 
   return {
-    subject: t.subject,
+    subject,
     html,
     text
   };

@@ -127,11 +127,12 @@ export async function handleStripeWebhook(rawBody, signature) {
     phase = "send_email";
 
     await sendReportEmail({
-      to: sessionRow.email,
-      lang: sessionRow.lang,
-      name: sessionRow.name,
-      reportText: resultText
-    });
+  to: sessionRow.email,
+  lang: sessionRow.lang,
+  name: sessionRow.name,
+  reportText: resultText,
+  payload: sessionRow.payload
+});
 
     phase = "mark_webhook_processed";
     await markWebhookProcessed(event.id);
