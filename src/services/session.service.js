@@ -110,17 +110,8 @@ export async function markAnalysisFailed(sessionId, errorMessage) {
     [sessionId, errorMessage]
   );
 }
-export async function saveAnalysis(sessionId, analysisText) {
-  await db.query(
-    `
-    UPDATE sessions
-    SET analysis = $1,
-        analyzed_at = NOW()
-    WHERE id = $2
-    `,
-    [analysisText, sessionId]
-  );
-}
+
+
 export async function saveAnalysis(sessionId, analysisText) {
   await db.query(
     `
