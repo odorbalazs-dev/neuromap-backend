@@ -4,6 +4,7 @@ import {
 } from "../../services/session.service.js";
 import { createCheckoutSession } from "../../services/stripe.service.js";
 import { validateCheckoutPayload } from "../../utils/validateCheckoutPayload.js";
+import { normalizeCheckoutPayload } from "../../utils/normalizeCheckoutPayload.js";
 
 export async function createCheckout(req, res) {
   try {
