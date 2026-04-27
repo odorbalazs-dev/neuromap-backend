@@ -1,6 +1,7 @@
 import { Resend } from "resend";
 import { env } from "../config/env.js";
 import { buildReportEmail } from "../templates/reportEmail.js";
+import { generatePdfBuffer } from "./pdf.service.js";
 
 const resend = new Resend(env.RESEND_API_KEY);
 
@@ -56,6 +57,10 @@ export async function sendReportEmail({ to, lang, name, reportText, payload }) {
   reportText: String(reportText).trim(),
   payload
 });
+const pdfBuffer = await generatePdfBuffer({
+  name,
+  reportText: String(reportText).trim()
+});
 
     console.log("[email] template built", {
       subjectLength: subject.length,
@@ -64,12 +69,18 @@ export async function sendReportEmail({ to, lang, name, reportText, payload }) {
     });
 
     const response = await resend.emails.send({
-      from: env.EMAIL_FROM,
-      to: recipients,
-      subject,
-      html,
-      text
-    });
+  from: env.EMAIL_FROM,
+  to: recipients,
+  subject,
+  html,
+  text,
+  attachments: [
+    {
+      filename: "neuromap-report.html",
+      content: pdfBuffer
+    }
+  ]
+});
 
     console.log("[email] send success", response);
 
