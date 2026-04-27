@@ -26,12 +26,22 @@ app.use("/webhook", express.raw({ type: "application/json" }));
 app.use(express.json({ limit: "2mb" }));
 
 app.get("/", (_req, res) => {
+  const adminTokenRaw = process.env.ADMIN_TOKEN;
+
   return res.status(200).json({
     ok: true,
     service: "neuromap-backend",
     message: "API is running",
-    adminTokenConfigured: Boolean(env.ADMIN_TOKEN),
-    nodeEnv: env.NODE_ENV
+    nodeEnv: env.NODE_ENV,
+
+    adminTokenFromEnvObject: Boolean(env.ADMIN_TOKEN),
+    adminTokenFromProcessEnv: Boolean(adminTokenRaw),
+    adminTokenLength: adminTokenRaw ? adminTokenRaw.length : 0,
+
+    hasAdminTokenKey: Object.prototype.hasOwnProperty.call(
+      process.env,
+      "ADMIN_TOKEN"
+    )
   });
 });
 
