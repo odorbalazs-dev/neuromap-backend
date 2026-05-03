@@ -32,24 +32,12 @@ function getStripeCheckoutLocale(lang) {
   return localeMap[safeLang] || "en";
 }
 
-function getWebBaseUrl() {
-  return (
-    env.APP_BASE_URL ||
-    env.WEBFLOW_BASE_URL ||
-    "https://neuromap-kids.webflow.io"
-  );
+function getSuccessUrl() {
+  return env.SUCCESS_URL || "https://neuromap-kids.webflow.io/success";
 }
 
-function getSuccessUrl(lang) {
-  const safeLang = getSafeLang(lang);
-  const base = getWebBaseUrl();
-  return `${base}/${safeLang}-checkout-success?session_id={CHECKOUT_SESSION_ID}`;
-}
-
-function getCancelUrl(lang) {
-  const safeLang = getSafeLang(lang);
-  const base = getWebBaseUrl();
-  return `${base}/${safeLang}-checkout-cancel`;
+function getCancelUrl() {
+  return env.CANCEL_URL || "https://neuromap-kids.webflow.io/cancel";
 }
 
 function getProductName(lang) {
@@ -72,6 +60,26 @@ function getProductName(lang) {
   return names[safeLang] || names.en;
 }
 
+function getProductDescription(lang) {
+  const safeLang = getSafeLang(lang);
+
+  const descriptions = {
+    hu: "Egyszeri fizetés. Személyre szabott NeuroMap Kids riport PDF-ben, emailben elküldve.",
+    en: "One-time payment. Personalized NeuroMap Kids report delivered by email as a PDF.",
+    de: "Einmalige Zahlung. Personalisierter NeuroMap Kids Bericht als PDF per E-Mail.",
+    it: "Pagamento unico. Report NeuroMap Kids personalizzato inviato via email in PDF.",
+    es: "Pago único. Informe NeuroMap Kids personalizado enviado por email en PDF.",
+    zh: "一次性付款。个性化 NeuroMap Kids PDF 报告将通过电子邮件发送。",
+    ja: "1回払い。個別の NeuroMap Kids PDFレポートをメールで送信します。",
+    ar: "دفع لمرة واحدة. تقرير NeuroMap Kids مخصص بصيغة PDF يتم إرساله عبر البريد الإلكتروني.",
+    pl: "Płatność jednorazowa. Spersonalizowany raport NeuroMap Kids PDF wysłany e-mailem.",
+    pt: "Pagamento único. Relatório NeuroMap Kids personalizado enviado por email em PDF.",
+    fr: "Paiement unique. Rapport NeuroMap Kids personnalisé envoyé par email en PDF."
+  };
+
+  return descriptions[safeLang] || descriptions.en;
+}
+
 export async function createCheckoutSession({
   internalSessionId,
   email,
@@ -86,6 +94,10 @@ export async function createCheckoutSession({
     throw new Error("Missing email for Stripe checkout session.");
   }
 
+  if (!env.STRIPE_SECRET_KEY) {
+    throw new Error("Missing STRIPE_SECRET_KEY.");
+  }
+
   const safeLang = getSafeLang(lang);
 
   const session = await stripe.checkout.sessions.create({
@@ -96,11 +108,12 @@ export async function createCheckoutSession({
     line_items: [
       {
         price_data: {
-          currency: "eur",
+          currency: "usd",
+          unit_amount: 200,
           product_data: {
-            name: getProductName(safeLang)
-          },
-          unit_amount: 4900
+            name: getProductName(safeLang),
+            description: getProductDescription(safeLang)
+          }
         },
         quantity: 1
       }
@@ -108,14 +121,27 @@ export async function createCheckoutSession({
 
     locale: getStripeCheckoutLocale(safeLang),
 
-    success_url: getSuccessUrl(safeLang),
-    cancel_url: getCancelUrl(safeLang),
+    success_url: `${getSuccessUrl()}?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: getCancelUrl(),
 
     metadata: {
       internalSessionId,
       email,
       name: name || "",
-      lang: safeLang
+      lang: safeLang,
+      product: "neuromap_kids_report",
+      amount_usd: "2.00"
+    },
+
+    payment_intent_data: {
+      metadata: {
+        internalSessionId,
+        email,
+        name: name || "",
+        lang: safeLang,
+        product: "neuromap_kids_report",
+        amount_usd: "2.00"
+      }
     }
   });
 
@@ -125,6 +151,10 @@ export async function createCheckoutSession({
 export function constructStripeEvent(rawBody, signature) {
   if (!signature) {
     throw new Error("Missing Stripe signature header.");
+  }
+
+  if (!env.STRIPE_WEBHOOK_SECRET) {
+    throw new Error("Missing STRIPE_WEBHOOK_SECRET.");
   }
 
   return stripe.webhooks.constructEvent(
