@@ -109,7 +109,7 @@ export async function createCheckoutSession({
       {
         price_data: {
           currency: "usd",
-          unit_amount: 200,
+          unit_amount: 500,
           product_data: {
             name: getProductName(safeLang),
             description: getProductDescription(safeLang)
@@ -130,7 +130,7 @@ export async function createCheckoutSession({
       name: name || "",
       lang: safeLang,
       product: "neuromap_kids_report",
-      amount_usd: "2.00"
+      amount_usd: "5.00"
     },
 
     payment_intent_data: {
@@ -140,7 +140,7 @@ export async function createCheckoutSession({
         name: name || "",
         lang: safeLang,
         product: "neuromap_kids_report",
-        amount_usd: "2.00"
+        amount_usd: "5.00"
       }
     }
   });
