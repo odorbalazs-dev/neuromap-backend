@@ -1,41 +1,44 @@
-import { db } from "../db/db.js";
 import { randomUUID } from "crypto";
+import { db } from "../db/db.js";
 
-/**
- * Session létrehozása
- */
 export async function createSession({ email, name, lang, payload }) {
   const id = randomUUID();
 
   const result = await db.query(
     `
-    INSERT INTO sessions (id, email, name, lang, payload)
-    VALUES ($1, $2, $3, $4, $5)
+    INSERT INTO sessions (
+      id,
+      email,
+      name,
+      lang,
+      payload,
+      payment_status,
+      analysis_status,
+      created_at
+    )
+    VALUES ($1, $2, $3, $4, $5, 'pending', 'pending', NOW())
     RETURNING *
     `,
-    [id, email, name, lang, payload]
+    [id, email, name || "", lang || "en", payload || {}]
   );
 
   return result.rows[0];
 }
 
-/**
- * Stripe session ID mentése
- */
 export async function updateStripeSessionId(sessionId, stripeSessionId) {
-  await db.query(
+  const result = await db.query(
     `
     UPDATE sessions
     SET stripe_session_id = $2
     WHERE id = $1
+    RETURNING *
     `,
     [sessionId, stripeSessionId]
   );
+
+  return result.rows[0] || null;
 }
 
-/**
- * Session lekérdezése ID alapján
- */
 export async function getSessionById(sessionId) {
   const result = await db.query(
     `
@@ -50,40 +53,40 @@ export async function getSessionById(sessionId) {
   return result.rows[0] || null;
 }
 
-/**
- * Payment státusz: paid
- */
 export async function markSessionPaid(sessionId) {
-  await db.query(
+  const result = await db.query(
     `
     UPDATE sessions
     SET payment_status = 'paid',
-        paid_at = NOW()
+        paid_at = COALESCE(paid_at, NOW())
     WHERE id = $1
+    RETURNING *
     `,
     [sessionId]
   );
+
+  return result.rows[0] || null;
 }
 
-/**
- * Analysis státusz: processing
- */
 export async function markAnalysisProcessing(sessionId) {
-  await db.query(
+  const result = await db.query(
     `
     UPDATE sessions
-    SET analysis_status = 'processing'
+    SET analysis_status = 'processing',
+        analysis_started_at = COALESCE(analysis_started_at, NOW()),
+        error_message = NULL
     WHERE id = $1
+      AND analysis_status IS DISTINCT FROM 'done'
+    RETURNING *
     `,
     [sessionId]
   );
+
+  return result.rows[0] || null;
 }
 
-/**
- * Analysis kész + eredmény mentése
- */
 export async function markAnalysisDone(sessionId, resultText) {
-  await db.query(
+  const result = await db.query(
     `
     UPDATE sessions
     SET analysis_status = 'done',
@@ -91,35 +94,26 @@ export async function markAnalysisDone(sessionId, resultText) {
         error_message = NULL,
         analysis_completed_at = NOW()
     WHERE id = $1
+    RETURNING *
     `,
     [sessionId, resultText]
   );
+
+  return result.rows[0] || null;
 }
 
-/**
- * Analysis hiba mentése
- */
 export async function markAnalysisFailed(sessionId, errorMessage) {
-  await db.query(
+  const result = await db.query(
     `
     UPDATE sessions
     SET analysis_status = 'failed',
         error_message = $2
     WHERE id = $1
+      AND analysis_status IS DISTINCT FROM 'done'
+    RETURNING *
     `,
-    [sessionId, errorMessage]
+    [sessionId, errorMessage || "Analysis failed"]
   );
-}
 
-
-export async function saveAnalysis(sessionId, analysisText) {
-  await db.query(
-    `
-    UPDATE sessions
-    SET analysis = $1,
-        analyzed_at = NOW()
-    WHERE id = $2
-    `,
-    [analysisText, sessionId]
-  );
+  return result.rows[0] || null;
 }

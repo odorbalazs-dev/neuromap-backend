@@ -5,8 +5,7 @@ import {
   markSessionPaid,
   markAnalysisProcessing,
   markAnalysisDone,
-  markAnalysisFailed,
-  saveAnalysis
+  markAnalysisFailed
 } from "./session.service.js";
 import { generateAnalysis } from "./analysis.service.js";
 import { sendReportEmail } from "./email.service.js";
@@ -76,24 +75,17 @@ export async function handleStripeWebhook(rawBody, signature) {
     }
 
     const checkoutSession = event.data.object;
-    internalSessionId = checkoutSession.metadata?.internalSessionId;
+    internalSessionId = checkoutSession.metadata?.internalSessionId || null;
 
     if (!internalSessionId) {
       throw new Error("Missing internalSessionId in Stripe metadata.");
     }
 
     phase = "load_session";
-
     const sessionRow = await getSessionById(internalSessionId);
 
     if (!sessionRow) {
       throw new Error("Session not found.");
-    }
-
-    phase = "mark_paid";
-
-    if (sessionRow.payment_status !== "paid") {
-      await markSessionPaid(internalSessionId);
     }
 
     if (sessionRow.analysis_status === "done") {
@@ -106,33 +98,39 @@ export async function handleStripeWebhook(rawBody, signature) {
       };
     }
 
-    phase = "analysis_processing";
-    await markAnalysisProcessing(internalSessionId);
+    phase = "mark_paid";
+    await markSessionPaid(internalSessionId);
+
+    phase = "mark_processing";
+    const processingRow = await markAnalysisProcessing(internalSessionId);
+
+    if (!processingRow) {
+      await markWebhookProcessed(event.id);
+
+      return {
+        received: true,
+        skipped: true,
+        reason: "analysis_not_processable"
+      };
+    }
 
     phase = "generate_analysis";
-
     const resultText = await generateAnalysis({
-      ...sessionRow.payload,
+      ...(sessionRow.payload || {}),
       lang: sessionRow.lang
     });
 
     phase = "save_analysis";
-
     await markAnalysisDone(internalSessionId, resultText);
 
-    if (typeof saveAnalysis === "function") {
-      await saveAnalysis(internalSessionId, resultText);
-    }
-
     phase = "send_email";
-
     await sendReportEmail({
-  to: sessionRow.email,
-  lang: sessionRow.lang,
-  name: sessionRow.name,
-  reportText: resultText,
-  payload: sessionRow.payload
-});
+      to: sessionRow.email,
+      lang: sessionRow.lang,
+      name: sessionRow.name,
+      reportText: resultText,
+      payload: sessionRow.payload
+    });
 
     phase = "mark_webhook_processed";
     await markWebhookProcessed(event.id);
@@ -143,29 +141,25 @@ export async function handleStripeWebhook(rawBody, signature) {
       sessionId: internalSessionId
     };
   } catch (error) {
+    const message = `[${phase}] ${error?.message || "Webhook processing failed"}`;
+
     console.error("Webhook processing failed:", {
       eventId: event?.id,
       eventType: event?.type,
       internalSessionId,
       phase,
-      error: error.message
+      error: error?.message || error
     });
 
     if (internalSessionId) {
       try {
-        await markAnalysisFailed(
-          internalSessionId,
-          `[${phase}] ${error.message || "Webhook processing failed"}`
-        );
+        await markAnalysisFailed(internalSessionId, message);
       } catch (nestedError) {
         console.error("Failed to persist analysis failure:", nestedError);
       }
     }
 
-    await markWebhookFailed(
-      event.id,
-      `[${phase}] ${error.message || "Webhook processing failed"}`
-    );
+    await markWebhookFailed(event.id, message);
 
     throw error;
   }

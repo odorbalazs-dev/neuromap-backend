@@ -273,7 +273,7 @@ function addReportText(doc, reportText, labels) {
   });
 }
 
-export async function generatePdfBuffer({ name, reportText, lang = "hu" }) {
+export async function generatePdfBuffer({ name, reportText, lang = "hu", payload = null }) {
   return new Promise((resolve, reject) => {
     try {
       const labels = getLabels(lang);

@@ -12,26 +12,49 @@ function getSafeLang(lang) {
 
 function normalizeRecipients(to) {
   if (!to) return [];
+
   if (Array.isArray(to)) {
     return to.map((v) => String(v).trim()).filter(Boolean);
   }
+
   return String(to)
     .split(",")
     .map((v) => v.trim())
     .filter(Boolean);
 }
 
+function buildPdfFilename(lang) {
+  const safeLang = getSafeLang(lang);
+
+  const map = {
+    hu: "neuromap-kids-riport.pdf",
+    en: "neuromap-kids-report.pdf",
+    de: "neuromap-kids-bericht.pdf",
+    it: "neuromap-kids-report.pdf",
+    es: "neuromap-kids-informe.pdf",
+    zh: "neuromap-kids-report.pdf",
+    ja: "neuromap-kids-report.pdf",
+    ar: "neuromap-kids-report.pdf",
+    pl: "neuromap-kids-raport.pdf",
+    pt: "neuromap-kids-relatorio.pdf",
+    fr: "neuromap-kids-rapport.pdf"
+  };
+
+  return map[safeLang] || map.en;
+}
+
 export async function sendReportEmail({ to, lang, name, reportText, payload }) {
   const recipients = normalizeRecipients(to);
   const safeLang = getSafeLang(lang);
+  const cleanReportText = String(reportText || "").trim();
 
   try {
     console.log("[email] start", {
       recipients,
       lang: safeLang,
       name,
-      hasReportText: !!reportText,
-      reportLength: reportText ? reportText.length : 0,
+      hasReportText: !!cleanReportText,
+      reportLength: cleanReportText.length,
       from: env.EMAIL_FROM
     });
 
@@ -47,41 +70,48 @@ export async function sendReportEmail({ to, lang, name, reportText, payload }) {
       throw new Error("Missing recipient email address.");
     }
 
-    if (!reportText || !String(reportText).trim()) {
+    if (!cleanReportText) {
       throw new Error("Missing reportText for email sending.");
     }
 
     const { subject, html, text } = buildReportEmail({
-  lang: safeLang,
-  name,
-  reportText: String(reportText).trim(),
-  payload
-});
-const pdfBuffer = await generatePdfBuffer({
-  name,
-  reportText: String(reportText).trim(),
-  lang: safeLang
-});
+      lang: safeLang,
+      name,
+      reportText: cleanReportText,
+      payload
+    });
+
+    const pdfBuffer = await generatePdfBuffer({
+      name,
+      reportText: cleanReportText,
+      lang: safeLang,
+      payload
+    });
+
+    if (!Buffer.isBuffer(pdfBuffer) || pdfBuffer.length === 0) {
+      throw new Error("PDF generation returned an empty or invalid buffer.");
+    }
 
     console.log("[email] template built", {
       subjectLength: subject.length,
       htmlLength: html.length,
-      textLength: text.length
+      textLength: text.length,
+      pdfBytes: pdfBuffer.length
     });
 
     const response = await resend.emails.send({
-  from: env.EMAIL_FROM,
-  to: recipients,
-  subject,
-  html,
-  text,
-  attachments: [
-  {
-    filename: "neuromap-report.pdf",
-    content: pdfBuffer
-  }
-]
-});
+      from: env.EMAIL_FROM,
+      to: recipients,
+      subject,
+      html,
+      text,
+      attachments: [
+        {
+          filename: buildPdfFilename(safeLang),
+          content: pdfBuffer.toString("base64")
+        }
+      ]
+    });
 
     console.log("[email] send success", response);
 
