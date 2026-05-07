@@ -1,4 +1,4 @@
-import { randomUUID } from "crypto";
+import { randomUUID, randomBytes } from "crypto";
 import { db } from "../db/db.js";
 
 export async function createSession({ email, name, lang, payload }) {
@@ -34,6 +34,73 @@ export async function updateStripeSessionId(sessionId, stripeSessionId) {
     RETURNING *
     `,
     [sessionId, stripeSessionId]
+  );
+
+  return result.rows[0] || null;
+}
+
+export async function markCheckoutStarted(sessionId, checkoutUrl) {
+  const recoveryToken = randomBytes(32).toString("hex");
+
+  const result = await db.query(
+    `
+    UPDATE sessions
+    SET checkout_started_at = COALESCE(checkout_started_at, NOW()),
+        checkout_url = $2,
+        recovery_token = COALESCE(recovery_token, $3)
+    WHERE id = $1
+    RETURNING *
+    `,
+    [sessionId, checkoutUrl || null, recoveryToken]
+  );
+
+  return result.rows[0] || null;
+}
+
+export async function markCheckoutCancelledByStripeSessionId(stripeSessionId) {
+  const result = await db.query(
+    `
+    UPDATE sessions
+    SET checkout_cancelled_at = COALESCE(checkout_cancelled_at, NOW())
+    WHERE stripe_session_id = $1
+      AND payment_status IS DISTINCT FROM 'paid'
+    RETURNING *
+    `,
+    [stripeSessionId]
+  );
+
+  return result.rows[0] || null;
+}
+
+export async function getRecoverableCheckoutSessions({ olderThanMinutes = 30, limit = 50 } = {}) {
+  const result = await db.query(
+    `
+    SELECT *
+    FROM sessions
+    WHERE payment_status IS DISTINCT FROM 'paid'
+      AND checkout_started_at IS NOT NULL
+      AND checkout_url IS NOT NULL
+      AND recovery_token IS NOT NULL
+      AND recovery_email_sent_at IS NULL
+      AND checkout_started_at < NOW() - ($1::int * INTERVAL '1 minute')
+    ORDER BY checkout_started_at ASC
+    LIMIT $2
+    `,
+    [olderThanMinutes, limit]
+  );
+
+  return result.rows;
+}
+
+export async function markRecoveryEmailSent(sessionId) {
+  const result = await db.query(
+    `
+    UPDATE sessions
+    SET recovery_email_sent_at = NOW()
+    WHERE id = $1
+    RETURNING *
+    `,
+    [sessionId]
   );
 
   return result.rows[0] || null;
