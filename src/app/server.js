@@ -8,6 +8,7 @@ import sessionRoutes from "../api/routes/session.js";
 import webhookRoutes from "../api/routes/webhook.js";
 import healthRoutes from "../api/routes/health.js";
 import adminRoutes from "../api/routes/admin.js";
+import cronRoutes from "../api/routes/cron.js";
 
 const app = express();
 
@@ -16,7 +17,12 @@ const corsOptions = {
     "https://neuromap-kids.webflow.io"
   ],
   methods: ["GET", "POST", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization", "x-admin-token"]
+  allowedHeaders: [
+    "Content-Type",
+    "Authorization",
+    "x-admin-token",
+    "x-cron-secret"
+  ]
 };
 
 app.use(cors(corsOptions));
@@ -40,6 +46,7 @@ app.use("/session", sessionRoutes);
 app.use("/webhook", webhookRoutes);
 app.use("/health", healthRoutes);
 app.use("/admin", adminRoutes);
+app.use("/cron", cronRoutes);
 
 async function start() {
   await runMigrations();
