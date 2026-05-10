@@ -60,7 +60,7 @@ function resolveDatabaseUrl() {
       return {
         error:
           `DATABASE_URL contains an unexpanded Railway reference variable: "${explicit}". ` +
-          `Ensure the Postgres service is running and the variable is correctly linked.`,
+          `Ensure the Postgres service is running and the variable is correctly linked.`
       };
     }
 
@@ -72,7 +72,7 @@ function resolveDatabaseUrl() {
     PGPORT: process.env.PGPORT,
     PGUSER: process.env.PGUSER,
     PGPASSWORD: process.env.PGPASSWORD,
-    PGDATABASE: process.env.PGDATABASE,
+    PGDATABASE: process.env.PGDATABASE
   };
 
   const unexpanded = Object.entries(vars)
@@ -85,7 +85,7 @@ function resolveDatabaseUrl() {
         `The following PG* variables contain unexpanded Railway reference variables:\n` +
         unexpanded.join("\n") +
         `\nEnsure the Postgres service is running and each variable is correctly linked ` +
-        `in the Railway dashboard under the neuromap-backend service variables tab.`,
+        `in the Railway dashboard under the neuromap-backend service variables tab.`
     };
   }
 
@@ -93,7 +93,7 @@ function resolveDatabaseUrl() {
 
   if (PGHOST && PGPORT && PGUSER && PGPASSWORD && PGDATABASE) {
     return {
-      url: `postgresql://${PGUSER}:${PGPASSWORD}@${PGHOST}:${PGPORT}/${PGDATABASE}`,
+      url: `postgresql://${PGUSER}:${PGPASSWORD}@${PGHOST}:${PGPORT}/${PGDATABASE}`
     };
   }
 
@@ -105,7 +105,7 @@ function resolveDatabaseUrl() {
     error:
       `Missing required database configuration. ` +
       `Set DATABASE_URL or all of PGHOST, PGPORT, PGUSER, PGPASSWORD, PGDATABASE. ` +
-      `Missing: ${missing.join(", ")}`,
+      `Missing: ${missing.join(", ")}`
   };
 }
 
@@ -170,5 +170,6 @@ export const env = {
       ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`
       : "http://localhost:3000"),
 
-  ADMIN_TOKEN: process.env.ADMIN_TOKEN || null
+  ADMIN_TOKEN: optional("ADMIN_TOKEN", null),
+  CRON_SECRET: optional("CRON_SECRET", null)
 };
