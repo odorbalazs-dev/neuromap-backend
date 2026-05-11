@@ -184,3 +184,16 @@ export async function markAnalysisFailed(sessionId, errorMessage) {
 
   return result.rows[0] || null;
 }
+export async function markCheckoutRecoveredOrPaid(sessionId) {
+  const result = await db.query(
+    `
+    UPDATE sessions
+    SET checkout_cancelled_at = NULL
+    WHERE id = $1
+    RETURNING *
+    `,
+    [sessionId]
+  );
+
+  return result.rows[0] || null;
+}

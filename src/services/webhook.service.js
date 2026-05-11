@@ -5,7 +5,8 @@ import {
   markSessionPaid,
   markAnalysisProcessing,
   markAnalysisDone,
-  markAnalysisFailed
+  markAnalysisFailed,
+  markCheckoutRecoveredOrPaid
 } from "./session.service.js";
 import { generateAnalysis } from "./analysis.service.js";
 import { sendReportEmail } from "./email.service.js";
@@ -49,6 +50,14 @@ async function markWebhookFailed(eventId, errorMessage) {
   );
 }
 
+function isCheckoutPaid(checkoutSession) {
+  return (
+    checkoutSession &&
+    checkoutSession.object === "checkout.session" &&
+    checkoutSession.payment_status === "paid"
+  );
+}
+
 export async function handleStripeWebhook(rawBody, signature) {
   const event = constructStripeEvent(rawBody, signature);
   const inserted = await insertWebhookEvent(event);
@@ -81,6 +90,17 @@ export async function handleStripeWebhook(rawBody, signature) {
       throw new Error("Missing internalSessionId in Stripe metadata.");
     }
 
+    if (!isCheckoutPaid(checkoutSession)) {
+      await markWebhookProcessed(event.id);
+
+      return {
+        received: true,
+        skipped: true,
+        reason: "checkout_not_paid",
+        paymentStatus: checkoutSession.payment_status || null
+      };
+    }
+
     phase = "load_session";
     const sessionRow = await getSessionById(internalSessionId);
 
@@ -100,6 +120,9 @@ export async function handleStripeWebhook(rawBody, signature) {
 
     phase = "mark_paid";
     await markSessionPaid(internalSessionId);
+
+    phase = "clear_recovery_state";
+    await markCheckoutRecoveredOrPaid(internalSessionId);
 
     phase = "mark_processing";
     const processingRow = await markAnalysisProcessing(internalSessionId);
@@ -153,7 +176,11 @@ export async function handleStripeWebhook(rawBody, signature) {
 
     if (internalSessionId) {
       try {
-        await markAnalysisFailed(internalSessionId, message);
+        const latestSession = await getSessionById(internalSessionId);
+
+        if (latestSession?.analysis_status !== "done") {
+          await markAnalysisFailed(internalSessionId, message);
+        }
       } catch (nestedError) {
         console.error("Failed to persist analysis failure:", nestedError);
       }
