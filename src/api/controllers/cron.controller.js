@@ -95,18 +95,3 @@ export async function recoverAbandonedCheckouts(req, res) {
     });
   }
 }
-export async function debugCronSecret(req, res) {
-  const receivedSecret = req.headers["x-cron-secret"];
-
-  return res.json({
-    ok: true,
-    hasCronSecret: Boolean(env.CRON_SECRET),
-    cronSecretLength: env.CRON_SECRET ? String(env.CRON_SECRET).length : 0,
-    receivedHeaderLength: receivedSecret ? String(receivedSecret).length : 0,
-    match: Boolean(
-      env.CRON_SECRET &&
-      receivedSecret &&
-      String(receivedSecret).trim() === String(env.CRON_SECRET).trim()
-    )
-  });
-}
