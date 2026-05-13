@@ -32,12 +32,22 @@ function getStripeCheckoutLocale(lang) {
   return localeMap[safeLang] || "en";
 }
 
-function getSuccessUrl() {
-  return env.SUCCESS_URL || "https://neuromap-kids.webflow.io/success";
+function getBaseAppUrl() {
+  const base =
+    env.APP_BASE_URL ||
+    "https://neuromap-kids.webflow.io";
+
+  return String(base).replace(/\/+$/, "");
 }
 
-function getCancelUrl() {
-  return env.CANCEL_URL || "https://neuromap-kids.webflow.io/cancel";
+function getLocalizedSuccessUrl(lang) {
+  const safeLang = getSafeLang(lang);
+  return `${getBaseAppUrl()}/${safeLang}/success`;
+}
+
+function getLocalizedCancelUrl(lang) {
+  const safeLang = getSafeLang(lang);
+  return `${getBaseAppUrl()}/${safeLang}/cancel`;
 }
 
 function getProductName(lang) {
@@ -100,6 +110,15 @@ export async function createCheckoutSession({
 
   const safeLang = getSafeLang(lang);
 
+  const successUrl = `${getLocalizedSuccessUrl(safeLang)}?session_id={CHECKOUT_SESSION_ID}`;
+  const cancelUrl = getLocalizedCancelUrl(safeLang);
+
+  console.log("[stripe] checkout urls", {
+    lang: safeLang,
+    successUrl,
+    cancelUrl
+  });
+
   const session = await stripe.checkout.sessions.create({
     mode: "payment",
     payment_method_types: ["card"],
@@ -121,8 +140,8 @@ export async function createCheckoutSession({
 
     locale: getStripeCheckoutLocale(safeLang),
 
-    success_url: `${getSuccessUrl()}?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: getCancelUrl(),
+    success_url: successUrl,
+    cancel_url: cancelUrl,
 
     metadata: {
       internalSessionId,
