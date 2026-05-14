@@ -48,22 +48,30 @@ function getLabels(lang = "hu") {
 }
 
 function addLogoLikeMark(doc, x, y) {
-  doc.circle(x, y, 16).fill(BRAND.blue);
-  doc.circle(x + 28, y, 16).fill(BRAND.orange);
-  doc.circle(x + 14, y + 18, 8).fill(BRAND.green);
+  const safeX = Number.isFinite(Number(x)) ? Number(x) : 72;
+  const safeY = Number.isFinite(Number(y)) ? Number(y) : 52;
+
+  doc.circle(safeX, safeY, 16).fill(BRAND.blue);
+  doc.circle(safeX + 28, safeY, 16).fill(BRAND.orange);
+  doc.circle(safeX + 14, safeY + 18, 8).fill(BRAND.green);
 
   doc
     .strokeColor("#FFFFFF")
     .lineWidth(2.2)
-    .moveTo(x, y)
-    .lineTo(x + 28, y)
-    .lineTo(x + 14, y + 18)
-    .lineTo(x, y)
+    .moveTo(safeX, safeY)
+    .lineTo(safeX + 28, safeY)
+    .lineTo(safeX + 14, safeY + 18)
+    .lineTo(safeX, safeY)
     .stroke();
 
-  doc.circle(x, y).fill("#FFFFFF").circle(x, y, 4).fill(BRAND.yellow);
-  doc.circle(x + 28, y).fill("#FFFFFF").circle(x + 28, y, 4).fill(BRAND.green);
-  doc.circle(x + 14, y + 18).fill("#FFFFFF").circle(x + 14, y + 18, 4).fill(BRAND.pink);
+  doc.circle(safeX, safeY, 7).fill("#FFFFFF");
+  doc.circle(safeX, safeY, 4).fill(BRAND.yellow);
+
+  doc.circle(safeX + 28, safeY, 7).fill("#FFFFFF");
+  doc.circle(safeX + 28, safeY, 4).fill(BRAND.green);
+
+  doc.circle(safeX + 14, safeY + 18, 7).fill("#FFFFFF");
+  doc.circle(safeX + 14, safeY + 18, 4).fill(BRAND.pink);
 }
 
 function addHeader(doc, labels) {
