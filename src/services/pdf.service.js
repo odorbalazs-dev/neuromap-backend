@@ -61,9 +61,9 @@ function addLogoLikeMark(doc, x, y) {
     .lineTo(x, y)
     .stroke();
 
-  doc.circle(x, y).fill("#FFFFFF").circle(x, y, 4).fill(BRAND.yellow);
-  doc.circle(x + 28, y).fill("#FFFFFF").circle(x + 28, y, 4).fill(BRAND.green);
-  doc.circle(x + 14, y + 18).fill("#FFFFFF").circle(x + 14, y + 18, 4).fill(BRAND.pink);
+  doc.circle(x, y, 6).fill("#FFFFFF").circle(x, y, 4).fill(BRAND.yellow);
+  doc.circle(x + 28, y, 6).fill("#FFFFFF").circle(x + 28, y, 4).fill(BRAND.green);
+  doc.circle(x + 14, y + 18, 6).fill("#FFFFFF").circle(x + 14, y + 18, 4).fill(BRAND.pink);
 }
 
 function addHeader(doc, labels) {
