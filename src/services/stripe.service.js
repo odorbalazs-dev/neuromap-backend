@@ -42,12 +42,12 @@ function getBaseAppUrl() {
 
 function getLocalizedSuccessUrl(lang) {
   const safeLang = getSafeLang(lang);
-  return `${getBaseAppUrl()}/${safeLang}/success`;
+  return `${getBaseAppUrl()}/${safeLang}-success`;
 }
 
 function getLocalizedCancelUrl(lang) {
   const safeLang = getSafeLang(lang);
-  return `${getBaseAppUrl()}/${safeLang}/cancel`;
+  return `${getBaseAppUrl()}/${safeLang}-cancel`;
 }
 
 function getProductName(lang) {
