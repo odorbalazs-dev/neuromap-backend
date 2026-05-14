@@ -425,38 +425,75 @@ function isHeading(paragraph) {
 }
 
 function addReportText(doc, reportText, labels, lang) {
-  const paragraphs = stripMarkdown(reportText)
+  const rawParagraphs = stripMarkdown(reportText)
     .split(/\n{2,}/)
-    .map((p) => stripMarkdown(p))
+    .map((p) => clean(p))
     .filter(Boolean);
 
-  paragraphs.forEach((paragraph) => {
-    if (isHeading(paragraph)) {
-      ensureSpace(doc, 46, labels, lang);
+  let sectionCounter = 1;
+
+  rawParagraphs.forEach((paragraph) => {
+    const headingMatch = paragraph.match(/^#{1,6}\s*(.+)$/);
+
+    if (headingMatch) {
+      ensureSpace(doc, 42, labels, lang);
+
+      const cleanHeading = clean(headingMatch[1]);
+
+      doc.moveDown(0.45);
 
       doc
-        .moveDown(0.45)
         .fillColor(BRAND.blue)
         .font(getFont(lang, true))
-        .fontSize(12.5)
-        .text(paragraph.replace(/^\d+\.\s+/, ""), {
+        .fontSize(13)
+        .text(`${sectionCounter}. ${cleanHeading}`, {
           lineGap: 3,
           align: getTextAlign(lang)
         });
 
+      sectionCounter += 1;
+
       doc
-        .moveDown(0.2)
+        .moveDown(0.18)
         .moveTo(56, doc.y)
-        .lineTo(145, doc.y)
+        .lineTo(doc.page.width - 120, doc.y)
         .strokeColor(BRAND.orange)
-        .lineWidth(1.4)
+        .lineWidth(1.2)
         .stroke();
 
       doc.moveDown(0.55);
       return;
     }
 
-    ensureSpace(doc, 86, labels, lang);
+    if (isHeading(paragraph)) {
+      ensureSpace(doc, 42, labels, lang);
+
+      doc.moveDown(0.35);
+
+      doc
+        .fillColor(BRAND.blue)
+        .font(getFont(lang, true))
+        .fontSize(12.5)
+        .text(`${sectionCounter}. ${paragraph}`, {
+          lineGap: 3,
+          align: getTextAlign(lang)
+        });
+
+      sectionCounter += 1;
+
+      doc
+        .moveDown(0.18)
+        .moveTo(56, doc.y)
+        .lineTo(doc.page.width - 120, doc.y)
+        .strokeColor(BRAND.orange)
+        .lineWidth(1.2)
+        .stroke();
+
+      doc.moveDown(0.55);
+      return;
+    }
+
+    ensureSpace(doc, 72, labels, lang);
 
     doc
       .fillColor("#374151")
@@ -467,10 +504,9 @@ function addReportText(doc, reportText, labels, lang) {
         lineGap: 4
       });
 
-    doc.moveDown(0.7);
+    doc.moveDown(0.55);
   });
 }
-
 export async function generatePdfBuffer({ name, reportText, lang = "en", payload = null }) {
   return new Promise((resolve, reject) => {
     try {
@@ -501,8 +537,11 @@ export async function generatePdfBuffer({ name, reportText, lang = "en", payload
 
       addSectionTitle(doc, labels.reportTitle, labels, safeLang);
       addReportText(doc, reportText, labels, safeLang);
-      addDisclaimerBox(doc, labels, safeLang);
-      addFooter(doc, labels, safeLang);
+      if (doc.y < doc.page.height - 220) {
+  addDisclaimerBox(doc, labels, safeLang);
+}
+
+addFooter(doc, labels, safeLang);
 
       doc.end();
     } catch (error) {
