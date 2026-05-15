@@ -120,6 +120,22 @@ NON-NEGOTIABLE SAFETY RULES:
 - Do NOT output raw JSON.
 - Do NOT put section headings in Markdown.
 - Use plain numbered section titles only.
+- Adapt the interpretation to the developmental stage and likely age-related expectations.
+- Distinguish between situational difficulties and persistent patterns.
+- Consider masking, compensation, and context-dependent functioning.
+- Carefully describe uncertainty when the profile is mixed.
+- Avoid repetitive wording.
+- Vary sentence structure naturally.
+- Write in a psychologically supportive tone.
+- Use nuanced language instead of rigid categories.
+- If the profile is mild, avoid unnecessarily alarming phrasing.
+- If the profile is more severe, remain calm, constructive, and practical.
+- Consider emotional regulation, sensory processing, flexibility, executive functioning, and social reciprocity interactions when relevant.
+- Highlight whether the observed pattern appears stable, fluctuating, environment-dependent, or stress-dependent.
+- Emphasize functional impact more than labels.
+- Interpret the child's likely experience, not only observable behaviors.
+- Avoid generic filler advice.
+- Recommendations must feel personalized to the described profile.
 
 QUALITY REQUIREMENTS:
 - The report must feel premium, coherent, personalized, and professionally written.
@@ -132,9 +148,12 @@ QUALITY REQUIREMENTS:
 - If primary and secondary signals overlap, explain the overlap carefully.
 - If the pattern is not conclusive, say so clearly.
 - Make recommendations practical and immediately usable.
-- Target length: 6500–8500 characters.
+- Target length: 8500–10500 characters.
 - Use paragraphs, with some short bullet lists only where useful.
 - Keep tone warm, calm, respectful, and non-alarming.
+- Include a clear next-30-days action plan.
+- Include developmental and contextual interpretation.
+- Avoid sounding like a template.
 
 SCORING INTERPRETATION:
 - Answers use a 0–3 intensity scale.
@@ -152,6 +171,18 @@ SCORING INTERPRETATION:
   - mixed pattern: primary and secondary areas are close
   - weak pattern: overall averages are low
   - stronger pattern: several subdomains are consistently elevated
+- If the profile is mild or low, explain that the result is an early signal rather than a strong concern.
+- If the profile is mixed, avoid overinterpreting a single category.
+- If secondaryRisk is close to the primary area, discuss it as an overlapping or contextual signal, not as a second diagnosis.
+
+DEVELOPMENTAL INTERPRETATION GUIDE:
+- Consider that younger children may naturally show more variability in attention, impulse control, emotional regulation, and transitions.
+- Consider that older children may show difficulties more clearly in school demands, peer relationships, planning, persistence, and performance.
+- Do not infer exact age unless it is present in the data.
+- If age is missing, phrase age-related points generally, such as "depending on the child’s age and developmental stage".
+- Consider whether difficulties may appear mainly under fatigue, stress, transitions, sensory load, time pressure, or unclear expectations.
+- Consider possible compensation: a child may function well in structured settings but struggle when demands increase.
+- Consider possible masking: some children may appear outwardly controlled while experiencing internal effort, tension, or overload.
 
 INPUT DATA:
 Primary detected focus: ${detectedRisk}
@@ -183,7 +214,7 @@ EXTRA QUESTION-ANSWER DATA:
 ${JSON.stringify(extra, null, 2)}
 
 OUTPUT FORMAT:
-Write exactly these 9 numbered sections. Translate the section titles naturally into the selected language, but keep the numbering.
+Write exactly these 11 numbered sections. Translate the section titles naturally into the selected language, but keep the numbering.
 
 1. Short opening summary
 Explain what the report is and what it is not. Summarize the strongest pattern in 2–4 clear sentences.
@@ -200,16 +231,22 @@ Explain the secondary signal carefully. If it is weak, say it is weak. If it ove
 5. Possible impact on everyday life
 Describe possible effects on home life, learning, peer relationships, routines, transitions, and emotional wellbeing.
 
-6. Strengths and protective factors
+6. Developmental and contextual interpretation
+Explain whether the observed pattern may vary across environments. Discuss possible stress sensitivity, transitions, overload, fatigue, masking, or compensation if relevant. Clarify whether the presentation appears persistent or more situational.
+
+7. Strengths and protective factors
 Identify realistic strengths, stabilizing factors, or signs of resilience. Do not invent unrealistic strengths.
 
-7. Practical recommendations for parents
+8. Practical recommendations for parents
 Give concrete suggestions parents can use immediately: routines, communication, emotional regulation, structure, observation, and supportive strategies.
 
-8. When professional support may be useful
+9. Suggested next 30 days
+Give a realistic, parent-friendly action plan for the next few weeks. Focus on observation, communication, routines, emotional support, and structured tracking.
+
+10. When professional support may be useful
 Explain when to consider a pediatrician, psychologist, child psychiatrist, developmental specialist, school specialist, or other qualified professional.
 
-9. Important limitation and disclaimer
+11. Important limitation and disclaimer
 Clearly state again that this is not a diagnosis and does not replace professional assessment. Explain that full assessment requires developmental history, observation, professional evaluation, and broader context.
 
 FINAL STYLE RULES:
@@ -221,6 +258,8 @@ FINAL STYLE RULES:
 - No excessive bullet lists.
 - No fake certainty.
 - No medical treatment plan.
+- No raw score dumping.
+- No generic conclusion paragraph outside the numbered sections.
 `;
 }
 
@@ -232,7 +271,7 @@ export async function generateAnalysis(payload) {
   const response = await openai.responses.create({
     model: env.OPENAI_MODEL || "gpt-4.1-mini",
     input: prompt,
-    temperature: 0.35
+    temperature: 0.32
   });
 
   const text =
