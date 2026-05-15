@@ -5,42 +5,25 @@ const openai = new OpenAI({
   apiKey: env.OPENAI_API_KEY
 });
 
+const ALLOWED_LANGS = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];
+
 function getSafeLang(lang) {
-  const allowed = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];
-  return allowed.includes(lang) ? lang : "en";
+  return ALLOWED_LANGS.includes(lang) ? lang : "en";
 }
 
 function buildLanguageInstruction(lang) {
   const map = {
-    hu: "A teljes választ magyar nyelven írd.",
-    en: "Write the entire response in English.",
-    de: "Schreibe die gesamte Antwort auf Deutsch.",
-    it: "Scrivi l'intera risposta in italiano.",
-    es: "Escribe toda la respuesta en español.",
-    zh: "请用中文完成整份回答。",
-    ja: "回答全体を日本語で書いてください。",
-    ar: "اكتب الإجابة كاملة باللغة العربية.",
-    pl: "Napisz całą odpowiedź po polsku.",
-    pt: "Escreva toda a resposta em português.",
-    fr: "Rédige toute la réponse en français."
-  };
-
-  return map[getSafeLang(lang)] || map.en;
-}
-
-function buildSectionHeadingInstruction(lang) {
-  const map = {
-    hu: "A szakaszcímeket is magyarul írd.",
-    en: "Write section headings in English as well.",
-    de: "Schreibe auch die Abschnittsüberschriften auf Deutsch.",
-    it: "Scrivi anche i titoli delle sezioni in italiano.",
-    es: "Escribe también los títulos de las secciones en español.",
-    zh: "小节标题也请使用中文。",
-    ja: "各セクションの見出しも日本語で書いてください。",
-    ar: "اكتب عناوين الأقسام أيضًا باللغة العربية.",
-    pl: "Napisz także nagłówki sekcji po polsku.",
-    pt: "Escreva também os títulos das seções em português.",
-    fr: "Rédige aussi les titres de section en français."
+    hu: "A teljes riportot magyar nyelven írd, természetes, helyes, igényes magyar mondatokkal.",
+    en: "Write the entire report in natural, polished English.",
+    de: "Schreibe den gesamten Bericht in natürlichem, korrektem Deutsch.",
+    it: "Scrivi l'intero report in italiano naturale, corretto e professionale.",
+    es: "Escribe todo el informe en español natural, correcto y profesional.",
+    zh: "请用自然、准确、专业的中文撰写整份报告。",
+    ja: "レポート全体を自然で正確な日本語で書いてください。",
+    ar: "اكتب التقرير كاملًا باللغة العربية الطبيعية والواضحة والمهنية.",
+    pl: "Napisz cały raport naturalnym, poprawnym i profesjonalnym językiem polskim.",
+    pt: "Escreva todo o relatório em português natural, correto e profissional.",
+    fr: "Rédige tout le rapport en français naturel, correct et professionnel."
   };
 
   return map[getSafeLang(lang)] || map.en;
@@ -107,52 +90,9 @@ function summarizeSpecificScoring(scoring = null) {
   };
 }
 
-function buildClinicalReadingGuide(lang) {
+function buildPrompt(payload = {}, lang = "en") {
   const safeLang = getSafeLang(lang);
 
-  const map = {
-    hu: `
-ÉRTELMEZÉSI SZABÁLYOK:
-- A triage pontszámok csak kezdeti irányjelzők.
-- A specificProfile.severity mezőt így kezeld:
-  - low = alacsony jelzésszint
-  - mild = enyhe jelzésszint
-  - moderate = közepes jelzésszint
-  - high = magas jelzésszint
-- A specificScoring.subdomains átlagai azt mutatják, mely aldimenziók a legerősebbek.
-- A reverse itemek már előre korrigálva vannak a scoringban.
-- A riportban a számokat ne pusztán ismételd meg, hanem értelmezd őket laikusok számára.
-- Ha az adatok vegyesek vagy nem egyirányúak, ezt mondd ki világosan.
-- Ha a fő terület ADHD, figyelj a figyelem, impulzivitás, aktivitásszabályozás, végrehajtó működés és érzelemszabályozás mintázataira.
-- Ha a fő terület ASD, figyelj a társas kommunikáció, rugalmasság, rutinok, szenzoros feldolgozás és kapcsolati működés mintázataira.
-- Ha a fő terület ANXIETY, figyelj az aggodalom, elkerülés, testi feszültség, megnyugtatásigény és bizonytalanságtűrés mintázataira.
-- Ha a fő terület DEPRESSION, figyelj a hangulat, motiváció, örömképesség, energia, önértékelés és ingerlékenység mintázataira.
-- Ha a fő terület LEARNING, figyelj az olvasás, írás, matematika, feladatmegértés, teljesítmény és tanulási terhelhetőség mintázataira.
-`,
-    en: `
-INTERPRETATION RULES:
-- Triage scores are only early directional indicators.
-- Interpret specificProfile.severity as:
-  - low = low signal level
-  - mild = mild signal level
-  - moderate = moderate signal level
-  - high = high signal level
-- specificScoring.subdomains averages show which subdimensions are strongest.
-- Reverse items are already corrected in scoring.
-- Do not merely repeat numbers; interpret them in parent-friendly language.
-- If the data is mixed or not one-directional, say so clearly.
-- For ADHD, focus on attention, impulsivity, activity regulation, executive functioning, and emotional regulation.
-- For ASD, focus on social communication, flexibility, routines, sensory processing, and relationship functioning.
-- For ANXIETY, focus on worry, avoidance, physical tension, reassurance seeking, and uncertainty tolerance.
-- For DEPRESSION, focus on mood, motivation, enjoyment, energy, self-view, and irritability.
-- For LEARNING, focus on reading, writing, math, task understanding, performance, and learning load.
-`
-  };
-
-  return map[safeLang] || map.en;
-}
-
-function buildPrompt(payload = {}, lang = "en") {
   const triage = compactQuestionAnswers(payload.triageQuestions, payload.triageAnswers);
   const specific = compactQuestionAnswers(payload.specificQuestions, payload.specificAnswers);
   const extra = compactQuestionAnswers(payload.extraQuestions, payload.extraAnswers);
@@ -163,43 +103,60 @@ function buildPrompt(payload = {}, lang = "en") {
   const specificScoringSummary = summarizeSpecificScoring(payload.specificScoring);
   const specificProfileSummary = summarizeSpecificProfile(payload.specificProfile);
 
-  const languageInstruction = buildLanguageInstruction(lang);
-  const sectionHeadingInstruction = buildSectionHeadingInstruction(lang);
-  const clinicalGuide = buildClinicalReadingGuide(lang);
-
   return `
-You are an expert child mental health and developmental screening interpreter writing for parents and caregivers.
+You are a senior child development and child mental-health screening interpreter writing a paid parent-facing report.
 
-IMPORTANT ROLE RULES:
-- You are NOT allowed to give a medical diagnosis.
-- You must NOT state that the child definitely has any disorder.
-- You must describe patterns, tendencies, possible areas of concern, possible overlap, and next-step recommendations.
-- Your tone must be warm, precise, calm, grounded, and understandable for non-experts.
-- The reader is a parent or caregiver, not a clinician.
-- Avoid jargon unless it is immediately explained in plain language.
-- The response should be highly structured, practical, and personalized.
-- Target length: around 7000-9000 characters.
-- Do not be too short.
-- Prefer clear sectioned prose over excessive bullet points.
-- If the data is mixed, partial, weak, or inconclusive, say that clearly and responsibly.
-- Do not mention AI, system prompts, hidden scoring rules, implementation details, bank names, item IDs, or internal code.
-- Do not overstate certainty.
-- Do not use alarming language.
-- Do not recommend medication directly.
-- Do not present this as a validated clinical diagnosis.
+LANGUAGE:
+${buildLanguageInstruction(safeLang)}
 
-LANGUAGE INSTRUCTION:
-${languageInstruction}
+NON-NEGOTIABLE SAFETY RULES:
+- This is NOT a diagnosis.
+- Do NOT say the child has ADHD, autism, anxiety, depression, learning disorder, or any condition.
+- Use careful wording: "may indicate", "may suggest", "can be consistent with", "appears to show", "screening signal".
+- Do NOT recommend medication.
+- Do NOT use alarming or deterministic language.
+- Do NOT mention AI, prompts, scoring internals, bank names, hidden logic, item IDs, or implementation details.
+- Do NOT use markdown headings such as ###, ##, **heading**, or horizontal rules.
+- Do NOT output raw JSON.
+- Do NOT put section headings in Markdown.
+- Use plain numbered section titles only.
 
-SECTION HEADING INSTRUCTION:
-${sectionHeadingInstruction}
+QUALITY REQUIREMENTS:
+- The report must feel premium, coherent, personalized, and professionally written.
+- Use fluent grammar in the selected language.
+- Avoid awkward literal translations.
+- Avoid repetitive generic phrases.
+- Explain what the pattern may mean in everyday family life.
+- Interpret the data instead of merely repeating scores.
+- If signals are weak, say they are weak.
+- If primary and secondary signals overlap, explain the overlap carefully.
+- If the pattern is not conclusive, say so clearly.
+- Make recommendations practical and immediately usable.
+- Target length: 6500–8500 characters.
+- Use paragraphs, with some short bullet lists only where useful.
+- Keep tone warm, calm, respectful, and non-alarming.
 
-${clinicalGuide}
+SCORING INTERPRETATION:
+- Answers use a 0–3 intensity scale.
+- Higher values usually mean a stronger screening signal.
+- Reverse items are already corrected in the scoring.
+- Triage scores are broad directional indicators.
+- Specific scoring is more important for detailed interpretation.
+- Severity labels:
+  - low = low signal / weak indication
+  - mild = mild signal
+  - moderate = moderate signal
+  - high = high signal
+- Confidence should be described qualitatively:
+  - coherent pattern: triage and specific profile align
+  - mixed pattern: primary and secondary areas are close
+  - weak pattern: overall averages are low
+  - stronger pattern: several subdomains are consistently elevated
 
 INPUT DATA:
-- Primary detected focus: ${detectedRisk}
-- Secondary signal: ${secondaryRisk}
-- Questionnaire version: ${payload.questionnaireVersion || "unknown"}
+Primary detected focus: ${detectedRisk}
+Secondary signal: ${secondaryRisk}
+Questionnaire version: ${payload.questionnaireVersion || "unknown"}
 
 TRIAGE SCORES:
 ${JSON.stringify(payload.triageScores || {}, null, 2)}
@@ -207,7 +164,7 @@ ${JSON.stringify(payload.triageScores || {}, null, 2)}
 TRIAGE RANKING:
 ${JSON.stringify(payload.triageRanking || [], null, 2)}
 
-RESULT SUMMARY FROM FRONTEND:
+FRONTEND RESULT SUMMARY:
 ${JSON.stringify(payload.resultSummary || null, null, 2)}
 
 SPECIFIC SCORING SUMMARY:
@@ -225,70 +182,45 @@ ${JSON.stringify(specific, null, 2)}
 EXTRA QUESTION-ANSWER DATA:
 ${JSON.stringify(extra, null, 2)}
 
-SCORING NOTE:
-- Answers use a 0-3 intensity scale.
-- Higher values usually indicate stronger relevance of a difficulty pattern.
-- specificScoring already includes weighted and reverse-corrected interpretation.
-- Use both the broad triage signal and the focused specific profile.
-- If triage and specific profile align, say the pattern looks more coherent.
-- If they only partially align, describe it as mixed, overlapping, or requiring context.
+OUTPUT FORMAT:
+Write exactly these 9 numbered sections. Translate the section titles naturally into the selected language, but keep the numbering.
 
-OUTPUT REQUIREMENTS:
-Write a detailed parent-friendly report with these sections:
+1. Short opening summary
+Explain what the report is and what it is not. Summarize the strongest pattern in 2–4 clear sentences.
 
-1. SHORT OPENING SUMMARY
-- Explain what this report is and what it is not.
-- State clearly that this is a structured screening-based interpretation, not a diagnosis.
-- Summarize the strongest observed pattern in 2-4 sentences.
+2. Main observed patterns
+Describe the main behavioral, emotional, regulatory, social, or learning patterns suggested by the answers.
 
-2. MAIN OBSERVED PATTERNS
-- Explain the most important behavioral, emotional, regulatory, social, learning, or functional themes.
-- Refer to concrete tendencies suggested by the answers.
-- Use the strongest subdomains where helpful.
+3. Primary area of concern
+Explain the primary screening area. Describe how it may appear at home, in learning situations, routines, play, and relationships.
 
-3. PRIMARY AREA OF CONCERN
-- Explain the main risk area indicated by the answers.
-- Clarify what this may look like in daily life, school, home, routines, and relationships.
-- Express severity in plain language, not only as a label.
+4. Secondary or overlapping signals
+Explain the secondary signal carefully. If it is weak, say it is weak. If it overlaps with the primary pattern, explain the overlap.
 
-4. SECONDARY OR OVERLAPPING SIGNALS
-- Explain whether another area also appears relevant.
-- Describe overlap carefully.
-- If the secondary signal is weak, say that.
-- If the pattern is mixed, explain what that means in plain language.
+5. Possible impact on everyday life
+Describe possible effects on home life, learning, peer relationships, routines, transitions, and emotional wellbeing.
 
-5. FUNCTIONAL IMPACT IN EVERYDAY LIFE
-- Explain possible effects on:
-  - home life
-  - school / learning
-  - peer relationships
-  - routines / transitions
-  - emotional wellbeing
+6. Strengths and protective factors
+Identify realistic strengths, stabilizing factors, or signs of resilience. Do not invent unrealistic strengths.
 
-6. STRENGTHS AND PROTECTIVE FACTORS
-- Identify realistic strengths, adaptive signs, resilience factors, or protective observations.
-- Keep this grounded in the data and do not invent unrealistic strengths.
+7. Practical recommendations for parents
+Give concrete suggestions parents can use immediately: routines, communication, emotional regulation, structure, observation, and supportive strategies.
 
-7. PRACTICAL RECOMMENDATIONS FOR PARENTS
-- Give concrete everyday suggestions.
-- Focus on communication, routines, emotional regulation, structure, observation, support, and next steps.
-- Make the recommendations usable immediately.
+8. When professional support may be useful
+Explain when to consider a pediatrician, psychologist, child psychiatrist, developmental specialist, school specialist, or other qualified professional.
 
-8. WHEN PROFESSIONAL HELP MAY BE WORTH SEEKING
-- Explain when a parent should consider a psychologist, developmental specialist, child psychiatrist, pediatrician, school specialist, or other relevant professional.
-- Stay balanced and non-alarming.
+9. Important limitation and disclaimer
+Clearly state again that this is not a diagnosis and does not replace professional assessment. Explain that full assessment requires developmental history, observation, professional evaluation, and broader context.
 
-9. IMPORTANT LIMITATION / DISCLAIMER
-- Clearly state that this report is not a diagnosis.
-- Explain that full assessment requires a qualified professional, developmental history, clinical observation, and broader context.
-
-STYLE REQUIREMENTS:
-- Use section headings.
-- Warm, professional, non-alarming tone.
-- Parent-friendly language.
-- No definitive diagnosis.
-- No unsupported claims.
-- No references to being an AI system.
+FINAL STYLE RULES:
+- Numbered headings only.
+- No markdown symbols.
+- No ###.
+- No bold markdown.
+- No diagnosis.
+- No excessive bullet lists.
+- No fake certainty.
+- No medical treatment plan.
 `;
 }
 
@@ -299,7 +231,8 @@ export async function generateAnalysis(payload) {
 
   const response = await openai.responses.create({
     model: env.OPENAI_MODEL || "gpt-4.1-mini",
-    input: prompt
+    input: prompt,
+    temperature: 0.35
   });
 
   const text =
@@ -315,5 +248,9 @@ export async function generateAnalysis(payload) {
     throw new Error("Analysis generation returned empty content.");
   }
 
-  return text.trim();
+  return text
+    .replace(/^#{1,6}\s*/gm, "")
+    .replace(/\*\*/g, "")
+    .replace(/^---+$/gm, "")
+    .trim();
 }
