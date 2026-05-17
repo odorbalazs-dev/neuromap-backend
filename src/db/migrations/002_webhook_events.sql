@@ -1,6 +1,4 @@
-DROP TABLE IF EXISTS webhook_events;
-
-CREATE TABLE webhook_events (
+CREATE TABLE IF NOT EXISTS webhook_events (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   provider TEXT NOT NULL,
   event_id TEXT NOT NULL UNIQUE,
