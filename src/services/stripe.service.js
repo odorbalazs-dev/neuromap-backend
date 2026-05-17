@@ -141,7 +141,7 @@ export async function createCheckoutSession({
     locale: getStripeCheckoutLocale(safeLang),
 
     success_url: successUrl,
-    cancel_url: cancelUrl,
+    cancel_url: `${cancelUrl}?sid=${internalSessionId}`,
 
     metadata: {
       internalSessionId,
