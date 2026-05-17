@@ -1,5 +1,6 @@
 import OpenAI from "openai";
 import { env } from "../config/env.js";
+import { analyzeAdaptiveState } from "./adaptive-engine.service.js";
 
 const openai = new OpenAI({
   apiKey: env.OPENAI_API_KEY
@@ -90,6 +91,19 @@ function summarizeSpecificScoring(scoring = null) {
   };
 }
 
+function buildAdaptiveSummary(payload = {}) {
+  try {
+    return analyzeAdaptiveState({
+      triageScores: payload.triageScores || {},
+      specificProfile: payload.specificProfile || null,
+      specificScoring: payload.specificScoring || null
+    });
+  } catch (error) {
+    console.warn("[analysis] adaptive summary unavailable:", error?.message || error);
+    return null;
+  }
+}
+
 function buildPrompt(payload = {}, lang = "en") {
   const safeLang = getSafeLang(lang);
 
@@ -102,6 +116,7 @@ function buildPrompt(payload = {}, lang = "en") {
 
   const specificScoringSummary = summarizeSpecificScoring(payload.specificScoring);
   const specificProfileSummary = summarizeSpecificProfile(payload.specificProfile);
+  const adaptiveSummary = buildAdaptiveSummary(payload);
 
   return `
 You are a senior child development and child mental-health screening interpreter writing a paid parent-facing report.
@@ -175,6 +190,16 @@ SCORING INTERPRETATION:
 - If the profile is mixed, avoid overinterpreting a single category.
 - If secondaryRisk is close to the primary area, discuss it as an overlapping or contextual signal, not as a second diagnosis.
 
+ADAPTIVE ENGINE INTERPRETATION:
+- The adaptive summary is an internal reasoning aid, not something to quote directly.
+- Use it to decide whether the profile appears coherent, mixed, uncertain, overlapping, or context-dependent.
+- If confidence is low, describe the result as cautious and preliminary.
+- If overlapScore is high, explain that the answers suggest overlap between areas rather than a single clear direction.
+- If interpretation is "coherent_pattern", explain that the answers form a relatively consistent screening pattern.
+- If interpretation is "mixed_pattern", explain the mixed pattern calmly and avoid overconfidence.
+- If interpretation is "uncertain_pattern", emphasize observation and professional context.
+- recommendedFocusAreas may guide which everyday examples and recommendations should be emphasized.
+
 DEVELOPMENTAL INTERPRETATION GUIDE:
 - Consider that younger children may naturally show more variability in attention, impulse control, emotional regulation, and transitions.
 - Consider that older children may show difficulties more clearly in school demands, peer relationships, planning, persistence, and performance.
@@ -188,6 +213,9 @@ INPUT DATA:
 Primary detected focus: ${detectedRisk}
 Secondary signal: ${secondaryRisk}
 Questionnaire version: ${payload.questionnaireVersion || "unknown"}
+
+ADAPTIVE SUMMARY:
+${JSON.stringify(adaptiveSummary, null, 2)}
 
 TRIAGE SCORES:
 ${JSON.stringify(payload.triageScores || {}, null, 2)}
