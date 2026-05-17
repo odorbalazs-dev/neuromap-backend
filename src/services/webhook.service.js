@@ -12,18 +12,42 @@ import { generateAnalysis } from "./analysis.service.js";
 import { sendReportEmail } from "./email.service.js";
 import { sendMetaPurchaseEvent } from "./meta.service.js";
 
-async function insertWebhookEvent(event) {
+async function registerWebhookEvent(event) {
   const result = await db.query(
     `
     INSERT INTO webhook_events (provider, event_id, event_type, payload, status)
     VALUES ($1, $2, $3, $4, 'received')
-    ON CONFLICT (event_id) DO NOTHING
+    ON CONFLICT (event_id)
+    DO UPDATE SET
+      event_type = EXCLUDED.event_type,
+      payload = EXCLUDED.payload,
+      status = CASE
+        WHEN webhook_events.status = 'processed' THEN 'processed'
+        ELSE 'received'
+      END,
+      error_message = CASE
+        WHEN webhook_events.status = 'processed' THEN webhook_events.error_message
+        ELSE NULL
+      END
     RETURNING *
     `,
     ["stripe", event.id, event.type, event]
   );
 
   return result.rows[0] || null;
+}
+
+async function markWebhookProcessing(eventId) {
+  await db.query(
+    `
+    UPDATE webhook_events
+    SET status = 'processing',
+        error_message = NULL
+    WHERE event_id = $1
+      AND status != 'processed'
+    `,
+    [eventId]
+  );
 }
 
 async function markWebhookProcessed(eventId) {
@@ -61,12 +85,13 @@ function isCheckoutPaid(checkoutSession) {
 
 export async function handleStripeWebhook(rawBody, signature) {
   const event = constructStripeEvent(rawBody, signature);
-  const inserted = await insertWebhookEvent(event);
+  const webhookRow = await registerWebhookEvent(event);
 
-  if (!inserted) {
+  if (webhookRow?.status === "processed") {
     return {
       received: true,
-      duplicate: true
+      duplicate: true,
+      alreadyProcessed: true
     };
   }
 
@@ -74,6 +99,8 @@ export async function handleStripeWebhook(rawBody, signature) {
   let phase = "received";
 
   try {
+    await markWebhookProcessing(event.id);
+
     if (event.type !== "checkout.session.completed") {
       await markWebhookProcessed(event.id);
 
