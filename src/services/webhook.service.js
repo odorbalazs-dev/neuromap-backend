@@ -10,6 +10,7 @@ import {
 } from "./session.service.js";
 import { generateAnalysis } from "./analysis.service.js";
 import { sendReportEmail } from "./email.service.js";
+import { sendMetaPurchaseEvent } from "./meta.service.js";
 
 async function insertWebhookEvent(event) {
   const result = await db.query(
@@ -123,6 +124,22 @@ export async function handleStripeWebhook(rawBody, signature) {
 
     phase = "clear_recovery_state";
     await markCheckoutRecoveredOrPaid(internalSessionId);
+
+    phase = "send_meta_purchase";
+    try {
+      await sendMetaPurchaseEvent({
+        email: sessionRow.email,
+        eventId: checkoutSession.id,
+        value: 5,
+        currency: "USD"
+      });
+    } catch (metaError) {
+      console.error("[meta] purchase event failed, continuing webhook:", {
+        message: metaError?.message || metaError,
+        internalSessionId,
+        stripeSessionId: checkoutSession.id
+      });
+    }
 
     phase = "mark_processing";
     const processingRow = await markAnalysisProcessing(internalSessionId);

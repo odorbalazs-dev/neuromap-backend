@@ -170,6 +170,9 @@ export const env = {
       ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`
       : "http://localhost:3000"),
 
+  META_PIXEL_ID: optional("META_PIXEL_ID", null),
+  META_ACCESS_TOKEN: optional("META_ACCESS_TOKEN", null),
+
   ADMIN_TOKEN: optional("ADMIN_TOKEN", null),
   CRON_SECRET: optional("CRON_SECRET", null)
 };
