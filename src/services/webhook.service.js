@@ -3,13 +3,10 @@ import { constructStripeEvent } from "./stripe.service.js";
 import {
   getSessionById,
   markSessionPaid,
-  markAnalysisProcessing,
-  markAnalysisDone,
+  markAnalysisQueued,
   markAnalysisFailed,
   markCheckoutRecoveredOrPaid
 } from "./session.service.js";
-import { generateAnalysis } from "./analysis.service.js";
-import { sendReportEmail } from "./email.service.js";
 import { sendMetaPurchaseEvent } from "./meta.service.js";
 
 async function registerWebhookEvent(event) {
@@ -168,36 +165,12 @@ export async function handleStripeWebhook(rawBody, signature) {
       });
     }
 
-    phase = "mark_processing";
-    const processingRow = await markAnalysisProcessing(internalSessionId);
+    phase = "queue_analysis";
+    const queuedRow = await markAnalysisQueued(internalSessionId);
 
-    if (!processingRow) {
-      await markWebhookProcessed(event.id);
-
-      return {
-        received: true,
-        skipped: true,
-        reason: "analysis_not_processable"
-      };
+    if (!queuedRow) {
+      throw new Error("Could not queue analysis job.");
     }
-
-    phase = "generate_analysis";
-    const resultText = await generateAnalysis({
-      ...(sessionRow.payload || {}),
-      lang: sessionRow.lang
-    });
-
-    phase = "save_analysis";
-    await markAnalysisDone(internalSessionId, resultText);
-
-    phase = "send_email";
-    await sendReportEmail({
-      to: sessionRow.email,
-      lang: sessionRow.lang,
-      name: sessionRow.name,
-      reportText: resultText,
-      payload: sessionRow.payload
-    });
 
     phase = "mark_webhook_processed";
     await markWebhookProcessed(event.id);
@@ -205,6 +178,7 @@ export async function handleStripeWebhook(rawBody, signature) {
     return {
       received: true,
       processed: true,
+      queued: true,
       sessionId: internalSessionId
     };
   } catch (error) {

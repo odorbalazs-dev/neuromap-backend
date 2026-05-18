@@ -135,6 +135,46 @@ export async function markSessionPaid(sessionId) {
   return result.rows[0] || null;
 }
 
+export async function markAnalysisQueued(sessionId) {
+  const result = await db.query(
+    `
+    UPDATE sessions
+    SET analysis_status = 'queued',
+        error_message = NULL
+    WHERE id = $1
+      AND payment_status = 'paid'
+      AND analysis_status IS DISTINCT FROM 'done'
+    RETURNING *
+    `,
+    [sessionId]
+  );
+
+  return result.rows[0] || null;
+}
+
+export async function getNextQueuedAnalysisSession() {
+  const result = await db.query(
+    `
+    UPDATE sessions
+    SET analysis_status = 'processing',
+        analysis_started_at = COALESCE(analysis_started_at, NOW()),
+        error_message = NULL
+    WHERE id = (
+      SELECT id
+      FROM sessions
+      WHERE payment_status = 'paid'
+        AND analysis_status IN ('queued', 'failed')
+      ORDER BY paid_at ASC NULLS LAST, created_at ASC
+      LIMIT 1
+      FOR UPDATE SKIP LOCKED
+    )
+    RETURNING *
+    `
+  );
+
+  return result.rows[0] || null;
+}
+
 export async function markAnalysisProcessing(sessionId) {
   const result = await db.query(
     `
@@ -184,6 +224,7 @@ export async function markAnalysisFailed(sessionId, errorMessage) {
 
   return result.rows[0] || null;
 }
+
 export async function markCheckoutRecoveredOrPaid(sessionId) {
   const result = await db.query(
     `
