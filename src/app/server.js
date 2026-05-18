@@ -9,6 +9,7 @@ import webhookRoutes from "../api/routes/webhook.js";
 import healthRoutes from "../api/routes/health.js";
 import adminRoutes from "../api/routes/admin.js";
 import cronRoutes from "../api/routes/cron.js";
+import jobsRoutes from "../api/routes/jobs.js";
 
 const app = express();
 
@@ -47,6 +48,7 @@ app.use("/webhook", webhookRoutes);
 app.use("/health", healthRoutes);
 app.use("/admin", adminRoutes);
 app.use("/cron", cronRoutes);
+app.use("/jobs", jobsRoutes);
 
 async function start() {
   await runMigrations();
