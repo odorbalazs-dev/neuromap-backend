@@ -10,9 +10,12 @@ const BRAND = {
   pink: "#FF5CA8",
   lightBlue: "#F1FAFF",
   lightOrange: "#FFF4E8",
+  lightGreen: "#F4FFF0",
+  lightGray: "#F7F8FC",
   dark: "#1F2937",
   muted: "#667085",
-  border: "#E5E7EB"
+  border: "#E5E7EB",
+  softBorder: "#D7EEF9"
 };
 
 const FONT_DIR = path.join(process.cwd(), "src/assets/fonts");
@@ -37,6 +40,7 @@ function clean(value = "") {
 
 function stripMarkdown(value = "") {
   return clean(value)
+    .replace(/^#{1,6}\s*/gm, "")
     .replace(/\*\*/g, "")
     .replace(/^---+$/gm, "")
     .replace(/\n{3,}/g, "\n\n")
@@ -56,13 +60,10 @@ function registerFonts(doc) {
 
   doc.registerFont("Regular", FONT_PATHS.regular);
   doc.registerFont("Bold", FONT_PATHS.bold);
-
   doc.registerFont("JA-Regular", FONT_PATHS.jaRegular);
   doc.registerFont("JA-Bold", FONT_PATHS.jaBold);
-
   doc.registerFont("ZH-Regular", FONT_PATHS.zhRegular);
   doc.registerFont("ZH-Bold", FONT_PATHS.zhBold);
-
   doc.registerFont("AR-Regular", FONT_PATHS.arRegular);
   doc.registerFont("AR-Bold", FONT_PATHS.arBold);
 }
@@ -71,7 +72,6 @@ function getFont(lang = "en", bold = false) {
   if (lang === "ja") return bold ? "JA-Bold" : "JA-Regular";
   if (lang === "zh") return bold ? "ZH-Bold" : "ZH-Regular";
   if (lang === "ar") return bold ? "AR-Bold" : "AR-Regular";
-
   return bold ? "Bold" : "Regular";
 }
 
@@ -92,6 +92,12 @@ function getLabels(lang = "en") {
       parentFallback: "Szülő",
       reportTitle: "Részletes értelmezés",
       summaryLabel: "Előzetes kérdőíves riport",
+      overviewTitle: "Gyors áttekintés",
+      focusArea: "Fő fókuszterület",
+      secondarySignal: "Másodlagos jelzés",
+      signalLevel: "Jelzésszint",
+      topAreas: "Legerősebb területek",
+      notAvailable: "Nem elérhető",
       disclaimerTitle: "Fontos megjegyzés",
       disclaimer:
         "Ez az anyag nem minősül diagnózisnak, és nem helyettesíti a személyes szakértői vizsgálatot. A teljes értékeléshez szakemberrel történő konzultáció, fejlődéstörténet és tágabb kontextus szükséges.",
@@ -104,6 +110,12 @@ function getLabels(lang = "en") {
       parentFallback: "Parent",
       reportTitle: "Detailed interpretation",
       summaryLabel: "Preliminary questionnaire report",
+      overviewTitle: "Quick overview",
+      focusArea: "Main focus area",
+      secondarySignal: "Secondary signal",
+      signalLevel: "Signal level",
+      topAreas: "Strongest areas",
+      notAvailable: "Not available",
       disclaimerTitle: "Important note",
       disclaimer:
         "This material is not a diagnosis and does not replace an in-person specialist assessment. A full evaluation requires a qualified professional, developmental history, and broader context.",
@@ -116,6 +128,12 @@ function getLabels(lang = "en") {
       parentFallback: "Elternteil",
       reportTitle: "Detaillierte Interpretation",
       summaryLabel: "Vorläufiger Fragebogenbericht",
+      overviewTitle: "Kurzer Überblick",
+      focusArea: "Hauptfokus",
+      secondarySignal: "Sekundäres Signal",
+      signalLevel: "Signalstärke",
+      topAreas: "Stärkste Bereiche",
+      notAvailable: "Nicht verfügbar",
       disclaimerTitle: "Wichtiger Hinweis",
       disclaimer:
         "Dieses Material ist keine Diagnose und ersetzt keine persönliche fachliche Untersuchung. Für eine vollständige Bewertung sind eine qualifizierte Fachperson, die Entwicklungsgeschichte und ein breiterer Kontext erforderlich.",
@@ -128,6 +146,12 @@ function getLabels(lang = "en") {
       parentFallback: "Genitore",
       reportTitle: "Interpretazione dettagliata",
       summaryLabel: "Report preliminare del questionario",
+      overviewTitle: "Panoramica rapida",
+      focusArea: "Area principale",
+      secondarySignal: "Segnale secondario",
+      signalLevel: "Livello del segnale",
+      topAreas: "Aree più rilevanti",
+      notAvailable: "Non disponibile",
       disclaimerTitle: "Nota importante",
       disclaimer:
         "Questo materiale non è una diagnosi e non sostituisce una valutazione di persona da parte di un professionista qualificato. Una valutazione completa richiede una consulenza specialistica, la storia dello sviluppo e un contesto più ampio.",
@@ -140,6 +164,12 @@ function getLabels(lang = "en") {
       parentFallback: "Padre/madre",
       reportTitle: "Interpretación detallada",
       summaryLabel: "Informe preliminar del cuestionario",
+      overviewTitle: "Resumen rápido",
+      focusArea: "Área principal",
+      secondarySignal: "Señal secundaria",
+      signalLevel: "Nivel de señal",
+      topAreas: "Áreas más destacadas",
+      notAvailable: "No disponible",
       disclaimerTitle: "Nota importante",
       disclaimer:
         "Este material no es un diagnóstico y no sustituye una evaluación presencial por parte de un profesional cualificado. Una evaluación completa requiere consulta profesional, historia del desarrollo y un contexto más amplio.",
@@ -152,6 +182,12 @@ function getLabels(lang = "en") {
       parentFallback: "Parent",
       reportTitle: "Interprétation détaillée",
       summaryLabel: "Rapport préliminaire du questionnaire",
+      overviewTitle: "Aperçu rapide",
+      focusArea: "Domaine principal",
+      secondarySignal: "Signal secondaire",
+      signalLevel: "Niveau du signal",
+      topAreas: "Domaines les plus marqués",
+      notAvailable: "Non disponible",
       disclaimerTitle: "Note importante",
       disclaimer:
         "Ce document n’est pas un diagnostic et ne remplace pas une évaluation en personne par un professionnel qualifié. Une évaluation complète nécessite une consultation spécialisée, l’histoire du développement et un contexte plus large.",
@@ -164,6 +200,12 @@ function getLabels(lang = "en") {
       parentFallback: "Responsável",
       reportTitle: "Interpretação detalhada",
       summaryLabel: "Relatório preliminar do questionário",
+      overviewTitle: "Visão rápida",
+      focusArea: "Área principal",
+      secondarySignal: "Sinal secundário",
+      signalLevel: "Nível do sinal",
+      topAreas: "Áreas mais fortes",
+      notAvailable: "Não disponível",
       disclaimerTitle: "Nota importante",
       disclaimer:
         "Este material não é um diagnóstico e não substitui uma avaliação presencial por um profissional qualificado. Uma avaliação completa requer consulta profissional, histórico de desenvolvimento e contexto mais amplo.",
@@ -176,6 +218,12 @@ function getLabels(lang = "en") {
       parentFallback: "Rodzic",
       reportTitle: "Szczegółowa interpretacja",
       summaryLabel: "Wstępny raport z kwestionariusza",
+      overviewTitle: "Krótki przegląd",
+      focusArea: "Główny obszar",
+      secondarySignal: "Sygnał dodatkowy",
+      signalLevel: "Poziom sygnału",
+      topAreas: "Najsilniejsze obszary",
+      notAvailable: "Brak danych",
       disclaimerTitle: "Ważna informacja",
       disclaimer:
         "Ten materiał nie jest diagnozą i nie zastępuje osobistej oceny przez wykwalifikowanego specjalistę. Pełna ocena wymaga konsultacji specjalistycznej, historii rozwoju i szerszego kontekstu.",
@@ -188,6 +236,12 @@ function getLabels(lang = "en") {
       parentFallback: "家长",
       reportTitle: "详细解读",
       summaryLabel: "初步问卷报告",
+      overviewTitle: "快速概览",
+      focusArea: "主要关注领域",
+      secondarySignal: "次要信号",
+      signalLevel: "信号水平",
+      topAreas: "最突出的领域",
+      notAvailable: "暂无数据",
       disclaimerTitle: "重要说明",
       disclaimer:
         "本材料不是诊断，也不能替代合格专业人员的面对面评估。完整评估需要专业咨询、发展史以及更广泛的背景信息。",
@@ -200,6 +254,12 @@ function getLabels(lang = "en") {
       parentFallback: "保護者",
       reportTitle: "詳細な解釈",
       summaryLabel: "予備的な質問票レポート",
+      overviewTitle: "概要",
+      focusArea: "主な注目領域",
+      secondarySignal: "二次的なサイン",
+      signalLevel: "サインの強さ",
+      topAreas: "最も強く示された領域",
+      notAvailable: "利用不可",
       disclaimerTitle: "重要なお知らせ",
       disclaimer:
         "この資料は診断ではなく、資格を持つ専門家による対面評価の代わりにはなりません。完全な評価には、専門家による相談、発達歴、より広い背景情報が必要です。",
@@ -212,6 +272,12 @@ function getLabels(lang = "en") {
       parentFallback: "ولي الأمر",
       reportTitle: "تفسير تفصيلي",
       summaryLabel: "تقرير أولي للاستبيان",
+      overviewTitle: "نظرة سريعة",
+      focusArea: "المجال الرئيسي",
+      secondarySignal: "إشارة ثانوية",
+      signalLevel: "مستوى الإشارة",
+      topAreas: "أبرز المجالات",
+      notAvailable: "غير متاح",
       disclaimerTitle: "ملاحظة مهمة",
       disclaimer:
         "هذه المادة ليست تشخيصًا ولا تحل محل التقييم الشخصي من قبل مختص مؤهل. يتطلب التقييم الكامل استشارة مختص، وتاريخًا نمائيًا، وسياقًا أوسع.",
@@ -222,6 +288,52 @@ function getLabels(lang = "en") {
   return labels[lang] || labels.en;
 }
 
+function extractSummary(payload = {}) {
+  const profile = payload?.specificProfile || {};
+  const scoring = payload?.specificScoring || {};
+  const resultSummary = payload?.resultSummary || {};
+
+  const detectedRisk =
+    payload?.detectedRisk ||
+    profile?.kind ||
+    resultSummary?.kind ||
+    null;
+
+  const secondaryRisk =
+    payload?.secondaryRisk ||
+    resultSummary?.secondaryRisk ||
+    null;
+
+  const severity =
+    profile?.severity ||
+    resultSummary?.signal?.key ||
+    null;
+
+  const normalizedAverage =
+    typeof profile?.normalizedAverage === "number"
+      ? profile.normalizedAverage
+      : typeof scoring?.normalizedAverage === "number"
+      ? scoring.normalizedAverage
+      : null;
+
+  const subdomains = Object.entries(scoring?.subdomains || profile?.subdomains || {})
+    .map(([key, value]) => ({
+      key,
+      average: typeof value?.average === "number" ? value.average : 0,
+      itemCount: Number(value?.itemCount || 0)
+    }))
+    .sort((a, b) => b.average - a.average)
+    .slice(0, 5);
+
+  return {
+    detectedRisk,
+    secondaryRisk,
+    severity,
+    normalizedAverage,
+    subdomains
+  };
+}
+
 function addLogoLikeMark(doc, x, y) {
   const safeX = Number.isFinite(Number(x)) ? Number(x) : 72;
   const safeY = Number.isFinite(Number(y)) ? Number(y) : 52;
@@ -230,9 +342,7 @@ function addLogoLikeMark(doc, x, y) {
   doc.circle(safeX + 28, safeY, 16).fill(BRAND.orange);
   doc.circle(safeX + 14, safeY + 18, 8).fill(BRAND.green);
 
-  doc
-    .strokeColor("#FFFFFF")
-    .lineWidth(2.2)
+  doc.strokeColor("#FFFFFF").lineWidth(2.2)
     .moveTo(safeX, safeY)
     .lineTo(safeX + 28, safeY)
     .lineTo(safeX + 14, safeY + 18)
@@ -241,26 +351,22 @@ function addLogoLikeMark(doc, x, y) {
 
   doc.circle(safeX, safeY, 7).fill("#FFFFFF");
   doc.circle(safeX, safeY, 4).fill(BRAND.yellow);
-
   doc.circle(safeX + 28, safeY, 7).fill("#FFFFFF");
   doc.circle(safeX + 28, safeY, 4).fill(BRAND.green);
-
   doc.circle(safeX + 14, safeY + 18, 7).fill("#FFFFFF");
   doc.circle(safeX + 14, safeY + 18, 4).fill(BRAND.pink);
 }
 
 function addHeader(doc, labels, lang) {
-  doc.rect(0, 0, doc.page.width, 108).fill(BRAND.lightBlue);
-
+  doc.rect(0, 0, doc.page.width, 116).fill(BRAND.lightBlue);
   doc.rect(0, 0, doc.page.width, 8).fill(BRAND.blue);
   doc.rect(0, 8, doc.page.width * 0.45, 5).fill(BRAND.orange);
   doc.rect(doc.page.width * 0.45, 8, doc.page.width * 0.22, 5).fill(BRAND.green);
   doc.rect(doc.page.width * 0.67, 8, doc.page.width * 0.33, 5).fill(BRAND.yellow);
 
-  addLogoLikeMark(doc, 72, 52);
+  addLogoLikeMark(doc, 72, 55);
 
-  doc
-    .fillColor(BRAND.dark)
+  doc.fillColor(BRAND.dark)
     .font(getFont(lang, true))
     .fontSize(lang === "zh" || lang === "ja" ? 20 : 23)
     .text(labels.title, 118, 34, {
@@ -268,11 +374,10 @@ function addHeader(doc, labels, lang) {
       align: getTextAlign(lang)
     });
 
-  doc
-    .fillColor(BRAND.muted)
+  doc.fillColor(BRAND.muted)
     .font(getFont(lang))
     .fontSize(10.5)
-    .text(labels.subtitle, 118, 64, {
+    .text(labels.subtitle, 118, 66, {
       width: doc.page.width - 174,
       align: getTextAlign(lang)
     });
@@ -281,8 +386,7 @@ function addHeader(doc, labels, lang) {
 function addFooter(doc, labels, lang) {
   const y = doc.page.height - 44;
 
-  doc
-    .moveTo(56, y - 10)
+  doc.moveTo(56, y - 10)
     .lineTo(doc.page.width - 56, y - 10)
     .strokeColor(BRAND.border)
     .lineWidth(1)
@@ -292,8 +396,7 @@ function addFooter(doc, labels, lang) {
   doc.circle(69, y + 3, 3).fill(BRAND.orange);
   doc.circle(80, y + 3, 3).fill(BRAND.green);
 
-  doc
-    .fillColor("#8A8F9C")
+  doc.fillColor("#8A8F9C")
     .font(getFont(lang))
     .fontSize(8.5)
     .text(labels.footer, 94, y - 2, {
@@ -307,7 +410,7 @@ function ensureSpace(doc, neededHeight, labels, lang) {
     addFooter(doc, labels, lang);
     doc.addPage();
     addHeader(doc, labels, lang);
-    doc.y = 132;
+    doc.y = 138;
   }
 }
 
@@ -316,16 +419,15 @@ function addInfoCard(doc, { name, lang }) {
   const safeName = clean(name) || labels.parentFallback;
 
   const x = 56;
-  const y = 132;
+  const y = 138;
   const w = doc.page.width - 112;
   const h = 88;
 
   doc.roundedRect(x, y, w, h, 16).fill("#FFFFFF");
-  doc.roundedRect(x, y, w, h, 16).strokeColor("#D7EEF9").lineWidth(1).stroke();
+  doc.roundedRect(x, y, w, h, 16).strokeColor(BRAND.softBorder).lineWidth(1).stroke();
   doc.rect(x, y, 8, h).fill(BRAND.orange);
 
-  doc
-    .fillColor(BRAND.dark)
+  doc.fillColor(BRAND.dark)
     .font(getFont(lang, true))
     .fontSize(14)
     .text(`${labels.greeting} ${safeName}!`, x + 22, y + 20, {
@@ -333,18 +435,137 @@ function addInfoCard(doc, { name, lang }) {
       align: getTextAlign(lang)
     });
 
-  doc
-    .fillColor(BRAND.muted)
+  doc.fillColor(BRAND.muted)
     .font(getFont(lang))
     .fontSize(10)
-    .text(labels.summaryLabel, x + 22, y + 46, {
+    .text(labels.summaryLabel, x + 22, y + 48, {
       width: w - 44,
       align: getTextAlign(lang)
     });
+}
 
-  doc.circle(x + w - 42, y + 30, 9).fill(BRAND.blue);
-  doc.circle(x + w - 24, y + 44, 7).fill(BRAND.orange);
-  doc.circle(x + w - 54, y + 56, 6).fill(BRAND.green);
+function addMiniCard(doc, x, y, w, title, value, lang, color = BRAND.blue) {
+  const h = 72;
+
+  doc.roundedRect(x, y, w, h, 14).fill("#FFFFFF");
+  doc.roundedRect(x, y, w, h, 14).strokeColor(BRAND.border).lineWidth(1).stroke();
+  doc.rect(x, y, 6, h).fill(color);
+
+  doc.fillColor(BRAND.muted)
+    .font(getFont(lang))
+    .fontSize(8.5)
+    .text(title, x + 16, y + 14, {
+      width: w - 28,
+      align: getTextAlign(lang)
+    });
+
+  doc.fillColor(BRAND.dark)
+    .font(getFont(lang, true))
+    .fontSize(12)
+    .text(value || "—", x + 16, y + 36, {
+      width: w - 28,
+      align: getTextAlign(lang)
+    });
+}
+
+function addOverviewBlock(doc, payload, labels, lang) {
+  const summary = extractSummary(payload || {});
+  const x = 56;
+  const w = doc.page.width - 112;
+
+  ensureSpace(doc, 190, labels, lang);
+
+  doc.moveDown(1);
+
+  doc.fillColor(BRAND.dark)
+    .font(getFont(lang, true))
+    .fontSize(15)
+    .text(labels.overviewTitle, x, doc.y, {
+      width: w,
+      align: getTextAlign(lang)
+    });
+
+  doc.moveDown(0.6);
+
+  const cardY = doc.y;
+  const gap = 10;
+  const cardW = (w - gap * 2) / 3;
+
+  addMiniCard(
+    doc,
+    x,
+    cardY,
+    cardW,
+    labels.focusArea,
+    summary.detectedRisk || labels.notAvailable,
+    lang,
+    BRAND.blue
+  );
+
+  addMiniCard(
+    doc,
+    x + cardW + gap,
+    cardY,
+    cardW,
+    labels.secondarySignal,
+    summary.secondaryRisk || labels.notAvailable,
+    lang,
+    BRAND.orange
+  );
+
+  addMiniCard(
+    doc,
+    x + (cardW + gap) * 2,
+    cardY,
+    cardW,
+    labels.signalLevel,
+    summary.severity || labels.notAvailable,
+    lang,
+    BRAND.green
+  );
+
+  doc.y = cardY + 92;
+
+  if (summary.subdomains.length) {
+    doc.fillColor(BRAND.dark)
+      .font(getFont(lang, true))
+      .fontSize(12)
+      .text(labels.topAreas, x, doc.y, {
+        width: w,
+        align: getTextAlign(lang)
+      });
+
+    doc.moveDown(0.4);
+
+    summary.subdomains.forEach((item) => {
+      ensureSpace(doc, 28, labels, lang);
+
+      const barX = x + 150;
+      const barY = doc.y + 5;
+      const barW = w - 180;
+      const ratio = Math.max(0, Math.min(1, item.average / 3));
+
+      doc.fillColor(BRAND.muted)
+        .font(getFont(lang))
+        .fontSize(9)
+        .text(item.key, x, doc.y, {
+          width: 135,
+          align: getTextAlign(lang)
+        });
+
+      doc.roundedRect(barX, barY, barW, 8, 4).fill("#EEF2F6");
+      doc.roundedRect(barX, barY, barW * ratio, 8, 4).fill(BRAND.blue);
+
+      doc.fillColor(BRAND.muted)
+        .font(getFont(lang))
+        .fontSize(8)
+        .text(item.average.toFixed(2), barX + barW + 8, doc.y - 1, {
+          width: 30
+        });
+
+      doc.moveDown(0.55);
+    });
+  }
 }
 
 function addSectionTitle(doc, title, labels, lang) {
@@ -355,8 +576,7 @@ function addSectionTitle(doc, title, labels, lang) {
   doc.circle(62, doc.y + 8, 5).fill(BRAND.blue);
   doc.circle(76, doc.y + 8, 5).fill(BRAND.orange);
 
-  doc
-    .fillColor(BRAND.dark)
+  doc.fillColor(BRAND.dark)
     .font(getFont(lang, true))
     .fontSize(14)
     .text(title, 92, doc.y, {
@@ -366,10 +586,9 @@ function addSectionTitle(doc, title, labels, lang) {
 
   doc.moveDown(0.4);
 
-  doc
-    .moveTo(56, doc.y)
+  doc.moveTo(56, doc.y)
     .lineTo(doc.page.width - 56, doc.y)
-    .strokeColor("#D7EEF9")
+    .strokeColor(BRAND.softBorder)
     .lineWidth(1)
     .stroke();
 
@@ -377,7 +596,7 @@ function addSectionTitle(doc, title, labels, lang) {
 }
 
 function addDisclaimerBox(doc, labels, lang) {
-  ensureSpace(doc, 130, labels, lang);
+  ensureSpace(doc, 132, labels, lang);
 
   doc.moveDown(1);
 
@@ -391,8 +610,7 @@ function addDisclaimerBox(doc, labels, lang) {
 
   doc.circle(x + 21, y + 23, 7).fill(BRAND.orange);
 
-  doc
-    .fillColor("#9A3412")
+  doc.fillColor("#9A3412")
     .font(getFont(lang, true))
     .fontSize(11)
     .text(labels.disclaimerTitle, x + 38, y + 16, {
@@ -400,8 +618,7 @@ function addDisclaimerBox(doc, labels, lang) {
       align: getTextAlign(lang)
     });
 
-  doc
-    .fillColor("#7C2D12")
+  doc.fillColor("#7C2D12")
     .font(getFont(lang))
     .fontSize(9.5)
     .text(labels.disclaimer, x + 18, y + 42, {
@@ -417,11 +634,22 @@ function isHeading(paragraph) {
   const text = clean(paragraph);
   if (!text) return false;
 
-  if (/^\d+\.\s+/.test(text) && text.length < 120) return true;
+  if (/^\d+\.\s+/.test(text) && text.length < 150) return true;
   if (text.length < 85 && !/[.!?。！？؟]$/u.test(text)) return true;
   if (text === text.toUpperCase() && text.length < 120) return true;
 
   return false;
+}
+
+function normalizeHeading(paragraph, fallbackCounter) {
+  const text = clean(paragraph);
+  const numbered = text.match(/^(\d+)\.\s*(.+)$/);
+
+  if (numbered) {
+    return `${numbered[1]}. ${clean(numbered[2])}`;
+  }
+
+  return `${fallbackCounter}. ${text}`;
 }
 
 function addReportText(doc, reportText, labels, lang) {
@@ -433,57 +661,26 @@ function addReportText(doc, reportText, labels, lang) {
   let sectionCounter = 1;
 
   rawParagraphs.forEach((paragraph) => {
-    const headingMatch = paragraph.match(/^#{1,6}\s*(.+)$/);
+    if (isHeading(paragraph)) {
+      ensureSpace(doc, 46, labels, lang);
 
-    if (headingMatch) {
-      ensureSpace(doc, 42, labels, lang);
-
-      const cleanHeading = clean(headingMatch[1]);
+      const heading = normalizeHeading(paragraph, sectionCounter);
+      const match = heading.match(/^(\d+)\./);
+      if (match) sectionCounter = Number(match[1]) + 1;
 
       doc.moveDown(0.45);
 
-      doc
-        .fillColor(BRAND.blue)
+      doc.fillColor(BRAND.blue)
         .font(getFont(lang, true))
         .fontSize(13)
-        .text(`${sectionCounter}. ${cleanHeading}`, {
+        .text(heading, {
           lineGap: 3,
           align: getTextAlign(lang)
         });
 
-      sectionCounter += 1;
+      doc.moveDown(0.18);
 
-      doc
-        .moveDown(0.18)
-        .moveTo(56, doc.y)
-        .lineTo(doc.page.width - 120, doc.y)
-        .strokeColor(BRAND.orange)
-        .lineWidth(1.2)
-        .stroke();
-
-      doc.moveDown(0.55);
-      return;
-    }
-
-    if (isHeading(paragraph)) {
-      ensureSpace(doc, 42, labels, lang);
-
-      doc.moveDown(0.35);
-
-      doc
-        .fillColor(BRAND.blue)
-        .font(getFont(lang, true))
-        .fontSize(12.5)
-        .text(`${sectionCounter}. ${paragraph}`, {
-          lineGap: 3,
-          align: getTextAlign(lang)
-        });
-
-      sectionCounter += 1;
-
-      doc
-        .moveDown(0.18)
-        .moveTo(56, doc.y)
+      doc.moveTo(56, doc.y)
         .lineTo(doc.page.width - 120, doc.y)
         .strokeColor(BRAND.orange)
         .lineWidth(1.2)
@@ -495,8 +692,7 @@ function addReportText(doc, reportText, labels, lang) {
 
     ensureSpace(doc, 72, labels, lang);
 
-    doc
-      .fillColor("#374151")
+    doc.fillColor("#374151")
       .font(getFont(lang))
       .fontSize(lang === "zh" || lang === "ja" ? 10 : 10.4)
       .text(paragraph, {
@@ -507,6 +703,7 @@ function addReportText(doc, reportText, labels, lang) {
     doc.moveDown(0.55);
   });
 }
+
 export async function generatePdfBuffer({ name, reportText, lang = "en", payload = null }) {
   return new Promise((resolve, reject) => {
     try {
@@ -533,15 +730,13 @@ export async function generatePdfBuffer({ name, reportText, lang = "en", payload
       addHeader(doc, labels, safeLang);
       addInfoCard(doc, { name, lang: safeLang });
 
-      doc.y = 252;
+      doc.y = 246;
 
+      addOverviewBlock(doc, payload, labels, safeLang);
       addSectionTitle(doc, labels.reportTitle, labels, safeLang);
       addReportText(doc, reportText, labels, safeLang);
-      if (doc.y < doc.page.height - 220) {
-  addDisclaimerBox(doc, labels, safeLang);
-}
-
-addFooter(doc, labels, safeLang);
+      addDisclaimerBox(doc, labels, safeLang);
+      addFooter(doc, labels, safeLang);
 
       doc.end();
     } catch (error) {
