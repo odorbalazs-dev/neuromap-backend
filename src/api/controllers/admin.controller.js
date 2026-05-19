@@ -1,10 +1,9 @@
+import { db } from "../../db/db.js";
 import {
   getSessionById,
-  markAnalysisProcessing,
-  markAnalysisDone,
-  markAnalysisFailed
+  markAnalysisQueued
 } from "../../services/session.service.js";
-import { generateAnalysis } from "../../services/analysis.service.js";
+import { processNextAnalysisJob } from "../../services/analysis-job.service.js";
 import { sendReportEmail } from "../../services/email.service.js";
 import { env } from "../../config/env.js";
 
@@ -25,6 +24,7 @@ function buildSessionView(sessionRow) {
 
     stripe_session_id: sessionRow.stripe_session_id,
     paid_at: sessionRow.paid_at,
+    analysis_started_at: sessionRow.analysis_started_at,
     analysis_completed_at: sessionRow.analysis_completed_at,
     error_message: sessionRow.error_message,
 
@@ -46,7 +46,33 @@ function buildSessionView(sessionRow) {
     analysisResultLength: sessionRow.analysis_result
       ? String(sessionRow.analysis_result).length
       : 0,
-    analysisPreview: shortText(sessionRow.analysis_result, 800)
+    analysisPreview: shortText(sessionRow.analysis_result, 800),
+
+    created_at: sessionRow.created_at,
+    updated_at: sessionRow.updated_at
+  };
+}
+
+function buildCompactSessionView(row) {
+  return {
+    id: row.id,
+    email: row.email,
+    name: row.name,
+    lang: row.lang,
+
+    payment_status: row.payment_status,
+    analysis_status: row.analysis_status,
+
+    detectedRisk: row.payload?.detectedRisk || null,
+    secondaryRisk: row.payload?.secondaryRisk || null,
+
+    paid_at: row.paid_at,
+    analysis_started_at: row.analysis_started_at,
+    analysis_completed_at: row.analysis_completed_at,
+    error_message: row.error_message,
+
+    created_at: row.created_at,
+    updated_at: row.updated_at
   };
 }
 
@@ -56,10 +82,116 @@ export async function getAdminStatus(_req, res) {
     service: "neuromap-admin",
     nodeEnv: env.NODE_ENV,
     adminTokenConfigured: Boolean(env.ADMIN_TOKEN),
+    cronSecretConfigured: Boolean(env.CRON_SECRET),
     openaiConfigured: Boolean(env.OPENAI_API_KEY),
     resendConfigured: Boolean(env.RESEND_API_KEY),
-    stripeConfigured: Boolean(env.STRIPE_SECRET_KEY)
+    stripeConfigured: Boolean(env.STRIPE_SECRET_KEY),
+    metaConfigured: Boolean(env.META_PIXEL_ID && env.META_ACCESS_TOKEN)
   });
+}
+
+export async function getQueueStatus(_req, res) {
+  try {
+    const result = await db.query(`
+      SELECT
+        analysis_status,
+        COUNT(*)::int AS count
+      FROM sessions
+      WHERE payment_status = 'paid'
+      GROUP BY analysis_status
+      ORDER BY analysis_status ASC
+    `);
+
+    const recentQueued = await db.query(`
+      SELECT *
+      FROM sessions
+      WHERE payment_status = 'paid'
+        AND analysis_status IN ('queued', 'processing', 'failed')
+      ORDER BY
+        CASE analysis_status
+          WHEN 'failed' THEN 1
+          WHEN 'processing' THEN 2
+          WHEN 'queued' THEN 3
+          ELSE 4
+        END,
+        paid_at ASC NULLS LAST,
+        created_at ASC
+      LIMIT 20
+    `);
+
+    return res.status(200).json({
+      ok: true,
+      counts: result.rows.reduce((acc, row) => {
+        acc[row.analysis_status] = row.count;
+        return acc;
+      }, {}),
+      items: recentQueued.rows.map(buildCompactSessionView)
+    });
+  } catch (error) {
+    console.error("Admin queue status error:", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: error.message || "Failed to get queue status"
+    });
+  }
+}
+
+export async function getRecentSessions(req, res) {
+  try {
+    const limit = Math.min(Number(req.query.limit || 25), 100);
+
+    const result = await db.query(
+      `
+      SELECT *
+      FROM sessions
+      ORDER BY created_at DESC
+      LIMIT $1
+      `,
+      [limit]
+    );
+
+    return res.status(200).json({
+      ok: true,
+      items: result.rows.map(buildCompactSessionView)
+    });
+  } catch (error) {
+    console.error("Admin recent sessions error:", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: error.message || "Failed to get recent sessions"
+    });
+  }
+}
+
+export async function getFailedAnalyses(req, res) {
+  try {
+    const limit = Math.min(Number(req.query.limit || 25), 100);
+
+    const result = await db.query(
+      `
+      SELECT *
+      FROM sessions
+      WHERE analysis_status = 'failed'
+      ORDER BY updated_at DESC NULLS LAST, created_at DESC
+      LIMIT $1
+      `,
+      [limit]
+    );
+
+    return res.status(200).json({
+      ok: true,
+      items: result.rows.map(buildCompactSessionView)
+    });
+  } catch (error) {
+    console.error("Admin failed analyses error:", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: error.message || "Failed to get failed analyses"
+    });
+  }
 }
 
 export async function getAdminSession(req, res) {
@@ -116,42 +248,37 @@ export async function retryAnalysis(req, res) {
       });
     }
 
-    await markAnalysisProcessing(sessionId);
-
-    const resultText = await generateAnalysis({
-      ...sessionRow.payload,
-      lang: sessionRow.lang
-    });
-
-    await markAnalysisDone(sessionId, resultText);
-
-    await sendReportEmail({
-      to: sessionRow.email,
-      lang: sessionRow.lang,
-      name: sessionRow.name,
-      reportText: resultText,
-      payload: sessionRow.payload
-    });
+    await markAnalysisQueued(sessionId);
 
     return res.status(200).json({
       ok: true,
       sessionId,
-      analysisStatus: "done",
-      emailSent: true,
-      reportLength: resultText.length
+      analysisStatus: "queued"
     });
   } catch (error) {
     console.error("Admin retry analysis error:", error);
 
-    try {
-      await markAnalysisFailed(sessionId, error.message || "Admin retry failed");
-    } catch (nestedError) {
-      console.error("Failed to mark retry failed:", nestedError);
-    }
-
     return res.status(500).json({
       ok: false,
       error: error.message || "Failed to retry analysis"
+    });
+  }
+}
+
+export async function processOneAnalysisJob(_req, res) {
+  try {
+    const result = await processNextAnalysisJob();
+
+    return res.status(200).json({
+      ok: true,
+      ...result
+    });
+  } catch (error) {
+    console.error("Admin process one analysis job error:", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: error.message || "Failed to process analysis job"
     });
   }
 }
