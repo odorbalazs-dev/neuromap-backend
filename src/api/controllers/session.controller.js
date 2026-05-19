@@ -23,17 +23,13 @@ export async function getSession(req, res) {
     return res.status(200).json({
       ok: true,
       session: {
-        id: session.id,
-        email: session.email,
-        name: session.name || null,
-        lang: session.lang || "en",
-
-        payment_status: session.payment_status || null,
-        analysis_status: session.analysis_status || null,
-
-        created_at: session.created_at || null,
-        updated_at: session.updated_at || null
-      }
+  id: session.id,
+  lang: session.lang || "en",
+  payment_status: session.payment_status || null,
+  analysis_status: session.analysis_status || null,
+  created_at: session.created_at || null,
+  updated_at: session.updated_at || null
+}
     });
   } catch (error) {
     console.error("session controller error:", error);
