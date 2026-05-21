@@ -5,7 +5,8 @@
   "main": "src/app/server.js",
   "scripts": {
     "start": "node src/app/server.js",
-    "dev": "node --watch src/app/server.js"
+    "dev": "node --watch src/app/server.js",
+    "worker": "node src/jobs/analysis.worker.js"
   },
   "dependencies": {
     "cors": "^2.8.6",

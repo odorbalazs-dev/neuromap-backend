@@ -1,3 +1,4 @@
+import { enqueueAnalysisJob } from "./analysis-queue.service.js";
 import { db } from "../db/db.js";
 import { constructStripeEvent } from "./stripe.service.js";
 import {
@@ -166,14 +167,14 @@ export async function handleStripeWebhook(rawBody, signature) {
     }
 
     phase = "queue_analysis";
-    const queuedRow = await markAnalysisQueued(internalSessionId);
 
-    if (!queuedRow) {
-      throw new Error("Could not queue analysis job.");
-    }
+const queuedRow = await markAnalysisQueued(internalSessionId);
 
-    phase = "mark_webhook_processed";
-    await markWebhookProcessed(event.id);
+if (!queuedRow) {
+  throw new Error("Could not queue analysis job.");
+}
+
+await enqueueAnalysisJob(internalSessionId);
 
     return {
       received: true,
