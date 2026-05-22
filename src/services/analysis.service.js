@@ -103,6 +103,97 @@ function buildAdaptiveSummary(payload = {}) {
   }
 }
 
+function getDomainInterpretationGuide(primary, secondary) {
+  const guides = {
+    ADHD: {
+      focus:
+        "attention regulation, impulse control, activity level, task completion, executive functioning, emotional reactivity, effort regulation",
+      avoid:
+        "do not treat every attention difficulty as ADHD; consider sleep, stress, task clarity, anxiety, sensory load, motivation, and developmental expectations",
+      parentHelp:
+        "emphasize predictable routines, reduced friction, one-step instructions, visual structure, transition warnings, movement breaks, emotional co-regulation, and strengths-based scaffolding"
+    },
+    ASD: {
+      focus:
+        "social communication, reciprocity, flexibility, routines, sensory processing, literal interpretation, transitions, predictability, peer demands",
+      avoid:
+        "do not describe autistic traits as deficits only; avoid implying poor motivation or intentional non-cooperation; consider masking, overload, sensory needs, and social fatigue",
+      parentHelp:
+        "emphasize predictability, clear language, visual supports, sensory-aware routines, transition preparation, respectful social support, and safe recovery time after demanding situations"
+    },
+    ANXIETY: {
+      focus:
+        "worry, uncertainty, avoidance, reassurance seeking, physical arousal, perfectionistic pressure, separation or social-evaluative stress, sleep and concentration effects",
+      avoid:
+        "do not frame anxiety as weakness or stubbornness; distinguish avoidance caused by fear from inattention, opposition, or low motivation",
+      parentHelp:
+        "emphasize calm validation, gradual exposure, predictable reassurance limits, naming body signals, small brave steps, routines for uncertainty, and avoiding excessive accommodation"
+    },
+    DEPRESSION: {
+      focus:
+        "low mood, irritability, reduced interest, low energy, withdrawal, negative self-view, hopelessness signals, concentration changes, sleep or appetite changes",
+      avoid:
+        "do not overstate risk; do not minimize persistent low mood as laziness; mention urgent support only if safety concerns are present or worsening",
+      parentHelp:
+        "emphasize connection before correction, gentle activation, predictable supportive routines, reduced shame, monitoring mood and energy, and seeking professional help if low mood persists or functioning declines"
+    },
+    LEARNING: {
+      focus:
+        "reading, writing, math, working memory, processing speed, instruction understanding, organization, task persistence, performance inconsistency",
+      avoid:
+        "do not confuse learning difficulty with lack of effort; consider attention, anxiety, language, sleep, and instruction clarity as possible contributors",
+      parentHelp:
+        "emphasize breaking tasks down, checking understanding, multisensory practice, short work blocks, error-friendly feedback, school collaboration, and documenting patterns across subjects"
+    }
+  };
+
+  const primaryGuide = guides[primary] || {
+    focus: "the strongest questionnaire pattern and its functional impact",
+    avoid: "avoid diagnostic certainty and avoid reducing the child to a label",
+    parentHelp: "emphasize practical, observable next steps for family life"
+  };
+
+  const secondaryGuide = secondary && guides[secondary] ? guides[secondary] : null;
+
+  return {
+    primary,
+    primaryGuide,
+    secondary: secondaryGuide ? secondary : null,
+    secondaryGuide
+  };
+}
+
+function buildSignalQualityGuide({ specificProfileSummary, specificScoringSummary, adaptiveSummary }) {
+  const average = Number(
+    specificProfileSummary?.normalizedAverage ??
+      specificScoringSummary?.normalizedAverage ??
+      0
+  );
+
+  const severity = specificProfileSummary?.severity || "unknown";
+  const topSubdomains = specificProfileSummary?.strongestSubdomains || [];
+  const confidence = adaptiveSummary?.confidence || null;
+  const interpretation = adaptiveSummary?.interpretation || null;
+  const overlapScore = Number(adaptiveSummary?.overlapScore || 0);
+
+  return {
+    severity,
+    average,
+    confidence,
+    interpretation,
+    overlapScore,
+    topSubdomains: topSubdomains.map((item) => item.name),
+    writingInstruction:
+      average < 0.8
+        ? "Treat the pattern as weak. Keep the report reassuring, observational, and focused on monitoring rather than concern."
+        : overlapScore >= 0.25
+        ? "Treat the pattern as overlapping. Explain the possible overlap calmly and avoid presenting one single explanation as certain."
+        : confidence === "low" || interpretation === "uncertain_pattern"
+        ? "Treat the pattern as preliminary. Use careful wording and emphasize context, observation, and professional interpretation if concerns persist."
+        : "Treat the pattern as meaningful but still non-diagnostic. Explain the functional pattern with practical parent guidance."
+  };
+}
+
 function buildPrompt(payload = {}, lang = "en") {
   const safeLang = getSafeLang(lang);
 
@@ -116,6 +207,12 @@ function buildPrompt(payload = {}, lang = "en") {
   const specificScoringSummary = summarizeSpecificScoring(payload.specificScoring);
   const specificProfileSummary = summarizeSpecificProfile(payload.specificProfile);
   const adaptiveSummary = buildAdaptiveSummary(payload);
+  const domainGuide = getDomainInterpretationGuide(detectedRisk, secondaryRisk);
+  const signalQualityGuide = buildSignalQualityGuide({
+    specificProfileSummary,
+    specificScoringSummary,
+    adaptiveSummary
+  });
 
   return `
 You are a senior child development and child mental-health screening interpreter writing a paid parent-facing report.
@@ -153,7 +250,21 @@ PREMIUM REPORT QUALITY RULES:
 - If signals are weak, explicitly say that the pattern is not strong.
 - If signals are coherent, explain that the answers form a relatively consistent screening pattern.
 - Keep sections readable: short paragraphs, concrete examples, and no wall-of-text blocks.
-- Target length: 7600-9200 characters.
+- Target length: 8600-10400 characters.
+- Each section should add a distinct kind of value. Do not repeat the same idea under different headings.
+- Use the child-centered perspective at least a few times: what the child may be trying to manage internally, not only what adults notice externally.
+- Use parent-friendly language without becoming casual, cute, or simplistic.
+- Make recommendations concrete enough that a parent could try them this week.
+- Prefer "what to observe", "what to try", and "what would suggest escalation" over generic reassurance.
+
+REPORT V2 CONTENT REQUIREMENTS:
+- The report must read like a premium paid interpretation, not a generic screening summary.
+- Make the primary area specific to the actual top subdomains and strongest patterns.
+- Explain why the secondary signal may appear together with the primary one, if present.
+- Include at least one paragraph on uncertainty, context, or overlap when the adaptive summary suggests it.
+- Include realistic protective factors based on low/medium items, coherent functioning, parent observation, or supportive conditions. If not enough data is available, say "the questionnaire gives limited information about strengths" and then identify likely support conditions instead.
+- Include a practical 30-day plan with observation, home support, school/daycare communication if relevant, and review.
+- Include a calm professional-support section that explains thresholds for seeking help without creating alarm.
 
 SCORING INTERPRETATION:
 - Answers use a 0–3 intensity scale.
@@ -195,6 +306,21 @@ DEVELOPMENTAL AND CONTEXTUAL REASONING:
 - Consider compensation: a child may function well in structured settings but struggle when demands increase.
 - Consider masking: a child may look outwardly controlled while experiencing internal effort, tension, or overload.
 - Emphasize functional impact more than labels.
+
+DOMAIN-SPECIFIC INTERPRETATION GUIDE:
+${JSON.stringify(domainGuide, null, 2)}
+
+SIGNAL QUALITY GUIDE:
+${JSON.stringify(signalQualityGuide, null, 2)}
+
+CLINICAL QUALITY GATE BEFORE WRITING:
+- First identify the strongest 2-4 subdomains and use them as the backbone of the report.
+- Then decide whether the profile is weak, mild, moderate, high, mixed, coherent, or uncertain.
+- Then write in a way that matches that signal quality.
+- Do not inflate a low or mild profile.
+- Do not soften a coherent moderate or high profile so much that the parent loses useful direction.
+- Do not over-focus on the diagnostic category name. Focus on functional patterns and next steps.
+- Do not overuse the words "may", "can", or "appears" in every sentence; keep the tone careful but readable.
 
 INPUT DATA:
 Primary detected focus: ${detectedRisk}
