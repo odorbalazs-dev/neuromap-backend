@@ -93,7 +93,6 @@ function getProductDescription(lang) {
 export async function createCheckoutSession({
   internalSessionId,
   email,
-  name,
   lang
 }) {
   if (!internalSessionId) {
@@ -145,8 +144,6 @@ export async function createCheckoutSession({
 
     metadata: {
       internalSessionId,
-      email,
-      name: name || "",
       lang: safeLang,
       product: "neuromap_kids_report",
       amount_usd: "5.00"
@@ -155,8 +152,6 @@ export async function createCheckoutSession({
     payment_intent_data: {
       metadata: {
         internalSessionId,
-        email,
-        name: name || "",
         lang: safeLang,
         product: "neuromap_kids_report",
         amount_usd: "5.00"

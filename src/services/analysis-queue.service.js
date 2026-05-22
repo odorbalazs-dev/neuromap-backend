@@ -12,12 +12,31 @@ export async function enqueueAnalysisJob(sessionId) {
       status
     )
     VALUES ($1, 'queued')
+    ON CONFLICT (session_id)
+    WHERE status IN ('queued', 'processing')
+    DO NOTHING
     RETURNING *
     `,
     [sessionId]
   );
 
-  return result.rows[0] || null;
+  if (result.rows[0]) {
+    return result.rows[0];
+  }
+
+  const existing = await db.query(
+    `
+    SELECT *
+    FROM analysis_jobs
+    WHERE session_id = $1
+      AND status IN ('queued', 'processing')
+    ORDER BY created_at ASC
+    LIMIT 1
+    `,
+    [sessionId]
+  );
+
+  return existing.rows[0] || null;
 }
 
 export async function claimNextAnalysisJob() {

@@ -1,22 +1,42 @@
 import {
-  getNextQueuedAnalysisSession,
+  getSessionById,
+  markAnalysisProcessing,
   markAnalysisDone,
   markAnalysisFailed
 } from "./session.service.js";
+import {
+  claimNextAnalysisJob,
+  markAnalysisJobDone,
+  markAnalysisJobFailed
+} from "./analysis-queue.service.js";
 import { generateAnalysis } from "./analysis.service.js";
 import { sendReportEmail } from "./email.service.js";
 
 export async function processNextAnalysisJob() {
-  const session = await getNextQueuedAnalysisSession();
+  const job = await claimNextAnalysisJob();
 
-  if (!session) {
+  if (!job) {
     return {
       processed: false,
       reason: "no_queued_analysis"
     };
   }
 
+  const session = await getSessionById(job.session_id);
+
+  if (!session) {
+    await markAnalysisJobFailed(job.id, "Session not found");
+
+    return {
+      processed: false,
+      reason: "session_not_found",
+      jobId: job.id
+    };
+  }
+
   try {
+    await markAnalysisProcessing(session.id);
+
     const resultText = await generateAnalysis({
       ...(session.payload || {}),
       lang: session.lang
@@ -32,8 +52,11 @@ export async function processNextAnalysisJob() {
       payload: session.payload
     });
 
+    await markAnalysisJobDone(job.id);
+
     return {
       processed: true,
+      jobId: job.id,
       sessionId: session.id
     };
   } catch (error) {
@@ -45,6 +68,7 @@ export async function processNextAnalysisJob() {
     });
 
     await markAnalysisFailed(session.id, message);
+    await markAnalysisJobFailed(job.id, message);
 
     throw error;
   }

@@ -1,4 +1,5 @@
 import { env } from "../config/env.js";
+import { secureCompare } from "../utils/secureCompare.js";
 
 export function adminAuth(req, res, next) {
   const token = req.headers["x-admin-token"];
@@ -10,7 +11,7 @@ export function adminAuth(req, res, next) {
     });
   }
 
-  if (!token || token !== env.ADMIN_TOKEN) {
+  if (!secureCompare(token, env.ADMIN_TOKEN)) {
     return res.status(401).json({
       ok: false,
       error: "Unauthorized"

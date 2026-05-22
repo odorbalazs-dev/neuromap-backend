@@ -168,13 +168,15 @@ export async function handleStripeWebhook(rawBody, signature) {
 
     phase = "queue_analysis";
 
-const queuedRow = await markAnalysisQueued(internalSessionId);
+    const queuedRow = await markAnalysisQueued(internalSessionId);
 
-if (!queuedRow) {
-  throw new Error("Could not queue analysis job.");
-}
+    if (!queuedRow) {
+      throw new Error("Could not queue analysis job.");
+    }
 
-await enqueueAnalysisJob(internalSessionId);
+    await enqueueAnalysisJob(internalSessionId);
+
+    await markWebhookProcessed(event.id);
 
     return {
       received: true,

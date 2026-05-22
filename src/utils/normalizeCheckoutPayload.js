@@ -1,6 +1,6 @@
-function cleanText(value) {
+function cleanText(value, maxLength = 1000) {
   if (typeof value !== "string") return "";
-  return value.trim();
+  return value.trim().slice(0, maxLength);
 }
 
 function cleanNumber(value, fallback = 0) {
@@ -14,13 +14,13 @@ function cleanBoolean(value) {
 
 function normalizeQuestion(q = {}) {
   return {
-    id: cleanText(q.id),
-    domain: q.domain || null,
-    subdomain: q.subdomain || null,
-    stemKey: q.stemKey || null,
+    id: cleanText(q.id, 120),
+    domain: cleanText(q.domain, 60) || null,
+    subdomain: cleanText(q.subdomain, 80) || null,
+    stemKey: cleanText(q.stemKey, 120) || null,
     weight: typeof q.weight === "number" ? q.weight : null,
     reverse: typeof q.reverse === "boolean" ? q.reverse : null,
-    text: cleanText(q.text)
+    text: cleanText(q.text, 1000)
   };
 }
 
@@ -115,13 +115,13 @@ export function normalizeCheckoutPayload(body = {}) {
   const payload = body.payload || {};
 
   return {
-    email: cleanText(body.email).toLowerCase(),
-    name: cleanText(body.name),
-    lang: cleanText(body.lang || "en"),
+    email: cleanText(body.email, 254).toLowerCase(),
+    name: cleanText(body.name, 120),
+    lang: cleanText(body.lang || "en", 10),
 
     payload: {
       triageQuestions: Array.isArray(payload.triageQuestions)
-        ? payload.triageQuestions.map(normalizeQuestion)
+        ? payload.triageQuestions.slice(0, 40).map(normalizeQuestion)
         : [],
       triageAnswers: normalizeAnswers(payload.triageAnswers),
       triageScores: normalizeTriageScores(payload.triageScores),
@@ -131,7 +131,7 @@ export function normalizeCheckoutPayload(body = {}) {
       secondaryRisk: payload.secondaryRisk || null,
 
       specificQuestions: Array.isArray(payload.specificQuestions)
-        ? payload.specificQuestions.map(normalizeQuestion)
+        ? payload.specificQuestions.slice(0, 60).map(normalizeQuestion)
         : [],
       specificAnswers: normalizeAnswers(payload.specificAnswers),
       specificScoring: normalizeSpecificScoring(payload.specificScoring),
@@ -139,11 +139,11 @@ export function normalizeCheckoutPayload(body = {}) {
       resultSummary: normalizeResultSummary(payload.resultSummary),
 
       extraQuestions: Array.isArray(payload.extraQuestions)
-        ? payload.extraQuestions.map(normalizeQuestion)
+        ? payload.extraQuestions.slice(0, 10).map(normalizeQuestion)
         : [],
       extraAnswers: normalizeAnswers(payload.extraAnswers),
 
-      questionnaireVersion: cleanText(payload.questionnaireVersion || "unknown")
+      questionnaireVersion: cleanText(payload.questionnaireVersion || "unknown", 80)
     }
   };
 }

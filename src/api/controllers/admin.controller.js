@@ -4,6 +4,7 @@ import {
   markAnalysisQueued
 } from "../../services/session.service.js";
 import { processNextAnalysisJob } from "../../services/analysis-job.service.js";
+import { enqueueAnalysisJob } from "../../services/analysis-queue.service.js";
 import { sendReportEmail } from "../../services/email.service.js";
 import { env } from "../../config/env.js";
 
@@ -249,6 +250,7 @@ export async function retryAnalysis(req, res) {
     }
 
     await markAnalysisQueued(sessionId);
+    await enqueueAnalysisJob(sessionId);
 
     return res.status(200).json({
       ok: true,

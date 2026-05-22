@@ -1,4 +1,6 @@
 const REQUIRED_DOMAINS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
+const SUPPORTED_LANGS = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function isObject(value) {
   return value && typeof value === "object" && !Array.isArray(value);
@@ -12,7 +14,7 @@ function isNumberArray(arr, expectedLength) {
   );
 }
 
-function validateQuestionArray(name, questions, minLength = 1) {
+function validateQuestionArray(name, questions, minLength = 1, maxLength = 60) {
   const errors = [];
 
   if (!Array.isArray(questions)) {
@@ -24,9 +26,23 @@ function validateQuestionArray(name, questions, minLength = 1) {
     errors.push(`${name} must contain at least ${minLength} item(s).`);
   }
 
+  if (questions.length > maxLength) {
+    errors.push(`${name} must contain at most ${maxLength} item(s).`);
+  }
+
   questions.forEach((q, index) => {
-    if (!q?.id) errors.push(`${name}[${index}] missing id.`);
-    if (!q?.text) errors.push(`${name}[${index}] missing text.`);
+    if (!q || typeof q !== "object" || Array.isArray(q)) {
+      errors.push(`${name}[${index}] must be an object.`);
+      return;
+    }
+
+    if (typeof q.id !== "string" || q.id.length < 1 || q.id.length > 120) {
+      errors.push(`${name}[${index}] has invalid id.`);
+    }
+
+    if (typeof q.text !== "string" || q.text.length < 1 || q.text.length > 1000) {
+      errors.push(`${name}[${index}] has invalid text.`);
+    }
   });
 
   return errors;
@@ -35,15 +51,15 @@ function validateQuestionArray(name, questions, minLength = 1) {
 export function validateCheckoutPayload(body = {}) {
   const errors = [];
 
-  if (!body.name || typeof body.name !== "string") {
+  if (!body.name || typeof body.name !== "string" || body.name.length > 120) {
     errors.push("Missing or invalid name.");
   }
 
-  if (!body.email || typeof body.email !== "string" || !body.email.includes("@")) {
+  if (!body.email || typeof body.email !== "string" || body.email.length > 254 || !EMAIL_RE.test(body.email)) {
     errors.push("Missing or invalid email.");
   }
 
-  if (!body.lang || typeof body.lang !== "string") {
+  if (!body.lang || typeof body.lang !== "string" || !SUPPORTED_LANGS.includes(body.lang)) {
     errors.push("Missing or invalid lang.");
   }
 
@@ -54,7 +70,7 @@ export function validateCheckoutPayload(body = {}) {
     return { ok: false, errors };
   }
 
-  errors.push(...validateQuestionArray("triageQuestions", payload.triageQuestions, 25));
+  errors.push(...validateQuestionArray("triageQuestions", payload.triageQuestions, 25, 40));
 
   if (!isNumberArray(payload.triageAnswers, payload.triageQuestions?.length || 25)) {
     errors.push("triageAnswers must match triageQuestions length and contain values 0-3.");
@@ -80,7 +96,7 @@ export function validateCheckoutPayload(body = {}) {
     }
   }
 
-  errors.push(...validateQuestionArray("specificQuestions", payload.specificQuestions, 1));
+  errors.push(...validateQuestionArray("specificQuestions", payload.specificQuestions, 1, 60));
 
   if (!isNumberArray(payload.specificAnswers, payload.specificQuestions?.length || 0)) {
     errors.push("specificAnswers must match specificQuestions length and contain values 0-3.");
@@ -105,6 +121,8 @@ export function validateCheckoutPayload(body = {}) {
   }
 
   if (Array.isArray(payload.extraQuestions) && payload.extraQuestions.length > 0) {
+    errors.push(...validateQuestionArray("extraQuestions", payload.extraQuestions, 1, 10));
+
     if (!isNumberArray(payload.extraAnswers, payload.extraQuestions.length)) {
       errors.push("extraAnswers must match extraQuestions length and contain values 0-3.");
     }

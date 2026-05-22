@@ -7,18 +7,12 @@ import {
 import { sendCheckoutRecoveryEmail } from "../../services/email.service.js";
 
 import { env } from "../../config/env.js";
+import { secureCompare } from "../../utils/secureCompare.js";
 
 function isAuthorizedCron(req) {
   const headerSecret = req.headers["x-cron-secret"];
-  const querySecret = req.query.secret;
 
-  return Boolean(
-    env.CRON_SECRET &&
-    (
-      headerSecret === env.CRON_SECRET ||
-      querySecret === env.CRON_SECRET
-    )
-  );
+  return Boolean(env.CRON_SECRET && secureCompare(headerSecret, env.CRON_SECRET));
 }
 
 function normalizeNumber(value, fallback, min, max) {
@@ -82,7 +76,6 @@ export async function recoverAbandonedCheckouts(req, res) {
         if (freshSession.payment_status === "paid") {
           results.push({
             sessionId: session.id,
-            email: session.email,
             status: "already_paid"
           });
 
@@ -102,13 +95,11 @@ export async function recoverAbandonedCheckouts(req, res) {
         await markRecoveryEmailSent(freshSession.id);
 
         console.log("[cron] recovery email sent", {
-          sessionId: freshSession.id,
-          email: freshSession.email
+          sessionId: freshSession.id
         });
 
         results.push({
           sessionId: freshSession.id,
-          email: freshSession.email,
           status: "sent"
         });
 
@@ -117,14 +108,12 @@ export async function recoverAbandonedCheckouts(req, res) {
           "[cron] recovery email failed:",
           {
             sessionId: session.id,
-            email: session.email,
             error: error.message
           }
         );
 
         results.push({
           sessionId: session.id,
-          email: session.email,
           status: "failed",
           error: error.message
         });

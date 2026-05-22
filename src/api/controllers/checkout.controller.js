@@ -5,31 +5,23 @@ import {
 } from "../../services/session.service.js";
 
 import { createCheckoutSession } from "../../services/stripe.service.js";
+import { normalizeCheckoutPayload } from "../../utils/normalizeCheckoutPayload.js";
+import { validateCheckoutPayload } from "../../utils/validateCheckoutPayload.js";
 
 export async function createCheckout(req, res) {
   try {
-    const { email, name, lang, payload } = req.body || {};
+    const validation = validateCheckoutPayload(req.body || {});
 
-    if (!email) {
+    if (!validation.ok) {
       return res.status(400).json({
         ok: false,
-        error: "Missing email"
+        error: "Invalid checkout payload",
+        details: validation.errors
       });
     }
 
-    if (!name) {
-      return res.status(400).json({
-        ok: false,
-        error: "Missing name"
-      });
-    }
-
-    if (!payload || typeof payload !== "object") {
-      return res.status(400).json({
-        ok: false,
-        error: "Missing payload"
-      });
-    }
+    const { email, name, lang, payload } =
+      normalizeCheckoutPayload(req.body || {});
 
     const session = await createSession({
       email,

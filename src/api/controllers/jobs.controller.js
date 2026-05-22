@@ -1,13 +1,11 @@
 import { processNextAnalysisJob } from "../../services/analysis-job.service.js";
 import { env } from "../../config/env.js";
+import { secureCompare } from "../../utils/secureCompare.js";
 
 function isAuthorized(req) {
-  const token =
-    req.headers["x-cron-secret"] ||
-    req.headers["x-admin-token"] ||
-    req.query.token;
+  const token = req.headers["x-cron-secret"];
 
-  return Boolean(env.CRON_SECRET && token === env.CRON_SECRET);
+  return Boolean(env.CRON_SECRET && secureCompare(token, env.CRON_SECRET));
 }
 
 export async function processAnalysisJob(req, res) {

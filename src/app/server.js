@@ -3,6 +3,10 @@ import cors from "cors";
 
 import { env } from "../config/env.js";
 import { runMigrations } from "../db/migrate.js";
+import {
+  createRateLimit,
+  securityHeaders
+} from "../middleware/security.js";
 import checkoutRoutes from "../api/routes/checkout.js";
 import sessionRoutes from "../api/routes/session.js";
 import webhookRoutes from "../api/routes/webhook.js";
@@ -12,6 +16,8 @@ import cronRoutes from "../api/routes/cron.js";
 import jobsRoutes from "../api/routes/jobs.js";
 
 const app = express();
+
+app.set("trust proxy", 1);
 
 const corsOptions = {
   origin: [
@@ -28,6 +34,13 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
+app.use(securityHeaders);
+
+app.use(createRateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 300,
+  keyPrefix: "global"
+}));
 
 app.use("/public", express.static("public"));
 
@@ -42,13 +55,38 @@ app.get("/", (_req, res) => {
   });
 });
 
-app.use("/checkout", checkoutRoutes);
-app.use("/session", sessionRoutes);
+app.use("/checkout", createRateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 25,
+  keyPrefix: "checkout"
+}), checkoutRoutes);
+
+app.use("/session", createRateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 80,
+  keyPrefix: "session"
+}), sessionRoutes);
+
 app.use("/webhook", webhookRoutes);
 app.use("/health", healthRoutes);
-app.use("/admin", adminRoutes);
-app.use("/cron", cronRoutes);
-app.use("/jobs", jobsRoutes);
+
+app.use("/admin", createRateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 40,
+  keyPrefix: "admin"
+}), adminRoutes);
+
+app.use("/cron", createRateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 30,
+  keyPrefix: "cron"
+}), cronRoutes);
+
+app.use("/jobs", createRateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 60,
+  keyPrefix: "jobs"
+}), jobsRoutes);
 
 async function start() {
   await runMigrations();
