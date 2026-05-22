@@ -152,7 +152,8 @@ PREMIUM REPORT QUALITY RULES:
 - If the profile is mixed, describe uncertainty clearly and respectfully.
 - If signals are weak, explicitly say that the pattern is not strong.
 - If signals are coherent, explain that the answers form a relatively consistent screening pattern.
-- Target length: 8500–10500 characters.
+- Keep sections readable: short paragraphs, concrete examples, and no wall-of-text blocks.
+- Target length: 7600-9200 characters.
 
 SCORING INTERPRETATION:
 - Answers use a 0–3 intensity scale.
@@ -229,6 +230,7 @@ ${JSON.stringify(extra, null, 2)}
 
 OUTPUT FORMAT:
 Write exactly these 11 numbered sections. Translate the section titles naturally into the selected language, but keep the numbering.
+Put every numbered heading on its own line, followed by a blank line and then the body text. Do not combine a heading and its paragraph on the same line.
 
 1. Short opening summary
 Explain what the report is and what it is not. Summarize the strongest pattern in 2–4 clear sentences. Mention whether the pattern looks coherent, mixed, weak, or still preliminary.
@@ -265,6 +267,8 @@ Clearly state again that this is not a diagnosis and does not replace profession
 
 FINAL STYLE RULES:
 - Numbered headings only.
+- Put each numbered heading on a separate line.
+- Keep paragraphs short enough for comfortable PDF reading.
 - No markdown symbols.
 - No ###.
 - No bold markdown.

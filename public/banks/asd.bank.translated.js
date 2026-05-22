@@ -607,7 +607,7 @@ window.NM_ASD_BANK = [
     reverse: false,
     text: {
       hu: `Nehezen reagál mások érzelmi megnyilvánulásaira.`,
-      en: `Has difficulty responding to others' emotions.`,
+      en: `Has difficulty responding to others' emotional expressions.`,
       de: `Hat Schwierigkeiten, auf die Gefühle anderer zu reagieren.`,
       it: `Ha difficoltà a rispondere alle emozioni degli altri.`,
       es: `Tiene dificultad para responder a las emociones de otros.`,
@@ -1067,7 +1067,7 @@ window.NM_ASD_BANK = [
     reverse: false,
     text: {
       hu: `Nehezen reagál mások érzelmeire.`,
-      en: `Has difficulty responding to others' emotions.`,
+      en: `May not readily notice or adjust to another person's emotional state.`,
       de: `Hat Schwierigkeiten, auf die Gefühle anderer zu reagieren.`,
       it: `Fa fatica a rispondere alle emozioni degli altri.`,
       es: `Tiene dificultad para responder a las emociones de otros.`,

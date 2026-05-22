@@ -634,8 +634,8 @@ function isHeading(paragraph) {
   const text = clean(paragraph);
   if (!text) return false;
 
-  if (/^\d+\.\s+/.test(text) && text.length < 150) return true;
-  if (text.length < 85 && !/[.!?。！？؟]$/u.test(text)) return true;
+  if (/^\d{1,2}\.\s+/.test(text) && text.length < 150) return true;
+  if (text.length < 90 && /[:：]$/u.test(text)) return true;
   if (text === text.toUpperCase() && text.length < 120) return true;
 
   return false;
@@ -652,55 +652,146 @@ function normalizeHeading(paragraph, fallbackCounter) {
   return `${fallbackCounter}. ${text}`;
 }
 
-function addReportText(doc, reportText, labels, lang) {
-  const rawParagraphs = stripMarkdown(reportText)
-    .split(/\n{2,}/)
-    .map((p) => clean(p))
+function splitReportText(reportText) {
+  const blocks = stripMarkdown(reportText)
+    .split(/\n\s*\n/)
+    .map((block) => clean(block))
     .filter(Boolean);
 
-  let sectionCounter = 1;
+  const parts = [];
 
-  rawParagraphs.forEach((paragraph) => {
-    if (isHeading(paragraph)) {
-      ensureSpace(doc, 46, labels, lang);
+  blocks.forEach((block) => {
+    const lines = block
+      .split(/\r?\n/)
+      .map((line) => clean(line))
+      .filter(Boolean);
 
-      const heading = normalizeHeading(paragraph, sectionCounter);
-      const match = heading.match(/^(\d+)\./);
-      if (match) sectionCounter = Number(match[1]) + 1;
+    let bodyLines = [];
 
-      doc.moveDown(0.45);
-
-      doc.fillColor(BRAND.blue)
-        .font(getFont(lang, true))
-        .fontSize(13)
-        .text(heading, {
-          lineGap: 3,
-          align: getTextAlign(lang)
-        });
-
-      doc.moveDown(0.18);
-
-      doc.moveTo(56, doc.y)
-        .lineTo(doc.page.width - 120, doc.y)
-        .strokeColor(BRAND.orange)
-        .lineWidth(1.2)
-        .stroke();
-
-      doc.moveDown(0.55);
-      return;
+    function flushBody() {
+      const text = bodyLines.join(" ").replace(/\s+/g, " ").trim();
+      if (text) parts.push({ type: "body", text });
+      bodyLines = [];
     }
 
-    ensureSpace(doc, 72, labels, lang);
+    lines.forEach((line) => {
+      if (isHeading(line)) {
+        flushBody();
+        parts.push({ type: "heading", text: line });
+      } else {
+        bodyLines.push(line);
+      }
+    });
+
+    flushBody();
+  });
+
+  return parts;
+}
+
+function splitLongParagraph(paragraph, lang) {
+  const maxLength = lang === "zh" || lang === "ja" ? 360 : 620;
+  const text = clean(paragraph);
+
+  if (text.length <= maxLength) {
+    return [text];
+  }
+
+  const sentences = text
+    .split(/(?<=[.!?。！？])\s+/u)
+    .map((item) => clean(item))
+    .filter(Boolean);
+
+  if (sentences.length <= 1) {
+    const chunks = [];
+    for (let i = 0; i < text.length; i += maxLength) {
+      chunks.push(text.slice(i, i + maxLength).trim());
+    }
+    return chunks.filter(Boolean);
+  }
+
+  const chunks = [];
+  let current = "";
+
+  sentences.forEach((sentence) => {
+    const next = current ? `${current} ${sentence}` : sentence;
+    if (next.length > maxLength && current) {
+      chunks.push(current);
+      current = sentence;
+    } else {
+      current = next;
+    }
+  });
+
+  if (current) chunks.push(current);
+  return chunks;
+}
+
+function addReportHeading(doc, heading, labels, lang) {
+  ensureSpace(doc, 66, labels, lang);
+
+  const x = 56;
+  const y = doc.y + 6;
+  const w = doc.page.width - 112;
+  const h = 46;
+
+  doc.roundedRect(x, y, w, h, 12).fill(BRAND.lightBlue);
+  doc.roundedRect(x, y, w, h, 12).strokeColor(BRAND.softBorder).lineWidth(1).stroke();
+  doc.rect(x, y, 6, h).fill(BRAND.blue);
+
+  doc.fillColor(BRAND.dark)
+    .font(getFont(lang, true))
+    .fontSize(12.4)
+    .text(heading, x + 18, y + 14, {
+      width: w - 36,
+      align: getTextAlign(lang),
+      lineGap: 2
+    });
+
+  doc.y = y + h + 10;
+}
+
+function addReportParagraph(doc, paragraph, labels, lang) {
+  const chunks = splitLongParagraph(paragraph, lang);
+  const width = doc.page.width - 112;
+  const fontSize = lang === "zh" || lang === "ja" ? 10 : 10.4;
+  const options = {
+    width,
+    align: getTextAlign(lang),
+    lineGap: 4
+  };
+
+  chunks.forEach((chunk) => {
+    doc.font(getFont(lang)).fontSize(fontSize);
+
+    const height = doc.heightOfString(chunk, options);
+    ensureSpace(doc, height + 20, labels, lang);
 
     doc.fillColor("#374151")
       .font(getFont(lang))
-      .fontSize(lang === "zh" || lang === "ja" ? 10 : 10.4)
-      .text(paragraph, {
-        align: getTextAlign(lang),
-        lineGap: 4
-      });
+      .fontSize(fontSize)
+      .text(chunk, 56, doc.y, options);
 
-    doc.moveDown(0.55);
+    doc.moveDown(0.62);
+  });
+}
+
+function addReportText(doc, reportText, labels, lang) {
+  const parts = splitReportText(reportText);
+
+  let sectionCounter = 1;
+
+  parts.forEach((part) => {
+    if (part.type === "heading") {
+      const heading = normalizeHeading(part.text, sectionCounter);
+      const match = heading.match(/^(\d+)\./);
+      if (match) sectionCounter = Number(match[1]) + 1;
+
+      addReportHeading(doc, heading, labels, lang);
+      return;
+    }
+
+    addReportParagraph(doc, part.text, labels, lang);
   });
 }
 

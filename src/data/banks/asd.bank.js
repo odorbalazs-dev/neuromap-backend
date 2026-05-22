@@ -372,7 +372,7 @@ export const ASD_BANK = [
   stemKey: "emotional_response_to_others",
   text: {
     hu: "Nehezen reagál mások érzelmi megnyilvánulásaira.",
-    en: "Has difficulty responding to others' emotions."
+    en: "Has difficulty responding to others' emotional expressions."
   }
 },
 {
@@ -653,7 +653,7 @@ export const ASD_BANK = [
   stemKey: "response_to_others_emotions",
   text: {
     hu: "Nehezen reagál mások érzelmeire.",
-    en: "Has difficulty responding to others' emotions."
+    en: "May not readily notice or adjust to another person's emotional state."
   }
 },
 {

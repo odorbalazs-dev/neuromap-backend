@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node src/app/server.js",
     "dev": "node --watch src/app/server.js",
-    "worker": "node src/jobs/analysis.worker.js"
+    "worker": "node src/jobs/analysis.worker.js",
+    "audit:banks": "node scripts/audit-banks.js",
+    "audit:bank-quality": "node scripts/audit-bank-quality.js"
   },
   "dependencies": {
     "cors": "^2.8.6",
