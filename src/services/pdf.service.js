@@ -334,6 +334,68 @@ function extractSummary(payload = {}) {
   };
 }
 
+function formatKeyLabel(key, labels) {
+  const value = clean(key);
+  if (!value) return labels.notAvailable;
+
+  return value
+    .replace(/[_-]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+function getDomainLabel(lang, domain, labels) {
+  const value = clean(domain).toUpperCase();
+  if (!value) return labels.notAvailable;
+
+  const names = {
+    hu: {
+      ADHD: "ADHD",
+      ASD: "Autizmus spektrum",
+      ANXIETY: "Szorongás",
+      DEPRESSION: "Hangulati terület",
+      LEARNING: "Tanulási terület"
+    },
+    en: {
+      ADHD: "ADHD",
+      ASD: "Autism spectrum",
+      ANXIETY: "Anxiety",
+      DEPRESSION: "Mood and motivation",
+      LEARNING: "Learning profile"
+    }
+  };
+
+  return names[lang]?.[value] || names.en[value] || formatKeyLabel(value, labels);
+}
+
+function getSeverityLabel(lang, severity, labels) {
+  const value = clean(severity).toLowerCase();
+  if (!value) return labels.notAvailable;
+
+  const names = {
+    hu: {
+      low: "Alacsony jelzésszint",
+      mild: "Enyhe jelzésszint",
+      moderate: "Közepes jelzésszint",
+      high: "Magas jelzésszint"
+    },
+    en: {
+      low: "Low signal level",
+      mild: "Mild signal level",
+      moderate: "Moderate signal level",
+      high: "High signal level"
+    }
+  };
+
+  return names[lang]?.[value] || names.en[value] || formatKeyLabel(value, labels);
+}
+
+function formatScore(value) {
+  const numeric = Number(value);
+  return Number.isFinite(numeric) ? numeric.toFixed(2) : "0.00";
+}
+
 function addLogoLikeMark(doc, x, y) {
   const safeX = Number.isFinite(Number(x)) ? Number(x) : 72;
   const safeY = Number.isFinite(Number(y)) ? Number(y) : 52;
@@ -384,7 +446,7 @@ function addHeader(doc, labels, lang) {
 }
 
 function addFooter(doc, labels, lang) {
-  const y = doc.page.height - 44;
+  const y = doc.page.height - 78;
 
   doc.moveTo(56, y - 10)
     .lineTo(doc.page.width - 56, y - 10)
@@ -402,6 +464,125 @@ function addFooter(doc, labels, lang) {
     .text(labels.footer, 94, y - 2, {
       align: getTextAlign(lang),
       width: doc.page.width - 150
+    });
+}
+
+function addCoverPage(doc, { name, payload, labels, lang }) {
+  const safeName = clean(name) || labels.parentFallback;
+  const summary = extractSummary(payload || {});
+  const x = 56;
+  const w = doc.page.width - 112;
+
+  doc.rect(0, 0, doc.page.width, doc.page.height).fill("#FFFFFF");
+  doc.rect(0, 0, doc.page.width, 16).fill(BRAND.blue);
+  doc.rect(0, 16, doc.page.width * 0.42, 7).fill(BRAND.orange);
+  doc.rect(doc.page.width * 0.42, 16, doc.page.width * 0.22, 7).fill(BRAND.green);
+  doc.rect(doc.page.width * 0.64, 16, doc.page.width * 0.36, 7).fill(BRAND.yellow);
+
+  doc.circle(doc.page.width - 70, 118, 58).fill(BRAND.lightBlue);
+  doc.circle(doc.page.width - 42, 104, 24).fill(BRAND.lightOrange);
+  doc.circle(doc.page.width - 98, 154, 18).fill(BRAND.lightGreen);
+
+  addLogoLikeMark(doc, x + 20, 106);
+
+  doc.fillColor(BRAND.dark)
+    .font(getFont(lang, true))
+    .fontSize(lang === "zh" || lang === "ja" ? 28 : 31)
+    .text(labels.title, x, 178, {
+      width: w,
+      align: getTextAlign(lang),
+      lineGap: 4
+    });
+
+  doc.fillColor(BRAND.muted)
+    .font(getFont(lang))
+    .fontSize(13)
+    .text(labels.subtitle, x, 222, {
+      width: w,
+      align: getTextAlign(lang),
+      lineGap: 4
+    });
+
+  const cardY = 292;
+  const cardH = 178;
+  doc.roundedRect(x, cardY, w, cardH, 18).fill(BRAND.lightBlue);
+  doc.roundedRect(x, cardY, w, cardH, 18).strokeColor(BRAND.softBorder).lineWidth(1).stroke();
+  doc.rect(x, cardY, 8, cardH).fill(BRAND.orange);
+
+  doc.fillColor(BRAND.dark)
+    .font(getFont(lang, true))
+    .fontSize(17)
+    .text(`${labels.greeting} ${safeName}!`, x + 28, cardY + 26, {
+      width: w - 56,
+      align: getTextAlign(lang)
+    });
+
+  doc.fillColor(BRAND.muted)
+    .font(getFont(lang))
+    .fontSize(10.5)
+    .text(labels.summaryLabel, x + 28, cardY + 58, {
+      width: w - 56,
+      align: getTextAlign(lang),
+      lineGap: 3
+    });
+
+  const miniY = cardY + 98;
+  const gap = 10;
+  const miniW = (w - 56 - gap * 2) / 3;
+
+  addMiniCard(
+    doc,
+    x + 28,
+    miniY,
+    miniW,
+    labels.focusArea,
+    getDomainLabel(lang, summary.detectedRisk, labels),
+    lang,
+    BRAND.blue
+  );
+
+  addMiniCard(
+    doc,
+    x + 28 + miniW + gap,
+    miniY,
+    miniW,
+    labels.secondarySignal,
+    getDomainLabel(lang, summary.secondaryRisk, labels),
+    lang,
+    BRAND.orange
+  );
+
+  addMiniCard(
+    doc,
+    x + 28 + (miniW + gap) * 2,
+    miniY,
+    miniW,
+    labels.signalLevel,
+    getSeverityLabel(lang, summary.severity, labels),
+    lang,
+    BRAND.green
+  );
+
+  const noteY = 520;
+  doc.roundedRect(x, noteY, w, 118, 16).fill(BRAND.lightOrange);
+  doc.roundedRect(x, noteY, w, 118, 16).strokeColor("#FFD2A6").lineWidth(1).stroke();
+
+  doc.circle(x + 22, noteY + 26, 7).fill(BRAND.orange);
+  doc.fillColor("#9A3412")
+    .font(getFont(lang, true))
+    .fontSize(12)
+    .text(labels.disclaimerTitle, x + 42, noteY + 18, {
+      width: w - 62,
+      align: getTextAlign(lang)
+    });
+
+  doc.fillColor("#7C2D12")
+    .font(getFont(lang))
+    .fontSize(9.8)
+    .text(labels.disclaimer, x + 22, noteY + 48, {
+      width: w - 44,
+      lineGap: 3,
+      align: getTextAlign(lang)
     });
 }
 
@@ -497,7 +678,7 @@ function addOverviewBlock(doc, payload, labels, lang) {
     cardY,
     cardW,
     labels.focusArea,
-    summary.detectedRisk || labels.notAvailable,
+    getDomainLabel(lang, summary.detectedRisk, labels),
     lang,
     BRAND.blue
   );
@@ -508,7 +689,7 @@ function addOverviewBlock(doc, payload, labels, lang) {
     cardY,
     cardW,
     labels.secondarySignal,
-    summary.secondaryRisk || labels.notAvailable,
+    getDomainLabel(lang, summary.secondaryRisk, labels),
     lang,
     BRAND.orange
   );
@@ -519,7 +700,7 @@ function addOverviewBlock(doc, payload, labels, lang) {
     cardY,
     cardW,
     labels.signalLevel,
-    summary.severity || labels.notAvailable,
+    getSeverityLabel(lang, summary.severity, labels),
     lang,
     BRAND.green
   );
@@ -548,7 +729,7 @@ function addOverviewBlock(doc, payload, labels, lang) {
       doc.fillColor(BRAND.muted)
         .font(getFont(lang))
         .fontSize(9)
-        .text(item.key, x, doc.y, {
+        .text(formatKeyLabel(item.key, labels), x, doc.y, {
           width: 135,
           align: getTextAlign(lang)
         });
@@ -559,7 +740,7 @@ function addOverviewBlock(doc, payload, labels, lang) {
       doc.fillColor(BRAND.muted)
         .font(getFont(lang))
         .fontSize(8)
-        .text(item.average.toFixed(2), barX + barW + 8, doc.y - 1, {
+        .text(formatScore(item.average), barX + barW + 8, doc.y - 1, {
           width: 30
         });
 
@@ -818,6 +999,10 @@ export async function generatePdfBuffer({ name, reportText, lang = "en", payload
       doc.on("end", () => resolve(Buffer.concat(chunks)));
       doc.on("error", reject);
 
+      addCoverPage(doc, { name, payload, labels, lang: safeLang });
+      addFooter(doc, labels, safeLang);
+
+      doc.addPage();
       addHeader(doc, labels, safeLang);
       addInfoCard(doc, { name, lang: safeLang });
 
