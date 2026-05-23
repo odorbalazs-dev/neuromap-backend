@@ -167,6 +167,186 @@ function getDomainInterpretationGuide(primary, secondary) {
   };
 }
 
+function getParentActionGuide(primary, secondary) {
+  const guides = {
+    ADHD: {
+      homeSupport: [
+        "short one-step instructions",
+        "visible routines and checklists",
+        "movement breaks before demanding tasks",
+        "clear start and finish points",
+        "emotion coaching before correction"
+      ],
+      schoolOrDaycareSupport: [
+        "seat and task placement with fewer distractions",
+        "instructions repeated in brief chunks",
+        "checking understanding before independent work",
+        "planned transition warnings",
+        "feedback focused on process and completion"
+      ],
+      observeNext30Days: [
+        "which routines break down most often",
+        "whether difficulty is stronger with multi-step tasks",
+        "whether movement or visual structure improves follow-through",
+        "how quickly frustration rises after correction"
+      ],
+      professionalSupportSignals: [
+        "persistent impairment across home and school",
+        "frequent conflict or loss of confidence",
+        "major difficulty completing age-expected routines",
+        "concern from educators across several weeks"
+      ],
+      avoid: [
+        "interpreting every lapse as laziness",
+        "using only verbal reminders",
+        "adding long explanations during dysregulation"
+      ]
+    },
+    ASD: {
+      homeSupport: [
+        "predictable routines with advance notice for changes",
+        "clear literal language",
+        "visual supports for transitions",
+        "sensory recovery time after demanding situations",
+        "respectful support for social demands without forcing performance"
+      ],
+      schoolOrDaycareSupport: [
+        "transition previews",
+        "sensory-aware seating and break options",
+        "explicit social expectations",
+        "safe recovery space after overload",
+        "communication about masking or delayed reactions at home"
+      ],
+      observeNext30Days: [
+        "whether difficulty increases after social or sensory load",
+        "which changes in routine cause the strongest reaction",
+        "whether the child seems controlled outside but exhausted later",
+        "which supports reduce rigidity or shutdown"
+      ],
+      professionalSupportSignals: [
+        "persistent social-communication difficulty",
+        "intense distress around routine change",
+        "sensory overload affecting daily functioning",
+        "concern about language, reciprocity, play, or peer relationships"
+      ],
+      avoid: [
+        "treating overload as intentional defiance",
+        "forcing eye contact or social performance",
+        "removing predictability without preparation"
+      ]
+    },
+    ANXIETY: {
+      homeSupport: [
+        "calm validation before problem-solving",
+        "small brave steps instead of sudden pressure",
+        "predictable reassurance limits",
+        "naming body signals of stress",
+        "gentle routines around uncertainty"
+      ],
+      schoolOrDaycareSupport: [
+        "advance notice for presentations or changes",
+        "safe check-in points with adults",
+        "gradual participation goals",
+        "support for separation or evaluation pressure",
+        "monitoring avoidance without shaming"
+      ],
+      observeNext30Days: [
+        "what the child avoids and what happens before avoidance",
+        "whether reassurance calms briefly but returns quickly",
+        "which body signs appear under stress",
+        "which small exposures are tolerated"
+      ],
+      professionalSupportSignals: [
+        "avoidance limiting school, sleep, play, or family routines",
+        "frequent distress that does not settle with support",
+        "panic-like body symptoms or intense fear",
+        "worries becoming persistent and hard to interrupt"
+      ],
+      avoid: [
+        "removing every anxiety trigger permanently",
+        "dismissing fear as overreaction",
+        "reassuring repeatedly without helping tolerance grow"
+      ]
+    },
+    DEPRESSION: {
+      homeSupport: [
+        "connection before correction",
+        "small predictable activation steps",
+        "low-pressure shared time",
+        "reduced shame around low energy",
+        "consistent sleep and daily rhythm support"
+      ],
+      schoolOrDaycareSupport: [
+        "watching withdrawal or loss of participation",
+        "reduced overload during low-energy periods",
+        "supportive adult check-ins",
+        "tracking changes in concentration and motivation",
+        "gentle re-entry into valued activities"
+      ],
+      observeNext30Days: [
+        "whether low mood or irritability persists",
+        "whether interest in usual activities returns",
+        "changes in sleep, appetite, energy, or self-talk",
+        "whether connection improves functioning"
+      ],
+      professionalSupportSignals: [
+        "persistent low mood, irritability, withdrawal, or loss of interest",
+        "declining functioning at home or school",
+        "strong negative self-statements or hopelessness",
+        "any self-harm behavior, talk of wanting to disappear, or safety concern"
+      ],
+      avoid: [
+        "calling low motivation laziness",
+        "using pressure as the main strategy",
+        "ignoring safety-related statements"
+      ]
+    },
+    LEARNING: {
+      homeSupport: [
+        "breaking tasks into visible steps",
+        "checking understanding before practice",
+        "short work blocks with review",
+        "multisensory practice",
+        "error-friendly feedback"
+      ],
+      schoolOrDaycareSupport: [
+        "documenting subject-specific patterns",
+        "checking instruction comprehension",
+        "support for working memory and processing speed",
+        "alternative ways to show understanding",
+        "collaboration with teachers or learning specialists"
+      ],
+      observeNext30Days: [
+        "which subjects or task types are hardest",
+        "whether errors repeat in a stable pattern",
+        "whether oral understanding differs from written output",
+        "whether performance improves with shorter steps"
+      ],
+      professionalSupportSignals: [
+        "persistent academic difficulty despite practice",
+        "large gap between effort and output",
+        "specific reading, writing, math, or comprehension concerns",
+        "school concerns lasting several weeks"
+      ],
+      avoid: [
+        "assuming the child is not trying",
+        "repeating the same explanation without changing support",
+        "measuring ability only by speed"
+      ]
+    }
+  };
+
+  const primaryGuide = guides[primary] || guides.ADHD;
+  const secondaryGuide = secondary && guides[secondary] ? guides[secondary] : null;
+
+  return {
+    primary,
+    primaryGuide,
+    secondary: secondaryGuide ? secondary : null,
+    secondaryGuide
+  };
+}
+
 function buildSignalQualityGuide({ specificProfileSummary, specificScoringSummary, adaptiveSummary }) {
   const average = Number(
     specificProfileSummary?.normalizedAverage ??
@@ -212,6 +392,7 @@ function buildPrompt(payload = {}, lang = "en") {
   const specificProfileSummary = summarizeSpecificProfile(payload.specificProfile);
   const adaptiveSummary = buildAdaptiveSummary(payload);
   const domainGuide = getDomainInterpretationGuide(detectedRisk, secondaryRisk);
+  const parentActionGuide = getParentActionGuide(detectedRisk, secondaryRisk);
   const signalQualityGuide = buildSignalQualityGuide({
     specificProfileSummary,
     specificScoringSummary,
@@ -260,6 +441,10 @@ PREMIUM REPORT QUALITY RULES:
 - Use parent-friendly language without becoming casual, cute, or simplistic.
 - Make recommendations concrete enough that a parent could try them this week.
 - Prefer "what to observe", "what to try", and "what would suggest escalation" over generic reassurance.
+- Every practical recommendation must connect to a likely everyday situation: morning routine, homework, transitions, peer contact, bedtime, school/daycare demands, emotional escalation, sensory load, uncertainty, or task completion.
+- When giving advice, explain the parent move and the reason behind it. Avoid isolated tips that feel like a checklist copied from a brochure.
+- Include school/daycare communication only when it is relevant, but when relevant make it specific: what to tell adults, what to observe, and what accommodation or support to try.
+- Include strengths and protective factors as real stabilizing conditions, not empty praise.
 
 REPORT V2 CONTENT REQUIREMENTS:
 - The report must read like a premium paid interpretation, not a generic screening summary.
@@ -269,6 +454,9 @@ REPORT V2 CONTENT REQUIREMENTS:
 - Include realistic protective factors based on low/medium items, coherent functioning, parent observation, or supportive conditions. If not enough data is available, say "the questionnaire gives limited information about strengths" and then identify likely support conditions instead.
 - Include a practical 30-day plan with observation, home support, school/daycare communication if relevant, and review.
 - Include a calm professional-support section that explains thresholds for seeking help without creating alarm.
+- Include at least one "this week" action and one "watch over the next month" observation.
+- If professional support is discussed, keep it non-alarming and tied to persistence, impairment, safety, or cross-context concern.
+- For any self-harm, disappearance, or safety-related signal, state that immediate qualified support is important. Do not provide crisis counseling; keep the wording brief and responsible.
 
 SCORING INTERPRETATION:
 - Answers use a 0–3 intensity scale.
@@ -313,6 +501,10 @@ DEVELOPMENTAL AND CONTEXTUAL REASONING:
 
 DOMAIN-SPECIFIC INTERPRETATION GUIDE:
 ${JSON.stringify(domainGuide, null, 2)}
+
+PARENT ACTION GUIDE:
+Use this as a practical menu. Do not copy it mechanically. Translate it naturally and adapt it to the actual profile strength, top subdomains, and context.
+${JSON.stringify(parentActionGuide, null, 2)}
 
 SIGNAL QUALITY GUIDE:
 ${JSON.stringify(signalQualityGuide, null, 2)}
@@ -382,16 +574,16 @@ Describe possible effects on home life, learning, peer relationships, routines, 
 Explain whether the observed pattern may vary across environments. Discuss stress sensitivity, transitions, overload, fatigue, masking, compensation, or context-dependence if relevant.
 
 7. Strengths and protective factors
-Identify realistic strengths, stabilizing factors, coping signs, supportive conditions, or signs of resilience. Do not invent unrealistic strengths.
+Identify realistic strengths, stabilizing factors, coping signs, supportive conditions, or signs of resilience. Explain how these strengths can be used in support planning. Do not invent unrealistic strengths.
 
 8. Practical recommendations for parents
-Give concrete suggestions parents can use immediately. Include communication, routines, structure, emotional regulation, sensory or transition support, observation, and supportive responses.
+Give concrete suggestions parents can use immediately. Include home routines, communication style, emotional regulation, sensory or transition support, observation, and supportive responses. Include at least one recommendation that can be tried this week and explain why it fits the pattern.
 
 9. Suggested next 30 days
-Give a realistic, parent-friendly action plan for the next few weeks. Make it specific enough to be useful. Include what to observe, what to try, and when to review.
+Give a realistic, parent-friendly action plan for the next few weeks. Structure it in prose around the first week, the following two weeks, and the review point. Include what to observe, what to try, what to share with school/daycare if relevant, and when to review.
 
 10. When professional support may be useful
-Explain when to consider a pediatrician, psychologist, child psychiatrist, developmental specialist, school specialist, speech therapist, occupational therapist, or other qualified professional, depending on the pattern.
+Explain when to consider a pediatrician, psychologist, child psychiatrist, developmental specialist, school specialist, speech therapist, occupational therapist, or other qualified professional, depending on the pattern. Tie the recommendation to persistence, impairment, cross-context concerns, declining confidence, safety concerns, or educator observations.
 
 11. Important limitation and disclaimer
 Clearly state again that this is not a diagnosis and does not replace professional assessment. Explain that full assessment requires developmental history, observation, professional evaluation, and broader context.
