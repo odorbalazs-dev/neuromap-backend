@@ -1,0 +1,1365 @@
+<script>
+/* =========================
+   ENGINE - PRODUCTION FINAL
+   Uses window.NM_ADAPTIVE_ENGINE when available.
+========================= */
+
+(function () {
+  const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
+
+  const state = {
+    lang: "hu",
+    step: "triage",
+
+    triageQuestions: [],
+    triageAnswers: [],
+    triageScores: null,
+    triageRanking: null,
+
+    detectedRisk: null,
+    secondaryRisk: null,
+
+    specificQuestions: [],
+    specificAnswers: [],
+    specificScoring: null,
+    specificProfile: null,
+    resultSummary: null,
+
+    extraQuestions: [],
+    extraAnswers: [],
+    extraDebug: null,
+
+    needsExtra: false
+  };
+
+  function getConfig() {
+    return window.NM_CONFIG || {};
+  }
+
+  function getLang() {
+    const saved = localStorage.getItem("nm_lang") || "hu";
+    const supported = getConfig().SUPPORTED_LANGS || ["hu"];
+    return supported.includes(saved) ? saved : "hu";
+  }
+
+  function getUI() {
+    const all = window.NM_UI || {};
+    const fallback = window.NM_UI_FALLBACK || "en";
+    return all[state.lang] || all[fallback] || {};
+  }
+
+  function getQuestionMark(lang) {
+    if (lang === "ar") return "؟";
+    if (lang === "zh" || lang === "ja") return "？";
+    return "?";
+  }
+
+  function normalizeQuestionText(text, lang = state.lang) {
+    if (!text) return "";
+
+    let value = String(text).trim();
+    if (!value) return "";
+
+    value = value.replace(/\s+/g, " ");
+
+    const firstLetterMatch = value.match(/\p{L}/u);
+    if (firstLetterMatch && typeof firstLetterMatch.index === "number") {
+      const index = firstLetterMatch.index;
+      value =
+        value.slice(0, index) +
+        value.charAt(index).toLocaleUpperCase(lang || "en") +
+        value.slice(index + 1);
+    }
+
+    value = value.replace(/[.!。．]+$/u, "").trim();
+
+    const questionMark = getQuestionMark(lang);
+
+    if (!/[?؟？]$/u.test(value)) {
+      value += questionMark;
+    }
+
+    if (lang === "es" && !value.startsWith("¿")) {
+      value = "¿" + value;
+    }
+
+    return value;
+  }
+
+  function disorderLabel(kind) {
+    const ui = getUI();
+    return (ui.disorderNames && ui.disorderNames[kind]) || kind;
+  }
+
+  function getSeverityLabel(severity) {
+    const t = getUI();
+    const labels =
+      t.severityLabels || {
+        low: "Low",
+        mild: "Mild",
+        moderate: "Moderate",
+        high: "High"
+      };
+
+    return labels[severity] || severity;
+  }
+
+  function shuffle(array) {
+    const copy = [...array];
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+  }
+
+  function setStatus(message) {
+    const el = document.getElementById("checkoutStatus");
+    if (el) el.textContent = message || "";
+  }
+
+  function scrollToQuestionnaireTop() {
+    const app = document.getElementById("nmApp");
+    const questionnaireVisible =
+      app && app.style.display !== "none" && app.offsetParent !== null;
+
+    if (!questionnaireVisible) return;
+
+    const target =
+      document.getElementById("questionnaireStart") ||
+      document.getElementById("nmApp") ||
+      document.getElementById("triageSection");
+
+    if (target) {
+      target.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }
+  }
+
+  function validateRuntimeBanks() {
+    const errors = [];
+
+    if (!Array.isArray(window.NM_TRIAGE_BANK)) {
+      errors.push("NM_TRIAGE_BANK is missing or not an array.");
+    } else if (window.NM_TRIAGE_BANK.length !== 250) {
+      errors.push(`NM_TRIAGE_BANK should have 250 items, found ${window.NM_TRIAGE_BANK.length}.`);
+    }
+
+    const specific = window.NM_SPECIFIC_BANK || {};
+
+    DISORDERS.forEach((domain) => {
+      if (!Array.isArray(specific[domain])) {
+        errors.push(`NM_SPECIFIC_BANK.${domain} is missing or not an array.`);
+      } else if (specific[domain].length !== 250) {
+        errors.push(`NM_SPECIFIC_BANK.${domain} should have 250 items, found ${specific[domain].length}.`);
+      }
+    });
+
+    if (!window.NM_EXTRA_BANK || typeof window.NM_EXTRA_BANK !== "object") {
+      errors.push("NM_EXTRA_BANK is missing.");
+    }
+
+    if (errors.length) {
+      console.error("NeuroMap runtime bank validation failed:", errors);
+      setStatus("A kérdőív betöltése nem sikerült. Kérjük, frissítsd az oldalt, vagy próbáld újra később.");
+      return false;
+    }
+
+    if (!window.NM_ADAPTIVE_ENGINE) {
+      console.warn("NM_ADAPTIVE_ENGINE is not available. Engine will use local fallback picker.");
+    }
+
+    console.log("NeuroMap runtime bank validation passed.");
+    return true;
+  }
+
+  function inferStemKey(item) {
+    if (item && item.stemKey) return item.stemKey;
+
+    const text =
+      (item && item.text ? item.text.en || item.text.hu || "" : "")
+        .toLowerCase()
+        .replace(/[^\p{L}\p{N}\s]/gu, "")
+        .trim();
+
+    const words = text.split(/\s+/).filter(Boolean).slice(0, 6);
+    return `${(item && item.subdomain) || "general"}::${words.join("_")}`;
+  }
+
+  function pickBalancedTriageQuestions(bank, perDomain = 5) {
+    const domains = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
+
+    if (!Array.isArray(bank) || bank.length === 0) return [];
+
+    function pickDiversifiedFromDomain(pool, count) {
+      if (!Array.isArray(pool) || pool.length === 0) return [];
+
+      const bySubdomain = {};
+
+      pool.forEach((q) => {
+        const key = q && q.subdomain ? q.subdomain : "general";
+        if (!bySubdomain[key]) bySubdomain[key] = [];
+        bySubdomain[key].push(q);
+      });
+
+      const subdomains = Object.keys(bySubdomain);
+      const selected = [];
+      const selectedIds = new Set();
+      const usedStemKeys = new Set();
+
+      for (const subdomain of shuffle(subdomains)) {
+        if (selected.length >= count) break;
+
+        const candidates = shuffle(bySubdomain[subdomain]).sort(
+          (a, b) => Number(b.weight || 1) - Number(a.weight || 1)
+        );
+
+        const candidate = candidates.find((item) => {
+          const stemKey = inferStemKey(item);
+          return !usedStemKeys.has(stemKey) && !selectedIds.has(item.id);
+        });
+
+        if (candidate) {
+          selected.push(candidate);
+          selectedIds.add(candidate.id);
+          usedStemKeys.add(inferStemKey(candidate));
+        }
+      }
+
+      if (selected.length < count) {
+        const remaining = shuffle(pool).sort(
+          (a, b) => Number(b.weight || 1) - Number(a.weight || 1)
+        );
+
+        for (const item of remaining) {
+          if (selected.length >= count) break;
+          if (selectedIds.has(item.id)) continue;
+
+          const stemKey = inferStemKey(item);
+          if (usedStemKeys.has(stemKey)) continue;
+
+          selected.push(item);
+          selectedIds.add(item.id);
+          usedStemKeys.add(stemKey);
+        }
+      }
+
+      if (selected.length < count) {
+        for (const item of shuffle(pool)) {
+          if (selected.length >= count) break;
+          if (selectedIds.has(item.id)) continue;
+
+          selected.push(item);
+          selectedIds.add(item.id);
+        }
+      }
+
+      return selected.slice(0, Math.min(count, selected.length));
+    }
+
+    return shuffle(
+      domains.flatMap((domain) => {
+        const pool = bank.filter((q) => q && q.domain === domain);
+        return pickDiversifiedFromDomain(pool, perDomain);
+      })
+    );
+  }
+
+  function pickBalancedSpecificQuestions(bank, count = 30) {
+    const browserEngine = window.NM_ADAPTIVE_ENGINE;
+
+    if (
+      browserEngine &&
+      typeof browserEngine.pickBalancedSpecificQuestions === "function"
+    ) {
+      const interpretation = state.needsExtra
+        ? "mixed_pattern"
+        : "coherent_pattern";
+
+      const focusSubdomains =
+        typeof browserEngine.getRecommendedFocusAreas === "function"
+          ? browserEngine.getRecommendedFocusAreas(
+              state.detectedRisk,
+              state.secondaryRisk,
+              interpretation
+            )
+          : [];
+
+      const seedParts = [
+        "specific",
+        state.lang || "hu",
+        state.detectedRisk || "unknown",
+        state.secondaryRisk || "none",
+        (state.triageAnswers || []).join("-")
+      ];
+
+      return browserEngine
+        .pickBalancedSpecificQuestions(bank, {
+          count,
+          seed: seedParts.join(":"),
+          focusSubdomains,
+          avoidStemKeys: [],
+          maxPerStem: 1,
+          targetReverseRatio: 0.2
+        })
+        .map((question) => {
+          if (question.stemKey) return question;
+
+          return Object.assign({}, question, {
+            stemKey:
+              typeof browserEngine.inferStemKey === "function"
+                ? browserEngine.inferStemKey(question)
+                : inferStemKey(question)
+          });
+        });
+    }
+
+    if (!Array.isArray(bank) || bank.length === 0) return [];
+
+    const bySubdomain = {};
+
+    bank.forEach((q) => {
+      const key = q.subdomain || "general";
+      if (!bySubdomain[key]) bySubdomain[key] = [];
+      bySubdomain[key].push(q);
+    });
+
+    const subdomains = Object.keys(bySubdomain);
+
+    if (subdomains.length === 0) {
+      return shuffle(bank).slice(0, Math.min(count, bank.length));
+    }
+
+    function diversifyPool(pool, targetCount) {
+      const shuffled = shuffle(pool).sort(
+        (a, b) => Number(b.weight || 1) - Number(a.weight || 1)
+      );
+
+      const selected = [];
+      const usedStemKeys = new Set();
+      let reverseCount = 0;
+
+      for (const item of shuffled) {
+        if (selected.length >= targetCount) break;
+
+        const stemKey = inferStemKey(item);
+        const isReverse = !!item.reverse;
+
+        if (usedStemKeys.has(stemKey)) continue;
+        if (isReverse && reverseCount >= Math.max(1, Math.floor(targetCount * 0.25))) continue;
+
+        selected.push(Object.assign({}, item, { stemKey }));
+        usedStemKeys.add(stemKey);
+        if (isReverse) reverseCount += 1;
+      }
+
+      if (selected.length < targetCount) {
+        for (const item of shuffled) {
+          if (selected.length >= targetCount) break;
+          if (selected.some((s) => s.id === item.id)) continue;
+          selected.push(Object.assign({}, item, { stemKey: inferStemKey(item) }));
+        }
+      }
+
+      return selected.slice(0, targetCount);
+    }
+
+    const perSubdomain = Math.floor(count / subdomains.length);
+    let remainder = count % subdomains.length;
+    let selected = [];
+
+    for (const subdomain of subdomains) {
+      selected.push(...diversifyPool(bySubdomain[subdomain] || [], perSubdomain));
+    }
+
+    if (remainder > 0) {
+      const alreadySelectedIds = new Set(selected.map((q) => q.id));
+      const leftovers = subdomains.flatMap((subdomain) =>
+        (bySubdomain[subdomain] || []).filter((q) => !alreadySelectedIds.has(q.id))
+      );
+
+      selected.push(...diversifyPool(leftovers, remainder));
+    }
+
+    if (selected.length < count) {
+      const alreadySelectedIds = new Set(selected.map((q) => q.id));
+      const remaining = bank.filter((q) => !alreadySelectedIds.has(q.id));
+      selected.push(...shuffle(remaining).slice(0, count - selected.length));
+    }
+
+    return shuffle(selected).slice(0, Math.min(count, selected.length));
+  }
+
+  function buildExtraQuestions(primaryKind, secondaryKind = null) {
+    const allBanks = window.NM_EXTRA_BANK || {};
+    const primaryBank = Array.isArray(allBanks[primaryKind]) ? [...allBanks[primaryKind]] : [];
+    const secondaryBank =
+      secondaryKind && Array.isArray(allBanks[secondaryKind])
+        ? [...allBanks[secondaryKind]]
+        : [];
+
+    function pickUnique(pool, count, usedStemKeys = new Set()) {
+      const selected = [];
+      const selectedIds = new Set();
+
+      const shuffled = shuffle(pool).sort(
+        (a, b) => Number(b.weight || 1) - Number(a.weight || 1)
+      );
+
+      for (const item of shuffled) {
+        if (selected.length >= count) break;
+        if (selectedIds.has(item.id)) continue;
+
+        const stemKey = inferStemKey(item);
+        if (usedStemKeys.has(stemKey)) continue;
+
+        selected.push(item);
+        selectedIds.add(item.id);
+        usedStemKeys.add(stemKey);
+      }
+
+      if (selected.length < count) {
+        for (const item of shuffled) {
+          if (selected.length >= count) break;
+          if (selectedIds.has(item.id)) continue;
+
+          selected.push(item);
+          selectedIds.add(item.id);
+        }
+      }
+
+      return selected;
+    }
+
+    if (!secondaryKind || secondaryKind === primaryKind || secondaryBank.length === 0) {
+      return shuffle(pickUnique(primaryBank, 5));
+    }
+
+    const usedStemKeys = new Set();
+    const primaryPicked = pickUnique(primaryBank, 3, usedStemKeys);
+    const secondaryPicked = pickUnique(secondaryBank, 2, usedStemKeys);
+    const combined = [...primaryPicked, ...secondaryPicked];
+
+    if (combined.length < 5) {
+      const selectedIds = new Set(combined.map((q) => q.id));
+      const fallbackPool = shuffle([...primaryBank, ...secondaryBank]);
+
+      for (const item of fallbackPool) {
+        if (combined.length >= 5) break;
+        if (selectedIds.has(item.id)) continue;
+
+        combined.push(item);
+        selectedIds.add(item.id);
+      }
+    }
+
+    return shuffle(combined).slice(0, 5);
+  }
+
+  function normalizeAnswer(value, reverse) {
+    const numeric = Number(value || 0);
+    return reverse ? 3 - numeric : numeric;
+  }
+
+  function evaluateTriage(questions, answers) {
+    const result = {
+      rawScores: {
+        ADHD: 0,
+        ASD: 0,
+        ANXIETY: 0,
+        DEPRESSION: 0,
+        LEARNING: 0
+      },
+      domainStats: {}
+    };
+
+    DISORDERS.forEach((domain) => {
+      result.domainStats[domain] = {
+        itemCount: 0,
+        average: 0,
+        strongestSubdomain: 0,
+        consistency: 0,
+        weightedSignal: 0,
+        subdomains: {}
+      };
+    });
+
+    questions.forEach((q, i) => {
+      const domain = q && q.domain;
+      if (!domain || !(domain in result.rawScores)) return;
+
+      const value = Number(answers[i] || 0);
+      const subdomain = q.subdomain || "general";
+
+      result.rawScores[domain] += value;
+      result.domainStats[domain].itemCount += 1;
+
+      if (!result.domainStats[domain].subdomains[subdomain]) {
+        result.domainStats[domain].subdomains[subdomain] = [];
+      }
+
+      result.domainStats[domain].subdomains[subdomain].push(value);
+    });
+
+    DISORDERS.forEach((domain) => {
+      const stat = result.domainStats[domain];
+      const total = result.rawScores[domain];
+      const itemCount = stat.itemCount || 1;
+
+      stat.average = total / itemCount;
+
+      const subdomainAverages = Object.values(stat.subdomains).map((values) => {
+        if (!values.length) return 0;
+        return values.reduce((sum, v) => sum + v, 0) / values.length;
+      });
+
+      stat.strongestSubdomain = subdomainAverages.length
+        ? Math.max(...subdomainAverages)
+        : 0;
+
+      stat.consistency =
+        subdomainAverages.length > 1
+          ? 1 - (Math.max(...subdomainAverages) - Math.min(...subdomainAverages)) / 3
+          : 1;
+
+      stat.weightedSignal =
+        stat.average * 0.7 +
+        stat.strongestSubdomain * 0.2 +
+        stat.consistency * 0.1;
+    });
+
+    return result;
+  }
+
+  function detectRisks(triageResult) {
+    const rawScores = triageResult && triageResult.rawScores ? triageResult.rawScores : {};
+    const domainStats = triageResult && triageResult.domainStats ? triageResult.domainStats : {};
+
+    const ranked = DISORDERS.map((domain) => {
+      const stat = domainStats[domain] || {};
+      const raw = Number(rawScores[domain] || 0);
+      let weightedSignal = Number(stat.weightedSignal || 0);
+
+      if (domain === "LEARNING" && rawScores.ADHD >= raw - 1) weightedSignal -= 0.08;
+      if (domain === "DEPRESSION" && rawScores.ANXIETY >= raw - 1) weightedSignal -= 0.05;
+      if (domain === "ANXIETY" && rawScores.DEPRESSION >= raw - 1) weightedSignal -= 0.03;
+
+      return {
+        domain,
+        raw,
+        average: Number(stat.average || 0),
+        strongestSubdomain: Number(stat.strongestSubdomain || 0),
+        consistency: Number(stat.consistency || 0),
+        weightedSignal
+      };
+    });
+
+    ranked.sort((a, b) => {
+      if (b.weightedSignal !== a.weightedSignal) return b.weightedSignal - a.weightedSignal;
+      return b.raw - a.raw;
+    });
+
+    return {
+      primaryRisk: ranked[0] ? ranked[0].domain : "ADHD",
+      primaryScore: ranked[0] ? ranked[0].weightedSignal : 0,
+      secondaryRisk: ranked[1] ? ranked[1].domain : null,
+      secondaryScore: ranked[1] ? ranked[1].weightedSignal : 0,
+      rankedDomains: ranked
+    };
+  }
+
+  function shouldAskExtra(primaryScore, secondaryScore) {
+    const primary = Number(primaryScore || 0);
+    const secondary = Number(secondaryScore || 0);
+
+    if (!primary || !secondary) return false;
+
+    return Math.abs(primary - secondary) <= 0.04;
+  }
+
+  function evaluateSpecificQuestions(questions, answers) {
+    const result = {
+      totalWeightedScore: 0,
+      totalWeight: 0,
+      normalizedAverage: 0,
+      subdomains: {}
+    };
+
+    questions.forEach((q, i) => {
+      const rawAnswer = answers[i];
+      const reverse = !!q.reverse;
+      const weight = Number(q.weight || 1);
+      const subdomain = q.subdomain || "general";
+
+      const normalized = normalizeAnswer(rawAnswer, reverse);
+      const weighted = normalized * weight;
+
+      if (!result.subdomains[subdomain]) {
+        result.subdomains[subdomain] = {
+          rawSum: 0,
+          weightedSum: 0,
+          totalWeight: 0,
+          itemCount: 0,
+          average: 0
+        };
+      }
+
+      result.subdomains[subdomain].rawSum += normalized;
+      result.subdomains[subdomain].weightedSum += weighted;
+      result.subdomains[subdomain].totalWeight += weight;
+      result.subdomains[subdomain].itemCount += 1;
+
+      result.totalWeightedScore += weighted;
+      result.totalWeight += weight;
+    });
+
+    Object.keys(result.subdomains).forEach((key) => {
+      const s = result.subdomains[key];
+      s.average = s.totalWeight > 0 ? s.weightedSum / s.totalWeight : 0;
+    });
+
+    result.normalizedAverage =
+      result.totalWeight > 0 ? result.totalWeightedScore / result.totalWeight : 0;
+
+    return result;
+  }
+
+  function buildSpecificProfile(kind, scoring) {
+    if (!scoring) return null;
+
+    const avg = scoring.normalizedAverage;
+    let severity = "low";
+    if (avg >= 2.2) severity = "high";
+    else if (avg >= 1.4) severity = "moderate";
+    else if (avg >= 0.8) severity = "mild";
+
+    return {
+      kind,
+      severity,
+      normalizedAverage: avg,
+      subdomains: scoring.subdomains
+    };
+  }
+
+  function getSignalLevel(score) {
+    const value = Number(score || 0);
+
+    if (value >= 2.2) {
+      return { key: "high", hu: "magas jelzésszint", en: "high signal level" };
+    }
+
+    if (value >= 1.4) {
+      return { key: "moderate", hu: "közepes jelzésszint", en: "moderate signal level" };
+    }
+
+    if (value >= 0.8) {
+      return { key: "mild", hu: "enyhe jelzésszint", en: "mild signal level" };
+    }
+
+    return { key: "low", hu: "alacsony jelzésszint", en: "low signal level" };
+  }
+
+  function getTopSubdomains(scoring, limit = 3) {
+    if (!scoring || !scoring.subdomains) return [];
+
+    return Object.entries(scoring.subdomains)
+      .map(([key, value]) => ({
+        key,
+        average: Number(value.average || 0),
+        itemCount: Number(value.itemCount || 0)
+      }))
+      .sort((a, b) => b.average - a.average)
+      .slice(0, limit);
+  }
+
+  function buildResultSummary(kind, scoring, triageScores, secondaryRisk) {
+    const avg = Number(scoring && scoring.normalizedAverage ? scoring.normalizedAverage : 0);
+    const signal = getSignalLevel(avg);
+    const topSubdomains = getTopSubdomains(scoring, 3);
+
+    const domainCopy = {
+      ADHD: {
+        hu: "A válaszok alapján a legerősebb mintázat a figyelem, impulzivitás, aktivitásszabályozás vagy végrehajtó működés területéhez kapcsolódik.",
+        en: "The strongest pattern appears to relate to attention, impulsivity, activity regulation, or executive functioning."
+      },
+      ASD: {
+        hu: "A válaszok alapján a legerősebb mintázat a társas kommunikáció, rugalmasság, rutinok vagy szenzoros feldolgozás területéhez kapcsolódik.",
+        en: "The strongest pattern appears to relate to social communication, flexibility, routines, or sensory processing."
+      },
+      ANXIETY: {
+        hu: "A válaszok alapján a legerősebb mintázat az aggodalom, feszültség, bizonytalanság vagy elkerülés területéhez kapcsolódik.",
+        en: "The strongest pattern appears to relate to worry, tension, uncertainty, or avoidance."
+      },
+      DEPRESSION: {
+        hu: "A válaszok alapján a legerősebb mintázat a hangulat, motiváció, érdeklődés vagy önértékelés területéhez kapcsolódik.",
+        en: "The strongest pattern appears to relate to mood, motivation, interest, or self-view."
+      },
+      LEARNING: {
+        hu: "A válaszok alapján a legerősebb mintázat tanulási, teljesítménybeli, olvasási, írási, matematikai vagy feladatmegértési nehézségekhez kapcsolódik.",
+        en: "The strongest pattern appears to relate to learning, performance, reading, writing, math, or task-understanding difficulties."
+      }
+    };
+
+    return {
+      kind,
+      normalizedAverage: avg,
+      signal,
+      topSubdomains,
+      secondaryRisk: secondaryRisk || null,
+      triageScores: triageScores || {},
+      summaryText: domainCopy[kind] || {
+        hu: "A válaszok alapján kirajzolódik egy értelmezhető mintázat.",
+        en: "The answers suggest a meaningful pattern."
+      }
+    };
+  }
+
+  function validateEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  function showModal() {
+    const el = document.getElementById("languageModal");
+    if (el) el.style.display = "flex";
+  }
+
+  function hideModal() {
+    const el = document.getElementById("languageModal");
+    if (el) el.style.display = "none";
+  }
+
+  function buildLangButtons() {
+    const container = document.getElementById("langButtons");
+    if (!container) return;
+    if (container.children.length > 0) return;
+
+    const labels = {
+      hu: "Magyar",
+      en: "English",
+      de: "Deutsch",
+      it: "Italiano",
+      es: "Español",
+      zh: "中文",
+      ja: "日本語",
+      ar: "العربية",
+      pl: "Polski",
+      pt: "Português",
+      fr: "Français"
+    };
+
+    const supported = getConfig().SUPPORTED_LANGS || ["hu"];
+
+    container.innerHTML = supported
+      .map(
+        (lang) => `
+      <button onclick="selectLang('${lang}')" style="display:block;width:100%;margin:8px 0;padding:10px;">
+        ${labels[lang] || lang.toUpperCase()}
+      </button>
+    `
+      )
+      .join("");
+  }
+
+  function responseOptionsHtml(selectedValue = "") {
+    const labels = getUI().responseLabels || ["0", "1", "2", "3"];
+    const safeValue =
+      selectedValue === "" || selectedValue === null || selectedValue === undefined
+        ? ""
+        : String(selectedValue);
+
+    return `
+      <option value="" ${safeValue === "" ? "selected" : ""}>--</option>
+      <option value="0" ${safeValue === "0" ? "selected" : ""}>${labels[0]}</option>
+      <option value="1" ${safeValue === "1" ? "selected" : ""}>${labels[1]}</option>
+      <option value="2" ${safeValue === "2" ? "selected" : ""}>${labels[2]}</option>
+      <option value="3" ${safeValue === "3" ? "selected" : ""}>${labels[3]}</option>
+    `;
+  }
+
+  function getQuestionText(question) {
+    if (!question || !question.text) return "";
+    const raw = question.text[state.lang] || question.text.en || question.text.hu || "";
+    return normalizeQuestionText(raw, state.lang);
+  }
+
+  function buildTriageQuestions() {
+    const bank = Array.isArray(window.NM_TRIAGE_BANK) ? window.NM_TRIAGE_BANK : [];
+    return pickBalancedTriageQuestions(bank);
+  }
+
+  function buildSpecificQuestions(kind) {
+    const bank = (window.NM_SPECIFIC_BANK || {})[kind] || [];
+    return pickBalancedSpecificQuestions(bank, 30);
+  }
+
+  function applyLang(lang) {
+    state.lang = lang;
+    localStorage.setItem("nm_lang", lang);
+
+    const t = getUI();
+
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+
+    const mapText = [
+      ["pageTitle", t.pageTitle],
+      ["pageIntro", t.pageIntro],
+      ["labelName", t.labelName],
+      ["labelEmail", t.labelEmail],
+      ["progressLabel", t.progressLabel || "Step"],
+      ["backBtn", t.back],
+      ["nextBtn", t.next],
+      ["paymentBtn", t.pay]
+    ];
+
+    mapText.forEach(([id, value]) => {
+      const el = document.getElementById(id);
+      if (el && typeof value === "string") el.textContent = value;
+    });
+
+    const langSwitch = document.getElementById("langSwitch");
+    if (langSwitch) langSwitch.textContent = lang.toUpperCase();
+
+    renderCurrentStep();
+  }
+
+  function renderQuestionList(targetId, questions, answers, title, intro) {
+    const container = document.getElementById(targetId);
+    if (!container) return;
+
+    container.innerHTML = `
+      <div>
+        <div class="nm-step-title-card">
+          <h3>${title || ""}</h3>
+          <p>${intro || ""}</p>
+        </div>
+
+        ${questions
+          .map(
+            (q, index) => `
+          <div class="nm-q-card">
+            <div class="nm-q-number">${index + 1}</div>
+            <div class="nm-q-text">${getQuestionText(q)}</div>
+            <select data-question-index="${index}" class="nm-answer-select">
+              ${responseOptionsHtml(answers[index])}
+            </select>
+          </div>
+        `
+          )
+          .join("")}
+      </div>
+    `;
+  }
+
+  function syncAnswersFromDOM(scopeId = null) {
+    const root = scopeId ? document.getElementById(scopeId) : document;
+    if (!root) return { ok: false, values: [] };
+
+    const selects = root.querySelectorAll(".nm-answer-select");
+    const values = Array.from(selects).map((el) => {
+      if (el.value === "") return null;
+      return Number(el.value);
+    });
+
+    if (values.some((v) => v === null || Number.isNaN(v))) {
+      return { ok: false, values: [] };
+    }
+
+    return { ok: true, values };
+  }
+
+  function updateProgress() {
+    const t = getUI();
+
+    const map = {
+      triage: { step: 1, title: t.triageTitle || "Step 1" },
+      specific: { step: 2, title: t.specificTitle || "Step 2" },
+      summary: { step: 3, title: t.summaryTitle || "Step 3" }
+    };
+
+    const currentData = map[state.step] || map.triage;
+    const current = currentData.step;
+
+    const textEl = document.getElementById("progressText");
+    const barEl = document.getElementById("progressBar");
+    const pageTitleEl = document.getElementById("pageTitle");
+
+    if (textEl) textEl.textContent = `${current} / 3 · ${currentData.title}`;
+
+    if (barEl) {
+      barEl.style.width = `${current * 33.33}%`;
+      barEl.style.transition = "width 0.35s ease";
+    }
+
+    if (pageTitleEl) pageTitleEl.textContent = currentData.title;
+  }
+
+  function renderSummary() {
+    const t = getUI();
+    const container = document.getElementById("summarySection");
+    if (!container) return;
+
+    const focus = disorderLabel(state.detectedRisk);
+    const secondary = state.secondaryRisk ? disorderLabel(state.secondaryRisk) : "—";
+    const signal =
+      (state.resultSummary && state.resultSummary.signal && state.resultSummary.signal[state.lang]) ||
+      (state.resultSummary && state.resultSummary.signal && state.resultSummary.signal.en) ||
+      (state.resultSummary && state.resultSummary.signal && state.resultSummary.signal.key) ||
+      "";
+    const summaryText =
+      (state.resultSummary && state.resultSummary.summaryText && state.resultSummary.summaryText[state.lang]) ||
+      (state.resultSummary && state.resultSummary.summaryText && state.resultSummary.summaryText.en) ||
+      "";
+    const topSubdomains = (state.resultSummary && state.resultSummary.topSubdomains) || [];
+
+    container.innerHTML = `
+      <div>
+        <div class="nm-summary-hero">
+          <h3>${t.summaryTitle || "Summary"}</h3>
+          <div style="font-size:15px;line-height:1.55;opacity:.95;">
+            ${t.summaryNote || ""}
+          </div>
+        </div>
+
+        <div class="nm-summary-card">
+          <div class="nm-summary-pill">🎯 ${t.possibleFocus || "Likely focus area"}: ${focus}</div>
+          <div class="nm-summary-pill">🔎 ${t.possibleSecondary || "Secondary signal"}: ${secondary}</div>
+          ${signal ? `<div class="nm-summary-pill">📊 ${getSeverityLabel(state.specificProfile?.severity || "low")}: ${signal}</div>` : ""}
+
+          <div style="margin-top:18px;font-size:16px;line-height:1.65;color:#344054;">
+            ${summaryText}
+          </div>
+        </div>
+
+        ${
+          topSubdomains.length
+            ? `
+          <div class="nm-summary-card">
+            <h4 style="margin:0 0 12px 0;font-size:18px;color:#1f2937;">
+              ${t.specificProfileTitle || "Strongest areas"}
+            </h4>
+
+            ${topSubdomains
+              .map(
+                (item) => `
+              <div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #f0f2f5;">
+                <span style="color:#344054;font-weight:700;">${item.key}</span>
+                <strong style="color:#1197d5;">${item.average.toFixed(2)}</strong>
+              </div>
+            `
+              )
+              .join("")}
+          </div>
+        `
+            : ""
+        }
+
+        <div class="nm-summary-warning">
+          ${
+            state.lang === "hu"
+              ? "Ez nem diagnózis, hanem strukturált előszűrési összegzés. A részletes, szülőbarát riport és PDF a fizetés után készül el."
+              : "This is not a diagnosis. It is a structured screening summary. The detailed parent-friendly report and PDF are generated after payment."
+          }
+        </div>
+      </div>
+    `;
+  }
+
+  function renderCurrentStep() {
+    scrollToQuestionnaireTop();
+
+    const t = getUI();
+
+    const triageSection = document.getElementById("triageSection");
+    const specificSection = document.getElementById("specificSection");
+    const summarySection = document.getElementById("summarySection");
+
+    if (triageSection) triageSection.style.display = state.step === "triage" ? "block" : "none";
+    if (specificSection) specificSection.style.display = state.step === "specific" ? "block" : "none";
+    if (summarySection) summarySection.style.display = state.step === "summary" ? "block" : "none";
+
+    const backBtn = document.getElementById("backBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const paymentBtn = document.getElementById("paymentBtn");
+
+    if (backBtn) {
+      backBtn.style.display = state.step === "triage" ? "none" : "inline-block";
+      backBtn.disabled = false;
+    }
+
+    if (nextBtn) {
+      nextBtn.style.display = state.step === "summary" ? "none" : "inline-block";
+      nextBtn.disabled = false;
+    }
+
+    if (paymentBtn) {
+      paymentBtn.style.display = state.step === "summary" ? "inline-block" : "none";
+      paymentBtn.disabled = false;
+    }
+
+    if (state.step === "triage") {
+      renderQuestionList(
+        "triageSection",
+        state.triageQuestions,
+        state.triageAnswers,
+        t.triageTitle,
+        t.introTriage
+      );
+    }
+
+    if (state.step === "specific") {
+      const questions = state.needsExtra
+        ? [...state.specificQuestions, ...state.extraQuestions]
+        : [...state.specificQuestions];
+
+      const answers = state.needsExtra
+        ? [...state.specificAnswers, ...state.extraAnswers]
+        : [...state.specificAnswers];
+
+      const title = state.needsExtra
+        ? `${t.specificTitle || ""} + ${t.extraTitle || ""}`
+        : t.specificTitle;
+
+      const intro =
+        state.needsExtra && state.secondaryRisk
+          ? `${t.introSpecific || ""} ${t.possibleFocus || ""}: ${disorderLabel(state.detectedRisk)}. ${t.possibleSecondary || "Secondary signal"}: ${disorderLabel(state.secondaryRisk)}.`
+          : `${t.introSpecific || ""} ${t.possibleFocus || ""}: ${disorderLabel(state.detectedRisk)}.`;
+
+      renderQuestionList("specificSection", questions, answers, title, intro);
+    }
+
+    if (state.step === "summary") renderSummary();
+
+    updateProgress();
+  }
+
+  function nextStep() {
+    const t = getUI();
+
+    if (state.step === "triage") {
+      const sync = syncAnswersFromDOM("triageSection");
+
+      if (!sync.ok) {
+        alert(t.answerRequired);
+        return;
+      }
+
+      state.triageAnswers = sync.values;
+
+      const triageResult = evaluateTriage(state.triageQuestions, state.triageAnswers);
+      state.triageScores = triageResult.rawScores;
+
+      const risks = detectRisks(triageResult);
+
+      state.detectedRisk = risks.primaryRisk;
+      state.secondaryRisk = risks.secondaryRisk;
+      state.needsExtra = shouldAskExtra(risks.primaryScore, risks.secondaryScore);
+      state.triageRanking = risks.rankedDomains;
+
+      state.specificQuestions = buildSpecificQuestions(state.detectedRisk);
+      state.specificAnswers = [];
+      state.specificScoring = null;
+      state.specificProfile = null;
+      state.resultSummary = null;
+
+      state.extraQuestions = state.needsExtra
+        ? buildExtraQuestions(state.detectedRisk, state.secondaryRisk)
+        : [];
+
+      state.extraAnswers = [];
+      state.extraDebug = state.extraQuestions.map((q) => ({
+        id: q.id,
+        domain: q.domain,
+        subdomain: q.subdomain,
+        stemKey: q.stemKey
+      }));
+
+      if (typeof window.nmTrack === "function") {
+        window.nmTrack("nm_triage_completed", {
+          lang: state.lang,
+          detectedRisk: state.detectedRisk,
+          secondaryRisk: state.secondaryRisk || "",
+          needsExtra: state.needsExtra,
+          answers: state.triageAnswers.length
+        });
+      }
+
+      state.step = "specific";
+      renderCurrentStep();
+      return;
+    }
+
+    if (state.step === "specific") {
+      const sync = syncAnswersFromDOM("specificSection");
+
+      if (!sync.ok) {
+        alert(t.answerRequired);
+        return;
+      }
+
+      state.specificAnswers = sync.values.slice(0, state.specificQuestions.length);
+      state.extraAnswers = state.needsExtra
+        ? sync.values.slice(state.specificQuestions.length)
+        : [];
+
+      state.specificScoring = evaluateSpecificQuestions(
+        state.specificQuestions,
+        state.specificAnswers
+      );
+
+      state.specificProfile = buildSpecificProfile(state.detectedRisk, state.specificScoring);
+      state.resultSummary = buildResultSummary(
+        state.detectedRisk,
+        state.specificScoring,
+        state.triageScores,
+        state.secondaryRisk
+      );
+
+      if (typeof window.nmTrack === "function") {
+        window.nmTrack("nm_specific_completed", {
+          lang: state.lang,
+          detectedRisk: state.detectedRisk,
+          secondaryRisk: state.secondaryRisk || "",
+          needsExtra: state.needsExtra,
+          answers: state.specificAnswers.length + state.extraAnswers.length
+        });
+      }
+
+      state.step = "summary";
+      renderCurrentStep();
+    }
+  }
+
+  function prevStep() {
+    if (state.step === "specific") {
+      state.step = "triage";
+    } else if (state.step === "summary") {
+      state.step = "specific";
+    }
+
+    renderCurrentStep();
+  }
+
+  function validateBeforeCheckout() {
+    const errors = [];
+
+    if (!state.triageQuestions.length || state.triageAnswers.length !== state.triageQuestions.length) {
+      errors.push("Triage kérdések nincsenek teljesen kitöltve.");
+    }
+
+    if (!state.detectedRisk) {
+      errors.push("Nem sikerült meghatározni a fő területet.");
+    }
+
+    if (!state.specificQuestions.length || state.specificAnswers.length !== state.specificQuestions.length) {
+      errors.push("Specifikus kérdések nincsenek teljesen kitöltve.");
+    }
+
+    if (!state.specificScoring || typeof state.specificScoring.normalizedAverage !== "number") {
+      errors.push("Hiányzik a scoring.");
+    }
+
+    if (!state.specificProfile || !state.specificProfile.kind) {
+      errors.push("Hiányzik a profil.");
+    }
+
+    if (state.needsExtra) {
+      const expectedExtra = state.extraQuestions.length;
+      const answeredExtra = state.extraAnswers.length;
+
+      if (!expectedExtra || answeredExtra !== expectedExtra) {
+        console.error("Extra validation detail:", {
+          expectedExtra,
+          answeredExtra,
+          specificQuestions: state.specificQuestions.length,
+          specificAnswers: state.specificAnswers.length,
+          extraQuestions: state.extraQuestions.length,
+          extraAnswers: state.extraAnswers.length
+        });
+
+        errors.push("Extra kérdések nincsenek kitöltve.");
+      }
+    }
+
+    if (errors.length) {
+      console.error("Checkout validation failed:", errors);
+      return { ok: false, errors };
+    }
+
+    console.log("Checkout validation passed");
+    return { ok: true };
+  }
+
+  function buildCheckoutPayload() {
+    return {
+      name: document.getElementById("name").value.trim(),
+      email: document.getElementById("email").value.trim(),
+      lang: state.lang,
+      payload: {
+        triageQuestions: state.triageQuestions.map((q) => ({
+          id: q.id,
+          text: getQuestionText(q),
+          domain: q.domain,
+          subdomain: q.subdomain,
+          stemKey: inferStemKey(q),
+          weight: q.weight
+        })),
+        triageAnswers: state.triageAnswers,
+        triageScores: state.triageScores,
+        triageRanking: state.triageRanking,
+        detectedRisk: state.detectedRisk,
+        secondaryRisk: state.secondaryRisk,
+
+        specificQuestions: state.specificQuestions.map((q) => ({
+          id: q.id,
+          text: getQuestionText(q),
+          subdomain: q.subdomain,
+          domain: q.domain,
+          weight: q.weight,
+          reverse: q.reverse,
+          stemKey: inferStemKey(q)
+        })),
+        specificAnswers: state.specificAnswers,
+        specificScoring: state.specificScoring,
+        specificProfile: state.specificProfile,
+        resultSummary: state.resultSummary,
+
+        extraQuestions: state.extraQuestions.map((q) => ({
+          id: q.id,
+          text: getQuestionText(q),
+          subdomain: q.subdomain,
+          domain: q.domain,
+          weight: q.weight,
+          reverse: q.reverse,
+          stemKey: inferStemKey(q)
+        })),
+        extraAnswers: state.extraAnswers,
+
+        questionnaireVersion: "v5-browser-adaptive-picker"
+      }
+    };
+  }
+
+  async function startCheckout() {
+    const t = getUI();
+    const config = getConfig();
+
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const button = document.getElementById("paymentBtn");
+
+    if (!name) {
+      alert(t.missingName);
+      return;
+    }
+
+    if (!email) {
+      alert(t.missingEmail);
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      alert(t.invalidEmail);
+      return;
+    }
+
+    const validation = validateBeforeCheckout();
+
+    if (!validation.ok) {
+      alert(validation.errors.join("\n"));
+      return;
+    }
+
+    const payload = buildCheckoutPayload();
+
+    if (typeof window.nmTrack === "function") {
+      window.nmTrack("nm_checkout_started", {
+        value: 5,
+        currency: "USD",
+        lang: state.lang,
+        detectedRisk: state.detectedRisk,
+        secondaryRisk: state.secondaryRisk || ""
+      });
+    }
+
+    try {
+      if (button) button.disabled = true;
+      setStatus(t.loading || "Loading...");
+
+      const response = await fetch(`${config.API_BASE_URL}/checkout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await response.json();
+
+      console.log("CHECKOUT RESPONSE:", data);
+
+      if (!response.ok) {
+        throw new Error((data && data.error) || t.checkoutError || "Checkout error");
+      }
+
+      if (!data || !data.checkoutUrl) {
+        throw new Error(t.checkoutError || "Checkout error");
+      }
+
+      try {
+        new URL(data.checkoutUrl);
+      } catch (_error) {
+        console.error("Invalid checkoutUrl:", data.checkoutUrl);
+        throw new Error("Not a valid URL");
+      }
+
+      window.location.href = data.checkoutUrl;
+    } catch (error) {
+      console.error("Checkout error:", error);
+      setStatus(error.message || t.checkoutError || "Checkout error");
+      if (button) button.disabled = false;
+    }
+  }
+
+  window.selectLang = function (lang) {
+    localStorage.setItem("nm_lang", lang);
+
+    applyLang(lang);
+
+    if (typeof window.NM_APPLY_LANDING_LANGUAGE === "function") {
+      window.NM_APPLY_LANDING_LANGUAGE(lang);
+    }
+
+    hideModal();
+  };
+
+  function init() {
+    buildLangButtons();
+
+    if (!validateRuntimeBanks()) {
+      return;
+    }
+
+    state.lang = getLang();
+    state.triageQuestions = buildTriageQuestions();
+
+    const langSwitch = document.getElementById("langSwitch");
+    const nextBtn = document.getElementById("nextBtn");
+    const backBtn = document.getElementById("backBtn");
+    const paymentBtn = document.getElementById("paymentBtn");
+
+    if (langSwitch) langSwitch.addEventListener("click", showModal);
+    if (nextBtn) nextBtn.addEventListener("click", nextStep);
+    if (backBtn) backBtn.addEventListener("click", prevStep);
+    if (paymentBtn) paymentBtn.addEventListener("click", startCheckout);
+
+    applyLang(state.lang);
+  }
+
+  window.NM_DEBUG_STATE = state;
+
+  init();
+})();
+</script>
