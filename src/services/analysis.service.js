@@ -1,6 +1,10 @@
 import OpenAI from "openai";
 import { env } from "../config/env.js";
 import { analyzeAdaptiveState } from "./adaptive-engine.service.js";
+import {
+  cleanGeneratedReportText,
+  validateReportStructure
+} from "./report-contract.service.js";
 
 const openai = new OpenAI({
   apiKey: env.OPENAI_API_KEY
@@ -357,6 +361,7 @@ ${JSON.stringify(extra, null, 2)}
 OUTPUT FORMAT:
 Write exactly these 11 numbered sections. Translate the section titles naturally into the selected language, but keep the numbering.
 Put every numbered heading on its own line, followed by a blank line and then the body text. Do not combine a heading and its paragraph on the same line.
+Each section should normally contain 1-3 short paragraphs. Avoid bullet-heavy output because the PDF renderer is optimized for compact paragraphs and numbered section cards.
 
 1. Short opening summary
 Explain what the report is and what it is not. Summarize the strongest pattern in 2–4 clear sentences. Mention whether the pattern looks coherent, mixed, weak, or still preliminary.
@@ -408,15 +413,6 @@ FINAL STYLE RULES:
 `;
 }
 
-function cleanGeneratedText(text = "") {
-  return String(text || "")
-    .replace(/^#{1,6}\s*/gm, "")
-    .replace(/\*\*/g, "")
-    .replace(/^---+$/gm, "")
-    .replace(/\n{3,}/g, "\n\n")
-    .trim();
-}
-
 export async function generateAnalysis(payload) {
   const safePayload = payload || {};
   const lang = getSafeLang(safePayload.lang || safePayload.language || "en");
@@ -437,10 +433,18 @@ export async function generateAnalysis(payload) {
           .join("\n")
       : "");
 
-  const cleaned = cleanGeneratedText(text);
+  const cleaned = cleanGeneratedReportText(text);
 
   if (!cleaned) {
     throw new Error("Analysis generation returned empty content.");
+  }
+
+  const reportValidation = validateReportStructure(cleaned, {
+    minLength: 5000
+  });
+
+  if (!reportValidation.ok) {
+    console.warn("[analysis] report structure warning:", reportValidation.errors.join("; "));
   }
 
   return cleaned;
