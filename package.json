@@ -11,7 +11,8 @@
     "audit:bank-quality": "node scripts/audit-bank-quality.js",
     "audit:engine-selection": "node scripts/audit-engine-selection.js",
     "smoke:checkout-payload": "node scripts/smoke-checkout-payload.js",
-    "audit:all": "npm run audit:banks && npm run audit:bank-quality && npm run audit:engine-selection && npm run smoke:checkout-payload"
+    "smoke:browser-engine": "node scripts/smoke-browser-engine-bundle.js",
+    "audit:all": "npm run audit:banks && npm run audit:bank-quality && npm run audit:engine-selection && npm run smoke:checkout-payload && npm run smoke:browser-engine"
   },
   "dependencies": {
     "cors": "^2.8.6",
