@@ -445,8 +445,9 @@ function addHeader(doc, labels, lang) {
     });
 }
 
-function addFooter(doc, labels, lang) {
+function addFooter(doc, labels, lang, pageNumber = null) {
   const y = doc.page.height - 78;
+  const footerTextWidth = pageNumber ? doc.page.width - 220 : doc.page.width - 150;
 
   doc.moveTo(56, y - 10)
     .lineTo(doc.page.width - 56, y - 10)
@@ -463,8 +464,25 @@ function addFooter(doc, labels, lang) {
     .fontSize(8.5)
     .text(labels.footer, 94, y - 2, {
       align: getTextAlign(lang),
-      width: doc.page.width - 150
+      width: footerTextWidth
     });
+
+  if (pageNumber) {
+    doc.roundedRect(doc.page.width - 94, y - 8, 38, 20, 10)
+      .fill("#F8FAFC");
+    doc.roundedRect(doc.page.width - 94, y - 8, 38, 20, 10)
+      .strokeColor(BRAND.softBorder)
+      .lineWidth(1)
+      .stroke();
+
+    doc.fillColor(BRAND.muted)
+      .font(getFont(lang, true))
+      .fontSize(8.5)
+      .text(String(pageNumber), doc.page.width - 94, y - 3, {
+        width: 38,
+        align: "center"
+      });
+  }
 }
 
 function addCoverPage(doc, { name, payload, labels, lang }) {
@@ -586,10 +604,11 @@ function addCoverPage(doc, { name, payload, labels, lang }) {
     });
 }
 
-function ensureSpace(doc, neededHeight, labels, lang) {
+function ensureSpace(doc, neededHeight, labels, lang, pageState = null) {
   if (doc.y + neededHeight > doc.page.height - 74) {
-    addFooter(doc, labels, lang);
+    addFooter(doc, labels, lang, pageState?.current || null);
     doc.addPage();
+    if (pageState) pageState.current += 1;
     addHeader(doc, labels, lang);
     doc.y = 138;
   }
@@ -649,12 +668,12 @@ function addMiniCard(doc, x, y, w, title, value, lang, color = BRAND.blue) {
     });
 }
 
-function addOverviewBlock(doc, payload, labels, lang) {
+function addOverviewBlock(doc, payload, labels, lang, pageState = null) {
   const summary = extractSummary(payload || {});
   const x = 56;
   const w = doc.page.width - 112;
 
-  ensureSpace(doc, 190, labels, lang);
+  ensureSpace(doc, 190, labels, lang, pageState);
 
   doc.moveDown(1);
 
@@ -719,7 +738,7 @@ function addOverviewBlock(doc, payload, labels, lang) {
     doc.moveDown(0.4);
 
     summary.subdomains.forEach((item) => {
-      ensureSpace(doc, 28, labels, lang);
+      ensureSpace(doc, 28, labels, lang, pageState);
 
       const barX = x + 150;
       const barY = doc.y + 5;
@@ -749,8 +768,8 @@ function addOverviewBlock(doc, payload, labels, lang) {
   }
 }
 
-function addSectionTitle(doc, title, labels, lang) {
-  ensureSpace(doc, 54, labels, lang);
+function addSectionTitle(doc, title, labels, lang, pageState = null) {
+  ensureSpace(doc, 54, labels, lang, pageState);
 
   doc.moveDown(1);
 
@@ -776,8 +795,8 @@ function addSectionTitle(doc, title, labels, lang) {
   doc.moveDown(0.65);
 }
 
-function addDisclaimerBox(doc, labels, lang) {
-  ensureSpace(doc, 132, labels, lang);
+function addDisclaimerBox(doc, labels, lang, pageState = null) {
+  ensureSpace(doc, 132, labels, lang, pageState);
 
   doc.moveDown(1);
 
@@ -908,23 +927,37 @@ function splitLongParagraph(paragraph, lang) {
   return chunks;
 }
 
-function addReportHeading(doc, heading, labels, lang) {
-  ensureSpace(doc, 66, labels, lang);
+function addReportHeading(doc, heading, labels, lang, pageState = null) {
+  ensureSpace(doc, 72, labels, lang, pageState);
 
   const x = 56;
   const y = doc.y + 6;
   const w = doc.page.width - 112;
-  const h = 46;
+  const h = 52;
+  const numbered = clean(heading).match(/^(\d+)\.\s*(.+)$/);
+  const sectionNumber = numbered ? numbered[1] : "";
+  const sectionTitle = numbered ? numbered[2] : heading;
 
   doc.roundedRect(x, y, w, h, 12).fill(BRAND.lightBlue);
   doc.roundedRect(x, y, w, h, 12).strokeColor(BRAND.softBorder).lineWidth(1).stroke();
-  doc.rect(x, y, 6, h).fill(BRAND.blue);
+  doc.rect(x, y, 7, h).fill(BRAND.blue);
+
+  if (sectionNumber) {
+    doc.circle(x + 31, y + 26, 15).fill(BRAND.blue);
+    doc.fillColor("#FFFFFF")
+      .font(getFont(lang, true))
+      .fontSize(10.5)
+      .text(sectionNumber, x + 16, y + 19, {
+        width: 30,
+        align: "center"
+      });
+  }
 
   doc.fillColor(BRAND.dark)
     .font(getFont(lang, true))
     .fontSize(12.4)
-    .text(heading, x + 18, y + 14, {
-      width: w - 36,
+    .text(sectionTitle, sectionNumber ? x + 58 : x + 20, y + 15, {
+      width: sectionNumber ? w - 78 : w - 40,
       align: getTextAlign(lang),
       lineGap: 2
     });
@@ -932,7 +965,7 @@ function addReportHeading(doc, heading, labels, lang) {
   doc.y = y + h + 10;
 }
 
-function addReportParagraph(doc, paragraph, labels, lang) {
+function addReportParagraph(doc, paragraph, labels, lang, pageState = null) {
   const chunks = splitLongParagraph(paragraph, lang);
   const width = doc.page.width - 112;
   const fontSize = lang === "zh" || lang === "ja" ? 10 : 10.4;
@@ -946,7 +979,7 @@ function addReportParagraph(doc, paragraph, labels, lang) {
     doc.font(getFont(lang)).fontSize(fontSize);
 
     const height = doc.heightOfString(chunk, options);
-    ensureSpace(doc, height + 20, labels, lang);
+    ensureSpace(doc, height + 20, labels, lang, pageState);
 
     doc.fillColor("#374151")
       .font(getFont(lang))
@@ -957,7 +990,7 @@ function addReportParagraph(doc, paragraph, labels, lang) {
   });
 }
 
-function addReportText(doc, reportText, labels, lang) {
+function addReportText(doc, reportText, labels, lang, pageState = null) {
   const parts = splitReportText(reportText);
 
   let sectionCounter = 1;
@@ -968,11 +1001,11 @@ function addReportText(doc, reportText, labels, lang) {
       const match = heading.match(/^(\d+)\./);
       if (match) sectionCounter = Number(match[1]) + 1;
 
-      addReportHeading(doc, heading, labels, lang);
+      addReportHeading(doc, heading, labels, lang, pageState);
       return;
     }
 
-    addReportParagraph(doc, part.text, labels, lang);
+    addReportParagraph(doc, part.text, labels, lang, pageState);
   });
 }
 
@@ -999,20 +1032,23 @@ export async function generatePdfBuffer({ name, reportText, lang = "en", payload
       doc.on("end", () => resolve(Buffer.concat(chunks)));
       doc.on("error", reject);
 
+      const pageState = { current: 1 };
+
       addCoverPage(doc, { name, payload, labels, lang: safeLang });
-      addFooter(doc, labels, safeLang);
+      addFooter(doc, labels, safeLang, pageState.current);
 
       doc.addPage();
+      pageState.current += 1;
       addHeader(doc, labels, safeLang);
       addInfoCard(doc, { name, lang: safeLang });
 
       doc.y = 246;
 
-      addOverviewBlock(doc, payload, labels, safeLang);
-      addSectionTitle(doc, labels.reportTitle, labels, safeLang);
-      addReportText(doc, reportText, labels, safeLang);
-      addDisclaimerBox(doc, labels, safeLang);
-      addFooter(doc, labels, safeLang);
+      addOverviewBlock(doc, payload, labels, safeLang, pageState);
+      addSectionTitle(doc, labels.reportTitle, labels, safeLang, pageState);
+      addReportText(doc, reportText, labels, safeLang, pageState);
+      addDisclaimerBox(doc, labels, safeLang, pageState);
+      addFooter(doc, labels, safeLang, pageState.current);
 
       doc.end();
     } catch (error) {
