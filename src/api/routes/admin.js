@@ -1,5 +1,6 @@
 import express from "express";
 import { adminAuth } from "../../middleware/adminAuth.js";
+import { getAdminDashboard } from "../controllers/admin-dashboard.controller.js";
 
 import {
   getAdminStatus,
@@ -13,6 +14,8 @@ import {
 } from "../controllers/admin.controller.js";
 
 const router = express.Router();
+
+router.get("/dashboard", getAdminDashboard);
 
 router.use(adminAuth);
 

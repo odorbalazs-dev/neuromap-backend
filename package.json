@@ -14,7 +14,8 @@
     "smoke:browser-engine": "node scripts/smoke-browser-engine-bundle.js",
     "smoke:analysis-report": "node scripts/smoke-analysis-report-contract.js",
     "smoke:pdf": "node scripts/smoke-pdf-report.js",
-    "audit:all": "npm run audit:banks && npm run audit:bank-quality && npm run audit:engine-selection && npm run smoke:checkout-payload && npm run smoke:browser-engine && npm run smoke:analysis-report && npm run smoke:pdf"
+    "smoke:admin-dashboard": "node scripts/smoke-admin-dashboard.js",
+    "audit:all": "npm run audit:banks && npm run audit:bank-quality && npm run audit:engine-selection && npm run smoke:checkout-payload && npm run smoke:browser-engine && npm run smoke:analysis-report && npm run smoke:pdf && npm run smoke:admin-dashboard"
   },
   "dependencies": {
     "cors": "^2.8.6",
