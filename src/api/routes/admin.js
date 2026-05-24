@@ -4,6 +4,7 @@ import { getAdminDashboard } from "../controllers/admin-dashboard.controller.js"
 
 import {
   getAdminStatus,
+  getProductionHealth,
   getQueueStatus,
   getRecentSessions,
   getFailedAnalyses,
@@ -20,6 +21,7 @@ router.get("/dashboard", getAdminDashboard);
 router.use(adminAuth);
 
 router.get("/status", getAdminStatus);
+router.get("/production-health", getProductionHealth);
 
 router.get("/queue-status", getQueueStatus);
 router.get("/recent-sessions", getRecentSessions);

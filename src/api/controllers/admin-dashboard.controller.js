@@ -48,6 +48,10 @@ export function getAdminDashboard(_req, res) {
           <span>Admin API</span>
           <strong id="apiStatus">-</strong>
         </article>
+        <article class="metric health">
+          <span>Production health</span>
+          <strong id="healthLevel">-</strong>
+        </article>
         <article class="metric">
           <span>Queued</span>
           <strong id="queuedCount">0</strong>
@@ -64,6 +68,51 @@ export function getAdminDashboard(_req, res) {
           <span>Done</span>
           <strong id="doneCount">0</strong>
         </article>
+      </section>
+
+      <section class="panel health-panel">
+        <div class="panel-head">
+          <div>
+            <h2>Production Health Panel</h2>
+            <p>Stripe webhook, worker queue és fizetett session állapotok egy helyen.</p>
+          </div>
+        </div>
+        <div class="health-grid">
+          <article class="health-card">
+            <span>Worker utolsó kész job</span>
+            <strong id="lastJobProcessed">-</strong>
+            <p id="lastJobProcessedMeta">-</p>
+          </article>
+          <article class="health-card">
+            <span>Legrégebbi queued job</span>
+            <strong id="oldestQueuedJob">-</strong>
+            <p id="oldestQueuedJobMeta">-</p>
+          </article>
+          <article class="health-card">
+            <span>Beragadt processing job</span>
+            <strong id="staleProcessingJobs">0</strong>
+            <p>15 percnél régebbi processing lock.</p>
+          </article>
+          <article class="health-card">
+            <span>Utolsó webhook</span>
+            <strong id="lastWebhook">-</strong>
+            <p id="lastWebhookMeta">-</p>
+          </article>
+          <article class="health-card">
+            <span>Webhook hiba 24h</span>
+            <strong id="failedWebhooks24h">0</strong>
+            <p id="webhookPendingMeta">-</p>
+          </article>
+          <article class="health-card">
+            <span>Fizetett, aktív job nélkül</span>
+            <strong id="paidWithoutJob">0</strong>
+            <p>Queued/processing session aktív queue sor nélkül.</p>
+          </article>
+        </div>
+        <div class="health-recommendations">
+          <h3>Teendők</h3>
+          <ul id="healthRecommendations"></ul>
+        </div>
       </section>
 
       <section class="panel">

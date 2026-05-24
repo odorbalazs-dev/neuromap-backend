@@ -9,10 +9,22 @@
     processOneBtn: document.getElementById("processOneBtn"),
     statusText: document.getElementById("statusText"),
     apiStatus: document.getElementById("apiStatus"),
+    healthLevel: document.getElementById("healthLevel"),
     queuedCount: document.getElementById("queuedCount"),
     processingCount: document.getElementById("processingCount"),
     failedCount: document.getElementById("failedCount"),
     doneCount: document.getElementById("doneCount"),
+    lastJobProcessed: document.getElementById("lastJobProcessed"),
+    lastJobProcessedMeta: document.getElementById("lastJobProcessedMeta"),
+    oldestQueuedJob: document.getElementById("oldestQueuedJob"),
+    oldestQueuedJobMeta: document.getElementById("oldestQueuedJobMeta"),
+    staleProcessingJobs: document.getElementById("staleProcessingJobs"),
+    lastWebhook: document.getElementById("lastWebhook"),
+    lastWebhookMeta: document.getElementById("lastWebhookMeta"),
+    failedWebhooks24h: document.getElementById("failedWebhooks24h"),
+    webhookPendingMeta: document.getElementById("webhookPendingMeta"),
+    paidWithoutJob: document.getElementById("paidWithoutJob"),
+    healthRecommendations: document.getElementById("healthRecommendations"),
     queueRows: document.getElementById("queueRows"),
     recentRows: document.getElementById("recentRows"),
     failedRows: document.getElementById("failedRows"),
@@ -60,6 +72,17 @@
       hour: "2-digit",
       minute: "2-digit"
     }).format(date);
+  }
+
+  function relativeMinutes(value) {
+    if (value === null || value === undefined) return "-";
+    const minutes = Number(value);
+    if (Number.isNaN(minutes)) return "-";
+    if (minutes < 1) return "most";
+    if (minutes < 60) return `${minutes} perce`;
+    const hours = Math.floor(minutes / 60);
+    const rest = minutes % 60;
+    return rest ? `${hours} óra ${rest} perce` : `${hours} órája`;
   }
 
   function statusClass(value) {
@@ -222,19 +245,66 @@
     els.doneCount.textContent = Number(counts.completed || counts.done || 0);
   }
 
+  function renderHealth(health) {
+    const level = health?.level || "-";
+    const healthMetric = els.healthLevel.closest(".metric");
+
+    els.healthLevel.textContent = level;
+    healthMetric.classList.remove("healthy", "active", "warning", "critical");
+    if (["healthy", "active", "warning", "critical"].includes(level)) {
+      healthMetric.classList.add(level);
+    }
+
+    els.lastJobProcessed.textContent = formatDate(health?.jobs?.lastProcessedAt);
+    els.lastJobProcessedMeta.textContent =
+      `Utolsó kész job: ${relativeMinutes(health?.jobs?.lastProcessedMinutesAgo)}`;
+
+    els.oldestQueuedJob.textContent = formatDate(health?.jobs?.oldestQueuedAt);
+    els.oldestQueuedJobMeta.textContent =
+      `Queue életkor: ${relativeMinutes(health?.jobs?.oldestQueuedMinutes)}`;
+
+    els.staleProcessingJobs.textContent =
+      Number(health?.metrics?.staleProcessingJobs || 0);
+
+    els.lastWebhook.textContent = formatDate(health?.webhooks?.lastReceivedAt);
+    els.lastWebhookMeta.textContent =
+      `Utolsó beérkezés: ${relativeMinutes(health?.webhooks?.lastReceivedMinutesAgo)}`;
+
+    els.failedWebhooks24h.textContent =
+      Number(health?.webhooks?.failedLast24h || 0);
+    els.webhookPendingMeta.textContent =
+      `Received/processing: ${Number(health?.webhooks?.pendingOrProcessing || 0)}`;
+
+    els.paidWithoutJob.textContent =
+      Number(health?.sessions?.paidWithoutActiveJob?.length || 0);
+
+    els.healthRecommendations.replaceChildren();
+    const recommendations = health?.recommendations || [
+      "A frissítéshez add meg az admin tokent."
+    ];
+
+    recommendations.forEach((item) => {
+      const li = document.createElement("li");
+      li.textContent = item;
+      els.healthRecommendations.appendChild(li);
+    });
+  }
+
   async function refreshDashboard() {
     setBusy(true);
     setStatus("Frissítés...");
 
     try {
-      const [status, queue, recent, failed] = await Promise.all([
+      const [status, health, queue, recent, failed] = await Promise.all([
         api("/admin/status"),
+        api("/admin/production-health"),
         api("/admin/queue-status"),
         api("/admin/recent-sessions?limit=30"),
         api("/admin/failed-analyses?limit=30")
       ]);
 
       els.apiStatus.textContent = status.ok ? "OK" : "Hiba";
+      renderHealth(health);
       renderCounts(queue.counts || {});
       renderSessionRows(els.queueRows, queue.items || [], "queue");
       renderSessionRows(els.recentRows, recent.items || [], "recent");
@@ -325,6 +395,7 @@
       emptyRow(els.recentRows, 5, "A frissítéshez add meg az admin tokent.");
       emptyRow(els.failedRows, 4, "A frissítéshez add meg az admin tokent.");
       renderCounts({});
+      renderHealth(null);
       els.apiStatus.textContent = "-";
       setStatus("Token törölve.");
     });

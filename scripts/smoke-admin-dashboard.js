@@ -60,6 +60,14 @@ assert(
   "Dashboard HTML should reference admin-dashboard.js."
 );
 assert(
+  res.body.includes("Production Health Panel"),
+  "Dashboard HTML should include the production health panel."
+);
+assert(
+  res.body.includes("healthRecommendations"),
+  "Dashboard HTML should include health recommendations container."
+);
+assert(
   !/<script(?![^>]*src=)/i.test(res.body),
   "Dashboard should not contain inline scripts."
 );

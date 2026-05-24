@@ -150,7 +150,7 @@ input:focus {
 .metrics {
   display: grid;
   gap: 12px;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   margin-bottom: 18px;
 }
 
@@ -183,6 +183,84 @@ input:focus {
 
 .metric.danger strong {
   color: var(--red);
+}
+
+.metric.health strong {
+  font-size: 25px;
+  text-transform: uppercase;
+}
+
+.metric.health.healthy strong {
+  color: var(--green);
+}
+
+.metric.health.active strong {
+  color: var(--blue);
+}
+
+.metric.health.warning strong {
+  color: var(--orange);
+}
+
+.metric.health.critical strong {
+  color: var(--red);
+}
+
+.health-panel {
+  margin-bottom: 18px;
+}
+
+.health-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  padding: 18px;
+}
+
+.health-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  min-height: 126px;
+  padding: 14px;
+}
+
+.health-card span {
+  color: var(--muted);
+  display: block;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.health-card strong {
+  display: block;
+  font-size: 24px;
+  margin: 9px 0 4px;
+}
+
+.health-card p {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.health-recommendations {
+  border-top: 1px solid var(--line);
+  padding: 18px;
+}
+
+.health-recommendations h3 {
+  font-size: 16px;
+  margin: 0 0 8px;
+}
+
+.health-recommendations ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.health-recommendations li {
+  color: #344054;
+  margin: 6px 0;
 }
 
 .grid {
@@ -333,6 +411,7 @@ pre {
   }
 
   .metrics,
+  .health-grid,
   .grid {
     grid-template-columns: 1fr;
   }
