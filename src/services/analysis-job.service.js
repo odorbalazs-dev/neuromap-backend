@@ -2,10 +2,7 @@ import {
   getSessionById,
   markAnalysisProcessing,
   markAnalysisDone,
-  markAnalysisFailed,
-  markReportEmailSending,
-  markReportEmailSent,
-  markReportEmailFailed
+  markAnalysisFailed
 } from "./session.service.js";
 import {
   claimNextAnalysisJob,
@@ -13,11 +10,7 @@ import {
   markAnalysisJobFailed
 } from "./analysis-queue.service.js";
 import { generateAnalysis } from "./analysis.service.js";
-import { sendReportEmail } from "./email.service.js";
-
-function getEmailProviderId(response) {
-  return response?.data?.id || response?.id || null;
-}
+import { deliverReportEmailForSession } from "./report-email-delivery.service.js";
 
 export async function processNextAnalysisJob() {
   const job = await claimNextAnalysisJob();
@@ -51,33 +44,13 @@ export async function processNextAnalysisJob() {
 
     await markAnalysisDone(session.id, resultText);
 
-    await markReportEmailSending(session.id);
-
-    try {
-      const emailResponse = await sendReportEmail({
-        to: session.email,
-        lang: session.lang,
-        name: session.name,
-        reportText: resultText,
-        payload: session.payload
-      });
-
-      await markReportEmailSent(
-        session.id,
-        getEmailProviderId(emailResponse)
-      );
-    } catch (emailError) {
-      const emailMessage =
-        emailError?.message ||
-        "Report email failed after analysis completed.";
-
-      await markReportEmailFailed(session.id, emailMessage);
-
-      console.error("[analysis-job] report email failed:", {
-        sessionId: session.id,
-        message: emailMessage
-      });
-    }
+    await deliverReportEmailForSession(
+      {
+        ...session,
+        analysis_result: resultText
+      },
+      { source: "analysis-job" }
+    );
 
     await markAnalysisJobDone(job.id);
 

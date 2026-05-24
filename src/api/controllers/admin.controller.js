@@ -1,23 +1,16 @@
 import { db } from "../../db/db.js";
 import {
   getSessionById,
-  markAnalysisQueued,
-  markReportEmailSending,
-  markReportEmailSent,
-  markReportEmailFailed
+  markAnalysisQueued
 } from "../../services/session.service.js";
 import { processNextAnalysisJob } from "../../services/analysis-job.service.js";
 import { enqueueAnalysisJob } from "../../services/analysis-queue.service.js";
-import { sendReportEmail } from "../../services/email.service.js";
+import { deliverReportEmailForSession } from "../../services/report-email-delivery.service.js";
 import { env } from "../../config/env.js";
 
 function shortText(value = "", max = 600) {
   const text = String(value || "");
   return text.length > max ? `${text.slice(0, max)}...` : text;
-}
-
-function getEmailProviderId(response) {
-  return response?.data?.id || response?.id || null;
 }
 
 function buildSessionView(sessionRow) {
@@ -702,37 +695,19 @@ export async function resendReportEmail(req, res) {
       });
     }
 
-    await markReportEmailSending(sessionId);
-
-    let emailResponse;
-
-    try {
-      emailResponse = await sendReportEmail({
-        to: sessionRow.email,
-        lang: sessionRow.lang,
-        name: sessionRow.name,
-        reportText: sessionRow.analysis_result,
-        payload: sessionRow.payload
-      });
-
-      await markReportEmailSent(
-        sessionId,
-        getEmailProviderId(emailResponse)
-      );
-    } catch (emailError) {
-      await markReportEmailFailed(
-        sessionId,
-        emailError?.message || "Failed to resend report email"
-      );
-
-      throw emailError;
-    }
+    const result = await deliverReportEmailForSession(
+      sessionRow,
+      {
+        source: "admin",
+        throwOnFailure: true
+      }
+    );
 
     return res.status(200).json({
       ok: true,
       sessionId,
       emailSent: true,
-      providerId: getEmailProviderId(emailResponse)
+      providerId: result.providerId || null
     });
   } catch (error) {
     console.error("Admin resend email error:", error);

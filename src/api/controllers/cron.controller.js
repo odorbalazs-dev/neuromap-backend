@@ -1,10 +1,12 @@
 import {
   getRecoverableCheckoutSessions,
+  getReportEmailRetryCandidates,
   getSessionById,
   markRecoveryEmailSent
 } from "../../services/session.service.js";
 
 import { sendCheckoutRecoveryEmail } from "../../services/email.service.js";
+import { deliverReportEmailForSession } from "../../services/report-email-delivery.service.js";
 
 import { env } from "../../config/env.js";
 import { secureCompare } from "../../utils/secureCompare.js";
@@ -131,6 +133,98 @@ export async function recoverAbandonedCheckouts(req, res) {
   } catch (error) {
     console.error(
       "[cron] recoverAbandonedCheckouts failed:",
+      error
+    );
+
+    return res.status(500).json({
+      ok: false,
+      error: error.message || "Cron failed"
+    });
+  }
+}
+
+export async function retryReportEmails(req, res) {
+  try {
+    if (!isAuthorizedCron(req)) {
+      return res.status(401).json({
+        ok: false,
+        error: "Unauthorized"
+      });
+    }
+
+    const limit = normalizeNumber(
+      req.query.limit,
+      20,
+      1,
+      100
+    );
+
+    const maxAttempts = normalizeNumber(
+      req.query.maxAttempts,
+      3,
+      1,
+      10
+    );
+
+    const retryAfterMinutes = normalizeNumber(
+      req.query.retryAfterMinutes,
+      10,
+      1,
+      1440
+    );
+
+    const staleSendingMinutes = normalizeNumber(
+      req.query.staleSendingMinutes,
+      15,
+      5,
+      1440
+    );
+
+    const sessions =
+      await getReportEmailRetryCandidates({
+        limit,
+        maxAttempts,
+        retryAfterMinutes,
+        staleSendingMinutes
+      });
+
+    const results = [];
+
+    for (const session of sessions) {
+      const previousStatus =
+        session.report_email_status || "not_sent";
+
+      const attemptsBefore =
+        Number(session.report_email_attempts || 0);
+
+      const result =
+        await deliverReportEmailForSession(
+          session,
+          { source: "cron-report-email-retry" }
+        );
+
+      results.push({
+        ...result,
+        previousStatus,
+        attemptsBefore
+      });
+    }
+
+    return res.json({
+      ok: true,
+      checked: sessions.length,
+      sent: results.filter((item) => item.status === "sent").length,
+      failed: results.filter((item) => item.status === "failed").length,
+      limit,
+      maxAttempts,
+      retryAfterMinutes,
+      staleSendingMinutes,
+      results
+    });
+
+  } catch (error) {
+    console.error(
+      "[cron] retryReportEmails failed:",
       error
     );
 

@@ -266,6 +266,57 @@ export async function markReportEmailFailed(sessionId, errorMessage) {
   return result.rows[0] || null;
 }
 
+export async function getReportEmailRetryCandidates({
+  limit = 20,
+  maxAttempts = 3,
+  retryAfterMinutes = 10,
+  staleSendingMinutes = 15
+} = {}) {
+  const result = await db.query(
+    `
+    SELECT *
+    FROM sessions
+    WHERE payment_status = 'paid'
+      AND analysis_status = 'done'
+      AND analysis_result IS NOT NULL
+      AND LENGTH(TRIM(analysis_result)) > 0
+      AND COALESCE(report_email_attempts, 0) < $2
+      AND (
+        (
+          COALESCE(report_email_status, 'not_sent') IN ('failed', 'not_sent')
+          AND (
+            report_email_last_attempt_at IS NULL
+            OR report_email_last_attempt_at < NOW() - ($3::int * INTERVAL '1 minute')
+          )
+        )
+        OR (
+          report_email_status = 'sending'
+          AND report_email_last_attempt_at < NOW() - ($4::int * INTERVAL '1 minute')
+        )
+      )
+    ORDER BY
+      CASE COALESCE(report_email_status, 'not_sent')
+        WHEN 'sending' THEN 1
+        WHEN 'failed' THEN 2
+        WHEN 'not_sent' THEN 3
+        ELSE 4
+      END,
+      report_email_last_attempt_at ASC NULLS FIRST,
+      analysis_completed_at ASC NULLS LAST,
+      updated_at ASC
+    LIMIT $1
+    `,
+    [
+      limit,
+      maxAttempts,
+      retryAfterMinutes,
+      staleSendingMinutes
+    ]
+  );
+
+  return result.rows;
+}
+
 export async function markAnalysisFailed(sessionId, errorMessage) {
   const result = await db.query(
     `

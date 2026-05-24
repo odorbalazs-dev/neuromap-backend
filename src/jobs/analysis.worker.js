@@ -9,21 +9,14 @@ import {
   getSessionById,
   markAnalysisProcessing,
   markAnalysisDone,
-  markAnalysisFailed,
-  markReportEmailSending,
-  markReportEmailSent,
-  markReportEmailFailed
+  markAnalysisFailed
 } from "../services/session.service.js";
 
 import { generateAnalysis }
   from "../services/analysis.service.js";
 
-import { sendReportEmail }
-  from "../services/email.service.js";
-
-function getEmailProviderId(response) {
-  return response?.data?.id || response?.id || null;
-}
+import { deliverReportEmailForSession }
+  from "../services/report-email-delivery.service.js";
 
 async function processSingleJob(job) {
   const session =
@@ -48,39 +41,13 @@ async function processSingleJob(job) {
     resultText
   );
 
-  await markReportEmailSending(session.id);
-
-  try {
-    const emailResponse = await sendReportEmail({
-      to: session.email,
-      lang: session.lang,
-      name: session.name,
-      reportText: resultText,
-      payload: session.payload
-    });
-
-    await markReportEmailSent(
-      session.id,
-      getEmailProviderId(emailResponse)
-    );
-  } catch (emailError) {
-    const emailMessage =
-      emailError?.message ||
-      "Report email failed after analysis completed.";
-
-    await markReportEmailFailed(
-      session.id,
-      emailMessage
-    );
-
-    console.error(
-      "[worker] report email failed",
-      {
-        sessionId: session.id,
-        error: emailMessage
-      }
-    );
-  }
+  await deliverReportEmailForSession(
+    {
+      ...session,
+      analysis_result: resultText
+    },
+    { source: "worker" }
+  );
 }
 
 async function workerLoop() {
