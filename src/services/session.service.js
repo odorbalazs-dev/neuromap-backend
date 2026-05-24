@@ -140,7 +140,13 @@ export async function markAnalysisQueued(sessionId) {
     `
     UPDATE sessions
     SET analysis_status = 'queued',
-        error_message = NULL
+        error_message = NULL,
+        report_email_status = 'not_sent',
+        report_email_sent_at = NULL,
+        report_email_last_attempt_at = NULL,
+        report_email_error = NULL,
+        report_email_provider_id = NULL,
+        report_email_attempts = 0
     WHERE id = $1
       AND payment_status = 'paid'
       AND analysis_status IS DISTINCT FROM 'done'
@@ -204,6 +210,57 @@ export async function markAnalysisDone(sessionId, resultText) {
     RETURNING *
     `,
     [sessionId, resultText]
+  );
+
+  return result.rows[0] || null;
+}
+
+export async function markReportEmailSending(sessionId) {
+  const result = await db.query(
+    `
+    UPDATE sessions
+    SET report_email_status = 'sending',
+        report_email_last_attempt_at = NOW(),
+        report_email_error = NULL,
+        report_email_attempts = report_email_attempts + 1
+    WHERE id = $1
+    RETURNING *
+    `,
+    [sessionId]
+  );
+
+  return result.rows[0] || null;
+}
+
+export async function markReportEmailSent(sessionId, providerId = null) {
+  const result = await db.query(
+    `
+    UPDATE sessions
+    SET report_email_status = 'sent',
+        report_email_sent_at = NOW(),
+        report_email_last_attempt_at = COALESCE(report_email_last_attempt_at, NOW()),
+        report_email_error = NULL,
+        report_email_provider_id = $2
+    WHERE id = $1
+    RETURNING *
+    `,
+    [sessionId, providerId]
+  );
+
+  return result.rows[0] || null;
+}
+
+export async function markReportEmailFailed(sessionId, errorMessage) {
+  const result = await db.query(
+    `
+    UPDATE sessions
+    SET report_email_status = 'failed',
+        report_email_last_attempt_at = COALESCE(report_email_last_attempt_at, NOW()),
+        report_email_error = $2
+    WHERE id = $1
+    RETURNING *
+    `,
+    [sessionId, errorMessage || "Report email failed"]
   );
 
   return result.rows[0] || null;

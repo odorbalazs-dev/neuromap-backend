@@ -68,6 +68,14 @@ assert(
   "Dashboard HTML should include health recommendations container."
 );
 assert(
+  res.body.includes("Email delivery figyel"),
+  "Dashboard HTML should include the email delivery panel."
+);
+assert(
+  res.body.includes("emailIssueRows"),
+  "Dashboard HTML should include the email issue rows container."
+);
+assert(
   !/<script(?![^>]*src=)/i.test(res.body),
   "Dashboard should not contain inline scripts."
 );

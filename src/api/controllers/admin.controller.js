@@ -1,7 +1,10 @@
 import { db } from "../../db/db.js";
 import {
   getSessionById,
-  markAnalysisQueued
+  markAnalysisQueued,
+  markReportEmailSending,
+  markReportEmailSent,
+  markReportEmailFailed
 } from "../../services/session.service.js";
 import { processNextAnalysisJob } from "../../services/analysis-job.service.js";
 import { enqueueAnalysisJob } from "../../services/analysis-queue.service.js";
@@ -13,6 +16,10 @@ function shortText(value = "", max = 600) {
   return text.length > max ? `${text.slice(0, max)}...` : text;
 }
 
+function getEmailProviderId(response) {
+  return response?.data?.id || response?.id || null;
+}
+
 function buildSessionView(sessionRow) {
   return {
     id: sessionRow.id,
@@ -22,6 +29,12 @@ function buildSessionView(sessionRow) {
 
     payment_status: sessionRow.payment_status,
     analysis_status: sessionRow.analysis_status,
+    report_email_status: sessionRow.report_email_status || "not_sent",
+    report_email_sent_at: sessionRow.report_email_sent_at,
+    report_email_last_attempt_at: sessionRow.report_email_last_attempt_at,
+    report_email_error: sessionRow.report_email_error,
+    report_email_provider_id: sessionRow.report_email_provider_id,
+    report_email_attempts: sessionRow.report_email_attempts || 0,
 
     stripe_session_id: sessionRow.stripe_session_id,
     paid_at: sessionRow.paid_at,
@@ -63,6 +76,11 @@ function buildCompactSessionView(row) {
 
     payment_status: row.payment_status,
     analysis_status: row.analysis_status,
+    report_email_status: row.report_email_status || "not_sent",
+    report_email_sent_at: row.report_email_sent_at,
+    report_email_last_attempt_at: row.report_email_last_attempt_at,
+    report_email_error: row.report_email_error,
+    report_email_attempts: row.report_email_attempts || 0,
 
     detectedRisk: row.payload?.detectedRisk || null,
     secondaryRisk: row.payload?.secondaryRisk || null,
@@ -153,13 +171,19 @@ function healthLevel({
   failedWebhooks24h = 0,
   paidFailedSessions = 0,
   paidQueuedSessions = 0,
-  paidProcessingSessions = 0
+  paidProcessingSessions = 0,
+  failedReportEmails = 0,
+  unsentDoneReports = 0
 }) {
-  if (staleProcessingJobs > 0 || failedWebhooks24h > 0) {
+  if (
+    staleProcessingJobs > 0 ||
+    failedWebhooks24h > 0 ||
+    failedReportEmails > 0
+  ) {
     return "critical";
   }
 
-  if (failedJobs > 0 || paidFailedSessions > 0) {
+  if (failedJobs > 0 || paidFailedSessions > 0 || unsentDoneReports > 0) {
     return "warning";
   }
 
@@ -176,7 +200,9 @@ function buildRecommendations({
   failedWebhooks24h,
   paidFailedSessions,
   paidQueuedSessions,
-  paidProcessingSessions
+  paidProcessingSessions,
+  failedReportEmails,
+  unsentDoneReports
 }) {
   const recommendations = [];
 
@@ -198,6 +224,18 @@ function buildRecommendations({
     );
   }
 
+  if (failedReportEmails > 0) {
+    recommendations.push(
+      "Van sikertelen riport email. A dashboardon sessionenként Email újraküldés indítható."
+    );
+  }
+
+  if (unsentDoneReports > 0) {
+    recommendations.push(
+      "Van elkészült riport, amelynél nincs elküldött email státusz. Ellenőrizd a session részleteit, majd küldd újra az emailt."
+    );
+  }
+
   if (paidQueuedSessions > 0) {
     recommendations.push(
       "Van fizetett queued session. Ha nem fogy a queue, ellenőrizd, hogy a worker service npm run worker módban fut-e."
@@ -214,10 +252,6 @@ function buildRecommendations({
     recommendations.push("A kritikus fizetés → webhook → worker lánc jelenleg tisztának látszik.");
   }
 
-  recommendations.push(
-    "Email delivery pontos monitorozásához később érdemes külön email_sent_at/email_error mezőket rögzíteni."
-  );
-
   return recommendations;
 }
 
@@ -233,7 +267,10 @@ export async function getProductionHealth(_req, res) {
       webhookTiming,
       recentWebhookFailures,
       paidSessionsWithoutActiveJob,
-      doneWithoutResult
+      doneWithoutResult,
+      reportEmailCounts,
+      reportEmailTiming,
+      reportEmailIssues
     ] = await Promise.all([
       db.query("SELECT NOW() AS now"),
       db.query(`
@@ -348,6 +385,60 @@ export async function getProductionHealth(_req, res) {
           )
         ORDER BY updated_at DESC
         LIMIT 20
+      `),
+      db.query(`
+        SELECT
+          report_email_status,
+          COUNT(*)::int AS count
+        FROM sessions
+        WHERE payment_status = 'paid'
+          AND analysis_status = 'done'
+        GROUP BY report_email_status
+      `),
+      db.query(`
+        SELECT
+          MAX(report_email_sent_at) AS last_sent_at,
+          MAX(report_email_last_attempt_at) AS last_attempt_at,
+          COUNT(*) FILTER (
+            WHERE report_email_status = 'failed'
+          )::int AS failed_count,
+          COUNT(*) FILTER (
+            WHERE analysis_status = 'done'
+              AND analysis_result IS NOT NULL
+              AND LENGTH(TRIM(analysis_result)) > 0
+              AND report_email_status IN ('not_sent', 'sending')
+          )::int AS unsent_done_count
+        FROM sessions
+        WHERE payment_status = 'paid'
+      `),
+      db.query(`
+        SELECT
+          id,
+          email,
+          name,
+          lang,
+          analysis_status,
+          report_email_status,
+          report_email_sent_at,
+          report_email_last_attempt_at,
+          report_email_error,
+          report_email_attempts,
+          paid_at,
+          updated_at
+        FROM sessions
+        WHERE payment_status = 'paid'
+          AND analysis_status = 'done'
+          AND report_email_status IN ('failed', 'not_sent', 'sending')
+        ORDER BY
+          CASE report_email_status
+            WHEN 'failed' THEN 1
+            WHEN 'sending' THEN 2
+            WHEN 'not_sent' THEN 3
+            ELSE 4
+          END,
+          report_email_last_attempt_at DESC NULLS LAST,
+          updated_at DESC
+        LIMIT 20
       `)
     ]);
 
@@ -369,8 +460,14 @@ export async function getProductionHealth(_req, res) {
       return acc;
     }, {});
 
+    const reportEmails = reportEmailCounts.rows.reduce((acc, row) => {
+      acc[row.report_email_status || "not_sent"] = row.count;
+      return acc;
+    }, {});
+
     const jobTimingRow = jobTiming.rows[0] || {};
     const webhookTimingRow = webhookTiming.rows[0] || {};
+    const reportEmailTimingRow = reportEmailTiming.rows[0] || {};
 
     const metrics = {
       staleProcessingJobs: staleJobs.rows.length,
@@ -378,7 +475,9 @@ export async function getProductionHealth(_req, res) {
       failedWebhooks24h: Number(webhookTimingRow.failed_last_24h || 0),
       paidFailedSessions: Number(sessions.paid?.failed || 0),
       paidQueuedSessions: Number(sessions.paid?.queued || 0),
-      paidProcessingSessions: Number(sessions.paid?.processing || 0)
+      paidProcessingSessions: Number(sessions.paid?.processing || 0),
+      failedReportEmails: Number(reportEmailTimingRow.failed_count || 0),
+      unsentDoneReports: Number(reportEmailTimingRow.unsent_done_count || 0)
     };
 
     return res.status(200).json({
@@ -414,8 +513,15 @@ export async function getProductionHealth(_req, res) {
         recentFailures: recentWebhookFailures.rows
       },
       email: {
-        persistentDeliveryTracking: false,
-        note: "A riport email küldése jelenleg a worker folyamat része, de külön email_sent_at/email_error mező még nincs tárolva."
+        persistentDeliveryTracking: true,
+        counts: reportEmails,
+        failedCount: Number(reportEmailTimingRow.failed_count || 0),
+        unsentDoneCount: Number(reportEmailTimingRow.unsent_done_count || 0),
+        lastSentAt: reportEmailTimingRow.last_sent_at || null,
+        lastSentMinutesAgo: minutesSince(reportEmailTimingRow.last_sent_at),
+        lastAttemptAt: reportEmailTimingRow.last_attempt_at || null,
+        lastAttemptMinutesAgo: minutesSince(reportEmailTimingRow.last_attempt_at),
+        issues: reportEmailIssues.rows.map(buildCompactSessionView)
       },
       recommendations: buildRecommendations(metrics)
     });
@@ -596,18 +702,37 @@ export async function resendReportEmail(req, res) {
       });
     }
 
-    await sendReportEmail({
-      to: sessionRow.email,
-      lang: sessionRow.lang,
-      name: sessionRow.name,
-      reportText: sessionRow.analysis_result,
-      payload: sessionRow.payload
-    });
+    await markReportEmailSending(sessionId);
+
+    let emailResponse;
+
+    try {
+      emailResponse = await sendReportEmail({
+        to: sessionRow.email,
+        lang: sessionRow.lang,
+        name: sessionRow.name,
+        reportText: sessionRow.analysis_result,
+        payload: sessionRow.payload
+      });
+
+      await markReportEmailSent(
+        sessionId,
+        getEmailProviderId(emailResponse)
+      );
+    } catch (emailError) {
+      await markReportEmailFailed(
+        sessionId,
+        emailError?.message || "Failed to resend report email"
+      );
+
+      throw emailError;
+    }
 
     return res.status(200).json({
       ok: true,
       sessionId,
-      emailSent: true
+      emailSent: true,
+      providerId: getEmailProviderId(emailResponse)
     });
   } catch (error) {
     console.error("Admin resend email error:", error);

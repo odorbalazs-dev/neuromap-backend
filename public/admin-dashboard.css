@@ -213,7 +213,7 @@ input:focus {
 .health-grid {
   display: grid;
   gap: 12px;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   padding: 18px;
 }
 
@@ -336,8 +336,15 @@ td {
   color: #9b5200;
 }
 
+.pill.sending,
+.pill.not_sent {
+  background: #fff6e8;
+  color: #9b5200;
+}
+
 .pill.done,
-.pill.completed {
+.pill.completed,
+.pill.sent {
   background: #e8f7ef;
   color: var(--green);
 }

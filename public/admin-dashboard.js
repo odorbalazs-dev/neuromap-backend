@@ -24,7 +24,12 @@
     failedWebhooks24h: document.getElementById("failedWebhooks24h"),
     webhookPendingMeta: document.getElementById("webhookPendingMeta"),
     paidWithoutJob: document.getElementById("paidWithoutJob"),
+    lastReportEmailSent: document.getElementById("lastReportEmailSent"),
+    lastReportEmailSentMeta: document.getElementById("lastReportEmailSentMeta"),
+    failedReportEmails: document.getElementById("failedReportEmails"),
+    unsentDoneReports: document.getElementById("unsentDoneReports"),
     healthRecommendations: document.getElementById("healthRecommendations"),
+    emailIssueRows: document.getElementById("emailIssueRows"),
     queueRows: document.getElementById("queueRows"),
     recentRows: document.getElementById("recentRows"),
     failedRows: document.getElementById("failedRows"),
@@ -87,7 +92,18 @@
 
   function statusClass(value) {
     const status = String(value || "unknown").toLowerCase();
-    if (["queued", "processing", "failed", "done", "completed"].includes(status)) {
+    if (
+      [
+        "queued",
+        "processing",
+        "failed",
+        "done",
+        "completed",
+        "not_sent",
+        "sending",
+        "sent"
+      ].includes(status)
+    ) {
       return status;
     }
     return "unknown";
@@ -238,6 +254,40 @@
     });
   }
 
+  function renderEmailIssueRows(items) {
+    els.emailIssueRows.replaceChildren();
+
+    if (!items.length) {
+      emptyRow(els.emailIssueRows, 5, "Nincs email delivery teendő.");
+      return;
+    }
+
+    items.forEach((row) => {
+      const tr = document.createElement("tr");
+      const attemptInfo = document.createElement("div");
+
+      const attempts = document.createElement("div");
+      attempts.textContent = `${Number(row.report_email_attempts || 0)} próbálkozás`;
+
+      const lastAttempt = document.createElement("div");
+      lastAttempt.className = "subtle";
+      lastAttempt.textContent =
+        `Utolsó: ${formatDate(row.report_email_last_attempt_at || row.updated_at)}`;
+
+      attemptInfo.append(attempts, lastAttempt);
+
+      tr.append(
+        cell(statusPill(row.report_email_status)),
+        cell(personBlock(row)),
+        cell(attemptInfo),
+        cell(compact(row.report_email_error || row.error_message, 140)),
+        cell(actions(row, true))
+      );
+
+      els.emailIssueRows.appendChild(tr);
+    });
+  }
+
   function renderCounts(counts = {}) {
     els.queuedCount.textContent = Number(counts.queued || 0);
     els.processingCount.textContent = Number(counts.processing || 0);
@@ -277,6 +327,18 @@
 
     els.paidWithoutJob.textContent =
       Number(health?.sessions?.paidWithoutActiveJob?.length || 0);
+
+    els.lastReportEmailSent.textContent = formatDate(health?.email?.lastSentAt);
+    els.lastReportEmailSentMeta.textContent =
+      `Utolsó küldés: ${relativeMinutes(health?.email?.lastSentMinutesAgo)}`;
+
+    els.failedReportEmails.textContent =
+      Number(health?.email?.failedCount || 0);
+
+    els.unsentDoneReports.textContent =
+      Number(health?.email?.unsentDoneCount || 0);
+
+    renderEmailIssueRows(health?.email?.issues || []);
 
     els.healthRecommendations.replaceChildren();
     const recommendations = health?.recommendations || [
@@ -394,6 +456,7 @@
       emptyRow(els.queueRows, 5, "A frissítéshez add meg az admin tokent.");
       emptyRow(els.recentRows, 5, "A frissítéshez add meg az admin tokent.");
       emptyRow(els.failedRows, 4, "A frissítéshez add meg az admin tokent.");
+      emptyRow(els.emailIssueRows, 5, "A frissítéshez add meg az admin tokent.");
       renderCounts({});
       renderHealth(null);
       els.apiStatus.textContent = "-";
@@ -413,6 +476,7 @@
       emptyRow(els.queueRows, 5, "A frissítéshez add meg az admin tokent.");
       emptyRow(els.recentRows, 5, "A frissítéshez add meg az admin tokent.");
       emptyRow(els.failedRows, 4, "A frissítéshez add meg az admin tokent.");
+      emptyRow(els.emailIssueRows, 5, "A frissítéshez add meg az admin tokent.");
       setStatus("Add meg az ADMIN_TOKEN értékét.");
     }
   }

@@ -108,10 +108,48 @@ export function getAdminDashboard(_req, res) {
             <strong id="paidWithoutJob">0</strong>
             <p>Queued/processing session aktív queue sor nélkül.</p>
           </article>
+          <article class="health-card">
+            <span>Utolsó riport email</span>
+            <strong id="lastReportEmailSent">-</strong>
+            <p id="lastReportEmailSentMeta">-</p>
+          </article>
+          <article class="health-card">
+            <span>Email delivery hiba</span>
+            <strong id="failedReportEmails">0</strong>
+            <p>Failed riport email küldések.</p>
+          </article>
+          <article class="health-card">
+            <span>Kész, de nincs email</span>
+            <strong id="unsentDoneReports">0</strong>
+            <p>Done riport sent státusz nélkül.</p>
+          </article>
         </div>
         <div class="health-recommendations">
           <h3>Teendők</h3>
           <ul id="healthRecommendations"></ul>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Email delivery figyelés</h2>
+            <p>Elkészült riportok, ahol az email küldés hibás, félbemaradt vagy még nincs sent státuszban.</p>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Email státusz</th>
+                <th>Név / email</th>
+                <th>Próbálkozás</th>
+                <th>Hiba</th>
+                <th>Műveletek</th>
+              </tr>
+            </thead>
+            <tbody id="emailIssueRows"></tbody>
+          </table>
         </div>
       </section>
 

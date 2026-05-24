@@ -144,6 +144,13 @@ export async function sendReportEmail({
       ]
     });
 
+    if (response?.error) {
+      throw new Error(
+        response.error.message ||
+        "Resend returned an email sending error."
+      );
+    }
+
     console.log("[email] send success", response);
 
     return response;
