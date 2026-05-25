@@ -31,7 +31,7 @@ function buildSampleReportText() {
     ],
     [
       "5. Szuloi tamogatasi iranyok",
-      "A legfontosabb tamogatasi irany nem a tobb figyelmeztetes, hanem a kornyezet okosabb strukturaja. Hasznos lehet a rovid, egyertelmu instrukcio, a vizualis lista, a feladatkezdest segito kulcslepest, valamint a befejezes elott adott konkret visszajelzes. A cel az, hogy a gyermek ne csak hallja, mit kell tennie, hanem lassa es kovetni is tudja a folyamatot."
+      "A legfontosabb tamogatasi irany nem a tobb figyelmeztetes, hanem a kornyezet okosabb strukturaja.\n- Hasznos lehet a rovid, egyertelmu instrukcio.\n- A vizualis lista segitheti a feladatkezdest.\n- A befejezes elott adott konkret visszajelzes csokkentheti az elakadast.\nA cel az, hogy a gyermek ne csak hallja, mit kell tennie, hanem lassa es kovetni is tudja a folyamatot."
     ],
     [
       "6. Erzelmi es viselkedesi kovetkezmenyek",
@@ -175,7 +175,7 @@ async function main() {
 
   const pages = countPdfPages(pdf);
   assert(pages >= 2, `PDF should contain at least 2 pages, found ${pages}.`);
-  assert(pages <= 16, `PDF should not create excessive blank pages, found ${pages}.`);
+  assert(pages <= 10, `PDF should not create excessive blank pages, found ${pages}.`);
 
   console.log("PDF report smoke passed.", {
     bytes: pdf.length,

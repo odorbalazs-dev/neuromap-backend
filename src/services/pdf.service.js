@@ -18,6 +18,14 @@ const BRAND = {
   softBorder: "#D7EEF9"
 };
 
+const SECTION_COLORS = [
+  BRAND.blue,
+  BRAND.orange,
+  BRAND.green,
+  BRAND.pink,
+  BRAND.yellow
+];
+
 const FONT_DIR = path.join(process.cwd(), "src/assets/fonts");
 
 const FONT_PATHS = {
@@ -40,9 +48,15 @@ function clean(value = "") {
 
 function stripMarkdown(value = "") {
   return clean(value)
+    .replace(/\r\n/g, "\n")
+    .replace(/\t/g, " ")
+    .replace(/\u00A0/g, " ")
+    .replace(/```[\s\S]*?```/g, "")
     .replace(/^#{1,6}\s*/gm, "")
     .replace(/\*\*/g, "")
+    .replace(/^>\s?/gm, "")
     .replace(/^---+$/gm, "")
+    .replace(/[ \t]{2,}/g, " ")
     .replace(/\n{3,}/g, "\n\n")
     .trim();
 }
@@ -394,6 +408,11 @@ function getSeverityLabel(lang, severity, labels) {
 function formatScore(value) {
   const numeric = Number(value);
   return Number.isFinite(numeric) ? numeric.toFixed(2) : "0.00";
+}
+
+function getSectionColor(sectionNumber = 1) {
+  const index = Math.max(0, Number(sectionNumber || 1) - 1);
+  return SECTION_COLORS[index % SECTION_COLORS.length];
 }
 
 function addLogoLikeMark(doc, x, y) {
@@ -796,14 +815,34 @@ function addSectionTitle(doc, title, labels, lang, pageState = null) {
 }
 
 function addDisclaimerBox(doc, labels, lang, pageState = null) {
-  ensureSpace(doc, 132, labels, lang, pageState);
+  const x = 56;
+  const w = doc.page.width - 112;
+  const bodyWidth = w - 36;
+
+  const titleHeight = doc
+    .font(getFont(lang, true))
+    .fontSize(11)
+    .heightOfString(labels.disclaimerTitle, {
+      width: w - 56,
+      align: getTextAlign(lang)
+    });
+
+  const bodyHeight = doc
+    .font(getFont(lang))
+    .fontSize(9.5)
+    .heightOfString(labels.disclaimer, {
+      width: bodyWidth,
+      lineGap: 3,
+      align: getTextAlign(lang)
+    });
+
+  const h = Math.max(104, Math.ceil(titleHeight + bodyHeight + 58));
+
+  ensureSpace(doc, h + 16, labels, lang, pageState);
 
   doc.moveDown(1);
 
-  const x = 56;
   const y = doc.y;
-  const w = doc.page.width - 112;
-  const h = 118;
 
   doc.roundedRect(x, y, w, h, 14).fill(BRAND.lightOrange);
   doc.roundedRect(x, y, w, h, 14).strokeColor("#FFD2A6").lineWidth(1).stroke();
@@ -841,6 +880,21 @@ function isHeading(paragraph) {
   return false;
 }
 
+function isBulletLine(line) {
+  const text = clean(line);
+  if (!text) return false;
+  if (/^\d{1,2}\.\s+\S/.test(text)) return false;
+  return /^([*•‣-]\s+|[–—]\s+|\d{1,2}[)]\s+)/u.test(text);
+}
+
+function cleanBulletLine(line) {
+  return clean(line)
+    .replace(/^([*•‣-]\s+|[–—]\s+|\d{1,2}[)]\s+)/u, "")
+    .replace(/\*\*/g, "")
+    .replace(/\*/g, "")
+    .trim();
+}
+
 function normalizeHeading(paragraph, fallbackCounter) {
   const text = clean(paragraph);
   const numbered = text.match(/^(\d+)\.\s*(.+)$/);
@@ -867,6 +921,7 @@ function splitReportText(reportText) {
       .filter(Boolean);
 
     let bodyLines = [];
+    let bulletLines = [];
 
     function flushBody() {
       const text = bodyLines.join(" ").replace(/\s+/g, " ").trim();
@@ -874,15 +929,33 @@ function splitReportText(reportText) {
       bodyLines = [];
     }
 
+    function flushBullets() {
+      const items = bulletLines
+        .map(cleanBulletLine)
+        .filter(Boolean);
+
+      if (items.length) {
+        parts.push({ type: "bullets", items });
+      }
+
+      bulletLines = [];
+    }
+
     lines.forEach((line) => {
       if (isHeading(line)) {
+        flushBullets();
         flushBody();
         parts.push({ type: "heading", text: line });
+      } else if (isBulletLine(line)) {
+        flushBody();
+        bulletLines.push(line);
       } else {
+        flushBullets();
         bodyLines.push(line);
       }
     });
 
+    flushBullets();
     flushBody();
   });
 
@@ -928,7 +1001,7 @@ function splitLongParagraph(paragraph, lang) {
 }
 
 function addReportHeading(doc, heading, labels, lang, pageState = null) {
-  ensureSpace(doc, 72, labels, lang, pageState);
+  ensureSpace(doc, 126, labels, lang, pageState);
 
   const x = 56;
   const y = doc.y + 6;
@@ -937,13 +1010,14 @@ function addReportHeading(doc, heading, labels, lang, pageState = null) {
   const numbered = clean(heading).match(/^(\d+)\.\s*(.+)$/);
   const sectionNumber = numbered ? numbered[1] : "";
   const sectionTitle = numbered ? numbered[2] : heading;
+  const accent = getSectionColor(sectionNumber || 1);
 
   doc.roundedRect(x, y, w, h, 12).fill(BRAND.lightBlue);
   doc.roundedRect(x, y, w, h, 12).strokeColor(BRAND.softBorder).lineWidth(1).stroke();
-  doc.rect(x, y, 7, h).fill(BRAND.blue);
+  doc.rect(x, y, 7, h).fill(accent);
 
   if (sectionNumber) {
-    doc.circle(x + 31, y + 26, 15).fill(BRAND.blue);
+    doc.circle(x + 31, y + 26, 15).fill(accent);
     doc.fillColor("#FFFFFF")
       .font(getFont(lang, true))
       .fontSize(10.5)
@@ -963,6 +1037,45 @@ function addReportHeading(doc, heading, labels, lang, pageState = null) {
     });
 
   doc.y = y + h + 10;
+}
+
+function addReportBulletList(doc, items, labels, lang, pageState = null) {
+  const listItems = (items || [])
+    .map((item) => clean(item))
+    .filter(Boolean);
+
+  if (!listItems.length) return;
+
+  const x = 74;
+  const width = doc.page.width - 148;
+  const fontSize = lang === "zh" || lang === "ja" ? 9.8 : 10.1;
+
+  listItems.forEach((item) => {
+    doc.font(getFont(lang)).fontSize(fontSize);
+
+    const height = doc.heightOfString(item, {
+      width,
+      align: getTextAlign(lang),
+      lineGap: 3
+    });
+
+    ensureSpace(doc, height + 18, labels, lang, pageState);
+
+    const y = doc.y + 4;
+
+    doc.circle(61, y + 4, 3.2).fill(BRAND.orange);
+
+    doc.fillColor("#374151")
+      .font(getFont(lang))
+      .fontSize(fontSize)
+      .text(item, x, doc.y, {
+        width,
+        align: getTextAlign(lang),
+        lineGap: 3
+      });
+
+    doc.moveDown(0.35);
+  });
 }
 
 function addReportParagraph(doc, paragraph, labels, lang, pageState = null) {
@@ -1002,6 +1115,11 @@ function addReportText(doc, reportText, labels, lang, pageState = null) {
       if (match) sectionCounter = Number(match[1]) + 1;
 
       addReportHeading(doc, heading, labels, lang, pageState);
+      return;
+    }
+
+    if (part.type === "bullets") {
+      addReportBulletList(doc, part.items, labels, lang, pageState);
       return;
     }
 
