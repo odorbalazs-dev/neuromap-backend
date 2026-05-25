@@ -242,3 +242,63 @@ export async function sendCheckoutRecoveryEmail({
     throw error;
   }
 }
+
+export async function sendAdminAlertEmail({
+  to,
+  subject,
+  html,
+  text
+}) {
+  const recipients = normalizeRecipients(to);
+
+  try {
+    console.log("[admin-alert-email] start", {
+      recipients,
+      subject,
+      from: env.EMAIL_FROM
+    });
+
+    if (!env.RESEND_API_KEY) {
+      throw new Error("Missing RESEND_API_KEY.");
+    }
+
+    if (!env.EMAIL_FROM) {
+      throw new Error("Missing EMAIL_FROM.");
+    }
+
+    if (recipients.length === 0) {
+      throw new Error("Missing admin alert recipient email address.");
+    }
+
+    if (!subject || !html || !text) {
+      throw new Error("Missing admin alert email content.");
+    }
+
+    const response = await resend.emails.send({
+      from: env.EMAIL_FROM,
+      to: recipients,
+      subject,
+      html,
+      text
+    });
+
+    if (response?.error) {
+      throw new Error(
+        response.error.message ||
+        "Resend returned an admin alert email sending error."
+      );
+    }
+
+    console.log("[admin-alert-email] send success", response);
+
+    return response;
+  } catch (error) {
+    console.error("[admin-alert-email] send failed", {
+      message: error?.message || "Unknown admin alert email error",
+      stack: error?.stack || null,
+      recipients
+    });
+
+    throw error;
+  }
+}

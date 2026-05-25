@@ -369,7 +369,8 @@ td {
 
 .pill.done,
 .pill.completed,
-.pill.sent {
+.pill.sent,
+.pill.healthy {
   background: #e8f7ef;
   color: var(--green);
 }
@@ -395,6 +396,7 @@ td {
 }
 
 .pill.info,
+.pill.skipped,
 .pill.email,
 .pill.analysis,
 .pill.webhook,

@@ -8,6 +8,7 @@
     refreshBtn: document.getElementById("refreshBtn"),
     processOneBtn: document.getElementById("processOneBtn"),
     retryEmailBatchBtn: document.getElementById("retryEmailBatchBtn"),
+    alertCheckBtn: document.getElementById("alertCheckBtn"),
     statusText: document.getElementById("statusText"),
     apiStatus: document.getElementById("apiStatus"),
     healthLevel: document.getElementById("healthLevel"),
@@ -32,6 +33,7 @@
     retryableReportEmails: document.getElementById("retryableReportEmails"),
     retryLimitReportEmails: document.getElementById("retryLimitReportEmails"),
     healthRecommendations: document.getElementById("healthRecommendations"),
+    alertRows: document.getElementById("alertRows"),
     emailIssueRows: document.getElementById("emailIssueRows"),
     operationsLogRows: document.getElementById("operationsLogRows"),
     queueRows: document.getElementById("queueRows"),
@@ -52,7 +54,8 @@
       els.clearTokenBtn,
       els.refreshBtn,
       els.processOneBtn,
-      els.retryEmailBatchBtn
+      els.retryEmailBatchBtn,
+      els.alertCheckBtn
     ].forEach((button) => {
       if (button) button.disabled = isBusy;
     });
@@ -109,6 +112,8 @@
         "not_sent",
         "sending",
         "sent",
+        "skipped",
+        "healthy",
         "critical",
         "warning",
         "active",
@@ -359,6 +364,40 @@
     });
   }
 
+  function renderAlertRows(items) {
+    els.alertRows.replaceChildren();
+
+    if (!items.length) {
+      emptyRow(els.alertRows, 5, "No proactive alerts yet.");
+      return;
+    }
+
+    items.forEach((item) => {
+      const tr = document.createElement("tr");
+      const summary = document.createElement("div");
+
+      const title = document.createElement("div");
+      title.className = "person";
+      title.textContent = compact(item.summary, 140);
+
+      const key = document.createElement("div");
+      key.className = "subtle";
+      key.textContent = item.alert_key || "-";
+
+      summary.append(title, key);
+
+      tr.append(
+        cell(formatDate(item.created_at)),
+        cell(statusPill(item.level)),
+        cell(statusPill(item.status)),
+        cell(summary),
+        cell(compact(item.sent_to || item.error_message || "-", 120))
+      );
+
+      els.alertRows.appendChild(tr);
+    });
+  }
+
   function renderCounts(counts = {}) {
     els.queuedCount.textContent = Number(counts.queued || 0);
     els.processingCount.textContent = Number(counts.processing || 0);
@@ -434,13 +473,14 @@
     setStatus("Frissítés...");
 
     try {
-      const [status, health, queue, recent, failed, operations] = await Promise.all([
+      const [status, health, queue, recent, failed, operations, alerts] = await Promise.all([
         api("/admin/status"),
         api("/admin/production-health"),
         api("/admin/queue-status"),
         api("/admin/recent-sessions?limit=30"),
         api("/admin/failed-analyses?limit=30"),
-        api(`/admin/operations-log?filter=${encodeURIComponent(activeLogFilter)}&limit=80`)
+        api(`/admin/operations-log?filter=${encodeURIComponent(activeLogFilter)}&limit=80`),
+        api("/admin/alerts?limit=10")
       ]);
 
       els.apiStatus.textContent = status.ok ? "OK" : "Hiba";
@@ -450,6 +490,7 @@
       renderSessionRows(els.recentRows, recent.items || [], "recent");
       renderSessionRows(els.failedRows, failed.items || [], "failed");
       renderOperationLogRows(operations.items || []);
+      renderAlertRows(alerts.items || []);
       setStatus("Frissítve.");
     } catch (error) {
       els.apiStatus.textContent = "Hiba";
@@ -543,6 +584,7 @@
       emptyRow(els.recentRows, 5, "A frissítéshez add meg az admin tokent.");
       emptyRow(els.failedRows, 4, "A frissítéshez add meg az admin tokent.");
       emptyRow(els.emailIssueRows, 5, "A frissítéshez add meg az admin tokent.");
+      emptyRow(els.alertRows, 5, "Add meg az admin tokent.");
       emptyRow(els.operationsLogRows, 5, "A frissítéshez add meg az admin tokent.");
       renderCounts({});
       renderHealth(null);
@@ -557,6 +599,10 @@
 
     els.retryEmailBatchBtn.addEventListener("click", () => {
       postAction("/admin/retry-report-emails", "Email retry batch lefutott.");
+    });
+
+    els.alertCheckBtn.addEventListener("click", () => {
+      postAction("/admin/trigger-alert-check", "Alert check lefutott.");
     });
 
     document.querySelectorAll(".log-filter").forEach((button) => {
@@ -580,6 +626,7 @@
       emptyRow(els.recentRows, 5, "A frissítéshez add meg az admin tokent.");
       emptyRow(els.failedRows, 4, "A frissítéshez add meg az admin tokent.");
       emptyRow(els.emailIssueRows, 5, "A frissítéshez add meg az admin tokent.");
+      emptyRow(els.alertRows, 5, "Add meg az admin tokent.");
       emptyRow(els.operationsLogRows, 5, "A frissítéshez add meg az admin tokent.");
       setStatus("Add meg az ADMIN_TOKEN értékét.");
     }

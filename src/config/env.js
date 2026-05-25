@@ -174,5 +174,8 @@ export const env = {
   META_ACCESS_TOKEN: optional("META_ACCESS_TOKEN", null),
 
   ADMIN_TOKEN: optional("ADMIN_TOKEN", null),
-  CRON_SECRET: optional("CRON_SECRET", null)
+  CRON_SECRET: optional("CRON_SECRET", null),
+
+  ADMIN_ALERT_EMAIL: optional("ADMIN_ALERT_EMAIL", null),
+  ADMIN_ALERT_COOLDOWN_MINUTES: optional("ADMIN_ALERT_COOLDOWN_MINUTES", "30")
 };

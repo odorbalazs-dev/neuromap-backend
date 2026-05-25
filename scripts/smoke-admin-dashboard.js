@@ -80,6 +80,18 @@ assert(
   "Dashboard HTML should include the batch email retry button."
 );
 assert(
+  res.body.includes("alertCheckBtn"),
+  "Dashboard HTML should include the proactive alert check button."
+);
+assert(
+  res.body.includes("Proactive alerts"),
+  "Dashboard HTML should include the proactive alerts panel."
+);
+assert(
+  res.body.includes("alertRows"),
+  "Dashboard HTML should include the proactive alert rows container."
+);
+assert(
   res.body.includes("retryableReportEmails"),
   "Dashboard HTML should include retryable report email metrics."
 );

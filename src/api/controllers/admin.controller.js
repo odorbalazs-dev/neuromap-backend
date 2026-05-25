@@ -8,6 +8,10 @@ import { processNextAnalysisJob } from "../../services/analysis-job.service.js";
 import { enqueueAnalysisJob } from "../../services/analysis-queue.service.js";
 import { deliverReportEmailForSession } from "../../services/report-email-delivery.service.js";
 import { retryReportEmailsBatch } from "../../services/report-email-retry.service.js";
+import {
+  getRecentAdminAlerts,
+  runProductionHealthAlertCheck
+} from "../../services/admin-alert.service.js";
 import { env } from "../../config/env.js";
 
 function shortText(value = "", max = 600) {
@@ -146,7 +150,8 @@ export async function getAdminStatus(_req, res) {
     openaiConfigured: Boolean(env.OPENAI_API_KEY),
     resendConfigured: Boolean(env.RESEND_API_KEY),
     stripeConfigured: Boolean(env.STRIPE_SECRET_KEY),
-    metaConfigured: Boolean(env.META_PIXEL_ID && env.META_ACCESS_TOKEN)
+    metaConfigured: Boolean(env.META_PIXEL_ID && env.META_ACCESS_TOKEN),
+    adminAlertEmailConfigured: Boolean(env.ADMIN_ALERT_EMAIL)
   });
 }
 
@@ -803,6 +808,54 @@ export async function getOperationsLog(req, res) {
     return res.status(500).json({
       ok: false,
       error: error.message || "Failed to get operations log"
+    });
+  }
+}
+
+export async function getAdminAlerts(req, res) {
+  try {
+    const limit = clampNumber(req.query.limit, 10, 1, 100);
+    const items = await getRecentAdminAlerts({ limit });
+
+    return res.status(200).json({
+      ok: true,
+      items
+    });
+  } catch (error) {
+    console.error("Admin alerts error:", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: error.message || "Failed to get admin alerts"
+    });
+  }
+}
+
+export async function triggerAdminAlertCheck(req, res) {
+  try {
+    const cooldownMinutes = clampNumber(
+      req.query.cooldownMinutes ?? req.body?.cooldownMinutes,
+      30,
+      1,
+      1440
+    );
+
+    const force =
+      String(req.query.force ?? req.body?.force ?? "false").toLowerCase() === "true";
+
+    const result =
+      await runProductionHealthAlertCheck({
+        cooldownMinutes,
+        force
+      });
+
+    return res.status(result.ok === false ? 500 : 200).json(result);
+  } catch (error) {
+    console.error("Admin alert check error:", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: error.message || "Failed to run admin alert check"
     });
   }
 }

@@ -40,6 +40,7 @@ export function getAdminDashboard(_req, res) {
         <button id="refreshBtn" type="button">Frissítés</button>
         <button id="processOneBtn" type="button">1 queued job futtatása</button>
         <button id="retryEmailBatchBtn" type="button" class="warn">Email retry batch</button>
+        <button id="alertCheckBtn" type="button" class="secondary">Alert check</button>
         <button id="clearTokenBtn" type="button" class="secondary">Token törlése</button>
         <span id="statusText" class="status-text" role="status"></span>
       </section>
@@ -138,6 +139,29 @@ export function getAdminDashboard(_req, res) {
         <div class="health-recommendations">
           <h3>Teendők</h3>
           <ul id="healthRecommendations"></ul>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Proactive alerts</h2>
+            <p>Critical production health alerts sent to the admin email.</p>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Level</th>
+                <th>Status</th>
+                <th>Summary</th>
+                <th>Recipient</th>
+              </tr>
+            </thead>
+            <tbody id="alertRows"></tbody>
+          </table>
         </div>
       </section>
 

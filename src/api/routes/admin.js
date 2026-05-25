@@ -6,6 +6,8 @@ import {
   getAdminStatus,
   getProductionHealth,
   getOperationsLog,
+  getAdminAlerts,
+  triggerAdminAlertCheck,
   getQueueStatus,
   getRecentSessions,
   getFailedAnalyses,
@@ -26,6 +28,8 @@ router.use(adminAuth);
 router.get("/status", getAdminStatus);
 router.get("/production-health", getProductionHealth);
 router.get("/operations-log", getOperationsLog);
+router.get("/alerts", getAdminAlerts);
+router.post("/trigger-alert-check", triggerAdminAlertCheck);
 
 router.get("/queue-status", getQueueStatus);
 router.get("/recent-sessions", getRecentSessions);
