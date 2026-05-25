@@ -76,6 +76,18 @@ assert(
   "Dashboard HTML should include the email issue rows container."
 );
 assert(
+  res.body.includes("retryEmailBatchBtn"),
+  "Dashboard HTML should include the batch email retry button."
+);
+assert(
+  res.body.includes("retryableReportEmails"),
+  "Dashboard HTML should include retryable report email metrics."
+);
+assert(
+  res.body.includes("retryLimitReportEmails"),
+  "Dashboard HTML should include retry limit report email metrics."
+);
+assert(
   !/<script(?![^>]*src=)/i.test(res.body),
   "Dashboard should not contain inline scripts."
 );

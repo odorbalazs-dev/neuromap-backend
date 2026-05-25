@@ -7,6 +7,7 @@
     clearTokenBtn: document.getElementById("clearTokenBtn"),
     refreshBtn: document.getElementById("refreshBtn"),
     processOneBtn: document.getElementById("processOneBtn"),
+    retryEmailBatchBtn: document.getElementById("retryEmailBatchBtn"),
     statusText: document.getElementById("statusText"),
     apiStatus: document.getElementById("apiStatus"),
     healthLevel: document.getElementById("healthLevel"),
@@ -28,6 +29,8 @@
     lastReportEmailSentMeta: document.getElementById("lastReportEmailSentMeta"),
     failedReportEmails: document.getElementById("failedReportEmails"),
     unsentDoneReports: document.getElementById("unsentDoneReports"),
+    retryableReportEmails: document.getElementById("retryableReportEmails"),
+    retryLimitReportEmails: document.getElementById("retryLimitReportEmails"),
     healthRecommendations: document.getElementById("healthRecommendations"),
     emailIssueRows: document.getElementById("emailIssueRows"),
     queueRows: document.getElementById("queueRows"),
@@ -45,7 +48,8 @@
       els.saveTokenBtn,
       els.clearTokenBtn,
       els.refreshBtn,
-      els.processOneBtn
+      els.processOneBtn,
+      els.retryEmailBatchBtn
     ].forEach((button) => {
       if (button) button.disabled = isBusy;
     });
@@ -338,6 +342,12 @@
     els.unsentDoneReports.textContent =
       Number(health?.email?.unsentDoneCount || 0);
 
+    els.retryableReportEmails.textContent =
+      Number(health?.email?.retryableCount || 0);
+
+    els.retryLimitReportEmails.textContent =
+      Number(health?.email?.retryLimitCount || 0);
+
     renderEmailIssueRows(health?.email?.issues || []);
 
     els.healthRecommendations.replaceChildren();
@@ -466,6 +476,10 @@
     els.refreshBtn.addEventListener("click", refreshDashboard);
     els.processOneBtn.addEventListener("click", () => {
       postAction("/admin/process-one-job", "Egy queued job feldolgozása lefutott.");
+    });
+
+    els.retryEmailBatchBtn.addEventListener("click", () => {
+      postAction("/admin/retry-report-emails", "Email retry batch lefutott.");
     });
 
     document.addEventListener("click", handleActionClick);

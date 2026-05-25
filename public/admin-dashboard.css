@@ -59,6 +59,14 @@ button.secondary:hover {
   background: #dbeaf5;
 }
 
+button.warn {
+  background: var(--orange);
+}
+
+button.warn:hover {
+  background: #d96400;
+}
+
 .shell {
   margin: 0 auto;
   max-width: 1480px;

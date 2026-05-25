@@ -39,6 +39,7 @@ export function getAdminDashboard(_req, res) {
       <section class="toolbar" aria-label="Admin műveletek">
         <button id="refreshBtn" type="button">Frissítés</button>
         <button id="processOneBtn" type="button">1 queued job futtatása</button>
+        <button id="retryEmailBatchBtn" type="button" class="warn">Email retry batch</button>
         <button id="clearTokenBtn" type="button" class="secondary">Token törlése</button>
         <span id="statusText" class="status-text" role="status"></span>
       </section>
@@ -122,6 +123,16 @@ export function getAdminDashboard(_req, res) {
             <span>Kész, de nincs email</span>
             <strong id="unsentDoneReports">0</strong>
             <p>Done riport sent státusz nélkül.</p>
+          </article>
+          <article class="health-card">
+            <span>Email retryable</span>
+            <strong id="retryableReportEmails">0</strong>
+            <p>Automatikusan vagy gombbal ujraprobalhato.</p>
+          </article>
+          <article class="health-card">
+            <span>Retry limit</span>
+            <strong id="retryLimitReportEmails">0</strong>
+            <p>Max probalkozast elert riport emailek.</p>
           </article>
         </div>
         <div class="health-recommendations">

@@ -6,6 +6,7 @@ import {
 import { processNextAnalysisJob } from "../../services/analysis-job.service.js";
 import { enqueueAnalysisJob } from "../../services/analysis-queue.service.js";
 import { deliverReportEmailForSession } from "../../services/report-email-delivery.service.js";
+import { retryReportEmailsBatch } from "../../services/report-email-retry.service.js";
 import { env } from "../../config/env.js";
 
 function shortText(value = "", max = 600) {
@@ -166,12 +167,14 @@ function healthLevel({
   paidQueuedSessions = 0,
   paidProcessingSessions = 0,
   failedReportEmails = 0,
-  unsentDoneReports = 0
+  unsentDoneReports = 0,
+  retryLimitReportEmails = 0
 }) {
   if (
     staleProcessingJobs > 0 ||
     failedWebhooks24h > 0 ||
-    failedReportEmails > 0
+    failedReportEmails > 0 ||
+    retryLimitReportEmails > 0
   ) {
     return "critical";
   }
@@ -195,7 +198,8 @@ function buildRecommendations({
   paidQueuedSessions,
   paidProcessingSessions,
   failedReportEmails,
-  unsentDoneReports
+  unsentDoneReports,
+  retryLimitReportEmails
 }) {
   const recommendations = [];
 
@@ -226,6 +230,12 @@ function buildRecommendations({
   if (unsentDoneReports > 0) {
     recommendations.push(
       "Van elkészült riport, amelynél nincs elküldött email státusz. Ellenőrizd a session részleteit, majd küldd újra az emailt."
+    );
+  }
+
+  if (retryLimitReportEmails > 0) {
+    recommendations.push(
+      "Van riport email, amely elérte az automatikus retry limitet. Ezeket manuálisan kell ellenőrizni a dashboardon."
     );
   }
 
@@ -400,7 +410,21 @@ export async function getProductionHealth(_req, res) {
               AND analysis_result IS NOT NULL
               AND LENGTH(TRIM(analysis_result)) > 0
               AND report_email_status IN ('not_sent', 'sending')
-          )::int AS unsent_done_count
+          )::int AS unsent_done_count,
+          COUNT(*) FILTER (
+            WHERE analysis_status = 'done'
+              AND analysis_result IS NOT NULL
+              AND LENGTH(TRIM(analysis_result)) > 0
+              AND report_email_status IN ('failed', 'not_sent', 'sending')
+              AND COALESCE(report_email_attempts, 0) < 3
+          )::int AS retryable_count,
+          COUNT(*) FILTER (
+            WHERE analysis_status = 'done'
+              AND analysis_result IS NOT NULL
+              AND LENGTH(TRIM(analysis_result)) > 0
+              AND report_email_status IN ('failed', 'not_sent', 'sending')
+              AND COALESCE(report_email_attempts, 0) >= 3
+          )::int AS retry_limit_count
         FROM sessions
         WHERE payment_status = 'paid'
       `),
@@ -470,7 +494,8 @@ export async function getProductionHealth(_req, res) {
       paidQueuedSessions: Number(sessions.paid?.queued || 0),
       paidProcessingSessions: Number(sessions.paid?.processing || 0),
       failedReportEmails: Number(reportEmailTimingRow.failed_count || 0),
-      unsentDoneReports: Number(reportEmailTimingRow.unsent_done_count || 0)
+      unsentDoneReports: Number(reportEmailTimingRow.unsent_done_count || 0),
+      retryLimitReportEmails: Number(reportEmailTimingRow.retry_limit_count || 0)
     };
 
     return res.status(200).json({
@@ -510,6 +535,8 @@ export async function getProductionHealth(_req, res) {
         counts: reportEmails,
         failedCount: Number(reportEmailTimingRow.failed_count || 0),
         unsentDoneCount: Number(reportEmailTimingRow.unsent_done_count || 0),
+        retryableCount: Number(reportEmailTimingRow.retryable_count || 0),
+        retryLimitCount: Number(reportEmailTimingRow.retry_limit_count || 0),
         lastSentAt: reportEmailTimingRow.last_sent_at || null,
         lastSentMinutesAgo: minutesSince(reportEmailTimingRow.last_sent_at),
         lastAttemptAt: reportEmailTimingRow.last_attempt_at || null,
@@ -715,6 +742,28 @@ export async function resendReportEmail(req, res) {
     return res.status(500).json({
       ok: false,
       error: error.message || "Failed to resend report email"
+    });
+  }
+}
+
+export async function retryReportEmailBatch(req, res) {
+  try {
+    const result =
+      await retryReportEmailsBatch(
+        {
+          ...(req.query || {}),
+          ...(req.body || {})
+        },
+        { source: "admin-report-email-retry" }
+      );
+
+    return res.status(200).json(result);
+  } catch (error) {
+    console.error("Admin report email batch retry error:", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: error.message || "Failed to retry report emails"
     });
   }
 }

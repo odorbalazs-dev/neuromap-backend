@@ -1,12 +1,11 @@
 import {
   getRecoverableCheckoutSessions,
-  getReportEmailRetryCandidates,
   getSessionById,
   markRecoveryEmailSent
 } from "../../services/session.service.js";
 
 import { sendCheckoutRecoveryEmail } from "../../services/email.service.js";
-import { deliverReportEmailForSession } from "../../services/report-email-delivery.service.js";
+import { retryReportEmailsBatch } from "../../services/report-email-retry.service.js";
 
 import { env } from "../../config/env.js";
 import { secureCompare } from "../../utils/secureCompare.js";
@@ -180,47 +179,18 @@ export async function retryReportEmails(req, res) {
       1440
     );
 
-    const sessions =
-      await getReportEmailRetryCandidates({
-        limit,
-        maxAttempts,
-        retryAfterMinutes,
-        staleSendingMinutes
-      });
+    const result =
+      await retryReportEmailsBatch(
+        {
+          limit,
+          maxAttempts,
+          retryAfterMinutes,
+          staleSendingMinutes
+        },
+        { source: "cron-report-email-retry" }
+      );
 
-    const results = [];
-
-    for (const session of sessions) {
-      const previousStatus =
-        session.report_email_status || "not_sent";
-
-      const attemptsBefore =
-        Number(session.report_email_attempts || 0);
-
-      const result =
-        await deliverReportEmailForSession(
-          session,
-          { source: "cron-report-email-retry" }
-        );
-
-      results.push({
-        ...result,
-        previousStatus,
-        attemptsBefore
-      });
-    }
-
-    return res.json({
-      ok: true,
-      checked: sessions.length,
-      sent: results.filter((item) => item.status === "sent").length,
-      failed: results.filter((item) => item.status === "failed").length,
-      limit,
-      maxAttempts,
-      retryAfterMinutes,
-      staleSendingMinutes,
-      results
-    });
+    return res.json(result);
 
   } catch (error) {
     console.error(

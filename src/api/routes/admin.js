@@ -11,7 +11,8 @@ import {
   getAdminSession,
   retryAnalysis,
   processOneAnalysisJob,
-  resendReportEmail
+  resendReportEmail,
+  retryReportEmailBatch
 } from "../controllers/admin.controller.js";
 
 const router = express.Router();
@@ -32,5 +33,6 @@ router.get("/session/:sessionId", getAdminSession);
 router.post("/retry-analysis/:sessionId", retryAnalysis);
 router.post("/process-one-job", processOneAnalysisJob);
 router.post("/resend-email/:sessionId", resendReportEmail);
+router.post("/retry-report-emails", retryReportEmailBatch);
 
 export default router;
