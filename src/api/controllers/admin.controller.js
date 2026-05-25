@@ -1,7 +1,8 @@
 import { db } from "../../db/db.js";
 import {
   getSessionById,
-  markAnalysisQueued
+  markAnalysisQueued,
+  resetReportEmailRetry
 } from "../../services/session.service.js";
 import { processNextAnalysisJob } from "../../services/analysis-job.service.js";
 import { enqueueAnalysisJob } from "../../services/analysis-queue.service.js";
@@ -86,6 +87,52 @@ function buildCompactSessionView(row) {
 
     created_at: row.created_at,
     updated_at: row.updated_at
+  };
+}
+
+function clampNumber(value, fallback, min, max) {
+  const number = Number(value);
+
+  if (!Number.isFinite(number)) {
+    return fallback;
+  }
+
+  return Math.min(
+    Math.max(number, min),
+    max
+  );
+}
+
+function eventSeverityClass(value) {
+  const status = String(value || "").toLowerCase();
+
+  if (["failed", "critical", "error"].includes(status)) return "critical";
+  if (["warning", "not_sent", "sending"].includes(status)) return "warning";
+  if (["queued", "processing", "active"].includes(status)) return "active";
+  return "info";
+}
+
+function buildOperationEvent({
+  kind,
+  severity,
+  title,
+  status,
+  detail,
+  sessionId = null,
+  email = null,
+  name = null,
+  createdAt = null
+}) {
+  return {
+    kind,
+    severity: severity || eventSeverityClass(status),
+    title,
+    status: status || null,
+    detail: shortText(detail || "", 240),
+    sessionId,
+    email,
+    name,
+    createdAt
   };
 }
 
@@ -555,6 +602,211 @@ export async function getProductionHealth(_req, res) {
   }
 }
 
+export async function getOperationsLog(req, res) {
+  try {
+    const limit = clampNumber(req.query.limit, 80, 10, 200);
+    const filter = String(req.query.filter || "all").toLowerCase();
+    const allowedFilters = new Set([
+      "all",
+      "email",
+      "analysis",
+      "webhook",
+      "checkout",
+      "critical"
+    ]);
+
+    const normalizedFilter = allowedFilters.has(filter) ? filter : "all";
+
+    const [
+      recentSessions,
+      recentJobs,
+      recentWebhooks
+    ] = await Promise.all([
+      db.query(
+        `
+        SELECT
+          id,
+          email,
+          name,
+          payment_status,
+          analysis_status,
+          report_email_status,
+          report_email_error,
+          report_email_attempts,
+          paid_at,
+          analysis_started_at,
+          analysis_completed_at,
+          report_email_sent_at,
+          report_email_last_attempt_at,
+          checkout_started_at,
+          checkout_cancelled_at,
+          created_at,
+          updated_at
+        FROM sessions
+        ORDER BY updated_at DESC NULLS LAST, created_at DESC
+        LIMIT $1
+        `,
+        [Math.max(limit, 100)]
+      ),
+      db.query(
+        `
+        SELECT
+          j.id,
+          j.session_id,
+          j.status,
+          j.attempts,
+          j.locked_at,
+          j.locked_by,
+          j.last_error,
+          j.created_at,
+          j.updated_at,
+          j.processed_at,
+          s.email,
+          s.name
+        FROM analysis_jobs j
+        LEFT JOIN sessions s ON s.id = j.session_id
+        ORDER BY j.updated_at DESC NULLS LAST, j.created_at DESC
+        LIMIT $1
+        `,
+        [Math.max(limit, 100)]
+      ),
+      db.query(
+        `
+        SELECT
+          event_id,
+          event_type,
+          status,
+          error_message,
+          created_at,
+          processed_at
+        FROM webhook_events
+        ORDER BY created_at DESC
+        LIMIT $1
+        `,
+        [Math.max(limit, 100)]
+      )
+    ]);
+
+    const events = [];
+
+    for (const row of recentSessions.rows) {
+      if (row.report_email_status || row.report_email_last_attempt_at || row.report_email_sent_at) {
+        events.push(
+          buildOperationEvent({
+            kind: "email",
+            status: row.report_email_status || "not_sent",
+            title: "Report email",
+            detail: row.report_email_error ||
+              `${Number(row.report_email_attempts || 0)} attempts`,
+            sessionId: row.id,
+            email: row.email,
+            name: row.name,
+            createdAt: row.report_email_last_attempt_at ||
+              row.report_email_sent_at ||
+              row.updated_at
+          })
+        );
+      }
+
+      if (row.analysis_status) {
+        events.push(
+          buildOperationEvent({
+            kind: "analysis",
+            status: row.analysis_status,
+            title: "Analysis session",
+            detail: `payment=${row.payment_status}`,
+            sessionId: row.id,
+            email: row.email,
+            name: row.name,
+            createdAt: row.analysis_completed_at ||
+              row.analysis_started_at ||
+              row.updated_at
+          })
+        );
+      }
+
+      if (row.payment_status === "paid" || row.checkout_started_at || row.checkout_cancelled_at) {
+        events.push(
+          buildOperationEvent({
+            kind: "checkout",
+            status: row.payment_status,
+            title: row.checkout_cancelled_at && row.payment_status !== "paid"
+              ? "Checkout cancelled"
+              : "Checkout/session",
+            detail: row.checkout_cancelled_at && row.payment_status !== "paid"
+              ? "Cancelled before payment"
+              : `payment=${row.payment_status}`,
+            sessionId: row.id,
+            email: row.email,
+            name: row.name,
+            createdAt: row.paid_at ||
+              row.checkout_cancelled_at ||
+              row.checkout_started_at ||
+              row.created_at
+          })
+        );
+      }
+    }
+
+    for (const row of recentJobs.rows) {
+      events.push(
+        buildOperationEvent({
+          kind: "analysis",
+          status: row.status,
+          title: "Analysis job",
+          detail: row.last_error ||
+            `attempts=${Number(row.attempts || 0)} lockedBy=${row.locked_by || "-"}`,
+          sessionId: row.session_id,
+          email: row.email,
+          name: row.name,
+          createdAt: row.processed_at ||
+            row.updated_at ||
+            row.created_at
+        })
+      );
+    }
+
+    for (const row of recentWebhooks.rows) {
+      events.push(
+        buildOperationEvent({
+          kind: "webhook",
+          status: row.status,
+          title: row.event_type || "Webhook event",
+          detail: row.error_message || row.event_id,
+          createdAt: row.processed_at || row.created_at
+        })
+      );
+    }
+
+    const filtered = events
+      .filter((event) => {
+        if (normalizedFilter === "all") return true;
+        if (normalizedFilter === "critical") return event.severity === "critical";
+        return event.kind === normalizedFilter;
+      })
+      .sort((a, b) => {
+        const aTime = new Date(a.createdAt || 0).getTime();
+        const bTime = new Date(b.createdAt || 0).getTime();
+        return bTime - aTime;
+      })
+      .slice(0, limit);
+
+    return res.status(200).json({
+      ok: true,
+      filter: normalizedFilter,
+      count: filtered.length,
+      items: filtered
+    });
+  } catch (error) {
+    console.error("Admin operations log error:", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: error.message || "Failed to get operations log"
+    });
+  }
+}
+
 export async function getRecentSessions(req, res) {
   try {
     const limit = Math.min(Number(req.query.limit || 25), 100);
@@ -764,6 +1016,36 @@ export async function retryReportEmailBatch(req, res) {
     return res.status(500).json({
       ok: false,
       error: error.message || "Failed to retry report emails"
+    });
+  }
+}
+
+export async function resetReportEmailRetryForSession(req, res) {
+  try {
+    const { sessionId } = req.params;
+
+    const sessionRow =
+      await resetReportEmailRetry(sessionId);
+
+    if (!sessionRow) {
+      return res.status(404).json({
+        ok: false,
+        error: "Retryable report email session not found"
+      });
+    }
+
+    return res.status(200).json({
+      ok: true,
+      sessionId,
+      reportEmailStatus: sessionRow.report_email_status,
+      reportEmailAttempts: sessionRow.report_email_attempts
+    });
+  } catch (error) {
+    console.error("Admin reset report email retry error:", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: error.message || "Failed to reset report email retry"
     });
   }
 }

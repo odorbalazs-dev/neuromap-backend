@@ -296,6 +296,23 @@ input:focus {
   margin-top: 3px;
 }
 
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.filter-row button {
+  font-size: 12px;
+  padding: 7px 10px;
+}
+
+.filter-row button.active {
+  background: var(--ink);
+  color: #fff;
+}
+
 .table-wrap {
   overflow-x: auto;
 }
@@ -362,6 +379,30 @@ td {
   color: var(--red);
 }
 
+.pill.critical {
+  background: #fdecec;
+  color: var(--red);
+}
+
+.pill.warning {
+  background: #fff6e8;
+  color: #9b5200;
+}
+
+.pill.active {
+  background: #edf6ff;
+  color: #0879b0;
+}
+
+.pill.info,
+.pill.email,
+.pill.analysis,
+.pill.webhook,
+.pill.checkout {
+  background: #eef2f6;
+  color: #4b5d70;
+}
+
 .pill.unknown {
   background: #eef2f6;
   color: #4b5d70;
@@ -394,6 +435,21 @@ td {
 
 .actions button.warn:hover {
   background: #d96400;
+}
+
+.link-button {
+  background: transparent;
+  color: var(--blue);
+  font-size: 12px;
+  font-weight: 800;
+  padding: 0;
+  text-align: left;
+}
+
+.link-button:hover {
+  background: transparent;
+  color: var(--blue-dark);
+  text-decoration: underline;
 }
 
 .empty {

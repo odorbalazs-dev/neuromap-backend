@@ -266,6 +266,29 @@ export async function markReportEmailFailed(sessionId, errorMessage) {
   return result.rows[0] || null;
 }
 
+export async function resetReportEmailRetry(sessionId) {
+  const result = await db.query(
+    `
+    UPDATE sessions
+    SET report_email_status = 'not_sent',
+        report_email_sent_at = NULL,
+        report_email_last_attempt_at = NULL,
+        report_email_error = NULL,
+        report_email_provider_id = NULL,
+        report_email_attempts = 0
+    WHERE id = $1
+      AND payment_status = 'paid'
+      AND analysis_status = 'done'
+      AND analysis_result IS NOT NULL
+      AND LENGTH(TRIM(analysis_result)) > 0
+    RETURNING *
+    `,
+    [sessionId]
+  );
+
+  return result.rows[0] || null;
+}
+
 export async function getReportEmailRetryCandidates({
   limit = 20,
   maxAttempts = 3,

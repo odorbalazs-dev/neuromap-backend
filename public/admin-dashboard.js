@@ -33,11 +33,14 @@
     retryLimitReportEmails: document.getElementById("retryLimitReportEmails"),
     healthRecommendations: document.getElementById("healthRecommendations"),
     emailIssueRows: document.getElementById("emailIssueRows"),
+    operationsLogRows: document.getElementById("operationsLogRows"),
     queueRows: document.getElementById("queueRows"),
     recentRows: document.getElementById("recentRows"),
     failedRows: document.getElementById("failedRows"),
     sessionDetail: document.getElementById("sessionDetail")
   };
+
+  let activeLogFilter = "all";
 
   function getToken() {
     return (els.token.value || "").trim();
@@ -105,7 +108,15 @@
         "completed",
         "not_sent",
         "sending",
-        "sent"
+        "sent",
+        "critical",
+        "warning",
+        "active",
+        "info",
+        "email",
+        "analysis",
+        "webhook",
+        "checkout"
       ].includes(status)
     ) {
       return status;
@@ -202,7 +213,7 @@
     return button;
   }
 
-  function actions(row, includeResend = true) {
+  function actions(row, includeResend = true, includeEmailReset = false) {
     const wrapper = document.createElement("div");
     wrapper.className = "actions";
     wrapper.appendChild(actionButton("Részletek", "detail", row.id, "secondary"));
@@ -210,6 +221,10 @@
 
     if (includeResend) {
       wrapper.appendChild(actionButton("Email újraküldés", "resend", row.id, "secondary"));
+    }
+
+    if (includeEmailReset) {
+      wrapper.appendChild(actionButton("Email retry reset", "reset-email", row.id, "secondary"));
     }
 
     return wrapper;
@@ -285,10 +300,62 @@
         cell(personBlock(row)),
         cell(attemptInfo),
         cell(compact(row.report_email_error || row.error_message, 140)),
-        cell(actions(row, true))
+        cell(actions(row, true, true))
       );
 
       els.emailIssueRows.appendChild(tr);
+    });
+  }
+
+  function renderOperationLogRows(items) {
+    els.operationsLogRows.replaceChildren();
+
+    if (!items.length) {
+      emptyRow(els.operationsLogRows, 5, "Nincs naplo esemeny.");
+      return;
+    }
+
+    items.forEach((item) => {
+      const tr = document.createElement("tr");
+      const session = document.createElement("div");
+
+      if (item.sessionId) {
+        const link = document.createElement("button");
+        link.type = "button";
+        link.className = "link-button";
+        link.dataset.action = "detail";
+        link.dataset.id = item.sessionId;
+        link.textContent = item.sessionId;
+        session.appendChild(link);
+      } else {
+        session.textContent = "-";
+      }
+
+      const person = document.createElement("div");
+      person.className = "subtle";
+      person.textContent =
+        [item.name, item.email].filter(Boolean).join(" / ") || "-";
+      session.appendChild(person);
+
+      const detail = document.createElement("div");
+      const title = document.createElement("div");
+      title.className = "person";
+      title.textContent = text(item.title);
+
+      const desc = document.createElement("div");
+      desc.className = "subtle";
+      desc.textContent = compact(item.detail, 180);
+      detail.append(title, desc);
+
+      tr.append(
+        cell(formatDate(item.createdAt)),
+        cell(statusPill(item.kind)),
+        cell(statusPill(item.severity || item.status)),
+        cell(session),
+        cell(detail)
+      );
+
+      els.operationsLogRows.appendChild(tr);
     });
   }
 
@@ -367,12 +434,13 @@
     setStatus("Frissítés...");
 
     try {
-      const [status, health, queue, recent, failed] = await Promise.all([
+      const [status, health, queue, recent, failed, operations] = await Promise.all([
         api("/admin/status"),
         api("/admin/production-health"),
         api("/admin/queue-status"),
         api("/admin/recent-sessions?limit=30"),
-        api("/admin/failed-analyses?limit=30")
+        api("/admin/failed-analyses?limit=30"),
+        api(`/admin/operations-log?filter=${encodeURIComponent(activeLogFilter)}&limit=80`)
       ]);
 
       els.apiStatus.textContent = status.ok ? "OK" : "Hiba";
@@ -381,6 +449,7 @@
       renderSessionRows(els.queueRows, queue.items || [], "queue");
       renderSessionRows(els.recentRows, recent.items || [], "recent");
       renderSessionRows(els.failedRows, failed.items || [], "failed");
+      renderOperationLogRows(operations.items || []);
       setStatus("Frissítve.");
     } catch (error) {
       els.apiStatus.textContent = "Hiba";
@@ -445,6 +514,13 @@
         "Riport email újraküldve."
       );
     }
+
+    if (action === "reset-email") {
+      postAction(
+        `/admin/reset-email-retry/${encodeURIComponent(sessionId)}`,
+        "Email retry állapot alaphelyzetbe téve."
+      );
+    }
   }
 
   function init() {
@@ -467,6 +543,7 @@
       emptyRow(els.recentRows, 5, "A frissítéshez add meg az admin tokent.");
       emptyRow(els.failedRows, 4, "A frissítéshez add meg az admin tokent.");
       emptyRow(els.emailIssueRows, 5, "A frissítéshez add meg az admin tokent.");
+      emptyRow(els.operationsLogRows, 5, "A frissítéshez add meg az admin tokent.");
       renderCounts({});
       renderHealth(null);
       els.apiStatus.textContent = "-";
@@ -482,6 +559,18 @@
       postAction("/admin/retry-report-emails", "Email retry batch lefutott.");
     });
 
+    document.querySelectorAll(".log-filter").forEach((button) => {
+      button.addEventListener("click", () => {
+        activeLogFilter = button.dataset.logFilter || "all";
+
+        document.querySelectorAll(".log-filter").forEach((item) => {
+          item.classList.toggle("active", item === button);
+        });
+
+        refreshDashboard();
+      });
+    });
+
     document.addEventListener("click", handleActionClick);
 
     if (savedToken) {
@@ -491,6 +580,7 @@
       emptyRow(els.recentRows, 5, "A frissítéshez add meg az admin tokent.");
       emptyRow(els.failedRows, 4, "A frissítéshez add meg az admin tokent.");
       emptyRow(els.emailIssueRows, 5, "A frissítéshez add meg az admin tokent.");
+      emptyRow(els.operationsLogRows, 5, "A frissítéshez add meg az admin tokent.");
       setStatus("Add meg az ADMIN_TOKEN értékét.");
     }
   }

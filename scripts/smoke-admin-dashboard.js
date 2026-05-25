@@ -88,6 +88,14 @@ assert(
   "Dashboard HTML should include retry limit report email metrics."
 );
 assert(
+  res.body.includes("operationsLogRows"),
+  "Dashboard HTML should include the operations log rows container."
+);
+assert(
+  res.body.includes('data-log-filter="critical"'),
+  "Dashboard HTML should include operations log filters."
+);
+assert(
   !/<script(?![^>]*src=)/i.test(res.body),
   "Dashboard should not contain inline scripts."
 );

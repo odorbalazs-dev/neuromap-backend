@@ -167,6 +167,37 @@ export function getAdminDashboard(_req, res) {
       <section class="panel">
         <div class="panel-head">
           <div>
+            <h2>Operations log</h2>
+            <p>Webhook, analysis, checkout es email esemenyek idorendben.</p>
+          </div>
+          <div class="filter-row" aria-label="Operations log filters">
+            <button type="button" class="secondary log-filter active" data-log-filter="all">All</button>
+            <button type="button" class="secondary log-filter" data-log-filter="critical">Critical</button>
+            <button type="button" class="secondary log-filter" data-log-filter="email">Email</button>
+            <button type="button" class="secondary log-filter" data-log-filter="analysis">Analysis</button>
+            <button type="button" class="secondary log-filter" data-log-filter="webhook">Webhook</button>
+            <button type="button" class="secondary log-filter" data-log-filter="checkout">Checkout</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Idopont</th>
+                <th>Tipus</th>
+                <th>Allapot</th>
+                <th>Session</th>
+                <th>Reszlet</th>
+              </tr>
+            </thead>
+            <tbody id="operationsLogRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
             <h2>Queue figyelés</h2>
             <p>Fizetett, még feldolgozás alatt álló vagy hibás sessionök.</p>
           </div>
