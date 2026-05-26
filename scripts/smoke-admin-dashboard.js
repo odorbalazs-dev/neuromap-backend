@@ -61,11 +61,11 @@ assert(
   "Dashboard HTML should reference admin-dashboard.js."
 );
 assert(
-  res.body.includes("Production Health Panel"),
+  res.body.includes("Éles rendszer állapota"),
   "Dashboard HTML should include the production health panel."
 );
 assert(
-  res.body.includes("Control Center"),
+  res.body.includes("Vezérlőközpont"),
   "Dashboard HTML should include the control center title."
 );
 assert(
@@ -73,11 +73,11 @@ assert(
   "Dashboard HTML should include the control center headline."
 );
 assert(
-  res.body.includes("Command panel"),
+  res.body.includes("Műveleti panel"),
   "Dashboard HTML should include the command panel."
 );
 assert(
-  res.body.includes("Pipeline cockpit"),
+  res.body.includes("Folyamat áttekintés"),
   "Dashboard HTML should include the pipeline cockpit."
 );
 assert(
@@ -93,7 +93,7 @@ assert(
   "Dashboard HTML should include health recommendations container."
 );
 assert(
-  res.body.includes("Email delivery figyel"),
+  res.body.includes("Email kézbesítés figyelés"),
   "Dashboard HTML should include the email delivery panel."
 );
 assert(
@@ -109,7 +109,7 @@ assert(
   "Dashboard HTML should include the proactive alert check button."
 );
 assert(
-  res.body.includes("Proactive alerts"),
+  res.body.includes("Proaktív riasztások"),
   "Dashboard HTML should include the proactive alerts panel."
 );
 assert(
@@ -129,7 +129,7 @@ assert(
   "Dashboard HTML should include the operations log rows container."
 );
 assert(
-  res.body.includes("Session search"),
+  res.body.includes("Session keresés"),
   "Dashboard HTML should include the session search panel."
 );
 assert(
@@ -141,7 +141,7 @@ assert(
   "Dashboard HTML should include session search rows."
 );
 assert(
-  res.body.includes("Readable timeline"),
+  res.body.includes("Olvasható idővonal"),
   "Dashboard HTML should describe the readable session detail panel."
 );
 assert(
@@ -211,6 +211,14 @@ assert(
   dashboardJs.includes("Gyermek életkora"),
   "Dashboard JS should expose child age in Hungarian."
 );
+assert(
+  dashboardJs.includes("A fő rendszerek rendben vannak"),
+  "Dashboard JS should render the control center state in Hungarian."
+);
+assert(
+  dashboardJs.includes("Email kézbesítés"),
+  "Dashboard JS should render the pipeline stages in Hungarian."
+);
 
 const summary = buildAdminSessionReportSummary(
   {
@@ -219,7 +227,7 @@ const summary = buildAdminSessionReportSummary(
     analysis_status: "failed",
     report_email_status: "failed",
     report_email_attempts: 3,
-    analysis_result: "Riport szoveg",
+    analysis_result: "Riport szöveg",
     payload: {
       childAge: 7,
       detectedRisk: "ADHD",
@@ -232,7 +240,7 @@ const summary = buildAdminSessionReportSummary(
       resultSummary: {
         signal: {
           key: "moderate",
-          hu: "kozepes jelzésszint",
+          hu: "közepes jelzésszint",
           en: "moderate signal level"
         },
         topSubdomains: [

@@ -145,6 +145,36 @@
     return "unknown";
   }
 
+  function statusLabel(value) {
+    const labels = {
+      queued: "várakozik",
+      processing: "feldolgozás alatt",
+      failed: "hibás",
+      done: "kész",
+      completed: "kész",
+      paid: "fizetve",
+      unpaid: "nincs fizetve",
+      not_sent: "nincs elküldve",
+      sending: "küldés alatt",
+      sent: "elküldve",
+      skipped: "kihagyva",
+      healthy: "rendben",
+      critical: "kritikus",
+      warning: "figyelendő",
+      active: "aktív",
+      info: "információ",
+      email: "email",
+      analysis: "elemzés",
+      webhook: "webhook",
+      checkout: "checkout",
+      open: "nyitott",
+      resolved: "lezárva",
+      pending: "függőben"
+    };
+
+    return labels[String(value || "").toLowerCase()] || text(value);
+  }
+
   async function api(path, options = {}) {
     const token = getToken();
 
@@ -210,7 +240,7 @@
   function statusPill(status) {
     const span = document.createElement("span");
     span.className = `pill ${statusClass(status)}`;
-    span.textContent = text(status);
+    span.textContent = statusLabel(status);
     return span;
   }
 
@@ -266,15 +296,15 @@
     wrapper.className = "actions";
     wrapper.appendChild(actionButton("Részletek", "detail", row.id, "secondary"));
     wrapper.appendChild(actionButton("PDF", "download-pdf", row.id, "secondary"));
-    wrapper.appendChild(actionButton("PDF regen", "regenerate-pdf", row.id, "secondary"));
-    wrapper.appendChild(actionButton("Retry", "retry", row.id, "warn"));
+    wrapper.appendChild(actionButton("PDF újragenerálás", "regenerate-pdf", row.id, "secondary"));
+    wrapper.appendChild(actionButton("Elemzés újraindítása", "retry", row.id, "warn"));
 
     if (includeResend) {
       wrapper.appendChild(actionButton("Email újraküldés", "resend", row.id, "secondary"));
     }
 
     if (includeEmailReset) {
-      wrapper.appendChild(actionButton("Email retry reset", "reset-email", row.id, "secondary"));
+      wrapper.appendChild(actionButton("Email retry alaphelyzet", "reset-email", row.id, "secondary"));
     }
 
     return wrapper;
@@ -353,7 +383,7 @@
   function retryActionLabel(value) {
     const labels = {
       no_action: "nincs teendő",
-      inspect_then_reset_retry: "ellenőrzés, majd retry reset",
+      inspect_then_reset_retry: "ellenőrzés, majd retry alaphelyzet",
       resend_report_email: "riport email újraküldése",
       wait_for_report: "riport elkészülésére vár",
       ready: "készen áll",
@@ -455,7 +485,7 @@
       actionButton("PDF", "download-pdf", session.id, "secondary"),
       actionButton("PDF újragenerálás", "regenerate-pdf", session.id, "secondary"),
       actionButton("Email újraküldés", "resend", session.id, "secondary"),
-      actionButton("Email retry reset", "reset-email", session.id, "secondary")
+      actionButton("Email retry alaphelyzet", "reset-email", session.id, "secondary")
     );
 
     header.append(titleWrap, actionWrap);
@@ -661,7 +691,7 @@
     els.alertRows.replaceChildren();
 
     if (!items.length) {
-      emptyRow(els.alertRows, 5, "No proactive alerts yet.");
+      emptyRow(els.alertRows, 5, "Még nincs proaktív riasztás.");
       return;
     }
 
@@ -711,10 +741,10 @@
   }
 
   function stageLabel(level) {
-    if (level === "critical") return "Needs action";
-    if (level === "warning") return "Watch";
-    if (level === "active") return "Running";
-    return "OK";
+    if (level === "critical") return "Beavatkozás kell";
+    if (level === "warning") return "Figyelendő";
+    if (level === "active") return "Fut";
+    return "Rendben";
   }
 
   function buildPipelineStages(health, queue) {
@@ -727,12 +757,12 @@
 
     return [
       {
-        name: "Checkout",
+        name: "Fizetés indítása",
         level: stageLevel({
           active: countValue(queueCounts.queued) + countValue(queueCounts.processing),
           warning: countValue(queueCounts.failed)
         }),
-        detail: `${countValue(queueCounts.queued)} queued, ${countValue(queueCounts.processing)} processing, ${countValue(queueCounts.failed)} failed`
+        detail: `${countValue(queueCounts.queued)} várakozik, ${countValue(queueCounts.processing)} feldolgozás alatt, ${countValue(queueCounts.failed)} hibás`
       },
       {
         name: "Stripe webhook",
@@ -740,32 +770,32 @@
           critical: countValue(webhooks.failedLast24h),
           active: countValue(webhooks.pendingOrProcessing)
         }),
-        detail: `${countValue(webhooks.failedLast24h)} failed in 24h, ${countValue(webhooks.pendingOrProcessing)} pending`
+        detail: `${countValue(webhooks.failedLast24h)} hiba 24 órában, ${countValue(webhooks.pendingOrProcessing)} függőben`
       },
       {
-        name: "Worker analysis",
+        name: "Worker elemzés",
         level: stageLevel({
           critical: countValue(metrics.staleProcessingJobs),
           warning: countValue(jobs.counts?.failed) + countValue(metrics.paidFailedSessions),
           active: countValue(jobs.counts?.queued) + countValue(jobs.counts?.processing)
         }),
-        detail: `${countValue(jobs.counts?.queued)} queued jobs, ${countValue(metrics.staleProcessingJobs)} stale locks`
+        detail: `${countValue(jobs.counts?.queued)} várakozó job, ${countValue(metrics.staleProcessingJobs)} beragadt lock`
       },
       {
-        name: "PDF/report",
+        name: "PDF/riport",
         level: stageLevel({
           warning: countValue(sessions.doneWithoutAnalysisResult?.length)
         }),
-        detail: `${countValue(sessions.doneWithoutAnalysisResult?.length)} done sessions without report text`
+        detail: `${countValue(sessions.doneWithoutAnalysisResult?.length)} kész session riportszöveg nélkül`
       },
       {
-        name: "Email delivery",
+        name: "Email kézbesítés",
         level: stageLevel({
           critical: countValue(email.failedCount) + countValue(email.retryLimitCount),
           warning: countValue(email.unsentDoneCount),
           active: countValue(email.retryableCount)
         }),
-        detail: `${countValue(email.failedCount)} failed, ${countValue(email.retryableCount)} retryable, ${countValue(email.retryLimitCount)} at limit`
+        detail: `${countValue(email.failedCount)} hibás, ${countValue(email.retryableCount)} újrapróbálható, ${countValue(email.retryLimitCount)} limitnél`
       }
     ];
   }
@@ -812,32 +842,32 @@
     ].reduce((sum, value) => sum + value, 0);
 
     const levelText = level === "healthy"
-      ? "All core systems look clean"
+      ? "A fő rendszerek rendben vannak"
       : level === "active"
-        ? "Pipeline is active"
+        ? "A folyamat aktív"
         : level === "warning"
-          ? "Operator review recommended"
+          ? "Operátori ellenőrzés javasolt"
           : level === "critical"
-            ? "Action needed"
-            : "Waiting for live data";
+            ? "Beavatkozás szükséges"
+            : "Éles adatokra vár";
 
     els.controlCenterHeadline.textContent = levelText;
     els.controlCenterSummary.textContent = status?.ok
-      ? `${issues} critical signal(s). ${countValue(queue?.counts?.queued)} queued, ${countValue(queue?.counts?.processing)} processing, ${countValue(queue?.counts?.failed)} failed sessions.`
-      : "Admin API is not reachable with the current token.";
+      ? `${issues} kritikus jelzés. ${countValue(queue?.counts?.queued)} várakozó, ${countValue(queue?.counts?.processing)} feldolgozás alatti, ${countValue(queue?.counts?.failed)} hibás session.`
+      : "Az Admin API nem érhető el a jelenlegi tokennel.";
 
     els.controlScore.className = `control-score ${statusClass(level)}`;
-    els.controlScore.querySelector("strong").textContent = level.toUpperCase();
+    els.controlScore.querySelector("strong").textContent = statusLabel(level).toUpperCase();
 
     els.lastSnapshotAt.textContent = health?.generatedAt
-      ? `Snapshot: ${formatDate(health.generatedAt)}`
-      : "No snapshot yet";
+      ? `Állapotkép: ${formatDate(health.generatedAt)}`
+      : "Még nincs állapotkép";
 
     els.riskFocus.textContent = alerts?.items?.length
       ? compact(alerts.items[0].summary, 100)
-      : recommendations[0] || "No current production risk detected.";
+      : recommendations[0] || "Nincs aktuális éles rendszerkockázat.";
 
-    els.nextAction.textContent = recommendations[0] || "Keep monitoring. No manual action is currently suggested.";
+    els.nextAction.textContent = recommendations[0] || "Figyeld tovább a rendszert. Jelenleg nincs javasolt kézi teendő.";
 
     renderPipelineStages(health, queue);
   }
@@ -846,7 +876,7 @@
     const level = health?.level || "-";
     const healthMetric = els.healthLevel.closest(".metric");
 
-    els.healthLevel.textContent = level;
+    els.healthLevel.textContent = statusLabel(level);
     healthMetric.classList.remove("healthy", "active", "warning", "critical");
     if (["healthy", "active", "warning", "critical"].includes(level)) {
       healthMetric.classList.add(level);
@@ -858,7 +888,7 @@
 
     els.oldestQueuedJob.textContent = formatDate(health?.jobs?.oldestQueuedAt);
     els.oldestQueuedJobMeta.textContent =
-      `Queue életkor: ${relativeMinutes(health?.jobs?.oldestQueuedMinutes)}`;
+      `Feldolgozási sor életkor: ${relativeMinutes(health?.jobs?.oldestQueuedMinutes)}`;
 
     els.staleProcessingJobs.textContent =
       Number(health?.metrics?.staleProcessingJobs || 0);
@@ -870,7 +900,7 @@
     els.failedWebhooks24h.textContent =
       Number(health?.webhooks?.failedLast24h || 0);
     els.webhookPendingMeta.textContent =
-      `Received/processing: ${Number(health?.webhooks?.pendingOrProcessing || 0)}`;
+      `Beérkezett/feldolgozás alatt: ${Number(health?.webhooks?.pendingOrProcessing || 0)}`;
 
     els.paidWithoutJob.textContent =
       Number(health?.sessions?.paidWithoutActiveJob?.length || 0);
@@ -920,7 +950,7 @@
         api("/admin/alerts?limit=10")
       ]);
 
-      els.apiStatus.textContent = status.ok ? "OK" : "Hiba";
+      els.apiStatus.textContent = status.ok ? "Elérhető" : "Hiba";
       renderHealth(health);
       renderCounts(queue.counts || {});
       renderSessionRows(els.queueRows, queue.items || [], "queue");
@@ -943,14 +973,14 @@
 
     if (!query) {
       if (els.sessionSearchHint) {
-        els.sessionSearchHint.textContent = "Enter an email, name, session ID, or Stripe ID.";
+        els.sessionSearchHint.textContent = "Adj meg emailt, nevet, session ID-t vagy Stripe ID-t.";
       }
-      emptyRow(els.sessionSearchRows, 5, "Adj meg keresesi kifejezest.");
+      emptyRow(els.sessionSearchRows, 5, "Adj meg keresési kifejezést.");
       return;
     }
 
     setBusy(true);
-    setStatus("Session keresese...");
+      setStatus("Session keresése...");
 
     try {
       const data = await api(
@@ -961,10 +991,10 @@
 
       if (els.sessionSearchHint) {
         els.sessionSearchHint.textContent =
-          `${Number(data.count || data.items?.length || 0)} talalat: "${query}"`;
+          `${Number(data.count || data.items?.length || 0)} találat: "${query}"`;
       }
 
-      setStatus("Session kereses kesz.");
+      setStatus("Session keresés kész.");
     } catch (error) {
       setStatus(error.message, true);
     } finally {
@@ -1103,7 +1133,7 @@
       els.token.value = "";
       showEmptyDetail();
       els.sessionSearchInput.value = "";
-      els.sessionSearchHint.textContent = "No search yet.";
+      els.sessionSearchHint.textContent = "Még nem indult keresés.";
       emptyRow(els.sessionSearchRows, 5, "A frissítéshez add meg az admin tokent.");
       emptyRow(els.queueRows, 5, "A frissítéshez add meg az admin tokent.");
       emptyRow(els.recentRows, 5, "A frissítéshez add meg az admin tokent.");
@@ -1132,11 +1162,11 @@
     });
 
     els.retryEmailBatchBtn.addEventListener("click", () => {
-      postAction("/admin/retry-report-emails", "Email retry batch lefutott.");
+      postAction("/admin/retry-report-emails", "Riport email újrapróbálás lefutott.");
     });
 
     els.alertCheckBtn.addEventListener("click", () => {
-      postAction("/admin/trigger-alert-check", "Alert check lefutott.");
+      postAction("/admin/trigger-alert-check", "Riasztásellenőrzés lefutott.");
     });
 
     document.querySelectorAll("[data-control-action]").forEach((button) => {
@@ -1148,15 +1178,15 @@
         }
 
         if (action === "process-job") {
-          postAction("/admin/process-one-job", "Egy queued job processed.");
+          postAction("/admin/process-one-job", "Egy várakozó job feldolgozva.");
         }
 
         if (action === "retry-email") {
-          postAction("/admin/retry-report-emails", "Email retry batch lefutott.");
+          postAction("/admin/retry-report-emails", "Riport email újrapróbálás lefutott.");
         }
 
         if (action === "alert-check") {
-          postAction("/admin/trigger-alert-check", "Alert check lefutott.");
+          postAction("/admin/trigger-alert-check", "Riasztásellenőrzés lefutott.");
         }
       });
     });
@@ -1174,7 +1204,7 @@
     });
 
     document.addEventListener("click", handleActionClick);
-    emptyRow(els.sessionSearchRows, 5, "No search yet.");
+    emptyRow(els.sessionSearchRows, 5, "Még nem indult keresés.");
 
     if (savedToken) {
       refreshDashboard();

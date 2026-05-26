@@ -17,7 +17,7 @@ export function getAdminDashboard(_req, res) {
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>NeuroMap Control Center</title>
+    <title>NeuroMap Vezérlőközpont</title>
     <link rel="stylesheet" href="/public/admin-dashboard.css">
   </head>
   <body>
@@ -25,8 +25,8 @@ export function getAdminDashboard(_req, res) {
       <header class="topbar">
         <div>
           <p class="eyebrow">NeuroMap Kids</p>
-          <h1>Control Center</h1>
-          <p class="topbar-copy">Live operations cockpit for checkout, analysis, PDF, email delivery, and alerts.</p>
+          <h1>Vezérlőközpont</h1>
+          <p class="topbar-copy">Éles működési felület a fizetés, elemzés, PDF, email kézbesítés és riasztások követéséhez.</p>
         </div>
         <div class="token-box">
           <label for="adminToken">Admin token</label>
@@ -39,22 +39,22 @@ export function getAdminDashboard(_req, res) {
 
       <section class="toolbar" aria-label="Admin műveletek">
         <button id="refreshBtn" type="button">Frissítés</button>
-        <button id="processOneBtn" type="button">1 queued job futtatása</button>
-        <button id="retryEmailBatchBtn" type="button" class="warn">Email retry batch</button>
-        <button id="alertCheckBtn" type="button" class="secondary">Alert check</button>
+        <button id="processOneBtn" type="button">1 várakozó job futtatása</button>
+        <button id="retryEmailBatchBtn" type="button" class="warn">Riport emailek újrapróbálása</button>
+        <button id="alertCheckBtn" type="button" class="secondary">Riasztásellenőrzés</button>
         <button id="clearTokenBtn" type="button" class="secondary">Token törlése</button>
         <span id="statusText" class="status-text" role="status"></span>
       </section>
 
-      <section class="control-center" aria-label="Control Center overview">
+      <section class="control-center" aria-label="Vezérlőközpont áttekintés">
         <article class="control-hero">
           <div>
-            <p class="eyebrow">System state</p>
-            <h2 id="controlCenterHeadline">Waiting for secure admin token</h2>
-            <p id="controlCenterSummary">Add ADMIN_TOKEN, then refresh to load the live production snapshot.</p>
+            <p class="eyebrow">Rendszerállapot</p>
+            <h2 id="controlCenterHeadline">Biztonságos admin tokenre vár</h2>
+            <p id="controlCenterSummary">Add meg az ADMIN_TOKEN értékét, majd frissíts az éles állapot betöltéséhez.</p>
           </div>
           <div class="control-score" id="controlScore">
-            <span>Health</span>
+            <span>Állapot</span>
             <strong>-</strong>
           </div>
         </article>
@@ -62,36 +62,36 @@ export function getAdminDashboard(_req, res) {
         <article class="command-panel">
           <div class="panel-head compact">
             <div>
-              <h2>Command panel</h2>
-              <p>High-signal operational controls for the full report pipeline.</p>
+              <h2>Műveleti panel</h2>
+              <p>Gyors beavatkozási gombok a teljes riportfolyamathoz.</p>
             </div>
           </div>
           <div class="command-grid">
-            <button type="button" data-control-action="refresh">Refresh snapshot</button>
-            <button type="button" data-control-action="process-job" class="secondary">Process 1 job</button>
-            <button type="button" data-control-action="retry-email" class="warn">Retry report emails</button>
-            <button type="button" data-control-action="alert-check" class="secondary">Run alert check</button>
+            <button type="button" data-control-action="refresh">Állapot frissítése</button>
+            <button type="button" data-control-action="process-job" class="secondary">1 job feldolgozása</button>
+            <button type="button" data-control-action="retry-email" class="warn">Riport emailek újrapróbálása</button>
+            <button type="button" data-control-action="alert-check" class="secondary">Riasztásellenőrzés</button>
           </div>
         </article>
       </section>
 
-      <section class="pipeline-panel panel" aria-label="Pipeline cockpit">
+      <section class="pipeline-panel panel" aria-label="Folyamat áttekintés">
         <div class="panel-head">
           <div>
-            <h2>Pipeline cockpit</h2>
-            <p>Checkout -> Stripe webhook -> worker analysis -> PDF/report -> email delivery.</p>
+            <h2>Folyamat áttekintés</h2>
+            <p>Fizetés indítása -> Stripe webhook -> worker elemzés -> PDF/riport -> email kézbesítés.</p>
           </div>
-          <span id="lastSnapshotAt" class="snapshot-time">No snapshot yet</span>
+          <span id="lastSnapshotAt" class="snapshot-time">Még nincs állapotkép</span>
         </div>
         <div id="pipelineStages" class="pipeline-stages"></div>
         <div class="risk-strip">
           <div>
-            <span class="risk-label">Current focus</span>
+            <span class="risk-label">Aktuális fókusz</span>
             <strong id="riskFocus">-</strong>
           </div>
           <div>
-            <span class="risk-label">Recommended next action</span>
-            <strong id="nextAction">Add ADMIN_TOKEN and refresh.</strong>
+            <span class="risk-label">Javasolt következő lépés</span>
+            <strong id="nextAction">Add meg az ADMIN_TOKEN értékét, majd frissíts.</strong>
           </div>
         </div>
       </section>
@@ -102,23 +102,23 @@ export function getAdminDashboard(_req, res) {
           <strong id="apiStatus">-</strong>
         </article>
         <article class="metric health">
-          <span>Production health</span>
+          <span>Éles rendszerállapot</span>
           <strong id="healthLevel">-</strong>
         </article>
         <article class="metric">
-          <span>Queued</span>
+          <span>Várakozik</span>
           <strong id="queuedCount">0</strong>
         </article>
         <article class="metric">
-          <span>Processing</span>
+          <span>Feldolgozás alatt</span>
           <strong id="processingCount">0</strong>
         </article>
         <article class="metric danger">
-          <span>Failed</span>
+          <span>Hibás</span>
           <strong id="failedCount">0</strong>
         </article>
         <article class="metric">
-          <span>Done</span>
+          <span>Kész</span>
           <strong id="doneCount">0</strong>
         </article>
       </section>
@@ -126,8 +126,8 @@ export function getAdminDashboard(_req, res) {
       <section class="panel health-panel">
         <div class="panel-head">
           <div>
-            <h2>Production Health Panel</h2>
-            <p>Stripe webhook, worker queue és fizetett session állapotok egy helyen.</p>
+            <h2>Éles rendszer állapota</h2>
+            <p>Stripe webhook, worker feldolgozási sor és fizetett session állapotok egy helyen.</p>
           </div>
         </div>
         <div class="health-grid">
@@ -137,12 +137,12 @@ export function getAdminDashboard(_req, res) {
             <p id="lastJobProcessedMeta">-</p>
           </article>
           <article class="health-card">
-            <span>Legrégebbi queued job</span>
+            <span>Legrégebbi várakozó job</span>
             <strong id="oldestQueuedJob">-</strong>
             <p id="oldestQueuedJobMeta">-</p>
           </article>
           <article class="health-card">
-            <span>Beragadt processing job</span>
+            <span>Beragadt feldolgozás</span>
             <strong id="staleProcessingJobs">0</strong>
             <p>15 percnél régebbi processing lock.</p>
           </article>
@@ -152,14 +152,14 @@ export function getAdminDashboard(_req, res) {
             <p id="lastWebhookMeta">-</p>
           </article>
           <article class="health-card">
-            <span>Webhook hiba 24h</span>
+            <span>Webhook hiba 24 órában</span>
             <strong id="failedWebhooks24h">0</strong>
             <p id="webhookPendingMeta">-</p>
           </article>
           <article class="health-card">
-            <span>Fizetett, aktív job nélkül</span>
+            <span>Fizetett session aktív job nélkül</span>
             <strong id="paidWithoutJob">0</strong>
-            <p>Queued/processing session aktív queue sor nélkül.</p>
+            <p>Várakozó vagy feldolgozás alatti session aktív queue sor nélkül.</p>
           </article>
           <article class="health-card">
             <span>Utolsó riport email</span>
@@ -167,24 +167,24 @@ export function getAdminDashboard(_req, res) {
             <p id="lastReportEmailSentMeta">-</p>
           </article>
           <article class="health-card">
-            <span>Email delivery hiba</span>
+            <span>Email kézbesítési hiba</span>
             <strong id="failedReportEmails">0</strong>
-            <p>Failed riport email küldések.</p>
+            <p>Hibára futott riport email küldések.</p>
           </article>
           <article class="health-card">
             <span>Kész, de nincs email</span>
             <strong id="unsentDoneReports">0</strong>
-            <p>Done riport sent státusz nélkül.</p>
+            <p>Kész riport elküldött státusz nélkül.</p>
           </article>
           <article class="health-card">
-            <span>Email retryable</span>
+            <span>Újrapróbálható email</span>
             <strong id="retryableReportEmails">0</strong>
-            <p>Automatikusan vagy gombbal ujraprobalhato.</p>
+            <p>Automatikusan vagy gombbal újrapróbálható.</p>
           </article>
           <article class="health-card">
-            <span>Retry limit</span>
+            <span>Próbálkozási limit</span>
             <strong id="retryLimitReportEmails">0</strong>
-            <p>Max probalkozast elert riport emailek.</p>
+            <p>Maximum próbálkozást elért riport emailek.</p>
           </article>
         </div>
         <div class="health-recommendations">
@@ -196,19 +196,19 @@ export function getAdminDashboard(_req, res) {
       <section class="panel">
         <div class="panel-head">
           <div>
-            <h2>Proactive alerts</h2>
-            <p>Critical production health alerts sent to the admin email.</p>
+            <h2>Proaktív riasztások</h2>
+            <p>Kritikus éles rendszerállapot-riasztások az admin email címre.</p>
           </div>
         </div>
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
-                <th>Time</th>
-                <th>Level</th>
-                <th>Status</th>
-                <th>Summary</th>
-                <th>Recipient</th>
+                <th>Időpont</th>
+                <th>Szint</th>
+                <th>Állapot</th>
+                <th>Összegzés</th>
+                <th>Címzett</th>
               </tr>
             </thead>
             <tbody id="alertRows"></tbody>
@@ -219,7 +219,7 @@ export function getAdminDashboard(_req, res) {
       <section class="panel">
         <div class="panel-head">
           <div>
-            <h2>Email delivery figyelés</h2>
+            <h2>Email kézbesítés figyelés</h2>
             <p>Elkészült riportok, ahol az email küldés hibás, félbemaradt vagy még nincs sent státuszban.</p>
           </div>
         </div>
@@ -242,26 +242,26 @@ export function getAdminDashboard(_req, res) {
       <section class="panel session-search-panel">
         <div class="panel-head">
           <div>
-            <h2>Session search</h2>
-            <p>Find a session by ID, email, name, or Stripe checkout session ID.</p>
+            <h2>Session keresés</h2>
+            <p>Session keresése ID, email, név vagy Stripe checkout session ID alapján.</p>
           </div>
           <div class="search-row" role="search">
-            <input id="sessionSearchInput" type="search" autocomplete="off" placeholder="Email, name, session ID, Stripe ID">
-            <button id="sessionSearchBtn" type="button">Search</button>
+            <input id="sessionSearchInput" type="search" autocomplete="off" placeholder="Email, név, session ID, Stripe ID">
+            <button id="sessionSearchBtn" type="button">Keresés</button>
           </div>
         </div>
         <div class="search-meta">
-          <span id="sessionSearchHint">No search yet.</span>
+          <span id="sessionSearchHint">Még nem indult keresés.</span>
         </div>
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
-                <th>Status</th>
-                <th>Name / email</th>
-                <th>Focus</th>
-                <th>Updated</th>
-                <th>Actions</th>
+                <th>Állapot</th>
+                <th>Név / email</th>
+                <th>Fókusz</th>
+                <th>Frissítve</th>
+                <th>Műveletek</th>
               </tr>
             </thead>
             <tbody id="sessionSearchRows"></tbody>
@@ -272,27 +272,27 @@ export function getAdminDashboard(_req, res) {
       <section class="panel">
         <div class="panel-head">
           <div>
-            <h2>Operations log</h2>
-            <p>Webhook, analysis, checkout es email esemenyek idorendben.</p>
+            <h2>Műveleti napló</h2>
+            <p>Webhook, elemzés, checkout és email események időrendben.</p>
           </div>
-          <div class="filter-row" aria-label="Operations log filters">
-            <button type="button" class="secondary log-filter active" data-log-filter="all">All</button>
-            <button type="button" class="secondary log-filter" data-log-filter="critical">Critical</button>
+          <div class="filter-row" aria-label="Műveleti napló szűrők">
+            <button type="button" class="secondary log-filter active" data-log-filter="all">Összes</button>
+            <button type="button" class="secondary log-filter" data-log-filter="critical">Kritikus</button>
             <button type="button" class="secondary log-filter" data-log-filter="email">Email</button>
-            <button type="button" class="secondary log-filter" data-log-filter="analysis">Analysis</button>
+            <button type="button" class="secondary log-filter" data-log-filter="analysis">Elemzés</button>
             <button type="button" class="secondary log-filter" data-log-filter="webhook">Webhook</button>
-            <button type="button" class="secondary log-filter" data-log-filter="checkout">Checkout</button>
+            <button type="button" class="secondary log-filter" data-log-filter="checkout">Fizetés</button>
           </div>
         </div>
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
-                <th>Idopont</th>
-                <th>Tipus</th>
-                <th>Allapot</th>
+                <th>Időpont</th>
+                <th>Típus</th>
+                <th>Állapot</th>
                 <th>Session</th>
-                <th>Reszlet</th>
+                <th>Részlet</th>
               </tr>
             </thead>
             <tbody id="operationsLogRows"></tbody>
@@ -303,7 +303,7 @@ export function getAdminDashboard(_req, res) {
       <section class="panel">
         <div class="panel-head">
           <div>
-            <h2>Queue figyelés</h2>
+            <h2>Feldolgozási sor figyelés</h2>
             <p>Fizetett, még feldolgozás alatt álló vagy hibás sessionök.</p>
           </div>
         </div>
@@ -351,7 +351,7 @@ export function getAdminDashboard(_req, res) {
           <div class="panel-head">
             <div>
               <h2>Hibás elemzések</h2>
-              <p>Retry vagy részletes hibaszöveg ellenőrzése.</p>
+              <p>Újraindítás vagy részletes hibaszöveg ellenőrzése.</p>
             </div>
           </div>
           <div class="table-wrap">
@@ -374,7 +374,7 @@ export function getAdminDashboard(_req, res) {
         <div class="panel-head">
           <div>
             <h2>Session részletek</h2>
-            <p>Readable timeline, payload/report state, and direct recovery actions.</p>
+            <p>Olvasható idővonal, payload/riport állapot és közvetlen helyreállítási műveletek.</p>
           </div>
         </div>
         <div id="sessionDetail" class="session-detail empty-detail">Nincs kiválasztott session.</div>
