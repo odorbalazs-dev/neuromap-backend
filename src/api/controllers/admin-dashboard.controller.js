@@ -17,7 +17,7 @@ export function getAdminDashboard(_req, res) {
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>NeuroMap Admin</title>
+    <title>NeuroMap Control Center</title>
     <link rel="stylesheet" href="/public/admin-dashboard.css">
   </head>
   <body>
@@ -25,7 +25,8 @@ export function getAdminDashboard(_req, res) {
       <header class="topbar">
         <div>
           <p class="eyebrow">NeuroMap Kids</p>
-          <h1>Admin monitor</h1>
+          <h1>Control Center</h1>
+          <p class="topbar-copy">Live operations cockpit for checkout, analysis, PDF, email delivery, and alerts.</p>
         </div>
         <div class="token-box">
           <label for="adminToken">Admin token</label>
@@ -43,6 +44,56 @@ export function getAdminDashboard(_req, res) {
         <button id="alertCheckBtn" type="button" class="secondary">Alert check</button>
         <button id="clearTokenBtn" type="button" class="secondary">Token törlése</button>
         <span id="statusText" class="status-text" role="status"></span>
+      </section>
+
+      <section class="control-center" aria-label="Control Center overview">
+        <article class="control-hero">
+          <div>
+            <p class="eyebrow">System state</p>
+            <h2 id="controlCenterHeadline">Waiting for secure admin token</h2>
+            <p id="controlCenterSummary">Add ADMIN_TOKEN, then refresh to load the live production snapshot.</p>
+          </div>
+          <div class="control-score" id="controlScore">
+            <span>Health</span>
+            <strong>-</strong>
+          </div>
+        </article>
+
+        <article class="command-panel">
+          <div class="panel-head compact">
+            <div>
+              <h2>Command panel</h2>
+              <p>High-signal operational controls for the full report pipeline.</p>
+            </div>
+          </div>
+          <div class="command-grid">
+            <button type="button" data-control-action="refresh">Refresh snapshot</button>
+            <button type="button" data-control-action="process-job" class="secondary">Process 1 job</button>
+            <button type="button" data-control-action="retry-email" class="warn">Retry report emails</button>
+            <button type="button" data-control-action="alert-check" class="secondary">Run alert check</button>
+          </div>
+        </article>
+      </section>
+
+      <section class="pipeline-panel panel" aria-label="Pipeline cockpit">
+        <div class="panel-head">
+          <div>
+            <h2>Pipeline cockpit</h2>
+            <p>Checkout -> Stripe webhook -> worker analysis -> PDF/report -> email delivery.</p>
+          </div>
+          <span id="lastSnapshotAt" class="snapshot-time">No snapshot yet</span>
+        </div>
+        <div id="pipelineStages" class="pipeline-stages"></div>
+        <div class="risk-strip">
+          <div>
+            <span class="risk-label">Current focus</span>
+            <strong id="riskFocus">-</strong>
+          </div>
+          <div>
+            <span class="risk-label">Recommended next action</span>
+            <strong id="nextAction">Add ADMIN_TOKEN and refresh.</strong>
+          </div>
+        </div>
       </section>
 
       <section class="metrics" aria-label="Állapot összegzés">

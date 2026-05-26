@@ -64,6 +64,30 @@ assert(
   "Dashboard HTML should include the production health panel."
 );
 assert(
+  res.body.includes("Control Center"),
+  "Dashboard HTML should include the control center title."
+);
+assert(
+  res.body.includes("controlCenterHeadline"),
+  "Dashboard HTML should include the control center headline."
+);
+assert(
+  res.body.includes("Command panel"),
+  "Dashboard HTML should include the command panel."
+);
+assert(
+  res.body.includes("Pipeline cockpit"),
+  "Dashboard HTML should include the pipeline cockpit."
+);
+assert(
+  res.body.includes("pipelineStages"),
+  "Dashboard HTML should include the pipeline stages container."
+);
+assert(
+  res.body.includes("nextAction"),
+  "Dashboard HTML should include the recommended next action container."
+);
+assert(
   res.body.includes("healthRecommendations"),
   "Dashboard HTML should include health recommendations container."
 );

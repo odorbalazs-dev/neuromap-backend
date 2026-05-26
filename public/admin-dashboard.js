@@ -10,6 +10,13 @@
     retryEmailBatchBtn: document.getElementById("retryEmailBatchBtn"),
     alertCheckBtn: document.getElementById("alertCheckBtn"),
     statusText: document.getElementById("statusText"),
+    controlCenterHeadline: document.getElementById("controlCenterHeadline"),
+    controlCenterSummary: document.getElementById("controlCenterSummary"),
+    controlScore: document.getElementById("controlScore"),
+    lastSnapshotAt: document.getElementById("lastSnapshotAt"),
+    pipelineStages: document.getElementById("pipelineStages"),
+    riskFocus: document.getElementById("riskFocus"),
+    nextAction: document.getElementById("nextAction"),
     apiStatus: document.getElementById("apiStatus"),
     healthLevel: document.getElementById("healthLevel"),
     queuedCount: document.getElementById("queuedCount"),
@@ -58,6 +65,10 @@
       els.alertCheckBtn
     ].forEach((button) => {
       if (button) button.disabled = isBusy;
+    });
+
+    document.querySelectorAll("[data-control-action]").forEach((button) => {
+      button.disabled = isBusy;
     });
   }
 
@@ -405,6 +416,150 @@
     els.doneCount.textContent = Number(counts.completed || counts.done || 0);
   }
 
+  function countValue(value) {
+    const number = Number(value || 0);
+    return Number.isFinite(number) ? number : 0;
+  }
+
+  function stageLevel({ critical = 0, warning = 0, active = 0 }) {
+    if (critical > 0) return "critical";
+    if (warning > 0) return "warning";
+    if (active > 0) return "active";
+    return "healthy";
+  }
+
+  function stageLabel(level) {
+    if (level === "critical") return "Needs action";
+    if (level === "warning") return "Watch";
+    if (level === "active") return "Running";
+    return "OK";
+  }
+
+  function buildPipelineStages(health, queue) {
+    const metrics = health?.metrics || {};
+    const jobs = health?.jobs || {};
+    const webhooks = health?.webhooks || {};
+    const email = health?.email || {};
+    const sessions = health?.sessions || {};
+    const queueCounts = queue?.counts || {};
+
+    return [
+      {
+        name: "Checkout",
+        level: stageLevel({
+          active: countValue(queueCounts.queued) + countValue(queueCounts.processing),
+          warning: countValue(queueCounts.failed)
+        }),
+        detail: `${countValue(queueCounts.queued)} queued, ${countValue(queueCounts.processing)} processing, ${countValue(queueCounts.failed)} failed`
+      },
+      {
+        name: "Stripe webhook",
+        level: stageLevel({
+          critical: countValue(webhooks.failedLast24h),
+          active: countValue(webhooks.pendingOrProcessing)
+        }),
+        detail: `${countValue(webhooks.failedLast24h)} failed in 24h, ${countValue(webhooks.pendingOrProcessing)} pending`
+      },
+      {
+        name: "Worker analysis",
+        level: stageLevel({
+          critical: countValue(metrics.staleProcessingJobs),
+          warning: countValue(jobs.counts?.failed) + countValue(metrics.paidFailedSessions),
+          active: countValue(jobs.counts?.queued) + countValue(jobs.counts?.processing)
+        }),
+        detail: `${countValue(jobs.counts?.queued)} queued jobs, ${countValue(metrics.staleProcessingJobs)} stale locks`
+      },
+      {
+        name: "PDF/report",
+        level: stageLevel({
+          warning: countValue(sessions.doneWithoutAnalysisResult?.length)
+        }),
+        detail: `${countValue(sessions.doneWithoutAnalysisResult?.length)} done sessions without report text`
+      },
+      {
+        name: "Email delivery",
+        level: stageLevel({
+          critical: countValue(email.failedCount) + countValue(email.retryLimitCount),
+          warning: countValue(email.unsentDoneCount),
+          active: countValue(email.retryableCount)
+        }),
+        detail: `${countValue(email.failedCount)} failed, ${countValue(email.retryableCount)} retryable, ${countValue(email.retryLimitCount)} at limit`
+      }
+    ];
+  }
+
+  function renderPipelineStages(health, queue) {
+    els.pipelineStages.replaceChildren();
+
+    const stages = buildPipelineStages(health, queue);
+
+    stages.forEach((stage, index) => {
+      const card = document.createElement("article");
+      card.className = `pipeline-stage ${stage.level}`;
+
+      const number = document.createElement("span");
+      number.className = "stage-number";
+      number.textContent = String(index + 1);
+
+      const body = document.createElement("div");
+      const title = document.createElement("h3");
+      title.textContent = stage.name;
+
+      const detail = document.createElement("p");
+      detail.textContent = stage.detail;
+
+      body.append(title, detail);
+
+      const pill = statusPill(stageLabel(stage.level));
+      pill.classList.add(stage.level);
+
+      card.append(number, body, pill);
+      els.pipelineStages.appendChild(card);
+    });
+  }
+
+  function renderControlCenter(status, health, queue, alerts) {
+    const level = health?.level || "unknown";
+    const recommendations = health?.recommendations || [];
+    const issues = [
+      countValue(health?.metrics?.staleProcessingJobs),
+      countValue(health?.metrics?.failedJobs),
+      countValue(health?.metrics?.failedWebhooks24h),
+      countValue(health?.metrics?.failedReportEmails),
+      countValue(health?.metrics?.retryLimitReportEmails)
+    ].reduce((sum, value) => sum + value, 0);
+
+    const levelText = level === "healthy"
+      ? "All core systems look clean"
+      : level === "active"
+        ? "Pipeline is active"
+        : level === "warning"
+          ? "Operator review recommended"
+          : level === "critical"
+            ? "Action needed"
+            : "Waiting for live data";
+
+    els.controlCenterHeadline.textContent = levelText;
+    els.controlCenterSummary.textContent = status?.ok
+      ? `${issues} critical signal(s). ${countValue(queue?.counts?.queued)} queued, ${countValue(queue?.counts?.processing)} processing, ${countValue(queue?.counts?.failed)} failed sessions.`
+      : "Admin API is not reachable with the current token.";
+
+    els.controlScore.className = `control-score ${statusClass(level)}`;
+    els.controlScore.querySelector("strong").textContent = level.toUpperCase();
+
+    els.lastSnapshotAt.textContent = health?.generatedAt
+      ? `Snapshot: ${formatDate(health.generatedAt)}`
+      : "No snapshot yet";
+
+    els.riskFocus.textContent = alerts?.items?.length
+      ? compact(alerts.items[0].summary, 100)
+      : recommendations[0] || "No current production risk detected.";
+
+    els.nextAction.textContent = recommendations[0] || "Keep monitoring. No manual action is currently suggested.";
+
+    renderPipelineStages(health, queue);
+  }
+
   function renderHealth(health) {
     const level = health?.level || "-";
     const healthMetric = els.healthLevel.closest(".metric");
@@ -491,6 +646,7 @@
       renderSessionRows(els.failedRows, failed.items || [], "failed");
       renderOperationLogRows(operations.items || []);
       renderAlertRows(alerts.items || []);
+      renderControlCenter(status, health, queue, alerts);
       setStatus("Frissítve.");
     } catch (error) {
       els.apiStatus.textContent = "Hiba";
@@ -588,6 +744,7 @@
       emptyRow(els.operationsLogRows, 5, "A frissítéshez add meg az admin tokent.");
       renderCounts({});
       renderHealth(null);
+      renderControlCenter(null, null, { counts: {} }, { items: [] });
       els.apiStatus.textContent = "-";
       setStatus("Token törölve.");
     });
@@ -603,6 +760,28 @@
 
     els.alertCheckBtn.addEventListener("click", () => {
       postAction("/admin/trigger-alert-check", "Alert check lefutott.");
+    });
+
+    document.querySelectorAll("[data-control-action]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const action = button.dataset.controlAction;
+
+        if (action === "refresh") {
+          refreshDashboard();
+        }
+
+        if (action === "process-job") {
+          postAction("/admin/process-one-job", "Egy queued job processed.");
+        }
+
+        if (action === "retry-email") {
+          postAction("/admin/retry-report-emails", "Email retry batch lefutott.");
+        }
+
+        if (action === "alert-check") {
+          postAction("/admin/trigger-alert-check", "Alert check lefutott.");
+        }
+      });
     });
 
     document.querySelectorAll(".log-filter").forEach((button) => {
