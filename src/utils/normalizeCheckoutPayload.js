@@ -12,6 +12,15 @@ function cleanBoolean(value) {
   return value === true;
 }
 
+function cleanAge(value) {
+  if (value === null || value === undefined || value === "") return null;
+
+  const num = Number(String(value).trim().replace(",", "."));
+  if (!Number.isFinite(num) || num < 1 || num > 24) return null;
+
+  return Math.round(num * 10) / 10;
+}
+
 function normalizeQuestion(q = {}) {
   return {
     id: cleanText(q.id, 120),
@@ -113,6 +122,9 @@ function normalizeResultSummary(summary = null) {
 
 export function normalizeCheckoutPayload(body = {}) {
   const payload = body.payload || {};
+  const childAge = cleanAge(
+    body.childAge ?? body.ageYears ?? payload.childAge ?? payload.ageYears
+  );
 
   return {
     email: cleanText(body.email, 254).toLowerCase(),
@@ -120,6 +132,8 @@ export function normalizeCheckoutPayload(body = {}) {
     lang: cleanText(body.lang || "en", 10),
 
     payload: {
+      childAge,
+      ageYears: childAge,
       triageQuestions: Array.isArray(payload.triageQuestions)
         ? payload.triageQuestions.slice(0, 40).map(normalizeQuestion)
         : [],

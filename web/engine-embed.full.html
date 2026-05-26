@@ -720,6 +720,106 @@
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   }
 
+  function getAgeUiText() {
+    const t = getUI();
+
+    const fallback = {
+      hu: {
+        label: "Gyermek eletkora",
+        placeholder: "pl. 7",
+        missing: "Kerlek add meg a gyermek eletkorat.",
+        invalid: "A gyermek eletkora 1 es 24 ev kozott legyen."
+      },
+      en: {
+        label: "Child age",
+        placeholder: "e.g. 7",
+        missing: "Please enter the child's age.",
+        invalid: "Child age should be between 1 and 24 years."
+      }
+    };
+
+    const local = fallback[state.lang] || fallback.en;
+
+    return {
+      label: t.labelChildAge || local.label,
+      placeholder: t.childAgePlaceholder || local.placeholder,
+      missing: t.missingChildAge || local.missing,
+      invalid: t.invalidChildAge || local.invalid
+    };
+  }
+
+  function ensureChildAgeField() {
+    const emailInput = document.getElementById("email");
+    if (!emailInput || document.getElementById("childAge")) return;
+
+    const ageText = getAgeUiText();
+    const labelEmail = document.getElementById("labelEmail");
+    const fieldWrapper = document.createElement("div");
+    fieldWrapper.id = "childAgeField";
+    fieldWrapper.style.marginTop = "14px";
+
+    const label = document.createElement("label");
+    label.id = "labelChildAge";
+    label.htmlFor = "childAge";
+    label.textContent = ageText.label;
+    if (labelEmail && labelEmail.className) label.className = labelEmail.className;
+    label.style.display = "block";
+    label.style.marginBottom = "6px";
+
+    const input = document.createElement("input");
+    input.id = "childAge";
+    input.name = "childAge";
+    input.type = "number";
+    input.min = "1";
+    input.max = "24";
+    input.step = "0.1";
+    input.inputMode = "decimal";
+    input.placeholder = ageText.placeholder;
+    input.autocomplete = "off";
+    if (emailInput.className) input.className = emailInput.className;
+    input.style.width = "100%";
+
+    fieldWrapper.appendChild(label);
+    fieldWrapper.appendChild(input);
+
+    emailInput.insertAdjacentElement("afterend", fieldWrapper);
+  }
+
+  function updateChildAgeFieldLanguage() {
+    const ageText = getAgeUiText();
+    const label = document.getElementById("labelChildAge");
+    const input = document.getElementById("childAge");
+
+    if (label) label.textContent = ageText.label;
+    if (input) input.placeholder = ageText.placeholder;
+  }
+
+  function getChildAgeValue() {
+    const input = document.getElementById("childAge");
+    if (!input) return null;
+
+    const normalized = String(input.value || "").trim().replace(",", ".");
+    if (!normalized) return null;
+
+    const age = Number(normalized);
+    return Number.isFinite(age) ? age : null;
+  }
+
+  function validateChildAge() {
+    const ageText = getAgeUiText();
+    const age = getChildAgeValue();
+
+    if (age === null) {
+      return { ok: false, message: ageText.missing };
+    }
+
+    if (age < 1 || age > 24) {
+      return { ok: false, message: ageText.invalid };
+    }
+
+    return { ok: true, age };
+  }
+
   function showModal() {
     const el = document.getElementById("languageModal");
     if (el) el.style.display = "flex";
@@ -808,6 +908,7 @@
       ["pageIntro", t.pageIntro],
       ["labelName", t.labelName],
       ["labelEmail", t.labelEmail],
+      ["labelChildAge", t.labelChildAge || getAgeUiText().label],
       ["progressLabel", t.progressLabel || "Step"],
       ["backBtn", t.back],
       ["nextBtn", t.next],
@@ -821,6 +922,9 @@
 
     const langSwitch = document.getElementById("langSwitch");
     if (langSwitch) langSwitch.textContent = lang.toUpperCase();
+
+    ensureChildAgeField();
+    updateChildAgeFieldLanguage();
 
     renderCurrentStep();
   }
@@ -1193,11 +1297,17 @@
   }
 
   function buildCheckoutPayload() {
+    const childAge = getChildAgeValue();
+
     return {
       name: document.getElementById("name").value.trim(),
       email: document.getElementById("email").value.trim(),
+      childAge,
+      ageYears: childAge,
       lang: state.lang,
       payload: {
+        childAge,
+        ageYears: childAge,
         triageQuestions: state.triageQuestions.map((q) => ({
           id: q.id,
           text: getQuestionText(q),
@@ -1262,6 +1372,13 @@
 
     if (!validateEmail(email)) {
       alert(t.invalidEmail);
+      return;
+    }
+
+    const ageValidation = validateChildAge();
+
+    if (!ageValidation.ok) {
+      alert(ageValidation.message);
       return;
     }
 
@@ -1337,6 +1454,7 @@
 
   function init() {
     buildLangButtons();
+    ensureChildAgeField();
 
     if (!validateRuntimeBanks()) {
       return;

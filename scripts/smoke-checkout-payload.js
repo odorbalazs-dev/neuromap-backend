@@ -132,8 +132,12 @@ function buildBasePayload({ includeExtra = false } = {}) {
   return {
     name: "Smoke Tester",
     email: "smoke@example.com",
+    childAge: 7,
+    ageYears: 7,
     lang: "hu",
     payload: {
+      childAge: 7,
+      ageYears: 7,
       triageQuestions: triageQuestions.map((question) => toPayloadQuestion(question)),
       triageAnswers,
       triageScores,
@@ -171,6 +175,8 @@ function expectValidPayload(name, payload) {
 
   const normalized = normalizeCheckoutPayload(payload);
   assert(normalized.email === payload.email, `${name} should keep lowercase email.`);
+  assert(normalized.payload.childAge === 7, `${name} should keep childAge.`);
+  assert(normalized.payload.ageYears === 7, `${name} should keep ageYears.`);
   assert(normalized.payload.triageQuestions.length === 25, `${name} should keep 25 triage questions.`);
   assert(normalized.payload.specificQuestions.length === 30, `${name} should keep 30 specific questions.`);
   assert(

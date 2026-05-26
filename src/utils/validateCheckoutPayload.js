@@ -14,6 +14,13 @@ function isNumberArray(arr, expectedLength) {
   );
 }
 
+function hasInvalidAge(value) {
+  if (value === null || value === undefined || value === "") return false;
+
+  const age = Number(String(value).trim().replace(",", "."));
+  return !Number.isFinite(age) || age < 1 || age > 24;
+}
+
 function validateQuestionArray(name, questions, minLength = 1, maxLength = 60) {
   const errors = [];
 
@@ -68,6 +75,10 @@ export function validateCheckoutPayload(body = {}) {
   if (!isObject(payload)) {
     errors.push("Missing payload.");
     return { ok: false, errors };
+  }
+
+  if (hasInvalidAge(body.childAge) || hasInvalidAge(body.ageYears) || hasInvalidAge(payload.childAge) || hasInvalidAge(payload.ageYears)) {
+    errors.push("Invalid child age.");
   }
 
   errors.push(...validateQuestionArray("triageQuestions", payload.triageQuestions, 25, 40));
