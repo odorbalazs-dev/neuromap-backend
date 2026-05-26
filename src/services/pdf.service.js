@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import PDFDocument from "pdfkit";
+import { buildReportV2Context } from "./report-v2.service.js";
 
 const BRAND = {
   blue: "#1197D5",
@@ -787,6 +788,123 @@ function addOverviewBlock(doc, payload, labels, lang, pageState = null) {
   }
 }
 
+function getReportV2PdfLabels(lang = "en") {
+  if (lang === "hu") {
+    return {
+      title: "Korosztalyi ertelmezes",
+      ageBand: "Korosztaly",
+      recommendations: "Korosztalyi javaslatok"
+    };
+  }
+
+  return {
+    title: "Age-group interpretation",
+    ageBand: "Age group",
+    recommendations: "Age-aware recommendations"
+  };
+}
+
+function addReportV2AgeBlock(doc, payload, labels, lang, pageState = null) {
+  const context = buildReportV2Context(payload || {}, lang);
+  const v2Labels = getReportV2PdfLabels(lang);
+  const x = 56;
+  const w = doc.page.width - 112;
+  const bodyWidth = w - 44;
+  const recommendations = (context.recommendations || []).slice(0, 3);
+
+  const bodyText = clean(context.interpretation);
+  const recommendationText = recommendations
+    .map((item) => `- ${clean(item)}`)
+    .join("\n");
+
+  const titleHeight = doc
+    .font(getFont(lang, true))
+    .fontSize(12.5)
+    .heightOfString(v2Labels.title, { width: bodyWidth });
+
+  const bodyHeight = doc
+    .font(getFont(lang))
+    .fontSize(9.5)
+    .heightOfString(bodyText, {
+      width: bodyWidth,
+      align: getTextAlign(lang),
+      lineGap: 3
+    });
+
+  const recHeight = recommendationText
+    ? doc
+        .font(getFont(lang))
+        .fontSize(9.2)
+        .heightOfString(recommendationText, {
+          width: bodyWidth - 12,
+          align: getTextAlign(lang),
+          lineGap: 3
+        })
+    : 0;
+
+  const h = Math.max(142, Math.ceil(titleHeight + bodyHeight + recHeight + 86));
+
+  ensureSpace(doc, h + 18, labels, lang, pageState);
+  doc.moveDown(0.8);
+
+  const y = doc.y;
+
+  doc.roundedRect(x, y, w, h, 16).fill("#FFFFFF");
+  doc.roundedRect(x, y, w, h, 16).strokeColor(BRAND.softBorder).lineWidth(1).stroke();
+  doc.rect(x, y, 8, h).fill(BRAND.green);
+
+  doc.circle(x + 30, y + 30, 13).fill(BRAND.lightGreen);
+  doc.circle(x + 30, y + 30, 5).fill(BRAND.green);
+
+  doc.fillColor(BRAND.dark)
+    .font(getFont(lang, true))
+    .fontSize(12.5)
+    .text(v2Labels.title, x + 54, y + 18, {
+      width: w - 76,
+      align: getTextAlign(lang)
+    });
+
+  doc.fillColor(BRAND.muted)
+    .font(getFont(lang, true))
+    .fontSize(9)
+    .text(`${v2Labels.ageBand}: ${context.ageBandLabel}`, x + 54, y + 42, {
+      width: w - 76,
+      align: getTextAlign(lang)
+    });
+
+  doc.fillColor("#374151")
+    .font(getFont(lang))
+    .fontSize(9.5)
+    .text(bodyText, x + 22, y + 68, {
+      width: bodyWidth,
+      align: getTextAlign(lang),
+      lineGap: 3
+    });
+
+  if (recommendations.length) {
+    const recY = doc.y + 10;
+
+    doc.fillColor(BRAND.dark)
+      .font(getFont(lang, true))
+      .fontSize(10)
+      .text(v2Labels.recommendations, x + 22, recY, {
+        width: bodyWidth,
+        align: getTextAlign(lang)
+      });
+
+    doc.fillColor("#374151")
+      .font(getFont(lang))
+      .fontSize(9.2)
+      .text(recommendationText, x + 30, recY + 18, {
+        width: bodyWidth - 12,
+        align: getTextAlign(lang),
+        lineGap: 3
+      });
+  }
+
+  doc.y = y + h;
+}
+
 function addSectionTitle(doc, title, labels, lang, pageState = null) {
   ensureSpace(doc, 54, labels, lang, pageState);
 
@@ -1163,6 +1281,7 @@ export async function generatePdfBuffer({ name, reportText, lang = "en", payload
       doc.y = 246;
 
       addOverviewBlock(doc, payload, labels, safeLang, pageState);
+      addReportV2AgeBlock(doc, payload, labels, safeLang, pageState);
       addSectionTitle(doc, labels.reportTitle, labels, safeLang, pageState);
       addReportText(doc, reportText, labels, safeLang, pageState);
       addDisclaimerBox(doc, labels, safeLang, pageState);

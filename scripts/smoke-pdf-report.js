@@ -102,6 +102,7 @@ function buildSamplePayload() {
   };
 
   return {
+    childAge: 7,
     detectedRisk: "ADHD",
     secondaryRisk: "ASD",
     triageScores: {

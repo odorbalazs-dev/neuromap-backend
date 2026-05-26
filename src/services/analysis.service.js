@@ -5,6 +5,7 @@ import {
   cleanGeneratedReportText,
   validateReportStructure
 } from "./report-contract.service.js";
+import { buildReportV2PromptContext } from "./report-v2.service.js";
 
 const openai = new OpenAI({
   apiKey: env.OPENAI_API_KEY
@@ -398,6 +399,7 @@ function buildPrompt(payload = {}, lang = "en") {
     specificScoringSummary,
     adaptiveSummary
   });
+  const reportV2Context = buildReportV2PromptContext(payload, safeLang);
 
   return `
 You are a senior child development and child mental-health screening interpreter writing a paid parent-facing report.
@@ -448,6 +450,10 @@ PREMIUM REPORT QUALITY RULES:
 
 REPORT V2 CONTENT REQUIREMENTS:
 - The report must read like a premium paid interpretation, not a generic screening summary.
+- The report must include age-group interpretation and age-aware recommendations.
+- If the child's age is available, use the age band below to adapt examples, expectations, and next steps.
+- If the child's age is not available, explicitly say that age was not provided and keep developmental guidance adaptable.
+- Do not infer exact age from questionnaire answers.
 - Make the primary area specific to the actual top subdomains and strongest patterns.
 - Explain why the secondary signal may appear together with the primary one, if present.
 - Include at least one paragraph on uncertainty, context, or overlap when the adaptive summary suggests it.
@@ -508,6 +514,9 @@ ${JSON.stringify(parentActionGuide, null, 2)}
 
 SIGNAL QUALITY GUIDE:
 ${JSON.stringify(signalQualityGuide, null, 2)}
+
+STRUCTURED REPORT V2 AGE CONTEXT:
+${JSON.stringify(reportV2Context, null, 2)}
 
 CLINICAL QUALITY GATE BEFORE WRITING:
 - First identify the strongest 2-4 subdomains and use them as the backbone of the report.
@@ -570,17 +579,17 @@ Explain the secondary signal carefully. If it is weak, say it is weak. If it ove
 5. Possible impact on everyday life
 Describe possible effects on home life, learning, peer relationships, routines, transitions, independence, and emotional wellbeing.
 
-6. Developmental and contextual interpretation
-Explain whether the observed pattern may vary across environments. Discuss stress sensitivity, transitions, overload, fatigue, masking, compensation, or context-dependence if relevant.
+6. Developmental, age-group, and contextual interpretation
+Explain how the observed pattern should be understood for the child's age band when age is available. If age is missing, state this briefly and explain that expectations should be adapted to the child's developmental stage. Discuss stress sensitivity, transitions, overload, fatigue, masking, compensation, or context-dependence if relevant.
 
 7. Strengths and protective factors
 Identify realistic strengths, stabilizing factors, coping signs, supportive conditions, or signs of resilience. Explain how these strengths can be used in support planning. Do not invent unrealistic strengths.
 
 8. Practical recommendations for parents
-Give concrete suggestions parents can use immediately. Include home routines, communication style, emotional regulation, sensory or transition support, observation, and supportive responses. Include at least one recommendation that can be tried this week and explain why it fits the pattern.
+Give concrete suggestions parents can use immediately. Include home routines, communication style, emotional regulation, sensory or transition support, observation, supportive responses, and age-aware adaptations. Include at least one recommendation that can be tried this week and explain why it fits the pattern.
 
 9. Suggested next 30 days
-Give a realistic, parent-friendly action plan for the next few weeks. Structure it in prose around the first week, the following two weeks, and the review point. Include what to observe, what to try, what to share with school/daycare if relevant, and when to review.
+Give a realistic, parent-friendly action plan for the next few weeks. Structure it in prose around the first week, the following two weeks, and the review point. Include what to observe, what to try, what to share with school/daycare if relevant, when to review, and how the plan should be adjusted for the age band or developmental stage.
 
 10. When professional support may be useful
 Explain when to consider a pediatrician, psychologist, child psychiatrist, developmental specialist, school specialist, speech therapist, occupational therapist, or other qualified professional, depending on the pattern. Tie the recommendation to persistence, impairment, cross-context concerns, declining confidence, safety concerns, or educator observations.

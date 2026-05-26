@@ -1,3 +1,5 @@
+import { buildReportV2EmailContext } from "../services/report-v2.service.js";
+
 function escapeHtml(value = "") {
   return String(value)
     .replaceAll("&", "&amp;")
@@ -51,6 +53,15 @@ export function buildReportEmail({ lang, name, reportText, payload = null }) {
   const safeLang = getSafeLang(lang);
   const safeName = escapeHtml(name || "");
   const safeReport = escapeHtml(reportText || "").replaceAll("\n", "<br />");
+  const reportV2 = buildReportV2EmailContext(payload || {}, safeLang);
+  const ageRecommendationHtml = (reportV2.recommendations || [])
+    .slice(0, 3)
+    .map((item) => `<li style="margin:0 0 8px 0;">${escapeHtml(item)}</li>`)
+    .join("");
+  const ageRecommendationText = (reportV2.recommendations || [])
+    .slice(0, 3)
+    .map((item) => `- ${item}`)
+    .join("\n");
 
   const content = {
     hu: {
@@ -273,6 +284,25 @@ export function buildReportEmail({ lang, name, reportText, payload = null }) {
 
             <tr>
               <td style="padding:0 32px 24px 32px;">
+                <div style="border:1px solid rgba(114,190,0,0.28);border-radius:18px;background:#f8fff4;overflow:hidden;">
+                  <div style="padding:14px 20px;border-bottom:1px solid rgba(114,190,0,0.18);font-family:Arial,sans-serif;font-size:15px;font-weight:700;color:#1f2937;">
+                    ${escapeHtml(reportV2.title)}
+                  </div>
+                  <div style="padding:18px 20px;font-family:Arial,sans-serif;font-size:14px;line-height:1.7;color:#334155;">
+                    <p style="margin:0 0 10px 0;"><strong>${escapeHtml(reportV2.ageBandLabel)}</strong></p>
+                    <p style="margin:0 0 12px 0;">${escapeHtml(reportV2.interpretation)}</p>
+                    ${
+                      ageRecommendationHtml
+                        ? `<div style="font-weight:700;margin:0 0 8px 0;color:#1f2937;">${escapeHtml(reportV2.recommendationTitle)}</div><ul style="margin:0;padding-left:20px;">${ageRecommendationHtml}</ul>`
+                        : ""
+                    }
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding:0 32px 24px 32px;">
                 <div style="border:1px solid rgba(15,23,42,0.08);border-radius:18px;background:#fbfcfe;overflow:hidden;">
                   <div style="padding:16px 20px;background:#eef2ff;border-bottom:1px solid rgba(15,23,42,0.08);font-family:Arial,sans-serif;font-size:15px;font-weight:700;color:#111827;">
                     ${escapeHtml(t.reportTitle)}
@@ -313,6 +343,11 @@ export function buildReportEmail({ lang, name, reportText, payload = null }) {
 NeuroMap Kids
 
 ${t.plainIntro}
+
+${reportV2.title}
+${reportV2.ageBandLabel}
+${reportV2.interpretation}
+${ageRecommendationText}
 
 ${reportText || ""}
 
