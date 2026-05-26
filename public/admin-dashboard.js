@@ -347,7 +347,24 @@
   }
 
   function yesNo(value) {
-    return value ? "yes" : "no";
+    return value ? "igen" : "nem";
+  }
+
+  function retryActionLabel(value) {
+    const labels = {
+      no_action: "nincs teendő",
+      inspect_then_reset_retry: "ellenőrzés, majd retry reset",
+      resend_report_email: "riport email újraküldése",
+      wait_for_report: "riport elkészülésére vár",
+      ready: "készen áll",
+      payment_not_paid: "nincs kifizetve",
+      missing_payload: "hiányzó payload",
+      analysis_done: "elemzés kész",
+      analysis_already_running: "elemzés már fut",
+      analysis_failed: "elemzés hibára futott"
+    };
+
+    return labels[value] || text(value);
   }
 
   function summaryField(label, value, options = {}) {
@@ -378,26 +395,26 @@
     card.className = "detail-card report-summary-card";
 
     const title = document.createElement("h4");
-    title.textContent = "Report snapshot";
+    title.textContent = "Riport áttekintés";
 
     const grid = document.createElement("div");
     grid.className = "summary-field-grid";
     grid.append(
-      summaryField("Child age", summary.hasAge ? `${formatNumber(summary.childAge, 1)} years` : "not provided"),
-      summaryField("Age band", summary.ageBandLabel || summary.ageBand),
-      summaryField("Primary signal", summary.detectedRisk),
-      summaryField("Secondary signal", summary.secondaryRisk),
-      summaryField("Severity", summary.severity, { pill: true }),
-      summaryField("Signal label", summary.signalLabel),
-      summaryField("Specific average", formatNumber(summary.normalizedAverage)),
-      summaryField("Questionnaire", summary.questionnaireVersion),
-      summaryField("Email retry", email.nextAction || "-"),
-      summaryField("Email retry available", yesNo(email.retryAvailable)),
+      summaryField("Gyermek életkora", summary.hasAge ? `${formatNumber(summary.childAge, 1)} év` : "nincs megadva"),
+      summaryField("Korosztály", summary.ageBandLabel || summary.ageBand),
+      summaryField("Fő jelzés", summary.detectedRisk),
+      summaryField("Másodlagos jelzés", summary.secondaryRisk),
+      summaryField("Erősség", summary.severity, { pill: true }),
+      summaryField("Jelzésszint", summary.signalLabel),
+      summaryField("Specifikus átlag", formatNumber(summary.normalizedAverage)),
+      summaryField("Kérdőív verzió", summary.questionnaireVersion),
+      summaryField("Email retry teendő", retryActionLabel(email.nextAction)),
+      summaryField("Email retry elérhető", yesNo(email.retryAvailable)),
       summaryField("Email retry limit", yesNo(email.retryLimitReached)),
-      summaryField("Analysis retry", analysisRetry.reason || "-"),
-      summaryField("Analysis retry recommended", yesNo(analysisRetry.retryRecommended)),
-      summaryField("Worker job", job.status || "no active job"),
-      summaryField("Worker attempts", job.attempts ?? "-")
+      summaryField("Elemzés retry állapot", retryActionLabel(analysisRetry.reason)),
+      summaryField("Elemzés retry javasolt", yesNo(analysisRetry.retryRecommended)),
+      summaryField("Worker job", job.status || "nincs aktív job"),
+      summaryField("Worker próbálkozás", job.attempts ?? "-")
     );
 
     const topAreas = document.createElement("p");
@@ -408,8 +425,8 @@
           .join(", ")
       : "";
     topAreas.textContent = areas
-      ? `Strongest areas: ${areas}`
-      : "Strongest areas: no subdomain profile available.";
+      ? `Legerősebb alterületek: ${areas}`
+      : "Legerősebb alterületek: nincs elérhető alterületi profil.";
 
     card.append(title, grid, topAreas);
     return card;
@@ -434,10 +451,10 @@
     const actionWrap = document.createElement("div");
     actionWrap.className = "actions detail-actions";
     actionWrap.append(
-      actionButton("Retry analysis", "retry", session.id, "warn"),
+      actionButton("Elemzés újraindítása", "retry", session.id, "warn"),
       actionButton("PDF", "download-pdf", session.id, "secondary"),
-      actionButton("PDF regen", "regenerate-pdf", session.id, "secondary"),
-      actionButton("Email resend", "resend", session.id, "secondary"),
+      actionButton("PDF újragenerálás", "regenerate-pdf", session.id, "secondary"),
+      actionButton("Email újraküldés", "resend", session.id, "secondary"),
       actionButton("Email retry reset", "reset-email", session.id, "secondary")
     );
 
@@ -446,25 +463,25 @@
     const grid = document.createElement("div");
     grid.className = "detail-grid";
     grid.append(
-      detailMetric("Payment", session.payment_status, { pill: true }),
-      detailMetric("Analysis", session.analysis_status, { pill: true }),
+      detailMetric("Fizetés", session.payment_status, { pill: true }),
+      detailMetric("Elemzés", session.analysis_status, { pill: true }),
       detailMetric("Email", session.report_email_status, { pill: true }),
-      detailMetric("Email attempts", session.report_email_attempts),
-      detailMetric("Language", session.lang),
-      detailMetric("Primary focus", session.detectedRisk),
-      detailMetric("Secondary focus", session.secondaryRisk),
-      detailMetric("Questionnaire", session.questionnaireVersion),
-      detailMetric("Report text", session.hasAnalysisResult ? `${session.analysisResultLength} chars` : "missing"),
-      detailMetric("Payload", session.hasPayload ? "available" : "missing"),
+      detailMetric("Email próbálkozások", session.report_email_attempts),
+      detailMetric("Nyelv", session.lang),
+      detailMetric("Fő fókusz", session.detectedRisk),
+      detailMetric("Másodlagos fókusz", session.secondaryRisk),
+      detailMetric("Kérdőív", session.questionnaireVersion),
+      detailMetric("Riport szöveg", session.hasAnalysisResult ? `${session.analysisResultLength} karakter` : "hiányzik"),
+      detailMetric("Payload", session.hasPayload ? "elérhető" : "hiányzik"),
       detailMetric("Stripe session", session.stripe_session_id),
-      detailMetric("Provider email ID", session.report_email_provider_id)
+      detailMetric("Email szolgáltatói ID", session.report_email_provider_id)
     );
 
     const counts = session.counts || {};
     const countsPanel = document.createElement("section");
     countsPanel.className = "detail-card";
     const countsTitle = document.createElement("h4");
-    countsTitle.textContent = "Question counts";
+    countsTitle.textContent = "Kérdésszámok";
     const countCopy = document.createElement("p");
     countCopy.textContent =
       `Triage ${Number(counts.triageAnswers || 0)}/${Number(counts.triageQuestions || 0)}, ` +
@@ -475,44 +492,44 @@
     const timeline = document.createElement("section");
     timeline.className = "detail-card";
     const timelineTitle = document.createElement("h4");
-    timelineTitle.textContent = "Timeline";
+    timelineTitle.textContent = "Idővonal";
     const timelineGrid = document.createElement("div");
     timelineGrid.className = "timeline-grid";
     timelineGrid.append(
-      timelineItem("Created", session.created_at),
-      timelineItem("Paid", session.paid_at),
-      timelineItem("Analysis started", session.analysis_started_at),
-      timelineItem("Analysis completed", session.analysis_completed_at),
-      timelineItem("Email attempt", session.report_email_last_attempt_at),
-      timelineItem("Email sent", session.report_email_sent_at),
-      timelineItem("Updated", session.updated_at)
+      timelineItem("Létrehozva", session.created_at),
+      timelineItem("Fizetve", session.paid_at),
+      timelineItem("Elemzés indult", session.analysis_started_at),
+      timelineItem("Elemzés kész", session.analysis_completed_at),
+      timelineItem("Email próbálkozás", session.report_email_last_attempt_at),
+      timelineItem("Email elküldve", session.report_email_sent_at),
+      timelineItem("Frissítve", session.updated_at)
     );
     timeline.append(timelineTitle, timelineGrid);
 
     const errors = document.createElement("section");
     errors.className = "detail-card";
     const errorsTitle = document.createElement("h4");
-    errorsTitle.textContent = "Errors";
+    errorsTitle.textContent = "Hibák";
     const errorText = document.createElement("p");
     errorText.textContent =
       session.report_email_error ||
       session.error_message ||
-      "No current error recorded.";
+      "Nincs aktuális rögzített hiba.";
     errors.append(errorsTitle, errorText);
 
     const preview = document.createElement("section");
     preview.className = "detail-card";
     const previewTitle = document.createElement("h4");
-    previewTitle.textContent = "Analysis preview";
+    previewTitle.textContent = "Elemzés előnézet";
     const previewText = document.createElement("p");
     previewText.className = "analysis-preview";
-    previewText.textContent = session.analysisPreview || "No analysis preview available.";
+    previewText.textContent = session.analysisPreview || "Nincs elérhető elemzés előnézet.";
     preview.append(previewTitle, previewText);
 
     const raw = document.createElement("details");
     raw.className = "raw-session";
     const rawSummary = document.createElement("summary");
-    rawSummary.textContent = "Raw session JSON";
+    rawSummary.textContent = "Nyers session JSON";
     const rawPre = document.createElement("pre");
     rawPre.className = "raw-json";
     rawPre.textContent = JSON.stringify(session, null, 2);

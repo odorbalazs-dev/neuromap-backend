@@ -196,12 +196,20 @@ assert(
   "Dashboard JS should use the admin report summary payload."
 );
 assert(
-  dashboardJs.includes("Email retry available"),
+  dashboardJs.includes("Email retry elérhető"),
   "Dashboard JS should expose email retry state in session details."
 );
 assert(
-  dashboardJs.includes("Analysis retry recommended"),
+  dashboardJs.includes("Elemzés retry javasolt"),
   "Dashboard JS should expose analysis retry state in session details."
+);
+assert(
+  dashboardJs.includes("Riport áttekintés"),
+  "Dashboard JS should render the session report snapshot in Hungarian."
+);
+assert(
+  dashboardJs.includes("Gyermek életkora"),
+  "Dashboard JS should expose child age in Hungarian."
 );
 
 const summary = buildAdminSessionReportSummary(
