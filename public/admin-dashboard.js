@@ -42,6 +42,10 @@
     healthRecommendations: document.getElementById("healthRecommendations"),
     alertRows: document.getElementById("alertRows"),
     emailIssueRows: document.getElementById("emailIssueRows"),
+    sessionSearchInput: document.getElementById("sessionSearchInput"),
+    sessionSearchBtn: document.getElementById("sessionSearchBtn"),
+    sessionSearchHint: document.getElementById("sessionSearchHint"),
+    sessionSearchRows: document.getElementById("sessionSearchRows"),
     operationsLogRows: document.getElementById("operationsLogRows"),
     queueRows: document.getElementById("queueRows"),
     recentRows: document.getElementById("recentRows"),
@@ -62,7 +66,8 @@
       els.refreshBtn,
       els.processOneBtn,
       els.retryEmailBatchBtn,
-      els.alertCheckBtn
+      els.alertCheckBtn,
+      els.sessionSearchBtn
     ].forEach((button) => {
       if (button) button.disabled = isBusy;
     });
@@ -284,6 +289,163 @@
     td.textContent = message;
     tr.appendChild(td);
     target.appendChild(tr);
+  }
+
+  function showEmptyDetail(message = "Nincs kiválasztott session.") {
+    els.sessionDetail.className = "session-detail empty-detail";
+    els.sessionDetail.textContent = message;
+  }
+
+  function showJsonDetail(data) {
+    els.sessionDetail.className = "session-detail";
+    const pre = document.createElement("pre");
+    pre.className = "raw-json";
+    pre.textContent = JSON.stringify(data, null, 2);
+    els.sessionDetail.replaceChildren(pre);
+  }
+
+  function detailMetric(label, value, options = {}) {
+    const card = document.createElement("article");
+    card.className = "detail-metric";
+
+    const title = document.createElement("span");
+    title.textContent = label;
+
+    const body = document.createElement("strong");
+    if (options.pill) {
+      body.appendChild(statusPill(value));
+    } else {
+      body.textContent = text(value);
+    }
+
+    card.append(title, body);
+    return card;
+  }
+
+  function timelineItem(label, value) {
+    const item = document.createElement("div");
+    item.className = "timeline-item";
+
+    const dot = document.createElement("span");
+    dot.className = value ? "timeline-dot active" : "timeline-dot";
+
+    const copy = document.createElement("div");
+    const title = document.createElement("strong");
+    title.textContent = label;
+
+    const date = document.createElement("span");
+    date.textContent = formatDate(value);
+
+    copy.append(title, date);
+    item.append(dot, copy);
+    return item;
+  }
+
+  function renderSessionDetail(session) {
+    const root = document.createElement("div");
+    root.className = "session-detail-view";
+
+    const header = document.createElement("div");
+    header.className = "session-detail-header";
+
+    const titleWrap = document.createElement("div");
+    const title = document.createElement("h3");
+    title.textContent = text(session.name);
+
+    const subtitle = document.createElement("p");
+    subtitle.textContent = `${text(session.email)} · ${text(session.id)}`;
+
+    titleWrap.append(title, subtitle);
+
+    const actionWrap = document.createElement("div");
+    actionWrap.className = "actions detail-actions";
+    actionWrap.append(
+      actionButton("Retry analysis", "retry", session.id, "warn"),
+      actionButton("PDF", "download-pdf", session.id, "secondary"),
+      actionButton("PDF regen", "regenerate-pdf", session.id, "secondary"),
+      actionButton("Email resend", "resend", session.id, "secondary"),
+      actionButton("Email retry reset", "reset-email", session.id, "secondary")
+    );
+
+    header.append(titleWrap, actionWrap);
+
+    const grid = document.createElement("div");
+    grid.className = "detail-grid";
+    grid.append(
+      detailMetric("Payment", session.payment_status, { pill: true }),
+      detailMetric("Analysis", session.analysis_status, { pill: true }),
+      detailMetric("Email", session.report_email_status, { pill: true }),
+      detailMetric("Email attempts", session.report_email_attempts),
+      detailMetric("Language", session.lang),
+      detailMetric("Primary focus", session.detectedRisk),
+      detailMetric("Secondary focus", session.secondaryRisk),
+      detailMetric("Questionnaire", session.questionnaireVersion),
+      detailMetric("Report text", session.hasAnalysisResult ? `${session.analysisResultLength} chars` : "missing"),
+      detailMetric("Payload", session.hasPayload ? "available" : "missing"),
+      detailMetric("Stripe session", session.stripe_session_id),
+      detailMetric("Provider email ID", session.report_email_provider_id)
+    );
+
+    const counts = session.counts || {};
+    const countsPanel = document.createElement("section");
+    countsPanel.className = "detail-card";
+    const countsTitle = document.createElement("h4");
+    countsTitle.textContent = "Question counts";
+    const countCopy = document.createElement("p");
+    countCopy.textContent =
+      `Triage ${Number(counts.triageAnswers || 0)}/${Number(counts.triageQuestions || 0)}, ` +
+      `specific ${Number(counts.specificAnswers || 0)}/${Number(counts.specificQuestions || 0)}, ` +
+      `extra ${Number(counts.extraAnswers || 0)}/${Number(counts.extraQuestions || 0)}.`;
+    countsPanel.append(countsTitle, countCopy);
+
+    const timeline = document.createElement("section");
+    timeline.className = "detail-card";
+    const timelineTitle = document.createElement("h4");
+    timelineTitle.textContent = "Timeline";
+    const timelineGrid = document.createElement("div");
+    timelineGrid.className = "timeline-grid";
+    timelineGrid.append(
+      timelineItem("Created", session.created_at),
+      timelineItem("Paid", session.paid_at),
+      timelineItem("Analysis started", session.analysis_started_at),
+      timelineItem("Analysis completed", session.analysis_completed_at),
+      timelineItem("Email attempt", session.report_email_last_attempt_at),
+      timelineItem("Email sent", session.report_email_sent_at),
+      timelineItem("Updated", session.updated_at)
+    );
+    timeline.append(timelineTitle, timelineGrid);
+
+    const errors = document.createElement("section");
+    errors.className = "detail-card";
+    const errorsTitle = document.createElement("h4");
+    errorsTitle.textContent = "Errors";
+    const errorText = document.createElement("p");
+    errorText.textContent =
+      session.report_email_error ||
+      session.error_message ||
+      "No current error recorded.";
+    errors.append(errorsTitle, errorText);
+
+    const preview = document.createElement("section");
+    preview.className = "detail-card";
+    const previewTitle = document.createElement("h4");
+    previewTitle.textContent = "Analysis preview";
+    const previewText = document.createElement("p");
+    previewText.className = "analysis-preview";
+    previewText.textContent = session.analysisPreview || "No analysis preview available.";
+    preview.append(previewTitle, previewText);
+
+    const raw = document.createElement("details");
+    raw.className = "raw-session";
+    const rawSummary = document.createElement("summary");
+    rawSummary.textContent = "Raw session JSON";
+    const rawPre = document.createElement("pre");
+    rawPre.className = "raw-json";
+    rawPre.textContent = JSON.stringify(session, null, 2);
+    raw.append(rawSummary, rawPre);
+
+    root.append(header, grid, countsPanel, timeline, errors, preview, raw);
+    return root;
   }
 
   function renderSessionRows(target, items, mode) {
@@ -685,13 +847,48 @@
     }
   }
 
+  async function searchSessions() {
+    const query = (els.sessionSearchInput?.value || "").trim();
+
+    if (!query) {
+      if (els.sessionSearchHint) {
+        els.sessionSearchHint.textContent = "Enter an email, name, session ID, or Stripe ID.";
+      }
+      emptyRow(els.sessionSearchRows, 5, "Adj meg keresesi kifejezest.");
+      return;
+    }
+
+    setBusy(true);
+    setStatus("Session keresese...");
+
+    try {
+      const data = await api(
+        `/admin/search-sessions?q=${encodeURIComponent(query)}&limit=30`
+      );
+
+      renderSessionRows(els.sessionSearchRows, data.items || [], "search");
+
+      if (els.sessionSearchHint) {
+        els.sessionSearchHint.textContent =
+          `${Number(data.count || data.items?.length || 0)} talalat: "${query}"`;
+      }
+
+      setStatus("Session kereses kesz.");
+    } catch (error) {
+      setStatus(error.message, true);
+    } finally {
+      setBusy(false);
+    }
+  }
+
   async function loadSessionDetail(sessionId) {
     setBusy(true);
     setStatus("Session betöltése...");
 
     try {
       const data = await api(`/admin/session/${encodeURIComponent(sessionId)}`);
-      els.sessionDetail.textContent = JSON.stringify(data.session, null, 2);
+      els.sessionDetail.className = "session-detail";
+      els.sessionDetail.replaceChildren(renderSessionDetail(data.session));
       setStatus("Session betöltve.");
     } catch (error) {
       setStatus(error.message, true);
@@ -707,7 +904,7 @@
     try {
       const data = await api(path, { method: "POST" });
       setStatus(successMessage || "Művelet kész.");
-      els.sessionDetail.textContent = JSON.stringify(data, null, 2);
+      showJsonDetail(data);
       await refreshDashboard();
     } catch (error) {
       setStatus(error.message, true);
@@ -813,7 +1010,10 @@
     els.clearTokenBtn.addEventListener("click", () => {
       localStorage.removeItem(TOKEN_KEY);
       els.token.value = "";
-      els.sessionDetail.textContent = "Nincs kiválasztott session.";
+      showEmptyDetail();
+      els.sessionSearchInput.value = "";
+      els.sessionSearchHint.textContent = "No search yet.";
+      emptyRow(els.sessionSearchRows, 5, "A frissítéshez add meg az admin tokent.");
       emptyRow(els.queueRows, 5, "A frissítéshez add meg az admin tokent.");
       emptyRow(els.recentRows, 5, "A frissítéshez add meg az admin tokent.");
       emptyRow(els.failedRows, 4, "A frissítéshez add meg az admin tokent.");
@@ -828,6 +1028,14 @@
     });
 
     els.refreshBtn.addEventListener("click", refreshDashboard);
+    els.sessionSearchBtn.addEventListener("click", searchSessions);
+    els.sessionSearchInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        searchSessions();
+      }
+    });
+
     els.processOneBtn.addEventListener("click", () => {
       postAction("/admin/process-one-job", "Egy queued job feldolgozása lefutott.");
     });
@@ -875,6 +1083,7 @@
     });
 
     document.addEventListener("click", handleActionClick);
+    emptyRow(els.sessionSearchRows, 5, "No search yet.");
 
     if (savedToken) {
       refreshDashboard();
@@ -882,6 +1091,7 @@
       emptyRow(els.queueRows, 5, "A frissítéshez add meg az admin tokent.");
       emptyRow(els.recentRows, 5, "A frissítéshez add meg az admin tokent.");
       emptyRow(els.failedRows, 4, "A frissítéshez add meg az admin tokent.");
+      emptyRow(els.sessionSearchRows, 5, "A frissítéshez add meg az admin tokent.");
       emptyRow(els.emailIssueRows, 5, "A frissítéshez add meg az admin tokent.");
       emptyRow(els.alertRows, 5, "Add meg az admin tokent.");
       emptyRow(els.operationsLogRows, 5, "A frissítéshez add meg az admin tokent.");

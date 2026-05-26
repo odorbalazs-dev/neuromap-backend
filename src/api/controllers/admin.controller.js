@@ -20,6 +20,10 @@ function shortText(value = "", max = 600) {
   return text.length > max ? `${text.slice(0, max)}...` : text;
 }
 
+function escapeLikePattern(value = "") {
+  return String(value || "").replace(/[\\%_]/g, "\\$&");
+}
+
 function safeFilenamePart(value = "") {
   return String(value || "")
     .trim()
@@ -127,14 +131,21 @@ function buildCompactSessionView(row) {
     report_email_last_attempt_at: row.report_email_last_attempt_at,
     report_email_error: row.report_email_error,
     report_email_attempts: row.report_email_attempts || 0,
+    stripe_session_id: row.stripe_session_id,
 
     detectedRisk: row.payload?.detectedRisk || null,
     secondaryRisk: row.payload?.secondaryRisk || null,
+    questionnaireVersion: row.payload?.questionnaireVersion || null,
 
     paid_at: row.paid_at,
     analysis_started_at: row.analysis_started_at,
     analysis_completed_at: row.analysis_completed_at,
     error_message: row.error_message,
+    hasPayload: Boolean(row.payload),
+    hasAnalysisResult: Boolean(row.analysis_result),
+    analysisResultLength: row.analysis_result
+      ? String(row.analysis_result).length
+      : 0,
 
     created_at: row.created_at,
     updated_at: row.updated_at
@@ -931,6 +942,51 @@ export async function getRecentSessions(req, res) {
     return res.status(500).json({
       ok: false,
       error: error.message || "Failed to get recent sessions"
+    });
+  }
+}
+
+export async function searchAdminSessions(req, res) {
+  try {
+    const query = String(req.query.q || "").trim();
+    const limit = clampNumber(req.query.limit, 25, 1, 100);
+
+    if (!query) {
+      return res.status(200).json({
+        ok: true,
+        query,
+        items: []
+      });
+    }
+
+    const pattern = `%${escapeLikePattern(query)}%`;
+
+    const result = await db.query(
+      `
+      SELECT *
+      FROM sessions
+      WHERE id::text ILIKE $1 ESCAPE '\\'
+        OR email ILIKE $1 ESCAPE '\\'
+        OR name ILIKE $1 ESCAPE '\\'
+        OR stripe_session_id ILIKE $1 ESCAPE '\\'
+      ORDER BY updated_at DESC NULLS LAST, created_at DESC
+      LIMIT $2
+      `,
+      [pattern, limit]
+    );
+
+    return res.status(200).json({
+      ok: true,
+      query,
+      count: result.rows.length,
+      items: result.rows.map(buildCompactSessionView)
+    });
+  } catch (error) {
+    console.error("Admin session search error:", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: error.message || "Failed to search sessions"
     });
   }
 }

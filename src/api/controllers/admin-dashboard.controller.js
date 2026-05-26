@@ -239,6 +239,36 @@ export function getAdminDashboard(_req, res) {
         </div>
       </section>
 
+      <section class="panel session-search-panel">
+        <div class="panel-head">
+          <div>
+            <h2>Session search</h2>
+            <p>Find a session by ID, email, name, or Stripe checkout session ID.</p>
+          </div>
+          <div class="search-row" role="search">
+            <input id="sessionSearchInput" type="search" autocomplete="off" placeholder="Email, name, session ID, Stripe ID">
+            <button id="sessionSearchBtn" type="button">Search</button>
+          </div>
+        </div>
+        <div class="search-meta">
+          <span id="sessionSearchHint">No search yet.</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Name / email</th>
+                <th>Focus</th>
+                <th>Updated</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="sessionSearchRows"></tbody>
+          </table>
+        </div>
+      </section>
+
       <section class="panel">
         <div class="panel-head">
           <div>
@@ -344,10 +374,10 @@ export function getAdminDashboard(_req, res) {
         <div class="panel-head">
           <div>
             <h2>Session részletek</h2>
-            <p>Válassz egy sort a pontos payload/report állapothoz.</p>
+            <p>Readable timeline, payload/report state, and direct recovery actions.</p>
           </div>
         </div>
-        <pre id="sessionDetail">Nincs kiválasztott session.</pre>
+        <div id="sessionDetail" class="session-detail empty-detail">Nincs kiválasztott session.</div>
       </section>
     </main>
 

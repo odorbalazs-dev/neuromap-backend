@@ -10,6 +10,7 @@ import {
   triggerAdminAlertCheck,
   getQueueStatus,
   getRecentSessions,
+  searchAdminSessions,
   getFailedAnalyses,
   getAdminSession,
   downloadReportPdf,
@@ -35,6 +36,7 @@ router.post("/trigger-alert-check", triggerAdminAlertCheck);
 
 router.get("/queue-status", getQueueStatus);
 router.get("/recent-sessions", getRecentSessions);
+router.get("/search-sessions", searchAdminSessions);
 router.get("/failed-analyses", getFailedAnalyses);
 
 router.get("/session/:sessionId", getAdminSession);

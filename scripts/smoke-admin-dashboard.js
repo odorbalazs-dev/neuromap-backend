@@ -128,6 +128,22 @@ assert(
   "Dashboard HTML should include the operations log rows container."
 );
 assert(
+  res.body.includes("Session search"),
+  "Dashboard HTML should include the session search panel."
+);
+assert(
+  res.body.includes("sessionSearchInput"),
+  "Dashboard HTML should include the session search input."
+);
+assert(
+  res.body.includes("sessionSearchRows"),
+  "Dashboard HTML should include session search rows."
+);
+assert(
+  res.body.includes("Readable timeline"),
+  "Dashboard HTML should describe the readable session detail panel."
+);
+assert(
   res.body.includes('data-log-filter="critical"'),
   "Dashboard HTML should include operations log filters."
 );
@@ -161,6 +177,14 @@ assert(
 assert(
   dashboardJs.includes("/regenerate-pdf"),
   "Dashboard JS should call the admin PDF regeneration endpoint."
+);
+assert(
+  dashboardJs.includes("/admin/search-sessions"),
+  "Dashboard JS should call the admin session search endpoint."
+);
+assert(
+  dashboardJs.includes("renderSessionDetail"),
+  "Dashboard JS should render a readable session detail view."
 );
 
 console.log("[smoke] admin dashboard assets passed");
