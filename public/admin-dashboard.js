@@ -165,6 +165,33 @@
     return data;
   }
 
+  async function fetchAdmin(path, options = {}) {
+    const token = getToken();
+
+    if (!token) {
+      throw new Error("Add meg az ADMIN_TOKEN értékét.");
+    }
+
+    return fetch(path, {
+      ...options,
+      headers: {
+        "x-admin-token": token,
+        ...(options.headers || {})
+      }
+    });
+  }
+
+  function filenameFromDisposition(value, fallback) {
+    const header = String(value || "");
+    const utfMatch = header.match(/filename\*=UTF-8''([^;]+)/i);
+    if (utfMatch) {
+      return decodeURIComponent(utfMatch[1]);
+    }
+
+    const match = header.match(/filename="?([^"]+)"?/i);
+    return match ? match[1] : fallback;
+  }
+
   function cell(content) {
     const td = document.createElement("td");
     if (content instanceof Node) {
@@ -233,6 +260,8 @@
     const wrapper = document.createElement("div");
     wrapper.className = "actions";
     wrapper.appendChild(actionButton("Részletek", "detail", row.id, "secondary"));
+    wrapper.appendChild(actionButton("PDF", "download-pdf", row.id, "secondary"));
+    wrapper.appendChild(actionButton("PDF regen", "regenerate-pdf", row.id, "secondary"));
     wrapper.appendChild(actionButton("Retry", "retry", row.id, "warn"));
 
     if (includeResend) {
@@ -687,6 +716,44 @@
     }
   }
 
+  async function downloadReportPdf(sessionId) {
+    setBusy(true);
+    setStatus("PDF letöltése...");
+
+    try {
+      const response = await fetchAdmin(
+        `/admin/session/${encodeURIComponent(sessionId)}/report-pdf`
+      );
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.error || `PDF letöltési hiba (${response.status})`);
+      }
+
+      const blob = await response.blob();
+      const fallback = `neuromap-kids-report-${sessionId}.pdf`;
+      const filename = filenameFromDisposition(
+        response.headers.get("content-disposition"),
+        fallback
+      );
+
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = filename;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      URL.revokeObjectURL(url);
+
+      setStatus("PDF letöltve.");
+    } catch (error) {
+      setStatus(error.message, true);
+    } finally {
+      setBusy(false);
+    }
+  }
+
   function handleActionClick(event) {
     const button = event.target.closest("button[data-action]");
     if (!button) return;
@@ -702,6 +769,17 @@
       postAction(
         `/admin/retry-analysis/${encodeURIComponent(sessionId)}`,
         "Elemzés újra queue-ba téve."
+      );
+    }
+
+    if (action === "download-pdf") {
+      downloadReportPdf(sessionId);
+    }
+
+    if (action === "regenerate-pdf") {
+      postAction(
+        `/admin/session/${encodeURIComponent(sessionId)}/regenerate-pdf`,
+        "PDF újragenerálás ellenőrizve."
       );
     }
 

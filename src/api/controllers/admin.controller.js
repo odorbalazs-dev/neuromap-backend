@@ -8,6 +8,7 @@ import { processNextAnalysisJob } from "../../services/analysis-job.service.js";
 import { enqueueAnalysisJob } from "../../services/analysis-queue.service.js";
 import { deliverReportEmailForSession } from "../../services/report-email-delivery.service.js";
 import { retryReportEmailsBatch } from "../../services/report-email-retry.service.js";
+import { generatePdfBuffer } from "../../services/pdf.service.js";
 import {
   getRecentAdminAlerts,
   runProductionHealthAlertCheck
@@ -17,6 +18,52 @@ import { env } from "../../config/env.js";
 function shortText(value = "", max = 600) {
   const text = String(value || "");
   return text.length > max ? `${text.slice(0, max)}...` : text;
+}
+
+function safeFilenamePart(value = "") {
+  return String(value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9_-]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 80);
+}
+
+function buildReportPdfFilename(sessionRow) {
+  const name =
+    safeFilenamePart(sessionRow?.name) ||
+    safeFilenamePart(sessionRow?.email) ||
+    safeFilenamePart(sessionRow?.id) ||
+    "session";
+
+  const lang = safeFilenamePart(sessionRow?.lang) || "en";
+
+  return `neuromap-kids-report-${lang}-${name}.pdf`;
+}
+
+async function generateReportPdfForSession(sessionRow) {
+  const reportText = String(sessionRow?.analysis_result || "").trim();
+
+  if (!reportText) {
+    const error = new Error("No analysis result found for this session");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const pdfBuffer = await generatePdfBuffer({
+    name: sessionRow.name,
+    reportText,
+    lang: sessionRow.lang || "en",
+    payload: sessionRow.payload
+  });
+
+  if (!Buffer.isBuffer(pdfBuffer) || pdfBuffer.length === 0) {
+    const error = new Error("PDF generation returned an empty buffer");
+    error.statusCode = 500;
+    throw error;
+  }
+
+  return pdfBuffer;
 }
 
 function buildSessionView(sessionRow) {
@@ -940,6 +987,73 @@ export async function getAdminSession(req, res) {
     return res.status(500).json({
       ok: false,
       error: error.message || "Failed to get session"
+    });
+  }
+}
+
+export async function downloadReportPdf(req, res) {
+  try {
+    const { sessionId } = req.params;
+
+    const sessionRow = await getSessionById(sessionId);
+
+    if (!sessionRow) {
+      return res.status(404).json({
+        ok: false,
+        error: "Session not found"
+      });
+    }
+
+    const pdfBuffer = await generateReportPdfForSession(sessionRow);
+    const filename = buildReportPdfFilename(sessionRow);
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Length", String(pdfBuffer.length));
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename="${filename}"`
+    );
+
+    return res.status(200).send(pdfBuffer);
+  } catch (error) {
+    console.error("Admin report PDF download error:", error);
+
+    return res.status(error.statusCode || 500).json({
+      ok: false,
+      error: error.message || "Failed to generate report PDF"
+    });
+  }
+}
+
+export async function regenerateReportPdf(req, res) {
+  try {
+    const { sessionId } = req.params;
+
+    const sessionRow = await getSessionById(sessionId);
+
+    if (!sessionRow) {
+      return res.status(404).json({
+        ok: false,
+        error: "Session not found"
+      });
+    }
+
+    const pdfBuffer = await generateReportPdfForSession(sessionRow);
+
+    return res.status(200).json({
+      ok: true,
+      sessionId,
+      pdfGenerated: true,
+      pdfBytes: pdfBuffer.length,
+      filename: buildReportPdfFilename(sessionRow),
+      generatedAt: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error("Admin report PDF regenerate error:", error);
+
+    return res.status(error.statusCode || 500).json({
+      ok: false,
+      error: error.message || "Failed to regenerate report PDF"
     });
   }
 }

@@ -144,4 +144,23 @@ assert(
   assert(fs.existsSync(fullPath), `${relativePath} should exist.`);
 });
 
+const dashboardJs = fs.readFileSync(
+  path.join(rootDir, "public/admin-dashboard.js"),
+  "utf8"
+);
+
+assert(
+  dashboardJs.includes('data-action = "download-pdf"') ||
+    dashboardJs.includes('"download-pdf"'),
+  "Dashboard JS should include the PDF download action."
+);
+assert(
+  dashboardJs.includes("/report-pdf"),
+  "Dashboard JS should call the admin report PDF endpoint."
+);
+assert(
+  dashboardJs.includes("/regenerate-pdf"),
+  "Dashboard JS should call the admin PDF regeneration endpoint."
+);
+
 console.log("[smoke] admin dashboard assets passed");

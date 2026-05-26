@@ -12,6 +12,8 @@ import {
   getRecentSessions,
   getFailedAnalyses,
   getAdminSession,
+  downloadReportPdf,
+  regenerateReportPdf,
   retryAnalysis,
   processOneAnalysisJob,
   resendReportEmail,
@@ -36,6 +38,8 @@ router.get("/recent-sessions", getRecentSessions);
 router.get("/failed-analyses", getFailedAnalyses);
 
 router.get("/session/:sessionId", getAdminSession);
+router.get("/session/:sessionId/report-pdf", downloadReportPdf);
+router.post("/session/:sessionId/regenerate-pdf", regenerateReportPdf);
 
 router.post("/retry-analysis/:sessionId", retryAnalysis);
 router.post("/process-one-job", processOneAnalysisJob);
