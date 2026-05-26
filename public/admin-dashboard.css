@@ -727,6 +727,44 @@ td {
   color: #344054;
 }
 
+.report-summary-card {
+  border-left: 4px solid var(--blue);
+}
+
+.summary-field-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  margin-top: 10px;
+}
+
+.summary-field {
+  border-bottom: 1px solid #edf2f7;
+  min-width: 0;
+  padding: 4px 0 10px;
+}
+
+.summary-field span {
+  color: var(--muted);
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.summary-field strong {
+  display: block;
+  font-size: 14px;
+  margin-top: 6px;
+  overflow-wrap: anywhere;
+}
+
+.summary-top-areas {
+  border-top: 1px solid #edf2f7;
+  margin-top: 12px;
+  padding-top: 12px;
+}
+
 .timeline-grid {
   display: grid;
   gap: 10px;
@@ -810,6 +848,7 @@ pre {
   .health-grid,
   .grid,
   .detail-grid,
+  .summary-field-grid,
   .timeline-grid {
     grid-template-columns: 1fr;
   }

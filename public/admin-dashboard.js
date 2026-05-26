@@ -341,6 +341,80 @@
     return item;
   }
 
+  function formatNumber(value, digits = 2) {
+    const number = Number(value);
+    return Number.isFinite(number) ? number.toFixed(digits) : "-";
+  }
+
+  function yesNo(value) {
+    return value ? "yes" : "no";
+  }
+
+  function summaryField(label, value, options = {}) {
+    const item = document.createElement("div");
+    item.className = "summary-field";
+
+    const title = document.createElement("span");
+    title.textContent = label;
+
+    const body = document.createElement("strong");
+    if (options.pill) {
+      body.appendChild(statusPill(value));
+    } else {
+      body.textContent = text(value);
+    }
+
+    item.append(title, body);
+    return item;
+  }
+
+  function renderReportSnapshot(session) {
+    const summary = session.reportSummary || {};
+    const email = summary.email || {};
+    const analysisRetry = summary.analysisRetry || {};
+    const job = analysisRetry.job || {};
+
+    const card = document.createElement("section");
+    card.className = "detail-card report-summary-card";
+
+    const title = document.createElement("h4");
+    title.textContent = "Report snapshot";
+
+    const grid = document.createElement("div");
+    grid.className = "summary-field-grid";
+    grid.append(
+      summaryField("Child age", summary.hasAge ? `${formatNumber(summary.childAge, 1)} years` : "not provided"),
+      summaryField("Age band", summary.ageBandLabel || summary.ageBand),
+      summaryField("Primary signal", summary.detectedRisk),
+      summaryField("Secondary signal", summary.secondaryRisk),
+      summaryField("Severity", summary.severity, { pill: true }),
+      summaryField("Signal label", summary.signalLabel),
+      summaryField("Specific average", formatNumber(summary.normalizedAverage)),
+      summaryField("Questionnaire", summary.questionnaireVersion),
+      summaryField("Email retry", email.nextAction || "-"),
+      summaryField("Email retry available", yesNo(email.retryAvailable)),
+      summaryField("Email retry limit", yesNo(email.retryLimitReached)),
+      summaryField("Analysis retry", analysisRetry.reason || "-"),
+      summaryField("Analysis retry recommended", yesNo(analysisRetry.retryRecommended)),
+      summaryField("Worker job", job.status || "no active job"),
+      summaryField("Worker attempts", job.attempts ?? "-")
+    );
+
+    const topAreas = document.createElement("p");
+    topAreas.className = "summary-top-areas";
+    const areas = Array.isArray(summary.topSubdomains)
+      ? summary.topSubdomains
+          .map((item) => `${item.key}: ${formatNumber(item.average)}`)
+          .join(", ")
+      : "";
+    topAreas.textContent = areas
+      ? `Strongest areas: ${areas}`
+      : "Strongest areas: no subdomain profile available.";
+
+    card.append(title, grid, topAreas);
+    return card;
+  }
+
   function renderSessionDetail(session) {
     const root = document.createElement("div");
     root.className = "session-detail-view";
@@ -444,7 +518,7 @@
     rawPre.textContent = JSON.stringify(session, null, 2);
     raw.append(rawSummary, rawPre);
 
-    root.append(header, grid, countsPanel, timeline, errors, preview, raw);
+    root.append(header, grid, renderReportSnapshot(session), countsPanel, timeline, errors, preview, raw);
     return root;
   }
 

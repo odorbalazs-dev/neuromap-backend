@@ -13,6 +13,7 @@ import {
   getRecentAdminAlerts,
   runProductionHealthAlertCheck
 } from "../../services/admin-alert.service.js";
+import { buildAdminSessionReportSummary } from "../../services/admin-session-summary.service.js";
 import { env } from "../../config/env.js";
 
 function shortText(value = "", max = 600) {
@@ -70,7 +71,7 @@ async function generateReportPdfForSession(sessionRow) {
   return pdfBuffer;
 }
 
-function buildSessionView(sessionRow) {
+function buildSessionView(sessionRow, analysisJobRow = null) {
   return {
     id: sessionRow.id,
     email: sessionRow.email,
@@ -95,6 +96,7 @@ function buildSessionView(sessionRow) {
     detectedRisk: sessionRow.payload?.detectedRisk || null,
     secondaryRisk: sessionRow.payload?.secondaryRisk || null,
     questionnaireVersion: sessionRow.payload?.questionnaireVersion || null,
+    reportSummary: buildAdminSessionReportSummary(sessionRow, analysisJobRow),
 
     counts: {
       triageQuestions: sessionRow.payload?.triageQuestions?.length || 0,
@@ -136,6 +138,7 @@ function buildCompactSessionView(row) {
     detectedRisk: row.payload?.detectedRisk || null,
     secondaryRisk: row.payload?.secondaryRisk || null,
     questionnaireVersion: row.payload?.questionnaireVersion || null,
+    reportSummary: buildAdminSessionReportSummary(row),
 
     paid_at: row.paid_at,
     analysis_started_at: row.analysis_started_at,
@@ -1033,9 +1036,28 @@ export async function getAdminSession(req, res) {
       });
     }
 
+    const analysisJobResult = await db.query(
+      `
+      SELECT
+        id,
+        status,
+        attempts,
+        last_error,
+        locked_at,
+        available_at,
+        created_at,
+        updated_at
+      FROM analysis_jobs
+      WHERE session_id = $1
+      ORDER BY created_at DESC
+      LIMIT 1
+      `,
+      [sessionId]
+    );
+
     return res.status(200).json({
       ok: true,
-      session: buildSessionView(sessionRow)
+      session: buildSessionView(sessionRow, analysisJobResult.rows[0] || null)
     });
   } catch (error) {
     console.error("Admin session error:", error);

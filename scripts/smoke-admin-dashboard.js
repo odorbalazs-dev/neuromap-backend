@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { getAdminDashboard } from "../src/api/controllers/admin-dashboard.controller.js";
+import { buildAdminSessionReportSummary } from "../src/services/admin-session-summary.service.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, "..");
@@ -186,5 +187,66 @@ assert(
   dashboardJs.includes("renderSessionDetail"),
   "Dashboard JS should render a readable session detail view."
 );
+assert(
+  dashboardJs.includes("renderReportSnapshot"),
+  "Dashboard JS should render the report snapshot panel."
+);
+assert(
+  dashboardJs.includes("reportSummary"),
+  "Dashboard JS should use the admin report summary payload."
+);
+assert(
+  dashboardJs.includes("Email retry available"),
+  "Dashboard JS should expose email retry state in session details."
+);
+assert(
+  dashboardJs.includes("Analysis retry recommended"),
+  "Dashboard JS should expose analysis retry state in session details."
+);
+
+const summary = buildAdminSessionReportSummary(
+  {
+    lang: "hu",
+    payment_status: "paid",
+    analysis_status: "failed",
+    report_email_status: "failed",
+    report_email_attempts: 3,
+    analysis_result: "Riport szoveg",
+    payload: {
+      childAge: 7,
+      detectedRisk: "ADHD",
+      secondaryRisk: "ASD",
+      questionnaireVersion: "smoke-v1",
+      specificProfile: {
+        severity: "moderate",
+        normalizedAverage: 1.6
+      },
+      resultSummary: {
+        signal: {
+          key: "moderate",
+          hu: "kozepes jelzésszint",
+          en: "moderate signal level"
+        },
+        topSubdomains: [
+          { key: "inattention", average: 1.7, itemCount: 4 }
+        ]
+      }
+    }
+  },
+  {
+    id: "job_smoke",
+    status: "failed",
+    attempts: 2,
+    last_error: "smoke error"
+  }
+);
+
+assert(summary.childAge === 7, "Admin report summary should expose child age.");
+assert(summary.ageBand === "early_school", "Admin report summary should expose age band.");
+assert(summary.detectedRisk === "ADHD", "Admin report summary should expose primary risk.");
+assert(summary.secondaryRisk === "ASD", "Admin report summary should expose secondary risk.");
+assert(summary.severity === "moderate", "Admin report summary should expose severity.");
+assert(summary.email.retryLimitReached === true, "Admin report summary should expose email retry limit.");
+assert(summary.analysisRetry.retryRecommended === true, "Admin report summary should expose analysis retry recommendation.");
 
 console.log("[smoke] admin dashboard assets passed");
