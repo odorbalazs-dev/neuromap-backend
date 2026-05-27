@@ -9,6 +9,7 @@
     processOneBtn: document.getElementById("processOneBtn"),
     retryEmailBatchBtn: document.getElementById("retryEmailBatchBtn"),
     alertCheckBtn: document.getElementById("alertCheckBtn"),
+    refreshLaunchReadinessBtn: document.getElementById("refreshLaunchReadinessBtn"),
     statusText: document.getElementById("statusText"),
     controlCenterHeadline: document.getElementById("controlCenterHeadline"),
     controlCenterSummary: document.getElementById("controlCenterSummary"),
@@ -17,6 +18,11 @@
     pipelineStages: document.getElementById("pipelineStages"),
     riskFocus: document.getElementById("riskFocus"),
     nextAction: document.getElementById("nextAction"),
+    launchReadinessLevel: document.getElementById("launchReadinessLevel"),
+    launchReadinessSummary: document.getElementById("launchReadinessSummary"),
+    launchReadinessGeneratedAt: document.getElementById("launchReadinessGeneratedAt"),
+    launchReadinessChecks: document.getElementById("launchReadinessChecks"),
+    launchManualChecks: document.getElementById("launchManualChecks"),
     apiStatus: document.getElementById("apiStatus"),
     healthLevel: document.getElementById("healthLevel"),
     queuedCount: document.getElementById("queuedCount"),
@@ -67,6 +73,7 @@
       els.processOneBtn,
       els.retryEmailBatchBtn,
       els.alertCheckBtn,
+      els.refreshLaunchReadinessBtn,
       els.sessionSearchBtn
     ].forEach((button) => {
       if (button) button.disabled = isBusy;
@@ -143,7 +150,12 @@
         "email",
         "analysis",
         "webhook",
-        "checkout"
+        "checkout",
+        "ready",
+        "blocked",
+        "pass",
+        "warn",
+        "fail"
       ].includes(status)
     ) {
       return status;
@@ -179,6 +191,11 @@
       analysis: "elemzés",
       webhook: "webhook",
       checkout: "checkout",
+      ready: "indításra kész",
+      blocked: "blokkolt",
+      pass: "rendben",
+      warn: "figyelendő",
+      fail: "hiba",
       open: "nyitott",
       resolved: "lezárva",
       pending: "függőben"
@@ -1014,6 +1031,99 @@
     });
   }
 
+  function renderLaunchReadiness(readiness) {
+    if (
+      !els.launchReadinessLevel ||
+      !els.launchReadinessSummary ||
+      !els.launchReadinessGeneratedAt ||
+      !els.launchReadinessChecks ||
+      !els.launchManualChecks
+    ) {
+      return;
+    }
+
+    const level = readiness?.level || "unknown";
+    const summary = readiness?.summary || {};
+
+    els.launchReadinessLevel.className = `launch-score ${statusClass(level)}`;
+    els.launchReadinessLevel.querySelector("strong").textContent =
+      statusLabel(level).toUpperCase();
+
+    if (readiness?.ok) {
+      els.launchReadinessSummary.textContent =
+        `${Number(summary.passed || 0)}/${Number(summary.total || 0)} ellenőrzés rendben, ` +
+        `${Number(summary.warnings || 0)} figyelmeztetés, ${Number(summary.failed || 0)} blokkoló hiba.`;
+      els.launchReadinessGeneratedAt.textContent =
+        readiness.generatedAt ? `Ellenőrizve: ${formatDate(readiness.generatedAt)}` : "-";
+    } else {
+      els.launchReadinessSummary.textContent = "Add meg az admin tokent, majd frissíts.";
+      els.launchReadinessGeneratedAt.textContent = "Még nincs ellenőrzés.";
+    }
+
+    els.launchReadinessChecks.replaceChildren();
+    const checks = readiness?.checks || [];
+
+    if (!checks.length) {
+      const empty = document.createElement("div");
+      empty.className = "launch-empty";
+      empty.textContent = "A launch checklist betöltéséhez frissíts admin tokennel.";
+      els.launchReadinessChecks.appendChild(empty);
+    }
+
+    checks.forEach((check) => {
+      const item = document.createElement("article");
+      item.className = `launch-check ${statusClass(check.status)}`;
+
+      const head = document.createElement("div");
+      head.className = "launch-check-head";
+
+      const titleWrap = document.createElement("div");
+      const group = document.createElement("span");
+      group.className = "launch-group";
+      group.textContent = check.group || "Ellenőrzés";
+
+      const title = document.createElement("h3");
+      title.textContent = check.label || check.id || "Launch check";
+
+      titleWrap.append(group, title);
+      head.append(titleWrap, statusPill(check.status));
+
+      const detail = document.createElement("p");
+      detail.textContent = check.detail || "-";
+
+      item.append(head, detail);
+
+      if (check.action) {
+        const action = document.createElement("strong");
+        action.className = "launch-action";
+        action.textContent = check.action;
+        item.appendChild(action);
+      }
+
+      els.launchReadinessChecks.appendChild(item);
+    });
+
+    els.launchManualChecks.replaceChildren();
+    const manualChecks = readiness?.manualChecks || [];
+
+    if (!manualChecks.length) {
+      const li = document.createElement("li");
+      li.textContent = "A kézi élesítési kontrollok az ellenőrzés után jelennek meg.";
+      els.launchManualChecks.appendChild(li);
+      return;
+    }
+
+    manualChecks.forEach((check) => {
+      const li = document.createElement("li");
+      const strong = document.createElement("strong");
+      strong.textContent = check.label || "Kézi kontroll";
+      const span = document.createElement("span");
+      span.textContent = check.detail || "";
+      li.append(strong, span);
+      els.launchManualChecks.appendChild(li);
+    });
+  }
+
   function renderControlCenter(status, health, queue, alerts) {
     const level = health?.level || "unknown";
     const recommendations = health?.recommendations || [];
@@ -1124,14 +1234,24 @@
     setStatus("Frissítés...");
 
     try {
-      const [status, health, queue, recent, failed, operations, alerts] = await Promise.all([
+      const [
+        status,
+        health,
+        queue,
+        recent,
+        failed,
+        operations,
+        alerts,
+        launchReadiness
+      ] = await Promise.all([
         api("/admin/status"),
         api("/admin/production-health"),
         api("/admin/queue-status"),
         api("/admin/recent-sessions?limit=30"),
         api("/admin/failed-analyses?limit=30"),
         api(`/admin/operations-log?filter=${encodeURIComponent(activeLogFilter)}&limit=80`),
-        api("/admin/alerts?limit=10")
+        api("/admin/alerts?limit=10"),
+        api("/admin/launch-readiness")
       ]);
 
       els.apiStatus.textContent = status.ok ? "Elérhető" : "Hiba";
@@ -1143,9 +1263,25 @@
       renderOperationLogRows(operations.items || []);
       renderAlertRows(alerts.items || []);
       renderControlCenter(status, health, queue, alerts);
+      renderLaunchReadiness(launchReadiness);
       setStatus("Frissítve.");
     } catch (error) {
       els.apiStatus.textContent = "Hiba";
+      setStatus(error.message, true);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function refreshLaunchReadiness() {
+    setBusy(true);
+    setStatus("Élesítési ellenőrzés...");
+
+    try {
+      const launchReadiness = await api("/admin/launch-readiness");
+      renderLaunchReadiness(launchReadiness);
+      setStatus("Élesítési ellenőrzés frissítve.");
+    } catch (error) {
       setStatus(error.message, true);
     } finally {
       setBusy(false);
@@ -1328,11 +1464,13 @@
       renderCounts({});
       renderHealth(null);
       renderControlCenter(null, null, { counts: {} }, { items: [] });
+      renderLaunchReadiness(null);
       els.apiStatus.textContent = "-";
       setStatus("Token törölve.");
     });
 
     els.refreshBtn.addEventListener("click", refreshDashboard);
+    els.refreshLaunchReadinessBtn.addEventListener("click", refreshLaunchReadiness);
     els.sessionSearchBtn.addEventListener("click", searchSessions);
     els.sessionSearchInput.addEventListener("keydown", (event) => {
       if (event.key === "Enter") {
@@ -1400,6 +1538,7 @@
       emptyRow(els.emailIssueRows, 5, "A frissítéshez add meg az admin tokent.");
       emptyRow(els.alertRows, 5, "Add meg az admin tokent.");
       emptyRow(els.operationsLogRows, 5, "A frissítéshez add meg az admin tokent.");
+      renderLaunchReadiness(null);
       setStatus("Add meg az ADMIN_TOKEN értékét.");
     }
   }

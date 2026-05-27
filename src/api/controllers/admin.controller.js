@@ -1,3 +1,5 @@
+import fs from "fs";
+import path from "path";
 import { db } from "../../db/db.js";
 import {
   getSessionById,
@@ -622,6 +624,411 @@ function buildRecommendations({
   }
 
   return recommendations;
+}
+
+function readinessCheck({
+  id,
+  group,
+  label,
+  status,
+  detail,
+  action = null,
+  meta = {}
+}) {
+  return {
+    id,
+    group,
+    label,
+    status,
+    detail,
+    action,
+    meta
+  };
+}
+
+function summarizeReadiness(checks) {
+  const summary = checks.reduce(
+    (acc, check) => {
+      acc.total += 1;
+      if (check.status === "pass") acc.passed += 1;
+      if (check.status === "warn") acc.warnings += 1;
+      if (check.status === "fail") acc.failed += 1;
+      return acc;
+    },
+    { total: 0, passed: 0, warnings: 0, failed: 0 }
+  );
+
+  const level = summary.failed > 0
+    ? "blocked"
+    : summary.warnings > 0
+      ? "warning"
+      : "ready";
+
+  return { level, summary };
+}
+
+function safeJsonFile(relativePath) {
+  try {
+    return JSON.parse(
+      fs.readFileSync(path.join(process.cwd(), relativePath), "utf8")
+    );
+  } catch (_error) {
+    return null;
+  }
+}
+
+function fileExists(relativePath) {
+  return fs.existsSync(path.join(process.cwd(), relativePath));
+}
+
+async function buildLaunchReadinessChecks() {
+  const checks = [];
+
+  const requiredEnv = [
+    ["DATABASE_URL", env.DATABASE_URL],
+    ["OPENAI_API_KEY", env.OPENAI_API_KEY],
+    ["STRIPE_SECRET_KEY", env.STRIPE_SECRET_KEY],
+    ["STRIPE_WEBHOOK_SECRET", env.STRIPE_WEBHOOK_SECRET],
+    ["RESEND_API_KEY", env.RESEND_API_KEY],
+    ["EMAIL_FROM", env.EMAIL_FROM],
+    ["SUCCESS_URL", env.SUCCESS_URL],
+    ["CANCEL_URL", env.CANCEL_URL],
+    ["APP_URL", env.APP_URL],
+    ["APP_BASE_URL", env.APP_BASE_URL],
+    ["ADMIN_TOKEN", env.ADMIN_TOKEN],
+    ["CRON_SECRET", env.CRON_SECRET]
+  ];
+
+  const missingRequiredEnv = requiredEnv
+    .filter(([, value]) => !value)
+    .map(([name]) => name);
+
+  checks.push(readinessCheck({
+    id: "required-env",
+    group: "Konfiguracio",
+    label: "Kotelezo env valtozok",
+    status: missingRequiredEnv.length ? "fail" : "pass",
+    detail: missingRequiredEnv.length
+      ? `Hianyzik: ${missingRequiredEnv.join(", ")}.`
+      : "A backend inditasahoz es a fizetes-riport folyamathoz szukseges env valtozok elerhetok.",
+    action: missingRequiredEnv.length
+      ? "Railway Variables alatt potold a hianyzo ertekeket, majd deploy."
+      : null,
+    meta: {
+      checked: requiredEnv.map(([name, value]) => ({
+        name,
+        configured: Boolean(value)
+      }))
+    }
+  }));
+
+  checks.push(readinessCheck({
+    id: "optional-marketing-env",
+    group: "Konfiguracio",
+    label: "Marketing es riasztasi env",
+    status: env.META_PIXEL_ID && env.META_ACCESS_TOKEN && env.ADMIN_ALERT_EMAIL
+      ? "pass"
+      : "warn",
+    detail: env.META_PIXEL_ID && env.META_ACCESS_TOKEN && env.ADMIN_ALERT_EMAIL
+      ? "Meta Conversions API es admin riasztasi email is konfiguralva."
+      : "A core termek mukodhet, de a Meta CAPI vagy az admin riasztasi email nincs teljesen konfiguralva.",
+    action: "Eles hirdetesek elott ellenorizd: META_PIXEL_ID, META_ACCESS_TOKEN, ADMIN_ALERT_EMAIL.",
+    meta: {
+      metaConfigured: Boolean(env.META_PIXEL_ID && env.META_ACCESS_TOKEN),
+      adminAlertEmailConfigured: Boolean(env.ADMIN_ALERT_EMAIL)
+    }
+  }));
+
+  if (env.DATABASE_ERROR) {
+    checks.push(readinessCheck({
+      id: "database-config",
+      group: "Adatbazis",
+      label: "Database konfiguracio",
+      status: "fail",
+      detail: env.DATABASE_ERROR,
+      action: "Allits be ervenyes DATABASE_URL-t vagy teljes PG* valtozokat Railway-ben."
+    }));
+  } else {
+    try {
+      await db.query("SELECT NOW() AS now");
+      checks.push(readinessCheck({
+        id: "database-connection",
+        group: "Adatbazis",
+        label: "Database kapcsolat",
+        status: "pass",
+        detail: "A backend eleri a Postgres adatbazist."
+      }));
+    } catch (error) {
+      checks.push(readinessCheck({
+        id: "database-connection",
+        group: "Adatbazis",
+        label: "Database kapcsolat",
+        status: "fail",
+        detail: error.message || "Nem sikerult kapcsolodni a Postgres adatbazishoz.",
+        action: "Ellenorizd a Railway Postgres service-t es a DATABASE_URL erteket."
+      }));
+    }
+  }
+
+  try {
+    const expectedColumns = {
+      sessions: [
+        "id",
+        "payload",
+        "payment_status",
+        "analysis_status",
+        "analysis_result",
+        "stripe_session_id",
+        "report_email_status",
+        "report_email_attempts",
+        "checkout_started_at",
+        "checkout_cancelled_at",
+        "recovery_token"
+      ],
+      analysis_jobs: [
+        "id",
+        "session_id",
+        "status",
+        "attempts",
+        "locked_at",
+        "last_error"
+      ],
+      webhook_events: [
+        "id",
+        "event_id",
+        "event_type",
+        "status",
+        "error_message"
+      ],
+      admin_alerts: [
+        "id",
+        "alert_key",
+        "level",
+        "status",
+        "summary",
+        "sent_to"
+      ]
+    };
+
+    const tableNames = Object.keys(expectedColumns);
+    const schemaResult = await db.query(
+      `
+      SELECT table_name, column_name
+      FROM information_schema.columns
+      WHERE table_schema = 'public'
+        AND table_name = ANY($1)
+      `,
+      [tableNames]
+    );
+
+    const available = schemaResult.rows.reduce((acc, row) => {
+      acc[row.table_name] = acc[row.table_name] || new Set();
+      acc[row.table_name].add(row.column_name);
+      return acc;
+    }, {});
+
+    const missing = [];
+    for (const [table, columns] of Object.entries(expectedColumns)) {
+      if (!available[table]) {
+        missing.push(`${table} tabla`);
+        continue;
+      }
+
+      for (const column of columns) {
+        if (!available[table].has(column)) {
+          missing.push(`${table}.${column}`);
+        }
+      }
+    }
+
+    checks.push(readinessCheck({
+      id: "database-schema",
+      group: "Adatbazis",
+      label: "Migraciok es tablak",
+      status: missing.length ? "fail" : "pass",
+      detail: missing.length
+        ? `Hianyzo schema elemek: ${missing.join(", ")}.`
+        : "A kritikus sessions, analysis_jobs, webhook_events es admin_alerts schema elemek megvannak.",
+      action: missing.length
+        ? "Futtasd ujra a deployt/migraciokat, majd ellenorizd a Railway logot."
+        : null
+    }));
+  } catch (error) {
+    checks.push(readinessCheck({
+      id: "database-schema",
+      group: "Adatbazis",
+      label: "Migraciok es tablak",
+      status: "fail",
+      detail: error.message || "Nem sikerult ellenorizni a schema allapotot.",
+      action: "Ellenorizd a migracio logokat es az adatbazis jogosultsagokat."
+    }));
+  }
+
+  try {
+    const health = await Promise.all([
+      db.query(`
+        SELECT COUNT(*)::int AS count
+        FROM analysis_jobs
+        WHERE status = 'processing'
+          AND locked_at < NOW() - INTERVAL '15 minutes'
+      `),
+      db.query(`
+        SELECT COUNT(*)::int AS count
+        FROM webhook_events
+        WHERE status = 'failed'
+          AND created_at >= NOW() - INTERVAL '24 hours'
+      `),
+      db.query(`
+        SELECT COUNT(*)::int AS count
+        FROM sessions
+        WHERE payment_status = 'paid'
+          AND analysis_status = 'done'
+          AND report_email_status IN ('failed', 'not_sent', 'sending')
+          AND COALESCE(report_email_attempts, 0) >= 3
+      `)
+    ]);
+
+    const staleProcessingJobs = Number(health[0].rows[0]?.count || 0);
+    const failedWebhooks24h = Number(health[1].rows[0]?.count || 0);
+    const retryLimitEmails = Number(health[2].rows[0]?.count || 0);
+    const blockingCount = staleProcessingJobs + failedWebhooks24h + retryLimitEmails;
+
+    checks.push(readinessCheck({
+      id: "critical-production-state",
+      group: "Eles mukodes",
+      label: "Kritikus folyamatallapot",
+      status: blockingCount ? "fail" : "pass",
+      detail: blockingCount
+        ? `${staleProcessingJobs} beragadt worker job, ${failedWebhooks24h} webhook hiba 24 oraban, ${retryLimitEmails} email retry limit.`
+        : "Nincs ismert kritikus beragadt worker, friss webhook hiba vagy email retry limit.",
+      action: blockingCount
+        ? "Hasznald a dashboard retry/process/alert gombjait, majd ellenorizd ujra."
+        : null,
+      meta: {
+        staleProcessingJobs,
+        failedWebhooks24h,
+        retryLimitEmails
+      }
+    }));
+  } catch (error) {
+    checks.push(readinessCheck({
+      id: "critical-production-state",
+      group: "Eles mukodes",
+      label: "Kritikus folyamatallapot",
+      status: "warn",
+      detail: error.message || "Nem sikerult lekerdezni a kritikus folyamatallapotot.",
+      action: "Ha az adatbazis elerheto, probald ujra a launch readiness frissitest."
+    }));
+  }
+
+  const requiredAssets = [
+    "public/banks/all-banks.bundle.js",
+    "public/banks/triage.embed.js",
+    "public/admin-dashboard.js",
+    "public/admin-dashboard.css"
+  ];
+
+  const missingAssets = requiredAssets.filter((asset) => !fileExists(asset));
+
+  checks.push(readinessCheck({
+    id: "runtime-assets",
+    group: "Frontend assetek",
+    label: "Bank bundle es admin assetek",
+    status: missingAssets.length ? "fail" : "pass",
+    detail: missingAssets.length
+      ? `Hianyzo fajlok: ${missingAssets.join(", ")}.`
+      : "A runtime bank bundle, triage embed es admin dashboard assetek elerhetok a repo-ban.",
+    action: missingAssets.length
+      ? "Futtasd ujra a bank buildet vagy ellenorizd a public mappat deploy elott."
+      : null
+  }));
+
+  const packageJson = safeJsonFile("package.json");
+  const scripts = packageJson?.scripts || {};
+  const missingScripts = ["start", "worker", "audit:all"].filter((name) => !scripts[name]);
+
+  checks.push(readinessCheck({
+    id: "runtime-scripts",
+    group: "Deploy",
+    label: "Backend es worker scriptek",
+    status: missingScripts.length ? "fail" : "pass",
+    detail: missingScripts.length
+      ? `Hianyzo npm scriptek: ${missingScripts.join(", ")}.`
+      : "Megvan a start, worker es audit:all script.",
+    action: missingScripts.length
+      ? "Allitsd vissza a package.json deployment scripteket."
+      : null,
+    meta: {
+      start: scripts.start || null,
+      worker: scripts.worker || null,
+      auditAll: scripts["audit:all"] || null
+    }
+  }));
+
+  const railwayToml = fileExists("railway.toml")
+    ? fs.readFileSync(path.join(process.cwd(), "railway.toml"), "utf8")
+    : "";
+
+  checks.push(readinessCheck({
+    id: "railway-worker-command",
+    group: "Deploy",
+    label: "Worker start command",
+    status: railwayToml.includes('startCommand = "npm start"') ? "warn" : "pass",
+    detail: railwayToml.includes('startCommand = "npm start"')
+      ? "A repo railway.toml alapertelmezett startCommand erteke npm start. Ez jo a web service-nek, de a worker service-ben Railway override kell: npm run worker."
+      : "A railway.toml nem kenyszeriti npm start parancsra a worker service-t.",
+    action: "Railway worker service Settings alatt ellenorizd: Start Command = npm run worker."
+  }));
+
+  return checks;
+}
+
+function buildLaunchManualChecks() {
+  return [
+    {
+      label: "Webflow publish",
+      detail: "A Home, checkout success es checkout cancel oldalak legyenek publisholva, es ugyanarra a backend API_BASE_URL-re mutassanak."
+    },
+    {
+      label: "Stripe webhook",
+      detail: "Stripe Dashboardban a production webhook endpoint legyen aktiv, es a STRIPE_WEBHOOK_SECRET egyezzen Railway-ben."
+    },
+    {
+      label: "Stripe mode",
+      detail: "Eles inditas elott dontsd el, hogy test vagy live fizetesi mod megy ki, es ehhez illeszkedjen a STRIPE_SECRET_KEY."
+    },
+    {
+      label: "GTM / Meta esemenyek",
+      detail: "Tag Assistant es Meta Events Manager alatt ellenorizd legalabb a landing, checkout start es purchase esemenyeket."
+    },
+    {
+      label: "Valos probavasarlas",
+      detail: "Inditas elott egy teljes vegigfutas: kitoltes -> checkout -> success -> worker -> PDF -> email."
+    }
+  ];
+}
+
+export async function getLaunchReadiness(_req, res) {
+  try {
+    const checks = await buildLaunchReadinessChecks();
+    const { level, summary } = summarizeReadiness(checks);
+
+    return res.status(200).json({
+      ok: true,
+      generatedAt: new Date().toISOString(),
+      level,
+      summary,
+      checks,
+      manualChecks: buildLaunchManualChecks()
+    });
+  } catch (error) {
+    console.error("Admin launch readiness error:", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: error.message || "Failed to get launch readiness"
+    });
+  }
 }
 
 export async function getProductionHealth(_req, res) {

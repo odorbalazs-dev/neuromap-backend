@@ -96,6 +96,31 @@ export function getAdminDashboard(_req, res) {
         </div>
       </section>
 
+      <section class="panel launch-panel" aria-label="Élesítési ellenőrzés">
+        <div class="panel-head">
+          <div>
+            <h2>Élesítési ellenőrzés</h2>
+            <p>Automatikus launch checklist a konfiguráció, adatbázis, deploy, assetek és kritikus folyamatállapot ellenőrzéséhez.</p>
+          </div>
+          <button id="refreshLaunchReadinessBtn" type="button" class="secondary">Launch ellenőrzés</button>
+        </div>
+        <div class="launch-summary">
+          <div class="launch-score" id="launchReadinessLevel">
+            <span>Launch állapot</span>
+            <strong>-</strong>
+          </div>
+          <div class="launch-copy">
+            <strong id="launchReadinessSummary">Add meg az admin tokent, majd frissíts.</strong>
+            <span id="launchReadinessGeneratedAt">Még nincs ellenőrzés.</span>
+          </div>
+        </div>
+        <div id="launchReadinessChecks" class="launch-checks"></div>
+        <div class="launch-manual">
+          <h3>Kézi élesítési kontrollok</h3>
+          <ul id="launchManualChecks"></ul>
+        </div>
+      </section>
+
       <section class="metrics" aria-label="Állapot összegzés">
         <article class="metric">
           <span>Admin API</span>

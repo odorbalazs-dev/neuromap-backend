@@ -81,6 +81,18 @@ assert(
   "Dashboard HTML should include the pipeline cockpit."
 );
 assert(
+  res.body.includes("Élesítési ellenőrzés"),
+  "Dashboard HTML should include the launch readiness panel."
+);
+assert(
+  res.body.includes("launchReadinessChecks"),
+  "Dashboard HTML should include the launch readiness checks container."
+);
+assert(
+  res.body.includes("launchManualChecks"),
+  "Dashboard HTML should include the manual launch checks container."
+);
+assert(
   res.body.includes("pipelineStages"),
   "Dashboard HTML should include the pipeline stages container."
 );
@@ -238,6 +250,14 @@ assert(
 assert(
   dashboardJs.includes("Email kézbesítés"),
   "Dashboard JS should render the pipeline stages in Hungarian."
+);
+assert(
+  dashboardJs.includes("/admin/launch-readiness"),
+  "Dashboard JS should call the admin launch readiness endpoint."
+);
+assert(
+  dashboardJs.includes("renderLaunchReadiness"),
+  "Dashboard JS should render launch readiness results."
 );
 
 const summary = buildAdminSessionReportSummary(

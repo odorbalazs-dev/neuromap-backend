@@ -391,6 +391,149 @@ input:focus {
   margin-bottom: 18px;
 }
 
+.launch-panel {
+  margin-bottom: 18px;
+}
+
+.launch-summary {
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  gap: 18px;
+  grid-template-columns: 190px minmax(0, 1fr);
+  padding: 18px;
+}
+
+.launch-score {
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  justify-content: center;
+  min-height: 108px;
+  padding: 16px;
+}
+
+.launch-score span,
+.launch-group {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.launch-score strong {
+  font-size: 20px;
+}
+
+.launch-score.ready strong,
+.launch-score.pass strong {
+  color: var(--green);
+}
+
+.launch-score.warning strong,
+.launch-score.warn strong {
+  color: var(--orange);
+}
+
+.launch-score.blocked strong,
+.launch-score.fail strong {
+  color: var(--red);
+}
+
+.launch-copy {
+  display: grid;
+  gap: 6px;
+}
+
+.launch-copy strong {
+  font-size: 20px;
+}
+
+.launch-copy span {
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.launch-checks {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding: 18px;
+}
+
+.launch-check,
+.launch-empty {
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--green);
+  border-radius: 8px;
+  min-height: 142px;
+  padding: 14px;
+}
+
+.launch-check.warn,
+.launch-check.warning {
+  border-left-color: var(--orange);
+}
+
+.launch-check.fail,
+.launch-check.blocked {
+  border-left-color: var(--red);
+}
+
+.launch-check-head {
+  align-items: flex-start;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.launch-check h3 {
+  font-size: 15px;
+  margin: 4px 0 10px;
+}
+
+.launch-check p,
+.launch-empty {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.launch-action {
+  color: var(--ink);
+  display: block;
+  font-size: 12px;
+  margin-top: 10px;
+}
+
+.launch-manual {
+  border-top: 1px solid var(--line);
+  padding: 18px;
+}
+
+.launch-manual h3 {
+  font-size: 16px;
+  margin: 0 0 10px;
+}
+
+.launch-manual ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.launch-manual li strong {
+  display: block;
+}
+
+.launch-manual li span {
+  color: var(--muted);
+  display: block;
+}
+
 .health-grid {
   display: grid;
   gap: 12px;
@@ -546,13 +689,17 @@ td {
 .pill.processed,
 .pill.sent,
 .pill.healthy,
-.pill.ok {
+.pill.ok,
+.pill.ready,
+.pill.pass {
   background: #e8f7ef;
   color: var(--green);
 }
 
 .pill.failed,
-.pill.problem {
+.pill.problem,
+.pill.blocked,
+.pill.fail {
   background: #fdecec;
   color: var(--red);
 }
@@ -563,7 +710,8 @@ td {
 }
 
 .pill.warning,
-.pill.waiting {
+.pill.waiting,
+.pill.warn {
   background: #fff6e8;
   color: #9b5200;
 }
@@ -961,6 +1109,8 @@ pre {
   .control-center,
   .pipeline-stages,
   .risk-strip,
+  .launch-summary,
+  .launch-checks,
   .health-grid,
   .grid,
   .detail-grid,
