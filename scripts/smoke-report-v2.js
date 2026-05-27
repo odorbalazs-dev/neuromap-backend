@@ -31,6 +31,13 @@ function main() {
     promptContext.recommendations.length >= 3,
     "Prompt context should include age-aware recommendations."
   );
+  assert(promptContext.actionPlanTitle, "Prompt context should include an action plan title.");
+  assert(
+    Array.isArray(promptContext.actionPlan) && promptContext.actionPlan.length >= 3,
+    "Prompt context should include a domain-aware action plan."
+  );
+  assert(promptContext.observationFocus, "Prompt context should include observation guidance.");
+  assert(promptContext.escalationNote, "Prompt context should include an escalation note.");
 
   const emailContext = buildReportV2EmailContext(withAge, "hu");
   assert(emailContext.title, "Email context should include a title.");

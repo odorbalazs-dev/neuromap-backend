@@ -793,14 +793,20 @@ function getReportV2PdfLabels(lang = "en") {
     return {
       title: "Korosztalyi ertelmezes",
       ageBand: "Korosztaly",
-      recommendations: "Korosztalyi javaslatok"
+      recommendations: "Korosztalyi javaslatok",
+      actionPlan: "Kovetkezo 7 nap akcioterve",
+      observationFocus: "Mit figyelj meg celzottan?",
+      escalationNote: "Mikor ne varj tovabb?"
     };
   }
 
   return {
     title: "Age-group interpretation",
     ageBand: "Age group",
-    recommendations: "Age-aware recommendations"
+    recommendations: "Age-aware recommendations",
+    actionPlan: "Next 7-day action plan",
+    observationFocus: "What to observe on purpose",
+    escalationNote: "When not to wait"
   };
 }
 
@@ -811,11 +817,17 @@ function addReportV2AgeBlock(doc, payload, labels, lang, pageState = null) {
   const w = doc.page.width - 112;
   const bodyWidth = w - 44;
   const recommendations = (context.recommendations || []).slice(0, 3);
+  const actionPlan = (context.actionPlan || []).slice(0, 3);
 
   const bodyText = clean(context.interpretation);
   const recommendationText = recommendations
     .map((item) => `- ${clean(item)}`)
     .join("\n");
+  const actionText = actionPlan
+    .map((item, index) => `${index + 1}. ${clean(item)}`)
+    .join("\n");
+  const observationText = clean(context.observationFocus);
+  const escalationText = clean(context.escalationNote);
 
   const titleHeight = doc
     .font(getFont(lang, true))
@@ -842,7 +854,51 @@ function addReportV2AgeBlock(doc, payload, labels, lang, pageState = null) {
         })
     : 0;
 
-  const h = Math.max(142, Math.ceil(titleHeight + bodyHeight + recHeight + 86));
+  const actionHeight = actionText
+    ? doc
+        .font(getFont(lang))
+        .fontSize(9.2)
+        .heightOfString(actionText, {
+          width: bodyWidth - 12,
+          align: getTextAlign(lang),
+          lineGap: 3
+        })
+    : 0;
+
+  const observationHeight = observationText
+    ? doc
+        .font(getFont(lang))
+        .fontSize(9.2)
+        .heightOfString(observationText, {
+          width: bodyWidth - 16,
+          align: getTextAlign(lang),
+          lineGap: 3
+        })
+    : 0;
+
+  const escalationHeight = escalationText
+    ? doc
+        .font(getFont(lang))
+        .fontSize(9)
+        .heightOfString(escalationText, {
+          width: bodyWidth - 16,
+          align: getTextAlign(lang),
+          lineGap: 3
+        })
+    : 0;
+
+  const h = Math.max(
+    260,
+    Math.ceil(
+      titleHeight +
+      bodyHeight +
+      recHeight +
+      actionHeight +
+      observationHeight +
+      escalationHeight +
+      190
+    )
+  );
 
   ensureSpace(doc, h + 18, labels, lang, pageState);
   doc.moveDown(0.8);
@@ -881,13 +937,13 @@ function addReportV2AgeBlock(doc, payload, labels, lang, pageState = null) {
       lineGap: 3
     });
 
-  if (recommendations.length) {
-    const recY = doc.y + 10;
+  let cursorY = doc.y + 10;
 
+  if (recommendations.length) {
     doc.fillColor(BRAND.dark)
       .font(getFont(lang, true))
       .fontSize(10)
-      .text(v2Labels.recommendations, x + 22, recY, {
+      .text(v2Labels.recommendations, x + 22, cursorY, {
         width: bodyWidth,
         align: getTextAlign(lang)
       });
@@ -895,8 +951,91 @@ function addReportV2AgeBlock(doc, payload, labels, lang, pageState = null) {
     doc.fillColor("#374151")
       .font(getFont(lang))
       .fontSize(9.2)
-      .text(recommendationText, x + 30, recY + 18, {
+      .text(recommendationText, x + 30, cursorY + 18, {
         width: bodyWidth - 12,
+        align: getTextAlign(lang),
+        lineGap: 3
+      });
+
+    cursorY = doc.y + 12;
+  }
+
+  if (actionPlan.length) {
+    const actionBoxHeight = Math.max(82, actionHeight + 48);
+
+    doc.roundedRect(x + 18, cursorY, bodyWidth + 8, actionBoxHeight, 12).fill(BRAND.lightBlue);
+    doc.roundedRect(x + 18, cursorY, bodyWidth + 8, actionBoxHeight, 12)
+      .strokeColor(BRAND.softBorder)
+      .lineWidth(1)
+      .stroke();
+
+    doc.circle(x + 36, cursorY + 22, 6).fill(BRAND.blue);
+
+    doc.fillColor(BRAND.dark)
+      .font(getFont(lang, true))
+      .fontSize(10)
+      .text(v2Labels.actionPlan, x + 52, cursorY + 14, {
+        width: bodyWidth - 34,
+        align: getTextAlign(lang)
+      });
+
+    doc.fillColor("#374151")
+      .font(getFont(lang))
+      .fontSize(9.2)
+      .text(actionText, x + 34, cursorY + 38, {
+        width: bodyWidth - 16,
+        align: getTextAlign(lang),
+        lineGap: 3
+      });
+
+    cursorY += actionBoxHeight + 10;
+  }
+
+  if (observationText) {
+    doc.fillColor(BRAND.dark)
+      .font(getFont(lang, true))
+      .fontSize(10)
+      .text(v2Labels.observationFocus, x + 22, cursorY, {
+        width: bodyWidth,
+        align: getTextAlign(lang)
+      });
+
+    doc.fillColor("#374151")
+      .font(getFont(lang))
+      .fontSize(9.2)
+      .text(observationText, x + 22, cursorY + 18, {
+        width: bodyWidth,
+        align: getTextAlign(lang),
+        lineGap: 3
+      });
+
+    cursorY = doc.y + 10;
+  }
+
+  if (escalationText) {
+    const noteHeight = Math.max(64, escalationHeight + 42);
+
+    doc.roundedRect(x + 18, cursorY, bodyWidth + 8, noteHeight, 12).fill(BRAND.lightOrange);
+    doc.roundedRect(x + 18, cursorY, bodyWidth + 8, noteHeight, 12)
+      .strokeColor("#FFD2A6")
+      .lineWidth(1)
+      .stroke();
+
+    doc.circle(x + 36, cursorY + 21, 6).fill(BRAND.orange);
+
+    doc.fillColor("#9A3412")
+      .font(getFont(lang, true))
+      .fontSize(10)
+      .text(v2Labels.escalationNote, x + 52, cursorY + 13, {
+        width: bodyWidth - 34,
+        align: getTextAlign(lang)
+      });
+
+    doc.fillColor("#7C2D12")
+      .font(getFont(lang))
+      .fontSize(9)
+      .text(escalationText, x + 34, cursorY + 36, {
+        width: bodyWidth - 16,
         align: getTextAlign(lang),
         lineGap: 3
       });

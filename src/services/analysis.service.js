@@ -461,6 +461,7 @@ REPORT V2 CONTENT REQUIREMENTS:
 - Include a practical 30-day plan with observation, home support, school/daycare communication if relevant, and review.
 - Include a calm professional-support section that explains thresholds for seeking help without creating alarm.
 - Include at least one "this week" action and one "watch over the next month" observation.
+- Use the structured v2 actionPlan, observationFocus, and escalationNote as guidance for sections 8-10. Do not copy them mechanically; weave them into natural parent-facing prose.
 - If professional support is discussed, keep it non-alarming and tied to persistence, impairment, safety, or cross-context concern.
 - For any self-harm, disappearance, or safety-related signal, state that immediate qualified support is important. Do not provide crisis counseling; keep the wording brief and responsible.
 

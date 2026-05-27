@@ -237,11 +237,214 @@ function getCopy(lang = "en") {
   return lang === "hu" ? hu : en;
 }
 
+function getReportSignals(payload = {}) {
+  const profile = payload?.specificProfile || {};
+  const scoring = payload?.specificScoring || {};
+  const summary = payload?.resultSummary || {};
+
+  const detectedRisk =
+    payload?.detectedRisk ||
+    profile?.kind ||
+    summary?.kind ||
+    "UNKNOWN";
+
+  const secondaryRisk =
+    payload?.secondaryRisk ||
+    summary?.secondaryRisk ||
+    null;
+
+  const severity =
+    profile?.severity ||
+    summary?.signal?.key ||
+    "unknown";
+
+  const subdomainSource =
+    summary?.topSubdomains ||
+    Object.entries(scoring?.subdomains || profile?.subdomains || {}).map(([key, value]) => ({
+      key,
+      average: Number(value?.average || 0),
+      itemCount: Number(value?.itemCount || 0)
+    }));
+
+  const topSubdomains = (Array.isArray(subdomainSource) ? subdomainSource : [])
+    .map((item) => ({
+      key: String(item?.key || "").trim(),
+      average: Number(item?.average || 0),
+      itemCount: Number(item?.itemCount || 0)
+    }))
+    .filter((item) => item.key)
+    .sort((a, b) => b.average - a.average)
+    .slice(0, 3);
+
+  return {
+    detectedRisk,
+    secondaryRisk,
+    severity,
+    topSubdomains
+  };
+}
+
+function getActionCopy(lang = "en") {
+  const hu = {
+    ADHD: {
+      title: "Kovetkezo 7 nap: figyelmi es feladattartasi tamogatas",
+      items: [
+        "Valassz ki egyetlen visszatero rutint, es bontsd 3-5 lathato lepesre.",
+        "Adj rovid instrukciot, majd kerj visszamondast: mi az elso kovetkezo lepes?",
+        "Figyeld, hogy a nehezseg inkabb inditasnal, fenntartasnal, valtasnal vagy befejezesnel jelenik meg."
+      ]
+    },
+    ASD: {
+      title: "Kovetkezo 7 nap: kiszamithatosag es tarsas-szenzoros terheles",
+      items: [
+        "Jelolj ki egy nehez atmenetet, es adj elore lathato jelzest a valtas elott.",
+        "Figyeld, hogy a reakciohoz tarsas bizonytalansag, szenzoros terheles vagy rutinvaltozas kapcsolodik-e.",
+        "Hasznalj konkret, rovid mondatokat, es hagyj tobb feldolgozasi idot valasz vagy valtas elott."
+      ]
+    },
+    ANXIETY: {
+      title: "Kovetkezo 7 nap: aggodalom es elkerules finom kovetese",
+      items: [
+        "Jegyezd fel, mely helyzetekben no meg a feszultseg, es mi segit visszarendezodni.",
+        "A megnyugtatas mellett probalj kis, biztonsagos lepest adni az elkerult helyzet fele.",
+        "Figyeld a testi jeleket is: alvas, hasfajas, fejfajas, feszultseg vagy visszahuzodas."
+      ]
+    },
+    DEPRESSION: {
+      title: "Kovetkezo 7 nap: hangulat, energia es kapcsolodas",
+      items: [
+        "Naponta egyszer figyeld meg az energiaszintet, erdeklodest es kedvet egy rovid skalan.",
+        "Tervezz be egy alacsony terhelesu, kapcsolodo tevekenyseget, ahol nem a teljesitmeny a cel.",
+        "Ha a lehangoltsag, visszahuzodas vagy onertekelesi romlas erosodik, kerj szakmai segitseget."
+      ]
+    },
+    LEARNING: {
+      title: "Kovetkezo 7 nap: tanulasi helyzetek pontos szetvalasztasa",
+      items: [
+        "Valassz ki egy konkret feladattipust, ahol gyakran elakadas van: olvasas, iras, matek vagy instrukcio.",
+        "Nezd meg, hogy a gond a megertesnel, emlekezetben tartasnal, tempoban vagy kivitelezesben jelenik meg.",
+        "Kerj konkret pedagogusi peldat arrol, milyen formatum segit: rovidebb utasitas, vizualis minta vagy tobb ido."
+      ]
+    },
+    UNKNOWN: {
+      title: "Kovetkezo 7 nap: egyetlen minta tisztazasa",
+      items: [
+        "Valassz egy visszatero helyzetet, ahol a nehezseg jol megfigyelheto.",
+        "Figyeld, mi tortenik elotte, mi tartja fenn, es mi segit visszarendezodni.",
+        "A kovetkezo lepes legyen kicsi, merheto es eletkorhoz igazitott."
+      ]
+    }
+  };
+
+  const en = {
+    ADHD: {
+      title: "Next 7 days: support attention and task persistence",
+      items: [
+        "Choose one recurring routine and break it into 3-5 visible steps.",
+        "Give a short instruction, then ask the child to repeat the first next step.",
+        "Observe whether the difficulty appears most during starting, staying with, switching, or finishing a task."
+      ]
+    },
+    ASD: {
+      title: "Next 7 days: predictability and social-sensory load",
+      items: [
+        "Choose one difficult transition and give a visible warning before the change.",
+        "Observe whether reactions are linked to social uncertainty, sensory load, or routine change.",
+        "Use concrete short sentences and allow more processing time before a response or transition."
+      ]
+    },
+    ANXIETY: {
+      title: "Next 7 days: track worry and avoidance gently",
+      items: [
+        "Note which situations increase tension and what helps the child settle again.",
+        "Alongside reassurance, offer one small safe step toward the avoided situation.",
+        "Watch body signals too: sleep, stomachaches, headaches, tension, or withdrawal."
+      ]
+    },
+    DEPRESSION: {
+      title: "Next 7 days: mood, energy, and connection",
+      items: [
+        "Once a day, briefly track energy, interest, and mood on a simple scale.",
+        "Plan one low-pressure connecting activity where performance is not the goal.",
+        "If low mood, withdrawal, or negative self-view increases, seek qualified support."
+      ]
+    },
+    LEARNING: {
+      title: "Next 7 days: separate learning situations clearly",
+      items: [
+        "Choose one task type where the child often gets stuck: reading, writing, math, or instructions.",
+        "Check whether the difficulty is in understanding, holding information, pace, or output.",
+        "Ask educators for concrete examples of what helps: shorter instructions, visual models, or more time."
+      ]
+    },
+    UNKNOWN: {
+      title: "Next 7 days: clarify one recurring pattern",
+      items: [
+        "Choose one recurring situation where the difficulty is easy to observe.",
+        "Watch what happens before it, what keeps it going, and what helps the child settle.",
+        "Make the next step small, measurable, and age-appropriate."
+      ]
+    }
+  };
+
+  return lang === "hu" ? hu : en;
+}
+
+function formatFocusLabel(value = "") {
+  return String(value || "")
+    .replace(/[_-]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function buildObservationFocus(signals, lang = "en") {
+  const areas = (signals.topSubdomains || [])
+    .map((item) => formatFocusLabel(item.key))
+    .filter(Boolean);
+
+  if (lang === "hu") {
+    if (!areas.length) {
+      return "A kovetkezo heten azt erdemes figyelni, hogy a nehezseg mely helyzetekben erosodik, es mi segit a visszarendezodesben.";
+    }
+
+    return `A kovetkezo heten kulon figyeld ezeket a teruleteket: ${areas.join(", ")}. A cel nem cimkezes, hanem annak tisztazasa, milyen helyzetben es milyen tamogatassal valtozik a minta.`;
+  }
+
+  if (!areas.length) {
+    return "Over the next week, observe where the difficulty becomes stronger and what helps the child settle or re-engage.";
+  }
+
+  return `Over the next week, pay special attention to these areas: ${areas.join(", ")}. The goal is not labeling, but understanding where the pattern changes and which supports help.`;
+}
+
+function buildEscalationNote(signals, lang = "en") {
+  const severity = String(signals.severity || "").toLowerCase();
+  const isHigh = severity === "high";
+  const hasMoodRisk = signals.detectedRisk === "DEPRESSION" || signals.secondaryRisk === "DEPRESSION";
+
+  if (lang === "hu") {
+    if (isHigh || hasMoodRisk) {
+      return "Ha a jelzes eros, tobb kornyezetben tartos, romlo onertekelest, visszahuzodast, eros szorongast vagy biztonsagi aggodalmat erint, ne csak megfigyelesben gondolkodj: erdemes szakemberrel egyeztetni.";
+    }
+
+    return "Ha a nehezseg tobb kornyezetben tartosan fennall, a csaladi vagy iskolai mukodest erdemben terheli, vagy a gyermek onbizalma csokken, szakember bevonasa segithet pontosabb kepet adni.";
+  }
+
+  if (isHigh || hasMoodRisk) {
+    return "If the signal is strong, persistent across settings, or linked with declining confidence, withdrawal, intense anxiety, or safety concerns, do not rely on observation alone: consider qualified support.";
+  }
+
+  return "If the difficulty persists across settings, meaningfully affects family or school functioning, or the child's confidence declines, qualified support can help clarify the picture.";
+}
+
 export function buildReportV2Context(payload = {}, lang = "en") {
   const ageYears = extractChildAgeYears(payload);
   const ageBand = getAgeBand(ageYears);
   const copy = getCopy(lang);
   const bandCopy = copy[ageBand] || copy.unknown;
+  const signals = getReportSignals(payload);
+  const actionCopy = getActionCopy(lang);
+  const domainAction = actionCopy[signals.detectedRisk] || actionCopy.UNKNOWN;
 
   return {
     version: "structured_report_v2",
@@ -250,7 +453,15 @@ export function buildReportV2Context(payload = {}, lang = "en") {
     ageBandLabel: bandCopy.label,
     hasAge: ageYears !== null,
     interpretation: bandCopy.interpretation,
-    recommendations: bandCopy.recommendations
+    recommendations: bandCopy.recommendations,
+    primaryFocus: signals.detectedRisk,
+    secondaryFocus: signals.secondaryRisk,
+    severity: signals.severity,
+    focusSubdomains: signals.topSubdomains,
+    actionPlanTitle: domainAction.title,
+    actionPlan: domainAction.items,
+    observationFocus: buildObservationFocus(signals, lang),
+    escalationNote: buildEscalationNote(signals, lang)
   };
 }
 
