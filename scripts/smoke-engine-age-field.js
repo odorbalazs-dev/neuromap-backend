@@ -6,20 +6,19 @@ function assert(condition, message) {
   }
 }
 
-function extractScript(html) {
-  return html
-    .replace(/^\s*<script>\s*/i, "")
-    .replace(/\s*<\/script>\s*$/i, "");
-}
-
 function main() {
   console.log("\n=== ENGINE AGE FIELD SMOKE ===");
 
-  const html = fs.readFileSync("web/engine-embed.full.html", "utf8");
-  const script = extractScript(html);
+  const loaderHtml = fs.readFileSync("web/engine-embed.full.html", "utf8").trim();
+  const script = fs.readFileSync("public/webflow/engine.js", "utf8");
 
   new Function(script);
 
+  assert(loaderHtml.length < 50000, "Webflow Engine loader embed should stay below the 50k character limit.");
+  assert(
+    loaderHtml.includes("/public/webflow/engine.js"),
+    "Webflow Engine loader should load the public engine file."
+  );
   assert(script.includes("ensureChildAgeField"), "Engine should create the child age field.");
   assert(script.includes("installFrontendDesign"), "Engine should install the Webflow frontend design layer.");
   assert(script.includes("nm-frontend-design-v2"), "Engine should include the scoped frontend design stylesheet.");
