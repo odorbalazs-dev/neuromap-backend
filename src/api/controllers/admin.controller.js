@@ -21,6 +21,254 @@ function shortText(value = "", max = 600) {
   return text.length > max ? `${text.slice(0, max)}...` : text;
 }
 
+function buildDiagnosticStage(key, label, level, status, detail) {
+  return {
+    key,
+    label,
+    level,
+    status,
+    detail
+  };
+}
+
+function normalizeAnalysisJob(row = {}) {
+  return {
+    id: row.id || null,
+    session_id: row.session_id || null,
+    status: row.status || null,
+    attempts: Number(row.attempts || 0),
+    locked_at: row.locked_at || null,
+    locked_by: row.locked_by || null,
+    last_error: row.last_error || null,
+    created_at: row.created_at || null,
+    updated_at: row.updated_at || null,
+    processed_at: row.processed_at || null
+  };
+}
+
+function normalizeWebhookEvent(row = {}) {
+  return {
+    event_id: row.event_id || null,
+    event_type: row.event_type || null,
+    status: row.status || null,
+    error_message: row.error_message || null,
+    stripe_session_id: row.stripe_session_id || null,
+    internal_session_id: row.internal_session_id || null,
+    created_at: row.created_at || null,
+    processed_at: row.processed_at || null
+  };
+}
+
+function buildSessionDiagnostics(sessionRow, analysisJobRows = [], webhookEventRows = []) {
+  const paymentStatus = sessionRow.payment_status || "unknown";
+  const analysisStatus = sessionRow.analysis_status || "unknown";
+  const emailStatus = sessionRow.report_email_status || "not_sent";
+  const hasPayload = Boolean(sessionRow.payload);
+  const hasResult = Boolean(sessionRow.analysis_result);
+  const latestJob = analysisJobRows[0] || null;
+  const completedWebhook = webhookEventRows.find(
+    (row) => row.event_type === "checkout.session.completed"
+  );
+  const failedWebhook = webhookEventRows.find((row) => row.status === "failed");
+
+  const stages = [];
+  const actions = [];
+
+  if (paymentStatus === "paid") {
+    stages.push(buildDiagnosticStage(
+      "payment",
+      "Fizetés",
+      "ok",
+      paymentStatus,
+      "A session fizetett állapotban van."
+    ));
+  } else if (paymentStatus === "failed") {
+    stages.push(buildDiagnosticStage(
+      "payment",
+      "Fizetés",
+      "problem",
+      paymentStatus,
+      "A fizetési folyamat hibás státuszt kapott."
+    ));
+    actions.push("Ellenőrizd a Stripe sessiont, majd szükség esetén küldd újra a checkout linket.");
+  } else {
+    stages.push(buildDiagnosticStage(
+      "payment",
+      "Fizetés",
+      "waiting",
+      paymentStatus,
+      "A fizetés még nincs visszaigazolva."
+    ));
+  }
+
+  if (completedWebhook?.status === "processed") {
+    stages.push(buildDiagnosticStage(
+      "webhook",
+      "Stripe webhook",
+      "ok",
+      completedWebhook.status,
+      "A checkout.session.completed webhook feldolgozva."
+    ));
+  } else if (failedWebhook) {
+    stages.push(buildDiagnosticStage(
+      "webhook",
+      "Stripe webhook",
+      "problem",
+      failedWebhook.status,
+      failedWebhook.error_message || "Webhook feldolgozási hiba rögzítve."
+    ));
+    actions.push("Nézd meg a webhook hibát, majd a Stripe eseményt szükség esetén küldd újra.");
+  } else if (webhookEventRows.length) {
+    stages.push(buildDiagnosticStage(
+      "webhook",
+      "Stripe webhook",
+      "waiting",
+      webhookEventRows[0].status,
+      "Kapcsolódó webhook esemény látszik, de nincs feldolgozott checkout completion."
+    ));
+  } else if (paymentStatus === "paid") {
+    stages.push(buildDiagnosticStage(
+      "webhook",
+      "Stripe webhook",
+      "unknown",
+      "nincs találat",
+      "A session fizetett, de ehhez nem találtam kapcsolódó webhook sort."
+    ));
+    actions.push("Ha a fizetés rendben van, de nincs webhook sor, ellenőrizd a Stripe webhook endpointot és a STRIPE_WEBHOOK_SECRET értéket.");
+  } else {
+    stages.push(buildDiagnosticStage(
+      "webhook",
+      "Stripe webhook",
+      "waiting",
+      "fizetésre vár",
+      "Webhook csak sikeres checkout után várható."
+    ));
+  }
+
+  if (analysisStatus === "done") {
+    stages.push(buildDiagnosticStage(
+      "analysis",
+      "Elemzés",
+      "ok",
+      analysisStatus,
+      "Az elemzés kész állapotban van."
+    ));
+  } else if (analysisStatus === "failed") {
+    stages.push(buildDiagnosticStage(
+      "analysis",
+      "Elemzés",
+      "problem",
+      analysisStatus,
+      sessionRow.error_message || latestJob?.last_error || "Az elemzés hibára futott."
+    ));
+    actions.push("Indítsd újra az elemzést az admin panelből, majd figyeld a worker job státuszát.");
+  } else if (["queued", "processing", "pending"].includes(analysisStatus)) {
+    const hasActiveJob = analysisJobRows.some((row) => ["queued", "processing"].includes(row.status));
+    stages.push(buildDiagnosticStage(
+      "analysis",
+      "Elemzés",
+      hasActiveJob || paymentStatus !== "paid" ? "waiting" : "problem",
+      latestJob?.status || analysisStatus,
+      hasActiveJob
+        ? "Van aktív worker job az elemzéshez."
+        : paymentStatus === "paid"
+          ? "Fizetett session, de nem látszik aktív worker job."
+          : "Az elemzés a fizetés visszaigazolására vár."
+    ));
+
+    if (paymentStatus === "paid" && !hasActiveJob && hasPayload) {
+      actions.push("Hozz létre vagy indíts újra analysis jobot az admin panelből.");
+    }
+  } else {
+    stages.push(buildDiagnosticStage(
+      "analysis",
+      "Elemzés",
+      "unknown",
+      analysisStatus,
+      "Ismeretlen elemzési státusz."
+    ));
+  }
+
+  if (hasResult) {
+    stages.push(buildDiagnosticStage(
+      "pdf",
+      "PDF alapanyag",
+      "ok",
+      "riport elérhető",
+      "Az elemzési szöveg elérhető, a PDF újragenerálható."
+    ));
+  } else if (analysisStatus === "done") {
+    stages.push(buildDiagnosticStage(
+      "pdf",
+      "PDF alapanyag",
+      "problem",
+      "hiányzik",
+      "Az elemzés kész, de nincs mentett riportszöveg."
+    ));
+    actions.push("Regeneráld az elemzést, mert a PDF alapjául szolgáló szöveg hiányzik.");
+  } else {
+    stages.push(buildDiagnosticStage(
+      "pdf",
+      "PDF alapanyag",
+      "waiting",
+      "elemzésre vár",
+      "A PDF csak elkészült elemzés után állítható elő."
+    ));
+  }
+
+  if (emailStatus === "sent") {
+    stages.push(buildDiagnosticStage(
+      "email",
+      "Riport email",
+      "ok",
+      emailStatus,
+      "A riport email elküldve."
+    ));
+  } else if (emailStatus === "failed") {
+    stages.push(buildDiagnosticStage(
+      "email",
+      "Riport email",
+      "problem",
+      emailStatus,
+      sessionRow.report_email_error || "Email kézbesítési hiba."
+    ));
+    actions.push("Ellenőrizd a kézbesítési hibát, majd használd az email újraküldés vagy retry alaphelyzet gombot.");
+  } else if (hasResult) {
+    stages.push(buildDiagnosticStage(
+      "email",
+      "Riport email",
+      "waiting",
+      emailStatus,
+      "A riport elérhető, az email még nincs sikeresen elküldve."
+    ));
+    actions.push("Küldd újra a riport emailt az admin panelből.");
+  } else {
+    stages.push(buildDiagnosticStage(
+      "email",
+      "Riport email",
+      "waiting",
+      emailStatus,
+      "Email küldés az elemzés elkészülése után várható."
+    ));
+  }
+
+  const overallLevel = stages.some((stage) => stage.level === "problem")
+    ? "critical"
+    : stages.some((stage) => stage.level === "waiting" || stage.level === "unknown")
+      ? "warning"
+      : "healthy";
+
+  if (!actions.length) {
+    actions.push("Nincs sürgős teendő. A session folyamatának fő pontjai rendben vannak.");
+  }
+
+  return {
+    overallLevel,
+    stages,
+    recommendedActions: [...new Set(actions)]
+  };
+}
+
 function escapeLikePattern(value = "") {
   return String(value || "").replace(/[\\%_]/g, "\\$&");
 }
@@ -71,7 +319,9 @@ async function generateReportPdfForSession(sessionRow) {
   return pdfBuffer;
 }
 
-function buildSessionView(sessionRow, analysisJobRow = null) {
+function buildSessionView(sessionRow, analysisJobRows = [], webhookEventRows = []) {
+  const latestAnalysisJob = analysisJobRows[0] || null;
+
   return {
     id: sessionRow.id,
     email: sessionRow.email,
@@ -96,7 +346,10 @@ function buildSessionView(sessionRow, analysisJobRow = null) {
     detectedRisk: sessionRow.payload?.detectedRisk || null,
     secondaryRisk: sessionRow.payload?.secondaryRisk || null,
     questionnaireVersion: sessionRow.payload?.questionnaireVersion || null,
-    reportSummary: buildAdminSessionReportSummary(sessionRow, analysisJobRow),
+    reportSummary: buildAdminSessionReportSummary(sessionRow, latestAnalysisJob),
+    diagnostics: buildSessionDiagnostics(sessionRow, analysisJobRows, webhookEventRows),
+    analysisJobs: analysisJobRows.map(normalizeAnalysisJob),
+    webhookEvents: webhookEventRows.map(normalizeWebhookEvent),
 
     counts: {
       triageQuestions: sessionRow.payload?.triageQuestions?.length || 0,
@@ -1036,28 +1289,55 @@ export async function getAdminSession(req, res) {
       });
     }
 
-    const analysisJobResult = await db.query(
-      `
-      SELECT
-        id,
-        status,
-        attempts,
-        last_error,
-        locked_at,
-        available_at,
-        created_at,
-        updated_at
-      FROM analysis_jobs
-      WHERE session_id = $1
-      ORDER BY created_at DESC
-      LIMIT 1
-      `,
-      [sessionId]
-    );
+    const [analysisJobResult, webhookEventResult] = await Promise.all([
+      db.query(
+        `
+        SELECT
+          id,
+          session_id,
+          status,
+          attempts,
+          last_error,
+          locked_at,
+          locked_by,
+          created_at,
+          updated_at,
+          processed_at
+        FROM analysis_jobs
+        WHERE session_id = $1
+        ORDER BY created_at DESC
+        LIMIT 5
+        `,
+        [sessionId]
+      ),
+      db.query(
+        `
+        SELECT
+          event_id,
+          event_type,
+          status,
+          error_message,
+          payload #>> '{data,object,id}' AS stripe_session_id,
+          payload #>> '{data,object,metadata,internalSessionId}' AS internal_session_id,
+          created_at,
+          processed_at
+        FROM webhook_events
+        WHERE payload #>> '{data,object,metadata,internalSessionId}' = $1
+           OR payload #>> '{data,object,id}' = $2
+        ORDER BY created_at DESC
+        LIMIT 5
+        `,
+        [sessionId, sessionRow.stripe_session_id || ""]
+      )
+    ]);
 
     return res.status(200).json({
       ok: true,
-      session: buildSessionView(sessionRow, analysisJobResult.rows[0] || null)
+      session: buildSessionView(
+        sessionRow,
+        analysisJobResult.rows,
+        webhookEventResult.rows
+      )
     });
   } catch (error) {
     console.error("Admin session error:", error);
@@ -1082,23 +1362,30 @@ export async function downloadReportPdf(req, res) {
       });
     }
 
+    if (!sessionRow.analysis_result) {
+      return res.status(409).json({
+        ok: false,
+        error: "Session has no analysis result yet"
+      });
+    }
+
     const pdfBuffer = await generateReportPdfForSession(sessionRow);
     const filename = buildReportPdfFilename(sessionRow);
 
     res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Length", String(pdfBuffer.length));
+    res.setHeader("Content-Length", pdfBuffer.length);
     res.setHeader(
       "Content-Disposition",
-      `attachment; filename="${filename}"`
+      `attachment; filename=\"${filename}\"; filename*=UTF-8''${encodeURIComponent(filename)}`
     );
 
     return res.status(200).send(pdfBuffer);
   } catch (error) {
-    console.error("Admin report PDF download error:", error);
+    console.error("Admin download report PDF error:", error);
 
     return res.status(error.statusCode || 500).json({
       ok: false,
-      error: error.message || "Failed to generate report PDF"
+      error: error.message || "Failed to download report PDF"
     });
   }
 }

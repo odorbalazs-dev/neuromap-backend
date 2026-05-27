@@ -529,7 +529,8 @@ td {
   color: #0879b0;
 }
 
-.pill.processing {
+.pill.processing,
+.pill.received {
   background: #fff6e8;
   color: #9b5200;
 }
@@ -542,13 +543,16 @@ td {
 
 .pill.done,
 .pill.completed,
+.pill.processed,
 .pill.sent,
-.pill.healthy {
+.pill.healthy,
+.pill.ok {
   background: #e8f7ef;
   color: var(--green);
 }
 
-.pill.failed {
+.pill.failed,
+.pill.problem {
   background: #fdecec;
   color: var(--red);
 }
@@ -558,7 +562,8 @@ td {
   color: var(--red);
 }
 
-.pill.warning {
+.pill.warning,
+.pill.waiting {
   background: #fff6e8;
   color: #9b5200;
 }
@@ -731,6 +736,117 @@ td {
   border-left: 4px solid var(--blue);
 }
 
+.diagnostics-card {
+  border-left: 4px solid #f79009;
+}
+
+.diagnostics-header {
+  align-items: flex-start;
+  display: flex;
+  gap: 14px;
+  justify-content: space-between;
+}
+
+.diagnostics-header p {
+  margin-top: 4px;
+}
+
+.diagnostic-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  margin-top: 12px;
+}
+
+.diagnostic-stage {
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  min-width: 0;
+  padding: 12px;
+}
+
+.diagnostic-stage.ok {
+  background: #f5fbf7;
+  border-color: #b7e4c7;
+}
+
+.diagnostic-stage.problem {
+  background: #fff7f7;
+  border-color: #fecaca;
+}
+
+.diagnostic-stage.waiting {
+  background: #fffbf1;
+  border-color: #fed7aa;
+}
+
+.diagnostic-stage-head {
+  align-items: flex-start;
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+}
+
+.diagnostic-stage-head strong {
+  font-size: 13px;
+}
+
+.diagnostic-status {
+  color: #344054;
+  font-size: 13px;
+  font-weight: 800;
+  margin-top: 10px;
+  overflow-wrap: anywhere;
+}
+
+.diagnostic-stage p {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+  margin-top: 6px;
+}
+
+.recommended-actions {
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  margin-top: 12px;
+  padding: 12px 14px;
+}
+
+.recommended-actions strong {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.recommended-actions ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.recommended-actions li {
+  color: #344054;
+  margin: 6px 0;
+}
+
+.mini-table-card {
+  overflow: hidden;
+}
+
+.mini-table-wrap {
+  overflow-x: auto;
+}
+
+.mini-table {
+  min-width: 720px;
+}
+
+.mini-table th,
+.mini-table td {
+  padding: 9px 10px;
+}
+
 .summary-field-grid {
   display: grid;
   gap: 10px;
@@ -848,6 +964,7 @@ pre {
   .health-grid,
   .grid,
   .detail-grid,
+  .diagnostic-grid,
   .summary-field-grid,
   .timeline-grid {
     grid-template-columns: 1fr;
@@ -863,6 +980,7 @@ pre {
   }
 
   .session-detail-header,
+  .diagnostics-header,
   .panel-head {
     align-items: stretch;
     flex-direction: column;

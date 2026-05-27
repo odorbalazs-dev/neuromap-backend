@@ -208,6 +208,26 @@ assert(
   "Dashboard JS should render the session report snapshot in Hungarian."
 );
 assert(
+  dashboardJs.includes("renderSessionDiagnostics"),
+  "Dashboard JS should render the session diagnostics panel."
+);
+assert(
+  dashboardJs.includes("Hibakeresési térkép"),
+  "Dashboard JS should render the troubleshooting map in Hungarian."
+);
+assert(
+  dashboardJs.includes("Javasolt következő lépések"),
+  "Dashboard JS should render recommended next actions in session details."
+);
+assert(
+  dashboardJs.includes("Worker job előzmények"),
+  "Dashboard JS should expose worker job history in session details."
+);
+assert(
+  dashboardJs.includes("Webhook események"),
+  "Dashboard JS should expose related webhook events in session details."
+);
+assert(
   dashboardJs.includes("Gyermek életkora"),
   "Dashboard JS should expose child age in Hungarian."
 );

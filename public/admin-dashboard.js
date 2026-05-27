@@ -122,6 +122,8 @@
       [
         "queued",
         "processing",
+        "processed",
+        "received",
         "failed",
         "done",
         "completed",
@@ -132,6 +134,10 @@
         "healthy",
         "critical",
         "warning",
+        "ok",
+        "problem",
+        "waiting",
+        "unknown",
         "active",
         "info",
         "email",
@@ -149,6 +155,8 @@
     const labels = {
       queued: "várakozik",
       processing: "feldolgozás alatt",
+      processed: "feldolgozva",
+      received: "beérkezett",
       failed: "hibás",
       done: "kész",
       completed: "kész",
@@ -161,6 +169,10 @@
       healthy: "rendben",
       critical: "kritikus",
       warning: "figyelendő",
+      ok: "rendben",
+      problem: "hiba",
+      waiting: "várakozik",
+      unknown: "ismeretlen",
       active: "aktív",
       info: "információ",
       email: "email",
@@ -462,6 +474,166 @@
     return card;
   }
 
+  function renderSessionDiagnostics(session) {
+    const diagnostics = session.diagnostics || {};
+    const stages = Array.isArray(diagnostics.stages) ? diagnostics.stages : [];
+    const actions = Array.isArray(diagnostics.recommendedActions)
+      ? diagnostics.recommendedActions
+      : [];
+
+    const card = document.createElement("section");
+    card.className = "detail-card diagnostics-card";
+
+    const header = document.createElement("div");
+    header.className = "diagnostics-header";
+
+    const titleWrap = document.createElement("div");
+    const title = document.createElement("h4");
+    title.textContent = "Hibakeresési térkép";
+    const copy = document.createElement("p");
+    copy.textContent = "Session szintű folyamatkép: fizetés, webhook, worker, PDF alapanyag és email kézbesítés.";
+    titleWrap.append(title, copy);
+
+    const score = document.createElement("span");
+    score.className = `pill ${statusClass(diagnostics.overallLevel)}`;
+    score.textContent = statusLabel(diagnostics.overallLevel);
+
+    header.append(titleWrap, score);
+
+    const grid = document.createElement("div");
+    grid.className = "diagnostic-grid";
+
+    stages.forEach((stage) => {
+      const item = document.createElement("article");
+      item.className = `diagnostic-stage ${statusClass(stage.level)}`;
+
+      const stageHead = document.createElement("div");
+      stageHead.className = "diagnostic-stage-head";
+
+      const label = document.createElement("strong");
+      label.textContent = text(stage.label);
+
+      const pill = document.createElement("span");
+      pill.className = `pill ${statusClass(stage.level)}`;
+      pill.textContent = statusLabel(stage.level);
+
+      stageHead.append(label, pill);
+
+      const status = document.createElement("div");
+      status.className = "diagnostic-status";
+      status.textContent = statusLabel(stage.status);
+
+      const detail = document.createElement("p");
+      detail.textContent = text(stage.detail);
+
+      item.append(stageHead, status, detail);
+      grid.appendChild(item);
+    });
+
+    const actionBox = document.createElement("div");
+    actionBox.className = "recommended-actions";
+    const actionTitle = document.createElement("strong");
+    actionTitle.textContent = "Javasolt következő lépések";
+    const list = document.createElement("ul");
+    actions.forEach((action) => {
+      const li = document.createElement("li");
+      li.textContent = text(action);
+      list.appendChild(li);
+    });
+    actionBox.append(actionTitle, list);
+
+    card.append(header, grid, actionBox);
+    return card;
+  }
+
+  function renderMiniTable(titleText, rows, columns, emptyText) {
+    const card = document.createElement("section");
+    card.className = "detail-card mini-table-card";
+
+    const title = document.createElement("h4");
+    title.textContent = titleText;
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "mini-table-wrap";
+
+    const table = document.createElement("table");
+    table.className = "mini-table";
+
+    const thead = document.createElement("thead");
+    const headRow = document.createElement("tr");
+    columns.forEach((column) => {
+      const th = document.createElement("th");
+      th.textContent = column.label;
+      headRow.appendChild(th);
+    });
+    thead.appendChild(headRow);
+
+    const tbody = document.createElement("tbody");
+    if (!rows.length) {
+      const tr = document.createElement("tr");
+      const td = document.createElement("td");
+      td.colSpan = columns.length;
+      td.className = "empty";
+      td.textContent = emptyText;
+      tr.appendChild(td);
+      tbody.appendChild(tr);
+    } else {
+      rows.forEach((row) => {
+        const tr = document.createElement("tr");
+        columns.forEach((column) => {
+          const td = document.createElement("td");
+          const value = column.value(row);
+          if (value instanceof Node) {
+            td.appendChild(value);
+          } else {
+            td.textContent = text(value);
+          }
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+    }
+
+    table.append(thead, tbody);
+    wrapper.appendChild(table);
+    card.append(title, wrapper);
+    return card;
+  }
+
+  function renderAnalysisJobs(session) {
+    const rows = Array.isArray(session.analysisJobs) ? session.analysisJobs : [];
+
+    return renderMiniTable(
+      "Worker job előzmények",
+      rows,
+      [
+        { label: "Státusz", value: (row) => statusPill(row.status) },
+        { label: "Próbálkozás", value: (row) => row.attempts },
+        { label: "Worker", value: (row) => row.locked_by },
+        { label: "Utolsó hiba", value: (row) => compact(row.last_error, 120) },
+        { label: "Frissítve", value: (row) => formatDate(row.updated_at || row.created_at) }
+      ],
+      "Ehhez a sessionhöz nem találtam worker job előzményt."
+    );
+  }
+
+  function renderWebhookEvents(session) {
+    const rows = Array.isArray(session.webhookEvents) ? session.webhookEvents : [];
+
+    return renderMiniTable(
+      "Webhook események",
+      rows,
+      [
+        { label: "Esemény", value: (row) => row.event_type },
+        { label: "Státusz", value: (row) => statusPill(row.status) },
+        { label: "Stripe session", value: (row) => row.stripe_session_id },
+        { label: "Hiba", value: (row) => compact(row.error_message, 120) },
+        { label: "Érkezett", value: (row) => formatDate(row.created_at) }
+      ],
+      "Ehhez a sessionhöz nem találtam közvetlenül kapcsolódó webhook eseményt."
+    );
+  }
+
   function renderSessionDetail(session) {
     const root = document.createElement("div");
     root.className = "session-detail-view";
@@ -565,7 +737,19 @@
     rawPre.textContent = JSON.stringify(session, null, 2);
     raw.append(rawSummary, rawPre);
 
-    root.append(header, grid, renderReportSnapshot(session), countsPanel, timeline, errors, preview, raw);
+    root.append(
+      header,
+      grid,
+      renderSessionDiagnostics(session),
+      renderReportSnapshot(session),
+      countsPanel,
+      timeline,
+      renderAnalysisJobs(session),
+      renderWebhookEvents(session),
+      errors,
+      preview,
+      raw
+    );
     return root;
   }
 
