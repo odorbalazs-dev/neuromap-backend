@@ -29,6 +29,24 @@ function main() {
   assert(script.includes("childAge,"), "Engine should include childAge in checkout payload.");
   assert(script.includes("ageYears: childAge"), "Engine should include ageYears in checkout payload.");
 
+  const expectedAgeLabels = [
+    "Gyermek életkora",
+    "Child age",
+    "Alter des Kindes",
+    "Eta del bambino",
+    "Edad del niño",
+    "孩子年龄",
+    "子どもの年齢",
+    "عمر الطفل",
+    "Wiek dziecka",
+    "Idade da criança",
+    "Âge de l'enfant"
+  ];
+
+  expectedAgeLabels.forEach((label) => {
+    assert(script.includes(label), `Engine should include localized age label: ${label}`);
+  });
+
   console.log("Engine age field smoke passed.");
 }
 

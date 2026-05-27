@@ -1168,16 +1168,70 @@
 
     const fallback = {
       hu: {
-        label: "Gyermek eletkora",
+        label: "Gyermek életkora",
         placeholder: "pl. 7",
-        missing: "Kerlek add meg a gyermek eletkorat.",
-        invalid: "A gyermek eletkora 1 es 24 ev kozott legyen."
+        missing: "Kérlek add meg a gyermek életkorát.",
+        invalid: "A gyermek életkora 1 és 24 év között legyen."
       },
       en: {
         label: "Child age",
         placeholder: "e.g. 7",
         missing: "Please enter the child's age.",
         invalid: "Child age should be between 1 and 24 years."
+      },
+      de: {
+        label: "Alter des Kindes",
+        placeholder: "z. B. 7",
+        missing: "Bitte gib das Alter des Kindes ein.",
+        invalid: "Das Alter des Kindes sollte zwischen 1 und 24 Jahren liegen."
+      },
+      it: {
+        label: "Eta del bambino",
+        placeholder: "es. 7",
+        missing: "Inserisci l'eta del bambino.",
+        invalid: "L'eta del bambino deve essere compresa tra 1 e 24 anni."
+      },
+      es: {
+        label: "Edad del niño",
+        placeholder: "p. ej. 7",
+        missing: "Por favor, introduce la edad del niño.",
+        invalid: "La edad del niño debe estar entre 1 y 24 años."
+      },
+      zh: {
+        label: "孩子年龄",
+        placeholder: "例如 7",
+        missing: "请输入孩子的年龄。",
+        invalid: "孩子年龄应在 1 到 24 岁之间。"
+      },
+      ja: {
+        label: "子どもの年齢",
+        placeholder: "例: 7",
+        missing: "子どもの年齢を入力してください。",
+        invalid: "子どもの年齢は1歳から24歳の間で入力してください。"
+      },
+      ar: {
+        label: "عمر الطفل",
+        placeholder: "مثال: 7",
+        missing: "يرجى إدخال عمر الطفل.",
+        invalid: "يجب أن يكون عمر الطفل بين 1 و24 سنة."
+      },
+      pl: {
+        label: "Wiek dziecka",
+        placeholder: "np. 7",
+        missing: "Podaj wiek dziecka.",
+        invalid: "Wiek dziecka powinien mieścić się w zakresie od 1 do 24 lat."
+      },
+      pt: {
+        label: "Idade da criança",
+        placeholder: "ex. 7",
+        missing: "Por favor, informe a idade da criança.",
+        invalid: "A idade da criança deve estar entre 1 e 24 anos."
+      },
+      fr: {
+        label: "Âge de l'enfant",
+        placeholder: "ex. 7",
+        missing: "Veuillez indiquer l'âge de l'enfant.",
+        invalid: "L'âge de l'enfant doit être compris entre 1 et 24 ans."
       }
     };
 
