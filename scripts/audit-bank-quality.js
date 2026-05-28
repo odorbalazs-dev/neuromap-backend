@@ -17,6 +17,9 @@ const EXPECTED_COUNTS = {
   LEARNING: 250
 };
 
+const REQUIRED_CORE_LANGS = ["hu", "en"];
+const REQUIRED_DOMAINS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
+
 function countBy(items, getValue) {
   return items.reduce((counts, item) => {
     const value = getValue(item) || "unknown";
@@ -34,6 +37,10 @@ function stats(values) {
     max: Math.max(...valid),
     avg: Number((valid.reduce((sum, value) => sum + value, 0) / valid.length).toFixed(1))
   };
+}
+
+function ratio(value, total) {
+  return Number((value / Math.max(1, total)).toFixed(3));
 }
 
 function normalizeText(value = "") {
@@ -57,11 +64,50 @@ function findDuplicateText(items) {
   return [...seen.values()].filter((ids) => ids.length > 1);
 }
 
+function getMissingRequiredFields(items) {
+  return items.filter((item) => {
+    return !item?.id ||
+      !item?.subdomain ||
+      !item?.stemKey ||
+      !item?.text ||
+      REQUIRED_CORE_LANGS.some((lang) => !item.text[lang]);
+  });
+}
+
+function getTranslationCoverage(items) {
+  const languages = [...new Set(items.flatMap((item) => Object.keys(item?.text || {})))].sort();
+
+  return Object.fromEntries(languages.map((lang) => {
+    const count = items.filter((item) => typeof item?.text?.[lang] === "string" && item.text[lang].trim()).length;
+    return [lang, ratio(count, items.length)];
+  }));
+}
+
+function getBalanceRatio(counts) {
+  const values = Object.values(counts).filter((value) => value > 0);
+  if (!values.length) return 0;
+  return Number((Math.min(...values) / Math.max(...values)).toFixed(3));
+}
+
+function getDomainCountFlags(domainCounts) {
+  return REQUIRED_DOMAINS
+    .filter((domain) => domainCounts[domain] !== 50)
+    .map((domain) => `TRIAGE domain ${domain} should have 50 items, found ${domainCounts[domain] || 0}.`);
+}
+
 function getQualityFlags(name, items, metrics) {
   const flags = [];
 
   if (items.length !== EXPECTED_COUNTS[name]) {
     flags.push(`Expected ${EXPECTED_COUNTS[name]} items, found ${items.length}.`);
+  }
+
+  if (metrics.missingRequiredFields > 0) {
+    flags.push(`${metrics.missingRequiredFields} item(s) are missing required schema fields or HU/EN text.`);
+  }
+
+  if (name === "TRIAGE") {
+    flags.push(...getDomainCountFlags(metrics.domainCounts));
   }
 
   if (name !== "TRIAGE" && metrics.reverseRatio < 0.1) {
@@ -74,6 +120,18 @@ function getQualityFlags(name, items, metrics) {
 
   if (metrics.maxStemRepeat > 10) {
     flags.push("One stemKey appears more than 10 times.");
+  }
+
+  if (name !== "TRIAGE" && metrics.subdomainCount < 4) {
+    flags.push("Specific bank covers fewer than 4 subdomains.");
+  }
+
+  if (name !== "TRIAGE" && metrics.subdomainBalanceRatio < 0.18) {
+    flags.push("Subdomain distribution is too uneven for stable adaptive picking.");
+  }
+
+  if (metrics.weight.min < 0.5 || metrics.weight.max > 2) {
+    flags.push("Question weights fall outside the expected 0.5..2.0 range.");
   }
 
   if (metrics.duplicateTexts.length > 0) {
@@ -93,18 +151,26 @@ function getQualityFlags(name, items, metrics) {
 
 function auditBank(name, items) {
   const subdomains = countBy(items, (item) => item.subdomain);
+  const domainCounts = countBy(items, (item) => item.domain);
   const stemKeys = countBy(items, (item) => item.stemKey);
   const reverseCount = items.filter((item) => item.reverse).length;
   const duplicateTexts = findDuplicateText(items);
   const topStemKey = Object.entries(stemKeys).sort((a, b) => b[1] - a[1])[0] || ["none", 0];
+  const missingRequiredFields = getMissingRequiredFields(items);
 
   const metrics = {
     items: items.length,
     subdomainCount: Object.keys(subdomains).length,
+    subdomainBalanceRatio: getBalanceRatio(subdomains),
+    domainCounts,
     reverseRatio: Number((reverseCount / Math.max(1, items.length)).toFixed(3)),
     uniqueStemKeys: Object.keys(stemKeys).length,
     maxStemKey: topStemKey[0],
     maxStemRepeat: topStemKey[1],
+    stemRepeatRatio: ratio(topStemKey[1], items.length),
+    missingRequiredFields: missingRequiredFields.length,
+    translationCoverage: getTranslationCoverage(items),
+    weight: stats(items.map((item) => Number(item?.weight || 1))),
     huLength: stats(items.map((item) => item?.text?.hu?.length || 0)),
     enLength: stats(items.map((item) => item?.text?.en?.length || 0)),
     duplicateTexts: duplicateTexts.map((ids) => ids.join(", "))
@@ -124,10 +190,17 @@ const report = Object.entries(banks).map(([name, items]) => auditBank(name, item
 for (const bank of report) {
   console.log(`\n=== ${bank.name} ===`);
   console.log(`Items: ${bank.items}`);
+  if (bank.name === "TRIAGE") {
+    console.log(`Domain counts: ${JSON.stringify(bank.domainCounts)}`);
+  }
   console.log(`Subdomains: ${bank.subdomainCount}`);
+  console.log(`Subdomain balance ratio: ${bank.subdomainBalanceRatio}`);
   console.log(`Reverse ratio: ${bank.reverseRatio}`);
   console.log(`Unique stemKeys: ${bank.uniqueStemKeys}`);
   console.log(`Max stemKey repeat: ${bank.maxStemKey} (${bank.maxStemRepeat})`);
+  console.log(`Missing required fields: ${bank.missingRequiredFields}`);
+  console.log(`Translation coverage: ${JSON.stringify(bank.translationCoverage)}`);
+  console.log(`Weight stats: ${JSON.stringify(bank.weight)}`);
   console.log(`HU length: ${JSON.stringify(bank.huLength)}`);
   console.log(`EN length: ${JSON.stringify(bank.enLength)}`);
   console.log(`Smallest subdomains: ${JSON.stringify(bank.smallestSubdomains)}`);

@@ -426,6 +426,36 @@
     return labels[value] || text(value);
   }
 
+  function enginePatternLabel(value) {
+    const labels = {
+      clear_pattern: "tiszta minta",
+      overlap_pattern: "atfedo minta",
+      needs_observation: "tovabbi megfigyelest igenyel",
+      weak_signal: "gyenge jelzes"
+    };
+
+    return labels[value] || text(value);
+  }
+
+  function decisionQualityLabel(value) {
+    const labels = {
+      high: "magas",
+      medium: "kozepes",
+      low: "alacsony"
+    };
+
+    return labels[value] || text(value);
+  }
+
+  function scoreSourceLabel(value) {
+    const labels = {
+      "triageRanking.weightedSignal": "sulyozott triage ranking",
+      "triageScores.normalizedRaw": "normalizalt triage pontszam"
+    };
+
+    return labels[value] || text(value);
+  }
+
   function summaryField(label, value, options = {}) {
     const item = document.createElement("div");
     item.className = "summary-field";
@@ -448,6 +478,8 @@
     const summary = session.reportSummary || {};
     const email = summary.email || {};
     const analysisRetry = summary.analysisRetry || {};
+    const engine = summary.engine || {};
+    const coherence = engine.specificCoherence || {};
     const job = analysisRetry.job || {};
 
     const card = document.createElement("section");
@@ -466,6 +498,14 @@
       summaryField("Erősség", summary.severity, { pill: true }),
       summaryField("Jelzésszint", summary.signalLabel),
       summaryField("Specifikus átlag", formatNumber(summary.normalizedAverage)),
+      summaryField("Engine döntés", enginePatternLabel(engine.patternType)),
+      summaryField("Döntési minőség", decisionQualityLabel(engine.decisionQuality)),
+      summaryField("Confidence", engine.confidenceLabel ? `${decisionQualityLabel(engine.confidenceLabel)} (${formatNumber(engine.confidence)})` : "-"),
+      summaryField("Pontkülönbség", formatNumber(engine.scoreGap)),
+      summaryField("Átfedés", formatNumber(engine.overlapScore)),
+      summaryField("Extra kérdés kell", yesNo(engine.shouldAskExtra)),
+      summaryField("Pontforrás", scoreSourceLabel(engine.scoreSource)),
+      summaryField("Specifikus koherencia", coherence.label ? `${text(coherence.label)} (${formatNumber(coherence.score)})` : "-"),
       summaryField("Kérdőív verzió", summary.questionnaireVersion),
       summaryField("Email retry teendő", retryActionLabel(email.nextAction)),
       summaryField("Email retry elérhető", yesNo(email.retryAvailable)),
@@ -487,7 +527,27 @@
       ? `Legerősebb alterületek: ${areas}`
       : "Legerősebb alterületek: nincs elérhető alterületi profil.";
 
-    card.append(title, grid, topAreas);
+    const engineAreas = document.createElement("p");
+    engineAreas.className = "summary-top-areas";
+    const focusAreas = Array.isArray(engine.recommendedFocusAreas)
+      ? engine.recommendedFocusAreas.join(", ")
+      : "";
+    engineAreas.textContent = focusAreas
+      ? `Engine fókuszterületek: ${focusAreas}`
+      : "Engine fókuszterületek: nincs elérhető engine v2 összegzés.";
+
+    const rankedDomains = document.createElement("p");
+    rankedDomains.className = "summary-top-areas";
+    const domainText = Array.isArray(engine.rankedDomains)
+      ? engine.rankedDomains
+          .map((item) => `${item.domain}: ${formatNumber(item.score)}`)
+          .join(", ")
+      : "";
+    rankedDomains.textContent = domainText
+      ? `Rangsorolt területek: ${domainText}`
+      : "Rangsorolt területek: nincs elérhető ranking.";
+
+    card.append(title, grid, topAreas, engineAreas, rankedDomains);
     return card;
   }
 

@@ -26,7 +26,8 @@ const SCENARIOS = [
       LEARNING: 1.05
     },
     expectedPrimary: "ADHD",
-    expectedExtra: false
+    expectedExtra: false,
+    expectedSource: "triageScores.normalizedRaw"
   },
   {
     name: "mixed_pattern",
@@ -39,7 +40,8 @@ const SCENARIOS = [
     },
     expectedPrimary: "ADHD",
     expectedSecondary: "ASD",
-    expectedExtra: true
+    expectedExtra: true,
+    expectedSource: "triageScores.normalizedRaw"
   },
   {
     name: "low_signal",
@@ -51,7 +53,42 @@ const SCENARIOS = [
       LEARNING: 0.5
     },
     expectedPrimary: "ADHD",
-    expectedExtra: false
+    expectedExtra: false,
+    expectedSource: "triageScores.normalizedRaw"
+  },
+  {
+    name: "raw_frontend_sum_normalization",
+    triageScores: {
+      ADHD: 13,
+      ASD: 9,
+      ANXIETY: 7,
+      DEPRESSION: 5,
+      LEARNING: 6
+    },
+    expectedPrimary: "ADHD",
+    expectedExtra: false,
+    expectedSource: "triageScores.normalizedRaw"
+  },
+  {
+    name: "ranking_preferred_over_raw_sum",
+    triageScores: {
+      ADHD: 14,
+      ASD: 5,
+      ANXIETY: 7,
+      DEPRESSION: 4,
+      LEARNING: 5
+    },
+    triageRanking: [
+      { domain: "ANXIETY", raw: 7, weightedSignal: 1.9, average: 1.4, strongestSubdomain: 2.2, consistency: 0.9 },
+      { domain: "ADHD", raw: 14, weightedSignal: 1.4, average: 2.8, strongestSubdomain: 2.8, consistency: 0.5 },
+      { domain: "ASD", raw: 5, weightedSignal: 1.0, average: 1.0, strongestSubdomain: 1.2, consistency: 0.8 },
+      { domain: "LEARNING", raw: 5, weightedSignal: 0.9, average: 1.0, strongestSubdomain: 1.1, consistency: 0.8 },
+      { domain: "DEPRESSION", raw: 4, weightedSignal: 0.7, average: 0.8, strongestSubdomain: 0.9, consistency: 0.8 }
+    ],
+    expectedPrimary: "ANXIETY",
+    expectedSecondary: "ADHD",
+    expectedExtra: true,
+    expectedSource: "triageRanking.weightedSignal"
   }
 ];
 
@@ -157,6 +194,7 @@ function auditAdaptiveScenarios() {
   SCENARIOS.forEach((scenario) => {
     const result = analyzeAdaptiveState({
       triageScores: scenario.triageScores,
+      triageRanking: scenario.triageRanking,
       specificScoring: {
         totalWeight: 30
       }
@@ -170,6 +208,10 @@ function auditAdaptiveScenarios() {
       confidence: result.confidence,
       scoreGap: result.scoreGap,
       interpretation: result.interpretation,
+      patternType: result.patternType,
+      decisionQuality: result.decisionQuality,
+      confidenceLabel: result.confidenceLabel,
+      scoreSource: result.evidence?.scoreSource,
       shouldAskExtra: result.shouldAskExtra,
       focusSubdomains: result.recommendedFocusAreas
     };
@@ -192,6 +234,16 @@ function auditAdaptiveScenarios() {
       errors.push(
         `${scenario.name}: expected shouldAskExtra=${scenario.expectedExtra}, found ${result.shouldAskExtra}.`
       );
+    }
+
+    if (scenario.expectedSource && result.evidence?.scoreSource !== scenario.expectedSource) {
+      errors.push(
+        `${scenario.name}: expected score source ${scenario.expectedSource}, found ${result.evidence?.scoreSource}.`
+      );
+    }
+
+    if (!result.patternType || !result.confidenceLabel || !result.decisionQuality) {
+      errors.push(`${scenario.name}: missing Engine Intelligence v2 decision fields.`);
     }
 
     if (!Array.isArray(result.recommendedFocusAreas) || result.recommendedFocusAreas.length === 0) {

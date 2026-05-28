@@ -1,5 +1,11 @@
+function clamp(value, min = 0, max = 1) {
+  const numeric = Number(value || 0);
+  if (!Number.isFinite(numeric)) return min;
+  return Math.max(min, Math.min(max, numeric));
+}
+
 function normalize(value, max = 3) {
-  return Math.max(0, Math.min(1, value / max));
+  return clamp(Number(value || 0) / max);
 }
 
 const DOMAIN_FOCUS_AREAS = {
@@ -51,26 +57,100 @@ const DOMAIN_FOCUS_AREAS = {
   ]
 };
 
+const DOMAINS = Object.keys(DOMAIN_FOCUS_AREAS);
+
 function round(value, digits = 3) {
   return Number(Number(value || 0).toFixed(digits));
 }
 
-function calculateDomainConfidence(score, itemCount = 0, scoreGap = 0) {
+function normalizeSignalScore(score) {
+  const numeric = Number(score || 0);
+  if (!Number.isFinite(numeric)) return 0;
+
+  // Frontend triage raw sums are 5 items x 0..3. Convert those to the same 0..3
+  // signal scale as weightedSignal/average before making backend decisions.
+  const normalized = numeric > 3 ? numeric / 5 : numeric;
+  return round(clamp(normalized, 0, 3));
+}
+
+function getConfidenceLabel(confidence) {
+  if (confidence >= 0.78) return "high";
+  if (confidence >= 0.62) return "medium";
+  return "low";
+}
+
+function calculateSpecificCoherence(specificScoring = null) {
+  const subdomains = specificScoring?.subdomains || {};
+  const values = Object.values(subdomains)
+    .map((item) => Number(item?.average || 0))
+    .filter((value) => Number.isFinite(value));
+
+  if (!values.length) {
+    return {
+      score: 0.5,
+      label: "not_available",
+      topAverage: 0,
+      spread: 0,
+      subdomainCount: 0
+    };
+  }
+
+  const sorted = [...values].sort((a, b) => b - a);
+  const topAverage = sorted.slice(0, Math.min(3, sorted.length))
+    .reduce((sum, value) => sum + value, 0) / Math.min(3, sorted.length);
+  const spread = sorted[0] - sorted[sorted.length - 1];
+
+  let score = 0.58;
+  let label = "mixed";
+
+  if (topAverage < 0.8) {
+    score = 0.4;
+    label = "weak";
+  } else if (spread >= 1.1) {
+    score = 0.72;
+    label = "spiky";
+  } else if (topAverage >= 1.4 && spread <= 0.7) {
+    score = 0.82;
+    label = "coherent";
+  }
+
+  return {
+    score: round(score),
+    label,
+    topAverage: round(topAverage),
+    spread: round(spread),
+    subdomainCount: values.length
+  };
+}
+
+function calculateDomainConfidence(
+  score,
+  itemCount = 0,
+  scoreGap = 0,
+  {
+    scoreSource = "triageScores.normalizedRaw",
+    specificCoherence = 0.5
+  } = {}
+) {
   const normalized = normalize(score);
   const itemFactor = Math.min(1, itemCount / 25);
   const gapFactor = Math.min(1, Math.max(0, scoreGap) / 0.8);
+  const sourceFactor = scoreSource === "triageRanking.weightedSignal" ? 1 : 0.8;
+  const coherenceFactor = clamp(specificCoherence);
 
   return round(
-    normalized * 0.55 +
-    itemFactor * 0.25 +
-    gapFactor * 0.2
+    normalized * 0.44 +
+    itemFactor * 0.18 +
+    gapFactor * 0.2 +
+    sourceFactor * 0.1 +
+    coherenceFactor * 0.08
   );
 }
 
 function calculateOverlap(primary, secondary) {
   if (!primary || !secondary) return 0;
 
-  return round(Math.max(0, 1 - Math.abs(primary - secondary)));
+  return round(Math.max(0, 1 - Math.abs(primary - secondary) / 1.2));
 }
 
 function calculateScoreGap(primary, secondary) {
@@ -90,6 +170,66 @@ function getInterpretation({ severity, overlap, confidence, scoreGap }) {
   if (overlap >= 0.82 && scoreGap < 0.35) return "mixed_pattern";
   if (confidence >= 0.78 && scoreGap >= 0.35) return "coherent_pattern";
   return "uncertain_pattern";
+}
+
+function getPatternType({ severity, overlap, confidence, scoreGap }) {
+  if (severity === "low") return "weak_signal";
+  if (overlap >= 0.82 && scoreGap < 0.35) return "overlap_pattern";
+  if (confidence >= 0.78 && scoreGap >= 0.35) return "clear_pattern";
+  return "needs_observation";
+}
+
+function getDecisionQuality({ severity, confidence, scoreGap, specificCoherence }) {
+  if (severity === "low") return "low";
+  if (confidence >= 0.78 && scoreGap >= 0.35) return "high";
+  if (confidence >= 0.62 || specificCoherence?.score >= 0.72) return "medium";
+  return "low";
+}
+
+function buildRankedDomainEntries({ triageScores = {}, triageRanking = [] } = {}) {
+  if (Array.isArray(triageRanking) && triageRanking.length) {
+    const entries = triageRanking
+      .filter((item) => DOMAINS.includes(item?.domain))
+      .map((item) => {
+        const score = normalizeSignalScore(
+          item.weightedSignal ?? item.score ?? item.average ?? item.raw
+        );
+
+        return {
+          domain: item.domain,
+          score,
+          weightedSignal: score,
+          raw: Number(item.raw || 0),
+          average: normalizeSignalScore(item.average ?? score),
+          strongestSubdomain: normalizeSignalScore(item.strongestSubdomain ?? 0),
+          consistency: round(clamp(item.consistency ?? 0))
+        };
+      })
+      .sort((a, b) => b.score - a.score);
+
+    if (entries.length) {
+      return {
+        entries,
+        scoreSource: "triageRanking.weightedSignal"
+      };
+    }
+  }
+
+  return {
+    entries: DOMAINS.map((domain) => {
+      const score = normalizeSignalScore(triageScores?.[domain]);
+      return {
+        domain,
+        score,
+        weightedSignal: score,
+        raw: Number(triageScores?.[domain] || 0),
+        average: score,
+        strongestSubdomain: 0,
+        consistency: 0
+      };
+    }).sort((a, b) => b.score - a.score),
+    scoreSource: "triageScores.normalizedRaw"
+  };
 }
 
 function unique(values = []) {
@@ -165,7 +305,7 @@ function scoreCandidate(item, selected, bank, options) {
     focusSubdomains,
     maxPerStem,
     targetReverseRatio,
-    avoidStemKeys
+    avoidStemKeys = []
   } = options;
 
   const subdomainCounts = countBy(selected, "subdomain");
@@ -249,24 +389,28 @@ export function pickBalancedSpecificQuestions(
 
 export function analyzeAdaptiveState({
   triageScores = {},
+  triageRanking = [],
   specificProfile = null,
   specificScoring = null
-}) {
-  const entries = Object.entries(triageScores || {})
-    .map(([domain, score]) => ({
-      domain,
-      score: Number(score || 0)
-    }))
-    .sort((a, b) => b.score - a.score);
+} = {}) {
+  const { entries, scoreSource } = buildRankedDomainEntries({
+    triageScores,
+    triageRanking
+  });
 
   const primary = entries[0] || null;
   const secondary = entries[1] || null;
   const scoreGap = calculateScoreGap(primary?.score || 0, secondary?.score || 0);
+  const specificCoherence = calculateSpecificCoherence(specificScoring || specificProfile);
 
   const primaryConfidence = calculateDomainConfidence(
     primary?.score || 0,
     specificScoring?.totalWeight || 0,
-    scoreGap
+    scoreGap,
+    {
+      scoreSource,
+      specificCoherence: specificCoherence.score
+    }
   );
 
   const overlap = calculateOverlap(
@@ -281,11 +425,24 @@ export function analyzeAdaptiveState({
     confidence: primaryConfidence,
     scoreGap
   });
+  const patternType = getPatternType({
+    severity,
+    overlap,
+    confidence: primaryConfidence,
+    scoreGap
+  });
+  const decisionQuality = getDecisionQuality({
+    severity,
+    confidence: primaryConfidence,
+    scoreGap,
+    specificCoherence
+  });
 
   const shouldAskExtra =
     severity !== "low" &&
     (
       interpretation === "mixed_pattern" ||
+      patternType === "needs_observation" ||
       primaryConfidence < 0.68
     );
 
@@ -307,6 +464,7 @@ export function analyzeAdaptiveState({
     severity,
 
     confidence: primaryConfidence,
+    confidenceLabel: getConfidenceLabel(primaryConfidence),
 
     overlapScore: overlap,
 
@@ -322,6 +480,18 @@ export function analyzeAdaptiveState({
     },
 
     interpretation,
+    patternType,
+    decisionQuality,
+
+    evidence: {
+      scoreSource,
+      primaryScoreNormalized: primary?.score || 0,
+      secondaryScoreNormalized: secondary?.score || 0,
+      scoreGap,
+      overlapScore: overlap,
+      specificCoherence,
+      hasSpecificScoring: !!specificScoring
+    },
 
     recommendedFocusAreas
   };

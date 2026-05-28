@@ -1,4 +1,5 @@
 import { buildReportV2Context } from "./report-v2.service.js";
+import { analyzeAdaptiveState } from "./adaptive-engine.service.js";
 
 function numberOrNull(value) {
   const number = Number(value);
@@ -102,6 +103,53 @@ function buildAnalysisRetrySummary(sessionRow, jobRow) {
   };
 }
 
+function buildEngineIntelligenceSummary(payload = {}) {
+  if (!payload || typeof payload !== "object") {
+    return null;
+  }
+
+  try {
+    const adaptive = analyzeAdaptiveState({
+      triageScores: payload.triageScores || {},
+      triageRanking: payload.triageRanking || [],
+      specificProfile: payload.specificProfile || null,
+      specificScoring: payload.specificScoring || null
+    });
+
+    return {
+      primaryDomain: adaptive.primaryDomain,
+      secondaryDomain: adaptive.secondaryDomain,
+      severity: adaptive.severity,
+      confidence: numberOrNull(adaptive.confidence),
+      confidenceLabel: adaptive.confidenceLabel,
+      scoreGap: numberOrNull(adaptive.scoreGap),
+      overlapScore: numberOrNull(adaptive.overlapScore),
+      shouldAskExtra: Boolean(adaptive.shouldAskExtra),
+      patternType: adaptive.patternType,
+      decisionQuality: adaptive.decisionQuality,
+      interpretation: adaptive.interpretation,
+      scoreSource: adaptive.evidence?.scoreSource || null,
+      specificCoherence: adaptive.evidence?.specificCoherence || null,
+      recommendedFocusAreas: Array.isArray(adaptive.recommendedFocusAreas)
+        ? adaptive.recommendedFocusAreas.slice(0, 8)
+        : [],
+      extraQuestionPlan: adaptive.extraQuestionPlan || null,
+      rankedDomains: Array.isArray(adaptive.rankedDomains)
+        ? adaptive.rankedDomains.slice(0, 5).map((item) => ({
+            domain: item.domain,
+            score: numberOrNull(item.score),
+            raw: numberOrNull(item.raw),
+            average: numberOrNull(item.average)
+          }))
+        : []
+    };
+  } catch (error) {
+    return {
+      error: error.message || "Engine intelligence summary failed"
+    };
+  }
+}
+
 export function buildAdminSessionReportSummary(sessionRow = {}, jobRow = null) {
   const payload = sessionRow.payload || {};
   const lang = sessionRow.lang || payload.lang || "en";
@@ -128,6 +176,7 @@ export function buildAdminSessionReportSummary(sessionRow = {}, jobRow = null) {
       )
     ),
     topSubdomains: getTopSubdomains(resultSummary, specificScoring),
+    engine: buildEngineIntelligenceSummary(payload),
     questionnaireVersion: payload.questionnaireVersion || null,
     email: buildEmailRetrySummary(sessionRow),
     analysisRetry: buildAnalysisRetrySummary(sessionRow, jobRow)

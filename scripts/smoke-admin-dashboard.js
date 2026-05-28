@@ -204,6 +204,14 @@ assert(
   "Dashboard JS should render the report snapshot panel."
 );
 assert(
+  dashboardJs.includes("Engine döntés"),
+  "Dashboard JS should expose Engine Intelligence v2 decision fields."
+);
+assert(
+  dashboardJs.includes("Engine fókuszterületek"),
+  "Dashboard JS should expose Engine Intelligence v2 focus areas."
+);
+assert(
   dashboardJs.includes("reportSummary"),
   "Dashboard JS should use the admin report summary payload."
 );
@@ -273,9 +281,42 @@ const summary = buildAdminSessionReportSummary(
       detectedRisk: "ADHD",
       secondaryRisk: "ASD",
       questionnaireVersion: "smoke-v1",
+      triageScores: {
+        ADHD: 11,
+        ASD: 9,
+        ANXIETY: 4,
+        DEPRESSION: 3,
+        LEARNING: 2
+      },
+      triageRanking: [
+        {
+          domain: "ADHD",
+          weightedSignal: 2.25,
+          raw: 11,
+          average: 2.2,
+          strongestSubdomain: 2.4,
+          consistency: 0.8
+        },
+        {
+          domain: "ASD",
+          weightedSignal: 1.9,
+          raw: 9,
+          average: 1.8,
+          strongestSubdomain: 2,
+          consistency: 0.7
+        }
+      ],
       specificProfile: {
         severity: "moderate",
         normalizedAverage: 1.6
+      },
+      specificScoring: {
+        normalizedAverage: 1.6,
+        totalWeight: 30,
+        subdomains: {
+          inattention: { average: 1.7, itemCount: 4 },
+          executive: { average: 1.5, itemCount: 4 }
+        }
       },
       resultSummary: {
         signal: {
@@ -302,6 +343,11 @@ assert(summary.ageBand === "early_school", "Admin report summary should expose a
 assert(summary.detectedRisk === "ADHD", "Admin report summary should expose primary risk.");
 assert(summary.secondaryRisk === "ASD", "Admin report summary should expose secondary risk.");
 assert(summary.severity === "moderate", "Admin report summary should expose severity.");
+assert(summary.engine?.primaryDomain === "ADHD", "Admin report summary should expose engine primary domain.");
+assert(summary.engine?.secondaryDomain === "ASD", "Admin report summary should expose engine secondary domain.");
+assert(summary.engine?.scoreSource === "triageRanking.weightedSignal", "Admin report summary should expose engine score source.");
+assert(summary.engine?.patternType, "Admin report summary should expose engine pattern type.");
+assert(summary.engine?.decisionQuality, "Admin report summary should expose engine decision quality.");
 assert(summary.email.retryLimitReached === true, "Admin report summary should expose email retry limit.");
 assert(summary.analysisRetry.retryRecommended === true, "Admin report summary should expose analysis retry recommendation.");
 

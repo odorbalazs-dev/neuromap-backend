@@ -99,6 +99,7 @@ function buildAdaptiveSummary(payload = {}) {
   try {
     return analyzeAdaptiveState({
       triageScores: payload.triageScores || {},
+      triageRanking: payload.triageRanking || [],
       specificProfile: payload.specificProfile || null,
       specificScoring: payload.specificScoring || null
     });
@@ -492,6 +493,10 @@ ADAPTIVE ENGINE INTERPRETATION:
 - If interpretation is "coherent_pattern", explain that the answers form a relatively consistent screening pattern.
 - If interpretation is "mixed_pattern", explain the mixed pattern calmly and avoid overconfidence.
 - If interpretation is "uncertain_pattern", emphasize observation and professional context.
+- patternType, decisionQuality, confidenceLabel, and evidence.scoreSource are Engine Intelligence v2 fields. Use them to calibrate tone, but never mention these technical names in the parent report.
+- If patternType is "clear_pattern", write with more practical direction while staying non-diagnostic.
+- If patternType is "overlap_pattern" or "needs_observation", explain uncertainty and cross-context observation more clearly.
+- If decisionQuality is "low", keep recommendations conservative and observation-focused.
 - recommendedFocusAreas may guide which everyday examples and recommendations should be emphasized.
 
 DEVELOPMENTAL AND CONTEXTUAL REASONING:
