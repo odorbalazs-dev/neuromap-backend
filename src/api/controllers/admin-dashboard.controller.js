@@ -1,4 +1,4 @@
-const ADMIN_DASHBOARD_ASSET_VERSION = "20260601-dashboard-actions-v2";
+const ADMIN_DASHBOARD_ASSET_VERSION = "20260601-dashboard-collapsible-v1";
 
 export function getAdminDashboard(_req, res) {
   res.setHeader(
@@ -56,6 +56,7 @@ export function getAdminDashboard(_req, res) {
         <button type="button" data-scroll-target="emailDeliveryPanel">Email</button>
         <button type="button" data-scroll-target="engineAnalyticsPanel">Engine</button>
         <button type="button" data-scroll-target="operationsLogPanel">Napló</button>
+        <button type="button" data-scroll-target="sessionListsPanel">Session listák</button>
         <button type="button" data-scroll-target="sessionDetailPanel">Részletek</button>
       </nav>
 
@@ -358,34 +359,52 @@ export function getAdminDashboard(_req, res) {
             <div id="engineFocusRows" class="engine-list"></div>
           </article>
         </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Dontesi minoseg</th>
-                <th>Nev / email</th>
-                <th>Engine dontes</th>
-                <th>Confidence</th>
-                <th>Muveletek</th>
-              </tr>
-            </thead>
-            <tbody id="engineReviewRows"></tbody>
-          </table>
+        <div class="subpanel-head">
+          <div>
+            <h3>Engine review queue</h3>
+            <p>Alacsony magabiztosságú vagy átnézést igénylő engine döntések.</p>
+          </div>
+          <button id="toggleEngineReviewBtn" type="button" class="secondary" data-collapsible-toggle="engineReview" data-open-label="Lista megnyitása" data-closed-label="Lista összecsukása" aria-controls="engineReviewPanelBody" aria-expanded="false">Lista megnyitása</button>
         </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Audit szint</th>
-                <th>Session</th>
-                <th>Mentett dontes</th>
-                <th>Engine v2 dontes</th>
-                <th>Megjegyzes</th>
-                <th>Muveletek</th>
-              </tr>
-            </thead>
-            <tbody id="engineDecisionAuditRows"></tbody>
-          </table>
+        <div id="engineReviewPanelBody" class="collapsible-panel is-collapsed" data-collapsible-body="engineReview">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Dontesi minoseg</th>
+                  <th>Nev / email</th>
+                  <th>Engine dontes</th>
+                  <th>Confidence</th>
+                  <th>Muveletek</th>
+                </tr>
+              </thead>
+              <tbody id="engineReviewRows"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="subpanel-head">
+          <div>
+            <h3>Engine döntési audit</h3>
+            <p>Mentett döntés és újraszámolt Engine v2 döntés összevetése.</p>
+          </div>
+          <button id="toggleEngineDecisionAuditBtn" type="button" class="secondary" data-collapsible-toggle="engineDecisionAudit" data-open-label="Lista megnyitása" data-closed-label="Lista összecsukása" aria-controls="engineDecisionAuditPanelBody" aria-expanded="false">Lista megnyitása</button>
+        </div>
+        <div id="engineDecisionAuditPanelBody" class="collapsible-panel is-collapsed" data-collapsible-body="engineDecisionAudit">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Audit szint</th>
+                  <th>Session</th>
+                  <th>Mentett dontes</th>
+                  <th>Engine v2 dontes</th>
+                  <th>Megjegyzes</th>
+                  <th>Muveletek</th>
+                </tr>
+              </thead>
+              <tbody id="engineDecisionAuditRows"></tbody>
+            </table>
+          </div>
         </div>
       </section>
 
@@ -566,7 +585,17 @@ export function getAdminDashboard(_req, res) {
         </div>
       </section>
 
-      <section class="grid">
+      <section id="sessionListsPanel" class="panel session-lists-toggle-panel">
+        <div class="panel-head">
+          <div>
+            <h2>Session listák</h2>
+            <p>Legutóbbi sessionök és hibás elemzések gyors áttekintése.</p>
+          </div>
+          <button id="toggleSessionListsBtn" type="button" class="secondary" data-collapsible-toggle="sessionLists" data-open-label="Listák megnyitása" data-closed-label="Listák összecsukása" aria-controls="sessionListsPanelBody" aria-expanded="false">Listák megnyitása</button>
+        </div>
+      </section>
+
+      <section id="sessionListsPanelBody" class="grid collapsible-panel is-collapsed" data-collapsible-body="sessionLists">
         <article id="recentSessionsPanel" class="panel">
           <div class="panel-head">
             <div>
@@ -607,8 +636,8 @@ export function getAdminDashboard(_req, res) {
                   <th>Műveletek</th>
                 </tr>
               </thead>
-              <tbody id="failedRows"></tbody>
-            </table>
+            <tbody id="failedRows"></tbody>
+          </table>
           </div>
         </article>
       </section>

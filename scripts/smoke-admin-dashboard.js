@@ -137,12 +137,28 @@ assert(
   "Dashboard HTML should include engine review queue rows."
 );
 assert(
+  res.body.includes("toggleEngineReviewBtn"),
+  "Dashboard HTML should include the engine review collapse toggle."
+);
+assert(
+  res.body.includes("engineReviewPanelBody"),
+  "Dashboard HTML should include the collapsible engine review body."
+);
+assert(
   res.body.includes("engineAuditAudited"),
   "Dashboard HTML should include live engine decision audit metrics."
 );
 assert(
   res.body.includes("engineDecisionAuditRows"),
   "Dashboard HTML should include live engine decision audit rows."
+);
+assert(
+  res.body.includes("toggleEngineDecisionAuditBtn"),
+  "Dashboard HTML should include the engine decision audit collapse toggle."
+);
+assert(
+  res.body.includes("engineDecisionAuditPanelBody"),
+  "Dashboard HTML should include the collapsible engine decision audit body."
 );
 assert(
   res.body.includes("Email kézbesítés figyelés"),
@@ -199,6 +215,14 @@ assert(
 assert(
   res.body.includes("operationsLogPanelBody"),
   "Dashboard HTML should include the collapsible operations log body."
+);
+assert(
+  res.body.includes("toggleSessionListsBtn"),
+  "Dashboard HTML should include the session lists collapse toggle."
+);
+assert(
+  res.body.includes("sessionListsPanelBody"),
+  "Dashboard HTML should include the collapsible session lists body."
 );
 assert(
   res.body.includes("sessionDetailPanel"),
@@ -311,6 +335,18 @@ assert(
 assert(
   dashboardJs.includes("OPERATIONS_LOG_KEY"),
   "Dashboard JS should persist the operations log collapsed state."
+);
+assert(
+  dashboardJs.includes("initCollapsibleSections"),
+  "Dashboard JS should initialize generic collapsible dashboard sections."
+);
+assert(
+  dashboardJs.includes("toggleCollapsibleSection"),
+  "Dashboard JS should toggle collapsible dashboard sections."
+);
+assert(
+  dashboardJs.includes("COLLAPSIBLE_SECTION_KEY_PREFIX"),
+  "Dashboard JS should persist generic collapsible section state."
 );
 assert(
   dashboardJs.includes("getRowSessionId"),
@@ -479,6 +515,14 @@ assert(
 assert(
   dashboardCss.includes(".quick-nav"),
   "Dashboard CSS should style the quick navigation."
+);
+assert(
+  dashboardCss.includes(".subpanel-head"),
+  "Dashboard CSS should style collapsible subpanel headers."
+);
+assert(
+  dashboardCss.includes(".session-lists-toggle-panel"),
+  "Dashboard CSS should style the session lists collapse panel."
 );
 assert(
   dashboardCss.includes(".operator-panel"),

@@ -1,6 +1,12 @@
 (function () {
   const TOKEN_KEY = "nm_admin_token";
   const OPERATIONS_LOG_KEY = "nm_operations_log_open";
+  const COLLAPSIBLE_SECTION_KEY_PREFIX = "nm_dashboard_collapsed_";
+  const DEFAULT_COLLAPSED_SECTIONS = new Set([
+    "engineReview",
+    "engineDecisionAudit",
+    "sessionLists"
+  ]);
 
   const els = {
     token: document.getElementById("adminToken"),
@@ -470,6 +476,62 @@
     setOperationsLogCollapsed(!operationsLogCollapsed);
   }
 
+  function readCollapsibleSectionCollapsed(sectionId) {
+    const value = localStorage.getItem(`${COLLAPSIBLE_SECTION_KEY_PREFIX}${sectionId}`);
+
+    if (value === "open" || value === "0") return false;
+    if (value === "collapsed" || value === "1") return true;
+
+    return DEFAULT_COLLAPSED_SECTIONS.has(sectionId);
+  }
+
+  function setCollapsibleSectionCollapsed(sectionId, collapsed) {
+    const body = document.querySelector(`[data-collapsible-body="${sectionId}"]`);
+    const button = document.querySelector(`[data-collapsible-toggle="${sectionId}"]`);
+
+    localStorage.setItem(
+      `${COLLAPSIBLE_SECTION_KEY_PREFIX}${sectionId}`,
+      collapsed ? "collapsed" : "open"
+    );
+
+    if (body) {
+      body.classList.toggle("is-collapsed", collapsed);
+      body.hidden = collapsed;
+    }
+
+    if (button) {
+      button.setAttribute("aria-expanded", String(!collapsed));
+      button.textContent = collapsed
+        ? button.dataset.openLabel || "Megnyitás"
+        : button.dataset.closedLabel || "Összecsukás";
+    }
+  }
+
+  function toggleCollapsibleSection(sectionId) {
+    setCollapsibleSectionCollapsed(
+      sectionId,
+      !readCollapsibleSectionCollapsed(sectionId)
+    );
+  }
+
+  function initCollapsibleSections() {
+    document.querySelectorAll("[data-collapsible-toggle]").forEach((button) => {
+      const sectionId = button.dataset.collapsibleToggle;
+      if (!sectionId) return;
+
+      setCollapsibleSectionCollapsed(
+        sectionId,
+        readCollapsibleSectionCollapsed(sectionId)
+      );
+
+      button.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        toggleCollapsibleSection(sectionId);
+      });
+    });
+  }
+
   function scrollSessionDetailIntoView() {
     const target = document.getElementById("sessionDetailPanel") || els.sessionDetail;
     if (!target) return;
@@ -485,6 +547,15 @@
 
     if (targetId === "operationsLogPanel") {
       setOperationsLogCollapsed(false);
+    }
+
+    if (targetId === "sessionListsPanel") {
+      setCollapsibleSectionCollapsed("sessionLists", false);
+    }
+
+    if (targetId === "engineAnalyticsPanel") {
+      setCollapsibleSectionCollapsed("engineReview", false);
+      setCollapsibleSectionCollapsed("engineDecisionAudit", false);
     }
 
     const target = document.getElementById(targetId);
@@ -2739,6 +2810,7 @@
       toggleOperationsLog();
     });
     setOperationsLogCollapsed(operationsLogCollapsed);
+    initCollapsibleSections();
 
     els.sessionSearchInput?.addEventListener("keydown", (event) => {
       if (event.key === "Enter") {

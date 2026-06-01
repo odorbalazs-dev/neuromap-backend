@@ -952,6 +952,34 @@ input:focus {
   gap: 10px;
 }
 
+.subpanel-head {
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  border-top: 1px solid var(--line);
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  padding: 14px 18px;
+}
+
+.subpanel-head h3 {
+  font-size: 15px;
+  margin: 0;
+}
+
+.subpanel-head p {
+  color: var(--muted);
+  margin: 3px 0 0;
+}
+
+.session-lists-toggle-panel {
+  margin-bottom: 14px;
+}
+
+.session-lists-body {
+  margin-top: 0;
+}
+
 .filter-row {
   display: flex;
   flex-wrap: wrap;
