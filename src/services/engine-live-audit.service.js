@@ -76,6 +76,46 @@ function buildIssue(code, level, label, detail) {
   };
 }
 
+function getNonAuditableIssue(payload) {
+  if (!payload || typeof payload !== "object") {
+    return buildIssue(
+      "missing_payload",
+      "skipped",
+      "Nincs payload",
+      "A session nem tartalmaz payloadot, ezert Engine v2 dontesi audit nem futtathato rajta."
+    );
+  }
+
+  if (
+    payload.detectedRisk ||
+    payload.secondaryRisk ||
+    payload.specificProfile ||
+    payload.resultSummary
+  ) {
+    return buildIssue(
+      "legacy_engine_payload",
+      "skipped",
+      "Legacy engine payload",
+      "Ez a session meg az Engine v2 audit inputok elott keszult, ezert nem szamolhato ujra megbizhatoan."
+    );
+  }
+
+  return buildIssue(
+    "missing_engine_input",
+    "skipped",
+    "Nincs auditalhato engine input",
+    "Nem talalhato triageRanking vagy triageScores a payloadban."
+  );
+}
+
+function isActionableIssueLevel(level) {
+  return level === "critical" || level === "warning";
+}
+
+function isActionableReviewSession(session) {
+  return Boolean(session?.auditable) && isActionableIssueLevel(session.issueLevel);
+}
+
 function auditIssues({ stored, engine, payload }) {
   const issues = [];
 
@@ -185,11 +225,13 @@ export function buildEngineLiveAuditSession(row = {}) {
   const payload = row.payload || {};
 
   if (!hasEngineLiveAuditInput(payload)) {
+    const issue = getNonAuditableIssue(payload);
+
     return {
       id: row.id,
       shortId: row.id ? String(row.id).slice(0, 8) : null,
       auditable: false,
-      issueLevel: "critical",
+      issueLevel: issue.level,
       lang: row.lang || payload.lang || null,
       paymentStatus: row.payment_status || null,
       analysisStatus: row.analysis_status || null,
@@ -205,6 +247,9 @@ export function buildEngineLiveAuditSession(row = {}) {
         )
       ],
       issueCodes: ["missing_engine_input"],
+      issues: [issue],
+      issueCodes: [issue.code],
+      nonAuditableReason: issue.code,
       createdAt: row.created_at || null,
       paidAt: row.paid_at || null,
       updatedAt: row.updated_at || null
@@ -267,10 +312,11 @@ export function buildEngineLiveAuditSession(row = {}) {
 export function buildEngineLiveDecisionAudit(rows = []) {
   const sessions = rows.map(buildEngineLiveAuditSession);
   const auditableSessions = sessions.filter((session) => session.auditable);
+  const skippedSessions = sessions.filter((session) => !session.auditable);
   const reviewSessions = sessions
-    .filter((session) => session.issueLevel !== "clean")
+    .filter(isActionableReviewSession)
     .sort((a, b) => {
-      const priority = { critical: 0, warning: 1, info: 2, clean: 3 };
+      const priority = { critical: 0, warning: 1, info: 2, skipped: 3, clean: 4 };
       const byLevel = priority[a.issueLevel] - priority[b.issueLevel];
       if (byLevel !== 0) return byLevel;
       return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
@@ -286,6 +332,15 @@ export function buildEngineLiveDecisionAudit(rows = []) {
   ).length;
   const extraMismatchCount = auditableSessions.filter((session) =>
     session.issueCodes.includes("extra_decision_mismatch")
+  ).length;
+  const criticalSessions = auditableSessions.filter((session) =>
+    session.issueLevel === "critical"
+  ).length;
+  const warningSessions = auditableSessions.filter((session) =>
+    session.issueLevel === "warning"
+  ).length;
+  const infoSessions = auditableSessions.filter((session) =>
+    session.issueLevel === "info"
   ).length;
 
   const confidenceValues = auditableSessions
@@ -305,12 +360,18 @@ export function buildEngineLiveDecisionAudit(rows = []) {
     generatedAt: new Date().toISOString(),
     summary: {
       loadedSessions: rows.length,
+      auditedSessions: auditableSessions.length,
       auditableSessions: auditableSessions.length,
-      nonAuditableSessions: sessions.length - auditableSessions.length,
+      nonAuditableSessions: skippedSessions.length,
+      skippedSessions: skippedSessions.length,
+      skippedLegacySessions: skippedSessions.filter((session) =>
+        session.issueCodes.includes("legacy_engine_payload")
+      ).length,
       cleanSessions: auditableSessions.filter((session) => session.issueLevel === "clean").length,
       reviewSessions: reviewSessions.length,
-      criticalSessions: sessions.filter((session) => session.issueLevel === "critical").length,
-      warningSessions: sessions.filter((session) => session.issueLevel === "warning").length,
+      criticalSessions,
+      warningSessions,
+      infoSessions,
       primaryMismatchCount,
       extraMismatchCount,
       averageConfidence: average(confidenceValues),

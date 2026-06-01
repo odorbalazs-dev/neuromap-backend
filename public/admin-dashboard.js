@@ -1648,11 +1648,15 @@
       : reviewEngineCount > 0
         ? "warning"
         : "healthy";
+    const auditedEngineCount = countValue(
+      auditSummary.auditedSessions ?? auditSummary.auditableSessions
+    );
+
     setPulseCard(
       els.pulseEngine,
       engineLevel,
       criticalEngineCount > 0 ? `${criticalEngineCount} kritikus` : `${reviewEngineCount} atnezes`,
-      `${countValue(auditSummary.auditedSessions)} auditolt session, ${engineReviewCount} review queue.`
+      `${auditedEngineCount} auditolt session, ${engineReviewCount} review queue.`
     );
 
     const alertLevel = latestAlert?.level || "healthy";
@@ -1832,7 +1836,9 @@
     const summary = data?.summary || {};
 
     if (els.engineAuditAudited) {
-      els.engineAuditAudited.textContent = Number(summary.auditableSessions || 0);
+      els.engineAuditAudited.textContent = Number(
+        summary.auditedSessions ?? summary.auditableSessions ?? 0
+      );
     }
 
     if (els.engineAuditReview) {
@@ -1842,6 +1848,18 @@
     if (els.engineAuditReviewMeta) {
       els.engineAuditReviewMeta.textContent =
         `${Number(summary.criticalSessions || 0)} kritikus, ${Number(summary.warningSessions || 0)} figyelendő`;
+    }
+
+    if (els.engineAuditReviewMeta) {
+      const skipped = Number(
+        summary.skippedLegacySessions ||
+        summary.skippedSessions ||
+        summary.nonAuditableSessions ||
+        0
+      );
+      const skippedText = skipped ? `, ${skipped} legacy kihagyva` : "";
+      els.engineAuditReviewMeta.textContent =
+        `${Number(summary.criticalSessions || 0)} kritikus, ${Number(summary.warningSessions || 0)} figyelendo${skippedText}`;
     }
 
     if (els.engineAuditPrimaryMismatch) {
@@ -2290,10 +2308,15 @@
   }
 
   function addOperatorTask(tasks, level, title, detail, targetId, actionLabel) {
+    const normalizedDetail =
+      level === "critical" && String(title || "").startsWith("Engine live audit")
+        ? detail.replace(/ vagy .+$/, ".").replace("nem egyezik", "elter")
+        : detail;
+
     tasks.push({
       level,
       title,
-      detail,
+      detail: normalizedDetail,
       targetId,
       actionLabel
     });
