@@ -1,3 +1,5 @@
+const ADMIN_DASHBOARD_ASSET_VERSION = "20260601-dashboard-actions-v2";
+
 export function getAdminDashboard(_req, res) {
   res.setHeader(
     "Content-Security-Policy",
@@ -18,7 +20,7 @@ export function getAdminDashboard(_req, res) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>NeuroMap Vezérlőközpont</title>
-    <link rel="stylesheet" href="/public/admin-dashboard.css">
+    <link rel="stylesheet" href="/public/admin-dashboard.css?v=${ADMIN_DASHBOARD_ASSET_VERSION}">
   </head>
   <body>
     <main class="shell">
@@ -46,7 +48,18 @@ export function getAdminDashboard(_req, res) {
         <span id="statusText" class="status-text" role="status"></span>
       </section>
 
-      <section class="control-center" aria-label="Vezérlőközpont áttekintés">
+      <nav class="quick-nav" aria-label="Dashboard gyors navigáció">
+        <button type="button" data-scroll-target="controlPulsePanel">Pulzus</button>
+        <button type="button" data-scroll-target="operatorFocusPanel">Teendők</button>
+        <button type="button" data-scroll-target="pipelinePanel">Folyamat</button>
+        <button type="button" data-scroll-target="queuePanel">Queue</button>
+        <button type="button" data-scroll-target="emailDeliveryPanel">Email</button>
+        <button type="button" data-scroll-target="engineAnalyticsPanel">Engine</button>
+        <button type="button" data-scroll-target="operationsLogPanel">Napló</button>
+        <button type="button" data-scroll-target="sessionDetailPanel">Részletek</button>
+      </nav>
+
+      <section id="controlCenterPanel" class="control-center" aria-label="Vezérlőközpont áttekintés">
         <article class="control-hero">
           <div>
             <p class="eyebrow">Rendszerállapot</p>
@@ -75,7 +88,64 @@ export function getAdminDashboard(_req, res) {
         </article>
       </section>
 
-      <section class="pipeline-panel panel" aria-label="Folyamat áttekintés">
+      <section id="controlPulsePanel" class="panel control-pulse-panel" aria-label="Admin Control Center v2 gyors pulzus">
+        <div class="panel-head">
+          <div>
+            <h2>Control Center v2 pulzus</h2>
+            <p>Azonnali, muveleti szintu allapotkep: fizetes, worker, email, engine es riasztasok.</p>
+          </div>
+          <span id="controlPulseUpdatedAt" class="snapshot-time">Meg nincs pulzus</span>
+        </div>
+        <div class="control-pulse-grid">
+          <article id="pulseCheckout" class="pulse-card">
+            <span>Checkout</span>
+            <strong>-</strong>
+            <p>Fizetett session / aktiv feldolgozas</p>
+          </article>
+          <article id="pulseWorker" class="pulse-card">
+            <span>Worker</span>
+            <strong>-</strong>
+            <p>Queue, lock es feldolgozasi allapot</p>
+          </article>
+          <article id="pulseEmail" class="pulse-card">
+            <span>Email</span>
+            <strong>-</strong>
+            <p>Riport kezbesites es retry allapot</p>
+          </article>
+          <article id="pulseEngine" class="pulse-card">
+            <span>Engine</span>
+            <strong>-</strong>
+            <p>Dontesi audit es atnezendo mintak</p>
+          </article>
+          <article id="pulseAlerts" class="pulse-card">
+            <span>Riasztas</span>
+            <strong>-</strong>
+            <p>Utolso proaktiv jelzes</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="operatorFocusPanel" class="panel operator-panel" aria-label="Operátori fókusz">
+        <div class="panel-head">
+          <div>
+            <h2>Operátori fókusz</h2>
+            <p>Azonnali teendők és a legutóbbi session kiemelve, hogy ne kelljen végiggörgetni az oldalt.</p>
+          </div>
+          <span id="operatorSummary" class="snapshot-time">Admin tokenre vár</span>
+        </div>
+        <div class="operator-grid">
+          <article class="operator-card">
+            <h3>Teendőlista</h3>
+            <div id="operatorTaskRows" class="operator-task-list"></div>
+          </article>
+          <article class="operator-card latest-session-card">
+            <h3>Legutóbbi session</h3>
+            <div id="latestSessionCard" class="latest-session-body empty-detail">Frissítés után jelenik meg.</div>
+          </article>
+        </div>
+      </section>
+
+      <section id="pipelinePanel" class="pipeline-panel panel" aria-label="Folyamat áttekintés">
         <div class="panel-head">
           <div>
             <h2>Folyamat áttekintés</h2>
@@ -96,7 +166,7 @@ export function getAdminDashboard(_req, res) {
         </div>
       </section>
 
-      <section class="panel launch-panel" aria-label="Élesítési ellenőrzés">
+      <section id="launchPanel" class="panel launch-panel" aria-label="Élesítési ellenőrzés">
         <div class="panel-head">
           <div>
             <h2>Élesítési ellenőrzés</h2>
@@ -121,7 +191,7 @@ export function getAdminDashboard(_req, res) {
         </div>
       </section>
 
-      <section class="metrics" aria-label="Állapot összegzés">
+      <section id="metricsPanel" class="metrics" aria-label="Állapot összegzés">
         <article class="metric">
           <span>Admin API</span>
           <strong id="apiStatus">-</strong>
@@ -148,7 +218,7 @@ export function getAdminDashboard(_req, res) {
         </article>
       </section>
 
-      <section class="panel health-panel">
+      <section id="healthPanel" class="panel health-panel">
         <div class="panel-head">
           <div>
             <h2>Éles rendszer állapota</h2>
@@ -218,7 +288,108 @@ export function getAdminDashboard(_req, res) {
         </div>
       </section>
 
-      <section class="panel">
+      <section id="engineAnalyticsPanel" class="panel engine-analytics-panel" aria-label="Engine analytics">
+        <div class="panel-head">
+          <div>
+            <h2>Engine analytics</h2>
+            <p>Aggregalt kep az Engine Intelligence v2 donteseirol, atfedeseirol es ellenorzendo sessionjeirol.</p>
+          </div>
+          <span id="engineAnalyticsGeneratedAt" class="snapshot-time">Meg nincs engine allapotkep</span>
+        </div>
+        <div class="engine-summary-grid">
+          <article class="health-card">
+            <span>Elemzett session</span>
+            <strong id="engineAnalyticsTotal">0</strong>
+            <p id="engineAnalyticsWindow">-</p>
+          </article>
+          <article class="health-card">
+            <span>Atlag confidence</span>
+            <strong id="engineAnalyticsConfidence">-</strong>
+            <p>Engine dontesi magabiztossag.</p>
+          </article>
+          <article class="health-card">
+            <span>Atlag pontkulonbseg</span>
+            <strong id="engineAnalyticsScoreGap">-</strong>
+            <p>Primary es secondary jelzes tavolsaga.</p>
+          </article>
+          <article class="health-card">
+            <span>Extra kerdes arany</span>
+            <strong id="engineAnalyticsExtraRate">-</strong>
+            <p>Kozeli vagy atfedo mintak aranya.</p>
+          </article>
+        </div>
+        <div class="engine-decision-audit-grid">
+          <article class="health-card">
+            <span>Dontesi audit session</span>
+            <strong id="engineAuditAudited">0</strong>
+            <p>Valos session payloadok ujraszamolva.</p>
+          </article>
+          <article class="health-card">
+            <span>Atnezesre var</span>
+            <strong id="engineAuditReview">0</strong>
+            <p id="engineAuditReviewMeta">-</p>
+          </article>
+          <article class="health-card">
+            <span>Fo dontes elteres</span>
+            <strong id="engineAuditPrimaryMismatch">0</strong>
+            <p>Mentett vs Engine v2 primary.</p>
+          </article>
+          <article class="health-card">
+            <span>Extra kerdes elteres</span>
+            <strong id="engineAuditExtraMismatch">0</strong>
+            <p>Mentett extra vs ujraszamolt extra.</p>
+          </article>
+        </div>
+        <div class="engine-analytics-grid">
+          <article class="engine-card">
+            <h3>Fo teruletek</h3>
+            <div id="engineDomainRows" class="engine-bars"></div>
+          </article>
+          <article class="engine-card">
+            <h3>Dontesi minoseg</h3>
+            <div id="engineQualityRows" class="engine-bars"></div>
+          </article>
+          <article class="engine-card">
+            <h3>Atfedo mintak</h3>
+            <div id="engineOverlapRows" class="engine-list"></div>
+          </article>
+          <article class="engine-card">
+            <h3>Leggyakoribb fokuszok</h3>
+            <div id="engineFocusRows" class="engine-list"></div>
+          </article>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Dontesi minoseg</th>
+                <th>Nev / email</th>
+                <th>Engine dontes</th>
+                <th>Confidence</th>
+                <th>Muveletek</th>
+              </tr>
+            </thead>
+            <tbody id="engineReviewRows"></tbody>
+          </table>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Audit szint</th>
+                <th>Session</th>
+                <th>Mentett dontes</th>
+                <th>Engine v2 dontes</th>
+                <th>Megjegyzes</th>
+                <th>Muveletek</th>
+              </tr>
+            </thead>
+            <tbody id="engineDecisionAuditRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="alertsPanel" class="panel">
         <div class="panel-head">
           <div>
             <h2>Proaktív riasztások</h2>
@@ -241,7 +412,7 @@ export function getAdminDashboard(_req, res) {
         </div>
       </section>
 
-      <section class="panel">
+      <section id="emailDeliveryPanel" class="panel">
         <div class="panel-head">
           <div>
             <h2>Email kézbesítés figyelés</h2>
@@ -262,9 +433,51 @@ export function getAdminDashboard(_req, res) {
             <tbody id="emailIssueRows"></tbody>
           </table>
         </div>
+        <div class="deliverability-monitor">
+          <article class="health-card deliverability-main">
+            <span>Deliverability status</span>
+            <strong id="emailDeliverabilityLevel">-</strong>
+            <p id="emailDeliverabilityWindow">Monitoring window: -</p>
+          </article>
+          <article class="health-card">
+            <span>Success rate</span>
+            <strong id="emailDeliverabilitySuccessRate">-</strong>
+            <p id="emailDeliverabilityAttempted">Attempted sends: -</p>
+          </article>
+          <article class="health-card">
+            <span>Failure rate</span>
+            <strong id="emailDeliverabilityFailureRate">-</strong>
+            <p id="emailDeliverabilityFailures">Failed: -</p>
+          </article>
+          <article class="health-card">
+            <span>Stale sending</span>
+            <strong id="emailDeliverabilityStale">0</strong>
+            <p>Sending status older than monitor threshold.</p>
+          </article>
+          <article class="health-card">
+            <span>Provider ID coverage</span>
+            <strong id="emailDeliverabilityProviderCoverage">-</strong>
+            <p id="emailDeliverabilityProviderMeta">Sent emails with provider id.</p>
+          </article>
+          <article class="health-card">
+            <span>Config</span>
+            <strong id="emailDeliverabilityConfig">-</strong>
+            <p id="emailDeliverabilityConfigMeta">Resend and sender domain check.</p>
+          </article>
+        </div>
+        <div class="deliverability-grid">
+          <article class="engine-card">
+            <h3>Top email errors</h3>
+            <div id="emailDeliverabilityErrorRows" class="engine-list"></div>
+          </article>
+          <article class="engine-card">
+            <h3>Deliverability recommendations</h3>
+            <div id="emailDeliverabilityRecommendationRows" class="engine-list"></div>
+          </article>
+        </div>
       </section>
 
-      <section class="panel session-search-panel">
+      <section id="sessionSearchPanel" class="panel session-search-panel">
         <div class="panel-head">
           <div>
             <h2>Session keresés</h2>
@@ -294,22 +507,26 @@ export function getAdminDashboard(_req, res) {
         </div>
       </section>
 
-      <section class="panel">
+      <section id="operationsLogPanel" class="panel">
         <div class="panel-head">
           <div>
             <h2>Műveleti napló</h2>
             <p>Webhook, elemzés, checkout és email események időrendben.</p>
           </div>
-          <div class="filter-row" aria-label="Műveleti napló szűrők">
-            <button type="button" class="secondary log-filter active" data-log-filter="all">Összes</button>
-            <button type="button" class="secondary log-filter" data-log-filter="critical">Kritikus</button>
-            <button type="button" class="secondary log-filter" data-log-filter="email">Email</button>
-            <button type="button" class="secondary log-filter" data-log-filter="analysis">Elemzés</button>
-            <button type="button" class="secondary log-filter" data-log-filter="webhook">Webhook</button>
-            <button type="button" class="secondary log-filter" data-log-filter="checkout">Fizetés</button>
+          <div class="panel-actions">
+            <button id="toggleOperationsLogBtn" type="button" class="secondary" aria-controls="operationsLogPanelBody" aria-expanded="false">Napló megnyitása</button>
+            <div class="filter-row" aria-label="Műveleti napló szűrők">
+              <button type="button" class="secondary log-filter active" data-log-filter="all">Összes</button>
+              <button type="button" class="secondary log-filter" data-log-filter="critical">Kritikus</button>
+              <button type="button" class="secondary log-filter" data-log-filter="email">Email</button>
+              <button type="button" class="secondary log-filter" data-log-filter="analysis">Elemzés</button>
+              <button type="button" class="secondary log-filter" data-log-filter="webhook">Webhook</button>
+              <button type="button" class="secondary log-filter" data-log-filter="checkout">Fizetés</button>
+            </div>
           </div>
         </div>
-        <div class="table-wrap">
+        <div id="operationsLogPanelBody" class="collapsible-panel is-collapsed">
+          <div class="table-wrap">
           <table>
             <thead>
               <tr>
@@ -322,10 +539,11 @@ export function getAdminDashboard(_req, res) {
             </thead>
             <tbody id="operationsLogRows"></tbody>
           </table>
+          </div>
         </div>
       </section>
 
-      <section class="panel">
+      <section id="queuePanel" class="panel">
         <div class="panel-head">
           <div>
             <h2>Feldolgozási sor figyelés</h2>
@@ -349,7 +567,7 @@ export function getAdminDashboard(_req, res) {
       </section>
 
       <section class="grid">
-        <article class="panel">
+        <article id="recentSessionsPanel" class="panel">
           <div class="panel-head">
             <div>
               <h2>Legutóbbi sessionök</h2>
@@ -372,7 +590,7 @@ export function getAdminDashboard(_req, res) {
           </div>
         </article>
 
-        <article class="panel">
+        <article id="failedAnalysesPanel" class="panel">
           <div class="panel-head">
             <div>
               <h2>Hibás elemzések</h2>
@@ -395,7 +613,7 @@ export function getAdminDashboard(_req, res) {
         </article>
       </section>
 
-      <section class="panel detail-panel" aria-live="polite">
+      <section id="sessionDetailPanel" class="panel detail-panel" aria-live="polite">
         <div class="panel-head">
           <div>
             <h2>Session részletek</h2>
@@ -406,7 +624,7 @@ export function getAdminDashboard(_req, res) {
       </section>
     </main>
 
-    <script src="/public/admin-dashboard.js"></script>
+    <script src="/public/admin-dashboard.js?v=${ADMIN_DASHBOARD_ASSET_VERSION}"></script>
   </body>
 </html>`);
 }

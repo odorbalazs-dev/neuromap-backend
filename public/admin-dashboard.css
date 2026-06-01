@@ -150,6 +150,35 @@ input:focus {
   margin-bottom: 18px;
 }
 
+.quick-nav {
+  align-items: center;
+  background: rgba(245, 248, 251, 0.94);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+  overflow-x: auto;
+  padding: 10px;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.quick-nav button {
+  background: #fff;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  flex: 0 0 auto;
+  padding: 8px 11px;
+}
+
+.quick-nav button:hover {
+  background: #edf6ff;
+  border-color: #b6dcf2;
+  color: var(--blue-dark);
+}
+
 .status-text {
   color: var(--muted);
   font-weight: 700;
@@ -238,6 +267,77 @@ input:focus {
   color: var(--red);
 }
 
+.control-pulse-panel {
+  margin-bottom: 18px;
+}
+
+.control-pulse-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  padding: 18px;
+}
+
+.pulse-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--blue);
+  border-radius: 8px;
+  min-height: 126px;
+  min-width: 0;
+  padding: 14px;
+}
+
+.pulse-card span {
+  color: var(--muted);
+  display: block;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.pulse-card strong {
+  display: block;
+  font-size: 22px;
+  margin: 8px 0 4px;
+  overflow-wrap: anywhere;
+}
+
+.pulse-card p {
+  color: var(--muted);
+  font-size: 12px;
+  margin: 0;
+}
+
+.pulse-card.healthy,
+.pulse-card.ok,
+.pulse-card.ready,
+.pulse-card.pass {
+  background: #f5fbf7;
+  border-left-color: var(--green);
+}
+
+.pulse-card.active,
+.pulse-card.info {
+  background: #f8fbff;
+  border-left-color: var(--blue);
+}
+
+.pulse-card.warning,
+.pulse-card.waiting,
+.pulse-card.warn {
+  background: #fffbf1;
+  border-left-color: var(--orange);
+}
+
+.pulse-card.critical,
+.pulse-card.failed,
+.pulse-card.fail,
+.pulse-card.problem {
+  background: #fff7f7;
+  border-left-color: var(--red);
+}
+
 .command-panel {
   overflow: hidden;
 }
@@ -255,6 +355,120 @@ input:focus {
 
 .pipeline-panel {
   margin-bottom: 18px;
+}
+
+.operator-panel {
+  margin-bottom: 18px;
+}
+
+.operator-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
+  padding: 18px;
+}
+
+.operator-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  min-width: 0;
+  padding: 14px;
+}
+
+.operator-card h3 {
+  font-size: 16px;
+  margin: 0 0 12px;
+}
+
+.operator-task-list {
+  display: grid;
+  gap: 10px;
+}
+
+.operator-task {
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--blue);
+  border-radius: 8px;
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+}
+
+.operator-task.critical {
+  background: #fff7f7;
+  border-left-color: var(--red);
+}
+
+.operator-task.warning {
+  background: #fffbf1;
+  border-left-color: var(--orange);
+}
+
+.operator-task.info {
+  background: #f8fafc;
+  border-left-color: var(--blue);
+}
+
+.operator-task-head {
+  align-items: flex-start;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.operator-task strong {
+  color: #1f2937;
+  display: block;
+}
+
+.operator-task p {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.operator-task-actions {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.operator-task-actions button {
+  font-size: 12px;
+  padding: 7px 10px;
+}
+
+.operator-empty {
+  background: #f8fafc;
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  color: var(--muted);
+  padding: 14px;
+}
+
+.latest-session-body {
+  display: grid;
+  gap: 10px;
+}
+
+.latest-session-title {
+  color: #1f2937;
+  font-size: 18px;
+  font-weight: 900;
+  overflow-wrap: anywhere;
+}
+
+.latest-session-statuses {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.latest-session-meta {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
 }
 
 .pipeline-stages {
@@ -587,6 +801,125 @@ input:focus {
   margin: 6px 0;
 }
 
+.engine-analytics-panel {
+  margin-top: 18px;
+}
+
+.engine-summary-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  padding: 18px;
+}
+
+.engine-decision-audit-grid {
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  padding: 18px;
+}
+
+.engine-analytics-grid {
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  padding: 18px;
+}
+
+.engine-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  min-height: 220px;
+  padding: 14px;
+}
+
+.engine-card h3 {
+  color: #1f2937;
+  font-size: 15px;
+  margin: 0 0 12px;
+}
+
+.engine-bars,
+.engine-list {
+  display: grid;
+  gap: 10px;
+}
+
+.engine-bar-row {
+  display: grid;
+  gap: 7px;
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.engine-bar-row span {
+  color: #26384d;
+  font-size: 12px;
+  font-weight: 800;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.engine-bar-row strong {
+  color: var(--blue);
+  font-size: 12px;
+}
+
+.engine-bar {
+  background: #edf2f7;
+  border-radius: 999px;
+  grid-column: 1 / -1;
+  height: 8px;
+  overflow: hidden;
+}
+
+.engine-bar i {
+  background: linear-gradient(90deg, var(--blue), var(--orange));
+  border-radius: inherit;
+  display: block;
+  height: 100%;
+}
+
+.engine-list-row {
+  border-bottom: 1px solid #edf2f7;
+  display: grid;
+  gap: 4px;
+  padding-bottom: 10px;
+}
+
+.engine-list-row strong {
+  color: #26384d;
+  font-size: 13px;
+}
+
+.engine-list-row span,
+.engine-empty {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.deliverability-monitor {
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding: 18px;
+}
+
+.deliverability-main {
+  border-left: 4px solid var(--blue);
+}
+
+.deliverability-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  padding: 0 18px 18px;
+}
+
 .grid {
   display: grid;
   gap: 18px;
@@ -612,6 +945,13 @@ input:focus {
   margin-top: 3px;
 }
 
+.panel-actions {
+  align-items: flex-end;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .filter-row {
   display: flex;
   flex-wrap: wrap;
@@ -631,6 +971,10 @@ input:focus {
 
 .table-wrap {
   overflow-x: auto;
+}
+
+.collapsible-panel.is-collapsed {
+  display: none;
 }
 
 table {
@@ -656,6 +1000,10 @@ th {
 
 td {
   color: #26384d;
+}
+
+.latest-row {
+  background: #f8fbff;
 }
 
 .pill {
@@ -687,6 +1035,7 @@ td {
 .pill.done,
 .pill.completed,
 .pill.processed,
+.pill.paid,
 .pill.sent,
 .pill.healthy,
 .pill.ok,
@@ -711,6 +1060,7 @@ td {
 
 .pill.warning,
 .pill.waiting,
+.pill.unpaid,
 .pill.warn {
   background: #fff6e8;
   color: #9b5200;
@@ -719,6 +1069,21 @@ td {
 .pill.active {
   background: #edf6ff;
   color: #0879b0;
+}
+
+.pill.high {
+  background: #e8f7ef;
+  color: var(--green);
+}
+
+.pill.medium {
+  background: #fff6e8;
+  color: #9b5200;
+}
+
+.pill.low {
+  background: #fdecec;
+  color: var(--red);
 }
 
 .pill.info,
@@ -878,6 +1243,154 @@ td {
 
 .detail-card p {
   color: #344054;
+}
+
+.session-cockpit {
+  border-left: 5px solid var(--blue);
+  background: #f8fbff;
+}
+
+.session-cockpit.ok {
+  border-left-color: var(--green);
+  background: #f5fbf7;
+}
+
+.session-cockpit.warning,
+.session-cockpit.waiting {
+  border-left-color: var(--orange);
+  background: #fffbf1;
+}
+
+.session-cockpit.critical,
+.session-cockpit.problem {
+  border-left-color: var(--red);
+  background: #fff7f7;
+}
+
+.session-cockpit-layout {
+  align-items: stretch;
+  display: grid;
+  gap: 14px;
+  grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+}
+
+.session-action-box {
+  min-width: 0;
+}
+
+.session-cockpit-eyebrow {
+  color: var(--muted);
+  display: block;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.session-action-box h4 {
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+
+.session-action-box p {
+  line-height: 1.55;
+}
+
+.session-action-meta {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  margin-top: 10px;
+}
+
+.session-cockpit-actions {
+  margin-top: 12px;
+}
+
+.session-status-strip {
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  padding: 12px;
+}
+
+.session-stage-rail {
+  border-left: 4px solid #64748b;
+}
+
+.session-stage-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  margin-top: 10px;
+}
+
+.session-stage-tile {
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  min-width: 0;
+  padding: 12px;
+}
+
+.session-stage-tile.ok {
+  background: #f5fbf7;
+  border-color: #b7e4c7;
+}
+
+.session-stage-tile.problem,
+.session-stage-tile.critical {
+  background: #fff7f7;
+  border-color: #fecaca;
+}
+
+.session-stage-tile.warning,
+.session-stage-tile.waiting {
+  background: #fffbf1;
+  border-color: #fed7aa;
+}
+
+.session-stage-head {
+  align-items: flex-start;
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+}
+
+.session-stage-head strong {
+  color: #26384d;
+  font-size: 13px;
+}
+
+.session-stage-status {
+  color: #344054;
+  display: block;
+  font-size: 13px;
+  font-weight: 800;
+  margin-top: 10px;
+  overflow-wrap: anywhere;
+}
+
+.session-stage-tile p {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+  margin-top: 6px;
+}
+
+.priority-facts-card {
+  border-left: 4px solid #8b5cf6;
+}
+
+.priority-facts-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 10px;
 }
 
 .report-summary-card {
@@ -1107,13 +1620,24 @@ pre {
 
   .metrics,
   .control-center,
+  .control-pulse-grid,
+  .operator-grid,
   .pipeline-stages,
   .risk-strip,
   .launch-summary,
   .launch-checks,
   .health-grid,
+  .engine-summary-grid,
+  .engine-decision-audit-grid,
+  .engine-analytics-grid,
+  .deliverability-monitor,
+  .deliverability-grid,
   .grid,
   .detail-grid,
+  .session-cockpit-layout,
+  .session-status-strip,
+  .session-stage-grid,
+  .priority-facts-grid,
   .diagnostic-grid,
   .summary-field-grid,
   .timeline-grid {

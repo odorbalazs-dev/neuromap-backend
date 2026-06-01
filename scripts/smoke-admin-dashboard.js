@@ -81,6 +81,22 @@ assert(
   "Dashboard HTML should include the pipeline cockpit."
 );
 assert(
+  res.body.includes("Operátori fókusz"),
+  "Dashboard HTML should include the operator focus panel."
+);
+assert(
+  res.body.includes("operatorTaskRows"),
+  "Dashboard HTML should include the operator task rows container."
+);
+assert(
+  res.body.includes("latestSessionCard"),
+  "Dashboard HTML should include the latest session card."
+);
+assert(
+  res.body.includes('data-scroll-target="queuePanel"'),
+  "Dashboard HTML should include quick navigation scroll targets."
+);
+assert(
   res.body.includes("Élesítési ellenőrzés"),
   "Dashboard HTML should include the launch readiness panel."
 );
@@ -105,12 +121,48 @@ assert(
   "Dashboard HTML should include health recommendations container."
 );
 assert(
+  res.body.includes("Engine analytics"),
+  "Dashboard HTML should include the engine analytics panel."
+);
+assert(
+  res.body.includes("engineAnalyticsTotal"),
+  "Dashboard HTML should include engine analytics metrics."
+);
+assert(
+  res.body.includes("engineDomainRows"),
+  "Dashboard HTML should include engine domain distribution."
+);
+assert(
+  res.body.includes("engineReviewRows"),
+  "Dashboard HTML should include engine review queue rows."
+);
+assert(
+  res.body.includes("engineAuditAudited"),
+  "Dashboard HTML should include live engine decision audit metrics."
+);
+assert(
+  res.body.includes("engineDecisionAuditRows"),
+  "Dashboard HTML should include live engine decision audit rows."
+);
+assert(
   res.body.includes("Email kézbesítés figyelés"),
   "Dashboard HTML should include the email delivery panel."
 );
 assert(
   res.body.includes("emailIssueRows"),
   "Dashboard HTML should include the email issue rows container."
+);
+assert(
+  res.body.includes("emailDeliverabilityLevel"),
+  "Dashboard HTML should include the email deliverability monitor metrics."
+);
+assert(
+  res.body.includes("emailDeliverabilityErrorRows"),
+  "Dashboard HTML should include email deliverability error rows."
+);
+assert(
+  res.body.includes("emailDeliverabilityRecommendationRows"),
+  "Dashboard HTML should include email deliverability recommendations."
 );
 assert(
   res.body.includes("retryEmailBatchBtn"),
@@ -141,6 +193,18 @@ assert(
   "Dashboard HTML should include the operations log rows container."
 );
 assert(
+  res.body.includes("toggleOperationsLogBtn"),
+  "Dashboard HTML should include the operations log collapse toggle."
+);
+assert(
+  res.body.includes("operationsLogPanelBody"),
+  "Dashboard HTML should include the collapsible operations log body."
+);
+assert(
+  res.body.includes("sessionDetailPanel"),
+  "Dashboard HTML should include the session detail scroll target."
+);
+assert(
   res.body.includes("Session keresés"),
   "Dashboard HTML should include the session search panel."
 );
@@ -164,6 +228,18 @@ assert(
   !/<script(?![^>]*src=)/i.test(res.body),
   "Dashboard should not contain inline scripts."
 );
+assert(
+  res.body.includes("Control Center v2 pulzus"),
+  "Dashboard HTML should include the Control Center v2 pulse panel."
+);
+assert(
+  res.body.includes("controlPulseUpdatedAt"),
+  "Dashboard HTML should include the control pulse timestamp."
+);
+assert(
+  res.body.includes("pulseCheckout"),
+  "Dashboard HTML should include the checkout pulse card."
+);
 
 [
   "public/admin-dashboard.css",
@@ -175,6 +251,11 @@ assert(
 
 const dashboardJs = fs.readFileSync(
   path.join(rootDir, "public/admin-dashboard.js"),
+  "utf8"
+);
+
+const dashboardCss = fs.readFileSync(
+  path.join(rootDir, "public/admin-dashboard.css"),
   "utf8"
 );
 
@@ -196,8 +277,120 @@ assert(
   "Dashboard JS should call the admin session search endpoint."
 );
 assert(
+  dashboardJs.includes("/admin/engine-decision-audit"),
+  "Dashboard JS should call the live engine decision audit endpoint."
+);
+assert(
+  dashboardJs.includes("/admin/email-deliverability?hours=168&limit=30"),
+  "Dashboard JS should call the email deliverability monitor endpoint."
+);
+assert(
+  dashboardJs.includes("renderEmailDeliverability"),
+  "Dashboard JS should render email deliverability monitor results."
+);
+assert(
+  dashboardJs.includes("emailDeliverability"),
+  "Dashboard JS should include email deliverability data in the dashboard refresh."
+);
+assert(
+  dashboardJs.includes("renderEngineDecisionAudit"),
+  "Dashboard JS should render live engine decision audit results."
+);
+assert(
+  dashboardJs.includes("primaryMismatchCount"),
+  "Dashboard JS should surface primary engine decision mismatches."
+);
+assert(
+  dashboardJs.includes("setOperationsLogCollapsed"),
+  "Dashboard JS should toggle the operations log body."
+);
+assert(
+  dashboardJs.includes("toggleOperationsLog"),
+  "Dashboard JS should expose a dedicated operations log toggle handler."
+);
+assert(
+  dashboardJs.includes("OPERATIONS_LOG_KEY"),
+  "Dashboard JS should persist the operations log collapsed state."
+);
+assert(
+  dashboardJs.includes("getRowSessionId"),
+  "Dashboard JS should normalize session IDs for all dashboard row actions."
+);
+assert(
+  dashboardJs.includes("dataset.sessionId"),
+  "Dashboard JS should attach session IDs to action buttons for delegated clicks."
+);
+assert(
+  dashboardJs.includes("renderControlPulse"),
+  "Dashboard JS should render the Control Center v2 pulse panel."
+);
+assert(
+  dashboardJs.includes("setPulseCard"),
+  "Dashboard JS should update pulse card statuses."
+);
+assert(
+  dashboardJs.includes("bindClick"),
+  "Dashboard JS should use guarded click binding for optional controls."
+);
+assert(
+  dashboardJs.includes("handleAction(action, sessionId)"),
+  "Dashboard JS should route row actions through a shared action handler."
+);
+assert(
+  dashboardJs.includes('button.addEventListener("click"'),
+  "Dashboard JS should bind row action buttons directly."
+);
+assert(
+  dashboardJs.includes("scrollSessionDetailIntoView"),
+  "Dashboard JS should scroll to session details after opening them."
+);
+assert(
+  dashboardJs.includes("scrollToPanel"),
+  "Dashboard JS should support dashboard quick navigation."
+);
+assert(
+  dashboardJs.includes("renderOperatorFocus"),
+  "Dashboard JS should render the operator focus panel."
+);
+assert(
+  dashboardJs.includes("renderLatestSessionCard"),
+  "Dashboard JS should render the latest session card."
+);
+assert(
+  dashboardJs.includes("operatorTaskRows"),
+  "Dashboard JS should update the operator task rows."
+);
+assert(
+  dashboardJs.includes('document.getElementById("sessionDetailPanel")'),
+  "Dashboard JS should scroll to the stable session detail panel target."
+);
+assert(
   dashboardJs.includes("renderSessionDetail"),
   "Dashboard JS should render a readable session detail view."
+);
+assert(
+  dashboardJs.includes("renderSessionCockpit"),
+  "Dashboard JS should render the session cockpit view."
+);
+assert(
+  dashboardJs.includes("renderSessionStageRail"),
+  "Dashboard JS should render the session stage rail."
+);
+assert(
+  dashboardJs.includes("renderPriorityFacts"),
+  "Dashboard JS should render session priority facts."
+);
+assert(
+  dashboardJs.includes("Részlet fókusz"),
+  "Dashboard JS should expose the session detail focus copy."
+);
+assert(
+  dashboardJs.includes("Folyamatlépések"),
+  "Dashboard JS should expose the session process stages copy."
+);
+assert(
+  dashboardJs.includes("Prioritás adatok"),
+  "Dashboard JS should expose priority session facts."
 );
 assert(
   dashboardJs.includes("renderReportSnapshot"),
@@ -266,6 +459,54 @@ assert(
 assert(
   dashboardJs.includes("renderLaunchReadiness"),
   "Dashboard JS should render launch readiness results."
+);
+assert(
+  dashboardJs.includes("/admin/engine-analytics"),
+  "Dashboard JS should call the admin engine analytics endpoint."
+);
+assert(
+  dashboardJs.includes("renderEngineAnalytics"),
+  "Dashboard JS should render engine analytics results."
+);
+assert(
+  dashboardJs.includes("reviewQueue"),
+  "Dashboard JS should render the engine analytics review queue."
+);
+assert(
+  dashboardJs.includes("engineOverlapRows"),
+  "Dashboard JS should render engine overlap rows."
+);
+assert(
+  dashboardCss.includes(".quick-nav"),
+  "Dashboard CSS should style the quick navigation."
+);
+assert(
+  dashboardCss.includes(".operator-panel"),
+  "Dashboard CSS should style the operator focus panel."
+);
+assert(
+  dashboardCss.includes(".control-pulse-grid"),
+  "Dashboard CSS should style the control pulse grid."
+);
+assert(
+  dashboardCss.includes(".pulse-card"),
+  "Dashboard CSS should style the control pulse cards."
+);
+assert(
+  dashboardCss.includes(".latest-row"),
+  "Dashboard CSS should highlight the latest session row."
+);
+assert(
+  dashboardCss.includes(".session-cockpit"),
+  "Dashboard CSS should style the session cockpit."
+);
+assert(
+  dashboardCss.includes(".session-stage-grid"),
+  "Dashboard CSS should style the session stage rail."
+);
+assert(
+  dashboardCss.includes(".priority-facts-grid"),
+  "Dashboard CSS should style the session priority facts."
 );
 
 const summary = buildAdminSessionReportSummary(

@@ -6,9 +6,12 @@ import {
   getAdminStatus,
   getLaunchReadiness,
   getProductionHealth,
+  getEmailDeliverability,
   getOperationsLog,
   getAdminAlerts,
   triggerAdminAlertCheck,
+  getEngineAnalytics,
+  getEngineDecisionAudit,
   getQueueStatus,
   getRecentSessions,
   searchAdminSessions,
@@ -32,9 +35,12 @@ router.use(adminAuth);
 router.get("/status", getAdminStatus);
 router.get("/launch-readiness", getLaunchReadiness);
 router.get("/production-health", getProductionHealth);
+router.get("/email-deliverability", getEmailDeliverability);
 router.get("/operations-log", getOperationsLog);
 router.get("/alerts", getAdminAlerts);
 router.post("/trigger-alert-check", triggerAdminAlertCheck);
+router.get("/engine-analytics", getEngineAnalytics);
+router.get("/engine-decision-audit", getEngineDecisionAudit);
 
 router.get("/queue-status", getQueueStatus);
 router.get("/recent-sessions", getRecentSessions);

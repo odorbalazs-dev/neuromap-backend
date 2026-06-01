@@ -1,5 +1,6 @@
 (function () {
   const TOKEN_KEY = "nm_admin_token";
+  const OPERATIONS_LOG_KEY = "nm_operations_log_open";
 
   const els = {
     token: document.getElementById("adminToken"),
@@ -14,6 +15,15 @@
     controlCenterHeadline: document.getElementById("controlCenterHeadline"),
     controlCenterSummary: document.getElementById("controlCenterSummary"),
     controlScore: document.getElementById("controlScore"),
+    controlPulseUpdatedAt: document.getElementById("controlPulseUpdatedAt"),
+    pulseCheckout: document.getElementById("pulseCheckout"),
+    pulseWorker: document.getElementById("pulseWorker"),
+    pulseEmail: document.getElementById("pulseEmail"),
+    pulseEngine: document.getElementById("pulseEngine"),
+    pulseAlerts: document.getElementById("pulseAlerts"),
+    operatorSummary: document.getElementById("operatorSummary"),
+    operatorTaskRows: document.getElementById("operatorTaskRows"),
+    latestSessionCard: document.getElementById("latestSessionCard"),
     lastSnapshotAt: document.getElementById("lastSnapshotAt"),
     pipelineStages: document.getElementById("pipelineStages"),
     riskFocus: document.getElementById("riskFocus"),
@@ -46,12 +56,44 @@
     retryableReportEmails: document.getElementById("retryableReportEmails"),
     retryLimitReportEmails: document.getElementById("retryLimitReportEmails"),
     healthRecommendations: document.getElementById("healthRecommendations"),
+    engineAnalyticsGeneratedAt: document.getElementById("engineAnalyticsGeneratedAt"),
+    engineAnalyticsTotal: document.getElementById("engineAnalyticsTotal"),
+    engineAnalyticsWindow: document.getElementById("engineAnalyticsWindow"),
+    engineAnalyticsConfidence: document.getElementById("engineAnalyticsConfidence"),
+    engineAnalyticsScoreGap: document.getElementById("engineAnalyticsScoreGap"),
+    engineAnalyticsExtraRate: document.getElementById("engineAnalyticsExtraRate"),
+    engineAuditAudited: document.getElementById("engineAuditAudited"),
+    engineAuditReview: document.getElementById("engineAuditReview"),
+    engineAuditReviewMeta: document.getElementById("engineAuditReviewMeta"),
+    engineAuditPrimaryMismatch: document.getElementById("engineAuditPrimaryMismatch"),
+    engineAuditExtraMismatch: document.getElementById("engineAuditExtraMismatch"),
+    engineDomainRows: document.getElementById("engineDomainRows"),
+    engineQualityRows: document.getElementById("engineQualityRows"),
+    engineOverlapRows: document.getElementById("engineOverlapRows"),
+    engineFocusRows: document.getElementById("engineFocusRows"),
+    engineReviewRows: document.getElementById("engineReviewRows"),
+    engineDecisionAuditRows: document.getElementById("engineDecisionAuditRows"),
     alertRows: document.getElementById("alertRows"),
     emailIssueRows: document.getElementById("emailIssueRows"),
+    emailDeliverabilityLevel: document.getElementById("emailDeliverabilityLevel"),
+    emailDeliverabilityWindow: document.getElementById("emailDeliverabilityWindow"),
+    emailDeliverabilitySuccessRate: document.getElementById("emailDeliverabilitySuccessRate"),
+    emailDeliverabilityAttempted: document.getElementById("emailDeliverabilityAttempted"),
+    emailDeliverabilityFailureRate: document.getElementById("emailDeliverabilityFailureRate"),
+    emailDeliverabilityFailures: document.getElementById("emailDeliverabilityFailures"),
+    emailDeliverabilityStale: document.getElementById("emailDeliverabilityStale"),
+    emailDeliverabilityProviderCoverage: document.getElementById("emailDeliverabilityProviderCoverage"),
+    emailDeliverabilityProviderMeta: document.getElementById("emailDeliverabilityProviderMeta"),
+    emailDeliverabilityConfig: document.getElementById("emailDeliverabilityConfig"),
+    emailDeliverabilityConfigMeta: document.getElementById("emailDeliverabilityConfigMeta"),
+    emailDeliverabilityErrorRows: document.getElementById("emailDeliverabilityErrorRows"),
+    emailDeliverabilityRecommendationRows: document.getElementById("emailDeliverabilityRecommendationRows"),
     sessionSearchInput: document.getElementById("sessionSearchInput"),
     sessionSearchBtn: document.getElementById("sessionSearchBtn"),
     sessionSearchHint: document.getElementById("sessionSearchHint"),
     sessionSearchRows: document.getElementById("sessionSearchRows"),
+    toggleOperationsLogBtn: document.getElementById("toggleOperationsLogBtn"),
+    operationsLogPanelBody: document.getElementById("operationsLogPanelBody"),
     operationsLogRows: document.getElementById("operationsLogRows"),
     queueRows: document.getElementById("queueRows"),
     recentRows: document.getElementById("recentRows"),
@@ -60,9 +102,22 @@
   };
 
   let activeLogFilter = "all";
+  let operationsLogCollapsed = readOperationsLogCollapsed();
+
+  function readOperationsLogCollapsed() {
+    const value = localStorage.getItem(OPERATIONS_LOG_KEY);
+    if (value === "open" || value === "1") return false;
+    if (value === "collapsed" || value === "0") return true;
+    return true;
+  }
+
+  function bindClick(element, handler) {
+    if (!element) return;
+    element.addEventListener("click", handler);
+  }
 
   function getToken() {
-    return (els.token.value || "").trim();
+    return (els.token?.value || "").trim();
   }
 
   function setBusy(isBusy) {
@@ -85,6 +140,7 @@
   }
 
   function setStatus(message, isError) {
+    if (!els.statusText) return;
     els.statusText.textContent = message || "";
     els.statusText.classList.toggle("error", Boolean(isError));
   }
@@ -134,6 +190,8 @@
         "failed",
         "done",
         "completed",
+        "paid",
+        "unpaid",
         "not_sent",
         "sending",
         "sent",
@@ -146,6 +204,7 @@
         "waiting",
         "unknown",
         "active",
+        "clean",
         "info",
         "email",
         "analysis",
@@ -155,7 +214,10 @@
         "blocked",
         "pass",
         "warn",
-        "fail"
+        "fail",
+        "high",
+        "medium",
+        "low"
       ].includes(status)
     ) {
       return status;
@@ -186,6 +248,7 @@
       waiting: "várakozik",
       unknown: "ismeretlen",
       active: "aktív",
+      clean: "rendben",
       info: "információ",
       email: "email",
       analysis: "elemzés",
@@ -196,6 +259,9 @@
       pass: "rendben",
       warn: "figyelendő",
       fail: "hiba",
+      high: "magas",
+      medium: "kozepes",
+      low: "alacsony",
       open: "nyitott",
       resolved: "lezárva",
       pending: "függőben"
@@ -310,36 +376,54 @@
     return wrapper;
   }
 
+  function getRowSessionId(row) {
+    if (!row) return "";
+    return String(row.id || row.sessionId || row.session_id || row.internal_session_id || "").trim();
+  }
+
   function actionButton(label, action, id, className) {
+    const safeId = String(id || "").trim();
     const button = document.createElement("button");
     button.type = "button";
     button.textContent = label;
     button.dataset.action = action;
-    button.dataset.id = id;
+    button.dataset.id = safeId;
+    button.dataset.sessionId = safeId;
+    if (!safeId && action !== "toggle-operations-log") {
+      button.disabled = true;
+      button.title = "Ehhez a sorhoz nem talalhato session ID.";
+    }
     if (className) button.className = className;
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      handleAction(action, safeId);
+    });
     return button;
   }
 
   function actions(row, includeResend = true, includeEmailReset = false) {
     const wrapper = document.createElement("div");
+    const sessionId = getRowSessionId(row);
     wrapper.className = "actions";
-    wrapper.appendChild(actionButton("Részletek", "detail", row.id, "secondary"));
-    wrapper.appendChild(actionButton("PDF", "download-pdf", row.id, "secondary"));
-    wrapper.appendChild(actionButton("PDF újragenerálás", "regenerate-pdf", row.id, "secondary"));
-    wrapper.appendChild(actionButton("Elemzés újraindítása", "retry", row.id, "warn"));
+    wrapper.appendChild(actionButton("Részletek", "detail", sessionId, "secondary"));
+    wrapper.appendChild(actionButton("PDF", "download-pdf", sessionId, "secondary"));
+    wrapper.appendChild(actionButton("PDF újragenerálás", "regenerate-pdf", sessionId, "secondary"));
+    wrapper.appendChild(actionButton("Elemzés újraindítása", "retry", sessionId, "warn"));
 
     if (includeResend) {
-      wrapper.appendChild(actionButton("Email újraküldés", "resend", row.id, "secondary"));
+      wrapper.appendChild(actionButton("Email újraküldés", "resend", sessionId, "secondary"));
     }
 
     if (includeEmailReset) {
-      wrapper.appendChild(actionButton("Email retry alaphelyzet", "reset-email", row.id, "secondary"));
+      wrapper.appendChild(actionButton("Email retry alaphelyzet", "reset-email", sessionId, "secondary"));
     }
 
     return wrapper;
   }
 
   function emptyRow(target, colSpan, message) {
+    if (!target) return;
     target.replaceChildren();
     const tr = document.createElement("tr");
     const td = document.createElement("td");
@@ -351,16 +435,65 @@
   }
 
   function showEmptyDetail(message = "Nincs kiválasztott session.") {
+    if (!els.sessionDetail) return;
     els.sessionDetail.className = "session-detail empty-detail";
     els.sessionDetail.textContent = message;
   }
 
   function showJsonDetail(data) {
+    if (!els.sessionDetail) return;
     els.sessionDetail.className = "session-detail";
     const pre = document.createElement("pre");
     pre.className = "raw-json";
     pre.textContent = JSON.stringify(data, null, 2);
     els.sessionDetail.replaceChildren(pre);
+  }
+
+  function setOperationsLogCollapsed(collapsed) {
+    operationsLogCollapsed = collapsed;
+    localStorage.setItem(OPERATIONS_LOG_KEY, collapsed ? "collapsed" : "open");
+
+    if (els.operationsLogPanelBody) {
+      els.operationsLogPanelBody.classList.toggle("is-collapsed", collapsed);
+      els.operationsLogPanelBody.hidden = collapsed;
+    }
+
+    if (els.toggleOperationsLogBtn) {
+      els.toggleOperationsLogBtn.setAttribute("aria-expanded", String(!collapsed));
+      els.toggleOperationsLogBtn.textContent = collapsed
+        ? "Napló megnyitása"
+        : "Napló összecsukása";
+    }
+  }
+
+  function toggleOperationsLog() {
+    setOperationsLogCollapsed(!operationsLogCollapsed);
+  }
+
+  function scrollSessionDetailIntoView() {
+    const target = document.getElementById("sessionDetailPanel") || els.sessionDetail;
+    if (!target) return;
+
+    target.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+
+  function scrollToPanel(targetId) {
+    if (!targetId) return;
+
+    if (targetId === "operationsLogPanel") {
+      setOperationsLogCollapsed(false);
+    }
+
+    const target = document.getElementById(targetId);
+    if (!target) return;
+
+    target.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
   }
 
   function detailMetric(label, value, options = {}) {
@@ -472,6 +605,235 @@
 
     item.append(title, body);
     return item;
+  }
+
+  function normalizedStatus(value) {
+    return String(value || "").toLowerCase();
+  }
+
+  function hasReportMaterial(session) {
+    return Boolean(
+      session.hasAnalysisResult ||
+      session.analysis_result ||
+      session.analysisPreview ||
+      session.reportSummary?.hasAnalysisResult
+    );
+  }
+
+  function hasRelatedWebhook(session) {
+    return Array.isArray(session.webhookEvents) && session.webhookEvents.length > 0;
+  }
+
+  function getSessionNextAction(session) {
+    const payment = normalizedStatus(session.payment_status);
+    const analysis = normalizedStatus(session.analysis_status);
+    const email = normalizedStatus(session.report_email_status);
+    const attempts = Number(session.report_email_attempts || 0);
+
+    if (payment && payment !== "paid") {
+      return {
+        level: "warning",
+        title: "Fizetés még nincs lezárva",
+        detail: "A session nem tekinthető teljes riportfolyamatnak, amíg a Stripe fizetés nincs fizetett állapotban.",
+        meta: "Elsőként a checkout vagy webhook oldalt érdemes ellenőrizni.",
+        actions: []
+      };
+    }
+
+    if (analysis === "failed") {
+      return {
+        level: "critical",
+        title: "Elemzés retry javasolt",
+        detail: compact(session.error_message || "Az elemzés hibára futott. A worker újrapróbálása vagy a payload ellenőrzése szükséges.", 170),
+        meta: "Tipikus ok: OpenAI/PDF/email előfeltétel, sérült payload vagy worker hiba.",
+        actions: [actionButton("Elemzés újraindítása", "retry", session.id, "warn")]
+      };
+    }
+
+    if (["queued", "processing"].includes(analysis)) {
+      return {
+        level: "active",
+        title: "Worker feldolgozás figyelése",
+        detail: "A fizetés megvan, a session elemzésre vár vagy feldolgozás alatt van.",
+        meta: "Ha hosszabb ideje nem mozdul, a queue panelen érdemes folytatni.",
+        actions: []
+      };
+    }
+
+    if (["done", "completed"].includes(analysis) && !hasReportMaterial(session)) {
+      return {
+        level: "warning",
+        title: "Riport/PDF alapanyag ellenőrzés",
+        detail: "Az elemzés státusza kész, de a dashboard nem lát riportanyag-előnézetet.",
+        meta: "PDF újragenerálás vagy session payload ellenőrzés javasolt.",
+        actions: [actionButton("PDF újragenerálás", "regenerate-pdf", session.id, "secondary")]
+      };
+    }
+
+    if (["failed", "not_sent"].includes(email)) {
+      return {
+        level: attempts >= 3 ? "critical" : "warning",
+        title: "Email kézbesítés beavatkozást kér",
+        detail: compact(session.report_email_error || "A riport elkészült, de az email nincs sikeresen elküldve.", 170),
+        meta: `Email próbálkozások: ${Number.isFinite(attempts) ? attempts : 0}`,
+        actions: [
+          actionButton("Email újraküldés", "resend", session.id, "secondary"),
+          actionButton("Email retry alaphelyzet", "reset-email", session.id, "secondary")
+        ]
+      };
+    }
+
+    if (email === "sent") {
+      return {
+        level: "ok",
+        title: "Riportfolyamat lezárva",
+        detail: "A fizetés, elemzés, PDF alapanyag és email kézbesítés alapján ez a session rendben van.",
+        meta: "Ellenőrzéshez a PDF letölthető.",
+        actions: [actionButton("PDF letöltése", "download-pdf", session.id, "secondary")]
+      };
+    }
+
+    return {
+      level: "info",
+      title: "Részletek áttekintése",
+      detail: "Nincs egyértelmű kritikus teendő, de a session státuszai még nem adnak teljesen lezárt képet.",
+      meta: "A folyamatlépések és az idővonal segítenek a következő pont megtalálásában.",
+      actions: []
+    };
+  }
+
+  function stageTile(label, level, status, detail) {
+    const tile = document.createElement("article");
+    tile.className = `session-stage-tile ${statusClass(level)}`;
+
+    const head = document.createElement("div");
+    head.className = "session-stage-head";
+
+    const title = document.createElement("strong");
+    title.textContent = label;
+
+    head.append(title, statusPill(level));
+
+    const statusText = document.createElement("span");
+    statusText.className = "session-stage-status";
+    statusText.textContent = text(status);
+
+    const copy = document.createElement("p");
+    copy.textContent = text(detail);
+
+    tile.append(head, statusText, copy);
+    return tile;
+  }
+
+  function deriveStageLevel(status, okStatuses = []) {
+    const normalized = normalizedStatus(status);
+    if (okStatuses.includes(normalized)) return "ok";
+    if (["failed", "problem", "blocked", "fail"].includes(normalized)) return "problem";
+    if (["queued", "processing", "sending", "received", "not_sent"].includes(normalized)) return "waiting";
+    if (!normalized) return "unknown";
+    return "info";
+  }
+
+  function renderSessionStageRail(session) {
+    const card = document.createElement("section");
+    card.className = "detail-card session-stage-rail";
+
+    const title = document.createElement("h4");
+    title.textContent = "Folyamatlépések";
+
+    const grid = document.createElement("div");
+    grid.className = "session-stage-grid";
+
+    const paymentLevel = deriveStageLevel(session.payment_status, ["paid"]);
+    const webhookLevel = hasRelatedWebhook(session) ? "ok" : paymentLevel === "ok" ? "waiting" : "unknown";
+    const reportLevel = hasReportMaterial(session)
+      ? "ok"
+      : ["done", "completed"].includes(normalizedStatus(session.analysis_status))
+        ? "warning"
+        : "waiting";
+    const emailLevel = deriveStageLevel(session.report_email_status, ["sent"]);
+
+    grid.append(
+      stageTile("Fizetés", paymentLevel, statusLabel(session.payment_status), `Stripe session: ${text(session.stripe_session_id)}`),
+      stageTile("Webhook", webhookLevel, hasRelatedWebhook(session) ? "van kapcsolódó esemény" : "nincs közvetlen esemény", "A webhook események a lentebbi táblában is látszanak."),
+      stageTile("Elemzés", deriveStageLevel(session.analysis_status, ["done", "completed"]), statusLabel(session.analysis_status), `Worker job: ${Array.isArray(session.analysisJobs) ? session.analysisJobs.length : 0} db`),
+      stageTile("Riport/PDF", reportLevel, hasReportMaterial(session) ? "riportalapanyag elérhető" : "riportalapanyag nem látszik", `Kérdőív: ${text(session.questionnaireVersion)}`),
+      stageTile("Email", emailLevel, statusLabel(session.report_email_status), `Próbálkozás: ${text(session.report_email_attempts)}`)
+    );
+
+    card.append(title, grid);
+    return card;
+  }
+
+  function renderPriorityFacts(session) {
+    const card = document.createElement("section");
+    card.className = "detail-card priority-facts-card";
+
+    const title = document.createElement("h4");
+    title.textContent = "Prioritás adatok";
+
+    const grid = document.createElement("div");
+    grid.className = "priority-facts-grid";
+
+    const summary = session.reportSummary || {};
+    grid.append(
+      summaryField("Session ID", session.id),
+      summaryField("Stripe session", session.stripe_session_id),
+      summaryField("Nyelv", session.lang),
+      summaryField("Gyermek életkora", summary.hasAge ? `${formatNumber(summary.childAge, 1)} év` : "nincs megadva"),
+      summaryField("Fő fókusz", session.detectedRisk || summary.detectedRisk),
+      summaryField("Másodlagos fókusz", session.secondaryRisk || summary.secondaryRisk),
+      summaryField("Email próbálkozás", session.report_email_attempts),
+      summaryField("Utolsó email hiba", compact(session.report_email_error, 90))
+    );
+
+    card.append(title, grid);
+    return card;
+  }
+
+  function renderSessionCockpit(session) {
+    const nextAction = getSessionNextAction(session);
+    const card = document.createElement("section");
+    card.className = `detail-card session-cockpit ${statusClass(nextAction.level)}`;
+
+    const layout = document.createElement("div");
+    layout.className = "session-cockpit-layout";
+
+    const focus = document.createElement("div");
+    focus.className = "session-action-box";
+
+    const eyebrow = document.createElement("span");
+    eyebrow.className = "session-cockpit-eyebrow";
+    eyebrow.textContent = "Részlet fókusz";
+
+    const title = document.createElement("h4");
+    title.textContent = nextAction.title;
+
+    const detail = document.createElement("p");
+    detail.textContent = nextAction.detail;
+
+    const meta = document.createElement("div");
+    meta.className = "session-action-meta";
+    meta.textContent = nextAction.meta;
+
+    const actionWrap = document.createElement("div");
+    actionWrap.className = "actions session-cockpit-actions";
+    nextAction.actions.forEach((button) => actionWrap.appendChild(button));
+
+    focus.append(eyebrow, title, detail, meta, actionWrap);
+
+    const strip = document.createElement("div");
+    strip.className = "session-status-strip";
+    strip.append(
+      summaryField("Fizetés", session.payment_status, { pill: true }),
+      summaryField("Elemzés", session.analysis_status, { pill: true }),
+      summaryField("Email", session.report_email_status, { pill: true }),
+      summaryField("Frissítve", formatDate(session.updated_at))
+    );
+
+    layout.append(focus, strip);
+    card.append(layout);
+    return card;
   }
 
   function renderReportSnapshot(session) {
@@ -816,6 +1178,9 @@
 
     root.append(
       header,
+      renderSessionCockpit(session),
+      renderSessionStageRail(session),
+      renderPriorityFacts(session),
       grid,
       renderSessionDiagnostics(session),
       renderReportSnapshot(session),
@@ -838,8 +1203,11 @@
       return;
     }
 
-    items.forEach((row) => {
+    items.forEach((row, index) => {
       const tr = document.createElement("tr");
+      if (mode === "recent" && index === 0) {
+        tr.className = "latest-row";
+      }
 
       if (mode === "failed") {
         tr.append(
@@ -896,6 +1264,111 @@
     });
   }
 
+  function renderDeliverabilityList(target, items, emptyMessage, renderItem) {
+    if (!target) return;
+
+    target.replaceChildren();
+
+    if (!items.length) {
+      const empty = document.createElement("div");
+      empty.className = "engine-empty";
+      empty.textContent = emptyMessage;
+      target.appendChild(empty);
+      return;
+    }
+
+    items.forEach((item) => {
+      const row = document.createElement("div");
+      row.className = "engine-list-row";
+      renderItem(row, item);
+      target.appendChild(row);
+    });
+  }
+
+  function renderEmailDeliverability(data = {}) {
+    const metrics = data.metrics || {};
+    const config = data.config || {};
+    const windowData = data.window || {};
+    const level = data.level || "unknown";
+
+    if (els.emailDeliverabilityLevel) {
+      els.emailDeliverabilityLevel.replaceChildren(statusPill(level));
+    }
+
+    if (els.emailDeliverabilityWindow) {
+      els.emailDeliverabilityWindow.textContent =
+        `${Number(windowData.hours || 0)} oras ablak, retry limit: ${Number(windowData.maxRetryAttempts || 0)}`;
+    }
+
+    if (els.emailDeliverabilitySuccessRate) {
+      els.emailDeliverabilitySuccessRate.textContent = formatPercent(metrics.successRate);
+    }
+
+    if (els.emailDeliverabilityAttempted) {
+      els.emailDeliverabilityAttempted.textContent =
+        `${Number(metrics.attemptedCount || 0)} probalkozas, ${Number(metrics.sentCount || 0)} sikeres`;
+    }
+
+    if (els.emailDeliverabilityFailureRate) {
+      els.emailDeliverabilityFailureRate.textContent = formatPercent(metrics.failureRate);
+    }
+
+    if (els.emailDeliverabilityFailures) {
+      els.emailDeliverabilityFailures.textContent =
+        `${Number(metrics.failedCount || 0)} hibas, ${Number(metrics.retryableCount || 0)} ujraprobalhato`;
+    }
+
+    if (els.emailDeliverabilityStale) {
+      els.emailDeliverabilityStale.textContent = Number(metrics.staleSendingCount || 0);
+    }
+
+    if (els.emailDeliverabilityProviderCoverage) {
+      els.emailDeliverabilityProviderCoverage.textContent = formatPercent(metrics.providerIdCoverage);
+    }
+
+    if (els.emailDeliverabilityProviderMeta) {
+      els.emailDeliverabilityProviderMeta.textContent =
+        `${Number(metrics.sentWithProviderIdCount || 0)} / ${Number(metrics.sentCount || 0)} sent email provider id-val`;
+    }
+
+    if (els.emailDeliverabilityConfig) {
+      const configOk = config.resendConfigured && config.fromConfigured && config.fromLooksValid;
+      els.emailDeliverabilityConfig.replaceChildren(statusPill(configOk ? "ok" : "critical"));
+    }
+
+    if (els.emailDeliverabilityConfigMeta) {
+      els.emailDeliverabilityConfigMeta.textContent =
+        `Resend: ${yesNo(config.resendConfigured)}, from domain: ${text(config.fromDomain)}`;
+    }
+
+    renderDeliverabilityList(
+      els.emailDeliverabilityErrorRows,
+      data.topErrors || [],
+      "Nincs friss email hibaminta.",
+      (row, item) => {
+        const main = document.createElement("strong");
+        main.textContent = compact(item.error, 120);
+
+        const meta = document.createElement("span");
+        meta.textContent =
+          `${Number(item.count || 0)}x, utolso: ${relativeMinutes(item.lastSeenMinutesAgo)}`;
+
+        row.append(main, meta);
+      }
+    );
+
+    renderDeliverabilityList(
+      els.emailDeliverabilityRecommendationRows,
+      data.recommendations || [],
+      "Nincs deliverability javaslat.",
+      (row, item) => {
+        const main = document.createElement("strong");
+        main.textContent = compact(item, 170);
+        row.appendChild(main);
+      }
+    );
+  }
+
   function renderOperationLogRows(items) {
     els.operationsLogRows.replaceChildren();
 
@@ -914,6 +1387,7 @@
         link.className = "link-button";
         link.dataset.action = "detail";
         link.dataset.id = item.sessionId;
+        link.dataset.sessionId = item.sessionId;
         link.textContent = item.sessionId;
         session.appendChild(link);
       } else {
@@ -992,6 +1466,378 @@
   function countValue(value) {
     const number = Number(value || 0);
     return Number.isFinite(number) ? number : 0;
+  }
+
+  function formatPercent(value) {
+    if (value === null || value === undefined || value === "") return "-";
+    const number = Number(value);
+    return Number.isFinite(number) ? `${Math.round(number * 100)}%` : "-";
+  }
+
+  function setPulseCard(card, level, title, detail) {
+    if (!card) return;
+
+    card.className = `pulse-card ${statusClass(level)}`;
+
+    const titleEl = card.querySelector("strong");
+    const detailEl = card.querySelector("p");
+
+    if (titleEl) titleEl.textContent = title;
+    if (detailEl) detailEl.textContent = detail;
+  }
+
+  function renderControlPulse(context = null) {
+    if (!els.controlPulseUpdatedAt) return;
+
+    if (!context) {
+      els.controlPulseUpdatedAt.textContent = "Admin tokenre var";
+      setPulseCard(els.pulseCheckout, "waiting", "-", "Add meg az admin tokent.");
+      setPulseCard(els.pulseWorker, "waiting", "-", "Add meg az admin tokent.");
+      setPulseCard(els.pulseEmail, "waiting", "-", "Add meg az admin tokent.");
+      setPulseCard(els.pulseEngine, "waiting", "-", "Add meg az admin tokent.");
+      setPulseCard(els.pulseAlerts, "waiting", "-", "Add meg az admin tokent.");
+      return;
+    }
+
+    const {
+      health,
+      queue,
+      alerts,
+      engineAnalytics,
+      engineDecisionAudit,
+      emailDeliverability
+    } = context;
+
+    const queueCounts = queue?.counts || {};
+    const healthMetrics = health?.metrics || {};
+    const sessions = health?.sessions || {};
+    const email = health?.email || {};
+    const latestAlert = alerts?.items?.[0] || null;
+    const auditSummary = engineDecisionAudit?.summary || {};
+    const engineReviewCount = countValue(engineAnalytics?.reviewQueue?.length);
+    const deliverabilityMetrics = emailDeliverability?.metrics || {};
+
+    const paidWithoutJobCount = countValue(sessions.paidWithoutActiveJob?.length);
+    const queuedCount = countValue(queueCounts.queued);
+    const processingCount = countValue(queueCounts.processing);
+    const failedQueueCount = countValue(queueCounts.failed);
+    const staleProcessingCount = countValue(healthMetrics.staleProcessingJobs);
+
+    const checkoutLevel = paidWithoutJobCount > 0
+      ? "critical"
+      : processingCount > 0 || queuedCount > 0
+        ? "active"
+        : "healthy";
+    setPulseCard(
+      els.pulseCheckout,
+      checkoutLevel,
+      paidWithoutJobCount > 0 ? `${paidWithoutJobCount} gond` : `${queuedCount + processingCount} aktiv`,
+      paidWithoutJobCount > 0
+        ? "Fizetett session aktiv job nelkul."
+        : `${queuedCount} varakozik, ${processingCount} feldolgozas alatt.`
+    );
+
+    const workerLevel = staleProcessingCount > 0
+      ? "critical"
+      : failedQueueCount > 0
+        ? "warning"
+        : queuedCount > 0 || processingCount > 0
+          ? "active"
+          : "healthy";
+    setPulseCard(
+      els.pulseWorker,
+      workerLevel,
+      staleProcessingCount > 0 ? `${staleProcessingCount} beragadt` : `${failedQueueCount} hiba`,
+      staleProcessingCount > 0
+        ? "Processing lock 15 percnel regebbi."
+        : `${failedQueueCount} hibas job, ${queuedCount} varakozo job.`
+    );
+
+    const retryLimitCount = countValue(email.retryLimitCount);
+    const failedEmailCount = countValue(email.failedCount);
+    const retryableEmailCount = countValue(email.retryableCount);
+    const staleEmailCount = countValue(deliverabilityMetrics.staleSendingCount);
+    const emailLevel = retryLimitCount > 0 || staleEmailCount > 0
+      ? "critical"
+      : failedEmailCount > 0 || retryableEmailCount > 0
+        ? "warning"
+        : "healthy";
+    setPulseCard(
+      els.pulseEmail,
+      emailLevel,
+      retryLimitCount > 0 ? `${retryLimitCount} limit` : `${failedEmailCount} hiba`,
+      `${retryableEmailCount} ujraprobalhato, ${staleEmailCount} beragadt sending.`
+    );
+
+    const criticalEngineCount = countValue(auditSummary.criticalSessions);
+    const reviewEngineCount =
+      countValue(auditSummary.reviewSessions) + engineReviewCount;
+    const engineLevel = criticalEngineCount > 0
+      ? "critical"
+      : reviewEngineCount > 0
+        ? "warning"
+        : "healthy";
+    setPulseCard(
+      els.pulseEngine,
+      engineLevel,
+      criticalEngineCount > 0 ? `${criticalEngineCount} kritikus` : `${reviewEngineCount} atnezes`,
+      `${countValue(auditSummary.auditedSessions)} auditolt session, ${engineReviewCount} review queue.`
+    );
+
+    const alertLevel = latestAlert?.level || "healthy";
+    setPulseCard(
+      els.pulseAlerts,
+      alertLevel,
+      latestAlert ? statusLabel(latestAlert.level) : "rendben",
+      latestAlert ? compact(latestAlert.summary || latestAlert.alert_key, 86) : "Nincs friss proaktiv riasztas."
+    );
+
+    els.controlPulseUpdatedAt.textContent = health?.generatedAt
+      ? `Pulzus: ${formatDate(health.generatedAt)}`
+      : "Pulzus frissitve";
+  }
+
+  function renderEngineBars(target, items = []) {
+    if (!target) return;
+
+    target.replaceChildren();
+
+    if (!items.length) {
+      const empty = document.createElement("div");
+      empty.className = "engine-empty";
+      empty.textContent = "Nincs megjelenitheto engine adat.";
+      target.appendChild(empty);
+      return;
+    }
+
+    const max = Math.max(...items.map((item) => Number(item.count || 0)), 1);
+
+    items.slice(0, 8).forEach((item) => {
+      const row = document.createElement("div");
+      row.className = "engine-bar-row";
+
+      const label = document.createElement("span");
+      label.textContent = item.key;
+
+      const count = document.createElement("strong");
+      count.textContent = String(Number(item.count || 0));
+
+      const bar = document.createElement("div");
+      bar.className = "engine-bar";
+      const fill = document.createElement("i");
+      fill.style.width = `${Math.max(6, (Number(item.count || 0) / max) * 100)}%`;
+      bar.appendChild(fill);
+
+      row.append(label, count, bar);
+      target.appendChild(row);
+    });
+  }
+
+  function renderEngineList(target, items = [], formatter) {
+    if (!target) return;
+
+    target.replaceChildren();
+
+    if (!items.length) {
+      const empty = document.createElement("div");
+      empty.className = "engine-empty";
+      empty.textContent = "Nincs megjelenitheto adat.";
+      target.appendChild(empty);
+      return;
+    }
+
+    items.slice(0, 8).forEach((item) => {
+      const row = document.createElement("div");
+      row.className = "engine-list-row";
+
+      const title = document.createElement("strong");
+      const meta = document.createElement("span");
+      const formatted = formatter(item);
+
+      title.textContent = formatted.title;
+      meta.textContent = formatted.meta;
+      row.append(title, meta);
+      target.appendChild(row);
+    });
+  }
+
+  function renderEngineReviewRows(items = []) {
+    if (!els.engineReviewRows) return;
+
+    els.engineReviewRows.replaceChildren();
+
+    if (!items.length) {
+      emptyRow(els.engineReviewRows, 5, "Nincs ellenorzest igenylo engine dontes.");
+      return;
+    }
+
+    items.forEach((row) => {
+      const tr = document.createElement("tr");
+
+      const engineDecision = document.createElement("div");
+      const primary = document.createElement("div");
+      primary.textContent = `Fo: ${text(row.primaryDomain)}`;
+      const secondary = document.createElement("div");
+      secondary.className = "subtle";
+      secondary.textContent = `Masodlagos: ${text(row.secondaryDomain)}`;
+      const pattern = document.createElement("div");
+      pattern.className = "subtle";
+      pattern.textContent = `${enginePatternLabel(row.patternType)} / extra: ${yesNo(row.shouldAskExtra)}`;
+      engineDecision.append(primary, secondary, pattern);
+
+      const confidence = document.createElement("div");
+      const confidenceValue = document.createElement("div");
+      confidenceValue.textContent = `${decisionQualityLabel(row.confidenceLabel)} (${formatNumber(row.confidence)})`;
+      const scoreGap = document.createElement("div");
+      scoreGap.className = "subtle";
+      scoreGap.textContent = `gap: ${formatNumber(row.scoreGap)} overlap: ${formatNumber(row.overlapScore)}`;
+      confidence.append(confidenceValue, scoreGap);
+
+      tr.append(
+        cell(statusPill(row.decisionQuality || "unknown")),
+        cell(personBlock(row)),
+        cell(engineDecision),
+        cell(confidence),
+        cell(actions(row, false))
+      );
+
+      els.engineReviewRows.appendChild(tr);
+    });
+  }
+
+  function renderEngineAnalytics(data) {
+    const metrics = data?.metrics || {};
+    const distributions = data?.distributions || {};
+
+    if (els.engineAnalyticsGeneratedAt) {
+      els.engineAnalyticsGeneratedAt.textContent = data?.generatedAt
+        ? `Engine allapotkep: ${formatDate(data.generatedAt)}`
+        : "Meg nincs engine allapotkep";
+    }
+
+    if (els.engineAnalyticsTotal) {
+      els.engineAnalyticsTotal.textContent = Number(metrics.sessionsWithEngine || 0);
+    }
+
+    if (els.engineAnalyticsWindow) {
+      els.engineAnalyticsWindow.textContent =
+        `${Number(data?.window?.loadedSessions || 0)} betoltott sessionbol`;
+    }
+
+    if (els.engineAnalyticsConfidence) {
+      els.engineAnalyticsConfidence.textContent = formatNumber(metrics.averageConfidence);
+    }
+
+    if (els.engineAnalyticsScoreGap) {
+      els.engineAnalyticsScoreGap.textContent = formatNumber(metrics.averageScoreGap);
+    }
+
+    if (els.engineAnalyticsExtraRate) {
+      els.engineAnalyticsExtraRate.textContent = formatPercent(metrics.extraQuestionRate);
+    }
+
+    renderEngineBars(els.engineDomainRows, distributions.primaryDomains || []);
+    renderEngineBars(els.engineQualityRows, distributions.decisionQuality || []);
+    renderEngineList(
+      els.engineOverlapRows,
+      data?.overlapPairs || [],
+      (item) => ({
+        title: `${item.primaryDomain} -> ${item.secondaryDomain}`,
+        meta: `${Number(item.count || 0)} session, overlap ${formatNumber(item.averageOverlap)}, confidence ${formatNumber(item.averageConfidence)}`
+      })
+    );
+    renderEngineList(
+      els.engineFocusRows,
+      data?.focusAreas || [],
+      (item) => ({
+        title: item.key,
+        meta: `${Number(item.count || 0)} elofordulas`
+      })
+    );
+    renderEngineReviewRows(data?.reviewQueue || []);
+  }
+
+  function renderEngineDecisionAudit(data) {
+    const summary = data?.summary || {};
+
+    if (els.engineAuditAudited) {
+      els.engineAuditAudited.textContent = Number(summary.auditableSessions || 0);
+    }
+
+    if (els.engineAuditReview) {
+      els.engineAuditReview.textContent = Number(summary.reviewSessions || 0);
+    }
+
+    if (els.engineAuditReviewMeta) {
+      els.engineAuditReviewMeta.textContent =
+        `${Number(summary.criticalSessions || 0)} kritikus, ${Number(summary.warningSessions || 0)} figyelendő`;
+    }
+
+    if (els.engineAuditPrimaryMismatch) {
+      els.engineAuditPrimaryMismatch.textContent = Number(summary.primaryMismatchCount || 0);
+    }
+
+    if (els.engineAuditExtraMismatch) {
+      els.engineAuditExtraMismatch.textContent = Number(summary.extraMismatchCount || 0);
+    }
+
+    if (!els.engineDecisionAuditRows) return;
+    els.engineDecisionAuditRows.replaceChildren();
+
+    const rows = data?.reviewQueue || [];
+
+    if (!rows.length) {
+      emptyRow(els.engineDecisionAuditRows, 6, "Nincs atnezesre varo engine dontesi audit eltérés.");
+      return;
+    }
+
+    rows.forEach((row) => {
+      const tr = document.createElement("tr");
+
+      const session = document.createElement("div");
+      const id = document.createElement("div");
+      id.textContent = row.shortId || row.id || "-";
+      const meta = document.createElement("div");
+      meta.className = "subtle";
+      meta.textContent = `${text(row.lang)} · ${formatDate(row.createdAt)}`;
+      session.append(id, meta);
+
+      const stored = document.createElement("div");
+      const storedPrimary = document.createElement("div");
+      storedPrimary.textContent = `Fő: ${text(row.stored?.primaryDomain)}`;
+      const storedExtra = document.createElement("div");
+      storedExtra.className = "subtle";
+      storedExtra.textContent = `extra: ${yesNo(row.stored?.askedExtra)} · ${Number(row.stored?.specificQuestionCount || 0)} specifikus`;
+      stored.append(storedPrimary, storedExtra);
+
+      const engine = document.createElement("div");
+      const enginePrimary = document.createElement("div");
+      enginePrimary.textContent = `Fő: ${text(row.engine?.primaryDomain)}`;
+      const engineMeta = document.createElement("div");
+      engineMeta.className = "subtle";
+      engineMeta.textContent =
+        `extra: ${yesNo(row.engine?.shouldAskExtra)} · conf: ${formatNumber(row.engine?.confidence)} · gap: ${formatNumber(row.engine?.scoreGap)}`;
+      engine.append(enginePrimary, engineMeta);
+
+      const issue = document.createElement("div");
+      const firstIssue = row.issues?.[0];
+      issue.textContent = firstIssue?.label || "Audit eltérés";
+      const issueDetail = document.createElement("div");
+      issueDetail.className = "subtle";
+      issueDetail.textContent = firstIssue?.detail || (row.issueCodes || []).join(", ");
+      issue.appendChild(issueDetail);
+
+      tr.append(
+        cell(statusPill(row.issueLevel || "unknown")),
+        cell(session),
+        cell(stored),
+        cell(engine),
+        cell(issue),
+        cell(actions(row, false))
+      );
+
+      els.engineDecisionAuditRows.appendChild(tr);
+    });
   }
 
   function stageLevel({ critical = 0, warning = 0, active = 0 }) {
@@ -1289,6 +2135,293 @@
     });
   }
 
+  function operatorScrollButton(label, targetId, className = "secondary") {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = className;
+    button.dataset.scrollTarget = targetId;
+    button.textContent = label;
+    return button;
+  }
+
+  function renderOperatorTask(task) {
+    const row = document.createElement("article");
+    row.className = `operator-task ${statusClass(task.level)}`;
+
+    const head = document.createElement("div");
+    head.className = "operator-task-head";
+
+    const copy = document.createElement("div");
+    const title = document.createElement("strong");
+    title.textContent = task.title;
+    const detail = document.createElement("p");
+    detail.textContent = task.detail;
+    copy.append(title, detail);
+
+    head.append(copy, statusPill(task.level));
+    row.appendChild(head);
+
+    if (task.targetId) {
+      const actionsWrap = document.createElement("div");
+      actionsWrap.className = "operator-task-actions";
+      actionsWrap.appendChild(operatorScrollButton(task.actionLabel || "Megnézem", task.targetId));
+      row.appendChild(actionsWrap);
+    }
+
+    return row;
+  }
+
+  function renderLatestSessionCard(row) {
+    if (!els.latestSessionCard) return;
+
+    els.latestSessionCard.className = "latest-session-body";
+    els.latestSessionCard.replaceChildren();
+
+    if (!row) {
+      els.latestSessionCard.classList.add("empty-detail");
+      els.latestSessionCard.textContent = "Nincs legutóbbi session a jelenlegi szűrésben.";
+      return;
+    }
+
+    const sessionId = getRowSessionId(row);
+
+    const title = document.createElement("div");
+    title.className = "latest-session-title";
+    title.textContent = text(row.name);
+
+    const email = document.createElement("div");
+    email.className = "subtle";
+    email.textContent = text(row.email);
+
+    const statuses = document.createElement("div");
+    statuses.className = "latest-session-statuses";
+    statuses.append(
+      statusPill(row.payment_status || "unknown"),
+      statusPill(row.analysis_status || "unknown"),
+      statusPill(row.report_email_status || "unknown")
+    );
+
+    const focus = document.createElement("div");
+    focus.className = "latest-session-meta";
+    focus.textContent =
+      `Fókusz: ${text(row.detectedRisk)} · Másodlagos: ${text(row.secondaryRisk)} · Nyelv: ${text(row.lang)}`;
+
+    const updated = document.createElement("div");
+    updated.className = "latest-session-meta";
+    updated.textContent = `Frissítve: ${formatDate(row.updated_at || row.created_at)}`;
+
+    const actionWrap = document.createElement("div");
+    actionWrap.className = "actions";
+    actionWrap.appendChild(actionButton("Részletek", "detail", sessionId, "secondary"));
+    actionWrap.appendChild(actionButton("PDF", "download-pdf", sessionId, "secondary"));
+
+    els.latestSessionCard.append(title, email, statuses, focus, updated, actionWrap);
+  }
+
+  function addOperatorTask(tasks, level, title, detail, targetId, actionLabel) {
+    tasks.push({
+      level,
+      title,
+      detail,
+      targetId,
+      actionLabel
+    });
+  }
+
+  function renderOperatorFocus(context = null) {
+    if (!els.operatorSummary || !els.operatorTaskRows || !els.latestSessionCard) return;
+
+    els.operatorTaskRows.replaceChildren();
+
+    if (!context) {
+      els.operatorSummary.textContent = "Admin tokenre vár";
+      const empty = document.createElement("div");
+      empty.className = "operator-empty";
+      empty.textContent = "Add meg az admin tokent, majd frissíts az operátori fókusz betöltéséhez.";
+      els.operatorTaskRows.appendChild(empty);
+      renderLatestSessionCard(null);
+      return;
+    }
+
+    const {
+      health,
+      queue,
+      alerts,
+      launchReadiness,
+      engineAnalytics,
+      engineDecisionAudit,
+      emailDeliverability,
+      recent
+    } = context;
+
+    const tasks = [];
+    const queueCounts = queue?.counts || {};
+    const email = health?.email || {};
+    const metrics = health?.metrics || {};
+    const sessions = health?.sessions || {};
+    const latestAlert = alerts?.items?.[0];
+    const deliverabilityMetrics = emailDeliverability?.metrics || {};
+
+    if (latestAlert) {
+      addOperatorTask(
+        tasks,
+        latestAlert.level || "warning",
+        "Legutóbbi proaktív riasztás",
+        compact(latestAlert.summary || latestAlert.alert_key, 180),
+        "alertsPanel",
+        "Riasztások"
+      );
+    }
+
+    if (emailDeliverability?.level === "critical") {
+      addOperatorTask(
+        tasks,
+        "critical",
+        "Email deliverability kritikus",
+        `${countValue(deliverabilityMetrics.failedCount)} hibas email, ${countValue(deliverabilityMetrics.staleSendingCount)} beragadt sending, ${countValue(deliverabilityMetrics.retryLimitCount)} retry limit.`,
+        "emailDeliveryPanel",
+        "Email monitor"
+      );
+    } else if (emailDeliverability?.level === "warning") {
+      addOperatorTask(
+        tasks,
+        "warning",
+        "Email deliverability figyelendo",
+        `${formatPercent(deliverabilityMetrics.failureRate)} hibaarany, ${countValue(deliverabilityMetrics.retryableCount)} ujraprobalhato email.`,
+        "emailDeliveryPanel",
+        "Email monitor"
+      );
+    }
+
+    if (countValue(metrics.staleProcessingJobs) > 0) {
+      addOperatorTask(
+        tasks,
+        "critical",
+        "Beragadt feldolgozás",
+        `${countValue(metrics.staleProcessingJobs)} processing lock 15 percnél régebbi. Ellenőrizd a worker állapotát és a queue sort.`,
+        "queuePanel",
+        "Queue megnyitása"
+      );
+    }
+
+    if (countValue(queueCounts.failed) > 0 || countValue(metrics.failedJobs) > 0) {
+      addOperatorTask(
+        tasks,
+        "warning",
+        "Hibás vagy retry-ra váró elemzés",
+        `${countValue(queueCounts.failed || metrics.failedJobs)} hibás queue/job jelzés. Nézd meg a hibás sessionöket és indíts célzott retry-t.`,
+        "failedAnalysesPanel",
+        "Hibák"
+      );
+    }
+
+    if (countValue(email.retryLimitCount) > 0) {
+      addOperatorTask(
+        tasks,
+        "critical",
+        "Email próbálkozási limit elérve",
+        `${countValue(email.retryLimitCount)} riport email elérte a próbálkozási limitet. Kézi ellenőrzés javasolt.`,
+        "emailDeliveryPanel",
+        "Email panel"
+      );
+    }
+
+    if (countValue(email.failedCount) > 0 || countValue(email.retryableCount) > 0) {
+      addOperatorTask(
+        tasks,
+        "warning",
+        "Email kézbesítési teendő",
+        `${countValue(email.failedCount)} hibás és ${countValue(email.retryableCount)} újrapróbálható riport email.`,
+        "emailDeliveryPanel",
+        "Email panel"
+      );
+    }
+
+    if (countValue(sessions.paidWithoutActiveJob?.length) > 0) {
+      addOperatorTask(
+        tasks,
+        "critical",
+        "Fizetett session aktív job nélkül",
+        `${countValue(sessions.paidWithoutActiveJob?.length)} fizetett session nincs aktív feldolgozási sorhoz kötve.`,
+        "healthPanel",
+        "Health panel"
+      );
+    }
+
+    if (countValue(engineAnalytics?.reviewQueue?.length) > 0) {
+      addOperatorTask(
+        tasks,
+        "info",
+        "Engine döntés ellenőrzendő",
+        `${countValue(engineAnalytics.reviewQueue.length)} alacsony confidence vagy átfedő mintázat vár kézi átnézésre.`,
+        "engineAnalyticsPanel",
+        "Engine panel"
+      );
+    }
+
+    const engineAuditSummary = engineDecisionAudit?.summary || {};
+
+    if (countValue(engineAuditSummary.criticalSessions) > 0) {
+      addOperatorTask(
+        tasks,
+        "critical",
+        "Engine live audit kritikus eltérés",
+        `${countValue(engineAuditSummary.criticalSessions)} sessionnel nem egyezik a mentett fő döntés vagy hiányzik a döntési input.`,
+        "engineAnalyticsPanel",
+        "Engine audit"
+      );
+    } else if (countValue(engineAuditSummary.reviewSessions) > 0) {
+      addOperatorTask(
+        tasks,
+        "warning",
+        "Engine live audit átnézendő",
+        `${countValue(engineAuditSummary.reviewSessions)} éles sessionnél van döntési, extra kérdés vagy confidence jelzés.`,
+        "engineAnalyticsPanel",
+        "Engine audit"
+      );
+    }
+
+    if (countValue(launchReadiness?.summary?.failed) > 0) {
+      addOperatorTask(
+        tasks,
+        "critical",
+        "Launch checklist blokkoló hiba",
+        `${countValue(launchReadiness.summary.failed)} blokkoló élesítési ellenőrzés hibát jelez.`,
+        "launchPanel",
+        "Launch panel"
+      );
+    } else if (countValue(launchReadiness?.summary?.warnings) > 0) {
+      addOperatorTask(
+        tasks,
+        "warning",
+        "Launch checklist figyelmeztetés",
+        `${countValue(launchReadiness.summary.warnings)} élesítési figyelmeztetés maradt.`,
+        "launchPanel",
+        "Launch panel"
+      );
+    }
+
+    if (!tasks.length) {
+      const empty = document.createElement("div");
+      empty.className = "operator-empty";
+      empty.textContent = "Nincs azonnali operátori teendő. A fő rendszerfolyamatok jelenleg rendben állnak.";
+      els.operatorTaskRows.appendChild(empty);
+    } else {
+      tasks.slice(0, 6).forEach((task) => {
+        els.operatorTaskRows.appendChild(renderOperatorTask(task));
+      });
+    }
+
+    const criticalCount = tasks.filter((task) => statusClass(task.level) === "critical").length;
+    const warningCount = tasks.filter((task) => statusClass(task.level) === "warning").length;
+    els.operatorSummary.textContent =
+      tasks.length
+        ? `${criticalCount} kritikus, ${warningCount} figyelendő, ${tasks.length} összes teendő`
+        : "Nincs azonnali teendő";
+
+    renderLatestSessionCard(recent?.items?.[0] || null);
+  }
+
   async function refreshDashboard() {
     setBusy(true);
     setStatus("Frissítés...");
@@ -1302,7 +2435,10 @@
         failed,
         operations,
         alerts,
-        launchReadiness
+        launchReadiness,
+        engineAnalytics,
+        engineDecisionAudit,
+        emailDeliverability
       ] = await Promise.all([
         api("/admin/status"),
         api("/admin/production-health"),
@@ -1311,7 +2447,10 @@
         api("/admin/failed-analyses?limit=30"),
         api(`/admin/operations-log?filter=${encodeURIComponent(activeLogFilter)}&limit=80`),
         api("/admin/alerts?limit=10"),
-        api("/admin/launch-readiness")
+        api("/admin/launch-readiness"),
+        api("/admin/engine-analytics?limit=300"),
+        api("/admin/engine-decision-audit?limit=300"),
+        api("/admin/email-deliverability?hours=168&limit=30")
       ]);
 
       els.apiStatus.textContent = status.ok ? "Elérhető" : "Hiba";
@@ -1324,6 +2463,30 @@
       renderAlertRows(alerts.items || []);
       renderControlCenter(status, health, queue, alerts);
       renderLaunchReadiness(launchReadiness);
+      renderEngineAnalytics(engineAnalytics);
+      renderEngineDecisionAudit(engineDecisionAudit);
+      renderEmailDeliverability(emailDeliverability);
+      renderControlPulse({
+        health,
+        queue,
+        alerts,
+        engineAnalytics,
+        engineDecisionAudit,
+        emailDeliverability
+      });
+      renderOperatorFocus({
+        status,
+        health,
+        queue,
+        recent,
+        failed,
+        operations,
+        alerts,
+        launchReadiness,
+        engineAnalytics,
+        engineDecisionAudit,
+        emailDeliverability
+      });
       setStatus("Frissítve.");
     } catch (error) {
       els.apiStatus.textContent = "Hiba";
@@ -1382,14 +2545,29 @@
     }
   }
 
-  async function loadSessionDetail(sessionId) {
+  async function loadSessionDetail(sessionId, options = {}) {
+    if (!sessionId) {
+      setStatus("Hianyzo session ID.", true);
+      return;
+    }
+
+    if (options.scroll) {
+      showEmptyDetail("Session betoltese...");
+      scrollSessionDetailIntoView();
+    }
+
     setBusy(true);
     setStatus("Session betöltése...");
 
     try {
       const data = await api(`/admin/session/${encodeURIComponent(sessionId)}`);
-      els.sessionDetail.className = "session-detail";
-      els.sessionDetail.replaceChildren(renderSessionDetail(data.session));
+      if (els.sessionDetail) {
+        els.sessionDetail.className = "session-detail";
+        els.sessionDetail.replaceChildren(renderSessionDetail(data.session));
+      }
+      if (options.scroll) {
+        window.requestAnimationFrame(scrollSessionDetailIntoView);
+      }
       setStatus("Session betöltve.");
     } catch (error) {
       setStatus(error.message, true);
@@ -1406,6 +2584,7 @@
       const data = await api(path, { method: "POST" });
       setStatus(successMessage || "Művelet kész.");
       showJsonDetail(data);
+      scrollSessionDetailIntoView();
       await refreshDashboard();
     } catch (error) {
       setStatus(error.message, true);
@@ -1452,68 +2631,85 @@
     }
   }
 
-  function handleActionClick(event) {
-    const button = event.target.closest("button[data-action]");
-    if (!button) return;
-
-    const sessionId = button.dataset.id;
-    const action = button.dataset.action;
+  function handleAction(action, sessionId) {
+    const safeSessionId = String(sessionId || "").trim();
 
     if (action === "detail") {
-      loadSessionDetail(sessionId);
+      loadSessionDetail(safeSessionId, { scroll: true });
+      return;
+    }
+
+    if (!safeSessionId) {
+      setStatus("Hianyzo session ID.", true);
+      return;
     }
 
     if (action === "retry") {
       postAction(
-        `/admin/retry-analysis/${encodeURIComponent(sessionId)}`,
+        `/admin/retry-analysis/${encodeURIComponent(safeSessionId)}`,
         "Elemzés újra queue-ba téve."
       );
+      return;
     }
 
     if (action === "download-pdf") {
-      downloadReportPdf(sessionId);
+      downloadReportPdf(safeSessionId);
+      return;
     }
 
     if (action === "regenerate-pdf") {
       postAction(
-        `/admin/session/${encodeURIComponent(sessionId)}/regenerate-pdf`,
+        `/admin/session/${encodeURIComponent(safeSessionId)}/regenerate-pdf`,
         "PDF újragenerálás ellenőrizve."
       );
+      return;
     }
 
     if (action === "resend") {
       postAction(
-        `/admin/resend-email/${encodeURIComponent(sessionId)}`,
+        `/admin/resend-email/${encodeURIComponent(safeSessionId)}`,
         "Riport email újraküldve."
       );
+      return;
     }
 
     if (action === "reset-email") {
       postAction(
-        `/admin/reset-email-retry/${encodeURIComponent(sessionId)}`,
+        `/admin/reset-email-retry/${encodeURIComponent(safeSessionId)}`,
         "Email retry állapot alaphelyzetbe téve."
       );
     }
   }
 
+  function handleActionClick(event) {
+    const button = event.target.closest("button[data-action]");
+    if (!button) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    handleAction(button.dataset.action, button.dataset.sessionId || button.dataset.id);
+  }
+
   function init() {
     const savedToken = localStorage.getItem(TOKEN_KEY);
-    if (savedToken) {
+    if (savedToken && els.token) {
       els.token.value = savedToken;
     }
 
-    els.saveTokenBtn.addEventListener("click", () => {
+    bindClick(els.saveTokenBtn, () => {
       localStorage.setItem(TOKEN_KEY, getToken());
       setStatus("Token mentve.");
       refreshDashboard();
     });
 
-    els.clearTokenBtn.addEventListener("click", () => {
+    bindClick(els.clearTokenBtn, () => {
       localStorage.removeItem(TOKEN_KEY);
-      els.token.value = "";
+      if (els.token) els.token.value = "";
       showEmptyDetail();
-      els.sessionSearchInput.value = "";
-      els.sessionSearchHint.textContent = "Még nem indult keresés.";
+      if (els.sessionSearchInput) els.sessionSearchInput.value = "";
+      if (els.sessionSearchHint) {
+        els.sessionSearchHint.textContent = "Még nem indult keresés.";
+      }
       emptyRow(els.sessionSearchRows, 5, "A frissítéshez add meg az admin tokent.");
       emptyRow(els.queueRows, 5, "A frissítéshez add meg az admin tokent.");
       emptyRow(els.recentRows, 5, "A frissítéshez add meg az admin tokent.");
@@ -1524,30 +2720,42 @@
       renderCounts({});
       renderHealth(null);
       renderControlCenter(null, null, { counts: {} }, { items: [] });
+      renderControlPulse(null);
       renderLaunchReadiness(null);
-      els.apiStatus.textContent = "-";
+      renderEngineAnalytics(null);
+      renderEngineDecisionAudit(null);
+      renderEmailDeliverability(null);
+      renderOperatorFocus(null);
+      if (els.apiStatus) els.apiStatus.textContent = "-";
       setStatus("Token törölve.");
     });
 
-    els.refreshBtn.addEventListener("click", refreshDashboard);
-    els.refreshLaunchReadinessBtn.addEventListener("click", refreshLaunchReadiness);
-    els.sessionSearchBtn.addEventListener("click", searchSessions);
-    els.sessionSearchInput.addEventListener("keydown", (event) => {
+    bindClick(els.refreshBtn, refreshDashboard);
+    bindClick(els.refreshLaunchReadinessBtn, refreshLaunchReadiness);
+    bindClick(els.sessionSearchBtn, searchSessions);
+    bindClick(els.toggleOperationsLogBtn, (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      toggleOperationsLog();
+    });
+    setOperationsLogCollapsed(operationsLogCollapsed);
+
+    els.sessionSearchInput?.addEventListener("keydown", (event) => {
       if (event.key === "Enter") {
         event.preventDefault();
         searchSessions();
       }
     });
 
-    els.processOneBtn.addEventListener("click", () => {
+    bindClick(els.processOneBtn, () => {
       postAction("/admin/process-one-job", "Egy queued job feldolgozása lefutott.");
     });
 
-    els.retryEmailBatchBtn.addEventListener("click", () => {
+    bindClick(els.retryEmailBatchBtn, () => {
       postAction("/admin/retry-report-emails", "Riport email újrapróbálás lefutott.");
     });
 
-    els.alertCheckBtn.addEventListener("click", () => {
+    bindClick(els.alertCheckBtn, () => {
       postAction("/admin/trigger-alert-check", "Riasztásellenőrzés lefutott.");
     });
 
@@ -1586,6 +2794,13 @@
     });
 
     document.addEventListener("click", handleActionClick);
+    document.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-scroll-target]");
+      if (!button) return;
+
+      event.preventDefault();
+      scrollToPanel(button.dataset.scrollTarget);
+    });
     emptyRow(els.sessionSearchRows, 5, "Még nem indult keresés.");
 
     if (savedToken) {
@@ -1598,7 +2813,12 @@
       emptyRow(els.emailIssueRows, 5, "A frissítéshez add meg az admin tokent.");
       emptyRow(els.alertRows, 5, "Add meg az admin tokent.");
       emptyRow(els.operationsLogRows, 5, "A frissítéshez add meg az admin tokent.");
+      renderOperatorFocus(null);
       renderLaunchReadiness(null);
+      renderEngineAnalytics(null);
+      renderEngineDecisionAudit(null);
+      renderEmailDeliverability(null);
+      renderControlPulse(null);
       setStatus("Add meg az ADMIN_TOKEN értékét.");
     }
   }

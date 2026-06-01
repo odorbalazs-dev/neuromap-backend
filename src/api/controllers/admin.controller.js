@@ -16,6 +16,8 @@ import {
   runProductionHealthAlertCheck
 } from "../../services/admin-alert.service.js";
 import { buildAdminSessionReportSummary } from "../../services/admin-session-summary.service.js";
+import { buildEngineLiveDecisionAudit } from "../../services/engine-live-audit.service.js";
+import { buildEmailDeliverabilityMonitor } from "../../services/email-deliverability.service.js";
 import { env } from "../../config/env.js";
 
 function shortText(value = "", max = 600) {
@@ -405,6 +407,88 @@ function buildCompactSessionView(row) {
       ? String(row.analysis_result).length
       : 0,
 
+    created_at: row.created_at,
+    updated_at: row.updated_at
+  };
+}
+
+function incrementCount(target, key) {
+  const normalizedKey = key || "unknown";
+  target[normalizedKey] = Number(target[normalizedKey] || 0) + 1;
+}
+
+function addNumberMetric(target, key, value) {
+  const number = Number(value);
+
+  if (!Number.isFinite(number)) {
+    return;
+  }
+
+  if (!target[key]) {
+    target[key] = {
+      sum: 0,
+      count: 0
+    };
+  }
+
+  target[key].sum += number;
+  target[key].count += 1;
+}
+
+function averageMetric(target, key) {
+  const metric = target[key] || {};
+  return metric.count ? metric.sum / metric.count : null;
+}
+
+function sortedCountEntries(counts = {}, limit = 20) {
+  return Object.entries(counts)
+    .map(([key, count]) => ({
+      key,
+      count: Number(count || 0)
+    }))
+    .sort((a, b) => b.count - a.count || a.key.localeCompare(b.key))
+    .slice(0, limit);
+}
+
+function hasEngineAnalyticsInput(payload) {
+  if (!payload || typeof payload !== "object") {
+    return false;
+  }
+
+  if (Array.isArray(payload.triageRanking) && payload.triageRanking.length > 0) {
+    return true;
+  }
+
+  const triageScores = payload.triageScores || {};
+  return Object.values(triageScores).some((value) => {
+    const number = Number(value);
+    return Number.isFinite(number) && number > 0;
+  });
+}
+
+function buildEngineAnalyticsReviewSession(row, engine) {
+  return {
+    id: row.id,
+    email: row.email,
+    name: row.name,
+    lang: row.lang,
+    payment_status: row.payment_status,
+    analysis_status: row.analysis_status,
+    primaryDomain: engine.primaryDomain || null,
+    secondaryDomain: engine.secondaryDomain || null,
+    confidence: Number.isFinite(Number(engine.confidence))
+      ? Number(engine.confidence)
+      : null,
+    confidenceLabel: engine.confidenceLabel || null,
+    scoreGap: Number.isFinite(Number(engine.scoreGap))
+      ? Number(engine.scoreGap)
+      : null,
+    overlapScore: Number.isFinite(Number(engine.overlapScore))
+      ? Number(engine.overlapScore)
+      : null,
+    patternType: engine.patternType || null,
+    decisionQuality: engine.decisionQuality || null,
+    shouldAskExtra: Boolean(engine.shouldAskExtra),
     created_at: row.created_at,
     updated_at: row.updated_at
   };
@@ -1328,6 +1412,24 @@ export async function getProductionHealth(_req, res) {
   }
 }
 
+export async function getEmailDeliverability(req, res) {
+  try {
+    const monitor = await buildEmailDeliverabilityMonitor({
+      hours: req.query.hours,
+      limit: req.query.limit
+    });
+
+    return res.status(200).json(monitor);
+  } catch (error) {
+    console.error("Admin email deliverability error:", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: error.message || "Failed to get email deliverability monitor"
+    });
+  }
+}
+
 export async function getOperationsLog(req, res) {
   try {
     const limit = clampNumber(req.query.limit, 80, 10, 200);
@@ -1577,6 +1679,209 @@ export async function triggerAdminAlertCheck(req, res) {
     return res.status(500).json({
       ok: false,
       error: error.message || "Failed to run admin alert check"
+    });
+  }
+}
+
+export async function getEngineAnalytics(req, res) {
+  try {
+    const limit = clampNumber(req.query.limit, 300, 20, 1000);
+
+    const result = await db.query(
+      `
+      SELECT
+        id,
+        email,
+        name,
+        lang,
+        payment_status,
+        analysis_status,
+        report_email_status,
+        report_email_attempts,
+        report_email_error,
+        analysis_result,
+        payload,
+        created_at,
+        updated_at,
+        paid_at
+      FROM sessions
+      WHERE payload IS NOT NULL
+      ORDER BY created_at DESC
+      LIMIT $1
+      `,
+      [limit]
+    );
+
+    const domainCounts = {};
+    const secondaryCounts = {};
+    const severityCounts = {};
+    const decisionQualityCounts = {};
+    const patternTypeCounts = {};
+    const confidenceLabelCounts = {};
+    const focusAreaCounts = {};
+    const overlapPairStats = {};
+    const numericMetrics = {};
+    const reviewQueue = [];
+
+    let sessionsWithEngine = 0;
+    let extraQuestionSessions = 0;
+
+    for (const row of result.rows) {
+      if (!hasEngineAnalyticsInput(row.payload)) {
+        continue;
+      }
+
+      const summary = buildAdminSessionReportSummary(row);
+      const engine = summary.engine || {};
+
+      if (!engine || engine.error || !engine.primaryDomain) {
+        continue;
+      }
+
+      sessionsWithEngine += 1;
+
+      incrementCount(domainCounts, engine.primaryDomain);
+      incrementCount(secondaryCounts, engine.secondaryDomain || "none");
+      incrementCount(severityCounts, engine.severity || summary.severity || "unknown");
+      incrementCount(decisionQualityCounts, engine.decisionQuality || "unknown");
+      incrementCount(patternTypeCounts, engine.patternType || "unknown");
+      incrementCount(confidenceLabelCounts, engine.confidenceLabel || "unknown");
+
+      addNumberMetric(numericMetrics, "confidence", engine.confidence);
+      addNumberMetric(numericMetrics, "scoreGap", engine.scoreGap);
+      addNumberMetric(numericMetrics, "overlapScore", engine.overlapScore);
+
+      if (engine.shouldAskExtra) {
+        extraQuestionSessions += 1;
+      }
+
+      if (engine.primaryDomain && engine.secondaryDomain) {
+        const key = `${engine.primaryDomain}-${engine.secondaryDomain}`;
+        if (!overlapPairStats[key]) {
+          overlapPairStats[key] = {
+            pair: key,
+            primaryDomain: engine.primaryDomain,
+            secondaryDomain: engine.secondaryDomain,
+            count: 0,
+            overlapSum: 0,
+            confidenceSum: 0
+          };
+        }
+
+        overlapPairStats[key].count += 1;
+        overlapPairStats[key].overlapSum += Number(engine.overlapScore || 0);
+        overlapPairStats[key].confidenceSum += Number(engine.confidence || 0);
+      }
+
+      if (Array.isArray(engine.recommendedFocusAreas)) {
+        engine.recommendedFocusAreas.forEach((area) => {
+          incrementCount(focusAreaCounts, area);
+        });
+      }
+
+      const needsReview =
+        engine.decisionQuality === "low" ||
+        engine.confidenceLabel === "low" ||
+        engine.shouldAskExtra ||
+        Number(engine.overlapScore || 0) >= 0.65;
+
+      if (needsReview && reviewQueue.length < 25) {
+        reviewQueue.push(buildEngineAnalyticsReviewSession(row, engine));
+      }
+    }
+
+    const overlapPairs = Object.values(overlapPairStats)
+      .map((item) => ({
+        pair: item.pair,
+        primaryDomain: item.primaryDomain,
+        secondaryDomain: item.secondaryDomain,
+        count: item.count,
+        averageOverlap: item.count ? item.overlapSum / item.count : null,
+        averageConfidence: item.count ? item.confidenceSum / item.count : null
+      }))
+      .sort((a, b) => b.count - a.count || b.averageOverlap - a.averageOverlap)
+      .slice(0, 12);
+
+    return res.status(200).json({
+      ok: true,
+      generatedAt: new Date().toISOString(),
+      window: {
+        requestedLimit: limit,
+        loadedSessions: result.rows.length,
+        sessionsWithEngine
+      },
+      metrics: {
+        totalSessions: result.rows.length,
+        sessionsWithEngine,
+        extraQuestionSessions,
+        extraQuestionRate: sessionsWithEngine
+          ? extraQuestionSessions / sessionsWithEngine
+          : 0,
+        averageConfidence: averageMetric(numericMetrics, "confidence"),
+        averageScoreGap: averageMetric(numericMetrics, "scoreGap"),
+        averageOverlapScore: averageMetric(numericMetrics, "overlapScore")
+      },
+      distributions: {
+        primaryDomains: sortedCountEntries(domainCounts),
+        secondaryDomains: sortedCountEntries(secondaryCounts),
+        severities: sortedCountEntries(severityCounts),
+        decisionQuality: sortedCountEntries(decisionQualityCounts),
+        patternTypes: sortedCountEntries(patternTypeCounts),
+        confidenceLabels: sortedCountEntries(confidenceLabelCounts)
+      },
+      overlapPairs,
+      focusAreas: sortedCountEntries(focusAreaCounts, 20),
+      reviewQueue
+    });
+  } catch (error) {
+    console.error("Admin engine analytics error:", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: error.message || "Failed to get engine analytics"
+    });
+  }
+}
+
+export async function getEngineDecisionAudit(req, res) {
+  try {
+    const limit = clampNumber(req.query.limit, 300, 20, 1000);
+
+    const result = await db.query(
+      `
+      SELECT
+        id,
+        lang,
+        payment_status,
+        analysis_status,
+        report_email_status,
+        payload,
+        created_at,
+        updated_at,
+        paid_at
+      FROM sessions
+      WHERE payload IS NOT NULL
+      ORDER BY created_at DESC
+      LIMIT $1
+      `,
+      [limit]
+    );
+
+    const audit = buildEngineLiveDecisionAudit(result.rows);
+
+    return res.status(200).json({
+      ...audit,
+      window: {
+        requestedLimit: limit,
+        loadedSessions: result.rows.length
+      }
+    });
+  } catch (error) {
+    console.error("Admin engine decision audit error:", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: error.message || "Failed to run engine decision audit"
     });
   }
 }
