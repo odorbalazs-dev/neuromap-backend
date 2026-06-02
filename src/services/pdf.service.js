@@ -27,6 +27,16 @@ const SECTION_COLORS = [
   BRAND.yellow
 ];
 
+const PAGE_LAYOUT = {
+  contentTop: 138,
+  contentBottomPadding: 146,
+  blockGap: 18
+};
+
+const PDF_REPORT_VERSION = "pdf_report_v3";
+const BODY_TEXT_COLOR = "#374151";
+const BULLET = "\u2022";
+
 const FONT_DIR = path.join(process.cwd(), "src/assets/fonts");
 
 const FONT_PATHS = {
@@ -624,13 +634,140 @@ function addCoverPage(doc, { name, payload, labels, lang }) {
     });
 }
 
+function getSafeContentBottom(doc) {
+  return doc.page.height - PAGE_LAYOUT.contentBottomPadding;
+}
+
+function getPageContentHeight(doc) {
+  return getSafeContentBottom(doc) - PAGE_LAYOUT.contentTop;
+}
+
+function addContentPage(doc, labels, lang, pageState = null) {
+  addFooter(doc, labels, lang, pageState?.current || null);
+  doc.addPage();
+  if (pageState) pageState.current += 1;
+  addHeader(doc, labels, lang);
+  doc.y = PAGE_LAYOUT.contentTop;
+}
+
 function ensureSpace(doc, neededHeight, labels, lang, pageState = null) {
-  if (doc.y + neededHeight > doc.page.height - 74) {
-    addFooter(doc, labels, lang, pageState?.current || null);
-    doc.addPage();
-    if (pageState) pageState.current += 1;
-    addHeader(doc, labels, lang);
-    doc.y = 138;
+  const safeBottom = getSafeContentBottom(doc);
+  const pageContentHeight = getPageContentHeight(doc);
+  const normalizedHeight = Math.max(0, Number(neededHeight || 0));
+
+  if (
+    normalizedHeight > pageContentHeight &&
+    doc.y > PAGE_LAYOUT.contentTop + 8
+  ) {
+    addContentPage(doc, labels, lang, pageState);
+    return;
+  }
+
+  if (doc.y + normalizedHeight > safeBottom) {
+    addContentPage(doc, labels, lang, pageState);
+  }
+}
+
+function measureText(doc, text, { font, fontSize, width, lineGap = 3, align = "left" }) {
+  return doc
+    .font(font)
+    .fontSize(fontSize)
+    .heightOfString(clean(text), {
+      width,
+      lineGap,
+      align
+    });
+}
+
+function splitOversizedUnit(doc, unit, options, maxHeight) {
+  const text = clean(unit);
+  if (!text) return [];
+
+  const words = text.split(/\s+/).filter(Boolean);
+  if (words.length <= 1) {
+    const chunks = [];
+    const sliceSize = 260;
+
+    for (let i = 0; i < text.length; i += sliceSize) {
+      chunks.push(text.slice(i, i + sliceSize).trim());
+    }
+
+    return chunks.filter(Boolean);
+  }
+
+  const chunks = [];
+  let current = "";
+
+  words.forEach((word) => {
+    const next = current ? `${current} ${word}` : word;
+    const nextHeight = measureText(doc, next, options);
+
+    if (nextHeight > maxHeight && current) {
+      chunks.push(current);
+      current = word;
+    } else {
+      current = next;
+    }
+  });
+
+  if (current) chunks.push(current);
+  return chunks;
+}
+
+function splitTextForHeight(doc, text, options, maxHeight) {
+  const safeText = clean(text);
+  if (!safeText) return [];
+
+  if (measureText(doc, safeText, options) <= maxHeight) {
+    return [safeText];
+  }
+
+  const units = safeText
+    .split(/\n+/)
+    .flatMap((line) => {
+      const trimmed = clean(line);
+      if (!trimmed) return [];
+
+      const sentenceParts = trimmed
+        .split(/(?<=[.!?\u3002\uff01\uff1f])\s+/u)
+        .map((item) => clean(item))
+        .filter(Boolean);
+
+      return sentenceParts.length ? sentenceParts : [trimmed];
+    });
+
+  const chunks = [];
+  let current = "";
+
+  units.forEach((unit) => {
+    const next = current ? `${current}\n${unit}` : unit;
+    const nextHeight = measureText(doc, next, options);
+
+    if (nextHeight > maxHeight && current) {
+      chunks.push(current);
+      current = unit;
+      return;
+    }
+
+    if (nextHeight > maxHeight) {
+      chunks.push(...splitOversizedUnit(doc, unit, options, maxHeight));
+      current = "";
+      return;
+    }
+
+    current = next;
+  });
+
+  if (current) chunks.push(current);
+  return chunks.filter(Boolean);
+}
+
+function drawPanel(doc, { x, y, w, h, fill = "#FFFFFF", stroke = BRAND.softBorder, accent = null, radius = 14 }) {
+  doc.roundedRect(x, y, w, h, radius).fill(fill);
+  doc.roundedRect(x, y, w, h, radius).strokeColor(stroke).lineWidth(1).stroke();
+
+  if (accent) {
+    doc.rect(x, y, 7, h).fill(accent);
   }
 }
 
@@ -791,12 +928,12 @@ function addOverviewBlock(doc, payload, labels, lang, pageState = null) {
 function getReportV2PdfLabels(lang = "en") {
   if (lang === "hu") {
     return {
-      title: "Korosztalyi ertelmezes",
-      ageBand: "Korosztaly",
-      recommendations: "Korosztalyi javaslatok",
-      actionPlan: "Kovetkezo 7 nap akcioterve",
-      observationFocus: "Mit figyelj meg celzottan?",
-      escalationNote: "Mikor ne varj tovabb?"
+      title: "Korosztályi értelmezés",
+      ageBand: "Korosztály",
+      recommendations: "Korosztályi javaslatok",
+      actionPlan: "Következő 7 nap akcióterve",
+      observationFocus: "Mit figyelj meg célzottan?",
+      escalationNote: "Mikor ne várj tovább?"
     };
   }
 
@@ -815,233 +952,215 @@ function addReportV2AgeBlock(doc, payload, labels, lang, pageState = null) {
   const v2Labels = getReportV2PdfLabels(lang);
   const x = 56;
   const w = doc.page.width - 112;
-  const bodyWidth = w - 44;
+  const bodyWidth = w - 48;
+  const align = getTextAlign(lang);
   const recommendations = (context.recommendations || []).slice(0, 3);
   const actionPlan = (context.actionPlan || []).slice(0, 3);
 
   const bodyText = clean(context.interpretation);
-  const recommendationText = recommendations
-    .map((item) => `- ${clean(item)}`)
-    .join("\n");
-  const actionText = actionPlan
-    .map((item, index) => `${index + 1}. ${clean(item)}`)
-    .join("\n");
   const observationText = clean(context.observationFocus);
   const escalationText = clean(context.escalationNote);
 
-  const titleHeight = doc
-    .font(getFont(lang, true))
-    .fontSize(12.5)
-    .heightOfString(v2Labels.title, { width: bodyWidth });
+  function addTextPanel({
+    title,
+    body,
+    accent = BRAND.green,
+    fill = "#FFFFFF",
+    titleColor = BRAND.dark,
+    bodyColor = BODY_TEXT_COLOR,
+    iconFill = null,
+    titleSize = 10.6,
+    bodySize = 9.4,
+    bodyLineGap = 3.5
+  }) {
+    const safeTitle = clean(title);
+    const safeBody = clean(body);
+    if (!safeTitle && !safeBody) return;
 
-  const bodyHeight = doc
-    .font(getFont(lang))
-    .fontSize(9.5)
-    .heightOfString(bodyText, {
-      width: bodyWidth,
-      align: getTextAlign(lang),
-      lineGap: 3
+    const titleWidth = bodyWidth - 34;
+    const firstTitleHeight = safeTitle
+      ? measureText(doc, safeTitle, {
+          font: getFont(lang, true),
+          fontSize: titleSize,
+          width: titleWidth,
+          lineGap: 2,
+          align
+        })
+      : 0;
+
+    const bodyOptions = {
+      font: getFont(lang),
+      fontSize: bodySize,
+      width: bodyWidth - 4,
+      lineGap: bodyLineGap,
+      align
+    };
+
+    const maxBodyHeight = Math.max(
+      120,
+      getPageContentHeight(doc) - firstTitleHeight - 88
+    );
+    const bodyChunks = safeBody
+      ? splitTextForHeight(doc, safeBody, bodyOptions, maxBodyHeight)
+      : [""];
+
+    bodyChunks.forEach((bodyChunk, index) => {
+      const shouldDrawTitle = index === 0 && safeTitle;
+      const titleHeight = shouldDrawTitle ? firstTitleHeight : 0;
+      const bodyHeight = bodyChunk
+        ? measureText(doc, bodyChunk, bodyOptions)
+        : 0;
+
+      const h = Math.max(78, Math.ceil(titleHeight + bodyHeight + 58));
+      ensureSpace(doc, h + 18, labels, lang, pageState);
+
+      const y = doc.y;
+      drawPanel(doc, {
+        x,
+        y,
+        w,
+        h,
+        fill,
+        stroke: accent === BRAND.orange ? "#FFD2A6" : BRAND.softBorder,
+        accent
+      });
+
+      if (iconFill && index === 0) {
+        doc.circle(x + 28, y + 27, 8).fill(iconFill);
+      }
+
+      if (shouldDrawTitle) {
+        doc.fillColor(titleColor)
+          .font(getFont(lang, true))
+          .fontSize(titleSize)
+          .text(safeTitle, x + 44, y + 18, {
+            width: titleWidth,
+            align
+          });
+      }
+
+      if (bodyChunk) {
+        const bodyY = shouldDrawTitle ? y + 44 + titleHeight : y + 22;
+
+        doc.fillColor(bodyColor)
+          .font(getFont(lang))
+          .fontSize(bodySize)
+          .text(bodyChunk, x + 22, bodyY, {
+            width: bodyWidth,
+            align,
+            lineGap: bodyLineGap
+          });
+      }
+
+      doc.y = y + h + 12;
     });
+  }
 
-  const recHeight = recommendationText
-    ? doc
-        .font(getFont(lang))
-        .fontSize(9.2)
-        .heightOfString(recommendationText, {
-          width: bodyWidth - 12,
-          align: getTextAlign(lang),
-          lineGap: 3
-        })
-    : 0;
-
-  const actionHeight = actionText
-    ? doc
-        .font(getFont(lang))
-        .fontSize(9.2)
-        .heightOfString(actionText, {
-          width: bodyWidth - 12,
-          align: getTextAlign(lang),
-          lineGap: 3
-        })
-    : 0;
-
-  const observationHeight = observationText
-    ? doc
-        .font(getFont(lang))
-        .fontSize(9.2)
-        .heightOfString(observationText, {
-          width: bodyWidth - 16,
-          align: getTextAlign(lang),
-          lineGap: 3
-        })
-    : 0;
-
-  const escalationHeight = escalationText
-    ? doc
-        .font(getFont(lang))
-        .fontSize(9)
-        .heightOfString(escalationText, {
-          width: bodyWidth - 16,
-          align: getTextAlign(lang),
-          lineGap: 3
-        })
-    : 0;
-
-  const h = Math.max(
-    260,
-    Math.ceil(
-      titleHeight +
-      bodyHeight +
-      recHeight +
-      actionHeight +
-      observationHeight +
-      escalationHeight +
-      190
-    )
-  );
-
-  ensureSpace(doc, h + 18, labels, lang, pageState);
   doc.moveDown(0.8);
 
-  const y = doc.y;
+  const introHeight =
+    measureText(doc, v2Labels.title, {
+      font: getFont(lang, true),
+      fontSize: 12.8,
+      width: bodyWidth - 42,
+      lineGap: 2,
+      align
+    }) +
+    measureText(doc, bodyText, {
+      font: getFont(lang),
+      fontSize: 9.6,
+      width: bodyWidth,
+      lineGap: 3.5,
+      align
+    });
+  const introPanelHeight = Math.max(132, Math.ceil(introHeight + 84));
 
-  doc.roundedRect(x, y, w, h, 16).fill("#FFFFFF");
-  doc.roundedRect(x, y, w, h, 16).strokeColor(BRAND.softBorder).lineWidth(1).stroke();
-  doc.rect(x, y, 8, h).fill(BRAND.green);
+  ensureSpace(doc, introPanelHeight + 14, labels, lang, pageState);
 
-  doc.circle(x + 30, y + 30, 13).fill(BRAND.lightGreen);
-  doc.circle(x + 30, y + 30, 5).fill(BRAND.green);
+  const introY = doc.y;
+  drawPanel(doc, {
+    x,
+    y: introY,
+    w,
+    h: introPanelHeight,
+    fill: "#FFFFFF",
+    stroke: BRAND.softBorder,
+    accent: BRAND.green,
+    radius: 16
+  });
+
+  doc.circle(x + 30, introY + 30, 13).fill(BRAND.lightGreen);
+  doc.circle(x + 30, introY + 30, 5).fill(BRAND.green);
 
   doc.fillColor(BRAND.dark)
     .font(getFont(lang, true))
-    .fontSize(12.5)
-    .text(v2Labels.title, x + 54, y + 18, {
-      width: w - 76,
-      align: getTextAlign(lang)
+    .fontSize(12.8)
+    .text(v2Labels.title, x + 54, introY + 18, {
+      width: bodyWidth - 42,
+      align
     });
 
   doc.fillColor(BRAND.muted)
     .font(getFont(lang, true))
     .fontSize(9)
-    .text(`${v2Labels.ageBand}: ${context.ageBandLabel}`, x + 54, y + 42, {
-      width: w - 76,
-      align: getTextAlign(lang)
+    .text(`${v2Labels.ageBand}: ${context.ageBandLabel}`, x + 54, introY + 44, {
+      width: bodyWidth - 42,
+      align
     });
 
-  doc.fillColor("#374151")
+  doc.fillColor(BODY_TEXT_COLOR)
     .font(getFont(lang))
-    .fontSize(9.5)
-    .text(bodyText, x + 22, y + 68, {
+    .fontSize(9.6)
+    .text(bodyText, x + 22, introY + 74, {
       width: bodyWidth,
-      align: getTextAlign(lang),
-      lineGap: 3
+      align,
+      lineGap: 3.5
     });
 
-  let cursorY = doc.y + 10;
+  doc.y = introY + introPanelHeight + 12;
 
   if (recommendations.length) {
-    doc.fillColor(BRAND.dark)
-      .font(getFont(lang, true))
-      .fontSize(10)
-      .text(v2Labels.recommendations, x + 22, cursorY, {
-        width: bodyWidth,
-        align: getTextAlign(lang)
-      });
-
-    doc.fillColor("#374151")
-      .font(getFont(lang))
-      .fontSize(9.2)
-      .text(recommendationText, x + 30, cursorY + 18, {
-        width: bodyWidth - 12,
-        align: getTextAlign(lang),
-        lineGap: 3
-      });
-
-    cursorY = doc.y + 12;
+    addTextPanel({
+      title: v2Labels.recommendations,
+      body: recommendations.map((item) => `${BULLET} ${clean(item)}`).join("\n"),
+      accent: BRAND.green,
+      iconFill: BRAND.green
+    });
   }
 
   if (actionPlan.length) {
-    const actionBoxHeight = Math.max(82, actionHeight + 48);
-
-    doc.roundedRect(x + 18, cursorY, bodyWidth + 8, actionBoxHeight, 12).fill(BRAND.lightBlue);
-    doc.roundedRect(x + 18, cursorY, bodyWidth + 8, actionBoxHeight, 12)
-      .strokeColor(BRAND.softBorder)
-      .lineWidth(1)
-      .stroke();
-
-    doc.circle(x + 36, cursorY + 22, 6).fill(BRAND.blue);
-
-    doc.fillColor(BRAND.dark)
-      .font(getFont(lang, true))
-      .fontSize(10)
-      .text(v2Labels.actionPlan, x + 52, cursorY + 14, {
-        width: bodyWidth - 34,
-        align: getTextAlign(lang)
-      });
-
-    doc.fillColor("#374151")
-      .font(getFont(lang))
-      .fontSize(9.2)
-      .text(actionText, x + 34, cursorY + 38, {
-        width: bodyWidth - 16,
-        align: getTextAlign(lang),
-        lineGap: 3
-      });
-
-    cursorY += actionBoxHeight + 10;
+    addTextPanel({
+      title: v2Labels.actionPlan,
+      body: actionPlan.map((item, index) => `${index + 1}. ${clean(item)}`).join("\n"),
+      accent: BRAND.blue,
+      fill: BRAND.lightBlue,
+      iconFill: BRAND.blue
+    });
   }
 
   if (observationText) {
-    doc.fillColor(BRAND.dark)
-      .font(getFont(lang, true))
-      .fontSize(10)
-      .text(v2Labels.observationFocus, x + 22, cursorY, {
-        width: bodyWidth,
-        align: getTextAlign(lang)
-      });
-
-    doc.fillColor("#374151")
-      .font(getFont(lang))
-      .fontSize(9.2)
-      .text(observationText, x + 22, cursorY + 18, {
-        width: bodyWidth,
-        align: getTextAlign(lang),
-        lineGap: 3
-      });
-
-    cursorY = doc.y + 10;
+    addTextPanel({
+      title: v2Labels.observationFocus,
+      body: observationText,
+      accent: BRAND.pink,
+      iconFill: BRAND.pink
+    });
   }
 
   if (escalationText) {
-    const noteHeight = Math.max(64, escalationHeight + 42);
-
-    doc.roundedRect(x + 18, cursorY, bodyWidth + 8, noteHeight, 12).fill(BRAND.lightOrange);
-    doc.roundedRect(x + 18, cursorY, bodyWidth + 8, noteHeight, 12)
-      .strokeColor("#FFD2A6")
-      .lineWidth(1)
-      .stroke();
-
-    doc.circle(x + 36, cursorY + 21, 6).fill(BRAND.orange);
-
-    doc.fillColor("#9A3412")
-      .font(getFont(lang, true))
-      .fontSize(10)
-      .text(v2Labels.escalationNote, x + 52, cursorY + 13, {
-        width: bodyWidth - 34,
-        align: getTextAlign(lang)
-      });
-
-    doc.fillColor("#7C2D12")
-      .font(getFont(lang))
-      .fontSize(9)
-      .text(escalationText, x + 34, cursorY + 36, {
-        width: bodyWidth - 16,
-        align: getTextAlign(lang),
-        lineGap: 3
-      });
+    addTextPanel({
+      title: v2Labels.escalationNote,
+      body: escalationText,
+      accent: BRAND.orange,
+      fill: BRAND.lightOrange,
+      titleColor: "#9A3412",
+      bodyColor: "#7C2D12",
+      iconFill: BRAND.orange,
+      bodySize: 9.1
+    });
   }
 
-  doc.y = y + h;
+  doc.y += 2;
 }
 
 function addSectionTitle(doc, title, labels, lang, pageState = null) {
@@ -1258,27 +1377,37 @@ function splitLongParagraph(paragraph, lang) {
 }
 
 function addReportHeading(doc, heading, labels, lang, pageState = null) {
-  ensureSpace(doc, 126, labels, lang, pageState);
-
   const x = 56;
-  const y = doc.y + 6;
   const w = doc.page.width - 112;
-  const h = 52;
   const numbered = clean(heading).match(/^(\d+)\.\s*(.+)$/);
   const sectionNumber = numbered ? numbered[1] : "";
   const sectionTitle = numbered ? numbered[2] : heading;
   const accent = getSectionColor(sectionNumber || 1);
+  const titleX = sectionNumber ? x + 58 : x + 20;
+  const titleWidth = sectionNumber ? w - 78 : w - 40;
+  const titleHeight = measureText(doc, sectionTitle, {
+    font: getFont(lang, true),
+    fontSize: 12.4,
+    width: titleWidth,
+    lineGap: 2,
+    align: getTextAlign(lang)
+  });
+  const h = Math.max(52, Math.ceil(titleHeight + 30));
+
+  ensureSpace(doc, h + 28, labels, lang, pageState);
+
+  const y = doc.y + 6;
 
   doc.roundedRect(x, y, w, h, 12).fill(BRAND.lightBlue);
   doc.roundedRect(x, y, w, h, 12).strokeColor(BRAND.softBorder).lineWidth(1).stroke();
   doc.rect(x, y, 7, h).fill(accent);
 
   if (sectionNumber) {
-    doc.circle(x + 31, y + 26, 15).fill(accent);
+    doc.circle(x + 31, y + Math.min(30, h / 2), 15).fill(accent);
     doc.fillColor("#FFFFFF")
       .font(getFont(lang, true))
       .fontSize(10.5)
-      .text(sectionNumber, x + 16, y + 19, {
+      .text(sectionNumber, x + 16, y + Math.min(23, h / 2 - 7), {
         width: 30,
         align: "center"
       });
@@ -1287,13 +1416,13 @@ function addReportHeading(doc, heading, labels, lang, pageState = null) {
   doc.fillColor(BRAND.dark)
     .font(getFont(lang, true))
     .fontSize(12.4)
-    .text(sectionTitle, sectionNumber ? x + 58 : x + 20, y + 15, {
-      width: sectionNumber ? w - 78 : w - 40,
+    .text(sectionTitle, titleX, y + 15, {
+      width: titleWidth,
       align: getTextAlign(lang),
       lineGap: 2
     });
 
-  doc.y = y + h + 10;
+  doc.y = y + h + 12;
 }
 
 function addReportBulletList(doc, items, labels, lang, pageState = null) {
@@ -1308,42 +1437,59 @@ function addReportBulletList(doc, items, labels, lang, pageState = null) {
   const fontSize = lang === "zh" || lang === "ja" ? 9.8 : 10.1;
 
   listItems.forEach((item) => {
-    doc.font(getFont(lang)).fontSize(fontSize);
-
-    const height = doc.heightOfString(item, {
+    const textOptions = {
+      font: getFont(lang),
+      fontSize,
       width,
       align: getTextAlign(lang),
       lineGap: 3
+    };
+    const chunks = splitTextForHeight(
+      doc,
+      item,
+      textOptions,
+      Math.max(100, getPageContentHeight(doc) - 32)
+    );
+
+    chunks.forEach((chunk, chunkIndex) => {
+      doc.font(getFont(lang)).fontSize(fontSize);
+
+      const height = doc.heightOfString(chunk, textOptions);
+
+      ensureSpace(doc, height + 20, labels, lang, pageState);
+
+      const y = doc.y + 4;
+
+      if (chunkIndex === 0) {
+        doc.circle(61, y + 4, 3.2).fill(BRAND.orange);
+      }
+
+      doc.fillColor("#374151")
+        .font(getFont(lang))
+        .fontSize(fontSize)
+        .text(chunk, x, doc.y, textOptions);
+
+      doc.moveDown(0.35);
     });
-
-    ensureSpace(doc, height + 18, labels, lang, pageState);
-
-    const y = doc.y + 4;
-
-    doc.circle(61, y + 4, 3.2).fill(BRAND.orange);
-
-    doc.fillColor("#374151")
-      .font(getFont(lang))
-      .fontSize(fontSize)
-      .text(item, x, doc.y, {
-        width,
-        align: getTextAlign(lang),
-        lineGap: 3
-      });
-
-    doc.moveDown(0.35);
   });
 }
 
 function addReportParagraph(doc, paragraph, labels, lang, pageState = null) {
-  const chunks = splitLongParagraph(paragraph, lang);
   const width = doc.page.width - 112;
   const fontSize = lang === "zh" || lang === "ja" ? 10 : 10.4;
   const options = {
+    font: getFont(lang),
+    fontSize,
     width,
     align: getTextAlign(lang),
     lineGap: 4
   };
+  const chunks = splitTextForHeight(
+    doc,
+    splitLongParagraph(paragraph, lang).join("\n"),
+    options,
+    Math.max(120, getPageContentHeight(doc) - 28)
+  );
 
   chunks.forEach((chunk) => {
     doc.font(getFont(lang)).fontSize(fontSize);
@@ -1397,7 +1543,8 @@ export async function generatePdfBuffer({ name, reportText, lang = "en", payload
         info: {
           Title: labels.title,
           Author: "NeuroMap Kids",
-          Subject: labels.subtitle
+          Subject: `${labels.subtitle} (${PDF_REPORT_VERSION})`,
+          Keywords: "NeuroMap Kids, screening report, parent report, pdf v3"
         }
       });
 

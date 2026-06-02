@@ -34,6 +34,20 @@
     pipelineStages: document.getElementById("pipelineStages"),
     riskFocus: document.getElementById("riskFocus"),
     nextAction: document.getElementById("nextAction"),
+    postPaymentLevel: document.getElementById("postPaymentLevel"),
+    postPaymentSummary: document.getElementById("postPaymentSummary"),
+    postPaymentWindow: document.getElementById("postPaymentWindow"),
+    postPaymentPaid: document.getElementById("postPaymentPaid"),
+    postPaymentPaidMeta: document.getElementById("postPaymentPaidMeta"),
+    postPaymentWebhookIssues: document.getElementById("postPaymentWebhookIssues"),
+    postPaymentWebhookMeta: document.getElementById("postPaymentWebhookMeta"),
+    postPaymentAnalysisIssues: document.getElementById("postPaymentAnalysisIssues"),
+    postPaymentAnalysisMeta: document.getElementById("postPaymentAnalysisMeta"),
+    postPaymentEmailIssues: document.getElementById("postPaymentEmailIssues"),
+    postPaymentEmailMeta: document.getElementById("postPaymentEmailMeta"),
+    postPaymentStageRows: document.getElementById("postPaymentStageRows"),
+    postPaymentRecommendationRows: document.getElementById("postPaymentRecommendationRows"),
+    postPaymentIssueRows: document.getElementById("postPaymentIssueRows"),
     launchReadinessLevel: document.getElementById("launchReadinessLevel"),
     launchReadinessSummary: document.getElementById("launchReadinessSummary"),
     launchReadinessGeneratedAt: document.getElementById("launchReadinessGeneratedAt"),
@@ -94,6 +108,15 @@
     emailDeliverabilityConfigMeta: document.getElementById("emailDeliverabilityConfigMeta"),
     emailDeliverabilityErrorRows: document.getElementById("emailDeliverabilityErrorRows"),
     emailDeliverabilityRecommendationRows: document.getElementById("emailDeliverabilityRecommendationRows"),
+    emailDeliveryStatusFilter: document.getElementById("emailDeliveryStatusFilter"),
+    refreshEmailDeliveryCenterBtn: document.getElementById("refreshEmailDeliveryCenterBtn"),
+    emailDeliverySent: document.getElementById("emailDeliverySent"),
+    emailDeliverySentMeta: document.getElementById("emailDeliverySentMeta"),
+    emailDeliveryFailed: document.getElementById("emailDeliveryFailed"),
+    emailDeliveryRetryLimit: document.getElementById("emailDeliveryRetryLimit"),
+    emailDeliveryRetryable: document.getElementById("emailDeliveryRetryable"),
+    emailDeliveryLastAttempt: document.getElementById("emailDeliveryLastAttempt"),
+    emailDeliveryCenterRows: document.getElementById("emailDeliveryCenterRows"),
     sessionSearchInput: document.getElementById("sessionSearchInput"),
     sessionSearchBtn: document.getElementById("sessionSearchBtn"),
     sessionSearchHint: document.getElementById("sessionSearchHint"),
@@ -109,6 +132,10 @@
 
   let activeLogFilter = "all";
   let operationsLogCollapsed = readOperationsLogCollapsed();
+
+  function currentEmailDeliveryStatusFilter() {
+    return els.emailDeliveryStatusFilter?.value || "actionable";
+  }
 
   function readOperationsLogCollapsed() {
     const value = localStorage.getItem(OPERATIONS_LOG_KEY);
@@ -135,6 +162,7 @@
       els.retryEmailBatchBtn,
       els.alertCheckBtn,
       els.refreshLaunchReadinessBtn,
+      els.refreshEmailDeliveryCenterBtn,
       els.sessionSearchBtn
     ].forEach((button) => {
       if (button) button.disabled = isBusy;
@@ -1335,6 +1363,82 @@
     });
   }
 
+  function renderEmailDeliveryCenter(data = {}) {
+    data = data || {};
+    const summary = data.summary || {};
+    const rows = data.items || [];
+
+    if (els.emailDeliverySent) {
+      els.emailDeliverySent.textContent = Number(summary.sent || 0);
+    }
+
+    if (els.emailDeliverySentMeta) {
+      els.emailDeliverySentMeta.textContent =
+        `Utolso sikeres: ${relativeMinutes(summary.lastSentMinutesAgo)}`;
+    }
+
+    if (els.emailDeliveryFailed) {
+      els.emailDeliveryFailed.textContent = Number(summary.failed || 0);
+    }
+
+    if (els.emailDeliveryRetryLimit) {
+      els.emailDeliveryRetryLimit.textContent = Number(summary.retryLimit || 0);
+    }
+
+    if (els.emailDeliveryRetryable) {
+      els.emailDeliveryRetryable.textContent = Number(summary.retryable || 0);
+    }
+
+    if (els.emailDeliveryLastAttempt) {
+      els.emailDeliveryLastAttempt.textContent =
+        `Utolso probalkozas: ${relativeMinutes(summary.lastAttemptMinutesAgo)}`;
+    }
+
+    if (!els.emailDeliveryCenterRows) return;
+
+    els.emailDeliveryCenterRows.replaceChildren();
+
+    if (!rows.length) {
+      emptyRow(els.emailDeliveryCenterRows, 5, "Nincs email delivery sor a jelenlegi szurovel.");
+      return;
+    }
+
+    rows.forEach((row) => {
+      const status = row.report_email_status || "not_sent";
+      const priority = row.deliveryPriority || status;
+
+      const statusInfo = document.createElement("div");
+      statusInfo.appendChild(statusPill(status));
+
+      const attemptMeta = document.createElement("div");
+      attemptMeta.className = "subtle";
+      attemptMeta.textContent =
+        `${Number(row.report_email_attempts || 0)} probalkozas, utolso: ${relativeMinutes(row.lastAttemptMinutesAgo)}`;
+      statusInfo.appendChild(attemptMeta);
+
+      const providerInfo = document.createElement("div");
+      const provider = document.createElement("div");
+      provider.textContent = `Provider: ${text(row.report_email_provider_id)}`;
+
+      const error = document.createElement("div");
+      error.className = "subtle";
+      error.textContent = compact(row.report_email_error || row.error_message, 160);
+
+      providerInfo.append(provider, error);
+
+      const tr = document.createElement("tr");
+      tr.append(
+        cell(statusPill(priority)),
+        cell(personBlock(row)),
+        cell(statusInfo),
+        cell(providerInfo),
+        cell(actions(row, true, true))
+      );
+
+      els.emailDeliveryCenterRows.appendChild(tr);
+    });
+  }
+
   function renderDeliverabilityList(target, items, emptyMessage, renderItem) {
     if (!target) return;
 
@@ -1357,6 +1461,7 @@
   }
 
   function renderEmailDeliverability(data = {}) {
+    data = data || {};
     const metrics = data.metrics || {};
     const config = data.config || {};
     const windowData = data.window || {};
@@ -1438,6 +1543,147 @@
         row.appendChild(main);
       }
     );
+  }
+
+  function renderPostPaymentMonitoring(data = {}) {
+    data = data || {};
+    const metrics = data.metrics || {};
+    const windowData = data.window || {};
+    const timestamps = data.timestamps || {};
+    const level = data.level || "unknown";
+    const webhookIssues =
+      Number(metrics.noProcessedWebhook || 0) +
+      Number(metrics.failedWebhooks || 0) +
+      Number(metrics.staleWebhooks || 0);
+    const analysisIssues =
+      Number(metrics.paidFailedSessions || 0) +
+      Number(metrics.paidWithoutActiveJob || 0) +
+      Number(metrics.analysisPending || 0) +
+      Number(metrics.staleQueuedSessions || 0) +
+      Number(metrics.staleProcessingSessions || 0) +
+      Number(metrics.staleProcessingJobs || 0);
+    const emailIssues =
+      Number(metrics.failedEmails || 0) +
+      Number(metrics.unsentDoneReports || 0) +
+      Number(metrics.staleSendingEmails || 0) +
+      Number(metrics.retryLimitEmails || 0);
+
+    if (els.postPaymentLevel) {
+      els.postPaymentLevel.replaceChildren(statusPill(level));
+    }
+
+    if (els.postPaymentSummary) {
+      els.postPaymentSummary.textContent =
+        `${Number(metrics.analysisDone || 0)} kesz elemzes, ${formatPercent(metrics.completionRate)} completion, ${formatPercent(metrics.emailSentRate)} email sent rate.`;
+    }
+
+    if (els.postPaymentWindow) {
+      els.postPaymentWindow.textContent =
+        `${Number(windowData.hours || 0)} oras ablak, frissitve: ${formatDate(data.generatedAt)}`;
+    }
+
+    if (els.postPaymentPaid) {
+      els.postPaymentPaid.textContent = Number(metrics.paidSessions || 0);
+    }
+
+    if (els.postPaymentPaidMeta) {
+      els.postPaymentPaidMeta.textContent =
+        `Utolsó fizetes: ${relativeMinutes(timestamps.lastPaidMinutesAgo)}`;
+    }
+
+    if (els.postPaymentWebhookIssues) {
+      els.postPaymentWebhookIssues.textContent = webhookIssues;
+    }
+
+    if (els.postPaymentWebhookMeta) {
+      els.postPaymentWebhookMeta.textContent =
+        `${Number(metrics.noProcessedWebhook || 0)} nincs processed webhook, ${Number(metrics.failedWebhooks || 0)} failed webhook.`;
+    }
+
+    if (els.postPaymentAnalysisIssues) {
+      els.postPaymentAnalysisIssues.textContent = analysisIssues;
+    }
+
+    if (els.postPaymentAnalysisMeta) {
+      els.postPaymentAnalysisMeta.textContent =
+        `${Number(metrics.analysisPending || 0)} pending, ${Number(metrics.analysisQueued || 0)} queued, ${Number(metrics.analysisProcessing || 0)} processing, ${Number(metrics.paidFailedSessions || 0)} failed.`;
+    }
+
+    if (els.postPaymentEmailIssues) {
+      els.postPaymentEmailIssues.textContent = emailIssues;
+    }
+
+    if (els.postPaymentEmailMeta) {
+      els.postPaymentEmailMeta.textContent =
+        `${Number(metrics.failedEmails || 0)} failed, ${Number(metrics.unsentDoneReports || 0)} not_sent, ${Number(metrics.retryableEmails || 0)} retryable.`;
+    }
+
+    renderDeliverabilityList(
+      els.postPaymentStageRows,
+      data.stages || [],
+      "Nincs post-payment szakaszadat.",
+      (row, item) => {
+        const main = document.createElement("strong");
+        main.textContent = `${text(item.label)}: ${statusLabel(item.level)}`;
+
+        const meta = document.createElement("span");
+        meta.textContent = `${Number(item.count || 0)} jelzes - ${compact(item.detail, 130)}`;
+
+        row.append(main, meta);
+      }
+    );
+
+    renderDeliverabilityList(
+      els.postPaymentRecommendationRows,
+      data.recommendations || [],
+      "Nincs post-payment teendo.",
+      (row, item) => {
+        const main = document.createElement("strong");
+        main.textContent = compact(item, 170);
+        row.appendChild(main);
+      }
+    );
+
+    if (!els.postPaymentIssueRows) return;
+    els.postPaymentIssueRows.replaceChildren();
+
+    const issues = data.issues || [];
+    if (!issues.length) {
+      emptyRow(els.postPaymentIssueRows, 5, "Nincs post-payment teendo.");
+      return;
+    }
+
+    issues.forEach((row) => {
+      const detail = document.createElement("div");
+      const issueType = document.createElement("div");
+      issueType.className = "person";
+      issueType.textContent = text(row.issueType);
+
+      const issueDetail = document.createElement("div");
+      issueDetail.className = "subtle";
+      issueDetail.textContent = compact(row.detail, 150);
+
+      detail.append(issueType, issueDetail);
+
+      const age = document.createElement("div");
+      age.textContent = relativeMinutes(row.ageMinutes);
+
+      const ageMeta = document.createElement("div");
+      ageMeta.className = "subtle";
+      ageMeta.textContent = `email=${text(row.report_email_status)} analysis=${text(row.analysis_status)}`;
+      age.appendChild(ageMeta);
+
+      const tr = document.createElement("tr");
+      tr.append(
+        cell(statusPill(row.severity)),
+        cell(personBlock(row)),
+        cell(detail),
+        cell(age),
+        cell(actions(row, true, true))
+      );
+
+      els.postPaymentIssueRows.appendChild(tr);
+    });
   }
 
   function renderOperationLogRows(items) {
@@ -1576,7 +1822,8 @@
       alerts,
       engineAnalytics,
       engineDecisionAudit,
-      emailDeliverability
+      emailDeliverability,
+      postPaymentMonitoring
     } = context;
 
     const queueCounts = queue?.counts || {};
@@ -2345,6 +2592,7 @@
       engineAnalytics,
       engineDecisionAudit,
       emailDeliverability,
+      postPaymentMonitoring,
       recent
     } = context;
 
@@ -2355,6 +2603,27 @@
     const sessions = health?.sessions || {};
     const latestAlert = alerts?.items?.[0];
     const deliverabilityMetrics = emailDeliverability?.metrics || {};
+    const postPaymentMetrics = postPaymentMonitoring?.metrics || {};
+
+    if (postPaymentMonitoring?.level === "critical") {
+      addOperatorTask(
+        tasks,
+        "critical",
+        "Post-payment folyamat kritikus",
+        `${countValue(postPaymentMetrics.issueCount)} fizetes utani teendo, ${countValue(postPaymentMetrics.paidWithoutActiveJob)} fizetett session aktiv job nelkul, ${countValue(postPaymentMetrics.retryLimitEmails)} email retry limit.`,
+        "postPaymentPanel",
+        "Post-payment"
+      );
+    } else if (postPaymentMonitoring?.level === "warning") {
+      addOperatorTask(
+        tasks,
+        "warning",
+        "Post-payment folyamat figyelendo",
+        `${countValue(postPaymentMetrics.issueCount)} fizetes utani jelzes, ${countValue(postPaymentMetrics.unsentDoneReports)} kesz riport email nelkul.`,
+        "postPaymentPanel",
+        "Post-payment"
+      );
+    }
 
     if (latestAlert) {
       addOperatorTask(
@@ -2532,7 +2801,9 @@
         launchReadiness,
         engineAnalytics,
         engineDecisionAudit,
-        emailDeliverability
+        emailDeliveryCenter,
+        emailDeliverability,
+        postPaymentMonitoring
       ] = await Promise.all([
         api("/admin/status"),
         api("/admin/production-health"),
@@ -2544,7 +2815,9 @@
         api("/admin/launch-readiness"),
         api("/admin/engine-analytics?limit=300"),
         api("/admin/engine-decision-audit?limit=300"),
-        api("/admin/email-deliverability?hours=168&limit=30")
+        api(`/admin/email-delivery-center?status=${encodeURIComponent(currentEmailDeliveryStatusFilter())}&limit=60`),
+        api("/admin/email-deliverability?hours=168&limit=30"),
+        api("/admin/post-payment-monitoring?hours=168&limit=30")
       ]);
 
       els.apiStatus.textContent = status.ok ? "Elérhető" : "Hiba";
@@ -2559,14 +2832,17 @@
       renderLaunchReadiness(launchReadiness);
       renderEngineAnalytics(engineAnalytics);
       renderEngineDecisionAudit(engineDecisionAudit);
+      renderEmailDeliveryCenter(emailDeliveryCenter);
       renderEmailDeliverability(emailDeliverability);
+      renderPostPaymentMonitoring(postPaymentMonitoring);
       renderControlPulse({
         health,
         queue,
         alerts,
         engineAnalytics,
         engineDecisionAudit,
-        emailDeliverability
+        emailDeliverability,
+        postPaymentMonitoring
       });
       renderOperatorFocus({
         status,
@@ -2579,7 +2855,8 @@
         launchReadiness,
         engineAnalytics,
         engineDecisionAudit,
-        emailDeliverability
+        emailDeliverability,
+        postPaymentMonitoring
       });
       setStatus("Frissítve.");
     } catch (error) {
@@ -2598,6 +2875,23 @@
       const launchReadiness = await api("/admin/launch-readiness");
       renderLaunchReadiness(launchReadiness);
       setStatus("Élesítési ellenőrzés frissítve.");
+    } catch (error) {
+      setStatus(error.message, true);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function refreshEmailDeliveryCenter() {
+    setBusy(true);
+    setStatus("Email center frissitese...");
+
+    try {
+      const data = await api(
+        `/admin/email-delivery-center?status=${encodeURIComponent(currentEmailDeliveryStatusFilter())}&limit=60`
+      );
+      renderEmailDeliveryCenter(data);
+      setStatus("Email center frissitve.");
     } catch (error) {
       setStatus(error.message, true);
     } finally {
@@ -2809,6 +3103,7 @@
       emptyRow(els.recentRows, 5, "A frissítéshez add meg az admin tokent.");
       emptyRow(els.failedRows, 4, "A frissítéshez add meg az admin tokent.");
       emptyRow(els.emailIssueRows, 5, "A frissítéshez add meg az admin tokent.");
+      emptyRow(els.emailDeliveryCenterRows, 5, "A frissiteshez add meg az admin tokent.");
       emptyRow(els.alertRows, 5, "Add meg az admin tokent.");
       emptyRow(els.operationsLogRows, 5, "A frissítéshez add meg az admin tokent.");
       renderCounts({});
@@ -2818,7 +3113,9 @@
       renderLaunchReadiness(null);
       renderEngineAnalytics(null);
       renderEngineDecisionAudit(null);
+      renderEmailDeliveryCenter(null);
       renderEmailDeliverability(null);
+      renderPostPaymentMonitoring(null);
       renderOperatorFocus(null);
       if (els.apiStatus) els.apiStatus.textContent = "-";
       setStatus("Token törölve.");
@@ -2826,6 +3123,7 @@
 
     bindClick(els.refreshBtn, refreshDashboard);
     bindClick(els.refreshLaunchReadinessBtn, refreshLaunchReadiness);
+    bindClick(els.refreshEmailDeliveryCenterBtn, refreshEmailDeliveryCenter);
     bindClick(els.sessionSearchBtn, searchSessions);
     bindClick(els.toggleOperationsLogBtn, (event) => {
       event.preventDefault();
@@ -2834,6 +3132,8 @@
     });
     setOperationsLogCollapsed(operationsLogCollapsed);
     initCollapsibleSections();
+
+    els.emailDeliveryStatusFilter?.addEventListener("change", refreshEmailDeliveryCenter);
 
     els.sessionSearchInput?.addEventListener("keydown", (event) => {
       if (event.key === "Enter") {
@@ -2913,6 +3213,7 @@
       renderEngineAnalytics(null);
       renderEngineDecisionAudit(null);
       renderEmailDeliverability(null);
+      renderPostPaymentMonitoring(null);
       renderControlPulse(null);
       setStatus("Add meg az ADMIN_TOKEN értékét.");
     }

@@ -62,6 +62,29 @@ function buildSampleReportText() {
   return sections.map(([title, body]) => `${title}\n\n${body}`).join("\n\n");
 }
 
+function buildStressReportText() {
+  const longParagraph = Array.from({ length: 26 }, (_, index) => {
+    const step = index + 1;
+    return `Stressz bekezdes ${step}: a riportnak akkor is kulturaltan kell oldalt torni, ha egy szakmai magyarazat hosszan folytatodik, tobb peldat, szuloi javaslatot, ovodai vagy iskolai megfigyelest es kovetkezo lepeseket sorol fel egyetlen nagyobb gondolati egysegben.`;
+  }).join(" ");
+
+  const longBullets = Array.from({ length: 7 }, (_, index) => {
+    const step = index + 1;
+    return `- Hosszu javaslat ${step}: valassz egy konkret, hetkoznapi helyzetet, figyeld meg a kivaltokat, rogzitsd mi segit, es csak egyetlen kis valtoztatast vezess be, hogy a szulo es a gyermek szamara is kovetheto maradjon a folyamat.`;
+  }).join("\n");
+
+  return [
+    "1. Hosszu klinikai osszefoglalo",
+    longParagraph,
+    "2. Hosszu szuloi javaslatlista",
+    longBullets,
+    "3. Hosszu megfigyelesi keret",
+    longParagraph,
+    "4. Hosszu zaras",
+    longParagraph
+  ].join("\n\n");
+}
+
 function buildSamplePayload() {
   const subdomains = {
     executive: {
@@ -178,9 +201,25 @@ async function main() {
   assert(pages >= 2, `PDF should contain at least 2 pages, found ${pages}.`);
   assert(pages <= 10, `PDF should not create excessive blank pages, found ${pages}.`);
 
+  const stressPdf = await generatePdfBuffer({
+    name: "Stressz Teszt",
+    reportText: buildStressReportText(),
+    lang: "hu",
+    payload: buildSamplePayload()
+  });
+
+  const stressPages = countPdfPages(stressPdf);
+  assert(Buffer.isBuffer(stressPdf), "Stress PDF output should be a Buffer.");
+  assert(stressPdf.slice(0, 5).toString("latin1") === "%PDF-", "Stress PDF should start with a PDF header.");
+  assert(stressPdf.toString("latin1").includes("%%EOF"), "Stress PDF should contain an EOF marker.");
+  assert(stressPages >= pages, `Stress PDF should be at least as long as the base PDF, found ${stressPages} vs ${pages}.`);
+  assert(stressPages <= 18, `Stress PDF should not create excessive blank pages, found ${stressPages}.`);
+
   console.log("PDF report smoke passed.", {
     bytes: pdf.length,
-    pages
+    pages,
+    stressBytes: stressPdf.length,
+    stressPages
   });
 }
 

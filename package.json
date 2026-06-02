@@ -10,14 +10,16 @@
     "audit:banks": "node scripts/audit-banks.js",
     "audit:bank-quality": "node scripts/audit-bank-quality.js",
     "audit:engine-selection": "node scripts/audit-engine-selection.js",
+    "audit:engine-live": "node scripts/audit-engine-live.js",
     "smoke:checkout-payload": "node scripts/smoke-checkout-payload.js",
     "smoke:browser-engine": "node scripts/smoke-browser-engine-bundle.js",
     "smoke:engine-age-field": "node scripts/smoke-engine-age-field.js",
+    "smoke:checkout-pages": "node scripts/smoke-checkout-pages.js",
     "smoke:analysis-report": "node scripts/smoke-analysis-report-contract.js",
     "smoke:report-v2": "node scripts/smoke-report-v2.js",
     "smoke:pdf": "node scripts/smoke-pdf-report.js",
     "smoke:admin-dashboard": "node scripts/smoke-admin-dashboard.js",
-    "audit:all": "npm run audit:banks && npm run audit:bank-quality && npm run audit:engine-selection && npm run smoke:checkout-payload && npm run smoke:browser-engine && npm run smoke:engine-age-field && npm run smoke:analysis-report && npm run smoke:report-v2 && npm run smoke:pdf && npm run smoke:admin-dashboard"
+    "audit:all": "npm run audit:banks && npm run audit:bank-quality && npm run audit:engine-selection && npm run smoke:checkout-payload && npm run smoke:browser-engine && npm run smoke:engine-age-field && npm run smoke:checkout-pages && npm run smoke:analysis-report && npm run smoke:report-v2 && npm run smoke:pdf && npm run smoke:admin-dashboard"
   },
   "dependencies": {
     "cors": "^2.8.6",

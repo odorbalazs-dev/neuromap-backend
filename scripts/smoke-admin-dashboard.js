@@ -165,8 +165,32 @@ assert(
   "Dashboard HTML should include the email delivery panel."
 );
 assert(
+  res.body.includes("Post-payment monitoring"),
+  "Dashboard HTML should include the post-payment monitoring panel."
+);
+assert(
+  res.body.includes("postPaymentLevel"),
+  "Dashboard HTML should include post-payment monitoring metrics."
+);
+assert(
+  res.body.includes("postPaymentIssueRows"),
+  "Dashboard HTML should include post-payment monitoring issue rows."
+);
+assert(
   res.body.includes("emailIssueRows"),
   "Dashboard HTML should include the email issue rows container."
+);
+assert(
+  res.body.includes("emailDeliveryCenterRows"),
+  "Dashboard HTML should include the email delivery center rows container."
+);
+assert(
+  res.body.includes("emailDeliveryStatusFilter"),
+  "Dashboard HTML should include the email delivery center status filter."
+);
+assert(
+  res.body.includes("toggleEmailDeliveryCenterBtn"),
+  "Dashboard HTML should include the email delivery center collapse toggle."
 );
 assert(
   res.body.includes("emailDeliverabilityLevel"),
@@ -309,8 +333,32 @@ assert(
   "Dashboard JS should call the email deliverability monitor endpoint."
 );
 assert(
+  dashboardJs.includes("/admin/email-delivery-center"),
+  "Dashboard JS should call the email delivery center endpoint."
+);
+assert(
+  dashboardJs.includes("/admin/post-payment-monitoring?hours=168&limit=30"),
+  "Dashboard JS should call the post-payment monitoring endpoint."
+);
+assert(
+  dashboardJs.includes("renderEmailDeliveryCenter"),
+  "Dashboard JS should render email delivery center results."
+);
+assert(
+  dashboardJs.includes("refreshEmailDeliveryCenter"),
+  "Dashboard JS should refresh the email delivery center independently."
+);
+assert(
   dashboardJs.includes("renderEmailDeliverability"),
   "Dashboard JS should render email deliverability monitor results."
+);
+assert(
+  dashboardJs.includes("renderPostPaymentMonitoring"),
+  "Dashboard JS should render post-payment monitoring results."
+);
+assert(
+  dashboardJs.includes("postPaymentMonitoring"),
+  "Dashboard JS should include post-payment data in the dashboard refresh."
 );
 assert(
   dashboardJs.includes("emailDeliverability"),
@@ -535,6 +583,10 @@ assert(
 assert(
   dashboardCss.includes(".pulse-card"),
   "Dashboard CSS should style the control pulse cards."
+);
+assert(
+  dashboardCss.includes(".delivery-center-toolbar"),
+  "Dashboard CSS should style the email delivery center toolbar."
 );
 assert(
   dashboardCss.includes(".latest-row"),

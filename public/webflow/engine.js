@@ -48,10 +48,10 @@
   }
 
   function installFrontendDesign() {
-    if (document.getElementById("nm-frontend-design-v2")) return;
+    if (document.getElementById("nm-frontend-design-v3")) return;
 
     const style = document.createElement("style");
-    style.id = "nm-frontend-design-v2";
+    style.id = "nm-frontend-design-v3";
     style.textContent = `
       #nmApp,
       #questionnaireStart {
@@ -63,6 +63,15 @@
       #languageModal *,
       #questionnaireStart * {
         box-sizing: border-box;
+      }
+
+      #questionnaireStart {
+        overflow-wrap: anywhere;
+      }
+
+      #questionnaireStart img {
+        height: auto;
+        max-width: 100%;
       }
 
       #nmApp {
@@ -116,6 +125,11 @@
         padding: 12px 14px;
         transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
         width: 100%;
+      }
+
+      #childAgeField {
+        margin-bottom: 18px;
+        max-width: 100%;
       }
 
       #name:focus,
@@ -224,6 +238,11 @@
         grid-template-columns: 44px minmax(0, 1fr) minmax(190px, 240px);
         margin: 12px 0;
         padding: 16px;
+      }
+
+      .nm-q-card:hover {
+        border-color: #bfe5f7;
+        box-shadow: 0 16px 34px rgba(20, 32, 51, 0.075);
       }
 
       .nm-q-number {
@@ -363,6 +382,18 @@
         transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
       }
 
+      #backBtn,
+      #nextBtn,
+      #paymentBtn {
+        margin: 8px 8px 0 0;
+      }
+
+      [dir="rtl"] #backBtn,
+      [dir="rtl"] #nextBtn,
+      [dir="rtl"] #paymentBtn {
+        margin: 8px 0 0 8px;
+      }
+
       #nextBtn,
       #paymentBtn {
         background: linear-gradient(135deg, #1197d5, #0b86bf);
@@ -433,6 +464,26 @@
         width: min(520px, 100%);
       }
 
+      #languageModal h1,
+      #languageModal h2,
+      #languageModal h3 {
+        color: #102033;
+        font-weight: 900;
+        letter-spacing: 0;
+        line-height: 1.14;
+        margin: 0 0 8px;
+        text-align: center;
+        text-wrap: balance;
+      }
+
+      #languageModal p {
+        color: #526579;
+        font-size: 15px;
+        line-height: 1.55;
+        margin: 0 0 16px;
+        text-align: center;
+      }
+
       #langButtons {
         display: grid;
         gap: 10px;
@@ -484,6 +535,45 @@
 
         #langButtons {
           grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 480px) {
+        #nmApp {
+          padding-left: 10px;
+          padding-right: 10px;
+        }
+
+        #pageTitle {
+          font-size: 25px;
+        }
+
+        #pageIntro,
+        .nm-q-text,
+        .nm-summary-text {
+          font-size: 15px;
+        }
+
+        #backBtn,
+        #nextBtn,
+        #paymentBtn {
+          margin-right: 0;
+          width: 100%;
+        }
+
+        .nm-step-title-card,
+        .nm-summary-hero,
+        .nm-summary-card,
+        .nm-q-card {
+          border-radius: 16px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        #nmApp *,
+        #languageModal * {
+          scroll-behavior: auto !important;
+          transition: none !important;
         }
       }
     `;

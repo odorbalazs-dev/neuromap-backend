@@ -21,9 +21,12 @@ function main() {
   );
   assert(script.includes("ensureChildAgeField"), "Engine should create the child age field.");
   assert(script.includes("installFrontendDesign"), "Engine should install the Webflow frontend design layer.");
-  assert(script.includes("nm-frontend-design-v2"), "Engine should include the scoped frontend design stylesheet.");
+  assert(script.includes("nm-frontend-design-v3"), "Engine should include the scoped frontend design stylesheet.");
   assert(script.includes(".nm-q-card"), "Engine design should style rendered question cards.");
   assert(script.includes(".nm-summary-pills"), "Engine design should style summary pills.");
+  assert(script.includes("#childAgeField"), "Engine design should style the child age field.");
+  assert(script.includes("@media (max-width: 480px)"), "Engine design should include a compact mobile breakpoint.");
+  assert(script.includes("prefers-reduced-motion"), "Engine design should respect reduced motion preferences.");
   assert(script.includes('input.id = "childAge"'), "Engine should insert #childAge.");
   assert(script.includes("validateChildAge"), "Engine should validate child age before checkout.");
   assert(script.includes("childAge,"), "Engine should include childAge in checkout payload.");

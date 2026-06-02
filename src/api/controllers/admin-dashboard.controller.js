@@ -1,4 +1,4 @@
-const ADMIN_DASHBOARD_ASSET_VERSION = "20260601-dashboard-collapsible-v1";
+const ADMIN_DASHBOARD_ASSET_VERSION = "20260602-post-payment-monitor-v1";
 
 export function getAdminDashboard(_req, res) {
   res.setHeader(
@@ -52,6 +52,7 @@ export function getAdminDashboard(_req, res) {
         <button type="button" data-scroll-target="controlPulsePanel">Pulzus</button>
         <button type="button" data-scroll-target="operatorFocusPanel">Teendők</button>
         <button type="button" data-scroll-target="pipelinePanel">Folyamat</button>
+        <button type="button" data-scroll-target="postPaymentPanel">Post-payment</button>
         <button type="button" data-scroll-target="queuePanel">Queue</button>
         <button type="button" data-scroll-target="emailDeliveryPanel">Email</button>
         <button type="button" data-scroll-target="engineAnalyticsPanel">Engine</button>
@@ -164,6 +165,73 @@ export function getAdminDashboard(_req, res) {
             <span class="risk-label">Javasolt következő lépés</span>
             <strong id="nextAction">Add meg az ADMIN_TOKEN értékét, majd frissíts.</strong>
           </div>
+        </div>
+      </section>
+
+      <section id="postPaymentPanel" class="panel post-payment-panel" aria-label="Post-payment monitoring">
+        <div class="panel-head">
+          <div>
+            <h2>Post-payment monitoring</h2>
+            <p>Fizetes utani lanc: Stripe webhook, worker, PDF/riport es email kezbesites egy nezoben.</p>
+          </div>
+          <span id="postPaymentWindow" class="snapshot-time">Meg nincs post-payment allapotkep</span>
+        </div>
+        <div class="health-grid">
+          <article class="health-card">
+            <span>Post-payment allapot</span>
+            <strong id="postPaymentLevel">-</strong>
+            <p id="postPaymentSummary">Add meg az admin tokent, majd frissits.</p>
+          </article>
+          <article class="health-card">
+            <span>Fizetett session</span>
+            <strong id="postPaymentPaid">0</strong>
+            <p id="postPaymentPaidMeta">Monitoring ablak: -</p>
+          </article>
+          <article class="health-card">
+            <span>Webhook gond</span>
+            <strong id="postPaymentWebhookIssues">0</strong>
+            <p id="postPaymentWebhookMeta">Stripe checkout session completed kovetes.</p>
+          </article>
+          <article class="health-card">
+            <span>Elemzesi gond</span>
+            <strong id="postPaymentAnalysisIssues">0</strong>
+            <p id="postPaymentAnalysisMeta">Queued / processing / failed / job nelkuli session.</p>
+          </article>
+          <article class="health-card">
+            <span>Email gond</span>
+            <strong id="postPaymentEmailIssues">0</strong>
+            <p id="postPaymentEmailMeta">Done report, de email nincs sent allapotban.</p>
+          </article>
+        </div>
+        <div class="engine-split">
+          <article>
+            <div class="subpanel-head">
+              <h3>Post-payment szakaszok</h3>
+              <p>Hol tud megakadni a fizetes utani folyamat.</p>
+            </div>
+            <div id="postPaymentStageRows" class="engine-list"></div>
+          </article>
+          <article>
+            <div class="subpanel-head">
+              <h3>Javasolt teendok</h3>
+              <p>Prioritas szerint rendezett kovetkezo lepesek.</p>
+            </div>
+            <div id="postPaymentRecommendationRows" class="engine-list"></div>
+          </article>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Prioritas</th>
+                <th>Nev / email</th>
+                <th>Folyamat hiba</th>
+                <th>Kor</th>
+                <th>Muveletek</th>
+              </tr>
+            </thead>
+            <tbody id="postPaymentIssueRows"></tbody>
+          </table>
         </div>
       </section>
 
@@ -437,6 +505,60 @@ export function getAdminDashboard(_req, res) {
             <h2>Email kézbesítés figyelés</h2>
             <p>Elkészült riportok, ahol az email küldés hibás, félbemaradt vagy még nincs sent státuszban.</p>
           </div>
+          <button id="toggleEmailDeliveryCenterBtn" type="button" class="secondary" data-collapsible-toggle="emailDeliveryCenter" data-open-label="Email center megnyitása" data-closed-label="Email center összecsukása" aria-controls="emailDeliveryPanelBody" aria-expanded="true">Email center összecsukása</button>
+        </div>
+        <div id="emailDeliveryPanelBody" class="collapsible-panel" data-collapsible-body="emailDeliveryCenter">
+          <div class="delivery-center-toolbar">
+            <div>
+              <label for="emailDeliveryStatusFilter">Email státusz szűrő</label>
+              <select id="emailDeliveryStatusFilter">
+                <option value="actionable">Teendők</option>
+                <option value="failed">Hibás</option>
+                <option value="retry_limit">Retry limit</option>
+                <option value="sending">Küldés alatt</option>
+                <option value="not_sent">Nincs elküldve</option>
+                <option value="sent">Elküldve</option>
+                <option value="all">Összes</option>
+              </select>
+            </div>
+            <button id="refreshEmailDeliveryCenterBtn" type="button" class="secondary">Email center frissítése</button>
+          </div>
+          <div class="delivery-center-summary">
+            <article class="health-card">
+              <span>Elküldve</span>
+              <strong id="emailDeliverySent">0</strong>
+              <p id="emailDeliverySentMeta">Utolsó sikeres: -</p>
+            </article>
+            <article class="health-card">
+              <span>Hibás</span>
+              <strong id="emailDeliveryFailed">0</strong>
+              <p>Provider vagy pipeline hiba.</p>
+            </article>
+            <article class="health-card">
+              <span>Retry limit</span>
+              <strong id="emailDeliveryRetryLimit">0</strong>
+              <p>Kézzel ellenőrizendő.</p>
+            </article>
+            <article class="health-card">
+              <span>Újrapróbálható</span>
+              <strong id="emailDeliveryRetryable">0</strong>
+              <p id="emailDeliveryLastAttempt">Utolsó próbálkozás: -</p>
+            </article>
+          </div>
+          <div class="table-wrap delivery-center-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Prioritás</th>
+                  <th>Név / email</th>
+                  <th>Email állapot</th>
+                  <th>Provider / hiba</th>
+                  <th>Műveletek</th>
+                </tr>
+              </thead>
+              <tbody id="emailDeliveryCenterRows"></tbody>
+            </table>
+          </div>
         </div>
         <div class="table-wrap">
           <table>
@@ -493,6 +615,7 @@ export function getAdminDashboard(_req, res) {
             <h3>Deliverability recommendations</h3>
             <div id="emailDeliverabilityRecommendationRows" class="engine-list"></div>
           </article>
+        </div>
         </div>
       </section>
 

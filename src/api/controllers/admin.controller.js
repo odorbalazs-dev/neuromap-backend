@@ -18,6 +18,7 @@ import {
 import { buildAdminSessionReportSummary } from "../../services/admin-session-summary.service.js";
 import { buildEngineLiveDecisionAudit } from "../../services/engine-live-audit.service.js";
 import { buildEmailDeliverabilityMonitor } from "../../services/email-deliverability.service.js";
+import { buildPostPaymentMonitor } from "../../services/post-payment-monitoring.service.js";
 import { env } from "../../config/env.js";
 
 function shortText(value = "", max = 600) {
@@ -1426,6 +1427,161 @@ export async function getEmailDeliverability(req, res) {
     return res.status(500).json({
       ok: false,
       error: error.message || "Failed to get email deliverability monitor"
+    });
+  }
+}
+
+function normalizeEmailDeliveryCenterRow(row = {}) {
+  const compact = buildCompactSessionView(row);
+
+  return {
+    ...compact,
+    report_email_provider_id: row.report_email_provider_id || null,
+    paidMinutesAgo: minutesSince(row.paid_at),
+    lastAttemptMinutesAgo: minutesSince(row.report_email_last_attempt_at),
+    sentMinutesAgo: minutesSince(row.report_email_sent_at),
+    updatedMinutesAgo: minutesSince(row.updated_at || row.created_at)
+  };
+}
+
+function buildEmailDeliveryPriority(row = {}) {
+  const status = row.report_email_status || "not_sent";
+  const attempts = Number(row.report_email_attempts || 0);
+
+  if (attempts >= 3 && ["failed", "not_sent", "sending"].includes(status)) {
+    return "retry_limit";
+  }
+
+  if (status === "failed") return "failed";
+  if (status === "sending") return "sending";
+  if (status === "not_sent") return "not_sent";
+  if (status === "sent") return "sent";
+
+  return "other";
+}
+
+export async function getEmailDeliveryCenter(req, res) {
+  try {
+    const limit = Math.floor(clampNumber(req.query.limit, 60, 10, 150));
+    const status = String(req.query.status || "all").toLowerCase();
+    const allowedStatuses = new Set([
+      "all",
+      "failed",
+      "not_sent",
+      "sending",
+      "sent",
+      "retry_limit",
+      "actionable"
+    ]);
+
+    const normalizedStatus = allowedStatuses.has(status) ? status : "all";
+
+    const summaryResult = await db.query(`
+      SELECT
+        COUNT(*) FILTER (WHERE COALESCE(report_email_status, 'not_sent') = 'sent')::int AS sent_count,
+        COUNT(*) FILTER (WHERE COALESCE(report_email_status, 'not_sent') = 'failed')::int AS failed_count,
+        COUNT(*) FILTER (WHERE COALESCE(report_email_status, 'not_sent') = 'sending')::int AS sending_count,
+        COUNT(*) FILTER (WHERE COALESCE(report_email_status, 'not_sent') = 'not_sent')::int AS not_sent_count,
+        COUNT(*) FILTER (
+          WHERE COALESCE(report_email_status, 'not_sent') IN ('failed', 'not_sent', 'sending')
+            AND COALESCE(report_email_attempts, 0) < 3
+        )::int AS retryable_count,
+        COUNT(*) FILTER (
+          WHERE COALESCE(report_email_status, 'not_sent') IN ('failed', 'not_sent', 'sending')
+            AND COALESCE(report_email_attempts, 0) >= 3
+        )::int AS retry_limit_count,
+        MAX(report_email_sent_at) AS last_sent_at,
+        MAX(report_email_last_attempt_at) AS last_attempt_at
+      FROM sessions
+      WHERE analysis_status = 'done'
+         OR report_email_status IS NOT NULL
+         OR report_email_last_attempt_at IS NOT NULL
+         OR report_email_sent_at IS NOT NULL
+    `);
+
+    const rowsResult = await db.query(
+      `
+      SELECT *
+      FROM sessions
+      WHERE (
+          analysis_status = 'done'
+          OR report_email_status IS NOT NULL
+          OR report_email_last_attempt_at IS NOT NULL
+          OR report_email_sent_at IS NOT NULL
+        )
+        AND (
+          $1 = 'all'
+          OR ($1 = 'actionable' AND COALESCE(report_email_status, 'not_sent') IN ('failed', 'not_sent', 'sending'))
+          OR ($1 = 'retry_limit' AND COALESCE(report_email_status, 'not_sent') IN ('failed', 'not_sent', 'sending') AND COALESCE(report_email_attempts, 0) >= 3)
+          OR ($1 NOT IN ('all', 'actionable', 'retry_limit') AND COALESCE(report_email_status, 'not_sent') = $1)
+        )
+      ORDER BY
+        CASE
+          WHEN COALESCE(report_email_status, 'not_sent') IN ('failed', 'not_sent', 'sending')
+            AND COALESCE(report_email_attempts, 0) >= 3 THEN 1
+          WHEN COALESCE(report_email_status, 'not_sent') = 'failed' THEN 2
+          WHEN COALESCE(report_email_status, 'not_sent') = 'sending' THEN 3
+          WHEN COALESCE(report_email_status, 'not_sent') = 'not_sent' THEN 4
+          ELSE 5
+        END,
+        report_email_last_attempt_at DESC NULLS LAST,
+        report_email_sent_at DESC NULLS LAST,
+        updated_at DESC NULLS LAST,
+        created_at DESC
+      LIMIT $2
+      `,
+      [normalizedStatus, limit]
+    );
+
+    const summary = summaryResult.rows[0] || {};
+    const items = rowsResult.rows.map((row) => ({
+      ...normalizeEmailDeliveryCenterRow(row),
+      deliveryPriority: buildEmailDeliveryPriority(row)
+    }));
+
+    return res.status(200).json({
+      ok: true,
+      generatedAt: new Date().toISOString(),
+      filter: normalizedStatus,
+      limit,
+      summary: {
+        sent: Number(summary.sent_count || 0),
+        failed: Number(summary.failed_count || 0),
+        sending: Number(summary.sending_count || 0),
+        notSent: Number(summary.not_sent_count || 0),
+        retryable: Number(summary.retryable_count || 0),
+        retryLimit: Number(summary.retry_limit_count || 0),
+        lastSentAt: summary.last_sent_at || null,
+        lastSentMinutesAgo: minutesSince(summary.last_sent_at),
+        lastAttemptAt: summary.last_attempt_at || null,
+        lastAttemptMinutesAgo: minutesSince(summary.last_attempt_at)
+      },
+      items
+    });
+  } catch (error) {
+    console.error("Admin email delivery center error:", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: error.message || "Failed to get email delivery center"
+    });
+  }
+}
+
+export async function getPostPaymentMonitoring(req, res) {
+  try {
+    const monitor = await buildPostPaymentMonitor({
+      hours: req.query.hours,
+      limit: req.query.limit
+    });
+
+    return res.status(200).json(monitor);
+  } catch (error) {
+    console.error("Admin post-payment monitoring error:", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: error.message || "Failed to get post-payment monitor"
     });
   }
 }

@@ -90,73 +90,73 @@ export function getAgeBand(ageYears) {
 function getCopy(lang = "en") {
   const hu = {
     unknown: {
-      label: "Korosztaly nincs megadva",
+      label: "Korosztály nincs megadva",
       interpretation:
-        "A gyermek eletkora nincs kulon megadva, ezert a riport a valaszok mintazatat altalanos fejlodesi es csaladi mukodesi keretben ertelmezi.",
+        "A gyermek életkora nincs külön megadva, ezért a riport a válaszok mintázatát általános fejlődési és családi működési keretben értelmezi.",
       recommendations: [
-        "A javaslatokat az eletkornak megfelelo elvarasokhoz erdemes igazitani.",
-        "Figyeld, hogy a nehezseg tobb helyzetben is megjelenik-e, vagy inkabb egy adott rutin, terheles vagy kornyezet valtja ki.",
-        "Ha kesobb bekerul a gyermek eletkora, a riport pontosabb korosztalyi hangsulyokat tud adni."
+        "A javaslatokat az életkornak megfelelő elvárásokhoz érdemes igazítani.",
+        "Figyeld, hogy a nehézség több helyzetben is megjelenik-e, vagy inkább egy adott rutin, terhelés vagy környezet váltja ki.",
+        "Ha később bekerül a gyermek életkora, a riport pontosabb korosztályi hangsúlyokat tud adni."
       ]
     },
     under_three: {
-      label: "3 ev alatti korosztaly",
+      label: "3 év alatti korosztály",
       interpretation:
-        "Ebben az eletkorban a figyelem, erzelemszabalyozas, valtasokhoz valo alkalmazkodas es kommunikacio meg gyorsan fejlodik, ezert a mintazatot kulonosen ovatosan kell ertelmezni.",
+        "Ebben az életkorban a figyelem, érzelemszabályozás, váltásokhoz való alkalmazkodás és kommunikáció még gyorsan fejlődik, ezért a mintázatot különösen óvatosan kell értelmezni.",
       recommendations: [
-        "Rovid, kiszamithato rutinokat es sok erzelmi megnyugtatast erdemes hasznalni.",
-        "A nagyobb kovetelmenyek helyett a ritmust, alvast, atmeneteket es szenzoros terhelest figyeld.",
-        "Tartos, eros vagy tobb teruletet erinto aggodalom eseten gyermekorvosi vagy korai fejlesztesi konzultacio lehet hasznos."
+        "Rövid, kiszámítható rutinokat és sok érzelmi megnyugtatást érdemes használni.",
+        "A nagyobb követelmények helyett a ritmust, alvást, átmeneteket és szenzoros terhelést figyeld.",
+        "Tartós, erős vagy több területet érintő aggodalom esetén gyermekorvosi vagy korai fejlesztési konzultáció lehet hasznos."
       ]
     },
     preschool: {
-      label: "Ovoda elotti/ovodas korosztaly",
+      label: "Óvoda előtti/óvodás korosztály",
       interpretation:
-        "Ovoda korul a figyelem, impulzuskontroll, rugalmassag, tarsas jelzesek es erzelmi szabalyzas meg erosen helyzetfuggo lehet. Fontos kulonbseget tenni az eletkori eretlenseg es a tartos, tobb helyzetben is visszatero minta kozott.",
+        "Óvoda körül a figyelem, impulzuskontroll, rugalmasság, társas jelzések és érzelmi szabályzás még erősen helyzetfüggő lehet. Fontos különbséget tenni az életkori éretlenség és a tartós, több helyzetben is visszatérő minta között.",
       recommendations: [
-        "A legjobban a rovid instrukcio, vizualis rutin, elore jelzett valtas es nyugodt felnott szabalyzas segithet.",
-        "Ertekes megfigyelni, hogy a nehezseg jatekban, etkezesnel, oltozesnel, elvalasnal vagy csoporthelyzetben erosebb-e.",
-        "Az ovodai visszajelzest konkret helyzetekrol erdemes kerni, nem altalanos cimkekrol."
+        "A legjobban a rövid instrukció, vizuális rutin, előre jelzett váltás és nyugodt felnőtt szabályzás segíthet.",
+        "Értékes megfigyelni, hogy a nehézség játékban, étkezésnél, öltözésnél, elválásnál vagy csoporthelyzetben erősebb-e.",
+        "Az óvodai visszajelzést konkrét helyzetekről érdemes kérni, nem általános címkékről."
       ]
     },
     early_school: {
-      label: "Kisiskolas korosztaly",
+      label: "Kisiskolás korosztály",
       interpretation:
-        "Kisiskolas korban a feladattartas, szabalykovetes, kortars helyzetek, tanulasi terheles es onallosodo rutinok jobban lathatova teszik a mintazatokat.",
+        "Kisiskolás korban a feladattartás, szabálykövetés, kortárs helyzetek, tanulási terhelés és önállósodó rutinok jobban láthatóvá teszik a mintázatokat.",
       recommendations: [
-        "A feladatokat rovid, lathato lepesekre erdemes bontani, es ellenorizni, hogy a gyermek tenyleg ertette-e a kovetkezo lepest.",
-        "Hasznos lehet kulon figyelni a reggeli rutinra, hazifeladatra, iskolai atmenetekre es kortars helyzetekre.",
-        "A tanitoval konkret tamogatasrol erdemes egyeztetni: instrukcio roviditese, vizualis lista, nyugodt hely, elore jelzett valtas."
+        "A feladatokat rövid, látható lépésekre érdemes bontani, és ellenőrizni, hogy a gyermek tényleg értette-e a következő lépést.",
+        "Hasznos lehet külön figyelni a reggeli rutinra, házi feladatra, iskolai átmenetekre és kortárs helyzetekre.",
+        "A tanítóval konkrét támogatásról érdemes egyeztetni: instrukció rövidítése, vizuális lista, nyugodt hely, előre jelzett váltás."
       ]
     },
     middle_school: {
-      label: "Felsos/korai serdulo korosztaly",
+      label: "Felsős/korai serdülő korosztály",
       interpretation:
-        "Ebben a szakaszban a tervezes, terheleskezeles, kortars kapcsolatok, onertekeles es teljesitmenynyomas nagyobb szerepet kap, ezert a nehezsegek gyakran osszetettebben jelennek meg.",
+        "Ebben a szakaszban a tervezés, terheléskezelés, kortárs kapcsolatok, önértékelés és teljesítménynyomás nagyobb szerepet kap, ezért a nehézségek gyakran összetettebben jelennek meg.",
       recommendations: [
-        "A cel ne csak a tobb ellenorzes legyen, hanem kozos tervezes, priorizalas es terhelheto rutin kialakitasa.",
-        "Figyeld, hogy a nehezseg inkabb szervezesben, teljesitmenyszorongasban, kortars helyzetekben vagy energiaszintben jelentkezik-e.",
-        "A gyermeket erdemes bevonni a megoldasokba, mert ebben a korban az autonomiat tiszteletben tarto tamogatas hatekonyabb."
+        "A cél ne csak a több ellenőrzés legyen, hanem közös tervezés, priorizálás és terhelhető rutin kialakítása.",
+        "Figyeld, hogy a nehézség inkább szervezésben, teljesítményszorongásban, kortárs helyzetekben vagy energiaszintben jelentkezik-e.",
+        "A gyermeket érdemes bevonni a megoldásokba, mert ebben a korban az autonómiát tiszteletben tartó támogatás hatékonyabb."
       ]
     },
     teen: {
-      label: "Serdulo korosztaly",
+      label: "Serdülő korosztály",
       interpretation:
-        "Serduloknel a mintazatok gyakran belso feszultsegben, kimerulesben, elkerulesben, teljesitmenyromlasban vagy kapcsolati terhelesben latszanak, nem mindig nyilt viselkedesben.",
+        "Serdülőknél a mintázatok gyakran belső feszültségben, kimerülésben, elkerülésben, teljesítményromlásban vagy kapcsolati terhelésben látszanak, nem mindig nyílt viselkedésben.",
       recommendations: [
-        "A beszelgetes legyen partneri: kevesebb kioktatas, tobb kozos problemafeltaras es konkret tervezes.",
-        "Fontos figyelni az alvasra, energiaszintre, onertekelesre, iskolai terhelesre es elkerulesre.",
-        "Tartos hangulati romlas, eros szorongas, visszahuzodas vagy biztonsagi aggodalom eseten szakember bevonasa kulonosen fontos."
+        "A beszélgetés legyen partneri: kevesebb kioktatás, több közös problémafeltárás és konkrét tervezés.",
+        "Fontos figyelni az alvásra, energiaszintre, önértékelésre, iskolai terhelésre és elkerülésre.",
+        "Tartós hangulati romlás, erős szorongás, visszahúzódás vagy biztonsági aggodalom esetén szakember bevonása különösen fontos."
       ]
     },
     older: {
-      label: "Idosebb serdulo/fiatal felnott korosztaly",
+      label: "Idősebb serdülő/fiatal felnőtt korosztály",
       interpretation:
-        "Ebben az eletkorban a mindennapi onallosag, tanulasi vagy munkaszervezes, kapcsolatok es mentalis terheles szempontjabol erdemes ertelmezni a mintazatot.",
+        "Ebben az életkorban a mindennapi önállóság, tanulási vagy munkaszervezés, kapcsolatok és mentális terhelés szempontjából érdemes értelmezni a mintázatot.",
       recommendations: [
-        "A tamogatas a sajat celokhoz, onmonitorozashoz es fenntarthato rutinokhoz kapcsolodjon.",
-        "Ertekes lehet megfigyelni, mely helyzetekben romlik leginkabb a teljesitmeny vagy kozerzet.",
-        "Ha a nehezseg tartosan rontja a mukodest, szakemberrel valo konzultacio segithet pontosabb keretet adni."
+        "A támogatás a saját célokhoz, önmonitorozáshoz és fenntartható rutinokhoz kapcsolódjon.",
+        "Értékes lehet megfigyelni, mely helyzetekben romlik leginkább a teljesítmény vagy közérzet.",
+        "Ha a nehézség tartósan rontja a működést, szakemberrel való konzultáció segíthet pontosabb keretet adni."
       ]
     }
   };

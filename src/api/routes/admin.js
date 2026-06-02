@@ -7,6 +7,8 @@ import {
   getLaunchReadiness,
   getProductionHealth,
   getEmailDeliverability,
+  getEmailDeliveryCenter,
+  getPostPaymentMonitoring,
   getOperationsLog,
   getAdminAlerts,
   triggerAdminAlertCheck,
@@ -36,6 +38,8 @@ router.get("/status", getAdminStatus);
 router.get("/launch-readiness", getLaunchReadiness);
 router.get("/production-health", getProductionHealth);
 router.get("/email-deliverability", getEmailDeliverability);
+router.get("/email-delivery-center", getEmailDeliveryCenter);
+router.get("/post-payment-monitoring", getPostPaymentMonitoring);
 router.get("/operations-log", getOperationsLog);
 router.get("/alerts", getAdminAlerts);
 router.post("/trigger-alert-check", triggerAdminAlertCheck);
