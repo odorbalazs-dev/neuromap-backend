@@ -1,13 +1,16 @@
-window.NM_ASD_BANK = [
+/* AUTO-GENERATED: ASD bank translations for Webflow. */
+(function () {
+  window.NM_ASD_BANK = [
   {
     id: "ASD_001",
     domain: "ASD",
     subdomain: "social_reciprocity",
     weight: 1.3,
     reverse: false,
+    stemKey: "social_initiation",
     text: {
-      hu: `Ritkán kezdeményez spontán beszélgetést másokkal.`,
-      en: `Rarely initiates spontaneous conversations with others.`,
+      hu: `Ritkán kezdeményez spontán beszélgetést másokkal többféle társas helyzetben.`,
+      en: `Rarely initiates spontaneous conversations with others across different social situations.`,
       de: `Beginnt selten von sich aus Gespräche mit anderen.`,
       it: `Inizia raramente conversazioni spontanee con gli altri.`,
       es: `Rara vez inicia conversaciones espontáneas con otros.`,
@@ -16,7 +19,7 @@ window.NM_ASD_BANK = [
       ar: `نادراً ما يبدأ محادثات عفوية مع الآخرين.`,
       pl: `Rzadko sam inicjuje spontaniczne rozmowy z innymi.`,
       pt: `Raramente inicia conversas espontâneas com outras pessoas.`,
-      fr: `Démarre rarement des conversations spontanées avec les autres.`,
+      fr: `Démarre rarement des conversations spontanées avec les autres.`
     }
   },
   {
@@ -25,8 +28,9 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.4,
     reverse: false,
+    stemKey: "social_emotional_interest",
     text: {
-      hu: `Úgy tűnik, nem igazán érdekli mások véleménye vagy érzései.`,
+      hu: `Úgy tűnik, nem igazán érdekli mások véleménye vagy érzései többféle társas helyzetben.`,
       en: `Seems uninterested in other people's opinions or feelings.`,
       de: `Scheint kein Interesse an Meinungen oder Gefühlen anderer zu haben.`,
       it: `Sembra disinteressato alle opinioni o ai sentimenti degli altri.`,
@@ -36,7 +40,7 @@ window.NM_ASD_BANK = [
       ar: `يبدو غير مهتم بآراء أو مشاعر الآخرين.`,
       pl: `Wydaje się nie interesować opiniami lub uczuciami innych osób.`,
       pt: `Parece desinteressado nas opiniões ou sentimentos das outras pessoas.`,
-      fr: `Semble peu intéressé par les opinions ou les sentiments des autres.`,
+      fr: `Semble peu intéressé par les opinions ou les sentiments des autres.`
     }
   },
   {
@@ -45,9 +49,10 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.2,
     reverse: true,
+    stemKey: "shared_activity_reverse",
     text: {
-      hu: `Könnyen bekapcsolódik másokkal közös tevékenységekbe.`,
-      en: `Easily joins shared activities with others.`,
+      hu: `Könnyen bekapcsolódik másokkal közös tevékenységekbe többféle társas helyzetben.`,
+      en: `Easily joins shared activities with others across different social situations.`,
       de: `Nimmt leicht an gemeinsamen Aktivitäten mit anderen teil.`,
       it: `Partecipa facilmente ad attività condivise con gli altri.`,
       es: `Se une fácilmente a actividades compartidas con otros.`,
@@ -56,7 +61,7 @@ window.NM_ASD_BANK = [
       ar: `ينضم بسهولة إلى الأنشطة المشتركة مع الآخرين.`,
       pl: `Łatwo dołącza do wspólnych działań z innymi.`,
       pt: `Participa facilmente em atividades compartilhadas com outros.`,
-      fr: `Participe facilement à des activités partagées avec les autres.`,
+      fr: `Participe facilement à des activités partagées avec les autres.`
     }
   },
   {
@@ -65,9 +70,10 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.5,
     reverse: false,
+    stemKey: "response_to_approach",
     text: {
-      hu: `Nehezen reagál természetesen mások közeledésére.`,
-      en: `Has difficulty responding naturally to social approaches.`,
+      hu: `Nehezen reagál természetesen mások közeledésére többféle társas helyzetben.`,
+      en: `Has difficulty responding naturally to social approaches across different social situations.`,
       de: `Hat Schwierigkeiten, natürlich auf soziale Annäherungen zu reagieren.`,
       it: `Ha difficoltà a rispondere in modo naturale agli approcci sociali.`,
       es: `Tiene dificultad para responder de forma natural a interacciones sociales.`,
@@ -76,7 +82,7 @@ window.NM_ASD_BANK = [
       ar: `يواجه صعوبة في الاستجابة بشكل طبيعي للمقارب الاجتماعية.`,
       pl: `Ma trudności z naturalną reakcją na społeczne podejścia.`,
       pt: `Tem dificuldade em responder naturalmente às abordagens sociais.`,
-      fr: `A des difficultés à répondre naturellement aux approches sociales.`,
+      fr: `A des difficultés à répondre naturellement aux approches sociales.`
     }
   },
   {
@@ -85,8 +91,9 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.3,
     reverse: false,
+    stemKey: "shared_experience",
     text: {
-      hu: `Nem osztja meg spontán módon az élményeit másokkal.`,
+      hu: `Nem osztja meg spontán módon az élményeit másokkal többféle társas helyzetben.`,
       en: `Does not spontaneously share experiences with others.`,
       de: `Teilt Erlebnisse selten spontan mit anderen.`,
       it: `Non condivide spontaneamente le esperienze con gli altri.`,
@@ -96,7 +103,7 @@ window.NM_ASD_BANK = [
       ar: `لا يشارك تجاربه تلقائياً مع الآخرين.`,
       pl: `Nie dzieli się spontanicznie swoimi doświadczeniami z innymi.`,
       pt: `Não compartilha experiências espontaneamente com os outros.`,
-      fr: `Ne partage pas spontanément ses expériences avec les autres.`,
+      fr: `Ne partage pas spontanément ses expériences avec les autres.`
     }
   },
   {
@@ -105,9 +112,10 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.5,
     reverse: false,
+    stemKey: "eye_contact",
     text: {
-      hu: `Kevés szemkontaktust használ beszélgetés közben.`,
-      en: `Uses limited eye contact during conversations.`,
+      hu: `Kevés szemkontaktust használ beszélgetés közben társas helyzetekben.`,
+      en: `Uses limited eye contact during conversations in social situations.`,
       de: `Verwendet beim Gespräch nur begrenzten Blickkontakt.`,
       it: `Usa un contatto visivo limitato durante le conversazioni.`,
       es: `Utiliza contacto visual limitado durante las conversaciones.`,
@@ -116,7 +124,7 @@ window.NM_ASD_BANK = [
       ar: `يستخدم اتصالاً بصريًا محدودًا أثناء المحادثات.`,
       pl: `Podczas rozmów używa ograniczonego kontaktu wzrokowego.`,
       pt: `Usa contato visual limitado durante as conversas.`,
-      fr: `Utilise un contact visuel limité lors des conversations.`,
+      fr: `Utilise un contact visuel limité lors des conversations.`
     }
   },
   {
@@ -125,9 +133,10 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.3,
     reverse: false,
+    stemKey: "expressive_clarity",
     text: {
-      hu: `Gesztusai vagy arckifejezései nehezen értelmezhetők.`,
-      en: `Facial expressions or gestures are difficult to interpret.`,
+      hu: `Gesztusai vagy arckifejezései nehezen értelmezhetők társas helyzetekben.`,
+      en: `Facial expressions or gestures are difficult to interpret in social situations.`,
       de: `Mimik oder Gesten sind schwer zu deuten.`,
       it: `Le espressioni facciali o i gesti sono difficili da interpretare.`,
       es: `Las expresiones faciales o los gestos son difíciles de interpretar.`,
@@ -136,7 +145,7 @@ window.NM_ASD_BANK = [
       ar: `تعابير الوجه أو الإيماءات يصعب تفسيرها.`,
       pl: `Wyraz twarzy lub gesty są trudne do interpretacji.`,
       pt: `Expressões faciais ou gestos são difíceis de interpretar.`,
-      fr: `Les expressions faciales ou les gestes sont difficiles à interpréter.`,
+      fr: `Les expressions faciales ou les gestes sont difficiles à interpréter.`
     }
   },
   {
@@ -145,9 +154,10 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.2,
     reverse: true,
+    stemKey: "body_language_reverse",
     text: {
-      hu: `Természetesen használ testbeszédet kommunikáció közben.`,
-      en: `Uses body language naturally while communicating.`,
+      hu: `Természetesen használ testbeszédet kommunikáció közben társas helyzetekben.`,
+      en: `Uses body language naturally while communicating in social situations.`,
       de: `Verwendet Körpersprache beim Kommunizieren auf natürliche Weise.`,
       it: `Usa il linguaggio del corpo in modo naturale durante la comunicazione.`,
       es: `Usa el lenguaje corporal de forma natural mientras se comunica.`,
@@ -156,7 +166,7 @@ window.NM_ASD_BANK = [
       ar: `يستخدم لغة الجسد بشكل طبيعي أثناء التواصل.`,
       pl: `Naturalnie używa mowy ciała podczas komunikacji.`,
       pt: `Usa a linguagem corporal naturalmente durante a comunicação.`,
-      fr: `Utilise le langage corporel naturellement lors de la communication.`,
+      fr: `Utilise le langage corporel naturellement lors de la communication.`
     }
   },
   {
@@ -165,9 +175,10 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.4,
     reverse: false,
+    stemKey: "facial_expression_reading",
     text: {
-      hu: `Nehezen érti meg mások arckifejezéseit.`,
-      en: `Has difficulty understanding others' facial expressions.`,
+      hu: `Nehezen érti meg mások arckifejezéseit társas helyzetekben.`,
+      en: `Has difficulty understanding others' facial expressions in social situations.`,
       de: `Hat Schwierigkeiten, Gesichtsausdrücke anderer zu verstehen.`,
       it: `Ha difficoltà a comprendere le espressioni facciali degli altri.`,
       es: `Tiene dificultad para entender las expresiones faciales de los demás.`,
@@ -176,7 +187,7 @@ window.NM_ASD_BANK = [
       ar: `يواجه صعوبة في فهم تعابير وجه الآخرين.`,
       pl: `Ma trudności ze zrozumieniem wyrazów twarzy innych osób.`,
       pt: `Tem dificuldade em entender as expressões faciais dos outros.`,
-      fr: `A des difficultés à comprendre les expressions faciales des autres.`,
+      fr: `A des difficultés à comprendre les expressions faciales des autres.`
     }
   },
   {
@@ -185,9 +196,10 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.3,
     reverse: false,
+    stemKey: "prosody_tone",
     text: {
-      hu: `Hangszíne vagy beszédritmusa szokatlannak tűnik.`,
-      en: `Tone of voice or speech rhythm may seem unusual.`,
+      hu: `Hangszíne vagy beszédritmusa szokatlannak tűnik társas helyzetekben.`,
+      en: `Tone of voice or speech rhythm seems unusual in social situations.`,
       de: `Tonfall oder Sprachrhythmus wirken ungewöhnlich.`,
       it: `Il tono di voce o il ritmo del discorso possono sembrare insoliti.`,
       es: `El tono de voz o el ritmo del habla pueden parecer inusuales.`,
@@ -196,7 +208,7 @@ window.NM_ASD_BANK = [
       ar: `قد يبدو نبرة الصوت أو إيقاع الكلام غير عاديين.`,
       pl: `Ton głosu lub rytm mowy mogą wydawać się dziwne.`,
       pt: `O tom de voz ou o ritmo da fala podem parecer incomuns.`,
-      fr: `Le ton de la voix ou le rythme du discours peut sembler inhabituel.`,
+      fr: `Le ton de la voix ou le rythme du discours peut sembler inhabituel.`
     }
   },
   {
@@ -205,9 +217,10 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.4,
     reverse: false,
+    stemKey: "friendship_formation",
     text: {
-      hu: `Kevés baráti kapcsolatot alakít ki.`,
-      en: `Forms few friendships.`,
+      hu: `Kevés baráti kapcsolatot alakít ki kortárs vagy családi kapcsolatokban.`,
+      en: `Forms few friendships in peer or family relationships.`,
       de: `Knüpft wenige Freundschaften.`,
       it: `Forma poche amicizie.`,
       es: `Forma pocas amistades.`,
@@ -216,7 +229,7 @@ window.NM_ASD_BANK = [
       ar: `يشكل صداقات قليلة.`,
       pl: `Nawiązuje niewiele przyjaźni.`,
       pt: `Forma poucas amizades.`,
-      fr: `Crée peu d'amitiés.`,
+      fr: `Crée peu d'amitiés.`
     }
   },
   {
@@ -225,9 +238,10 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.5,
     reverse: false,
+    stemKey: "social_rules",
     text: {
-      hu: `Nehezen érti a társas szabályokat.`,
-      en: `Struggles to understand social rules.`,
+      hu: `Nehezen érti a társas szabályokat kortárs vagy családi kapcsolatokban.`,
+      en: `Has difficulty understanding social rules in peer or family relationships.`,
       de: `Hat Schwierigkeiten, soziale Regeln zu verstehen.`,
       it: `Fa fatica a comprendere le regole sociali.`,
       es: `Le cuesta entender las reglas sociales.`,
@@ -236,7 +250,7 @@ window.NM_ASD_BANK = [
       ar: `يواجه صعوبة في فهم القواعد الاجتماعية.`,
       pl: `Ma trudności ze zrozumieniem zasad społecznych.`,
       pt: `Tem dificuldade em entender as regras sociais.`,
-      fr: `A du mal à comprendre les règles sociales.`,
+      fr: `A du mal à comprendre les règles sociales.`
     }
   },
   {
@@ -245,9 +259,10 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.2,
     reverse: true,
+    stemKey: "social_adaptation_reverse",
     text: {
-      hu: `Képes alkalmazkodni különböző társas helyzetekhez.`,
-      en: `Can adapt to different social situations.`,
+      hu: `Képes alkalmazkodni különböző társas helyzetekhez kortárs vagy családi kapcsolatokban.`,
+      en: `Can adapt to different social situations in peer or family relationships.`,
       de: `Kann sich an verschiedene soziale Situationen anpassen.`,
       it: `Sa adattarsi a diverse situazioni sociali.`,
       es: `Puede adaptarse a diferentes situaciones sociales.`,
@@ -256,7 +271,7 @@ window.NM_ASD_BANK = [
       ar: `يمكنه التكيف مع مواقف اجتماعية مختلفة.`,
       pl: `Potrafi dostosować się do różnych sytuacji społecznych.`,
       pt: `Consegue se adaptar a diferentes situações sociais.`,
-      fr: `S'adapte à différentes situations sociales.`,
+      fr: `S'adapte à différentes situations sociales.`
     }
   },
   {
@@ -265,9 +280,10 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.4,
     reverse: false,
+    stemKey: "relationship_maintenance",
     text: {
-      hu: `Nem érti, hogyan kell kapcsolatot fenntartani másokkal.`,
-      en: `Has difficulty maintaining relationships.`,
+      hu: `Nem érti, hogyan kell kapcsolatot fenntartani másokkal kortárs vagy családi kapcsolatokban.`,
+      en: `Does not understand how to maintain relationships with others in peer or family relationships.`,
       de: `Hat Schwierigkeiten, Beziehungen aufrechtzuerhalten.`,
       it: `Fa fatica a mantenere le relazioni.`,
       es: `Tiene dificultad para mantener relaciones.`,
@@ -276,7 +292,7 @@ window.NM_ASD_BANK = [
       ar: `يواجه صعوبة في الحفاظ على العلاقات.`,
       pl: `Ma trudności z utrzymaniem relacji.`,
       pt: `Tem dificuldade em manter relacionamentos.`,
-      fr: `A des difficultés à maintenir des relations.`,
+      fr: `A des difficultés à maintenir des relations.`
     }
   },
   {
@@ -285,9 +301,10 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.3,
     reverse: false,
+    stemKey: "social_uncertainty",
     text: {
-      hu: `Szociális helyzetekben gyakran bizonytalan.`,
-      en: `Often appears unsure in social situations.`,
+      hu: `Szociális helyzetekben gyakran bizonytalan kortárs vagy családi kapcsolatokban.`,
+      en: `Often seems socially uncertain in peer or family relationships.`,
       de: `Wirkt oft unsicher in sozialen Situationen.`,
       it: `Spesso sembra insicuro in situazioni sociali.`,
       es: `A menudo parece inseguro en situaciones sociales.`,
@@ -296,7 +313,7 @@ window.NM_ASD_BANK = [
       ar: `غالباً ما يبدو غير واثق في المواقف الاجتماعية.`,
       pl: `Często wydaje się niepewny w sytuacjach społecznych.`,
       pt: `Frequentemente parece inseguro em situações sociais.`,
-      fr: `Semble souvent incertain dans les situations sociales.`,
+      fr: `Semble souvent incertain dans les situations sociales.`
     }
   },
   {
@@ -305,9 +322,10 @@ window.NM_ASD_BANK = [
     subdomain: "restricted_patterns",
     weight: 1.5,
     reverse: false,
+    stemKey: "routine_adherence",
     text: {
-      hu: `Erősen ragaszkodik bizonyos rutinokhoz.`,
-      en: `Strongly attached to specific routines.`,
+      hu: `Erősen ragaszkodik bizonyos rutinokhoz hétköznapi helyzetekben.`,
+      en: `Strongly relies on certain routines in everyday situations.`,
       de: `Ist stark an bestimmte Routinen gebunden.`,
       it: `Fortemente legato a routine specifiche.`,
       es: `Está fuertemente apegado a rutinas específicas.`,
@@ -316,7 +334,7 @@ window.NM_ASD_BANK = [
       ar: `مرتبط بشكل قوي بروتينات محددة.`,
       pl: `Silnie przywiązany do określonych rutyn.`,
       pt: `Fortemente apegado a rotinas específicas.`,
-      fr: `Fortement attaché à des routines spécifiques.`,
+      fr: `Fortement attaché à des routines spécifiques.`
     }
   },
   {
@@ -325,9 +343,10 @@ window.NM_ASD_BANK = [
     subdomain: "restricted_patterns",
     weight: 1.4,
     reverse: false,
+    stemKey: "repetitive_behavior",
     text: {
-      hu: `Ismétlődő viselkedéseket mutat.`,
-      en: `Shows repetitive behaviors.`,
+      hu: `Ismétlődő viselkedéseket mutat több hétköznapi helyzetben.`,
+      en: `Shows repetitive behavior patterns in everyday situations.`,
       de: `Zeigt sich wiederholende Verhaltensweisen.`,
       it: `Mostra comportamenti ripetitivi.`,
       es: `Muestra comportamientos repetitivos.`,
@@ -336,7 +355,7 @@ window.NM_ASD_BANK = [
       ar: `يُظهر سلوكيات متكررة.`,
       pl: `Przejawia powtarzalne zachowania.`,
       pt: `Mostra comportamentos repetitivos.`,
-      fr: `Présente des comportements répétitifs.`,
+      fr: `Présente des comportements répétitifs.`
     }
   },
   {
@@ -345,9 +364,10 @@ window.NM_ASD_BANK = [
     subdomain: "restricted_patterns",
     weight: 1.3,
     reverse: false,
+    stemKey: "narrow_interest",
     text: {
-      hu: `Nagyon beszűkült érdeklődési köre van.`,
-      en: `Has very narrow interests.`,
+      hu: `Nagyon beszűkült érdeklődési köre van hétköznapi helyzetekben.`,
+      en: `Has a very restricted range of interests in everyday situations.`,
       de: `Hat sehr enge Interessen.`,
       it: `Ha interessi molto ristretti.`,
       es: `Tiene intereses muy limitados.`,
@@ -356,7 +376,7 @@ window.NM_ASD_BANK = [
       ar: `له اهتمامات ضيقة جداً.`,
       pl: `Ma bardzo wąskie zainteresowania.`,
       pt: `Tem interesses muito restritos.`,
-      fr: `A des intérêts très restreints.`,
+      fr: `A des intérêts très restreints.`
     }
   },
   {
@@ -365,9 +385,10 @@ window.NM_ASD_BANK = [
     subdomain: "restricted_patterns",
     weight: 1.2,
     reverse: true,
+    stemKey: "novelty_reverse",
     text: {
-      hu: `Könnyen kipróbál új dolgokat.`,
-      en: `Willing to try new things.`,
+      hu: `Könnyen kipróbál új dolgokat hétköznapi helyzetekben.`,
+      en: `Easily tries new things in everyday situations.`,
       de: `Ist bereit, Neues auszuprobieren.`,
       it: `È disposto a provare cose nuove.`,
       es: `Está dispuesto a probar cosas nuevas.`,
@@ -376,7 +397,7 @@ window.NM_ASD_BANK = [
       ar: `مستعد لتجربة أشياء جديدة.`,
       pl: `Jest gotowy spróbować nowych rzeczy.`,
       pt: `Está disposto a tentar coisas novas.`,
-      fr: `Prêt à essayer de nouvelles choses.`,
+      fr: `Prêt à essayer de nouvelles choses.`
     }
   },
   {
@@ -385,9 +406,10 @@ window.NM_ASD_BANK = [
     subdomain: "restricted_patterns",
     weight: 1.4,
     reverse: false,
+    stemKey: "activity_switching",
     text: {
-      hu: `Nehezen vált egyik tevékenységről a másikra.`,
-      en: `Has difficulty switching between activities.`,
+      hu: `Nehezen vált egyik tevékenységről a másikra hétköznapi helyzetekben.`,
+      en: `Has difficulty switching from one activity to another in everyday situations.`,
       de: `Hat Schwierigkeiten, zwischen Aktivitäten zu wechseln.`,
       it: `Ha difficoltà a passare da un'attività all'altra.`,
       es: `Tiene dificultad para cambiar entre actividades.`,
@@ -396,7 +418,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في الانتقال بين الأنشطة.`,
       pl: `Ma trudności z przechodzeniem między zadaniami.`,
       pt: `Tem dificuldade em alternar entre atividades.`,
-      fr: `A du mal à passer d'une activité à l'autre.`,
+      fr: `A du mal à passer d'une activité à l'autre.`
     }
   },
   {
@@ -405,9 +427,10 @@ window.NM_ASD_BANK = [
     subdomain: "sensory_processing",
     weight: 1.3,
     reverse: false,
+    stemKey: "sensory_general_reactivity",
     text: {
-      hu: `Erősen reagál különböző érzékszervi ingerekre.`,
-      en: `Shows strong reactions to sensory stimuli.`,
+      hu: `Erősen reagál különböző érzékszervi ingerekre a mindennapi környezetben.`,
+      en: `Reacts strongly to different sensory inputs in the everyday environment.`,
       de: `Zeigt starke Reaktionen auf sensorische Reize.`,
       it: `Mostra reazioni forti agli stimoli sensoriali.`,
       es: `Muestra reacciones intensas a estímulos sensoriales.`,
@@ -416,7 +439,7 @@ window.NM_ASD_BANK = [
       ar: `يظهر ردود فعل قوية تجاه المحفزات الحسية.`,
       pl: `Reaguje silnie na bodźce sensoryczne.`,
       pt: `Apresenta reações fortes a estímulos sensoriais.`,
-      fr: `Réagit fortement aux stimuli sensoriels.`,
+      fr: `Réagit fortement aux stimuli sensoriels.`
     }
   },
   {
@@ -425,6 +448,7 @@ window.NM_ASD_BANK = [
     subdomain: "sensory_processing",
     weight: 1.4,
     reverse: false,
+    stemKey: "sensory_avoidance",
     text: {
       hu: `Kerül bizonyos hangokat, fényeket vagy érintéseket.`,
       en: `Avoids certain sounds, lights, or touches.`,
@@ -436,7 +460,7 @@ window.NM_ASD_BANK = [
       ar: `يتجنب أصواتًا أو أضواء أو لمسات معينة.`,
       pl: `Unika niektórych dźwięków, świateł lub dotyku.`,
       pt: `Evita certos sons, luzes ou toques.`,
-      fr: `Évite certains sons, lumières ou contacts.`,
+      fr: `Évite certains sons, lumières ou contacts.`
     }
   },
   {
@@ -445,9 +469,10 @@ window.NM_ASD_BANK = [
     subdomain: "sensory_processing",
     weight: 1.3,
     reverse: false,
+    stemKey: "sensory_seeking",
     text: {
-      hu: `Kifejezetten keresi az erős érzékszervi ingereket.`,
-      en: `Actively seeks strong sensory input.`,
+      hu: `Kifejezetten keresi az erős érzékszervi ingereket a mindennapi környezetben.`,
+      en: `Actively seeks strong sensory input in the everyday environment.`,
       de: `Sucht aktiv starke sensorische Reize.`,
       it: `Cerca attivamente input sensoriali forti.`,
       es: `Busca activamente una entrada sensorial intensa.`,
@@ -456,7 +481,7 @@ window.NM_ASD_BANK = [
       ar: `يسعى بنشاط للحصول على تحفيز حسي قوي.`,
       pl: `Aktywnie poszukuje silnych bodźców sensorycznych.`,
       pt: `Busca ativamente estímulos sensoriais intensos.`,
-      fr: `Recherche activement des stimuli sensoriels forts.`,
+      fr: `Recherche activement des stimuli sensoriels forts.`
     }
   },
   {
@@ -465,9 +490,10 @@ window.NM_ASD_BANK = [
     subdomain: "sensory_processing",
     weight: 1.2,
     reverse: true,
+    stemKey: "sensory_typical_reverse",
     text: {
-      hu: `Általában átlagosan reagál érzékszervi ingerekre.`,
-      en: `Typically responds to sensory input in an average way.`,
+      hu: `Általában átlagosan reagál érzékszervi ingerekre a mindennapi környezetben.`,
+      en: `Usually responds to sensory input in an average way in the everyday environment.`,
       de: `Reagiert typischerweise durchschnittlich auf sensorische Reize.`,
       it: `Risponde tipicamente agli stimoli sensoriali in modo medio.`,
       es: `Generalmente responde de manera promedio a los estímulos sensoriales.`,
@@ -476,7 +502,7 @@ window.NM_ASD_BANK = [
       ar: `عادة ما يستجيب للمحفزات الحسية بشكل متوسط.`,
       pl: `Zazwyczaj reaguje przeciętnie na bodźce sensoryczne.`,
       pt: `Normalmente responde de forma média a estímulos sensoriais.`,
-      fr: `Réagit généralement de manière moyenne aux stimuli sensoriels.`,
+      fr: `Réagit généralement de manière moyenne aux stimuli sensoriels.`
     }
   },
   {
@@ -485,9 +511,10 @@ window.NM_ASD_BANK = [
     subdomain: "sensory_processing",
     weight: 1.4,
     reverse: false,
+    stemKey: "noise_sensitivity",
     text: {
-      hu: `Különösen érzékeny bizonyos zajokra.`,
-      en: `Is particularly sensitive to certain sounds.`,
+      hu: `Különösen érzékeny bizonyos zajokra a mindennapi környezetben.`,
+      en: `Is especially sensitive to certain noises in the everyday environment.`,
       de: `Ist besonders empfindlich gegenüber bestimmten Geräuschen.`,
       it: `È particolarmente sensibile a certi suoni.`,
       es: `Es particularmente sensible a ciertos sonidos.`,
@@ -496,7 +523,7 @@ window.NM_ASD_BANK = [
       ar: `حساس بشكل خاص تجاه أصوات معينة.`,
       pl: `Jest szczególnie wrażliwy na niektóre dźwięki.`,
       pt: `É particularmente sensível a certos sons.`,
-      fr: `Est particulièrement sensible à certains sons.`,
+      fr: `Est particulièrement sensible à certains sons.`
     }
   },
   {
@@ -505,9 +532,10 @@ window.NM_ASD_BANK = [
     subdomain: "flexibility",
     weight: 1.4,
     reverse: false,
+    stemKey: "change_tolerance",
     text: {
-      hu: `Nehezen viseli a változásokat.`,
-      en: `Has difficulty tolerating change.`,
+      hu: `Nehezen viseli a változásokat váratlan vagy változó helyzetekben.`,
+      en: `Has difficulty tolerating changes in unexpected or changing situations.`,
       de: `Hat Schwierigkeiten, Veränderungen zu tolerieren.`,
       it: `Fa fatica a tollerare i cambiamenti.`,
       es: `Tiene dificultad para tolerar los cambios.`,
@@ -516,7 +544,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في تحمل التغيير.`,
       pl: `Ma trudności z tolerowaniem zmian.`,
       pt: `Tem dificuldade em tolerar mudanças.`,
-      fr: `A du mal à tolérer les changements.`,
+      fr: `A du mal à tolérer les changements.`
     }
   },
   {
@@ -525,9 +553,10 @@ window.NM_ASD_BANK = [
     subdomain: "flexibility",
     weight: 1.3,
     reverse: false,
+    stemKey: "sameness_preference",
     text: {
-      hu: `Előnyben részesíti az állandó, kiszámítható helyzeteket.`,
-      en: `Prefers predictable and consistent situations.`,
+      hu: `Előnyben részesíti az állandó, kiszámítható helyzeteket váratlan vagy változó helyzetekben.`,
+      en: `Prefers stable, predictable situations when circumstances are unexpected or changing.`,
       de: `Bevorzugt vorhersehbare und konstante Situationen.`,
       it: `Preferisce situazioni prevedibili e costanti.`,
       es: `Prefiere situaciones predecibles y constantes.`,
@@ -536,7 +565,7 @@ window.NM_ASD_BANK = [
       ar: `يفضل المواقف المتوقعة والثابتة.`,
       pl: `Woli przewidywalne i stałe sytuacje.`,
       pt: `Prefere situações previsíveis e consistentes.`,
-      fr: `Préféré les situations prévisibles et constantes.`,
+      fr: `Préféré les situations prévisibles et constantes.`
     }
   },
   {
@@ -545,9 +574,10 @@ window.NM_ASD_BANK = [
     subdomain: "flexibility",
     weight: 1.2,
     reverse: true,
+    stemKey: "flexibility_reverse",
     text: {
-      hu: `Rugalmasan alkalmazkodik új helyzetekhez.`,
-      en: `Adapts flexibly to new situations.`,
+      hu: `Rugalmasan alkalmazkodik új helyzetekhez váratlan vagy változó helyzetekben.`,
+      en: `Adapts flexibly to new situations when circumstances are unexpected or changing.`,
       de: `Passt sich flexibel an neue Situationen an.`,
       it: `Si adatta con flessibilità alle nuove situazioni.`,
       es: `Se adapta con flexibilidad a nuevas situaciones.`,
@@ -556,7 +586,7 @@ window.NM_ASD_BANK = [
       ar: `يتكيف بمرونة مع المواقف الجديدة.`,
       pl: `Elastycznie dostosowuje się do nowych sytuacji.`,
       pt: `Adapta-se com flexibilidade a novas situações.`,
-      fr: `S'adapte de manière flexible aux nouvelles situations.`,
+      fr: `S'adapte de manière flexible aux nouvelles situations.`
     }
   },
   {
@@ -565,6 +595,7 @@ window.NM_ASD_BANK = [
     subdomain: "pragmatic_language",
     weight: 1.4,
     reverse: false,
+    stemKey: "pragmatic_social_language",
     text: {
       hu: `Nehezen igazítja beszédét a társas helyzethez.`,
       en: `Has difficulty adjusting speech to social context.`,
@@ -576,7 +607,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في تعديل كلامه بحسب السياق الاجتماعي.`,
       pl: `Ma trudności z dostosowaniem mowy do kontekstu społecznego.`,
       pt: `Tem dificuldade em ajustar a fala ao contexto social.`,
-      fr: `A du mal à ajuster son langage au contexte social.`,
+      fr: `A du mal à ajuster son langage au contexte social.`
     }
   },
   {
@@ -585,9 +616,10 @@ window.NM_ASD_BANK = [
     subdomain: "pragmatic_language",
     weight: 1.3,
     reverse: false,
+    stemKey: "literal_interpretation",
     text: {
-      hu: `Hajlamos szó szerint értelmezni a mondatokat.`,
-      en: `Tends to interpret language literally.`,
+      hu: `Hajlamos szó szerint értelmezni a mondatokat társas kommunikációban.`,
+      en: `Tends to interpret sentences literally in social communication.`,
       de: `Neigt dazu, Sprache wörtlich zu interpretieren.`,
       it: `Tende a interpretare il linguaggio in modo letterale.`,
       es: `Tiende a interpretar el lenguaje de manera literal.`,
@@ -596,7 +628,7 @@ window.NM_ASD_BANK = [
       ar: `يميل إلى تفسير اللغة بشكل حرفي.`,
       pl: `Ma tendencję do dosłownego interpretowania języka.`,
       pt: `Costuma interpretar a linguagem de forma literal.`,
-      fr: `Tend à interpréter le langage au pied de la lettre.`,
+      fr: `Tend à interpréter le langage au pied de la lettre.`
     }
   },
   {
@@ -605,9 +637,10 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.3,
     reverse: false,
+    stemKey: "emotional_response_to_others",
     text: {
-      hu: `Nehezen reagál mások érzelmi megnyilvánulásaira.`,
-      en: `Has difficulty responding to others' emotional expressions.`,
+      hu: `Nehezen reagál mások érzelmi megnyilvánulásaira többféle társas helyzetben.`,
+      en: `Has difficulty responding to others' emotional expressions across different social situations.`,
       de: `Hat Schwierigkeiten, auf die Gefühle anderer zu reagieren.`,
       it: `Ha difficoltà a rispondere alle emozioni degli altri.`,
       es: `Tiene dificultad para responder a las emociones de otros.`,
@@ -616,7 +649,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في الاستجابة لمشاعر الآخرين.`,
       pl: `Ma trudności z reagowaniem na emocje innych.`,
       pt: `Tem dificuldade em responder às emoções dos outros.`,
-      fr: `A des difficultés à répondre aux émotions des autres.`,
+      fr: `A des difficultés à répondre aux émotions des autres.`
     }
   },
   {
@@ -625,9 +658,10 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.2,
     reverse: false,
+    stemKey: "social_seeking",
     text: {
-      hu: `Ritkán keresi mások társaságát.`,
-      en: `Rarely seeks out social interaction.`,
+      hu: `Ritkán keresi mások társaságát többféle társas helyzetben.`,
+      en: `Rarely seeks the company of others across different social situations.`,
       de: `Sucht selten soziale Interaktion.`,
       it: `Cerca raramente l'interazione sociale.`,
       es: `Rara vez busca interacción social.`,
@@ -636,7 +670,7 @@ window.NM_ASD_BANK = [
       ar: `نادراً ما يبحث عن التفاعل الاجتماعي.`,
       pl: `Rzadko szuka interakcji społecznych.`,
       pt: `Raramente busca interação social.`,
-      fr: `Cherche rarement l'interaction sociale.`,
+      fr: `Cherche rarement l'interaction sociale.`
     }
   },
   {
@@ -645,8 +679,9 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.4,
     reverse: false,
+    stemKey: "joint_attention",
     text: {
-      hu: `Ritkán mutat rá dolgokra, hogy másokkal megossza a figyelmét.`,
+      hu: `Ritkán mutat rá dolgokra, hogy másokkal megossza a figyelmét többféle társas helyzetben.`,
       en: `Rarely points things out to share attention.`,
       de: `Weist selten auf Dinge hin, um Aufmerksamkeit zu teilen.`,
       it: `Raramente indica le cose per condividere l'attenzione.`,
@@ -656,7 +691,7 @@ window.NM_ASD_BANK = [
       ar: `نادراً ما يشير إلى أشياء لمشاركة الانتباه.`,
       pl: `Rzadko wskazuje na rzeczy, by dzielić uwagę.`,
       pt: `Raramente aponta coisas para compartilhar atenção.`,
-      fr: `Pointe rarement des choses pour partager l'attention.`,
+      fr: `Pointe rarement des choses pour partager l'attention.`
     }
   },
   {
@@ -665,6 +700,7 @@ window.NM_ASD_BANK = [
     subdomain: "restricted_patterns",
     weight: 1.3,
     reverse: false,
+    stemKey: "topic_fixation",
     text: {
       hu: `Gyakran ragaszkodik egy-egy témához beszélgetés közben.`,
       en: `Often fixates on specific topics during conversation.`,
@@ -676,7 +712,7 @@ window.NM_ASD_BANK = [
       ar: `غالبًا ما يركز على مواضيع محددة أثناء الحديث.`,
       pl: `Często koncentruje się na konkretnych tematach podczas rozmowy.`,
       pt: `Costuma fixar-se em tópicos específicos durante a conversa.`,
-      fr: `Se focalise souvent sur des sujets précis lors des conversations.`,
+      fr: `Se focalise souvent sur des sujets précis lors des conversations.`
     }
   },
   {
@@ -685,6 +721,7 @@ window.NM_ASD_BANK = [
     subdomain: "sensory_processing",
     weight: 1.4,
     reverse: false,
+    stemKey: "texture_sensitivity",
     text: {
       hu: `Érzékeny bizonyos anyagok vagy felületek érintésére.`,
       en: `Sensitive to certain textures or surfaces.`,
@@ -696,7 +733,7 @@ window.NM_ASD_BANK = [
       ar: `حساس تجاه بعض القوام أو الأسطح.`,
       pl: `Wrażliwy na określone tekstury lub powierzchnie.`,
       pt: `Sensível a certas texturas ou superfícies.`,
-      fr: `Sensibilité à certaines textures ou surfaces.`,
+      fr: `Sensibilité à certaines textures ou surfaces.`
     }
   },
   {
@@ -705,6 +742,7 @@ window.NM_ASD_BANK = [
     subdomain: "restricted_patterns",
     weight: 1.3,
     reverse: false,
+    stemKey: "routine_adherence_daily",
     text: {
       hu: `Ragaszkodik a napi rutinok pontos betartásához.`,
       en: `Insists on strict adherence to daily routines.`,
@@ -716,7 +754,7 @@ window.NM_ASD_BANK = [
       ar: `يصر على الالتزام الصارم بالروتين اليومي.`,
       pl: `Nalega na ścisłe przestrzeganie codziennych rutyn.`,
       pt: `Insiste em seguir rotinas diárias rigorosas.`,
-      fr: `Insiste pour que les routines quotidiennes soient strictement respectées.`,
+      fr: `Insiste pour que les routines quotidiennes soient strictement respectées.`
     }
   },
   {
@@ -725,6 +763,7 @@ window.NM_ASD_BANK = [
     subdomain: "pragmatic_language",
     weight: 1.3,
     reverse: false,
+    stemKey: "humor_irony_understanding",
     text: {
       hu: `Nehezen érti a humort vagy az iróniát.`,
       en: `Has difficulty understanding humor or irony.`,
@@ -736,7 +775,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في فهم الفكاهة أو السخرية.`,
       pl: `Ma trudności ze zrozumieniem humoru lub ironii.`,
       pt: `Tem dificuldade em compreender humor ou ironia.`,
-      fr: `A des difficultés à comprendre l'humour ou l'ironie.`,
+      fr: `A des difficultés à comprendre l'humour ou l'ironie.`
     }
   },
   {
@@ -745,9 +784,10 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.4,
     reverse: false,
+    stemKey: "friendship_dynamics",
     text: {
-      hu: `Nehezen alakít ki kölcsönös barátságokat.`,
-      en: `Struggles to form mutual friendships.`,
+      hu: `Nehezen alakít ki kölcsönös barátságokat kortárs vagy családi kapcsolatokban.`,
+      en: `Has difficulty forming reciprocal friendships in peer or family relationships.`,
       de: `Hat Schwierigkeiten, gegenseitige Freundschaften zu schließen.`,
       it: `Fatica a formare amicizie reciproche.`,
       es: `Le cuesta formar amistades mutuas.`,
@@ -756,7 +796,7 @@ window.NM_ASD_BANK = [
       ar: `يعاني في بناء صداقات متبادلة.`,
       pl: `Ma trudności z nawiązywaniem wzajemnych przyjaźni.`,
       pt: `Tem dificuldade em formar amizades mútuas.`,
-      fr: `A du mal à former des amitiés réciproques.`,
+      fr: `A du mal à former des amitiés réciproques.`
     }
   },
   {
@@ -765,8 +805,9 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.3,
     reverse: false,
+    stemKey: "response_to_others_joy",
     text: {
-      hu: `Ritkán reagál mások örömére vagy lelkesedésére.`,
+      hu: `Ritkán reagál mások örömére vagy lelkesedésére többféle társas helyzetben.`,
       en: `Rarely responds to others' excitement or joy.`,
       de: `Reagiert selten auf die Begeisterung oder Freude anderer.`,
       it: `Risponde raramente all'entusiasmo o alla gioia degli altri.`,
@@ -776,7 +817,7 @@ window.NM_ASD_BANK = [
       ar: `نادراً ما يستجيب لحماس أو فرح الآخرين.`,
       pl: `Rzadko reaguje na podekscytowanie lub radość innych.`,
       pt: `Raramente responde ao entusiasmo ou alegria dos outros.`,
-      fr: `Réagit rarement à l'excitation ou à la joie des autres.`,
+      fr: `Réagit rarement à l'excitation ou à la joie des autres.`
     }
   },
   {
@@ -785,9 +826,10 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.3,
     reverse: false,
+    stemKey: "facial_variability",
     text: {
-      hu: `Arckifejezése kevéssé változatos.`,
-      en: `Shows limited variation in facial expressions.`,
+      hu: `Arckifejezése kevéssé változatos több társas helyzetben.`,
+      en: `Facial expression shows limited variety across social situations.`,
       de: `Zeigt begrenzte Variation in Gesichtsausdrücken.`,
       it: `Mostra una limitata variazione nelle espressioni facciali.`,
       es: `Muestra poca variación en las expresiones faciales.`,
@@ -796,7 +838,7 @@ window.NM_ASD_BANK = [
       ar: `تظهر تعابير وجه محدودة التنوع.`,
       pl: `Ma ograniczoną różnorodność w mimice twarzy.`,
       pt: `Apresenta variação limitada nas expressões faciais.`,
-      fr: `Montre une variation limitée des expressions faciales.`,
+      fr: `Montre une variation limitée des expressions faciales.`
     }
   },
   {
@@ -805,9 +847,10 @@ window.NM_ASD_BANK = [
     subdomain: "restricted_patterns",
     weight: 1.4,
     reverse: false,
+    stemKey: "repetitive_movement",
     text: {
-      hu: `Ismétlődő mozdulatokat végez.`,
-      en: `Engages in repetitive movements.`,
+      hu: `Ismétlődő mozdulatokat végez több hétköznapi helyzetben.`,
+      en: `Makes repetitive movement patterns in everyday situations.`,
       de: `Zeigt sich in sich wiederholenden Bewegungen.`,
       it: `Si impegna in movimenti ripetitivi.`,
       es: `Realiza movimientos repetitivos.`,
@@ -816,7 +859,7 @@ window.NM_ASD_BANK = [
       ar: `يقوم بحركات متكررة.`,
       pl: `Wykonuje powtarzające się ruchy.`,
       pt: `Realiza movimentos repetitivos.`,
-      fr: `Effectue des mouvements répétitifs.`,
+      fr: `Effectue des mouvements répétitifs.`
     }
   },
   {
@@ -825,9 +868,10 @@ window.NM_ASD_BANK = [
     subdomain: "sensory_processing",
     weight: 1.4,
     reverse: false,
+    stemKey: "sound_specific_sensitivity",
     text: {
-      hu: `Bizonyos hangokra különösen érzékenyen reagál.`,
-      en: `Is particularly sensitive to specific sounds.`,
+      hu: `Bizonyos hangokra különösen érzékenyen reagál a mindennapi környezetben.`,
+      en: `Reacts with particular sensitivity to certain sounds in the everyday environment.`,
       de: `Reagiert besonders empfindlich auf bestimmte Geräusche.`,
       it: `È particolarmente sensibile a suoni specifici.`,
       es: `Es especialmente sensible a ciertos sonidos.`,
@@ -836,7 +880,7 @@ window.NM_ASD_BANK = [
       ar: `يتأثر بشكل خاص بأصوات معينة.`,
       pl: `Jest szczególnie wrażliwy na określone dźwięki.`,
       pt: `É particularmente sensível a sons específicos.`,
-      fr: `Est particulièrement sensible à certains sons.`,
+      fr: `Est particulièrement sensible à certains sons.`
     }
   },
   {
@@ -845,9 +889,10 @@ window.NM_ASD_BANK = [
     subdomain: "flexibility",
     weight: 1.4,
     reverse: false,
+    stemKey: "frustration_with_change",
     text: {
-      hu: `Könnyen frusztrálódik, ha valami megváltozik.`,
-      en: `Becomes easily frustrated when things change.`,
+      hu: `Könnyen frusztrálódik, ha valami megváltozik váratlan vagy változó helyzetekben.`,
+      en: `Becomes easily frustrated when something changes in unexpected or changing situations.`,
       de: `Wird leicht frustriert, wenn sich Dinge ändern.`,
       it: `Si frustra facilmente quando le cose cambiano.`,
       es: `Se frustra fácilmente cuando las cosas cambian.`,
@@ -856,7 +901,7 @@ window.NM_ASD_BANK = [
       ar: `يصاب بالإحباط بسهولة عند حدوث تغييرات.`,
       pl: `Łatwo się frustruje, gdy coś się zmienia.`,
       pt: `Fica facilmente frustrado quando as coisas mudam.`,
-      fr: `Se sent frustré facilement quand les choses changent.`,
+      fr: `Se sent frustré facilement quand les choses changent.`
     }
   },
   {
@@ -865,9 +910,10 @@ window.NM_ASD_BANK = [
     subdomain: "pragmatic_language",
     weight: 1.3,
     reverse: false,
+    stemKey: "context_adjustment",
     text: {
-      hu: `Nehezen igazítja kommunikációját a helyzethez.`,
-      en: `Has difficulty adjusting communication to context.`,
+      hu: `Nehezen igazítja kommunikációját a helyzethez társas kommunikációban.`,
+      en: `Has difficulty adapting communication to the situation in social communication.`,
       de: `Hat Schwierigkeiten, die Kommunikation an den Kontext anzupassen.`,
       it: `Fa fatica ad adattare la comunicazione al contesto.`,
       es: `Tiene dificultad para ajustar la comunicación al contexto.`,
@@ -876,7 +922,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في تعديل التواصل حسب السياق.`,
       pl: `Ma trudności z dostosowaniem komunikacji do kontekstu.`,
       pt: `Tem dificuldade em ajustar a comunicação ao contexto.`,
-      fr: `A des difficultés à adapter sa communication au contexte.`,
+      fr: `A des difficultés à adapter sa communication au contexte.`
     }
   },
   {
@@ -885,9 +931,10 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.3,
     reverse: false,
+    stemKey: "emotional_reaction_reading",
     text: {
-      hu: `Nehezen értelmezi mások érzelmi reakcióit.`,
-      en: `Has difficulty interpreting others' emotional reactions.`,
+      hu: `Nehezen értelmezi mások érzelmi reakcióit társas helyzetekben.`,
+      en: `Has difficulty interpreting others' emotional reactions in social situations.`,
       de: `Hat Schwierigkeiten, die emotionalen Reaktionen anderer zu verstehen.`,
       it: `Fa fatica a interpretare le reazioni emotive degli altri.`,
       es: `Tiene dificultad para interpretar las reacciones emocionales de los demás.`,
@@ -896,7 +943,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في تفسير ردود فعل الآخرين العاطفية.`,
       pl: `Ma trudności z interpretacją emocjonalnych reakcji innych.`,
       pt: `Tem dificuldade em interpretar as reações emocionais dos outros.`,
-      fr: `A du mal à interpréter les réactions émotionnelles des autres.`,
+      fr: `A du mal à interpréter les réactions émotionnelles des autres.`
     }
   },
   {
@@ -905,9 +952,10 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.3,
     reverse: false,
+    stemKey: "interest_sharing",
     text: {
-      hu: `Ritkán oszt meg érdeklődést másokkal.`,
-      en: `Rarely shares interests with others.`,
+      hu: `Ritkán oszt meg érdeklődést másokkal többféle társas helyzetben.`,
+      en: `Rarely shares interests with others across different social situations.`,
       de: `Teilt selten Interessen mit anderen.`,
       it: `Condivide raramente interessi con gli altri.`,
       es: `Rara vez comparte intereses con otros.`,
@@ -916,7 +964,7 @@ window.NM_ASD_BANK = [
       ar: `نادراً ما يشارك اهتماماته مع الآخرين.`,
       pl: `Rzadko dzieli zainteresowania z innymi.`,
       pt: `Raramente compartilha interesses com os outros.`,
-      fr: `Partage rarement ses intérêts avec les autres.`,
+      fr: `Partage rarement ses intérêts avec les autres.`
     }
   },
   {
@@ -925,8 +973,9 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.3,
     reverse: false,
+    stemKey: "pointing_gesture_use",
     text: {
-      hu: `Ritkán használ mutató gesztusokat kommunikáció közben.`,
+      hu: `Ritkán használ mutató gesztusokat kommunikáció közben társas helyzetekben.`,
       en: `Rarely uses pointing gestures while communicating.`,
       de: `Verwendet selten Zeigegesten beim Kommunizieren.`,
       it: `Usa raramente gesti di indicazione durante la comunicazione.`,
@@ -936,7 +985,7 @@ window.NM_ASD_BANK = [
       ar: `نادراً ما يستخدم إيماءات الإشارة أثناء التواصل.`,
       pl: `Rzadko używa gestów wskazywania podczas komunikacji.`,
       pt: `Raramente usa gestos de apontar ao comunicar.`,
-      fr: `Utilise rarement des gestes de pointage en communiquant.`,
+      fr: `Utilise rarement des gestes de pointage en communiquant.`
     }
   },
   {
@@ -945,9 +994,10 @@ window.NM_ASD_BANK = [
     subdomain: "restricted_patterns",
     weight: 1.3,
     reverse: false,
+    stemKey: "restricted_play",
     text: {
-      hu: `Játéka gyakran ismétlődő vagy beszűkült.`,
-      en: `Play tends to be repetitive or restricted.`,
+      hu: `Játéka gyakran ismétlődő vagy beszűkült hétköznapi helyzetekben.`,
+      en: `Play is often repetitive or restricted in everyday situations.`,
       de: `Das Spiel ist meist repetitiv oder eingeschränkt.`,
       it: `Il gioco tende ad essere ripetitivo o limitato.`,
       es: `El juego suele ser repetitivo o restringido.`,
@@ -956,7 +1006,7 @@ window.NM_ASD_BANK = [
       ar: `اللعب يميل لأن يكون متكررًا أو محدودًا.`,
       pl: `Zabawa jest zwykle powtarzalna lub ograniczona.`,
       pt: `O brincar tende a ser repetitivo ou restrito.`,
-      fr: `Le jeu a tendance à être répétitif ou restreint.`,
+      fr: `Le jeu a tendance à être répétitif ou restreint.`
     }
   },
   {
@@ -965,9 +1015,10 @@ window.NM_ASD_BANK = [
     subdomain: "sensory_processing",
     weight: 1.4,
     reverse: false,
+    stemKey: "touch_avoidance",
     text: {
-      hu: `Kerüli az érintést vagy testi kontaktust.`,
-      en: `Avoids touch or physical contact.`,
+      hu: `Kerüli az érintést vagy testi kontaktust a mindennapi környezetben.`,
+      en: `Avoids touch or physical contact in the everyday environment.`,
       de: `Vermeidet Berührungen oder physischen Kontakt.`,
       it: `Evita il contatto fisico o il tocco.`,
       es: `Evita el contacto físico o el tacto.`,
@@ -976,7 +1027,7 @@ window.NM_ASD_BANK = [
       ar: `يتجنب اللمس أو الاتصال الجسدي.`,
       pl: `Unika dotyku lub kontaktu fizycznego.`,
       pt: `Evita toque ou contato físico.`,
-      fr: `Évite le toucher ou le contact physique.`,
+      fr: `Évite le toucher ou le contact physique.`
     }
   },
   {
@@ -985,9 +1036,10 @@ window.NM_ASD_BANK = [
     subdomain: "flexibility",
     weight: 1.3,
     reverse: false,
+    stemKey: "new_situation_adjustment",
     text: {
-      hu: `Nehezen alkalmazkodik új helyzetekhez.`,
-      en: `Has difficulty adjusting to new situations.`,
+      hu: `Nehezen alkalmazkodik új helyzetekhez váratlan vagy változó helyzetekben.`,
+      en: `Has difficulty adapting to new situations when circumstances are unexpected or changing.`,
       de: `Hat Schwierigkeiten, sich an neue Situationen anzupassen.`,
       it: `Fa fatica ad adattarsi a nuove situazioni.`,
       es: `Tiene dificultad para adaptarse a nuevas situaciones.`,
@@ -996,7 +1048,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في التكيف مع المواقف الجديدة.`,
       pl: `Ma trudności z dostosowaniem się do nowych sytuacji.`,
       pt: `Tem dificuldade em adaptar-se a novas situações.`,
-      fr: `A des difficultés à s'adapter à de nouvelles situations.`,
+      fr: `A des difficultés à s'adapter à de nouvelles situations.`
     }
   },
   {
@@ -1005,9 +1057,10 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.3,
     reverse: false,
+    stemKey: "response_to_approach",
     text: {
-      hu: `Nem reagál mindig mások közeledésére.`,
-      en: `Does not consistently respond to others' social approaches.`,
+      hu: `Visszatérően nehezebben reagál mások közeledésére többféle társas helyzetben.`,
+      en: `Repeatedly has difficulty responding to others' social approaches across different social situations.`,
       de: `Reagiert nicht konsequent auf soziale Annäherungsversuche anderer.`,
       it: `Non risponde sempre agli approcci sociali degli altri.`,
       es: `No responde consistentemente a los acercamientos sociales de otros.`,
@@ -1016,7 +1069,7 @@ window.NM_ASD_BANK = [
       ar: `لا يستجيب باستمرار لمحاولات التواصل الاجتماعي من الآخرين.`,
       pl: `Nie reaguje konsekwentnie na społeczne podejścia innych.`,
       pt: `Não responde consistentemente às abordagens sociais dos outros.`,
-      fr: `Ne répond pas toujours aux approches sociales des autres.`,
+      fr: `Ne répond pas toujours aux approches sociales des autres.`
     }
   },
   {
@@ -1025,9 +1078,10 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.3,
     reverse: false,
+    stemKey: "shared_enjoyment",
     text: {
-      hu: `Ritkán oszt meg örömteli élményeket másokkal.`,
-      en: `Rarely shares enjoyment with others.`,
+      hu: `Ritkán oszt meg örömteli élményeket másokkal többféle társas helyzetben.`,
+      en: `Rarely shares enjoyable experiences with others across different social situations.`,
       de: `Teilt selten Freude mit anderen.`,
       it: `Condivide raramente il piacere con gli altri.`,
       es: `Rara vez comparte alegría con otros.`,
@@ -1036,7 +1090,7 @@ window.NM_ASD_BANK = [
       ar: `نادراً ما يشارك الاستمتاع مع الآخرين.`,
       pl: `Rzadko dzieli się radością z innymi.`,
       pt: `Raramente compartilha alegria com os outros.`,
-      fr: `Partage rarement son plaisir avec les autres.`,
+      fr: `Partage rarement son plaisir avec les autres.`
     }
   },
   {
@@ -1045,9 +1099,10 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.2,
     reverse: true,
+    stemKey: "social_seeking_reverse",
     text: {
-      hu: `Aktívan keresi mások társaságát.`,
-      en: `Actively seeks social interaction.`,
+      hu: `Aktívan keresi mások társaságát többféle társas helyzetben.`,
+      en: `Actively seeks others' company across different social situations.`,
       de: `Sucht aktiv soziale Interaktion.`,
       it: `Cerca attivamente l'interazione sociale.`,
       es: `Busca activamente la interacción social.`,
@@ -1056,7 +1111,7 @@ window.NM_ASD_BANK = [
       ar: `يسعى بنشاط إلى التفاعل الاجتماعي.`,
       pl: `Aktywnie poszukuje interakcji społecznych.`,
       pt: `Busca ativamente a interação social.`,
-      fr: `Recherche activement l'interaction sociale.`,
+      fr: `Recherche activement l'interaction sociale.`
     }
   },
   {
@@ -1065,9 +1120,10 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.3,
     reverse: false,
+    stemKey: "response_to_others_emotions",
     text: {
-      hu: `Nehezen reagál mások érzelmeire.`,
-      en: `May not readily notice or adjust to another person's emotional state.`,
+      hu: `Nehezen reagál mások érzelmeire többféle társas helyzetben.`,
+      en: `Has difficulty responding to others' emotions across different social situations.`,
       de: `Hat Schwierigkeiten, auf die Gefühle anderer zu reagieren.`,
       it: `Fa fatica a rispondere alle emozioni degli altri.`,
       es: `Tiene dificultad para responder a las emociones de otros.`,
@@ -1076,7 +1132,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في الاستجابة لمشاعر الآخرين.`,
       pl: `Ma trudności z reagowaniem na emocje innych.`,
       pt: `Tem dificuldade em responder às emoções dos outros.`,
-      fr: `A du mal à répondre aux émotions des autres.`,
+      fr: `A du mal à répondre aux émotions des autres.`
     }
   },
   {
@@ -1085,9 +1141,10 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.3,
     reverse: false,
+    stemKey: "help_seeking",
     text: {
-      hu: `Ritkán kér segítséget másoktól.`,
-      en: `Rarely seeks help from others.`,
+      hu: `Ritkán kér segítséget másoktól többféle társas helyzetben.`,
+      en: `Rarely asks others for help across different social situations.`,
       de: `Sucht selten Hilfe bei anderen.`,
       it: `Chiede raramente aiuto agli altri.`,
       es: `Rara vez busca ayuda de otros.`,
@@ -1096,7 +1153,7 @@ window.NM_ASD_BANK = [
       ar: `نادراً ما يلتمس المساعدة من الآخرين.`,
       pl: `Rzadko szuka pomocy u innych.`,
       pt: `Raramente busca ajuda dos outros.`,
-      fr: `Cherche rarement de l'aide auprès des autres.`,
+      fr: `Cherche rarement de l'aide auprès des autres.`
     }
   },
   {
@@ -1105,9 +1162,10 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.3,
     reverse: false,
+    stemKey: "facial_expression_use",
     text: {
-      hu: `Arckifejezése kevéssé tükrözi érzelmeit.`,
-      en: `Facial expressions do not clearly reflect emotions.`,
+      hu: `Arckifejezése kevéssé tükrözi érzelmeit társas helyzetekben.`,
+      en: `Facial expression reflects emotions only weakly in social situations.`,
       de: `Mimik spiegelt Emotionen nicht klar wider.`,
       it: `Le espressioni facciali non riflettono chiaramente le emozioni.`,
       es: `Las expresiones faciales no reflejan claramente las emociones.`,
@@ -1116,7 +1174,7 @@ window.NM_ASD_BANK = [
       ar: `التعبيرات الوجهية لا تعكس العواطف بوضوح.`,
       pl: `Mimika nie odzwierciedla wyraźnie emocji.`,
       pt: `As expressões faciais não refletem claramente as emoções.`,
-      fr: `Les expressions faciales ne reflètent pas clairement les émotions.`,
+      fr: `Les expressions faciales ne reflètent pas clairement les émotions.`
     }
   },
   {
@@ -1125,9 +1183,10 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.3,
     reverse: false,
+    stemKey: "body_posture_communication",
     text: {
-      hu: `Testtartása kevéssé fejezi ki szándékait.`,
-      en: `Body posture does not clearly convey intentions.`,
+      hu: `Testtartása kevéssé fejezi ki szándékait társas helyzetekben.`,
+      en: `Body posture expresses intentions only weakly in social situations.`,
       de: `Körperhaltung vermittelt Absichten nicht klar.`,
       it: `La postura corporea non trasmette chiaramente le intenzioni.`,
       es: `La postura corporal no transmite claramente las intenciones.`,
@@ -1136,7 +1195,7 @@ window.NM_ASD_BANK = [
       ar: `وضعية الجسم لا توضح النوايا بوضوح.`,
       pl: `Postawa ciała nie przekazuje jasno zamiarów.`,
       pt: `A postura corporal não transmite claramente as intenções.`,
-      fr: `La posture corporelle ne transmet pas clairement les intentions.`,
+      fr: `La posture corporelle ne transmet pas clairement les intentions.`
     }
   },
   {
@@ -1145,9 +1204,10 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.2,
     reverse: true,
+    stemKey: "gaze_following_reverse",
     text: {
-      hu: `Követi mások tekintetét.`,
-      en: `Follows others' gaze.`,
+      hu: `Követi mások tekintetét több társas helyzetben.`,
+      en: `Follows others' gaze direction in social situations.`,
       de: `Folgt dem Blick anderer.`,
       it: `Segue lo sguardo degli altri.`,
       es: `Sigue la mirada de otros.`,
@@ -1156,7 +1216,7 @@ window.NM_ASD_BANK = [
       ar: `يتبع نظرات الآخرين.`,
       pl: `Podąża za czyimś spojrzeniem.`,
       pt: `Segue o olhar dos outros.`,
-      fr: `Suit le regard des autres.`,
+      fr: `Suit le regard des autres.`
     }
   },
   {
@@ -1165,9 +1225,10 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.3,
     reverse: false,
+    stemKey: "body_language_reading",
     text: {
-      hu: `Nehezen értelmezi mások testbeszédét.`,
-      en: `Has difficulty interpreting body language.`,
+      hu: `Nehezen értelmezi mások testbeszédét társas helyzetekben.`,
+      en: `Has difficulty interpreting others' body language in social situations.`,
       de: `Hat Schwierigkeiten, Körpersprache zu deuten.`,
       it: `Ha difficoltà a interpretare il linguaggio del corpo.`,
       es: `Tiene dificultad para interpretar el lenguaje corporal.`,
@@ -1176,7 +1237,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في تفسير لغة الجسد.`,
       pl: `Ma trudności z interpretacją mowy ciała.`,
       pt: `Tem dificuldade em interpretar a linguagem corporal.`,
-      fr: `A du mal à interpréter le langage corporel.`,
+      fr: `A du mal à interpréter le langage corporel.`
     }
   },
   {
@@ -1185,9 +1246,10 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.3,
     reverse: false,
+    stemKey: "gesture_use",
     text: {
-      hu: `Kevés gesztust használ kommunikáció során.`,
-      en: `Uses few gestures when communicating.`,
+      hu: `Kevés gesztust használ kommunikáció során társas helyzetekben.`,
+      en: `Uses few gestures during communication in social situations.`,
       de: `Verwendet wenige Gesten beim Kommunizieren.`,
       it: `Usa pochi gesti durante la comunicazione.`,
       es: `Utiliza pocos gestos al comunicarse.`,
@@ -1196,7 +1258,7 @@ window.NM_ASD_BANK = [
       ar: `يستخدم القليل من الإيماءات عند التواصل.`,
       pl: `Używa niewielu gestów podczas komunikacji.`,
       pt: `Usa poucos gestos ao comunicar-se.`,
-      fr: `Utilise peu de gestes en communiquant.`,
+      fr: `Utilise peu de gestes en communiquant.`
     }
   },
   {
@@ -1205,9 +1267,10 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.4,
     reverse: false,
+    stemKey: "social_intention_reading",
     text: {
-      hu: `Nehezen érti mások szándékait.`,
-      en: `Has difficulty understanding others' intentions.`,
+      hu: `Nehezen érti mások szándékait kortárs vagy családi kapcsolatokban.`,
+      en: `Has difficulty understanding others' intentions in peer or family relationships.`,
       de: `Hat Schwierigkeiten, die Absichten anderer zu verstehen.`,
       it: `Ha difficoltà a comprendere le intenzioni degli altri.`,
       es: `Tiene dificultad para entender las intenciones de los demás.`,
@@ -1216,7 +1279,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في فهم نوايا الآخرين.`,
       pl: `Ma trudności ze zrozumieniem intencji innych.`,
       pt: `Tem dificuldade em entender as intenções dos outros.`,
-      fr: `A du mal à comprendre les intentions des autres.`,
+      fr: `A du mal à comprendre les intentions des autres.`
     }
   },
   {
@@ -1225,9 +1288,10 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.3,
     reverse: false,
+    stemKey: "lasting_relationships",
     text: {
-      hu: `Nehezen tart fenn tartós kapcsolatokat.`,
-      en: `Struggles to maintain long-term relationships.`,
+      hu: `Nehezen tart fenn tartós kapcsolatokat kortárs vagy családi kapcsolatokban.`,
+      en: `Has difficulty maintaining lasting relationships in peer or family relationships.`,
       de: `Hat Schwierigkeiten, langfristige Beziehungen aufrechtzuerhalten.`,
       it: `Fa fatica a mantenere relazioni a lungo termine.`,
       es: `Tiene dificultades para mantener relaciones a largo plazo.`,
@@ -1236,7 +1300,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في الحفاظ على العلاقات طويلة الأمد.`,
       pl: `Ma trudności w utrzymywaniu długoterminowych relacji.`,
       pt: `Tem dificuldade em manter relacionamentos a longo prazo.`,
-      fr: `A des difficultés à maintenir des relations à long terme.`,
+      fr: `A des difficultés à maintenir des relations à long terme.`
     }
   },
   {
@@ -1245,9 +1309,10 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.2,
     reverse: true,
+    stemKey: "social_adaptation_reverse",
     text: {
-      hu: `Képes alkalmazkodni mások elvárásaihoz.`,
-      en: `Can adapt to others' expectations.`,
+      hu: `Képes alkalmazkodni mások elvárásaihoz kortárs vagy családi kapcsolatokban.`,
+      en: `Can adapt to others' expectations in peer or family relationships.`,
       de: `Kann sich an die Erwartungen anderer anpassen.`,
       it: `È in grado di adattarsi alle aspettative degli altri.`,
       es: `Puede adaptarse a las expectativas de los demás.`,
@@ -1256,7 +1321,7 @@ window.NM_ASD_BANK = [
       ar: `يستطيع التكيف مع توقعات الآخرين.`,
       pl: `Potrafi dostosować się do oczekiwań innych.`,
       pt: `Consegue adaptar-se às expectativas dos outros.`,
-      fr: `Peut s'adapter aux attentes des autres.`,
+      fr: `Peut s'adapter aux attentes des autres.`
     }
   },
   {
@@ -1265,9 +1330,10 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.3,
     reverse: false,
+    stemKey: "friendship_initiation",
     text: {
-      hu: `Nehezen kezdeményez barátságokat.`,
-      en: `Has difficulty initiating friendships.`,
+      hu: `Nehezen kezdeményez barátságokat kortárs vagy családi kapcsolatokban.`,
+      en: `Has difficulty initiating friendships in peer or family relationships.`,
       de: `Hat Schwierigkeiten, Freundschaften zu beginnen.`,
       it: `Ha difficoltà a iniziare amicizie.`,
       es: `Tiene dificultades para iniciar amistades.`,
@@ -1276,7 +1342,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في بدء صداقات.`,
       pl: `Ma trudności z nawiązywaniem przyjaźni.`,
       pt: `Tem dificuldade em iniciar amizades.`,
-      fr: `A du mal à entamer des amitiés.`,
+      fr: `A du mal à entamer des amitiés.`
     }
   },
   {
@@ -1285,9 +1351,10 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.3,
     reverse: false,
+    stemKey: "social_feedback",
     text: {
-      hu: `Nem mindig reagál mások visszajelzéseire.`,
-      en: `Does not always respond to social feedback.`,
+      hu: `Visszatérően nehezebben igazítja viselkedését mások társas visszajelzéseihez.`,
+      en: `Repeatedly has difficulty adapting behavior to others' social feedback.`,
       de: `Reagiert nicht immer auf soziale Rückmeldungen.`,
       it: `Non risponde sempre ai feedback sociali.`,
       es: `No siempre responde a las señales sociales.`,
@@ -1296,7 +1363,7 @@ window.NM_ASD_BANK = [
       ar: `لا يرد دائمًا على التعليقات الاجتماعية.`,
       pl: `Nie zawsze reaguje na informacje zwrotne społeczne.`,
       pt: `Nem sempre responde ao feedback social.`,
-      fr: `Ne répond pas toujours aux retours sociaux.`,
+      fr: `Ne répond pas toujours aux retours sociaux.`
     }
   },
   {
@@ -1305,9 +1372,10 @@ window.NM_ASD_BANK = [
     subdomain: "restricted_patterns",
     weight: 1.4,
     reverse: false,
+    stemKey: "repetitive_vocalization",
     text: {
-      hu: `Ismétlődő hangokat vagy szavakat használ.`,
-      en: `Uses repetitive sounds or words.`,
+      hu: `Ismétlődő hangokat vagy szavakat használ hétköznapi helyzetekben.`,
+      en: `Uses repetitive sounds or words in everyday situations.`,
       de: `Verwendet sich wiederholende Laute oder Wörter.`,
       it: `Usa suoni o parole ripetitivi.`,
       es: `Usa sonidos o palabras repetitivas.`,
@@ -1316,7 +1384,7 @@ window.NM_ASD_BANK = [
       ar: `يستخدم أصواتًا أو كلمات متكررة.`,
       pl: `Używa powtarzających się dźwięków lub słów.`,
       pt: `Usa sons ou palavras repetitivas.`,
-      fr: `Utilise des sons ou mots répétitifs.`,
+      fr: `Utilise des sons ou mots répétitifs.`
     }
   },
   {
@@ -1325,9 +1393,10 @@ window.NM_ASD_BANK = [
     subdomain: "restricted_patterns",
     weight: 1.3,
     reverse: false,
+    stemKey: "arrangement_rigidity",
     text: {
-      hu: `Ragaszkodik tárgyak meghatározott elrendezéséhez.`,
-      en: `Insists on specific arrangements of objects.`,
+      hu: `Ragaszkodik tárgyak meghatározott elrendezéséhez hétköznapi helyzetekben.`,
+      en: `Insists on a specific arrangement of objects in everyday situations.`,
       de: `Besteht auf bestimmten Anordnungen von Gegenständen.`,
       it: `Insiste su disposizioni specifiche degli oggetti.`,
       es: `Insiste en arreglos específicos de objetos.`,
@@ -1336,7 +1405,7 @@ window.NM_ASD_BANK = [
       ar: `يصر على ترتيبات محددة للأشياء.`,
       pl: `Nalega na określonym układzie przedmiotów.`,
       pt: `Insiste em arranjos específicos de objetos.`,
-      fr: `Insiste sur des arrangements précis des objets.`,
+      fr: `Insiste sur des arrangements précis des objets.`
     }
   },
   {
@@ -1345,9 +1414,10 @@ window.NM_ASD_BANK = [
     subdomain: "restricted_patterns",
     weight: 1.2,
     reverse: true,
+    stemKey: "routine_change_reverse",
     text: {
-      hu: `Képes elfogadni a rutinok változását.`,
-      en: `Can accept changes in routines.`,
+      hu: `Képes elfogadni a rutinok változását hétköznapi helyzetekben.`,
+      en: `Can accept changes in routines in everyday situations.`,
       de: `Kann Veränderungen in Routinen akzeptieren.`,
       it: `Può accettare cambiamenti nelle routine.`,
       es: `Puede aceptar cambios en las rutinas.`,
@@ -1356,7 +1426,7 @@ window.NM_ASD_BANK = [
       ar: `يمكنه تقبل التغييرات في الروتين.`,
       pl: `Potrafi zaakceptować zmiany w rutynach.`,
       pt: `Consegue aceitar mudanças nas rotinas.`,
-      fr: `Peut accepter les changements dans les routines.`,
+      fr: `Peut accepter les changements dans les routines.`
     }
   },
   {
@@ -1365,9 +1435,10 @@ window.NM_ASD_BANK = [
     subdomain: "restricted_patterns",
     weight: 1.3,
     reverse: false,
+    stemKey: "topic_fixation",
     text: {
-      hu: `Hajlamos egy témára túlzottan ráfókuszálni.`,
-      en: `Tends to become overly focused on one topic.`,
+      hu: `Hajlamos egy témára túlzottan ráfókuszálni hétköznapi helyzetekben.`,
+      en: `Tends to focus excessively on one topic in everyday situations.`,
       de: `Neigt dazu, sich zu sehr auf ein Thema zu konzentrieren.`,
       it: `Tende a concentrarsi eccessivamente su un argomento.`,
       es: `Tiende a enfocarse demasiado en un solo tema.`,
@@ -1376,7 +1447,7 @@ window.NM_ASD_BANK = [
       ar: `يميل إلى التركيز المفرط على موضوع واحد.`,
       pl: `Ma tendencję do nadmiernego skupiania się na jednym temacie.`,
       pt: `Tende a focar demais em um único tópico.`,
-      fr: `A tendance à se concentrer excessivement sur un seul sujet.`,
+      fr: `A tendance à se concentrer excessivement sur un seul sujet.`
     }
   },
   {
@@ -1385,6 +1456,7 @@ window.NM_ASD_BANK = [
     subdomain: "restricted_patterns",
     weight: 1.3,
     reverse: false,
+    stemKey: "letting_go_routines",
     text: {
       hu: `Nehezen engedi el a megszokott rutinokat.`,
       en: `Has difficulty letting go of routines.`,
@@ -1396,7 +1468,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في التخلي عن الروتين.`,
       pl: `Ma trudności z odpuszczeniem rutyn.`,
       pt: `Tem dificuldade em abandonar rotinas.`,
-      fr: `A du mal à abandonner les routines.`,
+      fr: `A du mal à abandonner les routines.`
     }
   },
   {
@@ -1405,9 +1477,10 @@ window.NM_ASD_BANK = [
     subdomain: "sensory_processing",
     weight: 1.4,
     reverse: false,
+    stemKey: "sound_specific_sensitivity",
     text: {
-      hu: `Bizonyos hangokra különösen érzékeny.`,
-      en: `Is especially sensitive to specific sounds.`,
+      hu: `Bizonyos hangokra különösen érzékeny a mindennapi környezetben.`,
+      en: `Is especially sensitive to certain sounds in the everyday environment.`,
       de: `Ist besonders empfindlich gegenüber bestimmten Geräuschen.`,
       it: `È particolarmente sensibile a suoni specifici.`,
       es: `Es especialmente sensible a ciertos sonidos.`,
@@ -1416,7 +1489,7 @@ window.NM_ASD_BANK = [
       ar: `يتأثر بشكل خاص بأصوات معينة.`,
       pl: `Jest szczególnie wrażliwy na określone dźwięki.`,
       pt: `É especialmente sensível a sons específicos.`,
-      fr: `Est particulièrement sensible à certains sons.`,
+      fr: `Est particulièrement sensible à certains sons.`
     }
   },
   {
@@ -1425,9 +1498,10 @@ window.NM_ASD_BANK = [
     subdomain: "sensory_processing",
     weight: 1.3,
     reverse: false,
+    stemKey: "light_sensitivity",
     text: {
-      hu: `Erős fények zavarják.`,
-      en: `Is disturbed by bright lights.`,
+      hu: `Erős fények zavarják a mindennapi környezetben.`,
+      en: `Strong lights bother them in the everyday environment.`,
       de: `Wird durch grelles Licht gestört.`,
       it: `È infastidito da luci intense.`,
       es: `Se siente molesto por luces brillantes.`,
@@ -1436,7 +1510,7 @@ window.NM_ASD_BANK = [
       ar: `ينزعج من الأضواء الساطعة.`,
       pl: `Jest niepokojony przez jasne światła.`,
       pt: `Fica incomodado com luzes brilhantes.`,
-      fr: `Est gêné par les lumières vives.`,
+      fr: `Est gêné par les lumières vives.`
     }
   },
   {
@@ -1445,9 +1519,10 @@ window.NM_ASD_BANK = [
     subdomain: "sensory_processing",
     weight: 1.3,
     reverse: false,
+    stemKey: "sensory_seeking",
     text: {
-      hu: `Keresi az intenzív érzékszervi élményeket.`,
-      en: `Seeks intense sensory experiences.`,
+      hu: `Keresi az intenzív érzékszervi élményeket a mindennapi környezetben.`,
+      en: `Seeks intense sensory experiences in the everyday environment.`,
       de: `Sucht intensive sensorische Erfahrungen.`,
       it: `Cerca esperienze sensoriali intense.`,
       es: `Busca experiencias sensoriales intensas.`,
@@ -1456,7 +1531,7 @@ window.NM_ASD_BANK = [
       ar: `يسعى لتجارب حسية مكثفة.`,
       pl: `Poszukuje intensywnych doświadczeń sensorycznych.`,
       pt: `Busca experiências sensoriais intensas.`,
-      fr: `Recherche des expériences sensorielles intenses.`,
+      fr: `Recherche des expériences sensorielles intenses.`
     }
   },
   {
@@ -1465,9 +1540,10 @@ window.NM_ASD_BANK = [
     subdomain: "sensory_processing",
     weight: 1.2,
     reverse: true,
+    stemKey: "environmental_input_reverse",
     text: {
-      hu: `Jól kezeli a különböző környezeti ingereket.`,
-      en: `Handles environmental input well.`,
+      hu: `Jól kezeli a különböző környezeti ingereket a mindennapi környezetben.`,
+      en: `Handles different environmental stimuli well in the everyday environment.`,
       de: `Kann Umweltreize gut verarbeiten.`,
       it: `Gestisce bene gli stimoli ambientali.`,
       es: `Maneja bien los estímulos del entorno.`,
@@ -1476,7 +1552,7 @@ window.NM_ASD_BANK = [
       ar: `يتعامل جيداً مع المؤثرات البيئية.`,
       pl: `Dobrze radzi sobie z bodźcami środowiskowymi.`,
       pt: `Lida bem com os estímulos do ambiente.`,
-      fr: `Gère bien les stimulations de l'environnement.`,
+      fr: `Gère bien les stimulations de l'environnement.`
     }
   },
   {
@@ -1485,9 +1561,10 @@ window.NM_ASD_BANK = [
     subdomain: "sensory_processing",
     weight: 1.3,
     reverse: false,
+    stemKey: "texture_sensitivity",
     text: {
-      hu: `Bizonyos anyagokat kellemetlennek érez.`,
-      en: `Finds certain textures uncomfortable.`,
+      hu: `Bizonyos anyagokat kellemetlennek érez a mindennapi környezetben.`,
+      en: `Finds certain materials unpleasant in the everyday environment.`,
       de: `Findet bestimmte Texturen unangenehm.`,
       it: `Trova sgradevoli alcune texture.`,
       es: `Encuentra ciertas texturas incómodas.`,
@@ -1496,7 +1573,7 @@ window.NM_ASD_BANK = [
       ar: `تجد بعض القوام غير مريح.`,
       pl: `Odczuwa dyskomfort przy niektórych fakturach.`,
       pt: `Acha certas texturas desconfortáveis.`,
-      fr: `Trouve certaines textures désagréables.`,
+      fr: `Trouve certaines textures désagréables.`
     }
   },
   {
@@ -1505,9 +1582,10 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.3,
     reverse: false,
+    stemKey: "spontaneous_attention_sharing",
     text: {
-      hu: `Ritkán osztja meg spontán módon a figyelmét másokkal.`,
-      en: `Rarely shares attention spontaneously.`,
+      hu: `Ritkán osztja meg spontán módon a figyelmét másokkal többféle társas helyzetben.`,
+      en: `Rarely shares attention spontaneously with others across different social situations.`,
       de: `Teilt selten spontan Aufmerksamkeit.`,
       it: `Condivide raramente l'attenzione spontaneamente.`,
       es: `Rara vez comparte la atención de forma espontánea.`,
@@ -1516,7 +1594,7 @@ window.NM_ASD_BANK = [
       ar: `نادراً ما يشارك الانتباه بشكل عفوي.`,
       pl: `Rzadko spontanicznie dzieli się uwagą.`,
       pt: `Raramente compartilha atenção espontaneamente.`,
-      fr: `Partage rarement spontanément son attention.`,
+      fr: `Partage rarement spontanément son attention.`
     }
   },
   {
@@ -1525,9 +1603,10 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.3,
     reverse: false,
+    stemKey: "shared_experience",
     text: {
-      hu: `Nem osztja meg élményeit másokkal.`,
-      en: `Does not share experiences with others.`,
+      hu: `Nem osztja meg élményeit másokkal többféle társas helyzetben.`,
+      en: `Does not share experiences with others across different social situations.`,
       de: `Teilt keine Erfahrungen mit anderen.`,
       it: `Non condivide le esperienze con gli altri.`,
       es: `No comparte experiencias con otros.`,
@@ -1536,7 +1615,7 @@ window.NM_ASD_BANK = [
       ar: `لا يشارك التجارب مع الآخرين.`,
       pl: `Nie dzieli się doświadczeniami z innymi.`,
       pt: `Não compartilha experiências com os outros.`,
-      fr: `Ne partage pas ses expériences avec les autres.`,
+      fr: `Ne partage pas ses expériences avec les autres.`
     }
   },
   {
@@ -1545,9 +1624,10 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.2,
     reverse: true,
+    stemKey: "reciprocal_conversation_reverse",
     text: {
-      hu: `Képes oda-vissza kommunikációra.`,
-      en: `Able to engage in back-and-forth communication.`,
+      hu: `Képes oda-vissza kommunikációra többféle társas helyzetben.`,
+      en: `Can engage in back-and-forth communication across different social situations.`,
       de: `Kann sich auf einen wechselseitigen Austausch einlassen.`,
       it: `È in grado di impegnarsi in una comunicazione a scambio reciproco.`,
       es: `Es capaz de participar en una comunicación de ida y vuelta.`,
@@ -1556,7 +1636,7 @@ window.NM_ASD_BANK = [
       ar: `قادر على الانخراط في تواصل ذي اتجاهين.`,
       pl: `Potrafi prowadzić wymianę komunikacji w obie strony.`,
       pt: `Consegue envolver-se numa comunicação de ida e volta.`,
-      fr: `Capable d'engager une communication à double sens.`,
+      fr: `Capable d'engager une communication à double sens.`
     }
   },
   {
@@ -1565,9 +1645,10 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.3,
     reverse: false,
+    stemKey: "expected_social_response",
     text: {
-      hu: `Nem mindig reagál a helyzethez illően.`,
-      en: `Does not always respond appropriately to situations.`,
+      hu: `Visszatérően nehezebben reagál a helyzet társas elvárásaihoz illően.`,
+      en: `Repeatedly has difficulty responding in line with the social expectations of the situation.`,
       de: `Reagiert nicht immer angemessen auf Situationen.`,
       it: `Non risponde sempre in modo appropriato alle situazioni.`,
       es: `No siempre responde apropiadamente a las situaciones.`,
@@ -1576,7 +1657,7 @@ window.NM_ASD_BANK = [
       ar: `لا يستجيب دائماً بشكل مناسب للمواقف.`,
       pl: `Nie zawsze reaguje odpowiednio na sytuacje.`,
       pt: `Nem sempre responde de forma apropriada às situações.`,
-      fr: `Ne réagit pas toujours de manière appropriée aux situations.`,
+      fr: `Ne réagit pas toujours de manière appropriée aux situations.`
     }
   },
   {
@@ -1585,9 +1666,10 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.3,
     reverse: false,
+    stemKey: "social_withdrawal",
     text: {
-      hu: `Hajlamos visszahúzódni társas helyzetekben.`,
-      en: `Tends to withdraw in social situations.`,
+      hu: `Hajlamos visszahúzódni társas helyzetekben többféle társas helyzetben.`,
+      en: `Tends to withdraw in social settings across different social situations.`,
       de: `Zieht sich in sozialen Situationen zurück.`,
       it: `Tende a ritirarsi nelle situazioni sociali.`,
       es: `Tiende a retirarse en situaciones sociales.`,
@@ -1596,7 +1678,7 @@ window.NM_ASD_BANK = [
       ar: `يميل إلى الانسحاب في المواقف الاجتماعية.`,
       pl: `Ma tendencję do wycofywania się w sytuacjach społecznych.`,
       pt: `Tende a se afastar em situações sociais.`,
-      fr: `Tend à se retirer dans les situations sociales.`,
+      fr: `Tend à se retirer dans les situations sociales.`
     }
   },
   {
@@ -1605,8 +1687,9 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.4,
     reverse: false,
+    stemKey: "social_engagement_passive",
     text: {
-      hu: `Társas helyzetekben passzívnak vagy nehezen bevonhatónak tűnik.`,
+      hu: `Társas helyzetekben passzívnak vagy nehezen bevonhatónak tűnik többféle társas helyzetben.`,
       en: `Appears passive or difficult to engage in social situations.`,
       de: `Wirkt passiv oder schwer in sozialen Situationen einzubeziehen.`,
       it: `Sembra passivo o difficile da coinvolgere nelle situazioni sociali.`,
@@ -1616,7 +1699,7 @@ window.NM_ASD_BANK = [
       ar: `يبدو خاملاً أو من الصعب إشراكه في المواقف الاجتماعية.`,
       pl: `Wydaje się bierny lub trudno nawiązać z nim kontakt w sytuacjach społecznych.`,
       pt: `Parece passivo ou difícil de envolver em situações sociais.`,
-      fr: `Semble passif ou difficile à engager dans des situations sociales.`,
+      fr: `Semble passif ou difficile à engager dans des situations sociales.`
     }
   },
   {
@@ -1625,8 +1708,9 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.2,
     reverse: true,
+    stemKey: "response_to_others_interest_reverse",
     text: {
-      hu: `Természetesen reagál arra, ha mások érdeklődést vagy örömöt mutatnak.`,
+      hu: `Természetesen reagál arra, ha mások érdeklődést vagy örömöt mutatnak többféle társas helyzetben.`,
       en: `Responds naturally when others show interest or joy.`,
       de: `Reagiert natürlich, wenn andere Interesse oder Freude zeigen.`,
       it: `Risponde in modo naturale quando gli altri mostrano interesse o gioia.`,
@@ -1636,7 +1720,7 @@ window.NM_ASD_BANK = [
       ar: `يستجيب بشكل طبيعي عندما يُظهر الآخرون اهتمامًا أو فرحًا.`,
       pl: `Reaguje naturalnie, gdy inni okazują zainteresowanie lub radość.`,
       pt: `Responde naturalmente quando os outros mostram interesse ou alegria.`,
-      fr: `Réagit naturellement lorsque les autres montrent de l'intérêt ou de la joie.`,
+      fr: `Réagit naturellement lorsque les autres montrent de l'intérêt ou de la joie.`
     }
   },
   {
@@ -1645,8 +1729,9 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.4,
     reverse: false,
+    stemKey: "joint_attention",
     text: {
-      hu: `Kevéssé osztja meg a figyelmét másokkal közös helyzetekben.`,
+      hu: `Kevéssé osztja meg a figyelmét másokkal közös helyzetekben többféle társas helyzetben.`,
       en: `Shows limited shared attention with others in joint situations.`,
       de: `Zeigt begrenzte geteilte Aufmerksamkeit mit anderen bei gemeinsamen Situationen.`,
       it: `Mostra attenzione condivisa limitata con gli altri in situazioni comuni.`,
@@ -1656,7 +1741,7 @@ window.NM_ASD_BANK = [
       ar: `يظهر انتباهاً محدوداً مشتركا مع الآخرين في مواقف مشتركة.`,
       pl: `Okazuje ograniczoną wspólną uwagę z innymi w sytuacjach wspólnych.`,
       pt: `Mostra atenção compartilhada limitada com os outros em situações conjuntas.`,
-      fr: `Montre une attention partagée limitée avec les autres dans des situations communes.`,
+      fr: `Montre une attention partagée limitée avec les autres dans des situations communes.`
     }
   },
   {
@@ -1665,9 +1750,10 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.3,
     reverse: false,
+    stemKey: "noticing_social_bid",
     text: {
-      hu: `Nem mindig veszi észre, ha valaki kapcsolódni szeretne hozzá.`,
-      en: `Does not always notice when someone wants to connect.`,
+      hu: `Visszatérően nehezebben veszi észre, amikor valaki kapcsolódni szeretne hozzá.`,
+      en: `Repeatedly has difficulty noticing when someone wants to connect with them.`,
       de: `Bemerk nicht immer, wenn jemand Kontakt aufnehmen möchte.`,
       it: `Non sempre nota quando qualcuno vuole connettersi.`,
       es: `No siempre nota cuando alguien quiere conectar.`,
@@ -1676,7 +1762,7 @@ window.NM_ASD_BANK = [
       ar: `لا يلاحظ دائمًا عندما يريد شخص ما التواصل.`,
       pl: `Nie zawsze zauważa, kiedy ktoś chce nawiązać kontakt.`,
       pt: `Nem sempre percebe quando alguém quer se conectar.`,
-      fr: `Ne remarque pas toujours quand quelqu'un cherche à établir un lien.`,
+      fr: `Ne remarque pas toujours quand quelqu'un cherche à établir un lien.`
     }
   },
   {
@@ -1685,9 +1771,10 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.5,
     reverse: false,
+    stemKey: "reciprocity_one_sided",
     text: {
-      hu: `Társas kölcsönössége gyakran egyoldalúnak tűnik.`,
-      en: `Social reciprocity often appears one-sided.`,
+      hu: `Társas kölcsönössége gyakran egyoldalúnak tűnik többféle társas helyzetben.`,
+      en: `Social reciprocity often seems one-sided across different social situations.`,
       de: `Soziale Gegenseitigkeit wirkt oft einseitig.`,
       it: `La reciprocità sociale appare spesso a senso unico.`,
       es: `La reciprocidad social a menudo parece unilateral.`,
@@ -1696,7 +1783,7 @@ window.NM_ASD_BANK = [
       ar: `غالبا ما تبدو التفاعلات الاجتماعية من طرف واحد.`,
       pl: `Wzajemność społeczna często wydaje się jednostronna.`,
       pt: `A reciprocidade social frequentemente parece unilateral.`,
-      fr: `La réciprocité sociale semble souvent unilatérale.`,
+      fr: `La réciprocité sociale semble souvent unilatérale.`
     }
   },
   {
@@ -1705,9 +1792,10 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.4,
     reverse: false,
+    stemKey: "eye_contact_timing",
     text: {
-      hu: `Szemkontaktusa rövid vagy szokatlan időzítésű.`,
-      en: `Eye contact is brief or unusually timed.`,
+      hu: `Szemkontaktusa rövid vagy szokatlan időzítésű társas helyzetekben.`,
+      en: `Eye contact is brief or unusually timed in social situations.`,
       de: `Augenkontakt ist kurz oder ungewöhnlich getimt.`,
       it: `Il contatto visivo è breve o ha tempi insoliti.`,
       es: `El contacto visual es breve o de duración inusual.`,
@@ -1716,7 +1804,7 @@ window.NM_ASD_BANK = [
       ar: `التواصل البصري يكون قصيرًا أو بتوقيت غير معتاد.`,
       pl: `Kontakt wzrokowy jest krótki lub nietypowo zsynchronizowany.`,
       pt: `O contato visual é breve ou ocorre em momentos incomuns.`,
-      fr: `Le contact visuel est bref ou mal synchronisé.`,
+      fr: `Le contact visuel est bref ou mal synchronisé.`
     }
   },
   {
@@ -1725,8 +1813,9 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.3,
     reverse: false,
+    stemKey: "nonverbal_coordination",
     text: {
-      hu: `Nehezen hangolja össze a tekintetet, a mimikát és a beszédet.`,
+      hu: `Nehezen hangolja össze a tekintetet, a mimikát és a beszédet társas helyzetekben.`,
       en: `Has difficulty coordinating gaze, facial expression, and speech.`,
       de: `Hat Schwierigkeiten, Blick, Gesichtsausdruck und Sprache zu koordinieren.`,
       it: `Ha difficoltà a coordinare lo sguardo, l'espressione facciale e il linguaggio.`,
@@ -1736,7 +1825,7 @@ window.NM_ASD_BANK = [
       ar: `يواجه صعوبة في تنسيق النظرات وتعبيرات الوجه والكلام.`,
       pl: `Ma trudności z koordynacją spojrzenia, mimiki i mowy.`,
       pt: `Tem dificuldade em coordenar o olhar, a expressão facial e a fala.`,
-      fr: `A du mal à coordonner le regard, les expressions faciales et la parole.`,
+      fr: `A du mal à coordonner le regard, les expressions faciales et la parole.`
     }
   },
   {
@@ -1745,8 +1834,9 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.2,
     reverse: true,
+    stemKey: "facial_expression_reverse",
     text: {
-      hu: `Jól és természetesen használ arckifejezést kommunikáció közben.`,
+      hu: `Jól és természetesen használ arckifejezést kommunikáció közben társas helyzetekben.`,
       en: `Uses facial expressions naturally during communication.`,
       de: `Verwendet Gesichtsausdrücke natürlich während der Kommunikation.`,
       it: `Usa espressioni facciali in modo naturale durante la comunicazione.`,
@@ -1756,7 +1846,7 @@ window.NM_ASD_BANK = [
       ar: `يستخدم تعبيرات الوجه بشكل طبيعي أثناء التواصل.`,
       pl: `Naturalnie używa mimiki podczas komunikacji.`,
       pt: `Usa expressões faciais naturalmente durante a comunicação.`,
-      fr: `Utilise des expressions faciales naturelles pendant la communication.`,
+      fr: `Utilise des expressions faciales naturelles pendant la communication.`
     }
   },
   {
@@ -1765,9 +1855,10 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.5,
     reverse: false,
+    stemKey: "facial_posture_reading",
     text: {
-      hu: `Nem mindig érti, mit fejez ki mások arca vagy testtartása.`,
-      en: `Does not always understand what others' facial expressions or posture mean.`,
+      hu: `Visszatérően nehezebben értelmezi, mit fejez ki mások arca vagy testtartása.`,
+      en: `Repeatedly has difficulty interpreting what others' faces or posture express.`,
       de: `Versteht nicht immer, was Gesichtsausdruck oder Haltung anderer bedeuten.`,
       it: `Non sempre comprende cosa significano le espressioni facciali o la postura degli altri.`,
       es: `No siempre entiende lo que significan las expresiones faciales o la postura de los demás.`,
@@ -1776,7 +1867,7 @@ window.NM_ASD_BANK = [
       ar: `لا يفهم دائمًا ما تعنيه تعبيرات الوجه أو وضعية الآخرين.`,
       pl: `Nie zawsze rozumie, co oznaczają mimika twarzy lub postawa innych osób.`,
       pt: `Nem sempre entende o significado das expressões faciais ou posturas dos outros.`,
-      fr: `Ne comprend pas toujours ce que signifient les expressions faciales ou la posture des autres.`,
+      fr: `Ne comprend pas toujours ce que signifient les expressions faciales ou la posture des autres.`
     }
   },
   {
@@ -1785,9 +1876,10 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.3,
     reverse: false,
+    stemKey: "gesture_support_communication",
     text: {
-      hu: `Gesztusai nem mindig segítik jól a mondanivalóját.`,
-      en: `Gestures do not always support communication effectively.`,
+      hu: `Gesztusai visszatérően kevésbé támogatják a mondanivaló érthetőségét.`,
+      en: `Gestures repeatedly support the clarity of communication less than expected.`,
       de: `Gesten unterstützen die Kommunikation nicht immer effektiv.`,
       it: `I gesti non sempre supportano efficacemente la comunicazione.`,
       es: `Los gestos no siempre apoyan la comunicación de manera efectiva.`,
@@ -1796,7 +1888,7 @@ window.NM_ASD_BANK = [
       ar: `لا تدعم الإيماءات التواصل بشكل فعال دائمًا.`,
       pl: `Gesty nie zawsze skutecznie wspierają komunikację.`,
       pt: `Os gestos nem sempre apoiam eficazmente a comunicação.`,
-      fr: `Les gestes ne soutiennent pas toujours efficacement la communication.`,
+      fr: `Les gestes ne soutiennent pas toujours efficacement la communication.`
     }
   },
   {
@@ -1805,8 +1897,9 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.4,
     reverse: false,
+    stemKey: "formal_communication_style",
     text: {
-      hu: `Kommunikációja merevnek vagy szokatlanul formálisnak tűnhet.`,
+      hu: `Kommunikációja merevnek vagy szokatlanul formálisnak tűnhet társas helyzetekben.`,
       en: `Communication may seem rigid or unusually formal.`,
       de: `Die Kommunikation wirkt möglicherweise steif oder ungewöhnlich formell.`,
       it: `La comunicazione può sembrare rigida o insolita in modo formale.`,
@@ -1816,7 +1909,7 @@ window.NM_ASD_BANK = [
       ar: `قد تبدو الطريقة التي يتواصل بها جامدة أو رسمية بشكل غير معتاد.`,
       pl: `Komunikacja może wydawać się sztywna lub niezwykle formalna.`,
       pt: `A comunicação pode parecer rígida ou incomumente formal.`,
-      fr: `La communication peut sembler rigide ou anormalement formelle.`,
+      fr: `La communication peut sembler rigide ou anormalement formelle.`
     }
   },
   {
@@ -1825,8 +1918,9 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.2,
     reverse: true,
+    stemKey: "visual_social_cue_reverse",
     text: {
-      hu: `Könnyen követi mások mutatásait és vizuális jelzéseit.`,
+      hu: `Könnyen követi mások mutatásait és vizuális jelzéseit társas helyzetekben.`,
       en: `Easily follows others' pointing and visual cues.`,
       de: `Folgt leicht den Zeigegesten und visuellen Hinweisen anderer.`,
       it: `Segue facilmente i gesti di indicazione e i segnali visivi degli altri.`,
@@ -1836,7 +1930,7 @@ window.NM_ASD_BANK = [
       ar: `يتبع بسهولة إشارات التوجيه والبصريات لدى الآخرين.`,
       pl: `Łatwo podąża za wskazywaniem i sygnałami wizualnymi innych.`,
       pt: `Segue facilmente os apontamentos e pistas visuais dos outros.`,
-      fr: `Suit aisément les indications et signaux visuels des autres.`,
+      fr: `Suit aisément les indications et signaux visuels des autres.`
     }
   },
   {
@@ -1845,8 +1939,9 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.4,
     reverse: false,
+    stemKey: "prosody_adjustment",
     text: {
-      hu: `Nehezen igazítja a hanghordozását a helyzethez.`,
+      hu: `Nehezen igazítja a hanghordozását a helyzethez társas helyzetekben.`,
       en: `Has difficulty adjusting tone of voice to the situation.`,
       de: `Hat Schwierigkeiten, den Tonfall der Situation anzupassen.`,
       it: `Ha difficoltà ad adattare il tono di voce alla situazione.`,
@@ -1856,7 +1951,7 @@ window.NM_ASD_BANK = [
       ar: `يواجه صعوبة في تعديل نبرة الصوت حسب الموقف.`,
       pl: `Ma trudności z dostosowaniem tonu głosu do sytuacji.`,
       pt: `Tem dificuldade em ajustar o tom de voz à situação.`,
-      fr: `A du mal à adapter le ton de sa voix à la situation.`,
+      fr: `A du mal à adapter le ton de sa voix à la situation.`
     }
   },
   {
@@ -1865,9 +1960,10 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.3,
     reverse: false,
+    stemKey: "gaze_social_feedback",
     text: {
-      hu: `Nem mindig használja a tekintetét társas irányításra vagy visszajelzésre.`,
-      en: `Does not consistently use gaze for social guidance or feedback.`,
+      hu: `Visszatérően kevésbé használja a tekintetét társas irányításra vagy visszajelzésre.`,
+      en: `Repeatedly uses gaze less for social guidance or feedback.`,
       de: `Verwendet Blickkontakt nicht beständig zur sozialen Orientierung oder Rückmeldung.`,
       it: `Non usa sempre lo sguardo per guidare o ricevere feedback sociali.`,
       es: `No utiliza consistentemente la mirada para guiar o recibir retroalimentación social.`,
@@ -1876,7 +1972,7 @@ window.NM_ASD_BANK = [
       ar: `لا يستخدم النظرات باستمرار للتوجيه أو التفاعل الاجتماعي.`,
       pl: `Nie korzysta konsekwentnie z kontaktu wzrokowego do nawiązywania lub otrzymywania informacji zwrotnej społecznej.`,
       pt: `Não usa o olhar de forma consistente para orientação social ou feedback.`,
-      fr: `N'utilise pas systématiquement le regard pour guider ou obtenir un feedback social.`,
+      fr: `N'utilise pas systématiquement le regard pour guider ou obtenir un feedback social.`
     }
   },
   {
@@ -1885,8 +1981,9 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.5,
     reverse: false,
+    stemKey: "nonverbal_emotion_readability",
     text: {
-      hu: `Mások számára nehéz lehet leolvasni az érzelmi állapotát a nonverbális jelekből.`,
+      hu: `Mások számára nehéz lehet leolvasni az érzelmi állapotát a nonverbális jelekből társas helyzetekben.`,
       en: `Others may find it hard to read emotional state from nonverbal cues.`,
       de: `Andere haben möglicherweise Schwierigkeiten, den emotionalen Zustand anhand nonverbaler Signale zu erkennen.`,
       it: `Gli altri potrebbero trovare difficile interpretare lo stato emotivo dai segnali non verbali.`,
@@ -1896,7 +1993,7 @@ window.NM_ASD_BANK = [
       ar: `قد يجد الآخرون صعوبة في قراءة الحالة العاطفية من الإشارات غير اللفظية.`,
       pl: `Inni mogą mieć trudności z rozpoznaniem stanu emocjonalnego na podstawie niewerbalnych sygnałów.`,
       pt: `Outros podem ter dificuldade em perceber o estado emocional através de sinais não verbais.`,
-      fr: `Les autres peuvent avoir du mal à lire l'état émotionnel à partir des indices non verbaux.`,
+      fr: `Les autres peuvent avoir du mal à lire l'état émotionnel à partir des indices non verbaux.`
     }
   },
   {
@@ -1905,8 +2002,9 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.4,
     reverse: false,
+    stemKey: "relationship_adaptation",
     text: {
-      hu: `Nehezen alkalmazkodik különböző emberekhez kapcsolati helyzetekben.`,
+      hu: `Nehezen alkalmazkodik különböző emberekhez kapcsolati helyzetekben kortárs vagy családi kapcsolatokban.`,
       en: `Has difficulty adapting to different people in relationship situations.`,
       de: `Hat Schwierigkeiten, sich in Beziehungssituationen an verschiedene Personen anzupassen.`,
       it: `Fa fatica ad adattarsi a persone diverse in situazioni relazionali.`,
@@ -1916,7 +2014,7 @@ window.NM_ASD_BANK = [
       ar: `يواجه صعوبة في التكيف مع أشخاص مختلفين في مواقف العلاقات.`,
       pl: `Ma trudności z dostosowaniem się do różnych osób w sytuacjach relacyjnych.`,
       pt: `Tem dificuldade em adaptar-se a diferentes pessoas em situações relacionais.`,
-      fr: `A du mal à s'adapter à différentes personnes dans les situations relationnelles.`,
+      fr: `A du mal à s'adapter à différentes personnes dans les situations relationnelles.`
     }
   },
   {
@@ -1925,9 +2023,10 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.5,
     reverse: false,
+    stemKey: "context_meaning_difference",
     text: {
-      hu: `Nem mindig érti, hogy ugyanaz a viselkedés más helyzetben mást jelenthet.`,
-      en: `Does not always understand that the same behavior may mean different things in different contexts.`,
+      hu: `Visszatérően nehezebben érti, hogy ugyanaz a viselkedés más helyzetben mást jelenthet.`,
+      en: `Repeatedly has difficulty understanding that the same behavior can mean something different in another situation.`,
       de: `Versteht nicht immer, dass dasselbe Verhalten in verschiedenen Kontexten unterschiedliche Bedeutungen haben kann.`,
       it: `Non sempre capisce che lo stesso comportamento può significare cose diverse in contesti diversi.`,
       es: `No siempre entiende que el mismo comportamiento puede significar cosas diferentes en contextos distintos.`,
@@ -1936,7 +2035,7 @@ window.NM_ASD_BANK = [
       ar: `لا يفهم دائماً أن نفس السلوك قد يعني أشياء مختلفة في سياقات مختلفة.`,
       pl: `Nie zawsze rozumie, że to samo zachowanie może oznaczać coś innego w różnych kontekstach.`,
       pt: `Nem sempre entende que o mesmo comportamento pode ter significados diferentes em contextos distintos.`,
-      fr: `Ne comprend pas toujours que le même comportement peut avoir des significations différentes selon les contextes.`,
+      fr: `Ne comprend pas toujours que le même comportement peut avoir des significations différentes selon les contextes.`
     }
   },
   {
@@ -1945,8 +2044,9 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.2,
     reverse: true,
+    stemKey: "social_rejection_awareness_reverse",
     text: {
-      hu: `Képes felismerni, ha valaki nem szeretne kapcsolódni.`,
+      hu: `Képes felismerni, ha valaki nem szeretne kapcsolódni kortárs vagy családi kapcsolatokban.`,
       en: `Can recognize when someone does not want to interact.`,
       de: `Kann erkennen, wenn jemand nicht interagieren möchte.`,
       it: `Sa riconoscere quando qualcuno non vuole interagire.`,
@@ -1956,7 +2056,7 @@ window.NM_ASD_BANK = [
       ar: `يمكنه التعرف عندما لا يريد شخص ما التفاعل.`,
       pl: `Potrafi rozpoznać, gdy ktoś nie chce nawiązywać kontaktu.`,
       pt: `Consegue reconhecer quando alguém não quer interagir.`,
-      fr: `Peut reconnaître quand quelqu'un ne souhaite pas interagir.`,
+      fr: `Peut reconnaître quand quelqu'un ne souhaite pas interagir.`
     }
   },
   {
@@ -1965,8 +2065,9 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.4,
     reverse: false,
+    stemKey: "friendship_intention_reading",
     text: {
-      hu: `Baráti helyzetekben gyakran félreérti mások szándékait.`,
+      hu: `Baráti helyzetekben gyakran félreérti mások szándékait kortárs vagy családi kapcsolatokban.`,
       en: `Often misreads others' intentions in friendship situations.`,
       de: `Missversteht oft die Absichten anderer in Freundschaftssituationen.`,
       it: `Spesso interpreta male le intenzioni degli altri nelle situazioni di amicizia.`,
@@ -1976,7 +2077,7 @@ window.NM_ASD_BANK = [
       ar: `غالبًا ما يسيء فهم نوايا الآخرين في مواقف الصداقة.`,
       pl: `Często błędnie odczytuje intencje innych w sytuacjach przyjaźni.`,
       pt: `Frequentemente interpreta mal as intenções dos outros em situações de amizade.`,
-      fr: `Malfam les intentions des autres dans des situations d'amitié.`,
+      fr: `Malfam les intentions des autres dans des situations d'amitié.`
     }
   },
   {
@@ -1985,8 +2086,9 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.3,
     reverse: false,
+    stemKey: "social_distance_signals",
     text: {
-      hu: `Kevéssé érti a társas közeledés és távolodás finom jelzéseit.`,
+      hu: `Kevéssé érti a társas közeledés és távolodás finom jelzéseit kortárs vagy családi kapcsolatokban.`,
       en: `Has limited understanding of subtle signals of social closeness and distance.`,
       de: `Hat ein begrenztes Verständnis für subtile Signale sozialer Nähe und Distanz.`,
       it: `Ha una comprensione limitata dei segnali sottili di vicinanza e distanza sociale.`,
@@ -1996,7 +2098,7 @@ window.NM_ASD_BANK = [
       ar: `يمتلك فهماً محدوداً للإشارات الدقيقة للقرب والبعد الاجتماعي.`,
       pl: `Ma ograniczone rozumienie subtelnych sygnałów bliskości i dystansu społecznego.`,
       pt: `Tem compreensão limitada dos sinais subtis de proximidade e distância social.`,
-      fr: `A une compréhension limitée des signaux subtils de proximité et distance sociale.`,
+      fr: `A une compréhension limitée des signaux subtils de proximité et distance sociale.`
     }
   },
   {
@@ -2005,9 +2107,10 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.4,
     reverse: false,
+    stemKey: "boredom_interest_detection",
     text: {
-      hu: `Nehezen veszi észre, ha mások unatkoznak vagy elveszítik az érdeklődésüket.`,
-      en: `Has difficulty noticing when others are bored or losing interest.`,
+      hu: `Nehezen veszi észre, ha mások érdeklődése beszélgetés közben csökken.`,
+      en: `Has difficulty noticing when others' interest decreases during conversation.`,
       de: `Hat Schwierigkeiten zu bemerken, wenn andere sich langweilen oder das Interesse verlieren.`,
       it: `Fa fatica a notare quando gli altri sono annoiati o perdono interesse.`,
       es: `Tiene dificultad para notar cuando otros están aburridos o perdiendo interés.`,
@@ -2016,7 +2119,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في ملاحظة متى يشعر الآخرون بالملل أو يفقدون الاهتمام.`,
       pl: `Ma trudność z zauważaniem, gdy inni się nudzą lub tracą zainteresowanie.`,
       pt: `Tem dificuldade em perceber quando os outros estão entediados ou perdendo o interesse.`,
-      fr: `A du mal à remarquer quand les autres s’ennuient ou perdent intérêt.`,
+      fr: `A du mal à remarquer quand les autres s’ennuient ou perdent intérêt.`
     }
   },
   {
@@ -2025,8 +2128,9 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.2,
     reverse: true,
+    stemKey: "social_rules_new_context_reverse",
     text: {
-      hu: `Képes viszonylag jól alkalmazkodni a társas szabályokhoz új helyzetekben is.`,
+      hu: `Képes viszonylag jól alkalmazkodni a társas szabályokhoz új helyzetekben is kortárs vagy családi kapcsolatokban.`,
       en: `Can adapt relatively well to social rules even in new situations.`,
       de: `Kann sich relativ gut an soziale Regeln anpassen, auch in neuen Situationen.`,
       it: `Si adatta abbastanza bene alle regole sociali anche in situazioni nuove.`,
@@ -2036,7 +2140,7 @@ window.NM_ASD_BANK = [
       ar: `يستطيع التكيف بشكل جيد نسبياً مع القواعد الاجتماعية حتى في المواقف الجديدة.`,
       pl: `Potrafi stosunkowo dobrze dostosować się do zasad społecznych, nawet w nowych sytuacjach.`,
       pt: `Consegue adaptar-se relativamente bem às regras sociais, mesmo em situações novas.`,
-      fr: `S’adapte relativement bien aux règles sociales, même dans de nouvelles situations.`,
+      fr: `S’adapte relativement bien aux règles sociales, même dans de nouvelles situations.`
     }
   },
   {
@@ -2045,8 +2149,9 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.5,
     reverse: false,
+    stemKey: "unwritten_peer_rules",
     text: {
-      hu: `Nehezen érti a kortárs kapcsolatok íratlan szabályait.`,
+      hu: `Nehezen érti a kortárs kapcsolatok íratlan szabályait kortárs vagy családi kapcsolatokban.`,
       en: `Struggles to understand the unwritten rules of peer relationships.`,
       de: `Hat Schwierigkeiten, die unausgesprochenen Regeln von Peer-Beziehungen zu verstehen.`,
       it: `Fa fatica a capire le regole non scritte delle relazioni tra pari.`,
@@ -2056,7 +2161,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في فهم القواعد غير المكتوبة للعلاقات بين الأقران.`,
       pl: `Ma trudności ze zrozumieniem niepisanych zasad relacji z rówieśnikami.`,
       pt: `Tem dificuldade em compreender as regras não escritas das relações entre pares.`,
-      fr: `A du mal à comprendre les règles non écrites des relations entre pairs.`,
+      fr: `A du mal à comprendre les règles non écrites des relations entre pairs.`
     }
   },
   {
@@ -2065,8 +2170,9 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.3,
     reverse: false,
+    stemKey: "relationship_distance_balance",
     text: {
-      hu: `Kapcsolataiban gyakran túl közelinek vagy túl távolinak tűnik.`,
+      hu: `Kapcsolataiban gyakran túl közelinek vagy túl távolinak tűnik kortárs vagy családi kapcsolatokban.`,
       en: `May seem either too close or too distant in relationships.`,
       de: `Wirkt in Beziehungen entweder zu nah oder zu distanziert.`,
       it: `Può sembrare o troppo vicino o troppo distante nelle relazioni.`,
@@ -2076,7 +2182,7 @@ window.NM_ASD_BANK = [
       ar: `قد يبدو قريبًا جداً أو بعيدًا جداً في العلاقات.`,
       pl: `W relacjach może wydawać się zbyt bliski lub zbyt zdystansowany.`,
       pt: `Pode parecer demasiado próximo ou demasiado distante nas relações.`,
-      fr: `Peut sembler soit trop proche, soit trop distant dans les relations.`,
+      fr: `Peut sembler soit trop proche, soit trop distant dans les relations.`
     }
   },
   {
@@ -2085,8 +2191,9 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.4,
     reverse: false,
+    stemKey: "peer_group_fit",
     text: {
-      hu: `Nehézséget okoz számára a kortárs helyzetekhez való igazodás.`,
+      hu: `Nehézséget okoz számára a kortárs helyzetekhez való igazodás kortárs vagy családi kapcsolatokban.`,
       en: `Has difficulty fitting into peer-group situations.`,
       de: `Findet es schwer, sich in Gruppen von Gleichaltrigen einzufügen.`,
       it: `Ha difficoltà a inserirsi in gruppi di pari.`,
@@ -2096,7 +2203,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في الاندماج مع مجموعات الأقران.`,
       pl: `Ma trudności z dopasowaniem się do grup rówieśniczych.`,
       pt: `Tem dificuldade em encaixar-se em grupos de colegas.`,
-      fr: `A du mal à s’intégrer dans les groupes de pairs.`,
+      fr: `A du mal à s’intégrer dans les groupes de pairs.`
     }
   },
   {
@@ -2105,6 +2212,7 @@ window.NM_ASD_BANK = [
     subdomain: "restricted_patterns",
     weight: 1.4,
     reverse: false,
+    stemKey: "strong_topic_attachment",
     text: {
       hu: `Bizonyos témákhoz vagy tárgyakhoz szokatlanul erősen kötődik.`,
       en: `Shows unusually strong attachment to certain topics or objects.`,
@@ -2116,7 +2224,7 @@ window.NM_ASD_BANK = [
       ar: `يظهر تعلقًا غير معتاد بمواضيع أو أشياء معينة.`,
       pl: `Okazuje wyjątkowo silne przywiązanie do określonych tematów lub przedmiotów.`,
       pt: `Mostra apego incomum a certos temas ou objetos.`,
-      fr: `Montre un attachement inhabituellement fort à certains sujets ou objets.`,
+      fr: `Montre un attachement inhabituellement fort à certains sujets ou objets.`
     }
   },
   {
@@ -2125,6 +2233,7 @@ window.NM_ASD_BANK = [
     subdomain: "restricted_patterns",
     weight: 1.5,
     reverse: false,
+    stemKey: "sameness_comfort",
     text: {
       hu: `Megnyugszik, ha a dolgok pontosan ugyanúgy történnek, mint korábban.`,
       en: `Feels calmer when things happen exactly the same way as before.`,
@@ -2136,7 +2245,7 @@ window.NM_ASD_BANK = [
       ar: `يشعر بالهدوء عندما تحدث الأمور بنفس الطريقة تمامًا كما من قبل.`,
       pl: `Czuje się spokojniejszy, gdy rzeczy dzieją się dokładnie tak jak wcześniej.`,
       pt: `Sente-se mais calmo quando as coisas acontecem exatamente como antes.`,
-      fr: `Se sent plus calme lorsque les choses se passent exactement comme avant.`,
+      fr: `Se sent plus calme lorsque les choses se passent exactement comme avant.`
     }
   },
   {
@@ -2145,6 +2254,7 @@ window.NM_ASD_BANK = [
     subdomain: "restricted_patterns",
     weight: 1.2,
     reverse: true,
+    stemKey: "routine_change_tolerance_reverse",
     text: {
       hu: `Jól tolerálja, ha egy megszokott rutin megváltozik.`,
       en: `Tolerates changes in familiar routines well.`,
@@ -2156,7 +2266,7 @@ window.NM_ASD_BANK = [
       ar: `يتحمل التغيرات في الروتين المألوف جيدًا.`,
       pl: `Dobrze znosi zmiany w znanych rutynach.`,
       pt: `Tolera bem as mudanças em rotinas familiares.`,
-      fr: `Tolère bien les changements dans les routines familières.`,
+      fr: `Tolère bien les changements dans les routines familières.`
     }
   },
   {
@@ -2165,6 +2275,7 @@ window.NM_ASD_BANK = [
     subdomain: "restricted_patterns",
     weight: 1.4,
     reverse: false,
+    stemKey: "missing_step_distress",
     text: {
       hu: `A megszokott tárgyak vagy lépések hiánya erős feszültséget okozhat nála.`,
       en: `Missing familiar objects or steps may cause strong distress.`,
@@ -2176,7 +2287,7 @@ window.NM_ASD_BANK = [
       ar: `قد يسبب غياب الأشياء أو الخطوات المألوفة ضيقًا شديدًا.`,
       pl: `Brak znajomych przedmiotów lub etapów może powodować silny niepokój.`,
       pt: `A falta de objetos ou etapas familiares pode causar grande aflição.`,
-      fr: `L’absence d’objets ou d’étapes familiers peut provoquer une grande détresse.`,
+      fr: `L’absence d’objets ou d’étapes familiers peut provoquer une grande détresse.`
     }
   },
   {
@@ -2185,9 +2296,10 @@ window.NM_ASD_BANK = [
     subdomain: "restricted_patterns",
     weight: 1.3,
     reverse: false,
+    stemKey: "sequence_insistence",
     text: {
-      hu: `Ragaszkodik ahhoz, hogy bizonyos dolgokat mindig ugyanabban a sorrendben csináljon.`,
-      en: `Insists on doing certain things in the same order every time.`,
+      hu: `Erősen ragaszkodik ahhoz, hogy bizonyos dolgokat ugyanabban a sorrendben csináljon.`,
+      en: `Strongly insists on doing certain things in the same order.`,
       de: `Besteht darauf, bestimmte Dinge jedes Mal in der gleichen Reihenfolge zu tun.`,
       it: `Insiste nel fare certe cose sempre nello stesso ordine.`,
       es: `Insiste en hacer ciertas cosas siempre en el mismo orden.`,
@@ -2196,7 +2308,7 @@ window.NM_ASD_BANK = [
       ar: `يصر على القيام بأشياء معينة بنفس الترتيب في كل مرة.`,
       pl: `Nalega na wykonywanie pewnych rzeczy zawsze w tej samej kolejności.`,
       pt: `Insiste em fazer certas coisas sempre na mesma ordem.`,
-      fr: `Insiste pour faire certaines choses toujours dans le même ordre.`,
+      fr: `Insiste pour faire certaines choses toujours dans le même ordre.`
     }
   },
   {
@@ -2205,6 +2317,7 @@ window.NM_ASD_BANK = [
     subdomain: "restricted_patterns",
     weight: 1.4,
     reverse: false,
+    stemKey: "narrow_interest_dominance",
     text: {
       hu: `Érdeklődése néha annyira beszűkül, hogy más témák háttérbe szorulnak.`,
       en: `Interests may become so narrow that other topics fade into the background.`,
@@ -2216,7 +2329,7 @@ window.NM_ASD_BANK = [
       ar: `قد تصبح الاهتمامات ضيقة جداً بحيث تتلاشى المواضيع الأخرى في الخلفية.`,
       pl: `Zainteresowania mogą się tak zawęzić, że inne tematy odchodzą na dalszy plan.`,
       pt: `Os interesses podem se tornar tão restritos que outros temas ficam em segundo plano.`,
-      fr: `Les intérêts peuvent devenir si restreints que d'autres sujets passent en arrière-plan.`,
+      fr: `Les intérêts peuvent devenir si restreints que d'autres sujets passent en arrière-plan.`
     }
   },
   {
@@ -2225,6 +2338,7 @@ window.NM_ASD_BANK = [
     subdomain: "restricted_patterns",
     weight: 1.2,
     reverse: true,
+    stemKey: "shifting_preferred_topic_reverse",
     text: {
       hu: `Könnyen el tud mozdulni egy kedvelt témától vagy tevékenységtől.`,
       en: `Can shift away from a preferred topic or activity without much difficulty.`,
@@ -2236,7 +2350,7 @@ window.NM_ASD_BANK = [
       ar: `يمكنه التحول بسهولة من موضوع أو نشاط مفضل دون صعوبة كبيرة.`,
       pl: `Potrafi łatwo zmienić temat lub zajęcie, które preferuje, bez większych trudności.`,
       pt: `Consegue mudar facilmente de um tema ou atividade preferida sem muita dificuldade.`,
-      fr: `Peut passer facilement d'un sujet ou d'une activité préférée sans trop de difficulté.`,
+      fr: `Peut passer facilement d'un sujet ou d'une activité préférée sans trop de difficulté.`
     }
   },
   {
@@ -2245,6 +2359,7 @@ window.NM_ASD_BANK = [
     subdomain: "restricted_patterns",
     weight: 1.5,
     reverse: false,
+    stemKey: "detail_focus",
     text: {
       hu: `Szokatlan részletekre összpontosít ahelyett, hogy az egész képet nézné.`,
       en: `Focuses on unusual details rather than the bigger picture.`,
@@ -2256,7 +2371,7 @@ window.NM_ASD_BANK = [
       ar: `يركز على تفاصيل غير عادية بدلاً من الصورة الكبيرة.`,
       pl: `Skupia się na nietypowych szczegółach zamiast na szerszym obrazie.`,
       pt: `Foca em detalhes incomuns ao invés da visão geral.`,
-      fr: `Se concentre sur des détails inhabituels plutôt que sur l'ensemble.`,
+      fr: `Se concentre sur des détails inhabituels plutôt que sur l'ensemble.`
     }
   },
   {
@@ -2265,6 +2380,7 @@ window.NM_ASD_BANK = [
     subdomain: "restricted_patterns",
     weight: 1.3,
     reverse: false,
+    stemKey: "interruption_distress",
     text: {
       hu: `Nehézséget okoz számára, ha megszakítják egy preferált tevékenység közben.`,
       en: `Has difficulty when interrupted during a preferred activity.`,
@@ -2276,7 +2392,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة عند مقاطعته أثناء نشاط مفضل.`,
       pl: `Ma trudności, gdy zostaje przerwany podczas preferowanej aktywności.`,
       pt: `Tem dificuldade quando é interrompido durante uma atividade preferida.`,
-      fr: `A des difficultés lorsqu'il est interrompu pendant une activité préférée.`,
+      fr: `A des difficultés lorsqu'il est interrompu pendant une activité préférée.`
     }
   },
   {
@@ -2285,6 +2401,7 @@ window.NM_ASD_BANK = [
     subdomain: "restricted_patterns",
     weight: 1.4,
     reverse: false,
+    stemKey: "repetitive_pattern_need",
     text: {
       hu: `Bizonyos ismétlődő mintázatok megnyugtatóak vagy szükségesek számára.`,
       en: `Certain repetitive patterns seem calming or necessary.`,
@@ -2296,7 +2413,7 @@ window.NM_ASD_BANK = [
       ar: `بعض الأنماط المتكررة تبدو مهدئة أو ضرورية.`,
       pl: `Niektóre powtarzające się wzory wydają się uspokajające lub niezbędne.`,
       pt: `Certos padrões repetitivos parecem calmantes ou necessários.`,
-      fr: `Certains schémas répétitifs semblent apaisants ou nécessaires.`,
+      fr: `Certains schémas répétitifs semblent apaisants ou nécessaires.`
     }
   },
   {
@@ -2305,6 +2422,7 @@ window.NM_ASD_BANK = [
     subdomain: "sensory_processing",
     weight: 1.5,
     reverse: false,
+    stemKey: "background_noise_sensitivity",
     text: {
       hu: `Erősen zavarhatják a háttérzajok, még akkor is, ha másokat nem.`,
       en: `Background noise may be very distressing even when it does not bother others.`,
@@ -2316,7 +2434,7 @@ window.NM_ASD_BANK = [
       ar: `قد تكون الضوضاء الخلفية مزعجة جداً حتى لو لم تزعج الآخرين.`,
       pl: `Hałas w tle może być bardzo nieprzyjemny, nawet jeśli nie przeszkadza innym.`,
       pt: `O ruído de fundo pode ser muito perturbador mesmo que não incomode os outros.`,
-      fr: `Le bruit de fond peut être très dérangeant même s'il ne gêne pas les autres.`,
+      fr: `Le bruit de fond peut être très dérangeant même s'il ne gêne pas les autres.`
     }
   },
   {
@@ -2325,6 +2443,7 @@ window.NM_ASD_BANK = [
     subdomain: "sensory_processing",
     weight: 1.4,
     reverse: false,
+    stemKey: "multisensory_sensitivity",
     text: {
       hu: `Bizonyos fények, szagok vagy anyagok szokatlanul intenzív reakciót váltanak ki belőle.`,
       en: `Certain lights, smells, or textures may trigger unusually strong reactions.`,
@@ -2336,7 +2455,7 @@ window.NM_ASD_BANK = [
       ar: `بعض الأضواء أو الروائح أو الملمسات قد تثير ردود فعل قوية غير معتادة.`,
       pl: `Niektóre światła, zapachy lub faktury mogą wywoływać wyjątkowo silne reakcje.`,
       pt: `Certas luzes, cheiros ou texturas podem desencadear reações incomumente fortes.`,
-      fr: `Certaines lumières, odeurs ou textures peuvent déclencher des réactions exceptionnellement fortes.`,
+      fr: `Certaines lumières, odeurs ou textures peuvent déclencher des réactions exceptionnellement fortes.`
     }
   },
   {
@@ -2345,6 +2464,7 @@ window.NM_ASD_BANK = [
     subdomain: "sensory_processing",
     weight: 1.2,
     reverse: true,
+    stemKey: "everyday_sensory_reverse",
     text: {
       hu: `Általában jól kezeli a hétköznapi érzékszervi ingereket.`,
       en: `Generally handles everyday sensory input well.`,
@@ -2356,7 +2476,7 @@ window.NM_ASD_BANK = [
       ar: `يتعامل بشكل عام جيد مع المدخلات الحسية اليومية.`,
       pl: `Na ogół dobrze radzi sobie z codziennymi bodźcami sensorycznymi.`,
       pt: `Geralmente lida bem com estímulos sensoriais do dia a dia.`,
-      fr: `Gère généralement bien les stimulations sensorielles quotidiennes.`,
+      fr: `Gère généralement bien les stimulations sensorielles quotidiennes.`
     }
   },
   {
@@ -2365,6 +2485,7 @@ window.NM_ASD_BANK = [
     subdomain: "sensory_processing",
     weight: 1.3,
     reverse: false,
+    stemKey: "sensory_seek_avoid_pattern",
     text: {
       hu: `Úgy tűnik, bizonyos érzékszervi élményeket tudatosan keres vagy kerül.`,
       en: `Seems to actively seek or avoid certain sensory experiences.`,
@@ -2376,7 +2497,7 @@ window.NM_ASD_BANK = [
       ar: `يبدو أنه يبحث أو يتجنب بعض التجارب الحسية بنشاط.`,
       pl: `Wydaje się aktywnie poszukiwać lub unikać określonych doświadczeń sensorycznych.`,
       pt: `Parece buscar ou evitar ativamente certas experiências sensoriais.`,
-      fr: `Semble activement rechercher ou éviter certaines expériences sensorielles.`,
+      fr: `Semble activement rechercher ou éviter certaines expériences sensorielles.`
     }
   },
   {
@@ -2385,6 +2506,7 @@ window.NM_ASD_BANK = [
     subdomain: "sensory_processing",
     weight: 1.4,
     reverse: false,
+    stemKey: "sensory_overload",
     text: {
       hu: `Szenzoros túlterhelés esetén gyorsan kibillenhet az egyensúlyából.`,
       en: `May become dysregulated quickly during sensory overload.`,
@@ -2396,7 +2518,7 @@ window.NM_ASD_BANK = [
       ar: `قد يفقد السيطرة بسرعة أثناء الحمل الحسي المفرط.`,
       pl: `Może szybko się rozregulować podczas nadmiernej stymulacji sensorycznej.`,
       pt: `Pode se desregular rapidamente durante uma sobrecarga sensorial.`,
-      fr: `Peut se dérégler rapidement lors d'une surcharge sensorielle.`,
+      fr: `Peut se dérégler rapidement lors d'une surcharge sensorielle.`
     }
   },
   {
@@ -2405,6 +2527,7 @@ window.NM_ASD_BANK = [
     subdomain: "flexibility",
     weight: 1.5,
     reverse: false,
+    stemKey: "routine_change_tolerance",
     text: {
       hu: `Nehezen viseli, ha a megszokott rend megváltozik otthoni helyzetekben.`,
       en: `Has difficulty tolerating changes in familiar routines at home.`,
@@ -2416,7 +2539,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في تحمل التغييرات في الروتينات المألوفة في المنزل.`,
       pl: `Ma trudności z tolerowaniem zmian w znanych rutynach w domu.`,
       pt: `Tem dificuldade em tolerar mudanças nas rotinas familiares em casa.`,
-      fr: `A des difficultés à supporter les changements dans les routines familières à la maison.`,
+      fr: `A des difficultés à supporter les changements dans les routines familières à la maison.`
     }
   },
   {
@@ -2425,6 +2548,7 @@ window.NM_ASD_BANK = [
     subdomain: "flexibility",
     weight: 1.5,
     reverse: false,
+    stemKey: "routine_change_tolerance",
     text: {
       hu: `Nehezen viseli, ha a megszokott rend megváltozik iskolai vagy tanulási helyzetekben.`,
       en: `Has difficulty tolerating changes in familiar routines in school or learning situations.`,
@@ -2436,7 +2560,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في تحمل التغييرات في الروتينات المألوفة في المدرسة أو أثناء مواقف التعلم.`,
       pl: `Ma trudności z tolerowaniem zmian w znanych rutynach w szkole lub sytuacjach edukacyjnych.`,
       pt: `Tem dificuldade em tolerar mudanças nas rotinas familiares na escola ou em situações de aprendizagem.`,
-      fr: `A des difficultés à supporter les changements dans les routines familières à l'école ou lors des situations d'apprentissage.`,
+      fr: `A des difficultés à supporter les changements dans les routines familières à l'école ou lors des situations d'apprentissage.`
     }
   },
   {
@@ -2445,6 +2569,7 @@ window.NM_ASD_BANK = [
     subdomain: "flexibility",
     weight: 1.5,
     reverse: false,
+    stemKey: "routine_change_tolerance",
     text: {
       hu: `Nehezen viseli, ha a megszokott rend megváltozik kortársakkal együtt.`,
       en: `Has difficulty tolerating changes in familiar routines with peers.`,
@@ -2456,7 +2581,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في تحمل التغييرات في الروتينات المألوفة مع الأقران.`,
       pl: `Ma trudności z tolerowaniem zmian w znanych rutynach z rówieśnikami.`,
       pt: `Tem dificuldade em tolerar mudanças nas rotinas familiares com os colegas.`,
-      fr: `A des difficultés à supporter les changements dans les routines familières avec les pairs.`,
+      fr: `A des difficultés à supporter les changements dans les routines familières avec les pairs.`
     }
   },
   {
@@ -2465,6 +2590,7 @@ window.NM_ASD_BANK = [
     subdomain: "flexibility",
     weight: 1.5,
     reverse: false,
+    stemKey: "routine_change_tolerance",
     text: {
       hu: `Nehezen viseli, ha a megszokott rend megváltozik változó vagy kiszámíthatatlan helyzetekben.`,
       en: `Has difficulty tolerating changes in familiar routines in changing or unpredictable situations.`,
@@ -2476,7 +2602,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في تحمل التغييرات في الروتينات المألوفة في المواقف المتغيرة أو غير المتوقعة.`,
       pl: `Ma trudności z tolerowaniem zmian w znanych rutynach w zmieniających się lub nieprzewidywalnych sytuacjach.`,
       pt: `Tem dificuldade em tolerar mudanças nas rotinas familiares em situações que mudam ou são imprevisíveis.`,
-      fr: `A des difficultés à supporter les changements dans les routines familières lors de situations changeantes ou imprévisibles.`,
+      fr: `A des difficultés à supporter les changements dans les routines familières lors de situations changeantes ou imprévisibles.`
     }
   },
   {
@@ -2485,6 +2611,7 @@ window.NM_ASD_BANK = [
     subdomain: "flexibility",
     weight: 1.5,
     reverse: false,
+    stemKey: "routine_change_tolerance",
     text: {
       hu: `Nehezen viseli, ha a megszokott rend megváltozik közös játék vagy közös tevékenység közben.`,
       en: `Has difficulty tolerating changes in familiar routines during shared play or shared activities.`,
@@ -2496,7 +2623,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في تحمل التغييرات في الروتينات المألوفة خلال اللعب أو الأنشطة المشتركة.`,
       pl: `Ma trudności z tolerowaniem zmian w znanych rutynach podczas wspólnej zabawy lub zajęć.`,
       pt: `Tem dificuldade em tolerar mudanças nas rotinas familiares durante brincadeiras ou atividades compartilhadas.`,
-      fr: `A des difficultés à supporter les changements dans les routines familières lors de jeux ou d'activités partagés.`,
+      fr: `A des difficultés à supporter les changements dans les routines familières lors de jeux ou d'activités partagés.`
     }
   },
   {
@@ -2505,6 +2632,7 @@ window.NM_ASD_BANK = [
     subdomain: "flexibility",
     weight: 1.4,
     reverse: false,
+    stemKey: "sameness_frustration",
     text: {
       hu: `Frusztrálttá válik, ha a dolgok nem a megszokott módon történnek otthoni helyzetekben.`,
       en: `Becomes frustrated when things do not happen in the usual way at home.`,
@@ -2516,7 +2644,7 @@ window.NM_ASD_BANK = [
       ar: `يُصاب بالإحباط عندما لا تسير الأمور كالمعتاد في المنزل.`,
       pl: `Frustruje się, gdy w domu rzeczy nie dzieją się w zwykły sposób.`,
       pt: `Fica frustrado quando as coisas não acontecem da maneira habitual em casa.`,
-      fr: `Se frustre lorsque les choses ne se déroulent pas habituellement à la maison.`,
+      fr: `Se frustre lorsque les choses ne se déroulent pas habituellement à la maison.`
     }
   },
   {
@@ -2525,6 +2653,7 @@ window.NM_ASD_BANK = [
     subdomain: "flexibility",
     weight: 1.4,
     reverse: false,
+    stemKey: "sameness_frustration",
     text: {
       hu: `Frusztrálttá válik, ha a dolgok nem a megszokott módon történnek iskolai vagy tanulási helyzetekben.`,
       en: `Becomes frustrated when things do not happen in the usual way in school or learning situations.`,
@@ -2536,7 +2665,7 @@ window.NM_ASD_BANK = [
       ar: `يُصاب بالإحباط عندما لا تسير الأمور كالمعتاد في المدرسة أو أثناء مواقف التعلم.`,
       pl: `Frustruje się, gdy w szkole lub podczas nauki rzeczy nie dzieją się w zwykły sposób.`,
       pt: `Fica frustrado quando as coisas não acontecem da maneira habitual na escola ou em situações de aprendizagem.`,
-      fr: `Se frustre lorsque les choses ne se déroulent pas habituellement à l'école ou lors des situations d'apprentissage.`,
+      fr: `Se frustre lorsque les choses ne se déroulent pas habituellement à l'école ou lors des situations d'apprentissage.`
     }
   },
   {
@@ -2545,6 +2674,7 @@ window.NM_ASD_BANK = [
     subdomain: "flexibility",
     weight: 1.4,
     reverse: false,
+    stemKey: "sameness_frustration",
     text: {
       hu: `Frusztrálttá válik, ha a dolgok nem a megszokott módon történnek kortársakkal együtt.`,
       en: `Becomes frustrated when things do not happen in the usual way with peers.`,
@@ -2556,7 +2686,7 @@ window.NM_ASD_BANK = [
       ar: `يُصاب بالإحباط عندما لا تسير الأمور كالمعتاد مع الأقران.`,
       pl: `Frustruje się, gdy z rówieśnikami rzeczy nie dzieją się w zwykły sposób.`,
       pt: `Fica frustrado quando as coisas não acontecem da maneira habitual com os colegas.`,
-      fr: `Se frustre lorsque les choses ne se déroulent pas habituellement avec les pairs.`,
+      fr: `Se frustre lorsque les choses ne se déroulent pas habituellement avec les pairs.`
     }
   },
   {
@@ -2565,6 +2695,7 @@ window.NM_ASD_BANK = [
     subdomain: "flexibility",
     weight: 1.4,
     reverse: false,
+    stemKey: "sameness_frustration",
     text: {
       hu: `Frusztrálttá válik, ha a dolgok nem a megszokott módon történnek változó vagy kiszámíthatatlan helyzetekben.`,
       en: `Becomes frustrated when things do not happen in the usual way in changing or unpredictable situations.`,
@@ -2576,7 +2707,7 @@ window.NM_ASD_BANK = [
       ar: `يُصاب بالإحباط عندما لا تسير الأمور كالمعتاد في المواقف المتغيرة أو غير المتوقعة.`,
       pl: `Frustruje się, gdy w zmieniających się lub nieprzewidywalnych sytuacjach rzeczy nie dzieją się w zwykły sposób.`,
       pt: `Fica frustrado quando as coisas não acontecem da maneira habitual em situações que mudam ou são imprevisíveis.`,
-      fr: `Se frustre lorsque les choses ne se déroulent pas habituellement lors de situations changeantes ou imprévisibles.`,
+      fr: `Se frustre lorsque les choses ne se déroulent pas habituellement lors de situations changeantes ou imprévisibles.`
     }
   },
   {
@@ -2585,6 +2716,7 @@ window.NM_ASD_BANK = [
     subdomain: "flexibility",
     weight: 1.4,
     reverse: false,
+    stemKey: "sameness_frustration",
     text: {
       hu: `Frusztrálttá válik, ha a dolgok nem a megszokott módon történnek közös játék vagy közös tevékenység közben.`,
       en: `Becomes frustrated when things do not happen in the usual way during shared play or shared activities.`,
@@ -2596,7 +2728,7 @@ window.NM_ASD_BANK = [
       ar: `يُصاب بالإحباط عندما لا تسير الأمور كالمعتاد خلال اللعب أو الأنشطة المشتركة.`,
       pl: `Frustruje się, gdy podczas wspólnej zabawy lub zajęć rzeczy nie dzieją się w zwykły sposób.`,
       pt: `Fica frustrado quando as coisas não acontecem da maneira habitual durante brincadeiras ou atividades compartilhadas.`,
-      fr: `Se frustre lorsque les choses ne se déroulent pas habituellement lors de jeux ou d'activités partagés.`,
+      fr: `Se frustre lorsque les choses ne se déroulent pas habituellement lors de jeux ou d'activités partagés.`
     }
   },
   {
@@ -2605,6 +2737,7 @@ window.NM_ASD_BANK = [
     subdomain: "flexibility",
     weight: 1.2,
     reverse: true,
+    stemKey: "adaptation_reverse",
     text: {
       hu: `Viszonylag rugalmasan tud alkalmazkodni új helyzetekhez otthoni helyzetekben.`,
       en: `Can adapt relatively flexibly to new situations at home.`,
@@ -2616,7 +2749,7 @@ window.NM_ASD_BANK = [
       ar: `يمكنه التكيف بشكل مرن نسبيًا مع المواقف الجديدة في المنزل.`,
       pl: `Potrafi stosunkowo elastycznie dostosować się do nowych sytuacji w domu.`,
       pt: `Consegue adaptar-se de forma relativamente flexível a novas situações em casa.`,
-      fr: `Peut s’adapter de manière relativement flexible à de nouvelles situations à la maison.`,
+      fr: `Peut s’adapter de manière relativement flexible à de nouvelles situations à la maison.`
     }
   },
   {
@@ -2625,6 +2758,7 @@ window.NM_ASD_BANK = [
     subdomain: "flexibility",
     weight: 1.2,
     reverse: true,
+    stemKey: "adaptation_reverse",
     text: {
       hu: `Viszonylag rugalmasan tud alkalmazkodni új helyzetekhez iskolai vagy tanulási helyzetekben.`,
       en: `Can adapt relatively flexibly to new situations in school or learning situations.`,
@@ -2636,7 +2770,7 @@ window.NM_ASD_BANK = [
       ar: `يمكنه التكيف بشكل مرن نسبيًا مع المواقف الجديدة في المدرسة أو مواقف التعلم.`,
       pl: `Potrafi stosunkowo elastycznie dostosować się do nowych sytuacji w szkole lub podczas nauki.`,
       pt: `Consegue adaptar-se de forma relativamente flexível a novas situações na escola ou em contextos de aprendizagem.`,
-      fr: `Peut s’adapter de manière relativement flexible à de nouvelles situations à l’école ou dans des situations d’apprentissage.`,
+      fr: `Peut s’adapter de manière relativement flexible à de nouvelles situations à l’école ou dans des situations d’apprentissage.`
     }
   },
   {
@@ -2645,6 +2779,7 @@ window.NM_ASD_BANK = [
     subdomain: "flexibility",
     weight: 1.2,
     reverse: true,
+    stemKey: "adaptation_reverse",
     text: {
       hu: `Viszonylag rugalmasan tud alkalmazkodni új helyzetekhez kortársakkal együtt.`,
       en: `Can adapt relatively flexibly to new situations with peers.`,
@@ -2656,7 +2791,7 @@ window.NM_ASD_BANK = [
       ar: `يمكنه التكيف بشكل مرن نسبيًا مع المواقف الجديدة مع الأقران.`,
       pl: `Potrafi stosunkowo elastycznie dostosować się do nowych sytuacji w kontaktach z rówieśnikami.`,
       pt: `Consegue adaptar-se de forma relativamente flexível a novas situações com os pares.`,
-      fr: `Peut s’adapter de manière relativement flexible à de nouvelles situations avec ses pairs.`,
+      fr: `Peut s’adapter de manière relativement flexible à de nouvelles situations avec ses pairs.`
     }
   },
   {
@@ -2665,6 +2800,7 @@ window.NM_ASD_BANK = [
     subdomain: "flexibility",
     weight: 1.2,
     reverse: true,
+    stemKey: "adaptation_reverse",
     text: {
       hu: `Viszonylag rugalmasan tud alkalmazkodni új helyzetekhez változó vagy kiszámíthatatlan helyzetekben.`,
       en: `Can adapt relatively flexibly to new situations in changing or unpredictable situations.`,
@@ -2676,7 +2812,7 @@ window.NM_ASD_BANK = [
       ar: `يمكنه التكيف بشكل مرن نسبيًا مع المواقف الجديدة في المواقف المتغيرة أو غير المتوقعة.`,
       pl: `Potrafi stosunkowo elastycznie dostosować się do nowych sytuacji w zmieniających się lub nieprzewidywalnych warunkach.`,
       pt: `Consegue adaptar-se de forma relativamente flexível a novas situações em situações mutáveis ou imprevisíveis.`,
-      fr: `Peut s’adapter de manière relativement flexible à de nouvelles situations dans des contextes changeants ou imprévisibles.`,
+      fr: `Peut s’adapter de manière relativement flexible à de nouvelles situations dans des contextes changeants ou imprévisibles.`
     }
   },
   {
@@ -2685,6 +2821,7 @@ window.NM_ASD_BANK = [
     subdomain: "flexibility",
     weight: 1.2,
     reverse: true,
+    stemKey: "adaptation_reverse",
     text: {
       hu: `Viszonylag rugalmasan tud alkalmazkodni új helyzetekhez közös játék vagy közös tevékenység közben.`,
       en: `Can adapt relatively flexibly to new situations during shared play or shared activities.`,
@@ -2696,7 +2833,7 @@ window.NM_ASD_BANK = [
       ar: `يمكنه التكيف بشكل مرن نسبيًا مع المواقف الجديدة أثناء اللعب أو الأنشطة المشتركة.`,
       pl: `Potrafi stosunkowo elastycznie dostosować się do nowych sytuacji podczas wspólnej zabawy lub wspólnych zajęć.`,
       pt: `Consegue adaptar-se de forma relativamente flexível a novas situações durante brincadeiras ou atividades partilhadas.`,
-      fr: `Peut s’adapter de manière relativement flexible à de nouvelles situations lors de jeux ou activités partagés.`,
+      fr: `Peut s’adapter de manière relativement flexible à de nouvelles situations lors de jeux ou activités partagés.`
     }
   },
   {
@@ -2705,6 +2842,7 @@ window.NM_ASD_BANK = [
     subdomain: "flexibility",
     weight: 1.4,
     reverse: false,
+    stemKey: "transition_shift",
     text: {
       hu: `Nehézséget okoz számára egyik tevékenységről a másikra váltani otthoni helyzetekben.`,
       en: `Has difficulty shifting from one activity to another at home.`,
@@ -2716,7 +2854,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في التنقل من نشاط إلى آخر في المنزل.`,
       pl: `Ma trudności z przechodzeniem z jednej aktywności do drugiej w domu.`,
       pt: `Tem dificuldade em mudar de uma atividade para outra em casa.`,
-      fr: `A des difficultés à passer d’une activité à une autre à la maison.`,
+      fr: `A des difficultés à passer d’une activité à une autre à la maison.`
     }
   },
   {
@@ -2725,6 +2863,7 @@ window.NM_ASD_BANK = [
     subdomain: "flexibility",
     weight: 1.4,
     reverse: false,
+    stemKey: "transition_shift",
     text: {
       hu: `Nehézséget okoz számára egyik tevékenységről a másikra váltani iskolai vagy tanulási helyzetekben.`,
       en: `Has difficulty shifting from one activity to another in school or learning situations.`,
@@ -2736,7 +2875,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في التنقل من نشاط إلى آخر في المدرسة أو مواقف التعلم.`,
       pl: `Ma trudności z przechodzeniem z jednej aktywności do drugiej w szkole lub podczas nauki.`,
       pt: `Tem dificuldade em mudar de uma atividade para outra na escola ou em situações de aprendizagem.`,
-      fr: `A des difficultés à passer d’une activité à une autre à l’école ou dans des situations d’apprentissage.`,
+      fr: `A des difficultés à passer d’une activité à une autre à l’école ou dans des situations d’apprentissage.`
     }
   },
   {
@@ -2745,6 +2884,7 @@ window.NM_ASD_BANK = [
     subdomain: "flexibility",
     weight: 1.4,
     reverse: false,
+    stemKey: "transition_shift",
     text: {
       hu: `Nehézséget okoz számára egyik tevékenységről a másikra váltani kortársakkal együtt.`,
       en: `Has difficulty shifting from one activity to another with peers.`,
@@ -2756,7 +2896,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في التنقل من نشاط إلى آخر مع الأقران.`,
       pl: `Ma trudności z przechodzeniem z jednej aktywności do drugiej w kontaktach z rówieśnikami.`,
       pt: `Tem dificuldade em mudar de uma atividade para outra com os pares.`,
-      fr: `A des difficultés à passer d’une activité à une autre avec ses pairs.`,
+      fr: `A des difficultés à passer d’une activité à une autre avec ses pairs.`
     }
   },
   {
@@ -2765,6 +2905,7 @@ window.NM_ASD_BANK = [
     subdomain: "flexibility",
     weight: 1.4,
     reverse: false,
+    stemKey: "transition_shift",
     text: {
       hu: `Nehézséget okoz számára egyik tevékenységről a másikra váltani változó vagy kiszámíthatatlan helyzetekben.`,
       en: `Has difficulty shifting from one activity to another in changing or unpredictable situations.`,
@@ -2776,7 +2917,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في التنقل من نشاط إلى آخر في مواقف متغيرة أو غير متوقعة.`,
       pl: `Ma trudności z przechodzeniem z jednej aktywności do drugiej w zmieniających się lub nieprzewidywalnych sytuacjach.`,
       pt: `Tem dificuldade em mudar de uma atividade para outra em situações mutáveis ou imprevisíveis.`,
-      fr: `A des difficultés à passer d’une activité à une autre dans des situations changeantes ou imprévisibles.`,
+      fr: `A des difficultés à passer d’une activité à une autre dans des situations changeantes ou imprévisibles.`
     }
   },
   {
@@ -2785,6 +2926,7 @@ window.NM_ASD_BANK = [
     subdomain: "flexibility",
     weight: 1.4,
     reverse: false,
+    stemKey: "transition_shift",
     text: {
       hu: `Nehézséget okoz számára egyik tevékenységről a másikra váltani közös játék vagy közös tevékenység közben.`,
       en: `Has difficulty shifting from one activity to another during shared play or shared activities.`,
@@ -2796,7 +2938,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في التنقل من نشاط إلى آخر أثناء اللعب أو الأنشطة المشتركة.`,
       pl: `Ma trudności z przechodzeniem z jednej aktywności do drugiej podczas wspólnej zabawy lub wspólnych zajęć.`,
       pt: `Tem dificuldade em mudar de uma atividade para outra durante brincadeiras ou atividades partilhadas.`,
-      fr: `A des difficultés à passer d’une activité à une autre lors de jeux ou activités partagés.`,
+      fr: `A des difficultés à passer d’une activité à une autre lors de jeux ou activités partagés.`
     }
   },
   {
@@ -2805,6 +2947,7 @@ window.NM_ASD_BANK = [
     subdomain: "flexibility",
     weight: 1.3,
     reverse: false,
+    stemKey: "sequence_dependence",
     text: {
       hu: `Erősen ragaszkodik a megszokott lépésekhez és sorrendekhez otthoni helyzetekben.`,
       en: `Strongly relies on familiar steps and sequences at home.`,
@@ -2816,7 +2959,7 @@ window.NM_ASD_BANK = [
       ar: `يعتمد بشدة على الخطوات والتسلسلات المألوفة في المنزل.`,
       pl: `Silnie polega na znanych krokach i sekwencjach w domu.`,
       pt: `Depende fortemente de passos e sequências familiares em casa.`,
-      fr: `Dépend fortement des étapes et des séquences familières à la maison.`,
+      fr: `Dépend fortement des étapes et des séquences familières à la maison.`
     }
   },
   {
@@ -2825,6 +2968,7 @@ window.NM_ASD_BANK = [
     subdomain: "flexibility",
     weight: 1.3,
     reverse: false,
+    stemKey: "sequence_dependence",
     text: {
       hu: `Erősen ragaszkodik a megszokott lépésekhez és sorrendekhez iskolai vagy tanulási helyzetekben.`,
       en: `Strongly relies on familiar steps and sequences in school or learning situations.`,
@@ -2836,7 +2980,7 @@ window.NM_ASD_BANK = [
       ar: `يعتمد بشدة على الخطوات والتسلسلات المألوفة في المدرسة أو مواقف التعلم.`,
       pl: `Silnie polega na znanych krokach i sekwencjach w szkole lub sytuacjach edukacyjnych.`,
       pt: `Depende fortemente de passos e sequências familiares na escola ou em situações de aprendizagem.`,
-      fr: `Dépend fortement des étapes et des séquences familières à l'école ou lors de situations d'apprentissage.`,
+      fr: `Dépend fortement des étapes et des séquences familières à l'école ou lors de situations d'apprentissage.`
     }
   },
   {
@@ -2845,6 +2989,7 @@ window.NM_ASD_BANK = [
     subdomain: "flexibility",
     weight: 1.3,
     reverse: false,
+    stemKey: "sequence_dependence",
     text: {
       hu: `Erősen ragaszkodik a megszokott lépésekhez és sorrendekhez kortársakkal együtt.`,
       en: `Strongly relies on familiar steps and sequences with peers.`,
@@ -2856,7 +3001,7 @@ window.NM_ASD_BANK = [
       ar: `يعتمد بشدة على الخطوات والتسلسلات المألوفة مع الأقران.`,
       pl: `Silnie polega na znanych krokach i sekwencjach w kontaktach z rówieśnikami.`,
       pt: `Depende fortemente de passos e sequências familiares com os colegas.`,
-      fr: `Dépend fortement des étapes et des séquences familières avec les pairs.`,
+      fr: `Dépend fortement des étapes et des séquences familières avec les pairs.`
     }
   },
   {
@@ -2865,6 +3010,7 @@ window.NM_ASD_BANK = [
     subdomain: "flexibility",
     weight: 1.3,
     reverse: false,
+    stemKey: "sequence_dependence",
     text: {
       hu: `Erősen ragaszkodik a megszokott lépésekhez és sorrendekhez változó vagy kiszámíthatatlan helyzetekben.`,
       en: `Strongly relies on familiar steps and sequences in changing or unpredictable situations.`,
@@ -2876,7 +3022,7 @@ window.NM_ASD_BANK = [
       ar: `يعتمد بشدة على الخطوات والتسلسلات المألوفة في مواقف متغيرة أو غير متوقعة.`,
       pl: `Silnie polega na znanych krokach i sekwencjach w zmiennych lub nieprzewidywalnych sytuacjach.`,
       pt: `Depende fortemente de passos e sequências familiares em situações de mudança ou imprevisíveis.`,
-      fr: `Dépend fortement des étapes et des séquences familières dans des situations changeantes ou imprévisibles.`,
+      fr: `Dépend fortement des étapes et des séquences familières dans des situations changeantes ou imprévisibles.`
     }
   },
   {
@@ -2885,6 +3031,7 @@ window.NM_ASD_BANK = [
     subdomain: "flexibility",
     weight: 1.3,
     reverse: false,
+    stemKey: "sequence_dependence",
     text: {
       hu: `Erősen ragaszkodik a megszokott lépésekhez és sorrendekhez közös játék vagy közös tevékenység közben.`,
       en: `Strongly relies on familiar steps and sequences during shared play or shared activities.`,
@@ -2896,7 +3043,7 @@ window.NM_ASD_BANK = [
       ar: `يعتمد بشدة على الخطوات والتسلسلات المألوفة أثناء اللعب أو الأنشطة المشتركة.`,
       pl: `Silnie polega na znanych krokach i sekwencjach podczas wspólnej zabawy lub aktywności.`,
       pt: `Depende fortemente de passos e sequências familiares durante jogos ou atividades compartilhadas.`,
-      fr: `Dépend fortement des étapes et des séquences familières lors de jeux ou d'activités partagés.`,
+      fr: `Dépend fortement des étapes et des séquences familières lors de jeux ou d'activités partagés.`
     }
   },
   {
@@ -2905,6 +3052,7 @@ window.NM_ASD_BANK = [
     subdomain: "pragmatic_language",
     weight: 1.4,
     reverse: false,
+    stemKey: "hidden_meaning",
     text: {
       hu: `Nehezen érti a társas kommunikáció rejtett jelentéseit otthoni helyzetekben.`,
       en: `Has difficulty understanding hidden meanings in social communication at home.`,
@@ -2916,7 +3064,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في فهم المعاني المختبئة في التواصل الاجتماعي في المنزل.`,
       pl: `Ma trudności ze zrozumieniem ukrytych znaczeń w komunikacji społecznej w domu.`,
       pt: `Tem dificuldade em entender significados ocultos na comunicação social em casa.`,
-      fr: `A des difficultés à comprendre les significations cachées dans la communication sociale à la maison.`,
+      fr: `A des difficultés à comprendre les significations cachées dans la communication sociale à la maison.`
     }
   },
   {
@@ -2925,6 +3073,7 @@ window.NM_ASD_BANK = [
     subdomain: "pragmatic_language",
     weight: 1.4,
     reverse: false,
+    stemKey: "hidden_meaning",
     text: {
       hu: `Nehezen érti a társas kommunikáció rejtett jelentéseit iskolai vagy tanulási helyzetekben.`,
       en: `Has difficulty understanding hidden meanings in social communication in school or learning situations.`,
@@ -2936,7 +3085,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في فهم المعاني المختبئة في التواصل الاجتماعي في المدرسة أو مواقف التعلم.`,
       pl: `Ma trudności ze zrozumieniem ukrytych znaczeń w komunikacji społecznej w szkole lub sytuacjach edukacyjnych.`,
       pt: `Tem dificuldade em entender significados ocultos na comunicação social na escola ou em situações de aprendizagem.`,
-      fr: `A des difficultés à comprendre les significations cachées dans la communication sociale à l'école ou dans des situations d'apprentissage.`,
+      fr: `A des difficultés à comprendre les significations cachées dans la communication sociale à l'école ou dans des situations d'apprentissage.`
     }
   },
   {
@@ -2945,6 +3094,7 @@ window.NM_ASD_BANK = [
     subdomain: "pragmatic_language",
     weight: 1.4,
     reverse: false,
+    stemKey: "hidden_meaning",
     text: {
       hu: `Nehezen érti a társas kommunikáció rejtett jelentéseit kortársakkal együtt.`,
       en: `Has difficulty understanding hidden meanings in social communication with peers.`,
@@ -2956,7 +3106,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في فهم المعاني المختبئة في التواصل الاجتماعي مع الأقران.`,
       pl: `Ma trudności ze zrozumieniem ukrytych znaczeń w komunikacji społecznej z rówieśnikami.`,
       pt: `Tem dificuldade em entender significados ocultos na comunicação social com colegas.`,
-      fr: `A des difficultés à comprendre les significations cachées dans la communication sociale avec les pairs.`,
+      fr: `A des difficultés à comprendre les significations cachées dans la communication sociale avec les pairs.`
     }
   },
   {
@@ -2965,6 +3115,7 @@ window.NM_ASD_BANK = [
     subdomain: "pragmatic_language",
     weight: 1.4,
     reverse: false,
+    stemKey: "hidden_meaning",
     text: {
       hu: `Nehezen érti a társas kommunikáció rejtett jelentéseit változó vagy kiszámíthatatlan helyzetekben.`,
       en: `Has difficulty understanding hidden meanings in social communication in changing or unpredictable situations.`,
@@ -2976,7 +3127,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في فهم المعاني المختبئة في التواصل الاجتماعي في مواقف متغيرة أو غير متوقعة.`,
       pl: `Ma trudności ze zrozumieniem ukrytych znaczeń w komunikacji społecznej w zmiennych lub nieprzewidywalnych sytuacjach.`,
       pt: `Tem dificuldade em entender significados ocultos na comunicação social em situações de mudança ou imprevisíveis.`,
-      fr: `A des difficultés à comprendre les significations cachées dans la communication sociale dans des situations changeantes ou imprévisibles.`,
+      fr: `A des difficultés à comprendre les significations cachées dans la communication sociale dans des situations changeantes ou imprévisibles.`
     }
   },
   {
@@ -2985,6 +3136,7 @@ window.NM_ASD_BANK = [
     subdomain: "pragmatic_language",
     weight: 1.4,
     reverse: false,
+    stemKey: "hidden_meaning",
     text: {
       hu: `Nehezen érti a társas kommunikáció rejtett jelentéseit közös játék vagy közös tevékenység közben.`,
       en: `Has difficulty understanding hidden meanings in social communication during shared play or shared activities.`,
@@ -2996,7 +3148,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في فهم المعاني المختبئة في التواصل الاجتماعي أثناء اللعب أو الأنشطة المشتركة.`,
       pl: `Ma trudności ze zrozumieniem ukrytych znaczeń w komunikacji społecznej podczas wspólnej zabawy lub aktywności.`,
       pt: `Tem dificuldade em entender significados ocultos na comunicação social durante jogos ou atividades compartilhadas.`,
-      fr: `A des difficultés à comprendre les significations cachées dans la communication sociale lors de jeux ou d'activités partagés.`,
+      fr: `A des difficultés à comprendre les significations cachées dans la communication sociale lors de jeux ou d'activités partagés.`
     }
   },
   {
@@ -3005,6 +3157,7 @@ window.NM_ASD_BANK = [
     subdomain: "pragmatic_language",
     weight: 1.3,
     reverse: false,
+    stemKey: "literal_interpretation",
     text: {
       hu: `Gyakran szó szerint értelmezi, amit mások mondanak otthoni helyzetekben.`,
       en: `Often interprets what others say very literally at home.`,
@@ -3016,7 +3169,7 @@ window.NM_ASD_BANK = [
       ar: `غالبًا ما يفسر ما يقوله الآخرون حرفيًا في المنزل.`,
       pl: `Często dosłownie interpretuje to, co mówią inni w domu.`,
       pt: `Frequentemente interpreta de forma muito literal o que os outros dizem em casa.`,
-      fr: `Interprète souvent très littéralement ce que les autres disent à la maison.`,
+      fr: `Interprète souvent très littéralement ce que les autres disent à la maison.`
     }
   },
   {
@@ -3025,6 +3178,7 @@ window.NM_ASD_BANK = [
     subdomain: "pragmatic_language",
     weight: 1.3,
     reverse: false,
+    stemKey: "literal_interpretation",
     text: {
       hu: `Gyakran szó szerint értelmezi, amit mások mondanak iskolai vagy tanulási helyzetekben.`,
       en: `Often interprets what others say very literally in school or learning situations.`,
@@ -3036,7 +3190,7 @@ window.NM_ASD_BANK = [
       ar: `غالبًا ما يفسر ما يقوله الآخرون حرفيًا في المدرسة أو مواقف التعلم.`,
       pl: `Często dosłownie interpretuje to, co mówią inni w szkole lub sytuacjach edukacyjnych.`,
       pt: `Frequentemente interpreta de forma muito literal o que os outros dizem na escola ou em situações de aprendizagem.`,
-      fr: `Interprète souvent très littéralement ce que les autres disent à l'école ou en situation d'apprentissage.`,
+      fr: `Interprète souvent très littéralement ce que les autres disent à l'école ou en situation d'apprentissage.`
     }
   },
   {
@@ -3045,6 +3199,7 @@ window.NM_ASD_BANK = [
     subdomain: "pragmatic_language",
     weight: 1.3,
     reverse: false,
+    stemKey: "literal_interpretation",
     text: {
       hu: `Gyakran szó szerint értelmezi, amit mások mondanak kortársakkal együtt.`,
       en: `Often interprets what others say very literally with peers.`,
@@ -3056,7 +3211,7 @@ window.NM_ASD_BANK = [
       ar: `غالبًا ما يفسر ما يقوله الآخرون حرفيًا مع الأقران.`,
       pl: `Często dosłownie interpretuje to, co mówią inni rówieśnicy.`,
       pt: `Frequentemente interpreta de forma muito literal o que os outros dizem com os colegas.`,
-      fr: `Interprète souvent très littéralement ce que les autres disent avec les pairs.`,
+      fr: `Interprète souvent très littéralement ce que les autres disent avec les pairs.`
     }
   },
   {
@@ -3065,6 +3220,7 @@ window.NM_ASD_BANK = [
     subdomain: "pragmatic_language",
     weight: 1.3,
     reverse: false,
+    stemKey: "literal_interpretation",
     text: {
       hu: `Gyakran szó szerint értelmezi, amit mások mondanak változó vagy kiszámíthatatlan helyzetekben.`,
       en: `Often interprets what others say very literally in changing or unpredictable situations.`,
@@ -3076,7 +3232,7 @@ window.NM_ASD_BANK = [
       ar: `غالبًا ما يفسر ما يقوله الآخرون حرفيًا في المواقف المتغيرة أو غير المتوقعة.`,
       pl: `Często dosłownie interpretuje to, co mówią inni w zmieniających się lub nieprzewidywalnych sytuacjach.`,
       pt: `Frequentemente interpreta de forma muito literal o que os outros dizem em situações mudáveis ou imprevisíveis.`,
-      fr: `Interprète souvent très littéralement ce que les autres disent dans des situations changeantes ou imprévisibles.`,
+      fr: `Interprète souvent très littéralement ce que les autres disent dans des situations changeantes ou imprévisibles.`
     }
   },
   {
@@ -3085,6 +3241,7 @@ window.NM_ASD_BANK = [
     subdomain: "pragmatic_language",
     weight: 1.3,
     reverse: false,
+    stemKey: "literal_interpretation",
     text: {
       hu: `Gyakran szó szerint értelmezi, amit mások mondanak közös játék vagy közös tevékenység közben.`,
       en: `Often interprets what others say very literally during shared play or shared activities.`,
@@ -3096,7 +3253,7 @@ window.NM_ASD_BANK = [
       ar: `غالبًا ما يفسر ما يقوله الآخرون حرفيًا أثناء اللعب أو الأنشطة المشتركة.`,
       pl: `Często dosłownie interpretuje to, co mówią inni podczas wspólnej zabawy lub działań.`,
       pt: `Frequentemente interpreta de forma muito literal o que os outros dizem durante brincadeiras ou atividades compartilhadas.`,
-      fr: `Interprète souvent très littéralement ce que les autres disent lors de jeux ou d'activités partagés.`,
+      fr: `Interprète souvent très littéralement ce que les autres disent lors de jeux ou d'activités partagés.`
     }
   },
   {
@@ -3105,6 +3262,7 @@ window.NM_ASD_BANK = [
     subdomain: "pragmatic_language",
     weight: 1.2,
     reverse: true,
+    stemKey: "style_adjustment_reverse",
     text: {
       hu: `Képes a beszédstílusát a helyzethez és a partnerhez igazítani otthoni helyzetekben.`,
       en: `Can adjust communication style to the situation and communication partner at home.`,
@@ -3116,7 +3274,7 @@ window.NM_ASD_BANK = [
       ar: `يمكنه تعديل أسلوب التواصل وفقًا للموقف والشريك في التواصل في المنزل.`,
       pl: `Potrafi dostosować styl komunikacji do sytuacji i rozmówcy w domu.`,
       pt: `Consegue ajustar o estilo de comunicação à situação e ao interlocutor em casa.`,
-      fr: `Peut adapter son style de communication à la situation et à l'interlocuteur à la maison.`,
+      fr: `Peut adapter son style de communication à la situation et à l'interlocuteur à la maison.`
     }
   },
   {
@@ -3125,6 +3283,7 @@ window.NM_ASD_BANK = [
     subdomain: "pragmatic_language",
     weight: 1.2,
     reverse: true,
+    stemKey: "style_adjustment_reverse",
     text: {
       hu: `Képes a beszédstílusát a helyzethez és a partnerhez igazítani iskolai vagy tanulási helyzetekben.`,
       en: `Can adjust communication style to the situation and communication partner in school or learning situations.`,
@@ -3136,7 +3295,7 @@ window.NM_ASD_BANK = [
       ar: `يمكنه تعديل أسلوب التواصل وفقًا للموقف والشريك في التواصل في المدرسة أو مواقف التعلم.`,
       pl: `Potrafi dostosować styl komunikacji do sytuacji i rozmówcy w szkole lub podczas nauki.`,
       pt: `Consegue ajustar o estilo de comunicação à situação e ao interlocutor na escola ou em situações de aprendizagem.`,
-      fr: `Peut adapter son style de communication à la situation et à l'interlocuteur à l'école ou en situation d'apprentissage.`,
+      fr: `Peut adapter son style de communication à la situation et à l'interlocuteur à l'école ou en situation d'apprentissage.`
     }
   },
   {
@@ -3145,6 +3304,7 @@ window.NM_ASD_BANK = [
     subdomain: "pragmatic_language",
     weight: 1.2,
     reverse: true,
+    stemKey: "style_adjustment_reverse",
     text: {
       hu: `Képes a beszédstílusát a helyzethez és a partnerhez igazítani kortársakkal együtt.`,
       en: `Can adjust communication style to the situation and communication partner with peers.`,
@@ -3156,7 +3316,7 @@ window.NM_ASD_BANK = [
       ar: `يمكنه تعديل أسلوب التواصل وفقًا للموقف والشريك في التواصل مع الأقران.`,
       pl: `Potrafi dostosować styl komunikacji do sytuacji i rozmówcy wśród rówieśników.`,
       pt: `Consegue ajustar o estilo de comunicação à situação e ao interlocutor com os colegas.`,
-      fr: `Peut adapter son style de communication à la situation et à l'interlocuteur avec les pairs.`,
+      fr: `Peut adapter son style de communication à la situation et à l'interlocuteur avec les pairs.`
     }
   },
   {
@@ -3165,6 +3325,7 @@ window.NM_ASD_BANK = [
     subdomain: "pragmatic_language",
     weight: 1.2,
     reverse: true,
+    stemKey: "style_adjustment_reverse",
     text: {
       hu: `Képes a beszédstílusát a helyzethez és a partnerhez igazítani változó vagy kiszámíthatatlan helyzetekben.`,
       en: `Can adjust communication style to the situation and communication partner in changing or unpredictable situations.`,
@@ -3176,7 +3337,7 @@ window.NM_ASD_BANK = [
       ar: `يمكنه تعديل أسلوب التواصل وفقًا للموقف والشريك في التواصل في مواقف متغيرة أو غير متوقعة.`,
       pl: `Potrafi dostosować styl komunikacji do sytuacji i rozmówcy w zmieniających się lub nieprzewidywalnych sytuacjach.`,
       pt: `Consegue ajustar o estilo de comunicação à situação e ao interlocutor em situações mudáveis ou imprevisíveis.`,
-      fr: `Peut adapter son style de communication à la situation et à l'interlocuteur dans des situations changeantes ou imprévisibles.`,
+      fr: `Peut adapter son style de communication à la situation et à l'interlocuteur dans des situations changeantes ou imprévisibles.`
     }
   },
   {
@@ -3185,6 +3346,7 @@ window.NM_ASD_BANK = [
     subdomain: "pragmatic_language",
     weight: 1.2,
     reverse: true,
+    stemKey: "style_adjustment_reverse",
     text: {
       hu: `Képes a beszédstílusát a helyzethez és a partnerhez igazítani közös játék vagy közös tevékenység közben.`,
       en: `Can adjust communication style to the situation and communication partner during shared play or shared activities.`,
@@ -3196,7 +3358,7 @@ window.NM_ASD_BANK = [
       ar: `يمكنه تعديل أسلوب التواصل وفقًا للموقف والشريك في التواصل أثناء اللعب أو الأنشطة المشتركة.`,
       pl: `Potrafi dostosować styl komunikacji do sytuacji i rozmówcy podczas wspólnej zabawy lub działań.`,
       pt: `Consegue ajustar o estilo de comunicação à situação e ao interlocutor durante brincadeiras ou atividades compartilhadas.`,
-      fr: `Peut adapter son style de communication à la situation et à l'interlocuteur lors de jeux ou d'activités partagés.`,
+      fr: `Peut adapter son style de communication à la situation et à l'interlocuteur lors de jeux ou d'activités partagés.`
     }
   },
   {
@@ -3205,9 +3367,10 @@ window.NM_ASD_BANK = [
     subdomain: "pragmatic_language",
     weight: 1.4,
     reverse: false,
+    stemKey: "speech_amount_timing",
     text: {
-      hu: `Nem mindig érzi, mikor kellene többet vagy kevesebbet mondania otthoni helyzetekben.`,
-      en: `Does not always sense when to say more or less at home.`,
+      hu: `Visszatérően nehezebben érzi, mikor kellene többet vagy kevesebbet mondania otthoni helyzetekben.`,
+      en: `Repeatedly has difficulty sensing when to say more or less in home situations.`,
       de: `Er/Sie merkt nicht immer, wann er/sie zu Hause mehr oder weniger sagen sollte.`,
       it: `Non sempre capisce quando dire di più o di meno a casa.`,
       es: `No siempre percibe cuándo decir más o menos en casa.`,
@@ -3216,7 +3379,7 @@ window.NM_ASD_BANK = [
       ar: `لا يشعر دائماً بمتى يجب أن يقول أكثر أو أقل في المنزل.`,
       pl: `Nie zawsze wyczuwa, kiedy mówić więcej lub mniej w domu.`,
       pt: `Nem sempre percebe quando dizer mais ou menos em casa.`,
-      fr: `Ne sent pas toujours quand dire plus ou moins à la maison.`,
+      fr: `Ne sent pas toujours quand dire plus ou moins à la maison.`
     }
   },
   {
@@ -3225,9 +3388,10 @@ window.NM_ASD_BANK = [
     subdomain: "pragmatic_language",
     weight: 1.4,
     reverse: false,
+    stemKey: "speech_amount_timing",
     text: {
-      hu: `Nem mindig érzi, mikor kellene többet vagy kevesebbet mondania iskolai vagy tanulási helyzetekben.`,
-      en: `Does not always sense when to say more or less in school or learning situations.`,
+      hu: `Visszatérően nehezebben érzi, mikor kellene többet vagy kevesebbet mondania iskolai vagy tanulási helyzetekben.`,
+      en: `Repeatedly has difficulty sensing when to say more or less in school or learning situations.`,
       de: `Er/Sie merkt nicht immer, wann er/sie in der Schule oder in Lernsituationen mehr oder weniger sagen sollte.`,
       it: `Non sempre capisce quando dire di più o di meno a scuola o in situazioni di apprendimento.`,
       es: `No siempre percibe cuándo decir más o menos en la escuela o en situaciones de aprendizaje.`,
@@ -3236,7 +3400,7 @@ window.NM_ASD_BANK = [
       ar: `لا يشعر دائماً بمتى يجب أن يقول أكثر أو أقل في المدرسة أو أثناء التعلم.`,
       pl: `Nie zawsze wyczuwa, kiedy mówić więcej lub mniej w szkole lub podczas nauki.`,
       pt: `Nem sempre percebe quando dizer mais ou menos na escola ou em situações de aprendizagem.`,
-      fr: `Ne sent pas toujours quand dire plus ou moins à l'école ou en situation d'apprentissage.`,
+      fr: `Ne sent pas toujours quand dire plus ou moins à l'école ou en situation d'apprentissage.`
     }
   },
   {
@@ -3245,9 +3409,10 @@ window.NM_ASD_BANK = [
     subdomain: "pragmatic_language",
     weight: 1.4,
     reverse: false,
+    stemKey: "speech_amount_timing",
     text: {
-      hu: `Nem mindig érzi, mikor kellene többet vagy kevesebbet mondania kortársakkal együtt.`,
-      en: `Does not always sense when to say more or less with peers.`,
+      hu: `Visszatérően nehezebben érzi, mikor kellene többet vagy kevesebbet mondania kortársakkal együtt.`,
+      en: `Repeatedly has difficulty sensing when to say more or less with peers.`,
       de: `Er/Sie merkt nicht immer, wann er/sie mit Gleichaltrigen mehr oder weniger sagen sollte.`,
       it: `Non sempre capisce quando dire di più o di meno con i coetanei.`,
       es: `No siempre percibe cuándo decir más o menos con sus compañeros.`,
@@ -3256,7 +3421,7 @@ window.NM_ASD_BANK = [
       ar: `لا يشعر دائماً بمتى يجب أن يقول أكثر أو أقل مع الأقران.`,
       pl: `Nie zawsze wyczuwa, kiedy mówić więcej lub mniej z rówieśnikami.`,
       pt: `Nem sempre percebe quando dizer mais ou menos com os colegas.`,
-      fr: `Ne sent pas toujours quand dire plus ou moins avec ses pairs.`,
+      fr: `Ne sent pas toujours quand dire plus ou moins avec ses pairs.`
     }
   },
   {
@@ -3265,9 +3430,10 @@ window.NM_ASD_BANK = [
     subdomain: "pragmatic_language",
     weight: 1.4,
     reverse: false,
+    stemKey: "speech_amount_timing",
     text: {
-      hu: `Nem mindig érzi, mikor kellene többet vagy kevesebbet mondania változó vagy kiszámíthatatlan helyzetekben.`,
-      en: `Does not always sense when to say more or less in changing or unpredictable situations.`,
+      hu: `Visszatérően nehezebben érzi, mikor kellene többet vagy kevesebbet mondania változó vagy kiszámíthatatlan helyzetekben.`,
+      en: `Repeatedly has difficulty sensing when to say more or less in changing or unpredictable situations.`,
       de: `Er/Sie merkt nicht immer, wann er/sie in sich ändernden oder unvorhersehbaren Situationen mehr oder weniger sagen sollte.`,
       it: `Non sempre capisce quando dire di più o di meno in situazioni mutevoli o imprevedibili.`,
       es: `No siempre percibe cuándo decir más o menos en situaciones cambiantes o impredecibles.`,
@@ -3276,7 +3442,7 @@ window.NM_ASD_BANK = [
       ar: `لا يشعر دائماً بمتى يجب أن يقول أكثر أو أقل في المواقف المتغيرة أو غير المتوقعة.`,
       pl: `Nie zawsze wyczuwa, kiedy mówić więcej lub mniej w zmieniających się lub nieprzewidywalnych sytuacjach.`,
       pt: `Nem sempre percebe quando dizer mais ou menos em situações de mudança ou imprevisíveis.`,
-      fr: `Ne sent pas toujours quand dire plus ou moins dans des situations changeantes ou imprévisibles.`,
+      fr: `Ne sent pas toujours quand dire plus ou moins dans des situations changeantes ou imprévisibles.`
     }
   },
   {
@@ -3285,9 +3451,10 @@ window.NM_ASD_BANK = [
     subdomain: "pragmatic_language",
     weight: 1.4,
     reverse: false,
+    stemKey: "speech_amount_timing",
     text: {
-      hu: `Nem mindig érzi, mikor kellene többet vagy kevesebbet mondania közös játék vagy közös tevékenység közben.`,
-      en: `Does not always sense when to say more or less during shared play or shared activities.`,
+      hu: `Visszatérően nehezebben érzi, mikor kellene többet vagy kevesebbet mondania közös játék vagy közös tevékenység közben.`,
+      en: `Repeatedly has difficulty sensing when to say more or less during shared play or shared activities.`,
       de: `Er/Sie merkt nicht immer, wann er/sie beim gemeinsamen Spiel oder gemeinsamen Aktivitäten mehr oder weniger sagen sollte.`,
       it: `Non sempre capisce quando dire di più o di meno durante i giochi condivisi o le attività condivise.`,
       es: `No siempre percibe cuándo decir más o menos durante juegos o actividades compartidas.`,
@@ -3296,7 +3463,7 @@ window.NM_ASD_BANK = [
       ar: `لا يشعر دائماً بمتى يجب أن يقول أكثر أو أقل أثناء اللعب أو الأنشطة المشتركة.`,
       pl: `Nie zawsze wyczuwa, kiedy mówić więcej lub mniej podczas wspólnej zabawy lub aktywności.`,
       pt: `Nem sempre percebe quando dizer mais ou menos durante brincadeiras ou atividades compartilhadas.`,
-      fr: `Ne sent pas toujours quand dire plus ou moins pendant un jeu ou une activité partagée.`,
+      fr: `Ne sent pas toujours quand dire plus ou moins pendant un jeu ou une activité partagée.`
     }
   },
   {
@@ -3305,6 +3472,7 @@ window.NM_ASD_BANK = [
     subdomain: "pragmatic_language",
     weight: 1.3,
     reverse: false,
+    stemKey: "conversation_reciprocity",
     text: {
       hu: `Beszélgetésben nehezen követi a kölcsönös oda-vissza ritmust otthoni helyzetekben.`,
       en: `Has difficulty following the mutual back-and-forth rhythm of conversation at home.`,
@@ -3316,7 +3484,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في متابعة إيقاع المحادثة المتبادل في المنزل.`,
       pl: `Ma trudności z podążaniem za wzajemnym rytmem rozmowy w domu.`,
       pt: `Tem dificuldade em seguir o ritmo de ida e volta da conversação em casa.`,
-      fr: `A des difficultés à suivre le rythme des échanges dans la conversation à la maison.`,
+      fr: `A des difficultés à suivre le rythme des échanges dans la conversation à la maison.`
     }
   },
   {
@@ -3325,6 +3493,7 @@ window.NM_ASD_BANK = [
     subdomain: "pragmatic_language",
     weight: 1.3,
     reverse: false,
+    stemKey: "conversation_reciprocity",
     text: {
       hu: `Beszélgetésben nehezen követi a kölcsönös oda-vissza ritmust iskolai vagy tanulási helyzetekben.`,
       en: `Has difficulty following the mutual back-and-forth rhythm of conversation in school or learning situations.`,
@@ -3336,7 +3505,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في متابعة إيقاع المحادثة المتبادل في المدرسة أو أثناء التعلم.`,
       pl: `Ma trudności z podążaniem za wzajemnym rytmem rozmowy w szkole lub podczas nauki.`,
       pt: `Tem dificuldade em seguir o ritmo de ida e volta da conversação na escola ou em situações de aprendizagem.`,
-      fr: `A des difficultés à suivre le rythme des échanges dans la conversation à l'école ou en situation d'apprentissage.`,
+      fr: `A des difficultés à suivre le rythme des échanges dans la conversation à l'école ou en situation d'apprentissage.`
     }
   },
   {
@@ -3345,6 +3514,7 @@ window.NM_ASD_BANK = [
     subdomain: "pragmatic_language",
     weight: 1.3,
     reverse: false,
+    stemKey: "conversation_reciprocity",
     text: {
       hu: `Beszélgetésben nehezen követi a kölcsönös oda-vissza ritmust kortársakkal együtt.`,
       en: `Has difficulty following the mutual back-and-forth rhythm of conversation with peers.`,
@@ -3356,7 +3526,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في متابعة إيقاع المحادثة المتبادل مع الأقران.`,
       pl: `Ma trudności z podążaniem za wzajemnym rytmem rozmowy z rówieśnikami.`,
       pt: `Tem dificuldade em seguir o ritmo de ida e volta da conversação com os colegas.`,
-      fr: `A des difficultés à suivre le rythme des échanges dans la conversation avec ses pairs.`,
+      fr: `A des difficultés à suivre le rythme des échanges dans la conversation avec ses pairs.`
     }
   },
   {
@@ -3365,6 +3535,7 @@ window.NM_ASD_BANK = [
     subdomain: "pragmatic_language",
     weight: 1.3,
     reverse: false,
+    stemKey: "conversation_reciprocity",
     text: {
       hu: `Beszélgetésben nehezen követi a kölcsönös oda-vissza ritmust változó vagy kiszámíthatatlan helyzetekben.`,
       en: `Has difficulty following the mutual back-and-forth rhythm of conversation in changing or unpredictable situations.`,
@@ -3376,7 +3547,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في متابعة إيقاع المحادثة المتبادل في المواقف المتغيرة أو غير المتوقعة.`,
       pl: `Ma trudności z podążaniem za wzajemnym rytmem rozmowy w zmieniających się lub nieprzewidywalnych sytuacjach.`,
       pt: `Tem dificuldade em seguir o ritmo de ida e volta da conversação em situações de mudança ou imprevisíveis.`,
-      fr: `A des difficultés à suivre le rythme des échanges dans la conversation dans des situations changeantes ou imprévisibles.`,
+      fr: `A des difficultés à suivre le rythme des échanges dans la conversation dans des situations changeantes ou imprévisibles.`
     }
   },
   {
@@ -3385,6 +3556,7 @@ window.NM_ASD_BANK = [
     subdomain: "pragmatic_language",
     weight: 1.3,
     reverse: false,
+    stemKey: "conversation_reciprocity",
     text: {
       hu: `Beszélgetésben nehezen követi a kölcsönös oda-vissza ritmust közös játék vagy közös tevékenység közben.`,
       en: `Has difficulty following the mutual back-and-forth rhythm of conversation during shared play or shared activities.`,
@@ -3396,7 +3568,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في متابعة إيقاع المحادثة المتبادل أثناء اللعب أو الأنشطة المشتركة.`,
       pl: `Ma trudności z podążaniem za wzajemnym rytmem rozmowy podczas wspólnej zabawy lub aktywności.`,
       pt: `Tem dificuldade em seguir o ritmo de ida e volta da conversação durante brincadeiras ou atividades compartilhadas.`,
-      fr: `A des difficultés à suivre le rythme des échanges dans la conversation pendant un jeu ou une activité partagée.`,
+      fr: `A des difficultés à suivre le rythme des échanges dans la conversation pendant un jeu ou une activité partagée.`
     }
   },
   {
@@ -3405,9 +3577,10 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.4,
     reverse: false,
+    stemKey: "expected_social_response",
     text: {
-      hu: `Nem mindig reagál úgy, ahogy a helyzet társas szempontból indokolná otthoni helyzetekben.`,
-      en: `Does not always respond in the socially expected way at home.`,
+      hu: `Visszatérően nehezebben reagál a helyzet társas elvárásaihoz illően otthoni helyzetekben.`,
+      en: `Repeatedly has difficulty responding in line with social expectations in home situations.`,
       de: `Reagiert zu Hause nicht immer auf die sozial erwartete Weise.`,
       it: `Non sempre risponde in modo socialmente previsto a casa.`,
       es: `No siempre responde de la manera socialmente esperada en casa.`,
@@ -3416,7 +3589,7 @@ window.NM_ASD_BANK = [
       ar: `لا يستجيب دائمًا بالطريقة المتوقعة اجتماعيًا في المنزل.`,
       pl: `Nie zawsze reaguje w społecznie oczekiwany sposób w domu.`,
       pt: `Nem sempre responde da forma socialmente esperada em casa.`,
-      fr: `Ne répond pas toujours de manière socialement appropriée à la maison.`,
+      fr: `Ne répond pas toujours de manière socialement appropriée à la maison.`
     }
   },
   {
@@ -3425,9 +3598,10 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.4,
     reverse: false,
+    stemKey: "expected_social_response",
     text: {
-      hu: `Nem mindig reagál úgy, ahogy a helyzet társas szempontból indokolná iskolai vagy tanulási helyzetekben.`,
-      en: `Does not always respond in the socially expected way in school or learning situations.`,
+      hu: `Visszatérően nehezebben reagál a helyzet társas elvárásaihoz illően iskolai vagy tanulási helyzetekben.`,
+      en: `Repeatedly has difficulty responding in line with social expectations in school or learning situations.`,
       de: `Reagiert in der Schule oder in Lernsituationen nicht immer auf die sozial erwartete Weise.`,
       it: `Non sempre risponde in modo socialmente previsto a scuola o in situazioni di apprendimento.`,
       es: `No siempre responde de la manera socialmente esperada en la escuela o en situaciones de aprendizaje.`,
@@ -3436,7 +3610,7 @@ window.NM_ASD_BANK = [
       ar: `لا يستجيب دائمًا بالطريقة المتوقعة اجتماعيًا في المدرسة أو مواقف التعلم.`,
       pl: `Nie zawsze reaguje w społecznie oczekiwany sposób w szkole lub podczas nauki.`,
       pt: `Nem sempre responde da forma socialmente esperada na escola ou em situações de aprendizagem.`,
-      fr: `Ne répond pas toujours de manière socialement appropriée à l'école ou lors de situations d'apprentissage.`,
+      fr: `Ne répond pas toujours de manière socialement appropriée à l'école ou lors de situations d'apprentissage.`
     }
   },
   {
@@ -3445,9 +3619,10 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.4,
     reverse: false,
+    stemKey: "expected_social_response",
     text: {
-      hu: `Nem mindig reagál úgy, ahogy a helyzet társas szempontból indokolná kortársakkal együtt.`,
-      en: `Does not always respond in the socially expected way with peers.`,
+      hu: `Visszatérően nehezebben reagál a helyzet társas elvárásaihoz illően kortársakkal együtt.`,
+      en: `Repeatedly has difficulty responding in line with social expectations with peers.`,
       de: `Reagiert mit Gleichaltrigen nicht immer auf die sozial erwartete Weise.`,
       it: `Non sempre risponde in modo socialmente previsto con i coetanei.`,
       es: `No siempre responde de la manera socialmente esperada con sus compañeros.`,
@@ -3456,7 +3631,7 @@ window.NM_ASD_BANK = [
       ar: `لا يستجيب دائمًا بالطريقة المتوقعة اجتماعيًا مع الأقران.`,
       pl: `Nie zawsze reaguje w społecznie oczekiwany sposób w kontaktach z rówieśnikami.`,
       pt: `Nem sempre responde da forma socialmente esperada com os colegas.`,
-      fr: `Ne répond pas toujours de manière socialement appropriée avec les pairs.`,
+      fr: `Ne répond pas toujours de manière socialement appropriée avec les pairs.`
     }
   },
   {
@@ -3465,9 +3640,10 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.4,
     reverse: false,
+    stemKey: "expected_social_response",
     text: {
-      hu: `Nem mindig reagál úgy, ahogy a helyzet társas szempontból indokolná változó vagy kiszámíthatatlan helyzetekben.`,
-      en: `Does not always respond in the socially expected way in changing or unpredictable situations.`,
+      hu: `Visszatérően nehezebben reagál a helyzet társas elvárásaihoz illően változó vagy kiszámíthatatlan helyzetekben.`,
+      en: `Repeatedly has difficulty responding in line with social expectations in changing or unpredictable situations.`,
       de: `Reagiert in wechselnden oder unvorhersehbaren Situationen nicht immer auf die sozial erwartete Weise.`,
       it: `Non sempre risponde in modo socialmente previsto in situazioni variabili o imprevedibili.`,
       es: `No siempre responde de la manera socialmente esperada en situaciones cambiantes o impredecibles.`,
@@ -3476,7 +3652,7 @@ window.NM_ASD_BANK = [
       ar: `لا يستجيب دائمًا بالطريقة المتوقعة اجتماعيًا في المواقف المتغيرة أو غير المتوقعة.`,
       pl: `Nie zawsze reaguje w społecznie oczekiwany sposób w sytuacjach zmiennych lub nieprzewidywalnych.`,
       pt: `Nem sempre responde da forma socialmente esperada em situações de mudança ou imprevisíveis.`,
-      fr: `Ne répond pas toujours de manière socialement appropriée dans des situations changeantes ou imprévisibles.`,
+      fr: `Ne répond pas toujours de manière socialement appropriée dans des situations changeantes ou imprévisibles.`
     }
   },
   {
@@ -3485,9 +3661,10 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.4,
     reverse: false,
+    stemKey: "expected_social_response",
     text: {
-      hu: `Nem mindig reagál úgy, ahogy a helyzet társas szempontból indokolná közös játék vagy közös tevékenység közben.`,
-      en: `Does not always respond in the socially expected way during shared play or shared activities.`,
+      hu: `Visszatérően nehezebben reagál a helyzet társas elvárásaihoz illően közös játék vagy közös tevékenység közben.`,
+      en: `Repeatedly has difficulty responding in line with social expectations during shared play or shared activities.`,
       de: `Reagiert während gemeinsamen Spiels oder gemeinsamer Aktivitäten nicht immer auf die sozial erwartete Weise.`,
       it: `Non sempre risponde in modo socialmente previsto durante il gioco o le attività condivise.`,
       es: `No siempre responde de la manera socialmente esperada durante juegos o actividades compartidas.`,
@@ -3496,7 +3673,7 @@ window.NM_ASD_BANK = [
       ar: `لا يستجيب دائمًا بالطريقة المتوقعة اجتماعيًا أثناء اللعب أو الأنشطة المشتركة.`,
       pl: `Nie zawsze reaguje w społecznie oczekiwany sposób podczas wspólnej zabawy lub aktywności.`,
       pt: `Nem sempre responde da forma socialmente esperada durante o jogo ou atividades partilhadas.`,
-      fr: `Ne répond pas toujours de manière socialement appropriée lors de jeux ou d'activités partagés.`,
+      fr: `Ne répond pas toujours de manière socialement appropriée lors de jeux ou d'activités partagés.`
     }
   },
   {
@@ -3505,8 +3682,9 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.3,
     reverse: false,
+    stemKey: "shared_attention",
     text: {
-      hu: `Kevéssé keresi a közös figyelmi fókuszt másokkal otthoni helyzetekben.`,
+      hu: `Kevéssé keresi a közös figyelmi fókuszt másokkal otthoni helyzetekben többféle társas helyzetben.`,
       en: `Shows limited interest in shared attention with others at home.`,
       de: `Zeigt zu Hause nur begrenztes Interesse an gemeinsamer Aufmerksamkeit mit anderen.`,
       it: `Mostra scarso interesse per l'attenzione condivisa con altri a casa.`,
@@ -3516,7 +3694,7 @@ window.NM_ASD_BANK = [
       ar: `يظهر اهتمامًا محدودًا بالانتباه المشترك مع الآخرين في المنزل.`,
       pl: `W domu wykazuje ograniczone zainteresowanie wspólną uwagą z innymi.`,
       pt: `Mostra interesse limitado na atenção partilhada com outros em casa.`,
-      fr: `Montre un intérêt limité à l’attention partagée avec les autres à la maison.`,
+      fr: `Montre un intérêt limité à l’attention partagée avec les autres à la maison.`
     }
   },
   {
@@ -3525,8 +3703,9 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.3,
     reverse: false,
+    stemKey: "shared_attention",
     text: {
-      hu: `Kevéssé keresi a közös figyelmi fókuszt másokkal iskolai vagy tanulási helyzetekben.`,
+      hu: `Kevéssé keresi a közös figyelmi fókuszt másokkal iskolai vagy tanulási helyzetekben többféle társas helyzetben.`,
       en: `Shows limited interest in shared attention with others in school or learning situations.`,
       de: `Zeigt in der Schule oder in Lernsituationen nur begrenztes Interesse an gemeinsamer Aufmerksamkeit mit anderen.`,
       it: `Mostra scarso interesse per l'attenzione condivisa con altri a scuola o in situazioni di apprendimento.`,
@@ -3536,7 +3715,7 @@ window.NM_ASD_BANK = [
       ar: `يظهر اهتمامًا محدودًا بالانتباه المشترك مع الآخرين في المدرسة أو مواقف التعلم.`,
       pl: `W szkole lub podczas nauki wykazuje ograniczone zainteresowanie wspólną uwagą z innymi.`,
       pt: `Mostra interesse limitado na atenção partilhada com outros na escola ou em situações de aprendizagem.`,
-      fr: `Montre un intérêt limité à l’attention partagée avec les autres à l’école ou lors de situations d’apprentissage.`,
+      fr: `Montre un intérêt limité à l’attention partagée avec les autres à l’école ou lors de situations d’apprentissage.`
     }
   },
   {
@@ -3545,8 +3724,9 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.3,
     reverse: false,
+    stemKey: "shared_attention",
     text: {
-      hu: `Kevéssé keresi a közös figyelmi fókuszt másokkal kortársakkal együtt.`,
+      hu: `Kevéssé keresi a közös figyelmi fókuszt másokkal kortársakkal együtt többféle társas helyzetben.`,
       en: `Shows limited interest in shared attention with others with peers.`,
       de: `Zeigt mit Gleichaltrigen nur begrenztes Interesse an gemeinsamer Aufmerksamkeit.`,
       it: `Mostra scarso interesse per l'attenzione condivisa con altri coetanei.`,
@@ -3556,7 +3736,7 @@ window.NM_ASD_BANK = [
       ar: `يظهر اهتمامًا محدودًا بالانتباه المشترك مع الآخرين من الأقران.`,
       pl: `W kontaktach z rówieśnikami wykazuje ograniczone zainteresowanie wspólną uwagą.`,
       pt: `Mostra interesse limitado na atenção partilhada com outros colegas.`,
-      fr: `Montre un intérêt limité à l’attention partagée avec les pairs.`,
+      fr: `Montre un intérêt limité à l’attention partagée avec les pairs.`
     }
   },
   {
@@ -3565,8 +3745,9 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.3,
     reverse: false,
+    stemKey: "shared_attention",
     text: {
-      hu: `Kevéssé keresi a közös figyelmi fókuszt másokkal változó vagy kiszámíthatatlan helyzetekben.`,
+      hu: `Kevéssé keresi a közös figyelmi fókuszt másokkal változó vagy kiszámíthatatlan helyzetekben többféle társas helyzetben.`,
       en: `Shows limited interest in shared attention with others in changing or unpredictable situations.`,
       de: `Zeigt in wechselnden oder unvorhersehbaren Situationen nur begrenztes Interesse an gemeinsamer Aufmerksamkeit mit anderen.`,
       it: `Mostra scarso interesse per l'attenzione condivisa con altri in situazioni variabili o imprevedibili.`,
@@ -3576,7 +3757,7 @@ window.NM_ASD_BANK = [
       ar: `يظهر اهتمامًا محدودًا بالانتباه المشترك مع الآخرين في المواقف المتغيرة أو غير المتوقعة.`,
       pl: `W sytuacjach zmiennych lub nieprzewidywalnych wykazuje ograniczone zainteresowanie wspólną uwagą z innymi.`,
       pt: `Mostra interesse limitado na atenção partilhada com outros em situações de mudança ou imprevisíveis.`,
-      fr: `Montre un intérêt limité à l’attention partagée avec les autres dans des situations changeantes ou imprévisibles.`,
+      fr: `Montre un intérêt limité à l’attention partagée avec les autres dans des situations changeantes ou imprévisibles.`
     }
   },
   {
@@ -3585,8 +3766,9 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.3,
     reverse: false,
+    stemKey: "shared_attention",
     text: {
-      hu: `Kevéssé keresi a közös figyelmi fókuszt másokkal közös játék vagy közös tevékenység közben.`,
+      hu: `Kevéssé keresi a közös figyelmi fókuszt másokkal közös játék vagy közös tevékenység közben többféle társas helyzetben.`,
       en: `Shows limited interest in shared attention with others during shared play or shared activities.`,
       de: `Zeigt während gemeinsamen Spiels oder gemeinsamer Aktivitäten nur begrenztes Interesse an gemeinsamer Aufmerksamkeit mit anderen.`,
       it: `Mostra scarso interesse per l'attenzione condivisa con altri durante il gioco o le attività condivise.`,
@@ -3596,7 +3778,7 @@ window.NM_ASD_BANK = [
       ar: `يظهر اهتمامًا محدودًا بالانتباه المشترك مع الآخرين أثناء اللعب أو الأنشطة المشتركة.`,
       pl: `Podczas wspólnej zabawy lub aktywności wykazuje ograniczone zainteresowanie wspólną uwagą z innymi.`,
       pt: `Mostra interesse limitado na atenção partilhada com outros durante o jogo ou atividades partilhadas.`,
-      fr: `Montre un intérêt limité à l’attention partagée avec les autres lors de jeux ou d’activités partagés.`,
+      fr: `Montre un intérêt limité à l’attention partagée avec les autres lors de jeux ou d’activités partagés.`
     }
   },
   {
@@ -3605,8 +3787,9 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.2,
     reverse: true,
+    stemKey: "interest_sharing_reverse",
     text: {
-      hu: `Természetesen megosztja az érdeklődését és örömét másokkal otthoni helyzetekben.`,
+      hu: `Természetesen megosztja az érdeklődését és örömét másokkal otthoni helyzetekben többféle társas helyzetben.`,
       en: `Naturally shares interest and enjoyment with others at home.`,
       de: `Teilt natürlich Interesse und Freude mit anderen zu Hause.`,
       it: `Condivide naturalmente interesse e piacere con gli altri a casa.`,
@@ -3616,7 +3799,7 @@ window.NM_ASD_BANK = [
       ar: `يشارك الاهتمام والاستمتاع مع الآخرين في المنزل بشكل طبيعي.`,
       pl: `Naturalnie dzieli się zainteresowaniem i radością z innymi w domu.`,
       pt: `Compartilha naturalmente interesse e prazer com os outros em casa.`,
-      fr: `Partage naturellement intérêt et plaisir avec les autres à la maison.`,
+      fr: `Partage naturellement intérêt et plaisir avec les autres à la maison.`
     }
   },
   {
@@ -3625,8 +3808,9 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.2,
     reverse: true,
+    stemKey: "interest_sharing_reverse",
     text: {
-      hu: `Természetesen megosztja az érdeklődését és örömét másokkal iskolai vagy tanulási helyzetekben.`,
+      hu: `Természetesen megosztja az érdeklődését és örömét másokkal iskolai vagy tanulási helyzetekben többféle társas helyzetben.`,
       en: `Naturally shares interest and enjoyment with others in school or learning situations.`,
       de: `Teilt natürlich Interesse und Freude mit anderen in der Schule oder Lernsituationen.`,
       it: `Condivide naturalmente interesse e piacere con gli altri a scuola o durante l'apprendimento.`,
@@ -3636,7 +3820,7 @@ window.NM_ASD_BANK = [
       ar: `يشارك الاهتمام والاستمتاع مع الآخرين في المدرسة أو مواقف التعلم بشكل طبيعي.`,
       pl: `Naturalnie dzieli się zainteresowaniem i radością z innymi w sytuacjach szkolnych lub nauki.`,
       pt: `Compartilha naturalmente interesse e prazer com os outros na escola ou em situações de aprendizagem.`,
-      fr: `Partage naturellement intérêt et plaisir avec les autres à l'école ou en situation d'apprentissage.`,
+      fr: `Partage naturellement intérêt et plaisir avec les autres à l'école ou en situation d'apprentissage.`
     }
   },
   {
@@ -3645,8 +3829,9 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.2,
     reverse: true,
+    stemKey: "interest_sharing_reverse",
     text: {
-      hu: `Természetesen megosztja az érdeklődését és örömét másokkal kortársakkal együtt.`,
+      hu: `Természetesen megosztja az érdeklődését és örömét másokkal kortársakkal együtt többféle társas helyzetben.`,
       en: `Naturally shares interest and enjoyment with others with peers.`,
       de: `Teilt natürlich Interesse und Freude mit Gleichaltrigen.`,
       it: `Condivide naturalmente interesse e piacere con i coetanei.`,
@@ -3656,7 +3841,7 @@ window.NM_ASD_BANK = [
       ar: `يشارك الاهتمام والاستمتاع مع الأقران بشكل طبيعي.`,
       pl: `Naturalnie dzieli się zainteresowaniem i radością z rówieśnikami.`,
       pt: `Compartilha naturalmente interesse e prazer com os pares.`,
-      fr: `Partage naturellement intérêt et plaisir avec ses pairs.`,
+      fr: `Partage naturellement intérêt et plaisir avec ses pairs.`
     }
   },
   {
@@ -3665,8 +3850,9 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.2,
     reverse: true,
+    stemKey: "interest_sharing_reverse",
     text: {
-      hu: `Természetesen megosztja az érdeklődését és örömét másokkal változó vagy kiszámíthatatlan helyzetekben.`,
+      hu: `Természetesen megosztja az érdeklődését és örömét másokkal változó vagy kiszámíthatatlan helyzetekben többféle társas helyzetben.`,
       en: `Naturally shares interest and enjoyment with others in changing or unpredictable situations.`,
       de: `Teilt natürlich Interesse und Freude mit anderen in wechselnden oder unvorhersehbaren Situationen.`,
       it: `Condivide naturalmente interesse e piacere con gli altri in situazioni mutevoli o imprevedibili.`,
@@ -3676,7 +3862,7 @@ window.NM_ASD_BANK = [
       ar: `يشارك الاهتمام والاستمتاع مع الآخرين في مواقف متغيرة أو غير متوقعة بشكل طبيعي.`,
       pl: `Naturalnie dzieli się zainteresowaniem i radością z innymi w zmieniających się lub nieprzewidywalnych sytuacjach.`,
       pt: `Compartilha naturalmente interesse e prazer com os outros em situações mutáveis ou imprevisíveis.`,
-      fr: `Partage naturellement intérêt et plaisir avec les autres dans des situations changeantes ou imprévisibles.`,
+      fr: `Partage naturellement intérêt et plaisir avec les autres dans des situations changeantes ou imprévisibles.`
     }
   },
   {
@@ -3685,8 +3871,9 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.2,
     reverse: true,
+    stemKey: "interest_sharing_reverse",
     text: {
-      hu: `Természetesen megosztja az érdeklődését és örömét másokkal közös játék vagy közös tevékenység közben.`,
+      hu: `Természetesen megosztja az érdeklődését és örömét másokkal közös játék vagy közös tevékenység közben többféle társas helyzetben.`,
       en: `Naturally shares interest and enjoyment with others during shared play or shared activities.`,
       de: `Teilt natürlich Interesse und Freude mit anderen während gemeinsam spielerischer oder gemeinsamer Aktivitäten.`,
       it: `Condivide naturalmente interesse e piacere con gli altri durante il gioco o attività condivise.`,
@@ -3696,7 +3883,7 @@ window.NM_ASD_BANK = [
       ar: `يشارك الاهتمام والاستمتاع مع الآخرين أثناء اللعب أو الأنشطة المشتركة بشكل طبيعي.`,
       pl: `Naturalnie dzieli się zainteresowaniem i radością z innymi podczas wspólnej zabawy lub wspólnych zajęć.`,
       pt: `Compartilha naturalmente interesse e prazer com os outros durante brincadeiras ou atividades compartilhadas.`,
-      fr: `Partage naturellement intérêt et plaisir avec les autres lors de jeux ou d'activités partagées.`,
+      fr: `Partage naturellement intérêt et plaisir avec les autres lors de jeux ou d'activités partagées.`
     }
   },
   {
@@ -3705,8 +3892,9 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.4,
     reverse: false,
+    stemKey: "low_reciprocity",
     text: {
-      hu: `Társas helyzetben kevéssé kölcsönösnek tűnik a kapcsolódása otthoni helyzetekben.`,
+      hu: `Társas helyzetben kevéssé kölcsönösnek tűnik a kapcsolódása otthoni helyzetekben többféle társas helyzetben.`,
       en: `May appear less reciprocal in social interaction at home.`,
       de: `Scheint weniger wechselseitig in der sozialen Interaktion zu Hause zu sein.`,
       it: `Può apparire meno ricettivo nell'interazione sociale a casa.`,
@@ -3716,7 +3904,7 @@ window.NM_ASD_BANK = [
       ar: `قد يظهر أقل تبادلية في التفاعل الاجتماعي في المنزل.`,
       pl: `Może wydawać się mniej wzajemny w interakcjach społecznych w domu.`,
       pt: `Pode parecer menos recíproco na interação social em casa.`,
-      fr: `Peut sembler moins réciproque dans les interactions sociales à la maison.`,
+      fr: `Peut sembler moins réciproque dans les interactions sociales à la maison.`
     }
   },
   {
@@ -3725,8 +3913,9 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.4,
     reverse: false,
+    stemKey: "low_reciprocity",
     text: {
-      hu: `Társas helyzetben kevéssé kölcsönösnek tűnik a kapcsolódása iskolai vagy tanulási helyzetekben.`,
+      hu: `Társas helyzetben kevéssé kölcsönösnek tűnik a kapcsolódása iskolai vagy tanulási helyzetekben többféle társas helyzetben.`,
       en: `May appear less reciprocal in social interaction in school or learning situations.`,
       de: `Scheint weniger wechselseitig in der sozialen Interaktion in Schule oder Lernsituationen zu sein.`,
       it: `Può apparire meno ricettivo nell'interazione sociale a scuola o in contesti di apprendimento.`,
@@ -3736,7 +3925,7 @@ window.NM_ASD_BANK = [
       ar: `قد يظهر أقل تبادلية في التفاعل الاجتماعي في المدرسة أو مواقف التعلم.`,
       pl: `Może wydawać się mniej wzajemny w interakcjach społecznych w szkole lub sytuacjach edukacyjnych.`,
       pt: `Pode parecer menos recíproco na interação social na escola ou em situações de aprendizagem.`,
-      fr: `Peut sembler moins réciproque dans les interactions sociales à l'école ou en situation d'apprentissage.`,
+      fr: `Peut sembler moins réciproque dans les interactions sociales à l'école ou en situation d'apprentissage.`
     }
   },
   {
@@ -3745,8 +3934,9 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.4,
     reverse: false,
+    stemKey: "low_reciprocity",
     text: {
-      hu: `Társas helyzetben kevéssé kölcsönösnek tűnik a kapcsolódása kortársakkal együtt.`,
+      hu: `Társas helyzetben kevéssé kölcsönösnek tűnik a kapcsolódása kortársakkal együtt többféle társas helyzetben.`,
       en: `May appear less reciprocal in social interaction with peers.`,
       de: `Scheint weniger wechselseitig in der sozialen Interaktion mit Gleichaltrigen zu sein.`,
       it: `Può apparire meno ricettivo nell'interazione sociale con i coetanei.`,
@@ -3756,7 +3946,7 @@ window.NM_ASD_BANK = [
       ar: `قد يظهر أقل تبادلية في التفاعل الاجتماعي مع الأقران.`,
       pl: `Może wydawać się mniej wzajemny w interakcjach społecznych z rówieśnikami.`,
       pt: `Pode parecer menos recíproco na interação social com os pares.`,
-      fr: `Peut sembler moins réciproque dans les interactions sociales avec ses pairs.`,
+      fr: `Peut sembler moins réciproque dans les interactions sociales avec ses pairs.`
     }
   },
   {
@@ -3765,8 +3955,9 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.4,
     reverse: false,
+    stemKey: "low_reciprocity",
     text: {
-      hu: `Társas helyzetben kevéssé kölcsönösnek tűnik a kapcsolódása változó vagy kiszámíthatatlan helyzetekben.`,
+      hu: `Társas helyzetben kevéssé kölcsönösnek tűnik a kapcsolódása változó vagy kiszámíthatatlan helyzetekben többféle társas helyzetben.`,
       en: `May appear less reciprocal in social interaction in changing or unpredictable situations.`,
       de: `Scheint weniger wechselseitig in der sozialen Interaktion in wechselnden oder unvorhersehbaren Situationen zu sein.`,
       it: `Può apparire meno ricettivo nell'interazione sociale in situazioni mutevoli o imprevedibili.`,
@@ -3776,7 +3967,7 @@ window.NM_ASD_BANK = [
       ar: `قد يظهر أقل تبادلية في التفاعل الاجتماعي في مواقف متغيرة أو غير متوقعة.`,
       pl: `Może wydawać się mniej wzajemny w interakcjach społecznych w zmieniających się lub nieprzewidywalnych sytuacjach.`,
       pt: `Pode parecer menos recíproco na interação social em situações mutáveis ou imprevisíveis.`,
-      fr: `Peut sembler moins réciproque dans les interactions sociales dans des situations changeantes ou imprévisibles.`,
+      fr: `Peut sembler moins réciproque dans les interactions sociales dans des situations changeantes ou imprévisibles.`
     }
   },
   {
@@ -3785,8 +3976,9 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.4,
     reverse: false,
+    stemKey: "low_reciprocity",
     text: {
-      hu: `Társas helyzetben kevéssé kölcsönösnek tűnik a kapcsolódása közös játék vagy közös tevékenység közben.`,
+      hu: `Társas helyzetben kevéssé kölcsönösnek tűnik a kapcsolódása közös játék vagy közös tevékenység közben többféle társas helyzetben.`,
       en: `May appear less reciprocal in social interaction during shared play or shared activities.`,
       de: `Scheint weniger wechselseitig in der sozialen Interaktion während gemeinsamem Spiel oder gemeinsamen Aktivitäten zu sein.`,
       it: `Può apparire meno ricettivo nell'interazione sociale durante il gioco o attività condivise.`,
@@ -3796,7 +3988,7 @@ window.NM_ASD_BANK = [
       ar: `قد يظهر أقل تبادلية في التفاعل الاجتماعي أثناء اللعب أو الأنشطة المشتركة.`,
       pl: `Może wydawać się mniej wzajemny w interakcjach społecznych podczas wspólnej zabawy lub wspólnych zajęć.`,
       pt: `Pode parecer menos recíproco na interação social durante brincadeiras ou atividades compartilhadas.`,
-      fr: `Peut sembler moins réciproque dans les interactions sociales lors de jeux ou d'activités partagées.`,
+      fr: `Peut sembler moins réciproque dans les interactions sociales lors de jeux ou d'activités partagées.`
     }
   },
   {
@@ -3805,8 +3997,9 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.5,
     reverse: false,
+    stemKey: "social_rhythm",
     text: {
-      hu: `Nehezen veszi fel vagy tartja fenn a társas kapcsolat ritmusát otthoni helyzetekben.`,
+      hu: `Nehezen veszi fel vagy tartja fenn a társas kapcsolat ritmusát otthoni helyzetekben többféle társas helyzetben.`,
       en: `Has difficulty initiating or maintaining the rhythm of social interaction at home.`,
       de: `Hat Schwierigkeiten, den Rhythmus sozialer Interaktionen zu Hause zu beginnen oder aufrechtzuerhalten.`,
       it: `Ha difficoltà a iniziare o mantenere il ritmo delle interazioni sociali a casa.`,
@@ -3816,7 +4009,7 @@ window.NM_ASD_BANK = [
       ar: `يواجه صعوبة في بدء أو الحفاظ على إيقاع التفاعل الاجتماعي في المنزل.`,
       pl: `Ma trudności z inicjowaniem lub utrzymywaniem rytmu interakcji społecznej w domu.`,
       pt: `Tem dificuldade em iniciar ou manter o ritmo da interação social em casa.`,
-      fr: `A des difficultés à initier ou maintenir le rythme des interactions sociales à la maison.`,
+      fr: `A des difficultés à initier ou maintenir le rythme des interactions sociales à la maison.`
     }
   },
   {
@@ -3825,8 +4018,9 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.5,
     reverse: false,
+    stemKey: "social_rhythm",
     text: {
-      hu: `Nehezen veszi fel vagy tartja fenn a társas kapcsolat ritmusát iskolai vagy tanulási helyzetekben.`,
+      hu: `Nehezen veszi fel vagy tartja fenn a társas kapcsolat ritmusát iskolai vagy tanulási helyzetekben többféle társas helyzetben.`,
       en: `Has difficulty initiating or maintaining the rhythm of social interaction in school or learning situations.`,
       de: `Hat Schwierigkeiten, den Rhythmus sozialer Interaktionen in der Schule oder Lernsituationen zu beginnen oder aufrechtzuerhalten.`,
       it: `Ha difficoltà a iniziare o mantenere il ritmo delle interazioni sociali a scuola o durante situazioni di apprendimento.`,
@@ -3836,7 +4030,7 @@ window.NM_ASD_BANK = [
       ar: `يواجه صعوبة في بدء أو الحفاظ على إيقاع التفاعل الاجتماعي في المدرسة أو مواقف التعلم.`,
       pl: `Ma trudności z inicjowaniem lub utrzymywaniem rytmu interakcji społecznej w szkole lub podczas nauki.`,
       pt: `Tem dificuldade em iniciar ou manter o ritmo da interação social na escola ou em situações de aprendizagem.`,
-      fr: `A des difficultés à initier ou maintenir le rythme des interactions sociales à l'école ou en situation d'apprentissage.`,
+      fr: `A des difficultés à initier ou maintenir le rythme des interactions sociales à l'école ou en situation d'apprentissage.`
     }
   },
   {
@@ -3845,8 +4039,9 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.5,
     reverse: false,
+    stemKey: "social_rhythm",
     text: {
-      hu: `Nehezen veszi fel vagy tartja fenn a társas kapcsolat ritmusát kortársakkal együtt.`,
+      hu: `Nehezen veszi fel vagy tartja fenn a társas kapcsolat ritmusát kortársakkal együtt többféle társas helyzetben.`,
       en: `Has difficulty initiating or maintaining the rhythm of social interaction with peers.`,
       de: `Hat Schwierigkeiten, den Rhythmus sozialer Interaktionen mit Gleichaltrigen zu beginnen oder aufrechtzuerhalten.`,
       it: `Ha difficoltà a iniziare o mantenere il ritmo delle interazioni sociali con i coetanei.`,
@@ -3856,7 +4051,7 @@ window.NM_ASD_BANK = [
       ar: `يواجه صعوبة في بدء أو الحفاظ على إيقاع التفاعل الاجتماعي مع الأقران.`,
       pl: `Ma trudności z inicjowaniem lub utrzymywaniem rytmu interakcji społecznej z rówieśnikami.`,
       pt: `Tem dificuldade em iniciar ou manter o ritmo da interação social com colegas.`,
-      fr: `A des difficultés à initier ou maintenir le rythme des interactions sociales avec les pairs.`,
+      fr: `A des difficultés à initier ou maintenir le rythme des interactions sociales avec les pairs.`
     }
   },
   {
@@ -3865,8 +4060,9 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.5,
     reverse: false,
+    stemKey: "social_rhythm",
     text: {
-      hu: `Nehezen veszi fel vagy tartja fenn a társas kapcsolat ritmusát változó vagy kiszámíthatatlan helyzetekben.`,
+      hu: `Nehezen veszi fel vagy tartja fenn a társas kapcsolat ritmusát változó vagy kiszámíthatatlan helyzetekben többféle társas helyzetben.`,
       en: `Has difficulty initiating or maintaining the rhythm of social interaction in changing or unpredictable situations.`,
       de: `Hat Schwierigkeiten, den Rhythmus sozialer Interaktionen in sich verändernden oder unvorhersehbaren Situationen zu beginnen oder aufrechtzuerhalten.`,
       it: `Ha difficoltà a iniziare o mantenere il ritmo delle interazioni sociali in situazioni mutevoli o imprevedibili.`,
@@ -3876,7 +4072,7 @@ window.NM_ASD_BANK = [
       ar: `يواجه صعوبة في بدء أو الحفاظ على إيقاع التفاعل الاجتماعي في المواقف المتغيرة أو غير المتوقعة.`,
       pl: `Ma trudności z inicjowaniem lub utrzymywaniem rytmu interakcji społecznej w zmieniających się lub nieprzewidywalnych sytuacjach.`,
       pt: `Tem dificuldade em iniciar ou manter o ritmo da interação social em situações de mudança ou imprevisíveis.`,
-      fr: `A des difficultés à initier ou maintenir le rythme des interactions sociales dans des situations changeantes ou imprévisibles.`,
+      fr: `A des difficultés à initier ou maintenir le rythme des interactions sociales dans des situations changeantes ou imprévisibles.`
     }
   },
   {
@@ -3885,8 +4081,9 @@ window.NM_ASD_BANK = [
     subdomain: "social_reciprocity",
     weight: 1.5,
     reverse: false,
+    stemKey: "social_rhythm",
     text: {
-      hu: `Nehezen veszi fel vagy tartja fenn a társas kapcsolat ritmusát közös játék vagy közös tevékenység közben.`,
+      hu: `Nehezen veszi fel vagy tartja fenn a társas kapcsolat ritmusát közös játék vagy közös tevékenység közben többféle társas helyzetben.`,
       en: `Has difficulty initiating or maintaining the rhythm of social interaction during shared play or shared activities.`,
       de: `Hat Schwierigkeiten, den Rhythmus sozialer Interaktionen während gemeinsamen Spiels oder Aktivitäten zu beginnen oder aufrechtzuerhalten.`,
       it: `Ha difficoltà a iniziare o mantenere il ritmo delle interazioni sociali durante giochi o attività condivise.`,
@@ -3896,7 +4093,7 @@ window.NM_ASD_BANK = [
       ar: `يواجه صعوبة في بدء أو الحفاظ على إيقاع التفاعل الاجتماعي أثناء اللعب أو الأنشطة المشتركة.`,
       pl: `Ma trudności z inicjowaniem lub utrzymywaniem rytmu interakcji społecznej podczas wspólnej zabawy lub zajęć.`,
       pt: `Tem dificuldade em iniciar ou manter o ritmo da interação social durante jogos ou atividades compartilhadas.`,
-      fr: `A des difficultés à initier ou maintenir le rythme des interactions sociales pendant les jeux ou activités partagés.`,
+      fr: `A des difficultés à initier ou maintenir le rythme des interactions sociales pendant les jeux ou activités partagés.`
     }
   },
   {
@@ -3905,9 +4102,10 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.4,
     reverse: false,
+    stemKey: "nonverbal_fit",
     text: {
-      hu: `Nonverbális jelzései nem mindig illeszkednek a helyzethez otthoni helyzetekben.`,
-      en: `Nonverbal signals do not always match the situation at home.`,
+      hu: `Nonverbális jelzései visszatérően kevésbé illeszkednek a helyzethez otthoni helyzetekben.`,
+      en: `Nonverbal signals repeatedly fit the situation less well in home situations.`,
       de: `Nonverbale Signale stimmen nicht immer mit der Situation zu Hause überein.`,
       it: `I segnali non verbali non corrispondono sempre alla situazione a casa.`,
       es: `Las señales no verbales no siempre coinciden con la situación en casa.`,
@@ -3916,7 +4114,7 @@ window.NM_ASD_BANK = [
       ar: `الإشارات غير اللفظية لا تتطابق دائمًا مع الموقف في المنزل.`,
       pl: `Sygnały niewerbalne nie zawsze odpowiadają sytuacji w domu.`,
       pt: `Sinais não verbais nem sempre condizem com a situação em casa.`,
-      fr: `Les signaux non verbaux ne correspondent pas toujours à la situation à la maison.`,
+      fr: `Les signaux non verbaux ne correspondent pas toujours à la situation à la maison.`
     }
   },
   {
@@ -3925,9 +4123,10 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.4,
     reverse: false,
+    stemKey: "nonverbal_fit",
     text: {
-      hu: `Nonverbális jelzései nem mindig illeszkednek a helyzethez iskolai vagy tanulási helyzetekben.`,
-      en: `Nonverbal signals do not always match the situation in school or learning situations.`,
+      hu: `Nonverbális jelzései visszatérően kevésbé illeszkednek a helyzethez iskolai vagy tanulási helyzetekben.`,
+      en: `Nonverbal signals repeatedly fit the situation less well in school or learning situations.`,
       de: `Nonverbale Signale stimmen nicht immer mit der Situation in der Schule oder Lernsituationen überein.`,
       it: `I segnali non verbali non corrispondono sempre alla situazione a scuola o durante situazioni di apprendimento.`,
       es: `Las señales no verbales no siempre coinciden con la situación en la escuela o situaciones de aprendizaje.`,
@@ -3936,7 +4135,7 @@ window.NM_ASD_BANK = [
       ar: `الإشارات غير اللفظية لا تتطابق دائمًا مع الموقف في المدرسة أو مواقف التعلم.`,
       pl: `Sygnały niewerbalne nie zawsze odpowiadają sytuacji w szkole lub podczas nauki.`,
       pt: `Sinais não verbais nem sempre condizem com a situação na escola ou em situações de aprendizagem.`,
-      fr: `Les signaux non verbaux ne correspondent pas toujours à la situation à l'école ou en situation d'apprentissage.`,
+      fr: `Les signaux non verbaux ne correspondent pas toujours à la situation à l'école ou en situation d'apprentissage.`
     }
   },
   {
@@ -3945,9 +4144,10 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.4,
     reverse: false,
+    stemKey: "nonverbal_fit",
     text: {
-      hu: `Nonverbális jelzései nem mindig illeszkednek a helyzethez kortársakkal együtt.`,
-      en: `Nonverbal signals do not always match the situation with peers.`,
+      hu: `Nonverbális jelzései visszatérően kevésbé illeszkednek a helyzethez kortársakkal együtt.`,
+      en: `Nonverbal signals repeatedly fit the situation less well with peers.`,
       de: `Nonverbale Signale stimmen nicht immer mit der Situation bei Gleichaltrigen überein.`,
       it: `I segnali non verbali non corrispondono sempre alla situazione con i coetanei.`,
       es: `Las señales no verbales no siempre coinciden con la situación con los compañeros.`,
@@ -3956,7 +4156,7 @@ window.NM_ASD_BANK = [
       ar: `الإشارات غير اللفظية لا تتطابق دائمًا مع الموقف مع الأقران.`,
       pl: `Sygnały niewerbalne nie zawsze odpowiadają sytuacji z rówieśnikami.`,
       pt: `Sinais não verbais nem sempre condizem com a situação com os colegas.`,
-      fr: `Les signaux non verbaux ne correspondent pas toujours à la situation avec les pairs.`,
+      fr: `Les signaux non verbaux ne correspondent pas toujours à la situation avec les pairs.`
     }
   },
   {
@@ -3965,9 +4165,10 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.4,
     reverse: false,
+    stemKey: "nonverbal_fit",
     text: {
-      hu: `Nonverbális jelzései nem mindig illeszkednek a helyzethez változó vagy kiszámíthatatlan helyzetekben.`,
-      en: `Nonverbal signals do not always match the situation in changing or unpredictable situations.`,
+      hu: `Nonverbális jelzései visszatérően kevésbé illeszkednek a helyzethez változó vagy kiszámíthatatlan helyzetekben.`,
+      en: `Nonverbal signals repeatedly fit the situation less well in changing or unpredictable situations.`,
       de: `Nonverbale Signale stimmen nicht immer mit der Situation in sich verändernden oder unvorhersehbaren Situationen überein.`,
       it: `I segnali non verbali non corrispondono sempre alla situazione in situazioni mutevoli o imprevedibili.`,
       es: `Las señales no verbales no siempre coinciden con la situación en situaciones cambiantes o impredecibles.`,
@@ -3976,7 +4177,7 @@ window.NM_ASD_BANK = [
       ar: `الإشارات غير اللفظية لا تتطابق دائمًا مع الموقف في المواقف المتغيرة أو غير المتوقعة.`,
       pl: `Sygnały niewerbalne nie zawsze odpowiadają sytuacji w zmieniających się lub nieprzewidywalnych sytuacjach.`,
       pt: `Sinais não verbais nem sempre condizem com a situação em situações imprevisíveis ou em mudança.`,
-      fr: `Les signaux non verbaux ne correspondent pas toujours à la situation dans des situations changeantes ou imprévisibles.`,
+      fr: `Les signaux non verbaux ne correspondent pas toujours à la situation dans des situations changeantes ou imprévisibles.`
     }
   },
   {
@@ -3985,9 +4186,10 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.4,
     reverse: false,
+    stemKey: "nonverbal_fit",
     text: {
-      hu: `Nonverbális jelzései nem mindig illeszkednek a helyzethez közös játék vagy közös tevékenység közben.`,
-      en: `Nonverbal signals do not always match the situation during shared play or shared activities.`,
+      hu: `Nonverbális jelzései visszatérően kevésbé illeszkednek a helyzethez közös játék vagy közös tevékenység közben.`,
+      en: `Nonverbal signals repeatedly fit the situation less well during shared play or shared activities.`,
       de: `Nonverbale Signale stimmen nicht immer mit der Situation während gemeinsamen Spiels oder Aktivitäten überein.`,
       it: `I segnali non verbali non corrispondono sempre alla situazione durante giochi o attività condivise.`,
       es: `Las señales no verbales no siempre coinciden con la situación durante juegos o actividades compartidas.`,
@@ -3996,7 +4198,7 @@ window.NM_ASD_BANK = [
       ar: `الإشارات غير اللفظية لا تتطابق دائمًا مع الموقف أثناء اللعب أو الأنشطة المشتركة.`,
       pl: `Sygnały niewerbalne nie zawsze odpowiadają sytuacji podczas wspólnej zabawy lub zajęć.`,
       pt: `Sinais não verbais nem sempre condizem com a situação durante jogos ou atividades compartilhadas.`,
-      fr: `Les signaux non verbaux ne correspondent pas toujours à la situation pendant les jeux ou activités partagés.`,
+      fr: `Les signaux non verbaux ne correspondent pas toujours à la situation pendant les jeux ou activités partagés.`
     }
   },
   {
@@ -4005,8 +4207,9 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.3,
     reverse: false,
+    stemKey: "body_language_reading",
     text: {
-      hu: `Nehezen értelmezi mások testbeszédét és hangsúlyait otthoni helyzetekben.`,
+      hu: `Nehezen értelmezi mások testbeszédét és hangsúlyait otthoni helyzetekben társas helyzetekben.`,
       en: `Has difficulty interpreting others' body language and vocal emphasis at home.`,
       de: `Hat Schwierigkeiten, Körpersprache und Betonung der Stimme anderer zu Hause zu deuten.`,
       it: `Ha difficoltà a interpretare il linguaggio del corpo e l'enfasi vocale degli altri a casa.`,
@@ -4016,7 +4219,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في تفسير لغة جسد الآخرين وتأثيراتهم الصوتية في المنزل.`,
       pl: `Ma trudności w interpretowaniu mowy ciała i akcentów głosowych innych osób w domu.`,
       pt: `Tem dificuldade em interpretar a linguagem corporal e a ênfase vocal dos outros em casa.`,
-      fr: `A des difficultés à interpréter le langage corporel et l'intonation vocale des autres à la maison.`,
+      fr: `A des difficultés à interpréter le langage corporel et l'intonation vocale des autres à la maison.`
     }
   },
   {
@@ -4025,8 +4228,9 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.3,
     reverse: false,
+    stemKey: "body_language_reading",
     text: {
-      hu: `Nehezen értelmezi mások testbeszédét és hangsúlyait iskolai vagy tanulási helyzetekben.`,
+      hu: `Nehezen értelmezi mások testbeszédét és hangsúlyait iskolai vagy tanulási helyzetekben társas helyzetekben.`,
       en: `Has difficulty interpreting others' body language and vocal emphasis in school or learning situations.`,
       de: `Hat Schwierigkeiten, Körpersprache und Betonung der Stimme anderer in der Schule oder Lernsituationen zu deuten.`,
       it: `Ha difficoltà a interpretare il linguaggio del corpo e l'enfasi vocale degli altri a scuola o in situazioni di apprendimento.`,
@@ -4036,7 +4240,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في تفسير لغة جسد الآخرين وتأثيراتهم الصوتية في المدرسة أو أثناء التعلم.`,
       pl: `Ma trudności w interpretacji mowy ciała i akcentów głosowych innych osób w szkole lub sytuacjach nauki.`,
       pt: `Tem dificuldade em interpretar a linguagem corporal e a ênfase vocal dos outros na escola ou em situações de aprendizagem.`,
-      fr: `A des difficultés à interpréter le langage corporel et l'intonation vocale des autres à l'école ou en situation d'apprentissage.`,
+      fr: `A des difficultés à interpréter le langage corporel et l'intonation vocale des autres à l'école ou en situation d'apprentissage.`
     }
   },
   {
@@ -4045,8 +4249,9 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.3,
     reverse: false,
+    stemKey: "body_language_reading",
     text: {
-      hu: `Nehezen értelmezi mások testbeszédét és hangsúlyait kortársakkal együtt.`,
+      hu: `Nehezen értelmezi mások testbeszédét és hangsúlyait kortársakkal együtt társas helyzetekben.`,
       en: `Has difficulty interpreting others' body language and vocal emphasis with peers.`,
       de: `Hat Schwierigkeiten, Körpersprache und Betonung der Stimme anderer bei Gleichaltrigen zu deuten.`,
       it: `Ha difficoltà a interpretare il linguaggio del corpo e l'enfasi vocale degli altri tra coetanei.`,
@@ -4056,7 +4261,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في تفسير لغة جسد الآخرين وتأثيراتهم الصوتية مع الأقران.`,
       pl: `Ma trudności w interpretacji mowy ciała i akcentów głosowych innych osób w kontaktach z rówieśnikami.`,
       pt: `Tem dificuldade em interpretar a linguagem corporal e a ênfase vocal dos outros com os colegas.`,
-      fr: `A des difficultés à interpréter le langage corporel et l'intonation vocale des autres avec ses pairs.`,
+      fr: `A des difficultés à interpréter le langage corporel et l'intonation vocale des autres avec ses pairs.`
     }
   },
   {
@@ -4065,8 +4270,9 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.3,
     reverse: false,
+    stemKey: "body_language_reading",
     text: {
-      hu: `Nehezen értelmezi mások testbeszédét és hangsúlyait változó vagy kiszámíthatatlan helyzetekben.`,
+      hu: `Nehezen értelmezi mások testbeszédét és hangsúlyait változó vagy kiszámíthatatlan helyzetekben társas helyzetekben.`,
       en: `Has difficulty interpreting others' body language and vocal emphasis in changing or unpredictable situations.`,
       de: `Hat Schwierigkeiten, Körpersprache und Betonung der Stimme anderer in wechselnden oder unvorhersehbaren Situationen zu deuten.`,
       it: `Ha difficoltà a interpretare il linguaggio del corpo e l'enfasi vocale degli altri in situazioni mutevoli o imprevedibili.`,
@@ -4076,7 +4282,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في تفسير لغة جسد الآخرين وتأثيراتهم الصوتية في المواقف المتغيرة أو غير المتوقعة.`,
       pl: `Ma trudności w interpretacji mowy ciała i akcentów głosowych innych osób w zmieniających się lub nieprzewidywalnych sytuacjach.`,
       pt: `Tem dificuldade em interpretar a linguagem corporal e a ênfase vocal dos outros em situações variáveis ou imprevisíveis.`,
-      fr: `A des difficultés à interpréter le langage corporel et l'intonation vocale des autres dans des situations changeantes ou imprévisibles.`,
+      fr: `A des difficultés à interpréter le langage corporel et l'intonation vocale des autres dans des situations changeantes ou imprévisibles.`
     }
   },
   {
@@ -4085,8 +4291,9 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.3,
     reverse: false,
+    stemKey: "body_language_reading",
     text: {
-      hu: `Nehezen értelmezi mások testbeszédét és hangsúlyait közös játék vagy közös tevékenység közben.`,
+      hu: `Nehezen értelmezi mások testbeszédét és hangsúlyait közös játék vagy közös tevékenység közben társas helyzetekben.`,
       en: `Has difficulty interpreting others' body language and vocal emphasis during shared play or shared activities.`,
       de: `Hat Schwierigkeiten, Körpersprache und Betonung der Stimme anderer bei gemeinsamem Spiel oder gemeinsamen Aktivitäten zu deuten.`,
       it: `Ha difficoltà a interpretare il linguaggio del corpo e l'enfasi vocale degli altri durante il gioco condiviso o attività condivise.`,
@@ -4096,7 +4303,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في تفسير لغة جسد الآخرين وتأثيراتهم الصوتية أثناء اللعب أو الأنشطة المشتركة.`,
       pl: `Ma trudności w interpretowaniu mowy ciała i akcentów głosowych innych osób podczas wspólnej zabawy lub działań.`,
       pt: `Tem dificuldade em interpretar a linguagem corporal e a ênfase vocal dos outros durante brincadeiras ou atividades em conjunto.`,
-      fr: `A des difficultés à interpréter le langage corporel et l'intonation vocale des autres lors de jeux ou d'activités partagés.`,
+      fr: `A des difficultés à interpréter le langage corporel et l'intonation vocale des autres lors de jeux ou d'activités partagés.`
     }
   },
   {
@@ -4105,8 +4312,9 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.2,
     reverse: true,
+    stemKey: "gaze_expression_gesture_reverse",
     text: {
-      hu: `Jól használja a tekintetet, mimikát és gesztusokat a kapcsolódásban otthoni helyzetekben.`,
+      hu: `Jól használja a tekintetet, mimikát és gesztusokat a kapcsolódásban otthoni helyzetekben társas helyzetekben.`,
       en: `Uses gaze, facial expression, and gestures well in interaction at home.`,
       de: `Verwendet Blickkontakt, Mimik und Gesten gut bei Interaktionen zu Hause.`,
       it: `Usa bene lo sguardo, l'espressione facciale e i gesti nelle interazioni a casa.`,
@@ -4116,7 +4324,7 @@ window.NM_ASD_BANK = [
       ar: `يستخدم النظرة، وتعبيرات الوجه، والإيماءات بشكل جيد في التفاعل داخل المنزل.`,
       pl: `Dobrze używa spojrzenia, mimiki i gestów podczas interakcji w domu.`,
       pt: `Usa bem o olhar, expressão facial e gestos nas interações em casa.`,
-      fr: `Utilise bien le regard, l'expression faciale et les gestes dans les interactions à la maison.`,
+      fr: `Utilise bien le regard, l'expression faciale et les gestes dans les interactions à la maison.`
     }
   },
   {
@@ -4125,9 +4333,10 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.2,
     reverse: true,
+    stemKey: "gaze_expression_gesture_reverse",
     text: {
-      hu: `Jól használja a tekintetet, mimikát és gesztusokat a kapcsolódásban iskolai vagy tanulási helyzetekben.`,
-      en: `Uses gaze, facial expression, and gestures well in interaction in school or learning situations.`,
+      hu: `Nonverbális jelzéseit jól használja iskolai vagy tanulási helyzetekben.`,
+      en: `Uses nonverbal signals well in school or learning situations.`,
       de: `Verwendet Blickkontakt, Mimik und Gesten gut bei Interaktionen in der Schule oder Lernsituationen.`,
       it: `Usa bene lo sguardo, l'espressione facciale e i gesti nelle interazioni a scuola o in situazioni di apprendimento.`,
       es: `Utiliza bien la mirada, expresión facial y gestos en la interacción en la escuela o en situaciones de aprendizaje.`,
@@ -4136,7 +4345,7 @@ window.NM_ASD_BANK = [
       ar: `يستخدم النظرة، وتعبيرات الوجه، والإيماءات بشكل جيد في التفاعل في المدرسة أو أثناء التعلم.`,
       pl: `Dobrze używa spojrzenia, mimiki i gestów podczas interakcji w szkole lub sytuacjach nauki.`,
       pt: `Usa bem o olhar, expressão facial e gestos nas interações na escola ou em situações de aprendizagem.`,
-      fr: `Utilise bien le regard, l'expression faciale et les gestes dans les interactions à l'école ou en situation d'apprentissage.`,
+      fr: `Utilise bien le regard, l'expression faciale et les gestes dans les interactions à l'école ou en situation d'apprentissage.`
     }
   },
   {
@@ -4145,8 +4354,9 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.2,
     reverse: true,
+    stemKey: "gaze_expression_gesture_reverse",
     text: {
-      hu: `Jól használja a tekintetet, mimikát és gesztusokat a kapcsolódásban kortársakkal együtt.`,
+      hu: `Jól használja a tekintetet, mimikát és gesztusokat a kapcsolódásban kortársakkal együtt társas helyzetekben.`,
       en: `Uses gaze, facial expression, and gestures well in interaction with peers.`,
       de: `Verwendet Blickkontakt, Mimik und Gesten gut bei Interaktionen mit Gleichaltrigen.`,
       it: `Usa bene lo sguardo, l'espressione facciale e i gesti nelle interazioni con i coetanei.`,
@@ -4156,7 +4366,7 @@ window.NM_ASD_BANK = [
       ar: `يستخدم النظرة، وتعبيرات الوجه، والإيماءات بشكل جيد في التفاعل مع الأقران.`,
       pl: `Dobrze używa spojrzenia, mimiki i gestów podczas interakcji z rówieśnikami.`,
       pt: `Usa bem o olhar, expressão facial e gestos nas interações com os colegas.`,
-      fr: `Utilise bien le regard, l'expression faciale et les gestes dans les interactions avec ses pairs.`,
+      fr: `Utilise bien le regard, l'expression faciale et les gestes dans les interactions avec ses pairs.`
     }
   },
   {
@@ -4165,9 +4375,10 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.2,
     reverse: true,
+    stemKey: "gaze_expression_gesture_reverse",
     text: {
-      hu: `Jól használja a tekintetet, mimikát és gesztusokat a kapcsolódásban változó vagy kiszámíthatatlan helyzetekben.`,
-      en: `Uses gaze, facial expression, and gestures well in interaction in changing or unpredictable situations.`,
+      hu: `Nonverbális jelzéseit jól használja változó vagy kiszámíthatatlan helyzetekben.`,
+      en: `Uses nonverbal signals well in changing or unpredictable situations.`,
       de: `Verwendet Blickkontakt, Mimik und Gesten gut bei Interaktionen in wechselnden oder unvorhersehbaren Situationen.`,
       it: `Usa bene lo sguardo, l'espressione facciale e i gesti nelle interazioni in situazioni mutevoli o imprevedibili.`,
       es: `Utiliza bien la mirada, expresión facial y gestos en la interacción en situaciones cambiantes o impredecibles.`,
@@ -4176,7 +4387,7 @@ window.NM_ASD_BANK = [
       ar: `يستخدم النظرة، وتعبيرات الوجه، والإيماءات بشكل جيد في التفاعل في المواقف المتغيرة أو غير المتوقعة.`,
       pl: `Dobrze używa spojrzenia, mimiki i gestów podczas interakcji w zmieniających się lub nieprzewidywalnych sytuacjach.`,
       pt: `Usa bem o olhar, expressão facial e gestos nas interações em situações variáveis ou imprevisíveis.`,
-      fr: `Utilise bien le regard, l'expression faciale et les gestes dans les interactions dans des situations changeantes ou imprévisibles.`,
+      fr: `Utilise bien le regard, l'expression faciale et les gestes dans les interactions dans des situations changeantes ou imprévisibles.`
     }
   },
   {
@@ -4185,9 +4396,10 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.2,
     reverse: true,
+    stemKey: "gaze_expression_gesture_reverse",
     text: {
-      hu: `Jól használja a tekintetet, mimikát és gesztusokat a kapcsolódásban közös játék vagy közös tevékenység közben.`,
-      en: `Uses gaze, facial expression, and gestures well in interaction during shared play or shared activities.`,
+      hu: `Nonverbális jelzéseit jól használja közös játék vagy közös tevékenység közben.`,
+      en: `Uses nonverbal signals well during shared play or shared activities.`,
       de: `Verwendet Blickkontakt, Mimik und Gesten gut bei Interaktionen während gemeinsamem Spiel oder gemeinsamen Aktivitäten.`,
       it: `Usa bene lo sguardo, l'espressione facciale e i gesti nelle interazioni durante il gioco condiviso o attività condivise.`,
       es: `Utiliza bien la mirada, expresión facial y gestos en la interacción durante juegos o actividades compartidas.`,
@@ -4196,7 +4408,7 @@ window.NM_ASD_BANK = [
       ar: `يستخدم النظرة، وتعبيرات الوجه، والإيماءات بشكل جيد في التفاعل خلال اللعب أو الأنشطة المشتركة.`,
       pl: `Dobrze używa spojrzenia, mimiki i gestów podczas interakcji w wspólnej zabawie lub działaniach.`,
       pt: `Usa bem o olhar, expressão facial e gestos nas interações durante brincadeiras ou atividades em conjunto.`,
-      fr: `Utilise bien le regard, l'expression faciale et les gestes dans les interactions lors de jeux ou d'activités partagés.`,
+      fr: `Utilise bien le regard, l'expression faciale et les gestes dans les interactions lors de jeux ou d'activités partagés.`
     }
   },
   {
@@ -4205,8 +4417,9 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.4,
     reverse: false,
+    stemKey: "unusual_nonverbal_style",
     text: {
-      hu: `Tekintete, arckifejezése vagy hanghordozása szokatlannak tűnhet otthoni helyzetekben.`,
+      hu: `Tekintete, arckifejezése vagy hanghordozása szokatlannak tűnhet otthoni helyzetekben társas helyzetekben.`,
       en: `Gaze, facial expression, or tone of voice may seem unusual at home.`,
       de: `Blick, Gesichtsausdruck oder Tonfall können zu Hause ungewöhnlich wirken.`,
       it: `Lo sguardo, l'espressione facciale o il tono della voce possono sembrare insoliti a casa.`,
@@ -4216,7 +4429,7 @@ window.NM_ASD_BANK = [
       ar: `قد يبدو النظر، أو تعبير الوجه، أو نبرة الصوت غير معتادة في المنزل.`,
       pl: `Spojrzenie, wyraz twarzy lub ton głosu mogą wydawać się nietypowe w domu.`,
       pt: `O olhar, a expressão facial ou o tom de voz podem parecer incomuns em casa.`,
-      fr: `Le regard, l’expression faciale ou le ton de la voix peuvent sembler inhabituels à la maison.`,
+      fr: `Le regard, l’expression faciale ou le ton de la voix peuvent sembler inhabituels à la maison.`
     }
   },
   {
@@ -4225,9 +4438,10 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.4,
     reverse: false,
+    stemKey: "unusual_nonverbal_style",
     text: {
-      hu: `Tekintete, arckifejezése vagy hanghordozása szokatlannak tűnhet iskolai vagy tanulási helyzetekben.`,
-      en: `Gaze, facial expression, or tone of voice may seem unusual in school or learning situations.`,
+      hu: `Tekintete vagy arckifejezése szokatlannak tűnhet iskolai vagy tanulási helyzetekben.`,
+      en: `Gaze or facial expression may seem unusual in school or learning situations.`,
       de: `Blick, Gesichtsausdruck oder Tonfall können in der Schule oder Lernsituationen ungewöhnlich wirken.`,
       it: `Lo sguardo, l'espressione facciale o il tono della voce possono sembrare insoliti a scuola o durante le situazioni di apprendimento.`,
       es: `La mirada, la expresión facial o el tono de voz pueden parecer inusuales en la escuela o en situaciones de aprendizaje.`,
@@ -4236,7 +4450,7 @@ window.NM_ASD_BANK = [
       ar: `قد يبدو النظر، أو تعبير الوجه، أو نبرة الصوت غير معتادة في المدرسة أو أثناء المواقف التعليمية.`,
       pl: `Spojrzenie, wyraz twarzy lub ton głosu mogą wydawać się nietypowe w szkole lub podczas nauki.`,
       pt: `O olhar, a expressão facial ou o tom de voz podem parecer incomuns na escola ou em situações de aprendizagem.`,
-      fr: `Le regard, l’expression faciale ou le ton de la voix peuvent sembler inhabituels à l’école ou lors de situations d’apprentissage.`,
+      fr: `Le regard, l’expression faciale ou le ton de la voix peuvent sembler inhabituels à l’école ou lors de situations d’apprentissage.`
     }
   },
   {
@@ -4245,9 +4459,10 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.4,
     reverse: false,
+    stemKey: "unusual_nonverbal_style",
     text: {
-      hu: `Tekintete, arckifejezése vagy hanghordozása szokatlannak tűnhet kortársakkal együtt.`,
-      en: `Gaze, facial expression, or tone of voice may seem unusual with peers.`,
+      hu: `Tekintete vagy arckifejezése szokatlannak tűnhet kortársakkal együtt.`,
+      en: `Gaze or facial expression may seem unusual with peers.`,
       de: `Blick, Gesichtsausdruck oder Tonfall können im Umgang mit Gleichaltrigen ungewöhnlich wirken.`,
       it: `Lo sguardo, l'espressione facciale o il tono della voce possono sembrare insoliti con i coetanei.`,
       es: `La mirada, la expresión facial o el tono de voz pueden parecer inusuales con los compañeros.`,
@@ -4256,7 +4471,7 @@ window.NM_ASD_BANK = [
       ar: `قد يبدو النظر، أو تعبير الوجه، أو نبرة الصوت غير معتادة مع الأقران.`,
       pl: `Spojrzenie, wyraz twarzy lub ton głosu mogą wydawać się nietypowe w kontakcie z rówieśnikami.`,
       pt: `O olhar, a expressão facial ou o tom de voz podem parecer incomuns com os colegas.`,
-      fr: `Le regard, l’expression faciale ou le ton de la voix peuvent sembler inhabituels avec les pairs.`,
+      fr: `Le regard, l’expression faciale ou le ton de la voix peuvent sembler inhabituels avec les pairs.`
     }
   },
   {
@@ -4265,9 +4480,10 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.4,
     reverse: false,
+    stemKey: "unusual_nonverbal_style",
     text: {
-      hu: `Tekintete, arckifejezése vagy hanghordozása szokatlannak tűnhet változó vagy kiszámíthatatlan helyzetekben.`,
-      en: `Gaze, facial expression, or tone of voice may seem unusual in changing or unpredictable situations.`,
+      hu: `Tekintete vagy arckifejezése szokatlannak tűnhet változó vagy kiszámíthatatlan helyzetekben.`,
+      en: `Gaze or facial expression may seem unusual in changing or unpredictable situations.`,
       de: `Blick, Gesichtsausdruck oder Tonfall können in wechselnden oder unvorhersehbaren Situationen ungewöhnlich wirken.`,
       it: `Lo sguardo, l'espressione facciale o il tono della voce possono sembrare insoliti in situazioni mutevoli o imprevedibili.`,
       es: `La mirada, la expresión facial o el tono de voz pueden parecer inusuales en situaciones cambiantes o impredecibles.`,
@@ -4276,7 +4492,7 @@ window.NM_ASD_BANK = [
       ar: `قد يبدو النظر، أو تعبير الوجه، أو نبرة الصوت غير معتادة في المواقف المتغيرة أو غير المتوقعة.`,
       pl: `Spojrzenie, wyraz twarzy lub ton głosu mogą wydawać się nietypowe w zmieniających się lub nieprzewidywalnych sytuacjach.`,
       pt: `O olhar, a expressão facial ou o tom de voz podem parecer incomuns em situações cambiantes ou imprevisíveis.`,
-      fr: `Le regard, l’expression faciale ou le ton de la voix peuvent sembler inhabituels dans des situations changeantes ou imprévisibles.`,
+      fr: `Le regard, l’expression faciale ou le ton de la voix peuvent sembler inhabituels dans des situations changeantes ou imprévisibles.`
     }
   },
   {
@@ -4285,9 +4501,10 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.4,
     reverse: false,
+    stemKey: "unusual_nonverbal_style",
     text: {
-      hu: `Tekintete, arckifejezése vagy hanghordozása szokatlannak tűnhet közös játék vagy közös tevékenység közben.`,
-      en: `Gaze, facial expression, or tone of voice may seem unusual during shared play or shared activities.`,
+      hu: `Tekintete vagy arckifejezése szokatlannak tűnhet közös játék vagy közös tevékenység közben.`,
+      en: `Gaze or facial expression may seem unusual during shared play or shared activities.`,
       de: `Blick, Gesichtsausdruck oder Tonfall können während gemeinsamer Spiel- oder Aktivitätsphasen ungewöhnlich wirken.`,
       it: `Lo sguardo, l'espressione facciale o il tono della voce possono sembrare insoliti durante il gioco o le attività condivise.`,
       es: `La mirada, la expresión facial o el tono de voz pueden parecer inusuales durante el juego o actividades compartidas.`,
@@ -4296,7 +4513,7 @@ window.NM_ASD_BANK = [
       ar: `قد يبدو النظر، أو تعبير الوجه، أو نبرة الصوت غير معتادة أثناء اللعب أو الأنشطة المشتركة.`,
       pl: `Spojrzenie, wyraz twarzy lub ton głosu mogą wydawać się nietypowe podczas wspólnej zabawy lub aktywności.`,
       pt: `O olhar, a expressão facial ou o tom de voz podem parecer incomuns durante brincadeiras ou atividades compartilhadas.`,
-      fr: `Le regard, l’expression faciale ou le ton de la voix peuvent sembler inhabituels lors de jeux ou d’activités partagés.`,
+      fr: `Le regard, l’expression faciale ou le ton de la voix peuvent sembler inhabituels lors de jeux ou d’activités partagés.`
     }
   },
   {
@@ -4305,9 +4522,10 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.3,
     reverse: false,
+    stemKey: "nonverbal_cue_detection",
     text: {
-      hu: `Nem mindig észleli pontosan a nonverbális társas jelzéseket otthoni helyzetekben.`,
-      en: `Does not always accurately detect nonverbal social cues at home.`,
+      hu: `Visszatérően nehezebben észleli pontosan a nonverbális társas jelzéseket otthoni helyzetekben.`,
+      en: `Repeatedly has difficulty accurately noticing nonverbal social cues in home situations.`,
       de: `Er erkennt zu Hause nonverbale soziale Signale nicht immer richtig.`,
       it: `A casa non riconosce sempre correttamente i segnali sociali non verbali.`,
       es: `No siempre detecta correctamente las señales sociales no verbales en casa.`,
@@ -4316,7 +4534,7 @@ window.NM_ASD_BANK = [
       ar: `لا يكتشف دائمًا الإشارات الاجتماعية غير اللفظية بدقة في المنزل.`,
       pl: `Nie zawsze prawidłowo rozpoznaje niewerbalne sygnały społeczne w domu.`,
       pt: `Nem sempre detecta corretamente os sinais sociais não verbais em casa.`,
-      fr: `Il ne détecte pas toujours avec précision les signaux sociaux non verbaux à la maison.`,
+      fr: `Il ne détecte pas toujours avec précision les signaux sociaux non verbaux à la maison.`
     }
   },
   {
@@ -4325,9 +4543,10 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.3,
     reverse: false,
+    stemKey: "nonverbal_cue_detection",
     text: {
-      hu: `Nem mindig észleli pontosan a nonverbális társas jelzéseket iskolai vagy tanulási helyzetekben.`,
-      en: `Does not always accurately detect nonverbal social cues in school or learning situations.`,
+      hu: `Visszatérően nehezebben észleli pontosan a nonverbális társas jelzéseket iskolai vagy tanulási helyzetekben.`,
+      en: `Repeatedly has difficulty accurately noticing nonverbal social cues in school or learning situations.`,
       de: `Er erkennt in der Schule oder Lernsituationen nonverbale soziale Signale nicht immer richtig.`,
       it: `A scuola o in situazioni di apprendimento non riconosce sempre correttamente i segnali sociali non verbali.`,
       es: `No siempre detecta correctamente las señales sociales no verbales en la escuela o situaciones de aprendizaje.`,
@@ -4336,7 +4555,7 @@ window.NM_ASD_BANK = [
       ar: `لا يكتشف دائمًا الإشارات الاجتماعية غير اللفظية بدقة في المدرسة أو أثناء المواقف التعليمية.`,
       pl: `Nie zawsze prawidłowo rozpoznaje niewerbalne sygnały społeczne w szkole lub podczas nauki.`,
       pt: `Nem sempre detecta corretamente os sinais sociais não verbais na escola ou em situações de aprendizagem.`,
-      fr: `Il ne détecte pas toujours avec précision les signaux sociaux non verbaux à l’école ou lors de situations d’apprentissage.`,
+      fr: `Il ne détecte pas toujours avec précision les signaux sociaux non verbaux à l’école ou lors de situations d’apprentissage.`
     }
   },
   {
@@ -4345,9 +4564,10 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.3,
     reverse: false,
+    stemKey: "nonverbal_cue_detection",
     text: {
-      hu: `Nem mindig észleli pontosan a nonverbális társas jelzéseket kortársakkal együtt.`,
-      en: `Does not always accurately detect nonverbal social cues with peers.`,
+      hu: `Visszatérően nehezebben észleli pontosan a nonverbális társas jelzéseket kortársakkal együtt.`,
+      en: `Repeatedly has difficulty accurately noticing nonverbal social cues with peers.`,
       de: `Er erkennt im Umgang mit Gleichaltrigen nonverbale soziale Signale nicht immer richtig.`,
       it: `Con i coetanei non riconosce sempre correttamente i segnali sociali non verbali.`,
       es: `No siempre detecta correctamente las señales sociales no verbales con los compañeros.`,
@@ -4356,7 +4576,7 @@ window.NM_ASD_BANK = [
       ar: `لا يكتشف دائمًا الإشارات الاجتماعية غير اللفظية بدقة مع الأقران.`,
       pl: `Nie zawsze prawidłowo rozpoznaje niewerbalne sygnały społeczne w kontaktach z rówieśnikami.`,
       pt: `Nem sempre detecta corretamente os sinais sociais não verbais com os colegas.`,
-      fr: `Il ne détecte pas toujours avec précision les signaux sociaux non verbaux avec ses pairs.`,
+      fr: `Il ne détecte pas toujours avec précision les signaux sociaux non verbaux avec ses pairs.`
     }
   },
   {
@@ -4365,9 +4585,10 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.3,
     reverse: false,
+    stemKey: "nonverbal_cue_detection",
     text: {
-      hu: `Nem mindig észleli pontosan a nonverbális társas jelzéseket változó vagy kiszámíthatatlan helyzetekben.`,
-      en: `Does not always accurately detect nonverbal social cues in changing or unpredictable situations.`,
+      hu: `Visszatérően nehezebben észleli pontosan a nonverbális társas jelzéseket változó vagy kiszámíthatatlan helyzetekben.`,
+      en: `Repeatedly has difficulty accurately noticing nonverbal social cues in changing or unpredictable situations.`,
       de: `Er erkennt in wechselnden oder unvorhersehbaren Situationen nonverbale soziale Signale nicht immer richtig.`,
       it: `In situazioni mutevoli o imprevedibili non riconosce sempre correttamente i segnali sociali non verbali.`,
       es: `No siempre detecta correctamente las señales sociales no verbales en situaciones cambiantes o impredecibles.`,
@@ -4376,7 +4597,7 @@ window.NM_ASD_BANK = [
       ar: `لا يكتشف دائمًا الإشارات الاجتماعية غير اللفظية بدقة في المواقف المتغيرة أو غير المتوقعة.`,
       pl: `Nie zawsze prawidłowo rozpoznaje niewerbalne sygnały społeczne w zmieniających się lub nieprzewidywalnych sytuacjach.`,
       pt: `Nem sempre detecta corretamente os sinais sociais não verbais em situações cambiantes ou imprevisíveis.`,
-      fr: `Il ne détecte pas toujours avec précision les signaux sociaux non verbaux dans des situations changeantes ou imprévisibles.`,
+      fr: `Il ne détecte pas toujours avec précision les signaux sociaux non verbaux dans des situations changeantes ou imprévisibles.`
     }
   },
   {
@@ -4385,9 +4606,10 @@ window.NM_ASD_BANK = [
     subdomain: "nonverbal_communication",
     weight: 1.3,
     reverse: false,
+    stemKey: "nonverbal_cue_detection",
     text: {
-      hu: `Nem mindig észleli pontosan a nonverbális társas jelzéseket közös játék vagy közös tevékenység közben.`,
-      en: `Does not always accurately detect nonverbal social cues during shared play or shared activities.`,
+      hu: `Visszatérően nehezebben észleli pontosan a nonverbális társas jelzéseket közös játék vagy közös tevékenység közben.`,
+      en: `Repeatedly has difficulty accurately noticing nonverbal social cues during shared play or shared activities.`,
       de: `Er erkennt während gemeinsamer Spiel- oder Aktivitätsphasen nonverbale soziale Signale nicht immer richtig.`,
       it: `Durante il gioco o le attività condivise non riconosce sempre correttamente i segnali sociali non verbali.`,
       es: `No siempre detecta correctamente las señales sociales no verbales durante el juego o actividades compartidas.`,
@@ -4396,7 +4618,7 @@ window.NM_ASD_BANK = [
       ar: `لا يكتشف دائمًا الإشارات الاجتماعية غير اللفظية بدقة أثناء اللعب أو الأنشطة المشتركة.`,
       pl: `Nie zawsze prawidłowo rozpoznaje niewerbalne sygnały społeczne podczas wspólnej zabawy lub aktywności.`,
       pt: `Nem sempre detecta corretamente os sinais sociais não verbais durante brincadeiras ou atividades compartilhadas.`,
-      fr: `Il ne détecte pas toujours avec précision les signaux sociaux non verbaux lors de jeux ou d’activités partagés.`,
+      fr: `Il ne détecte pas toujours avec précision les signaux sociaux non verbaux lors de jeux ou d’activités partagés.`
     }
   },
   {
@@ -4405,8 +4627,9 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.4,
     reverse: false,
+    stemKey: "peer_expectation_fit",
     text: {
-      hu: `Nehezen igazodik a kortárs kapcsolatok elvárásaihoz otthoni helyzetekben.`,
+      hu: `Nehezen igazodik a kortárs kapcsolatok elvárásaihoz otthoni helyzetekben kortárs vagy családi kapcsolatokban.`,
       en: `Has difficulty adjusting to expectations in peer relationships at home.`,
       de: `Hat Schwierigkeiten, sich an Erwartungen in Beziehungen zu Gleichaltrigen zu Hause anzupassen.`,
       it: `Ha difficoltà ad adattarsi alle aspettative nelle relazioni con coetanei a casa.`,
@@ -4416,7 +4639,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في التكيف مع التوقعات في العلاقات مع الأقران في المنزل.`,
       pl: `Ma trudności z dostosowaniem się do oczekiwań w relacjach rówieśniczych w domu.`,
       pt: `Tem dificuldade em se ajustar às expectativas nas relações com colegas em casa.`,
-      fr: `A des difficultés à s’adapter aux attentes dans les relations avec les pairs à la maison.`,
+      fr: `A des difficultés à s’adapter aux attentes dans les relations avec les pairs à la maison.`
     }
   },
   {
@@ -4425,8 +4648,9 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.4,
     reverse: false,
+    stemKey: "peer_expectation_fit",
     text: {
-      hu: `Nehezen igazodik a kortárs kapcsolatok elvárásaihoz iskolai vagy tanulási helyzetekben.`,
+      hu: `Nehezen igazodik a kortárs kapcsolatok elvárásaihoz iskolai vagy tanulási helyzetekben kortárs vagy családi kapcsolatokban.`,
       en: `Has difficulty adjusting to expectations in peer relationships in school or learning situations.`,
       de: `Hat Schwierigkeiten, sich an Erwartungen in Beziehungen zu Gleichaltrigen in der Schule oder Lernsituationen anzupassen.`,
       it: `Ha difficoltà ad adattarsi alle aspettative nelle relazioni con coetanei a scuola o in situazioni di apprendimento.`,
@@ -4436,7 +4660,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في التكيف مع التوقعات في العلاقات مع الأقران في المدرسة أو مواقف التعلم.`,
       pl: `Ma trudności z dostosowaniem się do oczekiwań w relacjach rówieśniczych w szkole lub podczas nauki.`,
       pt: `Tem dificuldade em se ajustar às expectativas nas relações com colegas na escola ou em situações de aprendizagem.`,
-      fr: `A des difficultés à s’adapter aux attentes dans les relations avec les pairs à l’école ou en situation d’apprentissage.`,
+      fr: `A des difficultés à s’adapter aux attentes dans les relations avec les pairs à l’école ou en situation d’apprentissage.`
     }
   },
   {
@@ -4445,8 +4669,9 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.4,
     reverse: false,
+    stemKey: "peer_expectation_fit",
     text: {
-      hu: `Nehezen igazodik a kortárs kapcsolatok elvárásaihoz kortársakkal együtt.`,
+      hu: `Nehezen igazodik a kortárs kapcsolatok elvárásaihoz kortársakkal együtt kortárs vagy családi kapcsolatokban.`,
       en: `Has difficulty adjusting to expectations in peer relationships with peers.`,
       de: `Hat Schwierigkeiten, sich an Erwartungen in Beziehungen zu Gleichaltrigen anzupassen.`,
       it: `Ha difficoltà ad adattarsi alle aspettative nelle relazioni con i coetanei.`,
@@ -4456,7 +4681,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في التكيف مع التوقعات في العلاقات مع الأقران.`,
       pl: `Ma trudności z dostosowaniem się do oczekiwań w relacjach z rówieśnikami.`,
       pt: `Tem dificuldade em se ajustar às expectativas nas relações com colegas.`,
-      fr: `A des difficultés à s’adapter aux attentes dans les relations avec les pairs.`,
+      fr: `A des difficultés à s’adapter aux attentes dans les relations avec les pairs.`
     }
   },
   {
@@ -4465,8 +4690,9 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.4,
     reverse: false,
+    stemKey: "peer_expectation_fit",
     text: {
-      hu: `Nehezen igazodik a kortárs kapcsolatok elvárásaihoz változó vagy kiszámíthatatlan helyzetekben.`,
+      hu: `Nehezen igazodik a kortárs kapcsolatok elvárásaihoz változó vagy kiszámíthatatlan helyzetekben kortárs vagy családi kapcsolatokban.`,
       en: `Has difficulty adjusting to expectations in peer relationships in changing or unpredictable situations.`,
       de: `Hat Schwierigkeiten, sich an Erwartungen in Beziehungen zu Gleichaltrigen in wechselnden oder unvorhersehbaren Situationen anzupassen.`,
       it: `Ha difficoltà ad adattarsi alle aspettative nelle relazioni con i coetanei in situazioni variabili o imprevedibili.`,
@@ -4476,7 +4702,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في التكيف مع التوقعات في العلاقات مع الأقران في المواقف المتغيرة أو غير المتوقعة.`,
       pl: `Ma trudności z dostosowaniem się do oczekiwań w relacjach z rówieśnikami w zmieniających się lub nieprzewidywalnych sytuacjach.`,
       pt: `Tem dificuldade em se ajustar às expectativas nas relações com colegas em situações mutáveis ou imprevisíveis.`,
-      fr: `A des difficultés à s’adapter aux attentes dans les relations avec les pairs dans des situations changeantes ou imprévisibles.`,
+      fr: `A des difficultés à s’adapter aux attentes dans les relations avec les pairs dans des situations changeantes ou imprévisibles.`
     }
   },
   {
@@ -4485,8 +4711,9 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.4,
     reverse: false,
+    stemKey: "peer_expectation_fit",
     text: {
-      hu: `Nehezen igazodik a kortárs kapcsolatok elvárásaihoz közös játék vagy közös tevékenység közben.`,
+      hu: `Nehezen igazodik a kortárs kapcsolatok elvárásaihoz közös játék vagy közös tevékenység közben kortárs vagy családi kapcsolatokban.`,
       en: `Has difficulty adjusting to expectations in peer relationships during shared play or shared activities.`,
       de: `Hat Schwierigkeiten, sich an Erwartungen in Beziehungen zu Gleichaltrigen bei gemeinsamem Spielen oder Aktivitäten anzupassen.`,
       it: `Ha difficoltà ad adattarsi alle aspettative nelle relazioni con coetanei durante il gioco o attività condivise.`,
@@ -4496,7 +4723,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في التكيف مع التوقعات في العلاقات مع الأقران أثناء اللعب أو الأنشطة المشتركة.`,
       pl: `Ma trudności z dostosowaniem się do oczekiwań w relacjach z rówieśnikami podczas wspólnej zabawy lub działań.`,
       pt: `Tem dificuldade em se ajustar às expectativas nas relações com colegas durante brincadeiras ou atividades compartilhadas.`,
-      fr: `A des difficultés à s’adapter aux attentes dans les relations avec les pairs lors de jeux ou activités partagés.`,
+      fr: `A des difficultés à s’adapter aux attentes dans les relations avec les pairs lors de jeux ou activités partagés.`
     }
   },
   {
@@ -4505,9 +4732,10 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.3,
     reverse: false,
+    stemKey: "relationship_initiation_maintenance",
     text: {
-      hu: `Nem mindig érti, hogyan lehet kapcsolatot kezdeményezni vagy fenntartani otthoni helyzetekben.`,
-      en: `Does not always understand how to initiate or maintain relationships at home.`,
+      hu: `Visszatérően nehezebben érti, hogyan lehet kapcsolatot kezdeményezni vagy fenntartani otthoni helyzetekben.`,
+      en: `Repeatedly has difficulty understanding how to initiate or maintain relationships in home situations.`,
       de: `Versteht nicht immer, wie man Beziehungen zu Hause initiiert oder aufrechterhält.`,
       it: `Non capisce sempre come avviare o mantenere relazioni a casa.`,
       es: `No siempre entiende cómo iniciar o mantener relaciones en casa.`,
@@ -4516,7 +4744,7 @@ window.NM_ASD_BANK = [
       ar: `لا يفهم دائمًا كيف يبدأ أو يحافظ على العلاقات في المنزل.`,
       pl: `Nie zawsze rozumie, jak nawiązywać lub utrzymywać relacje w domu.`,
       pt: `Nem sempre entende como iniciar ou manter relacionamentos em casa.`,
-      fr: `Ne comprend pas toujours comment initier ou maintenir des relations à la maison.`,
+      fr: `Ne comprend pas toujours comment initier ou maintenir des relations à la maison.`
     }
   },
   {
@@ -4525,9 +4753,10 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.3,
     reverse: false,
+    stemKey: "relationship_initiation_maintenance",
     text: {
-      hu: `Nem mindig érti, hogyan lehet kapcsolatot kezdeményezni vagy fenntartani iskolai vagy tanulási helyzetekben.`,
-      en: `Does not always understand how to initiate or maintain relationships in school or learning situations.`,
+      hu: `Visszatérően nehezebben érti a kapcsolatépítés lépéseit iskolai vagy tanulási helyzetekben.`,
+      en: `Often has difficulty understanding relationship-building steps in school or learning situations.`,
       de: `Versteht nicht immer, wie man Beziehungen in der Schule oder Lernsituationen initiiert oder aufrechterhält.`,
       it: `Non capisce sempre come avviare o mantenere relazioni a scuola o in situazioni di apprendimento.`,
       es: `No siempre entiende cómo iniciar o mantener relaciones en la escuela o situaciones de aprendizaje.`,
@@ -4536,7 +4765,7 @@ window.NM_ASD_BANK = [
       ar: `لا يفهم دائمًا كيف يبدأ أو يحافظ على العلاقات في المدرسة أو مواقف التعلم.`,
       pl: `Nie zawsze rozumie, jak nawiązywać lub utrzymywać relacje w szkole lub podczas nauki.`,
       pt: `Nem sempre entende como iniciar ou manter relacionamentos na escola ou em situações de aprendizagem.`,
-      fr: `Ne comprend pas toujours comment initier ou maintenir des relations à l’école ou en situation d’apprentissage.`,
+      fr: `Ne comprend pas toujours comment initier ou maintenir des relations à l’école ou en situation d’apprentissage.`
     }
   },
   {
@@ -4545,9 +4774,10 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.3,
     reverse: false,
+    stemKey: "relationship_initiation_maintenance",
     text: {
-      hu: `Nem mindig érti, hogyan lehet kapcsolatot kezdeményezni vagy fenntartani kortársakkal együtt.`,
-      en: `Does not always understand how to initiate or maintain relationships with peers.`,
+      hu: `Visszatérően nehezebben érti, hogyan lehet kapcsolatot kezdeményezni vagy fenntartani kortársakkal együtt.`,
+      en: `Repeatedly has difficulty understanding how to initiate or maintain relationships with peers.`,
       de: `Versteht nicht immer, wie man Beziehungen zu Gleichaltrigen initiiert oder aufrechterhält.`,
       it: `Non capisce sempre come avviare o mantenere relazioni con i coetanei.`,
       es: `No siempre entiende cómo iniciar o mantener relaciones con iguales.`,
@@ -4556,7 +4786,7 @@ window.NM_ASD_BANK = [
       ar: `لا يفهم دائمًا كيف يبدأ أو يحافظ على العلاقات مع الأقران.`,
       pl: `Nie zawsze rozumie, jak nawiązywać lub utrzymywać relacje z rówieśnikami.`,
       pt: `Nem sempre entende como iniciar ou manter relacionamentos com colegas.`,
-      fr: `Ne comprend pas toujours comment initier ou maintenir des relations avec les pairs.`,
+      fr: `Ne comprend pas toujours comment initier ou maintenir des relations avec les pairs.`
     }
   },
   {
@@ -4565,9 +4795,10 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.3,
     reverse: false,
+    stemKey: "relationship_initiation_maintenance",
     text: {
-      hu: `Nem mindig érti, hogyan lehet kapcsolatot kezdeményezni vagy fenntartani változó vagy kiszámíthatatlan helyzetekben.`,
-      en: `Does not always understand how to initiate or maintain relationships in changing or unpredictable situations.`,
+      hu: `Visszatérően nehezebben érti a kapcsolatépítés lépéseit változó vagy kiszámíthatatlan helyzetekben.`,
+      en: `Often has difficulty understanding relationship-building steps in changing or unpredictable situations.`,
       de: `Versteht nicht immer, wie man Beziehungen in wechselnden oder unvorhersehbaren Situationen initiiert oder aufrechterhält.`,
       it: `Non capisce sempre come avviare o mantenere relazioni in situazioni variabili o imprevedibili.`,
       es: `No siempre entiende cómo iniciar o mantener relaciones en situaciones cambiantes o imprevisibles.`,
@@ -4576,7 +4807,7 @@ window.NM_ASD_BANK = [
       ar: `لا يفهم دائمًا كيف يبدأ أو يحافظ على العلاقات في المواقف المتغيرة أو غير المتوقعة.`,
       pl: `Nie zawsze rozumie, jak nawiązywać lub utrzymywać relacje w zmieniających się lub nieprzewidywalnych sytuacjach.`,
       pt: `Nem sempre entende como iniciar ou manter relacionamentos em situações mutáveis ou imprevisíveis.`,
-      fr: `Ne comprend pas toujours comment initier ou maintenir des relations dans des situations changeantes ou imprévisibles.`,
+      fr: `Ne comprend pas toujours comment initier ou maintenir des relations dans des situations changeantes ou imprévisibles.`
     }
   },
   {
@@ -4585,9 +4816,10 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.3,
     reverse: false,
+    stemKey: "relationship_initiation_maintenance",
     text: {
-      hu: `Nem mindig érti, hogyan lehet kapcsolatot kezdeményezni vagy fenntartani közös játék vagy közös tevékenység közben.`,
-      en: `Does not always understand how to initiate or maintain relationships during shared play or shared activities.`,
+      hu: `Visszatérően nehezebben érti a kapcsolatépítés lépéseit közös játék vagy közös tevékenység közben.`,
+      en: `Often has difficulty understanding relationship-building steps during shared play or shared activities.`,
       de: `Versteht nicht immer, wie man Beziehungen bei gemeinsamem Spielen oder gemeinsamen Aktivitäten initiiert oder aufrechterhält.`,
       it: `Non capisce sempre come avviare o mantenere relazioni durante il gioco o attività condivise.`,
       es: `No siempre entiende cómo iniciar o mantener relaciones durante juegos o actividades compartidas.`,
@@ -4596,7 +4828,7 @@ window.NM_ASD_BANK = [
       ar: `لا يفهم دائمًا كيف يبدأ أو يحافظ على العلاقات أثناء اللعب أو الأنشطة المشتركة.`,
       pl: `Nie zawsze rozumie, jak nawiązywać lub utrzymywać relacje podczas wspólnej zabawy lub działań.`,
       pt: `Nem sempre entende como iniciar ou manter relacionamentos durante brincadeiras ou atividades compartilhadas.`,
-      fr: `Ne comprend pas toujours comment initier ou maintenir des relations lors de jeux ou d’activités partagés.`,
+      fr: `Ne comprend pas toujours comment initier ou maintenir des relations lors de jeux ou d’activités partagés.`
     }
   },
   {
@@ -4605,8 +4837,9 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.2,
     reverse: true,
+    stemKey: "social_role_navigation_reverse",
     text: {
-      hu: `Viszonylag jól eligazodik különböző társas szerepek között otthoni helyzetekben.`,
+      hu: `Viszonylag jól eligazodik különböző társas szerepek között otthoni helyzetekben kortárs vagy családi kapcsolatokban.`,
       en: `Navigates different social roles relatively well at home.`,
       de: `Bewältigt verschiedene soziale Rollen zu Hause relativ gut.`,
       it: `Si destreggia abbastanza bene in diversi ruoli sociali a casa.`,
@@ -4616,7 +4849,7 @@ window.NM_ASD_BANK = [
       ar: `يتعامل بشكل جيد نسبيًا مع الأدوار الاجتماعية المختلفة في المنزل.`,
       pl: `Radzi sobie stosunkowo dobrze z różnymi rolami społecznymi w domu.`,
       pt: `Lida relativamente bem com diferentes papéis sociais em casa.`,
-      fr: `Gère relativement bien les différents rôles sociaux à la maison.`,
+      fr: `Gère relativement bien les différents rôles sociaux à la maison.`
     }
   },
   {
@@ -4625,8 +4858,9 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.2,
     reverse: true,
+    stemKey: "social_role_navigation_reverse",
     text: {
-      hu: `Viszonylag jól eligazodik különböző társas szerepek között iskolai vagy tanulási helyzetekben.`,
+      hu: `Viszonylag jól eligazodik különböző társas szerepek között iskolai vagy tanulási helyzetekben kortárs vagy családi kapcsolatokban.`,
       en: `Navigates different social roles relatively well in school or learning situations.`,
       de: `Bewältigt verschiedene soziale Rollen in Schule oder Lernsituationen relativ gut.`,
       it: `Si destreggia abbastanza bene in diversi ruoli sociali a scuola o in situazioni di apprendimento.`,
@@ -4636,7 +4870,7 @@ window.NM_ASD_BANK = [
       ar: `يتعامل بشكل جيد نسبيًا مع الأدوار الاجتماعية المختلفة في المدرسة أو مواقف التعلم.`,
       pl: `Radzi sobie stosunkowo dobrze z różnymi rolami społecznymi w szkole lub sytuacjach edukacyjnych.`,
       pt: `Lida relativamente bem com diferentes papéis sociais na escola ou em situações de aprendizagem.`,
-      fr: `Gère relativement bien les différents rôles sociaux à l'école ou dans les situations d'apprentissage.`,
+      fr: `Gère relativement bien les différents rôles sociaux à l'école ou dans les situations d'apprentissage.`
     }
   },
   {
@@ -4645,8 +4879,9 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.2,
     reverse: true,
+    stemKey: "social_role_navigation_reverse",
     text: {
-      hu: `Viszonylag jól eligazodik különböző társas szerepek között kortársakkal együtt.`,
+      hu: `Viszonylag jól eligazodik különböző társas szerepek között kortársakkal együtt kortárs vagy családi kapcsolatokban.`,
       en: `Navigates different social roles relatively well with peers.`,
       de: `Bewältigt verschiedene soziale Rollen mit Gleichaltrigen relativ gut.`,
       it: `Si destreggia abbastanza bene in diversi ruoli sociali con i coetanei.`,
@@ -4656,7 +4891,7 @@ window.NM_ASD_BANK = [
       ar: `يتعامل بشكل جيد نسبيًا مع الأدوار الاجتماعية المختلفة مع الأقران.`,
       pl: `Radzi sobie stosunkowo dobrze z różnymi rolami społecznymi wśród rówieśników.`,
       pt: `Lida relativamente bem com diferentes papéis sociais entre pares.`,
-      fr: `Gère relativement bien les différents rôles sociaux avec les pairs.`,
+      fr: `Gère relativement bien les différents rôles sociaux avec les pairs.`
     }
   },
   {
@@ -4665,8 +4900,9 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.2,
     reverse: true,
+    stemKey: "social_role_navigation_reverse",
     text: {
-      hu: `Viszonylag jól eligazodik különböző társas szerepek között változó vagy kiszámíthatatlan helyzetekben.`,
+      hu: `Viszonylag jól eligazodik különböző társas szerepek között változó vagy kiszámíthatatlan helyzetekben kortárs vagy családi kapcsolatokban.`,
       en: `Navigates different social roles relatively well in changing or unpredictable situations.`,
       de: `Bewältigt verschiedene soziale Rollen in wechselnden oder unvorhersehbaren Situationen relativ gut.`,
       it: `Si destreggia abbastanza bene in diversi ruoli sociali in situazioni di cambiamento o imprevedibili.`,
@@ -4676,7 +4912,7 @@ window.NM_ASD_BANK = [
       ar: `يتعامل بشكل جيد نسبيًا مع الأدوار الاجتماعية المختلفة في المواقف المتغيرة أو غير المتوقعة.`,
       pl: `Radzi sobie stosunkowo dobrze z różnymi rolami społecznymi w zmieniających się lub nieprzewidywalnych sytuacjach.`,
       pt: `Lida relativamente bem com diferentes papéis sociais em situações de mudança ou imprevisíveis.`,
-      fr: `Gère relativement bien les différents rôles sociaux dans des situations changeantes ou imprévisibles.`,
+      fr: `Gère relativement bien les différents rôles sociaux dans des situations changeantes ou imprévisibles.`
     }
   },
   {
@@ -4685,8 +4921,9 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.2,
     reverse: true,
+    stemKey: "social_role_navigation_reverse",
     text: {
-      hu: `Viszonylag jól eligazodik különböző társas szerepek között közös játék vagy közös tevékenység közben.`,
+      hu: `Viszonylag jól eligazodik különböző társas szerepek között közös játék vagy közös tevékenység közben kortárs vagy családi kapcsolatokban.`,
       en: `Navigates different social roles relatively well during shared play or shared activities.`,
       de: `Bewältigt verschiedene soziale Rollen während gemeinsamen Spiels oder gemeinsamer Aktivitäten relativ gut.`,
       it: `Si destreggia abbastanza bene in diversi ruoli sociali durante giochi o attività condivise.`,
@@ -4696,7 +4933,7 @@ window.NM_ASD_BANK = [
       ar: `يتعامل بشكل جيد نسبيًا مع الأدوار الاجتماعية المختلفة أثناء اللعب المشترك أو الأنشطة المشتركة.`,
       pl: `Radzi sobie stosunkowo dobrze z różnymi rolami społecznymi podczas wspólnej zabawy lub zajęć.`,
       pt: `Lida relativamente bem com diferentes papéis sociais durante brincadeiras ou atividades compartilhadas.`,
-      fr: `Gère relativement bien les différents rôles sociaux lors de jeux ou d'activités partagés.`,
+      fr: `Gère relativement bien les différents rôles sociaux lors de jeux ou d'activités partagés.`
     }
   },
   {
@@ -4705,8 +4942,9 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.4,
     reverse: false,
+    stemKey: "relationship_uncertainty",
     text: {
-      hu: `Másokkal való kapcsolatai gyakran egyoldalúnak vagy bizonytalannak tűnnek otthoni helyzetekben.`,
+      hu: `Másokkal való kapcsolatai gyakran egyoldalúnak vagy bizonytalannak tűnnek otthoni helyzetekben kortárs vagy családi kapcsolatokban.`,
       en: `Relationships may seem one-sided or uncertain at home.`,
       de: `Beziehungen wirken zu Hause möglicherweise einseitig oder unsicher.`,
       it: `Le relazioni a casa possono sembrare unilaterali o insicure.`,
@@ -4716,7 +4954,7 @@ window.NM_ASD_BANK = [
       ar: `قد تبدو العلاقات في المنزل من جانب واحد أو غير مؤكدة.`,
       pl: `Relacje w domu mogą wydawać się jednostronne lub niepewne.`,
       pt: `As relações podem parecer unilaterais ou incertas em casa.`,
-      fr: `Les relations peuvent sembler unilatérales ou incertaines à la maison.`,
+      fr: `Les relations peuvent sembler unilatérales ou incertaines à la maison.`
     }
   },
   {
@@ -4725,9 +4963,10 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.4,
     reverse: false,
+    stemKey: "relationship_uncertainty",
     text: {
-      hu: `Másokkal való kapcsolatai gyakran egyoldalúnak vagy bizonytalannak tűnnek iskolai vagy tanulási helyzetekben.`,
-      en: `Relationships may seem one-sided or uncertain in school or learning situations.`,
+      hu: `Kapcsolatai gyakran egyoldalúnak tűnnek iskolai vagy tanulási helyzetekben.`,
+      en: `Relationships may seem one-sided in school or learning situations.`,
       de: `Beziehungen wirken in Schule oder Lernsituationen möglicherweise einseitig oder unsicher.`,
       it: `Le relazioni a scuola o in situazioni di apprendimento possono sembrare unilaterali o insicure.`,
       es: `Las relaciones pueden parecer unilaterales o inciertas en la escuela o situaciones de aprendizaje.`,
@@ -4736,7 +4975,7 @@ window.NM_ASD_BANK = [
       ar: `قد تبدو العلاقات في المدرسة أو مواقف التعلم من جانب واحد أو غير مؤكدة.`,
       pl: `Relacje w szkole lub sytuacjach edukacyjnych mogą wydawać się jednostronne lub niepewne.`,
       pt: `As relações podem parecer unilaterais ou incertas na escola ou em situações de aprendizagem.`,
-      fr: `Les relations peuvent sembler unilatérales ou incertaines à l'école ou dans les situations d'apprentissage.`,
+      fr: `Les relations peuvent sembler unilatérales ou incertaines à l'école ou dans les situations d'apprentissage.`
     }
   },
   {
@@ -4745,8 +4984,9 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.4,
     reverse: false,
+    stemKey: "relationship_uncertainty",
     text: {
-      hu: `Másokkal való kapcsolatai gyakran egyoldalúnak vagy bizonytalannak tűnnek kortársakkal együtt.`,
+      hu: `Másokkal való kapcsolatai gyakran egyoldalúnak vagy bizonytalannak tűnnek kortársakkal együtt kortárs vagy családi kapcsolatokban.`,
       en: `Relationships may seem one-sided or uncertain with peers.`,
       de: `Beziehungen wirken mit Gleichaltrigen möglicherweise einseitig oder unsicher.`,
       it: `Le relazioni con i coetanei possono sembrare unilaterali o insicure.`,
@@ -4756,7 +4996,7 @@ window.NM_ASD_BANK = [
       ar: `قد تبدو العلاقات مع الأقران من جانب واحد أو غير مؤكدة.`,
       pl: `Relacje z rówieśnikami mogą wydawać się jednostronne lub niepewne.`,
       pt: `As relações podem parecer unilaterais ou incertas entre pares.`,
-      fr: `Les relations peuvent sembler unilatérales ou incertaines avec les pairs.`,
+      fr: `Les relations peuvent sembler unilatérales ou incertaines avec les pairs.`
     }
   },
   {
@@ -4765,9 +5005,10 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.4,
     reverse: false,
+    stemKey: "relationship_uncertainty",
     text: {
-      hu: `Másokkal való kapcsolatai gyakran egyoldalúnak vagy bizonytalannak tűnnek változó vagy kiszámíthatatlan helyzetekben.`,
-      en: `Relationships may seem one-sided or uncertain in changing or unpredictable situations.`,
+      hu: `Kapcsolatai gyakran egyoldalúnak tűnnek változó vagy kiszámíthatatlan helyzetekben.`,
+      en: `Relationships may seem one-sided in changing or unpredictable situations.`,
       de: `Beziehungen wirken in wechselnden oder unvorhersehbaren Situationen möglicherweise einseitig oder unsicher.`,
       it: `Le relazioni in situazioni di cambiamento o imprevedibili possono sembrare unilaterali o insicure.`,
       es: `Las relaciones pueden parecer unilaterales o inciertas en situaciones cambiantes o impredecibles.`,
@@ -4776,7 +5017,7 @@ window.NM_ASD_BANK = [
       ar: `قد تبدو العلاقات في المواقف المتغيرة أو غير المتوقعة من جانب واحد أو غير مؤكدة.`,
       pl: `Relacje w zmieniających się lub nieprzewidywalnych sytuacjach mogą wydawać się jednostronne lub niepewne.`,
       pt: `As relações podem parecer unilaterais ou incertas em situações de mudança ou imprevisíveis.`,
-      fr: `Les relations peuvent sembler unilatérales ou incertaines dans des situations changeantes ou imprévisibles.`,
+      fr: `Les relations peuvent sembler unilatérales ou incertaines dans des situations changeantes ou imprévisibles.`
     }
   },
   {
@@ -4785,9 +5026,10 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.4,
     reverse: false,
+    stemKey: "relationship_uncertainty",
     text: {
-      hu: `Másokkal való kapcsolatai gyakran egyoldalúnak vagy bizonytalannak tűnnek közös játék vagy közös tevékenység közben.`,
-      en: `Relationships may seem one-sided or uncertain during shared play or shared activities.`,
+      hu: `Kapcsolatai gyakran egyoldalúnak tűnnek közös játék vagy közös tevékenység közben.`,
+      en: `Relationships may seem one-sided during shared play or shared activities.`,
       de: `Beziehungen wirken während gemeinsamer Spiels oder gemeinsamer Aktivitäten möglicherweise einseitig oder unsicher.`,
       it: `Le relazioni durante giochi o attività condivise possono sembrare unilaterali o insicure.`,
       es: `Las relaciones pueden parecer unilaterales o inciertas durante juegos o actividades compartidas.`,
@@ -4796,7 +5038,7 @@ window.NM_ASD_BANK = [
       ar: `قد تبدو العلاقات أثناء اللعب المشترك أو الأنشطة المشتركة من جانب واحد أو غير مؤكدة.`,
       pl: `Relacje podczas wspólnej zabawy lub zajęć mogą wydawać się jednostronne lub niepewne.`,
       pt: `As relações podem parecer unilaterais ou incertas durante brincadeiras ou atividades compartilhadas.`,
-      fr: `Les relations peuvent sembler unilatérales ou incertaines lors de jeux ou d'activités partagés.`,
+      fr: `Les relations peuvent sembler unilatérales ou incertaines lors de jeux ou d'activités partagés.`
     }
   },
   {
@@ -4805,8 +5047,9 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.5,
     reverse: false,
+    stemKey: "friendship_rules",
     text: {
-      hu: `Nehézséget okoz számára a barátságok finom szabályainak megértése otthoni helyzetekben.`,
+      hu: `Nehézséget okoz számára a barátságok finom szabályainak megértése otthoni helyzetekben kortárs vagy családi kapcsolatokban.`,
       en: `Has difficulty understanding the subtle rules of friendship at home.`,
       de: `Hat Schwierigkeiten, die feinen Regeln der Freundschaft zu Hause zu verstehen.`,
       it: `Ha difficoltà a comprendere le regole sottili dell'amicizia in famiglia.`,
@@ -4816,7 +5059,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في فهم القواعد الدقيقة للصداقة في المنزل.`,
       pl: `Ma trudności ze zrozumieniem subtelnych zasad przyjaźni w domu.`,
       pt: `Tem dificuldade em compreender as regras sutis da amizade em casa.`,
-      fr: `A des difficultés à comprendre les règles subtiles de l'amitié à la maison.`,
+      fr: `A des difficultés à comprendre les règles subtiles de l'amitié à la maison.`
     }
   },
   {
@@ -4825,8 +5068,9 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.5,
     reverse: false,
+    stemKey: "friendship_rules",
     text: {
-      hu: `Nehézséget okoz számára a barátságok finom szabályainak megértése iskolai vagy tanulási helyzetekben.`,
+      hu: `Nehézséget okoz számára a barátságok finom szabályainak megértése iskolai vagy tanulási helyzetekben kortárs vagy családi kapcsolatokban.`,
       en: `Has difficulty understanding the subtle rules of friendship in school or learning situations.`,
       de: `Hat Schwierigkeiten, die feinen Regeln der Freundschaft in der Schule oder Lernsituationen zu verstehen.`,
       it: `Ha difficoltà a comprendere le regole sottili dell'amicizia a scuola o in situazione di apprendimento.`,
@@ -4836,7 +5080,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في فهم القواعد الدقيقة للصداقة في المدرسة أو مواقف التعلم.`,
       pl: `Ma trudności ze zrozumieniem subtelnych zasad przyjaźni w szkole lub sytuacjach edukacyjnych.`,
       pt: `Tem dificuldade em compreender as regras sutis da amizade na escola ou em situações de aprendizagem.`,
-      fr: `A des difficultés à comprendre les règles subtiles de l'amitié à l'école ou en situation d'apprentissage.`,
+      fr: `A des difficultés à comprendre les règles subtiles de l'amitié à l'école ou en situation d'apprentissage.`
     }
   },
   {
@@ -4845,8 +5089,9 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.5,
     reverse: false,
+    stemKey: "friendship_rules",
     text: {
-      hu: `Nehézséget okoz számára a barátságok finom szabályainak megértése kortársakkal együtt.`,
+      hu: `Nehézséget okoz számára a barátságok finom szabályainak megértése kortársakkal együtt kortárs vagy családi kapcsolatokban.`,
       en: `Has difficulty understanding the subtle rules of friendship with peers.`,
       de: `Hat Schwierigkeiten, die feinen Regeln der Freundschaft mit Gleichaltrigen zu verstehen.`,
       it: `Ha difficoltà a comprendere le regole sottili dell'amicizia con i coetanei.`,
@@ -4856,7 +5101,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في فهم القواعد الدقيقة للصداقة مع الأقران.`,
       pl: `Ma trudności ze zrozumieniem subtelnych zasad przyjaźni z rówieśnikami.`,
       pt: `Tem dificuldade em compreender as regras sutis da amizade com os pares.`,
-      fr: `A des difficultés à comprendre les règles subtiles de l'amitié avec les pairs.`,
+      fr: `A des difficultés à comprendre les règles subtiles de l'amitié avec les pairs.`
     }
   },
   {
@@ -4865,8 +5110,9 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.5,
     reverse: false,
+    stemKey: "friendship_rules",
     text: {
-      hu: `Nehézséget okoz számára a barátságok finom szabályainak megértése változó vagy kiszámíthatatlan helyzetekben.`,
+      hu: `Nehézséget okoz számára a barátságok finom szabályainak megértése változó vagy kiszámíthatatlan helyzetekben kortárs vagy családi kapcsolatokban.`,
       en: `Has difficulty understanding the subtle rules of friendship in changing or unpredictable situations.`,
       de: `Hat Schwierigkeiten, die feinen Regeln der Freundschaft in sich ändernden oder unvorhersehbaren Situationen zu verstehen.`,
       it: `Ha difficoltà a comprendere le regole sottili dell'amicizia in situazioni mutevoli o imprevedibili.`,
@@ -4876,7 +5122,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في فهم القواعد الدقيقة للصداقة في المواقف المتغيرة أو غير المتوقعة.`,
       pl: `Ma trudności ze zrozumieniem subtelnych zasad przyjaźni w zmieniających się lub nieprzewidywalnych sytuacjach.`,
       pt: `Tem dificuldade em compreender as regras sutis da amizade em situações mutáveis ou imprevisíveis.`,
-      fr: `A des difficultés à comprendre les règles subtiles de l'amitié dans des situations changeantes ou imprévisibles.`,
+      fr: `A des difficultés à comprendre les règles subtiles de l'amitié dans des situations changeantes ou imprévisibles.`
     }
   },
   {
@@ -4885,8 +5131,9 @@ window.NM_ASD_BANK = [
     subdomain: "relationships",
     weight: 1.5,
     reverse: false,
+    stemKey: "friendship_rules",
     text: {
-      hu: `Nehézséget okoz számára a barátságok finom szabályainak megértése közös játék vagy közös tevékenység közben.`,
+      hu: `Nehézséget okoz számára a barátságok finom szabályainak megértése közös játék vagy közös tevékenység közben kortárs vagy családi kapcsolatokban.`,
       en: `Has difficulty understanding the subtle rules of friendship during shared play or shared activities.`,
       de: `Hat Schwierigkeiten, die feinen Regeln der Freundschaft beim gemeinsamen Spielen oder Aktivitäten zu verstehen.`,
       it: `Ha difficoltà a comprendere le regole sottili dell'amicizia durante il gioco o le attività condivise.`,
@@ -4896,7 +5143,7 @@ window.NM_ASD_BANK = [
       ar: `يجد صعوبة في فهم القواعد الدقيقة للصداقة أثناء اللعب أو الأنشطة المشتركة.`,
       pl: `Ma trudności ze zrozumieniem subtelnych zasad przyjaźni podczas wspólnej zabawy lub aktywności.`,
       pt: `Tem dificuldade em compreender as regras sutis da amizade durante brincadeiras ou atividades partilhadas.`,
-      fr: `A des difficultés à comprendre les règles subtiles de l'amitié lors des jeux ou activités partagés.`,
+      fr: `A des difficultés à comprendre les règles subtiles de l'amitié lors des jeux ou activités partagés.`
     }
   },
   {
@@ -4905,6 +5152,7 @@ window.NM_ASD_BANK = [
     subdomain: "sensory_processing",
     weight: 1.4,
     reverse: false,
+    stemKey: "sensory_intensity",
     text: {
       hu: `Bizonyos hétköznapi érzékszervi ingerek túl intenzívnek tűnnek számára.`,
       en: `Certain everyday sensory inputs seem excessively intense.`,
@@ -4916,7 +5164,7 @@ window.NM_ASD_BANK = [
       ar: `بعض المدخلات الحسية اليومية تبدو مفرطة في الشدة.`,
       pl: `Niektóre codzienne bodźce sensoryczne wydają się nadmiernie intensywne.`,
       pt: `Certos estímulos sensoriais diários parecem excessivamente intensos.`,
-      fr: `Certaines stimulations sensorielles courantes semblent excessivement intenses.`,
+      fr: `Certaines stimulations sensorielles courantes semblent excessivement intenses.`
     }
   },
   {
@@ -4925,6 +5173,7 @@ window.NM_ASD_BANK = [
     subdomain: "sensory_processing",
     weight: 1.2,
     reverse: true,
+    stemKey: "sensory_tolerance_reverse",
     text: {
       hu: `A szokásos zajokat, fényeket és érintéseket többnyire jól tolerálja.`,
       en: `Generally tolerates ordinary sounds, lights, and touch well.`,
@@ -4936,7 +5185,7 @@ window.NM_ASD_BANK = [
       ar: `يتحمل بشكل عام الأصوات والأضواء واللمسات العادية جيدًا.`,
       pl: `Zazwyczaj dobrze toleruje zwykłe dźwięki, światło i dotyk.`,
       pt: `Geralmente tolera bem os sons, luzes e toques comuns.`,
-      fr: `Supporte généralement bien les sons, les lumières et le toucher ordinaires.`,
+      fr: `Supporte généralement bien les sons, les lumières et le toucher ordinaires.`
     }
   },
   {
@@ -4945,6 +5194,7 @@ window.NM_ASD_BANK = [
     subdomain: "restricted_patterns",
     weight: 1.4,
     reverse: false,
+    stemKey: "interest_attachment",
     text: {
       hu: `Erősen ragaszkodik bizonyos érdeklődési témákhoz vagy ismétlődő mintákhoz.`,
       en: `Shows strong attachment to certain interests or repetitive patterns.`,
@@ -4956,7 +5206,7 @@ window.NM_ASD_BANK = [
       ar: `تظهر تعلقًا شديدًا باهتمامات معينة أو أنماط متكررة.`,
       pl: `Przejawia silne przywiązanie do określonych zainteresowań lub powtarzających się wzorców.`,
       pt: `Mostra forte apego a certos interesses ou padrões repetitivos.`,
-      fr: `Montre un attachement fort à certains intérêts ou schémas répétitifs.`,
+      fr: `Montre un attachement fort à certains intérêts ou schémas répétitifs.`
     }
   },
   {
@@ -4965,6 +5215,7 @@ window.NM_ASD_BANK = [
     subdomain: "restricted_patterns",
     weight: 1.3,
     reverse: false,
+    stemKey: "preferred_activity_interruption",
     text: {
       hu: `Megterhelő lehet számára, ha egy kedvelt téma vagy tevékenység megszakad.`,
       en: `It may be distressing when a preferred topic or activity is interrupted.`,
@@ -4976,7 +5227,7 @@ window.NM_ASD_BANK = [
       ar: `قد يكون من المزعج عندما يتم مقاطعة موضوع أو نشاط مفضل.`,
       pl: `Może to powodować dyskomfort, gdy ulubiony temat lub aktywność zostanie przerwana.`,
       pt: `Pode ser angustiante quando um tema ou atividade preferidos é interrompido.`,
-      fr: `Cela peut être difficile lorsque qu'un sujet ou une activité préférée est interrompu(e).`,
+      fr: `Cela peut être difficile lorsque qu'un sujet ou une activité préférée est interrompu(e).`
     }
   },
   {
@@ -4985,6 +5236,7 @@ window.NM_ASD_BANK = [
     subdomain: "restricted_patterns",
     weight: 1.2,
     reverse: true,
+    stemKey: "new_idea_openness_reverse",
     text: {
       hu: `Képes új ötletek vagy tevékenységek felé nyitni, ha megfelelő támogatást kap.`,
       en: `Can open up to new ideas or activities when given appropriate support.`,
@@ -4996,9 +5248,9 @@ window.NM_ASD_BANK = [
       ar: `يمكنه الانفتاح على أفكار أو أنشطة جديدة عند تقديم الدعم المناسب.`,
       pl: `Może otworzyć się na nowe pomysły lub działania przy odpowiednim wsparciu.`,
       pt: `Pode abrir-se a novas ideias ou atividades quando recebe o suporte adequado.`,
-      fr: `Peut s'ouvrir à de nouvelles idées ou activités avec un soutien approprié.`,
+      fr: `Peut s'ouvrir à de nouvelles idées ou activités avec un soutien approprié.`
     }
-  },
-];
-
-console.log("✅ window.NM_ASD_BANK LOADED:", window.NM_ASD_BANK.length);
+  }
+  ];
+  console.log("✅ window.NM_ASD_BANK LOADED:", window.NM_ASD_BANK.length);
+})();
