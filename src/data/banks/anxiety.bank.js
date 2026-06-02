@@ -1,8 +1,4 @@
 export const ANXIETY_BANK = [
-  /* =========================
-     CORE 1-120
-  ========================= */
-
   {
     id: "ANX_001",
     domain: "ANXIETY",
@@ -47,8 +43,8 @@ export const ANXIETY_BANK = [
     reverse: false,
     stemKey: "difficulty_switching_off_worry",
     text: {
-      hu: "Nehéz számára leállítani az aggodalmas gondolatokat.",
-      en: "Has difficulty stopping worried thoughts."
+      hu: "Nehezen tudja félretenni az aggodalmas gondolatokat hétköznapi helyzetekben.",
+      en: "Has difficulty setting worried thoughts aside in everyday situations."
     }
   },
   {
@@ -95,8 +91,8 @@ export const ANXIETY_BANK = [
     reverse: false,
     stemKey: "everyday_worry_load",
     text: {
-      hu: "A hétköznapi helyzetek is gyakran feszültséget keltenek benne.",
-      en: "Everyday situations often create tension."
+      hu: "Hétköznapi helyzetekben is könnyen megjelenhet benne feszültség.",
+      en: "Everyday situations can easily bring up tension for them."
     }
   },
   {
@@ -123,7 +119,6 @@ export const ANXIETY_BANK = [
       en: "Sometimes seems tense even without a clear trigger."
     }
   },
-
   {
     id: "ANX_011",
     domain: "ANXIETY",
@@ -180,8 +175,8 @@ export const ANXIETY_BANK = [
     reverse: true,
     stemKey: "uncertainty_tolerance_reverse",
     text: {
-      hu: "Viszonylag jól tud együtt élni azzal, ha nem ismert minden részlet.",
-      en: "Can cope relatively well even when not all details are known."
+      hu: "Viszonylag jól tud együtt élni azzal, ha néhány részlet még bizonytalan.",
+      en: "Can cope relatively well when some details remain uncertain."
     }
   },
   {
@@ -228,8 +223,8 @@ export const ANXIETY_BANK = [
     reverse: true,
     stemKey: "open_ended_situation_reverse",
     text: {
-      hu: "Nyitottabb, ha egy helyzet nem teljesen kiszámítható.",
-      en: "Can stay open even when a situation is not fully predictable."
+      hu: "Nyitottabb tud maradni, ha egy helyzet csak részben kiszámítható.",
+      en: "Can stay open when a situation is only partly predictable."
     }
   },
   {
@@ -244,7 +239,6 @@ export const ANXIETY_BANK = [
       en: "Often tries to gain complete certainty before making decisions."
     }
   },
-
   {
     id: "ANX_021",
     domain: "ANXIETY",
@@ -365,7 +359,6 @@ export const ANXIETY_BANK = [
       en: "Physical tension tends to build up easily over the day."
     }
   },
-
   {
     id: "ANX_031",
     domain: "ANXIETY",
@@ -374,8 +367,8 @@ export const ANXIETY_BANK = [
     reverse: false,
     stemKey: "inner_restlessness",
     text: {
-      hu: "Gyakran belső nyugtalanság jellemzi.",
-      en: "Often experiences inner restlessness."
+      hu: "Gyakran belső nyugtalanság látszik rajta nyugodtabb környezetben is.",
+      en: "Often shows inner restlessness even in calmer settings."
     }
   },
   {
@@ -386,8 +379,8 @@ export const ANXIETY_BANK = [
     reverse: false,
     stemKey: "difficulty_relaxing",
     text: {
-      hu: "Nehezen tud igazán ellazulni.",
-      en: "Has difficulty truly relaxing."
+      hu: "Nehezen tud igazán ellazulni, még támogató környezetben is.",
+      en: "Has difficulty truly relaxing, even in supportive settings."
     }
   },
   {
@@ -398,8 +391,8 @@ export const ANXIETY_BANK = [
     reverse: false,
     stemKey: "muscle_tension",
     text: {
-      hu: "Izmai gyakran feszesek vagy megterheltek.",
-      en: "Muscles are often tense or tight."
+      hu: "Izmai gyakran feszesnek vagy megterheltnek tűnnek stresszesebb időszakokban.",
+      en: "Muscles often seem tense or strained during stressful periods."
     }
   },
   {
@@ -434,8 +427,8 @@ export const ANXIETY_BANK = [
     reverse: false,
     stemKey: "irritability_under_stress",
     text: {
-      hu: "Feszültség alatt ingerlékenyebbé válhat.",
-      en: "May become more irritable under stress."
+      hu: "Feszültség alatt könnyebben válhat ingerlékennyé vagy türelmetlenné.",
+      en: "May become more irritable or impatient under tension."
     }
   },
   {
@@ -486,7 +479,6 @@ export const ANXIETY_BANK = [
       en: "May often seem to remain in a state of tension."
     }
   },
-
   {
     id: "ANX_041",
     domain: "ANXIETY",
@@ -607,7 +599,6 @@ export const ANXIETY_BANK = [
       en: "May avoid things in advance to prevent later stress."
     }
   },
-
   {
     id: "ANX_051",
     domain: "ANXIETY",
@@ -728,7 +719,6 @@ export const ANXIETY_BANK = [
       en: "May become tense just by thinking about an upcoming social situation."
     }
   },
-
   {
     id: "ANX_061",
     domain: "ANXIETY",
@@ -773,8 +763,8 @@ export const ANXIETY_BANK = [
     reverse: false,
     stemKey: "fatigue_from_worry",
     text: {
-      hu: "Az állandó aggodalom kifáraszthatja.",
-      en: "Constant worry may leave them tired."
+      hu: "A visszatérő aggodalom érezhetően kifáraszthatja a nap végére.",
+      en: "Recurring worry may leave them noticeably tired by the end of the day."
     }
   },
   {
@@ -849,7 +839,6 @@ export const ANXIETY_BANK = [
       en: "At bedtime, worry thoughts can easily start up."
     }
   },
-
   {
     id: "ANX_071",
     domain: "ANXIETY",
@@ -858,8 +847,8 @@ export const ANXIETY_BANK = [
     reverse: false,
     stemKey: "reassurance_seeking",
     text: {
-      hu: "Gyakran kér megerősítést másoktól, hogy minden rendben lesz-e.",
-      en: "Often seeks reassurance from others that things will be okay."
+      hu: "Gyakran kér megerősítést másoktól, hogy biztonságosnak érezze a helyzetet.",
+      en: "Often seeks reassurance from others to feel safer in the situation."
     }
   },
   {
@@ -906,8 +895,8 @@ export const ANXIETY_BANK = [
     reverse: true,
     stemKey: "letting_go_control_reverse",
     text: {
-      hu: "El tud engedni helyzeteket akkor is, ha nincs minden részlet teljesen kézben tartva.",
-      en: "Can let go even when not every detail is fully under control."
+      hu: "El tud engedni helyzeteket akkor is, ha néhány részlet nincs kézben tartva.",
+      en: "Can let go of situations even when some details are not under control."
     }
   },
   {
@@ -954,8 +943,8 @@ export const ANXIETY_BANK = [
     reverse: true,
     stemKey: "good_enough_tolerance_reverse",
     text: {
-      hu: "El tud fogadni olyan helyzeteket is, amelyek nem teljesen tökéletesek.",
-      en: "Can accept situations that are not completely perfect."
+      hu: "El tud fogadni olyan helyzeteket is, amelyek csak elég jónak érződnek.",
+      en: "Can accept situations that feel good enough rather than perfect."
     }
   },
   {
@@ -970,7 +959,6 @@ export const ANXIETY_BANK = [
       en: "Relief often depends on getting enough reassurance from outside."
     }
   },
-
   {
     id: "ANX_081",
     domain: "ANXIETY",
@@ -1031,7 +1019,6 @@ export const ANXIETY_BANK = [
       en: "May seem to carry a baseline level of apprehensive tension."
     }
   },
-
   {
     id: "ANX_086",
     domain: "ANXIETY",
@@ -1064,8 +1051,8 @@ export const ANXIETY_BANK = [
     reverse: true,
     stemKey: "flexible_unknown_reverse",
     text: {
-      hu: "Viszonylag rugalmas tud maradni akkor is, ha nincs minden előre tisztázva.",
-      en: "Can stay relatively flexible even when not everything is clarified in advance."
+      hu: "Viszonylag rugalmas tud maradni akkor is, ha több részlet még nem tisztázott.",
+      en: "Can stay relatively flexible when several details are still unclear."
     }
   },
   {
@@ -1076,8 +1063,8 @@ export const ANXIETY_BANK = [
     reverse: false,
     stemKey: "uncertainty_distress",
     text: {
-      hu: "A bizonytalanság önmagában is feszültséget kelt benne.",
-      en: "Uncertainty itself creates tension."
+      hu: "A bizonytalanság önmagában is könnyen feszültséget kelt benne.",
+      en: "Uncertainty by itself can easily create tension for them."
     }
   },
   {
@@ -1092,7 +1079,6 @@ export const ANXIETY_BANK = [
       en: "Functions more easily when steps and expectations are known in advance."
     }
   },
-
   {
     id: "ANX_091",
     domain: "ANXIETY",
@@ -1153,7 +1139,6 @@ export const ANXIETY_BANK = [
       en: "Prolonged tension may lead to strong physical exhaustion by the end of the day."
     }
   },
-
   {
     id: "ANX_096",
     domain: "ANXIETY",
@@ -1214,7 +1199,6 @@ export const ANXIETY_BANK = [
       en: "Needs time to relax because shifting into a calm state is harder."
     }
   },
-
   {
     id: "ANX_101",
     domain: "ANXIETY",
@@ -1275,7 +1259,6 @@ export const ANXIETY_BANK = [
       en: "In difficult situations, retreating or leaving comes to mind quickly."
     }
   },
-
   {
     id: "ANX_106",
     domain: "ANXIETY",
@@ -1336,7 +1319,6 @@ export const ANXIETY_BANK = [
       en: "May imagine an embarrassing social moment in advance."
     }
   },
-
   {
     id: "ANX_111",
     domain: "ANXIETY",
@@ -1397,7 +1379,6 @@ export const ANXIETY_BANK = [
       en: "Mental tension may cause significant fatigue by the end of the day."
     }
   },
-
   {
     id: "ANX_116",
     domain: "ANXIETY",
@@ -1430,8 +1411,8 @@ export const ANXIETY_BANK = [
     reverse: true,
     stemKey: "trust_process_reverse",
     text: {
-      hu: "Képes megbízni a folyamatban akkor is, ha nincs minden végig ellenőrizve.",
-      en: "Can trust the process even when not every part has been checked."
+      hu: "Képes megbízni a folyamatban akkor is, ha néhány rész még nincs ellenőrizve.",
+      en: "Can trust the process even when some parts have not been checked."
     }
   },
   {
@@ -1458,412 +1439,1564 @@ export const ANXIETY_BANK = [
       en: "Calms down more easily when someone else gives clear reassurance."
     }
   },
-
-  /* =========================
-     121-250
-  ========================= */
-
-  ...(() => {
-    const items = [];
-    let num = 121;
-
-    function makeId() {
-      return `ANX_${String(num++).padStart(3, "0")}`;
+  {
+    id: "ANX_121",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "persistent_worry",
+    text: {
+      hu: "Az aggodalmai nehezen csendesednek le otthoni helyzetekben.",
+      en: "Worries are difficult to settle at home."
     }
-
-    function add(subdomain, weight, reverse, stemKey, hu, en) {
-      items.push({
-        id: makeId(),
-        domain: "ANXIETY",
-        subdomain,
-        weight,
-        reverse,
-        stemKey,
-        text: { hu, en }
-      });
+  },
+  {
+    id: "ANX_122",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "persistent_worry",
+    text: {
+      hu: "Az aggodalmai nehezen csendesednek le iskolai vagy munkahelyi helyzetekben.",
+      en: "Worries are difficult to settle in school or work situations."
     }
-
-    const contexts = [
-      { hu: "otthoni helyzetekben", en: "at home" },
-      { hu: "iskolai vagy munkahelyi helyzetekben", en: "in school or work situations" },
-      { hu: "társas helyzetekben", en: "in social situations" },
-      { hu: "váratlan vagy bizonytalan helyzetekben", en: "in unexpected or uncertain situations" },
-      { hu: "teljesítményhelyzetekben", en: "in performance situations" }
-    ];
-
-    function contextualize(subdomain, weight, reverse, stemKey, huStem, enStem) {
-      contexts.forEach((ctx) => {
-        add(
-          subdomain,
-          weight,
-          reverse,
-          stemKey,
-          `${huStem} ${ctx.hu}.`,
-          `${enStem} ${ctx.en}.`
-        );
-      });
+  },
+  {
+    id: "ANX_123",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "persistent_worry",
+    text: {
+      hu: "Az aggodalmai nehezen csendesednek le társas helyzetekben.",
+      en: "Worries are difficult to settle in social situations."
     }
-
-    contextualize(
-      "general_worry",
-      1.5,
-      false,
-      "persistent_worry",
-      "Az aggodalmai nehezen csendesednek le",
-      "Worries are difficult to settle"
-    );
-
-    contextualize(
-      "general_worry",
-      1.4,
-      false,
-      "future_concern",
-      "Sokat foglalkoztatja, mi történhet rosszul",
-      "Spends a lot of time thinking about what might go wrong"
-    );
-
-    contextualize(
-      "general_worry",
-      1.2,
-      true,
-      "worry_regulation_reverse",
-      "Képes viszonylag jól keretek között tartani az aggodalmait",
-      "Can keep worries relatively contained"
-    );
-
-    contextualize(
-      "general_worry",
-      1.4,
-      false,
-      "difficulty_switching_off_worry",
-      "Nehéz számára leállítani a feszültséget fenntartó gondolatokat",
-      "Has difficulty switching off thoughts that maintain tension"
-    );
-
-    contextualize(
-      "general_worry",
-      1.3,
-      false,
-      "small_issue_escalation",
-      "Kisebb problémák is könnyen nagyobb aggodalommá nőhetnek",
-      "Smaller issues can easily grow into bigger worries"
-    );
-
-    contextualize(
-      "intolerance_of_uncertainty",
-      1.5,
-      false,
-      "uncertainty_distress",
-      "Erős feszültséget él át, ha nem tudja pontosan, mire számíthat",
-      "Experiences strong tension when not knowing exactly what to expect"
-    );
-
-    contextualize(
-      "intolerance_of_uncertainty",
-      1.4,
-      false,
-      "need_for_predictability",
-      "Nyugodtabb, ha a dolgok előre kiszámíthatóak",
-      "Feels calmer when things are predictable in advance"
-    );
-
-    contextualize(
-      "intolerance_of_uncertainty",
-      1.2,
-      true,
-      "uncertainty_tolerance_reverse",
-      "Viszonylag jól tud működni akkor is, ha nem ismert minden részlet",
-      "Can function relatively well even when not every detail is known"
-    );
-
-    contextualize(
-      "intolerance_of_uncertainty",
-      1.4,
-      false,
-      "waiting_difficulty",
-      "A várakozás és a nyitva maradó kérdések különösen megterhelik",
-      "Waiting and unresolved questions are especially hard to tolerate"
-    );
-
-    contextualize(
-      "intolerance_of_uncertainty",
-      1.3,
-      false,
-      "certainty_seeking",
-      "Szeretne biztos válaszokat kapni, mielőtt továbblép",
-      "Wants definite answers before moving forward"
-    );
-
-    contextualize(
-      "physical_arousal",
-      1.4,
-      false,
-      "somatic_tension",
-      "A feszültség testileg is erősen megjelenik",
-      "Tension shows up strongly in the body"
-    );
-
-    contextualize(
-      "physical_arousal",
-      1.4,
-      false,
-      "physical_alarm_response",
-      "A teste néha úgy reagál, mintha fokozott veszély lenne jelen",
-      "The body sometimes reacts as if there were increased danger"
-    );
-
-    contextualize(
-      "physical_arousal",
-      1.2,
-      true,
-      "physical_calm_reverse",
-      "Teste többnyire viszonylag nyugodt tud maradni terhelőbb helyzetekben is",
-      "The body can usually stay relatively calm even in more demanding situations"
-    );
-
-    contextualize(
-      "physical_arousal",
-      1.3,
-      false,
-      "breathing_tension",
-      "A légzésén is érződik a feszültség",
-      "Tension can also be noticed in breathing"
-    );
-
-    contextualize(
-      "physical_arousal",
-      1.3,
-      false,
-      "stomach_discomfort",
-      "A feszültség gyomortáji kellemetlenséget vagy testi nyomást okozhat",
-      "Tension may cause stomach discomfort or bodily pressure"
-    );
-
-    contextualize(
-      "restlessness_tension",
-      1.4,
-      false,
-      "inner_restlessness",
-      "Belső nyugtalanság jellemzi",
-      "Is characterized by inner restlessness"
-    );
-
-    contextualize(
-      "restlessness_tension",
-      1.4,
-      false,
-      "difficulty_relaxing",
-      "Nehezen tud valóban ellazulni és lelassulni",
-      "Has difficulty truly relaxing and slowing down"
-    );
-
-    contextualize(
-      "restlessness_tension",
-      1.2,
-      true,
-      "calming_down_reverse",
-      "Képes visszatalálni egy nyugodtabb belső állapothoz",
-      "Can return to a calmer inner state"
-    );
-
-    contextualize(
-      "restlessness_tension",
-      1.4,
-      false,
-      "constant_alertness",
-      "Mintha folyamatos készenlétben lenne",
-      "Seems to remain in a continuous state of alertness"
-    );
-
-    contextualize(
-      "restlessness_tension",
-      1.3,
-      false,
-      "anticipatory_tension",
-      "Már előre feszültté válhat egy közelgő helyzet miatt",
-      "May become tense in advance because of an upcoming situation"
-    );
-
-    contextualize(
-      "avoidance_safety",
-      1.5,
-      false,
-      "avoidance_of_stressful_situations",
-      "Hajlamos kerülni azokat a helyzeteket, amelyek feszültséget keltenek benne",
-      "Tends to avoid situations that create tension"
-    );
-
-    contextualize(
-      "avoidance_safety",
-      1.4,
-      false,
-      "safety_checking",
-      "Megnyugvás céljából többször is ellenőrizhet dolgokat",
-      "May check things repeatedly in order to feel reassured"
-    );
-
-    contextualize(
-      "avoidance_safety",
-      1.2,
-      true,
-      "facing_discomfort_reverse",
-      "Képes vállalni enyhébb kellemetlenséget is anélkül, hogy rögtön visszahúzódna",
-      "Can tolerate mild discomfort without immediately withdrawing"
-    );
-
-    contextualize(
-      "avoidance_safety",
-      1.4,
-      false,
-      "comfort_zone_dependence",
-      "Sokkal könnyebben működik, ha biztonságosnak érzi a közeget",
-      "Functions much more easily when the environment feels safe"
-    );
-
-    contextualize(
-      "avoidance_safety",
-      1.3,
-      false,
-      "escape_preference",
-      "Legszívesebben kilépne vagy visszavonulna, ha túl nagy lesz a feszültség",
-      "Would most like to leave or withdraw when tension becomes too high"
-    );
-
-    contextualize(
-      "social_evaluative_anxiety",
-      1.4,
-      false,
-      "fear_of_judgment",
-      "Tart attól, hogy mások kedvezőtlenül ítélik meg",
-      "Fears being judged negatively by others"
-    );
-
-    contextualize(
-      "social_evaluative_anxiety",
-      1.4,
-      false,
-      "performance_worry",
-      "Teljesítményhelyzetben erősen megemelkedhet a feszültsége",
-      "Tension may rise strongly in performance situations"
-    );
-
-    contextualize(
-      "social_evaluative_anxiety",
-      1.2,
-      true,
-      "social_confidence_reverse",
-      "Viszonylag magabiztos tud maradni akkor is, ha mások figyelik",
-      "Can remain relatively confident even when others are watching"
-    );
-
-    contextualize(
-      "social_evaluative_anxiety",
-      1.4,
-      false,
-      "post_social_overthinking",
-      "Egy társas helyzet után sokáig elemezheti, mi történt",
-      "May analyze what happened for a long time after a social situation"
-    );
-
-    contextualize(
-      "social_evaluative_anxiety",
-      1.3,
-      false,
-      "embarrassment_anticipation",
-      "Előre félhet attól, hogy zavarba jön vagy hibázik",
-      "May fear in advance becoming embarrassed or making a mistake"
-    );
-
-    contextualize(
-      "concentration_sleep",
-      1.4,
-      false,
-      "worry_interrupts_focus",
-      "Az aggodalom megnehezíti a figyelmének összpontosítását",
-      "Worry makes it difficult to focus attention"
-    );
-
-    contextualize(
-      "concentration_sleep",
-      1.4,
-      false,
-      "bedtime_anticipation_worry",
-      "Lefekvéskor könnyen felerősödnek az aggodalmi gondolatai",
-      "Worry thoughts can easily intensify at bedtime"
-    );
-
-    contextualize(
-      "concentration_sleep",
-      1.2,
-      true,
-      "mental_settling_reverse",
-      "Viszonylag jól le tudja csendesíteni a gondolatait, amikor pihenésre lenne szükség",
-      "Can settle thoughts relatively well when rest is needed"
-    );
-
-    contextualize(
-      "concentration_sleep",
-      1.3,
-      false,
-      "mental_preoccupation",
-      "Gondolatai gyakran lekötöttek a lehetséges problémákkal",
-      "Thoughts are often occupied by possible problems"
-    );
-
-    contextualize(
-      "concentration_sleep",
-      1.3,
-      false,
-      "fatigue_from_worry",
-      "A tartós aggodalom a nap végére erősen kifáraszthatja",
-      "Ongoing worry may leave them strongly fatigued by the end of the day"
-    );
-
-    contextualize(
-      "reassurance_control",
-      1.4,
-      false,
-      "reassurance_seeking",
-      "Szeretne külső megerősítést kapni arról, hogy minden rendben lesz",
-      "Wants external reassurance that things will be okay"
-    );
-
-    contextualize(
-      "reassurance_control",
-      1.4,
-      false,
-      "need_for_control",
-      "Nyugodtabb, ha kézben tudja tartani a részleteket",
-      "Feels calmer when able to keep details under control"
-    );
-
-    contextualize(
-      "reassurance_control",
-      1.2,
-      true,
-      "letting_go_control_reverse",
-      "El tud engedni helyzeteket akkor is, ha nem minden alakul pontosan a tervei szerint",
-      "Can let go even when things do not unfold exactly as planned"
-    );
-
-    contextualize(
-      "reassurance_control",
-      1.3,
-      false,
-      "checking_for_certainty",
-      "Szeretne még egyszer megbizonyosodni róla, hogy minden rendben van",
-      "Wants to make sure one more time that everything is okay"
-    );
-
-    contextualize(
-      "reassurance_control",
-      1.3,
-      false,
-      "certainty_dependency",
-      "A megnyugvása gyakran attól függ, kap-e elég egyértelmű visszajelzést",
-      "Relief often depends on getting sufficiently clear feedback"
-    );
-
-    return items.slice(0, 130);
-})()
+  },
+  {
+    id: "ANX_124",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "persistent_worry",
+    text: {
+      hu: "Az aggodalmai nehezen csendesednek le váratlan vagy bizonytalan helyzetekben.",
+      en: "Worries are difficult to settle in unexpected or uncertain situations."
+    }
+  },
+  {
+    id: "ANX_125",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "persistent_worry",
+    text: {
+      hu: "Az aggodalmai nehezen csendesednek le teljesítményhelyzetekben.",
+      en: "Worries are difficult to settle in performance situations."
+    }
+  },
+  {
+    id: "ANX_126",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "future_concern",
+    text: {
+      hu: "Sokat foglalkoztatja, mi történhet rosszul otthoni helyzetekben.",
+      en: "Spends a lot of time thinking about what might go wrong at home."
+    }
+  },
+  {
+    id: "ANX_127",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "future_concern",
+    text: {
+      hu: "Sokat foglalkoztatja, mi történhet rosszul iskolai vagy munkahelyi helyzetekben.",
+      en: "Spends a lot of time thinking about what might go wrong in school or work situations."
+    }
+  },
+  {
+    id: "ANX_128",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "future_concern",
+    text: {
+      hu: "Sokat foglalkoztatja, mi történhet rosszul társas helyzetekben.",
+      en: "Spends a lot of time thinking about what might go wrong in social situations."
+    }
+  },
+  {
+    id: "ANX_129",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "future_concern",
+    text: {
+      hu: "Sokat foglalkoztatja, mi történhet rosszul váratlan vagy bizonytalan helyzetekben.",
+      en: "Spends a lot of time thinking about what might go wrong in unexpected or uncertain situations."
+    }
+  },
+  {
+    id: "ANX_130",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "future_concern",
+    text: {
+      hu: "Sokat foglalkoztatja, mi történhet rosszul teljesítményhelyzetekben.",
+      en: "Spends a lot of time thinking about what might go wrong in performance situations."
+    }
+  },
+  {
+    id: "ANX_131",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "worry_regulation_reverse",
+    text: {
+      hu: "Képes viszonylag jól keretek között tartani az aggodalmait otthoni helyzetekben.",
+      en: "Can keep worries relatively contained at home."
+    }
+  },
+  {
+    id: "ANX_132",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "worry_regulation_reverse",
+    text: {
+      hu: "Képes viszonylag jól keretek között tartani az aggodalmait iskolai vagy munkahelyi helyzetekben.",
+      en: "Can keep worries relatively contained in school or work situations."
+    }
+  },
+  {
+    id: "ANX_133",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "worry_regulation_reverse",
+    text: {
+      hu: "Képes viszonylag jól keretek között tartani az aggodalmait társas helyzetekben.",
+      en: "Can keep worries relatively contained in social situations."
+    }
+  },
+  {
+    id: "ANX_134",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "worry_regulation_reverse",
+    text: {
+      hu: "Képes viszonylag jól keretek között tartani az aggodalmait váratlan vagy bizonytalan helyzetekben.",
+      en: "Can keep worries relatively contained in unexpected or uncertain situations."
+    }
+  },
+  {
+    id: "ANX_135",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "worry_regulation_reverse",
+    text: {
+      hu: "Képes viszonylag jól keretek között tartani az aggodalmait teljesítményhelyzetekben.",
+      en: "Can keep worries relatively contained in performance situations."
+    }
+  },
+  {
+    id: "ANX_136",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "difficulty_switching_off_worry",
+    text: {
+      hu: "Nehéz számára leállítani a feszültséget fenntartó gondolatokat otthoni helyzetekben.",
+      en: "Has difficulty switching off thoughts that maintain tension at home."
+    }
+  },
+  {
+    id: "ANX_137",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "difficulty_switching_off_worry",
+    text: {
+      hu: "Nehéz számára leállítani a feszültséget fenntartó gondolatokat iskolai vagy munkahelyi helyzetekben.",
+      en: "Has difficulty switching off thoughts that maintain tension in school or work situations."
+    }
+  },
+  {
+    id: "ANX_138",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "difficulty_switching_off_worry",
+    text: {
+      hu: "Nehéz számára leállítani a feszültséget fenntartó gondolatokat társas helyzetekben.",
+      en: "Has difficulty switching off thoughts that maintain tension in social situations."
+    }
+  },
+  {
+    id: "ANX_139",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "difficulty_switching_off_worry",
+    text: {
+      hu: "Nehéz számára leállítani a feszültséget fenntartó gondolatokat váratlan vagy bizonytalan helyzetekben.",
+      en: "Has difficulty switching off thoughts that maintain tension in unexpected or uncertain situations."
+    }
+  },
+  {
+    id: "ANX_140",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "difficulty_switching_off_worry",
+    text: {
+      hu: "Nehéz számára leállítani a feszültséget fenntartó gondolatokat teljesítményhelyzetekben.",
+      en: "Has difficulty switching off thoughts that maintain tension in performance situations."
+    }
+  },
+  {
+    id: "ANX_141",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "small_issue_escalation",
+    text: {
+      hu: "Kisebb problémák is könnyen nagyobb aggodalommá nőhetnek otthoni helyzetekben.",
+      en: "Smaller issues can easily grow into bigger worries at home."
+    }
+  },
+  {
+    id: "ANX_142",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "small_issue_escalation",
+    text: {
+      hu: "Kisebb problémák is könnyen nagyobb aggodalommá nőhetnek iskolai vagy munkahelyi helyzetekben.",
+      en: "Smaller issues can easily grow into bigger worries in school or work situations."
+    }
+  },
+  {
+    id: "ANX_143",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "small_issue_escalation",
+    text: {
+      hu: "Kisebb problémák is könnyen nagyobb aggodalommá nőhetnek társas helyzetekben.",
+      en: "Smaller issues can easily grow into bigger worries in social situations."
+    }
+  },
+  {
+    id: "ANX_144",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "small_issue_escalation",
+    text: {
+      hu: "Kisebb problémák is könnyen nagyobb aggodalommá nőhetnek váratlan vagy bizonytalan helyzetekben.",
+      en: "Smaller issues can easily grow into bigger worries in unexpected or uncertain situations."
+    }
+  },
+  {
+    id: "ANX_145",
+    domain: "ANXIETY",
+    subdomain: "general_worry",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "small_issue_escalation",
+    text: {
+      hu: "Kisebb problémák is könnyen nagyobb aggodalommá nőhetnek teljesítményhelyzetekben.",
+      en: "Smaller issues can easily grow into bigger worries in performance situations."
+    }
+  },
+  {
+    id: "ANX_146",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "uncertainty_distress",
+    text: {
+      hu: "Erős feszültséget él át, ha nem tudja pontosan, mire számíthat otthoni helyzetekben.",
+      en: "Experiences strong tension when not knowing exactly what to expect at home."
+    }
+  },
+  {
+    id: "ANX_147",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "uncertainty_distress",
+    text: {
+      hu: "Erős feszültséget él át, ha nem tudja pontosan, mire számíthat iskolai vagy munkahelyi helyzetekben.",
+      en: "Experiences strong tension when not knowing exactly what to expect in school or work situations."
+    }
+  },
+  {
+    id: "ANX_148",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "uncertainty_distress",
+    text: {
+      hu: "Erős feszültséget él át, ha nem tudja pontosan, mire számíthat társas helyzetekben.",
+      en: "Experiences strong tension when not knowing exactly what to expect in social situations."
+    }
+  },
+  {
+    id: "ANX_149",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "uncertainty_distress",
+    text: {
+      hu: "Erős feszültséget él át, ha nem tudja pontosan, mire számíthat váratlan vagy bizonytalan helyzetekben.",
+      en: "Experiences strong tension when not knowing exactly what to expect in unexpected or uncertain situations."
+    }
+  },
+  {
+    id: "ANX_150",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "uncertainty_distress",
+    text: {
+      hu: "Erős feszültséget él át, ha nem tudja pontosan, mire számíthat teljesítményhelyzetekben.",
+      en: "Experiences strong tension when not knowing exactly what to expect in performance situations."
+    }
+  },
+  {
+    id: "ANX_151",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "need_for_predictability",
+    text: {
+      hu: "Nyugodtabb, ha a dolgok előre kiszámíthatóak otthoni helyzetekben.",
+      en: "Feels calmer when things are predictable in advance at home."
+    }
+  },
+  {
+    id: "ANX_152",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "need_for_predictability",
+    text: {
+      hu: "Nyugodtabb, ha a dolgok előre kiszámíthatóak iskolai vagy munkahelyi helyzetekben.",
+      en: "Feels calmer when things are predictable in advance in school or work situations."
+    }
+  },
+  {
+    id: "ANX_153",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "need_for_predictability",
+    text: {
+      hu: "Nyugodtabb, ha a dolgok előre kiszámíthatóak társas helyzetekben.",
+      en: "Feels calmer when things are predictable in advance in social situations."
+    }
+  },
+  {
+    id: "ANX_154",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "need_for_predictability",
+    text: {
+      hu: "Nyugodtabb, ha a dolgok előre kiszámíthatóak váratlan vagy bizonytalan helyzetekben.",
+      en: "Feels calmer when things are predictable in advance in unexpected or uncertain situations."
+    }
+  },
+  {
+    id: "ANX_155",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "need_for_predictability",
+    text: {
+      hu: "Nyugodtabb, ha a dolgok előre kiszámíthatóak teljesítményhelyzetekben.",
+      en: "Feels calmer when things are predictable in advance in performance situations."
+    }
+  },
+  {
+    id: "ANX_156",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "uncertainty_tolerance_reverse",
+    text: {
+      hu: "Viszonylag jól tud működni otthon akkor is, ha néhány részlet még nem ismert.",
+      en: "Can function relatively well at home when some details are still unknown."
+    }
+  },
+  {
+    id: "ANX_157",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "uncertainty_tolerance_reverse",
+    text: {
+      hu: "Viszonylag jól tud működni iskolai vagy munkahelyi helyzetekben, ha néhány részlet még nem ismert.",
+      en: "Can function relatively well in school or work settings when some details are still unknown."
+    }
+  },
+  {
+    id: "ANX_158",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "uncertainty_tolerance_reverse",
+    text: {
+      hu: "Viszonylag jól tud működni társas helyzetekben, ha néhány részlet még nem ismert.",
+      en: "Can function relatively well in social situations when some details are still unknown."
+    }
+  },
+  {
+    id: "ANX_159",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "uncertainty_tolerance_reverse",
+    text: {
+      hu: "Viszonylag jól tud működni váratlan helyzetekben, ha néhány részlet bizonytalan marad.",
+      en: "Can function relatively well in unexpected situations when some details remain uncertain."
+    }
+  },
+  {
+    id: "ANX_160",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "uncertainty_tolerance_reverse",
+    text: {
+      hu: "Viszonylag jól tud működni teljesítményhelyzetekben, ha néhány részlet még nem ismert.",
+      en: "Can function relatively well in performance situations when some details are still unknown."
+    }
+  },
+  {
+    id: "ANX_161",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "waiting_difficulty",
+    text: {
+      hu: "A várakozás és a nyitva maradó kérdések különösen megterhelik otthoni helyzetekben.",
+      en: "Waiting and unresolved questions are especially hard to tolerate at home."
+    }
+  },
+  {
+    id: "ANX_162",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "waiting_difficulty",
+    text: {
+      hu: "A várakozás és a nyitva maradó kérdések különösen megterhelik iskolai vagy munkahelyi helyzetekben.",
+      en: "Waiting and unresolved questions are especially hard to tolerate in school or work situations."
+    }
+  },
+  {
+    id: "ANX_163",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "waiting_difficulty",
+    text: {
+      hu: "A várakozás és a nyitva maradó kérdések különösen megterhelik társas helyzetekben.",
+      en: "Waiting and unresolved questions are especially hard to tolerate in social situations."
+    }
+  },
+  {
+    id: "ANX_164",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "waiting_difficulty",
+    text: {
+      hu: "A várakozás és a nyitva maradó kérdések különösen megterhelik váratlan vagy bizonytalan helyzetekben.",
+      en: "Waiting and unresolved questions are especially hard to tolerate in unexpected or uncertain situations."
+    }
+  },
+  {
+    id: "ANX_165",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "waiting_difficulty",
+    text: {
+      hu: "A várakozás és a nyitva maradó kérdések különösen megterhelik teljesítményhelyzetekben.",
+      en: "Waiting and unresolved questions are especially hard to tolerate in performance situations."
+    }
+  },
+  {
+    id: "ANX_166",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "certainty_seeking",
+    text: {
+      hu: "Szeretne biztos válaszokat kapni, mielőtt továbblép otthoni helyzetekben.",
+      en: "Wants definite answers before moving forward at home."
+    }
+  },
+  {
+    id: "ANX_167",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "certainty_seeking",
+    text: {
+      hu: "Szeretne biztos válaszokat kapni, mielőtt továbblép iskolai vagy munkahelyi helyzetekben.",
+      en: "Wants definite answers before moving forward in school or work situations."
+    }
+  },
+  {
+    id: "ANX_168",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "certainty_seeking",
+    text: {
+      hu: "Szeretne biztos válaszokat kapni, mielőtt továbblép társas helyzetekben.",
+      en: "Wants definite answers before moving forward in social situations."
+    }
+  },
+  {
+    id: "ANX_169",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "certainty_seeking",
+    text: {
+      hu: "Szeretne biztos válaszokat kapni, mielőtt továbblép váratlan vagy bizonytalan helyzetekben.",
+      en: "Wants definite answers before moving forward in unexpected or uncertain situations."
+    }
+  },
+  {
+    id: "ANX_170",
+    domain: "ANXIETY",
+    subdomain: "intolerance_of_uncertainty",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "certainty_seeking",
+    text: {
+      hu: "Szeretne biztos válaszokat kapni, mielőtt továbblép teljesítményhelyzetekben.",
+      en: "Wants definite answers before moving forward in performance situations."
+    }
+  },
+  {
+    id: "ANX_171",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "somatic_tension",
+    text: {
+      hu: "A feszültség testileg is erősen megjelenik otthoni helyzetekben.",
+      en: "Tension shows up strongly in the body at home."
+    }
+  },
+  {
+    id: "ANX_172",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "somatic_tension",
+    text: {
+      hu: "A feszültség testileg is erősen megjelenik iskolai vagy munkahelyi helyzetekben.",
+      en: "Tension shows up strongly in the body in school or work situations."
+    }
+  },
+  {
+    id: "ANX_173",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "somatic_tension",
+    text: {
+      hu: "A feszültség testileg is erősen megjelenik társas helyzetekben.",
+      en: "Tension shows up strongly in the body in social situations."
+    }
+  },
+  {
+    id: "ANX_174",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "somatic_tension",
+    text: {
+      hu: "A feszültség testileg is erősen megjelenik váratlan vagy bizonytalan helyzetekben.",
+      en: "Tension shows up strongly in the body in unexpected or uncertain situations."
+    }
+  },
+  {
+    id: "ANX_175",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "somatic_tension",
+    text: {
+      hu: "A feszültség testileg is erősen megjelenik teljesítményhelyzetekben.",
+      en: "Tension shows up strongly in the body in performance situations."
+    }
+  },
+  {
+    id: "ANX_176",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "physical_alarm_response",
+    text: {
+      hu: "A teste néha úgy reagál, mintha fokozott veszély lenne jelen otthoni helyzetekben.",
+      en: "The body sometimes reacts as if there were increased danger at home."
+    }
+  },
+  {
+    id: "ANX_177",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "physical_alarm_response",
+    text: {
+      hu: "A teste néha úgy reagál, mintha fokozott veszély lenne jelen iskolai vagy munkahelyi helyzetekben.",
+      en: "The body sometimes reacts as if there were increased danger in school or work situations."
+    }
+  },
+  {
+    id: "ANX_178",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "physical_alarm_response",
+    text: {
+      hu: "A teste néha úgy reagál, mintha fokozott veszély lenne jelen társas helyzetekben.",
+      en: "The body sometimes reacts as if there were increased danger in social situations."
+    }
+  },
+  {
+    id: "ANX_179",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "physical_alarm_response",
+    text: {
+      hu: "A teste néha úgy reagál, mintha fokozott veszély lenne jelen váratlan vagy bizonytalan helyzetekben.",
+      en: "The body sometimes reacts as if there were increased danger in unexpected or uncertain situations."
+    }
+  },
+  {
+    id: "ANX_180",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "physical_alarm_response",
+    text: {
+      hu: "A teste néha úgy reagál, mintha fokozott veszély lenne jelen teljesítményhelyzetekben.",
+      en: "The body sometimes reacts as if there were increased danger in performance situations."
+    }
+  },
+  {
+    id: "ANX_181",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "physical_calm_reverse",
+    text: {
+      hu: "Teste többnyire viszonylag nyugodt tud maradni terhelőbb helyzetekben is otthoni helyzetekben.",
+      en: "The body can usually stay relatively calm even in more demanding situations at home."
+    }
+  },
+  {
+    id: "ANX_182",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "physical_calm_reverse",
+    text: {
+      hu: "Teste többnyire viszonylag nyugodt tud maradni terhelőbb helyzetekben is iskolai vagy munkahelyi helyzetekben.",
+      en: "The body can usually stay relatively calm even in more demanding situations in school or work situations."
+    }
+  },
+  {
+    id: "ANX_183",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "physical_calm_reverse",
+    text: {
+      hu: "Teste többnyire viszonylag nyugodt tud maradni terhelőbb helyzetekben is társas helyzetekben.",
+      en: "The body can usually stay relatively calm even in more demanding situations in social situations."
+    }
+  },
+  {
+    id: "ANX_184",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "physical_calm_reverse",
+    text: {
+      hu: "Teste többnyire viszonylag nyugodt tud maradni terhelőbb helyzetekben is váratlan vagy bizonytalan helyzetekben.",
+      en: "The body can usually stay relatively calm even in more demanding situations in unexpected or uncertain situations."
+    }
+  },
+  {
+    id: "ANX_185",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "physical_calm_reverse",
+    text: {
+      hu: "Teste többnyire viszonylag nyugodt tud maradni terhelőbb helyzetekben is teljesítményhelyzetekben.",
+      en: "The body can usually stay relatively calm even in more demanding situations in performance situations."
+    }
+  },
+  {
+    id: "ANX_186",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "breathing_tension",
+    text: {
+      hu: "A légzésén is érződik a feszültség otthoni helyzetekben.",
+      en: "Tension can also be noticed in breathing at home."
+    }
+  },
+  {
+    id: "ANX_187",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "breathing_tension",
+    text: {
+      hu: "A légzésén is érződik a feszültség iskolai vagy munkahelyi helyzetekben.",
+      en: "Tension can also be noticed in breathing in school or work situations."
+    }
+  },
+  {
+    id: "ANX_188",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "breathing_tension",
+    text: {
+      hu: "A légzésén is érződik a feszültség társas helyzetekben.",
+      en: "Tension can also be noticed in breathing in social situations."
+    }
+  },
+  {
+    id: "ANX_189",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "breathing_tension",
+    text: {
+      hu: "A légzésén is érződik a feszültség váratlan vagy bizonytalan helyzetekben.",
+      en: "Tension can also be noticed in breathing in unexpected or uncertain situations."
+    }
+  },
+  {
+    id: "ANX_190",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "breathing_tension",
+    text: {
+      hu: "A légzésén is érződik a feszültség teljesítményhelyzetekben.",
+      en: "Tension can also be noticed in breathing in performance situations."
+    }
+  },
+  {
+    id: "ANX_191",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "stomach_discomfort",
+    text: {
+      hu: "A feszültség gyomortáji kellemetlenséget vagy testi nyomást okozhat otthoni helyzetekben.",
+      en: "Tension may cause stomach discomfort or bodily pressure at home."
+    }
+  },
+  {
+    id: "ANX_192",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "stomach_discomfort",
+    text: {
+      hu: "A feszültség gyomortáji kellemetlenséget vagy testi nyomást okozhat iskolai vagy munkahelyi helyzetekben.",
+      en: "Tension may cause stomach discomfort or bodily pressure in school or work situations."
+    }
+  },
+  {
+    id: "ANX_193",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "stomach_discomfort",
+    text: {
+      hu: "A feszültség gyomortáji kellemetlenséget vagy testi nyomást okozhat társas helyzetekben.",
+      en: "Tension may cause stomach discomfort or bodily pressure in social situations."
+    }
+  },
+  {
+    id: "ANX_194",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "stomach_discomfort",
+    text: {
+      hu: "A feszültség gyomortáji kellemetlenséget vagy testi nyomást okozhat váratlan vagy bizonytalan helyzetekben.",
+      en: "Tension may cause stomach discomfort or bodily pressure in unexpected or uncertain situations."
+    }
+  },
+  {
+    id: "ANX_195",
+    domain: "ANXIETY",
+    subdomain: "physical_arousal",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "stomach_discomfort",
+    text: {
+      hu: "A feszültség gyomortáji kellemetlenséget vagy testi nyomást okozhat teljesítményhelyzetekben.",
+      en: "Tension may cause stomach discomfort or bodily pressure in performance situations."
+    }
+  },
+  {
+    id: "ANX_196",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "inner_restlessness",
+    text: {
+      hu: "Belső nyugtalanság jellemzi otthoni helyzetekben, még külső nyomás nélkül is.",
+      en: "Shows inner restlessness at home, even without obvious external pressure."
+    }
+  },
+  {
+    id: "ANX_197",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "inner_restlessness",
+    text: {
+      hu: "Belső nyugtalanság jellemzi iskolai vagy munkahelyi helyzetekben.",
+      en: "Is characterized by inner restlessness in school or work situations."
+    }
+  },
+  {
+    id: "ANX_198",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "inner_restlessness",
+    text: {
+      hu: "Belső nyugtalanság jellemzi társas helyzetekben, különösen új közegben.",
+      en: "Shows inner restlessness in social situations, especially in new settings."
+    }
+  },
+  {
+    id: "ANX_199",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "inner_restlessness",
+    text: {
+      hu: "Belső nyugtalanság jellemzi váratlan vagy bizonytalan helyzetekben.",
+      en: "Is characterized by inner restlessness in unexpected or uncertain situations."
+    }
+  },
+  {
+    id: "ANX_200",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "inner_restlessness",
+    text: {
+      hu: "Belső nyugtalanság jellemzi teljesítményhelyzetekben, amikor értékelést vár.",
+      en: "Shows inner restlessness in performance situations when evaluation is expected."
+    }
+  },
+  {
+    id: "ANX_201",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "difficulty_relaxing",
+    text: {
+      hu: "Nehezen tud valóban ellazulni és lelassulni otthoni helyzetekben.",
+      en: "Has difficulty truly relaxing and slowing down at home."
+    }
+  },
+  {
+    id: "ANX_202",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "difficulty_relaxing",
+    text: {
+      hu: "Nehezen tud valóban ellazulni és lelassulni iskolai vagy munkahelyi helyzetekben.",
+      en: "Has difficulty truly relaxing and slowing down in school or work situations."
+    }
+  },
+  {
+    id: "ANX_203",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "difficulty_relaxing",
+    text: {
+      hu: "Nehezen tud valóban ellazulni és lelassulni társas helyzetekben.",
+      en: "Has difficulty truly relaxing and slowing down in social situations."
+    }
+  },
+  {
+    id: "ANX_204",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "difficulty_relaxing",
+    text: {
+      hu: "Nehezen tud valóban ellazulni és lelassulni váratlan vagy bizonytalan helyzetekben.",
+      en: "Has difficulty truly relaxing and slowing down in unexpected or uncertain situations."
+    }
+  },
+  {
+    id: "ANX_205",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "difficulty_relaxing",
+    text: {
+      hu: "Nehezen tud valóban ellazulni és lelassulni teljesítményhelyzetekben.",
+      en: "Has difficulty truly relaxing and slowing down in performance situations."
+    }
+  },
+  {
+    id: "ANX_206",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "calming_down_reverse",
+    text: {
+      hu: "Képes visszatalálni egy nyugodtabb belső állapothoz otthoni helyzetekben.",
+      en: "Can return to a calmer inner state at home."
+    }
+  },
+  {
+    id: "ANX_207",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "calming_down_reverse",
+    text: {
+      hu: "Képes visszatalálni egy nyugodtabb belső állapothoz iskolai vagy munkahelyi helyzetekben.",
+      en: "Can return to a calmer inner state in school or work situations."
+    }
+  },
+  {
+    id: "ANX_208",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "calming_down_reverse",
+    text: {
+      hu: "Képes visszatalálni egy nyugodtabb belső állapothoz társas helyzetekben.",
+      en: "Can return to a calmer inner state in social situations."
+    }
+  },
+  {
+    id: "ANX_209",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "calming_down_reverse",
+    text: {
+      hu: "Képes visszatalálni egy nyugodtabb belső állapothoz váratlan vagy bizonytalan helyzetekben.",
+      en: "Can return to a calmer inner state in unexpected or uncertain situations."
+    }
+  },
+  {
+    id: "ANX_210",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "calming_down_reverse",
+    text: {
+      hu: "Képes visszatalálni egy nyugodtabb belső állapothoz teljesítményhelyzetekben.",
+      en: "Can return to a calmer inner state in performance situations."
+    }
+  },
+  {
+    id: "ANX_211",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "constant_alertness",
+    text: {
+      hu: "Mintha folyamatos készenlétben lenne otthoni helyzetekben.",
+      en: "Seems to remain in a continuous state of alertness at home."
+    }
+  },
+  {
+    id: "ANX_212",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "constant_alertness",
+    text: {
+      hu: "Mintha folyamatos készenlétben lenne iskolai vagy munkahelyi helyzetekben.",
+      en: "Seems to remain in a continuous state of alertness in school or work situations."
+    }
+  },
+  {
+    id: "ANX_213",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "constant_alertness",
+    text: {
+      hu: "Mintha folyamatos készenlétben lenne társas helyzetekben.",
+      en: "Seems to remain in a continuous state of alertness in social situations."
+    }
+  },
+  {
+    id: "ANX_214",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "constant_alertness",
+    text: {
+      hu: "Mintha folyamatos készenlétben lenne váratlan vagy bizonytalan helyzetekben.",
+      en: "Seems to remain in a continuous state of alertness in unexpected or uncertain situations."
+    }
+  },
+  {
+    id: "ANX_215",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "constant_alertness",
+    text: {
+      hu: "Mintha fokozott készenlétben lenne teljesítményhelyzetekben, különösen időnyomás alatt.",
+      en: "Seems to remain in a heightened alert state in performance situations, especially under time pressure."
+    }
+  },
+  {
+    id: "ANX_216",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "anticipatory_tension",
+    text: {
+      hu: "Már előre feszültté válhat egy közelgő helyzet miatt otthoni helyzetekben.",
+      en: "May become tense in advance because of an upcoming situation at home."
+    }
+  },
+  {
+    id: "ANX_217",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "anticipatory_tension",
+    text: {
+      hu: "Már előre feszültté válhat egy közelgő helyzet miatt iskolai vagy munkahelyi helyzetekben.",
+      en: "May become tense in advance because of an upcoming situation in school or work situations."
+    }
+  },
+  {
+    id: "ANX_218",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "anticipatory_tension",
+    text: {
+      hu: "Már előre feszültté válhat egy közelgő helyzet miatt társas helyzetekben.",
+      en: "May become tense in advance because of an upcoming situation in social situations."
+    }
+  },
+  {
+    id: "ANX_219",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "anticipatory_tension",
+    text: {
+      hu: "Már előre feszültté válhat egy közelgő helyzet miatt váratlan vagy bizonytalan helyzetekben.",
+      en: "May become tense in advance because of an upcoming situation in unexpected or uncertain situations."
+    }
+  },
+  {
+    id: "ANX_220",
+    domain: "ANXIETY",
+    subdomain: "restlessness_tension",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "anticipatory_tension",
+    text: {
+      hu: "Már előre feszültté válhat egy közelgő helyzet miatt teljesítményhelyzetekben.",
+      en: "May become tense in advance because of an upcoming situation in performance situations."
+    }
+  },
+  {
+    id: "ANX_221",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "avoidance_of_stressful_situations",
+    text: {
+      hu: "Hajlamos kerülni azokat a helyzeteket, amelyek feszültséget keltenek benne otthoni helyzetekben.",
+      en: "Tends to avoid situations that create tension at home."
+    }
+  },
+  {
+    id: "ANX_222",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "avoidance_of_stressful_situations",
+    text: {
+      hu: "Hajlamos kerülni azokat a helyzeteket, amelyek feszültséget keltenek benne iskolai vagy munkahelyi helyzetekben.",
+      en: "Tends to avoid situations that create tension in school or work situations."
+    }
+  },
+  {
+    id: "ANX_223",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "avoidance_of_stressful_situations",
+    text: {
+      hu: "Hajlamos kerülni azokat a helyzeteket, amelyek feszültséget keltenek benne társas helyzetekben.",
+      en: "Tends to avoid situations that create tension in social situations."
+    }
+  },
+  {
+    id: "ANX_224",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "avoidance_of_stressful_situations",
+    text: {
+      hu: "Hajlamos kerülni azokat a helyzeteket, amelyek feszültséget keltenek benne váratlan vagy bizonytalan helyzetekben.",
+      en: "Tends to avoid situations that create tension in unexpected or uncertain situations."
+    }
+  },
+  {
+    id: "ANX_225",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "avoidance_of_stressful_situations",
+    text: {
+      hu: "Hajlamos kerülni azokat a helyzeteket, amelyek feszültséget keltenek benne teljesítményhelyzetekben.",
+      en: "Tends to avoid situations that create tension in performance situations."
+    }
+  },
+  {
+    id: "ANX_226",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "safety_checking",
+    text: {
+      hu: "Megnyugvás céljából többször is ellenőrizhet dolgokat otthoni helyzetekben.",
+      en: "May check things repeatedly in order to feel reassured at home."
+    }
+  },
+  {
+    id: "ANX_227",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "safety_checking",
+    text: {
+      hu: "Megnyugvás céljából többször is ellenőrizhet dolgokat iskolai vagy munkahelyi helyzetekben.",
+      en: "May check things repeatedly in order to feel reassured in school or work situations."
+    }
+  },
+  {
+    id: "ANX_228",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "safety_checking",
+    text: {
+      hu: "Megnyugvás céljából többször is ellenőrizhet dolgokat társas helyzetekben.",
+      en: "May check things repeatedly in order to feel reassured in social situations."
+    }
+  },
+  {
+    id: "ANX_229",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "safety_checking",
+    text: {
+      hu: "Megnyugvás céljából többször is ellenőrizhet dolgokat váratlan vagy bizonytalan helyzetekben.",
+      en: "May check things repeatedly in order to feel reassured in unexpected or uncertain situations."
+    }
+  },
+  {
+    id: "ANX_230",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "safety_checking",
+    text: {
+      hu: "Megnyugvás céljából többször is ellenőrizhet dolgokat teljesítményhelyzetekben.",
+      en: "May check things repeatedly in order to feel reassured in performance situations."
+    }
+  },
+  {
+    id: "ANX_231",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "facing_discomfort_reverse",
+    text: {
+      hu: "Képes vállalni enyhébb kellemetlenséget is anélkül, hogy rögtön visszahúzódna otthoni helyzetekben.",
+      en: "Can tolerate mild discomfort without immediately withdrawing at home."
+    }
+  },
+  {
+    id: "ANX_232",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "facing_discomfort_reverse",
+    text: {
+      hu: "Képes vállalni enyhébb kellemetlenséget is anélkül, hogy rögtön visszahúzódna iskolai vagy munkahelyi helyzetekben.",
+      en: "Can tolerate mild discomfort without immediately withdrawing in school or work situations."
+    }
+  },
+  {
+    id: "ANX_233",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "facing_discomfort_reverse",
+    text: {
+      hu: "Képes vállalni enyhébb kellemetlenséget is anélkül, hogy rögtön visszahúzódna társas helyzetekben.",
+      en: "Can tolerate mild discomfort without immediately withdrawing in social situations."
+    }
+  },
+  {
+    id: "ANX_234",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "facing_discomfort_reverse",
+    text: {
+      hu: "Képes vállalni enyhébb kellemetlenséget is anélkül, hogy rögtön visszahúzódna váratlan vagy bizonytalan helyzetekben.",
+      en: "Can tolerate mild discomfort without immediately withdrawing in unexpected or uncertain situations."
+    }
+  },
+  {
+    id: "ANX_235",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "facing_discomfort_reverse",
+    text: {
+      hu: "Képes vállalni enyhébb kellemetlenséget is anélkül, hogy rögtön visszahúzódna teljesítményhelyzetekben.",
+      en: "Can tolerate mild discomfort without immediately withdrawing in performance situations."
+    }
+  },
+  {
+    id: "ANX_236",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "comfort_zone_dependence",
+    text: {
+      hu: "Sokkal könnyebben működik, ha biztonságosnak érzi a közeget otthoni helyzetekben.",
+      en: "Functions much more easily when the environment feels safe at home."
+    }
+  },
+  {
+    id: "ANX_237",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "comfort_zone_dependence",
+    text: {
+      hu: "Sokkal könnyebben működik, ha biztonságosnak érzi a közeget iskolai vagy munkahelyi helyzetekben.",
+      en: "Functions much more easily when the environment feels safe in school or work situations."
+    }
+  },
+  {
+    id: "ANX_238",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "comfort_zone_dependence",
+    text: {
+      hu: "Sokkal könnyebben működik, ha biztonságosnak érzi a közeget társas helyzetekben.",
+      en: "Functions much more easily when the environment feels safe in social situations."
+    }
+  },
+  {
+    id: "ANX_239",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "comfort_zone_dependence",
+    text: {
+      hu: "Sokkal könnyebben működik, ha biztonságosnak érzi a közeget váratlan vagy bizonytalan helyzetekben.",
+      en: "Functions much more easily when the environment feels safe in unexpected or uncertain situations."
+    }
+  },
+  {
+    id: "ANX_240",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "comfort_zone_dependence",
+    text: {
+      hu: "Sokkal könnyebben működik, ha biztonságosnak érzi a közeget teljesítményhelyzetekben.",
+      en: "Functions much more easily when the environment feels safe in performance situations."
+    }
+  },
+  {
+    id: "ANX_241",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "escape_preference",
+    text: {
+      hu: "Legszívesebben kilépne vagy visszavonulna, ha túl nagy lesz a feszültség otthoni helyzetekben.",
+      en: "Would most like to leave or withdraw when tension becomes too high at home."
+    }
+  },
+  {
+    id: "ANX_242",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "escape_preference",
+    text: {
+      hu: "Legszívesebben kilépne vagy visszavonulna, ha túl nagy lesz a feszültség iskolai vagy munkahelyi helyzetekben.",
+      en: "Would most like to leave or withdraw when tension becomes too high in school or work situations."
+    }
+  },
+  {
+    id: "ANX_243",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "escape_preference",
+    text: {
+      hu: "Legszívesebben kilépne vagy visszavonulna, ha túl nagy lesz a feszültség társas helyzetekben.",
+      en: "Would most like to leave or withdraw when tension becomes too high in social situations."
+    }
+  },
+  {
+    id: "ANX_244",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "escape_preference",
+    text: {
+      hu: "Legszívesebben kilépne vagy visszavonulna, ha túl nagy lesz a feszültség váratlan vagy bizonytalan helyzetekben.",
+      en: "Would most like to leave or withdraw when tension becomes too high in unexpected or uncertain situations."
+    }
+  },
+  {
+    id: "ANX_245",
+    domain: "ANXIETY",
+    subdomain: "avoidance_safety",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "escape_preference",
+    text: {
+      hu: "Legszívesebben kilépne vagy visszavonulna, ha túl nagy lesz a feszültség teljesítményhelyzetekben.",
+      en: "Would most like to leave or withdraw when tension becomes too high in performance situations."
+    }
+  },
+  {
+    id: "ANX_246",
+    domain: "ANXIETY",
+    subdomain: "social_evaluative_anxiety",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "fear_of_judgment",
+    text: {
+      hu: "Tart attól, hogy mások kedvezőtlenül ítélik meg otthoni helyzetekben.",
+      en: "Fears being judged negatively by others at home."
+    }
+  },
+  {
+    id: "ANX_247",
+    domain: "ANXIETY",
+    subdomain: "social_evaluative_anxiety",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "fear_of_judgment",
+    text: {
+      hu: "Tart attól, hogy mások kedvezőtlenül ítélik meg iskolai vagy munkahelyi helyzetekben.",
+      en: "Fears being judged negatively by others in school or work situations."
+    }
+  },
+  {
+    id: "ANX_248",
+    domain: "ANXIETY",
+    subdomain: "social_evaluative_anxiety",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "fear_of_judgment",
+    text: {
+      hu: "Tart attól, hogy mások kedvezőtlenül ítélik meg társas helyzetekben.",
+      en: "Fears being judged negatively by others in social situations."
+    }
+  },
+  {
+    id: "ANX_249",
+    domain: "ANXIETY",
+    subdomain: "social_evaluative_anxiety",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "fear_of_judgment",
+    text: {
+      hu: "Tart attól, hogy mások kedvezőtlenül ítélik meg váratlan vagy bizonytalan helyzetekben.",
+      en: "Fears being judged negatively by others in unexpected or uncertain situations."
+    }
+  },
+  {
+    id: "ANX_250",
+    domain: "ANXIETY",
+    subdomain: "social_evaluative_anxiety",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "fear_of_judgment",
+    text: {
+      hu: "Tart attól, hogy mások kedvezőtlenül ítélik meg teljesítményhelyzetekben.",
+      en: "Fears being judged negatively by others in performance situations."
+    }
+  }
 ];

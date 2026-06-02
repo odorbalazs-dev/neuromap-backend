@@ -1,8 +1,4 @@
 export const DEPRESSION_BANK = [
-  /* =========================
-     CORE 1-120
-  ========================= */
-
   {
     id: "DEP_001",
     domain: "DEPRESSION",
@@ -11,8 +7,8 @@ export const DEPRESSION_BANK = [
     reverse: false,
     stemKey: "persistent_sadness",
     text: {
-      hu: "Gyakran tartós lehangoltság jellemzi.",
-      en: "Is often characterized by persistent low mood."
+      hu: "Gyakran tartós lehangoltság jellemzi több hétköznapi helyzetben.",
+      en: "Often shows persistent low mood across everyday situations."
     }
   },
   {
@@ -59,8 +55,8 @@ export const DEPRESSION_BANK = [
     reverse: true,
     stemKey: "stable_mood_reverse",
     text: {
-      hu: "Hangulata többnyire kiegyensúlyozott tud maradni.",
-      en: "Mood can usually remain relatively stable."
+      hu: "Hangulata többnyire kiegyensúlyozott tud maradni kisebb nehézségek mellett is.",
+      en: "Mood can usually remain relatively stable despite smaller difficulties."
     }
   },
   {
@@ -123,7 +119,6 @@ export const DEPRESSION_BANK = [
       en: "Feelings of sadness may linger for a long time."
     }
   },
-
   {
     id: "DEP_011",
     domain: "DEPRESSION",
@@ -144,8 +139,8 @@ export const DEPRESSION_BANK = [
     reverse: false,
     stemKey: "interest_loss",
     text: {
-      hu: "Érdeklődése több területen is csökkenhet.",
-      en: "Interest may decrease across several areas."
+      hu: "Érdeklődése több számára korábban fontos területen is csökkenhet.",
+      en: "Interest may decrease across several areas that used to matter to them."
     }
   },
   {
@@ -156,8 +151,8 @@ export const DEPRESSION_BANK = [
     reverse: false,
     stemKey: "hobby_withdrawal",
     text: {
-      hu: "Korábban kedvelt tevékenységektől is eltávolodhat.",
-      en: "May pull away even from activities once enjoyed."
+      hu: "Korábban kedvelt tevékenységektől is eltávolodhat, még ha elérhetők maradnak.",
+      en: "May pull away from previously enjoyed activities even when they remain available."
     }
   },
   {
@@ -244,7 +239,6 @@ export const DEPRESSION_BANK = [
       en: "No longer looks forward to pleasant things as much as before."
     }
   },
-
   {
     id: "DEP_021",
     domain: "DEPRESSION",
@@ -313,8 +307,8 @@ export const DEPRESSION_BANK = [
     reverse: false,
     stemKey: "fatigue_not_restored",
     text: {
-      hu: "Pihenés után sem mindig érzi magát igazán feltöltődve.",
-      en: "Does not always feel restored even after rest."
+      hu: "Pihenés után is előfordulhat, hogy nem érzi magát igazán feltöltődve.",
+      en: "Even after rest, they may still not feel truly restored."
     }
   },
   {
@@ -365,7 +359,6 @@ export const DEPRESSION_BANK = [
       en: "Even basic activities may be harder to mobilize for."
     }
   },
-
   {
     id: "DEP_031",
     domain: "DEPRESSION",
@@ -398,8 +391,8 @@ export const DEPRESSION_BANK = [
     reverse: false,
     stemKey: "self_criticism",
     text: {
-      hu: "Szigorúan, bántóan kritikus lehet önmagával szemben.",
-      en: "May be harshly self-critical."
+      hu: "Szigorúan és bántóan kritikus lehet önmagával szemben hibák után.",
+      en: "May be harshly self-critical after mistakes or setbacks."
     }
   },
   {
@@ -422,8 +415,8 @@ export const DEPRESSION_BANK = [
     reverse: true,
     stemKey: "self_acceptance_reverse",
     text: {
-      hu: "Többnyire képes együttérzően viszonyulni önmagához.",
-      en: "Can usually relate to self with compassion."
+      hu: "Többnyire képes együttérzően viszonyulni önmagához nehéz helyzetekben is.",
+      en: "Can usually relate to self with compassion in difficult situations."
     }
   },
   {
@@ -486,7 +479,6 @@ export const DEPRESSION_BANK = [
       en: "Thoughts of worthlessness may sometimes appear."
     }
   },
-
   {
     id: "DEP_041",
     domain: "DEPRESSION",
@@ -531,8 +523,8 @@ export const DEPRESSION_BANK = [
     reverse: false,
     stemKey: "low_expectancy",
     text: {
-      hu: "Kevésbé számít arra, hogy jó dolgok történnek majd vele.",
-      en: "Expects positive things less often."
+      hu: "Kevésbé számít arra, hogy a közeljövőben jó dolgok történhetnek vele.",
+      en: "Expects positive things to happen in the near future less often."
     }
   },
   {
@@ -607,7 +599,6 @@ export const DEPRESSION_BANK = [
       en: "The future may sometimes feel blank or hard to grasp."
     }
   },
-
   {
     id: "DEP_051",
     domain: "DEPRESSION",
@@ -700,8 +691,8 @@ export const DEPRESSION_BANK = [
     reverse: false,
     stemKey: "mental_fog",
     text: {
-      hu: "Időnként mintha ködösebbnek érezné a gondolkodását.",
-      en: "Thinking may sometimes feel foggier."
+      hu: "Időnként mintha ködösebbnek érezné a gondolkodását feladatok közben.",
+      en: "Thinking may sometimes feel foggier during tasks."
     }
   },
   {
@@ -728,7 +719,6 @@ export const DEPRESSION_BANK = [
       en: "More easily loses the thread of attention."
     }
   },
-
   {
     id: "DEP_061",
     domain: "DEPRESSION",
@@ -749,8 +739,8 @@ export const DEPRESSION_BANK = [
     reverse: false,
     stemKey: "falling_asleep_difficulty",
     text: {
-      hu: "Nehezebben alszik el, mint szeretne.",
-      en: "Has more difficulty falling asleep than desired."
+      hu: "Nehezebben alszik el, mint szeretne, különösen feszültebb estéken.",
+      en: "Has more difficulty falling asleep than desired, especially on tense evenings."
     }
   },
   {
@@ -785,8 +775,8 @@ export const DEPRESSION_BANK = [
     reverse: true,
     stemKey: "restorative_sleep_reverse",
     text: {
-      hu: "Alvása többnyire pihentető és helyreállító tud lenni.",
-      en: "Sleep is usually restorative."
+      hu: "Alvása többnyire pihentető tud lenni rendezettebb napirend mellett.",
+      en: "Sleep is usually restorative when the daily rhythm is more settled."
     }
   },
   {
@@ -821,8 +811,8 @@ export const DEPRESSION_BANK = [
     reverse: false,
     stemKey: "sleep_schedule_shift",
     text: {
-      hu: "Alvási ritmusa könnyebben felborulhat.",
-      en: "Sleep schedule may become more disrupted."
+      hu: "Alvási ritmusa könnyebben felborulhat érzelmileg terheltebb időszakokban.",
+      en: "Sleep schedule may become more disrupted during emotionally demanding periods."
     }
   },
   {
@@ -849,7 +839,6 @@ export const DEPRESSION_BANK = [
       en: "Getting up and starting the day may be difficult."
     }
   },
-
   {
     id: "DEP_071",
     domain: "DEPRESSION",
@@ -858,8 +847,8 @@ export const DEPRESSION_BANK = [
     reverse: false,
     stemKey: "appetite_reduction",
     text: {
-      hu: "Étvágya csökkenhet vagy rendszertelenebbé válhat.",
-      en: "Appetite may decrease or become more irregular."
+      hu: "Étvágya csökkenhet vagy rendszertelenebbé válhat terheltebb napokon.",
+      en: "Appetite may decrease or become more irregular on more demanding days."
     }
   },
   {
@@ -970,7 +959,6 @@ export const DEPRESSION_BANK = [
       en: "Can usually maintain a relatively organized daily rhythm."
     }
   },
-
   {
     id: "DEP_081",
     domain: "DEPRESSION",
@@ -979,8 +967,8 @@ export const DEPRESSION_BANK = [
     reverse: false,
     stemKey: "social_withdrawal",
     text: {
-      hu: "Hajlamosabb lehet visszahúzódni másoktól.",
-      en: "May become more withdrawn from others."
+      hu: "Hajlamosabb lehet visszahúzódni másoktól, amikor lehangoltabbnak érzi magát.",
+      en: "May become more withdrawn from others when feeling lower."
     }
   },
   {
@@ -1003,8 +991,8 @@ export const DEPRESSION_BANK = [
     reverse: false,
     stemKey: "prefers_aloneness_low_mood",
     text: {
-      hu: "Lehangoltabban inkább egyedül maradna.",
-      en: "When feeling low, would rather be alone."
+      hu: "Lehangoltabb állapotban inkább egyedül maradna, még társas lehetőségek mellett is.",
+      en: "When feeling low, may prefer being alone even when social options are available."
     }
   },
   {
@@ -1063,8 +1051,8 @@ export const DEPRESSION_BANK = [
     reverse: false,
     stemKey: "less_reaching_out",
     text: {
-      hu: "Kevésbé kezdeményez beszélgetést vagy kapcsolódást.",
-      en: "Initiates conversation or connection less often."
+      hu: "Kevésbé kezdeményez beszélgetést vagy kapcsolódást társas helyzetekben.",
+      en: "Initiates conversation or connection less often in social situations."
     }
   },
   {
@@ -1091,7 +1079,6 @@ export const DEPRESSION_BANK = [
       en: "Isolation may sometimes feel like the easiest option."
     }
   },
-
   {
     id: "DEP_091",
     domain: "DEPRESSION",
@@ -1100,8 +1087,8 @@ export const DEPRESSION_BANK = [
     reverse: false,
     stemKey: "slowed_movement",
     text: {
-      hu: "Mozdulatai vagy tevékenységei lelassultabbnak tűnhetnek.",
-      en: "Movement or activity may seem slower."
+      hu: "Mozdulatai vagy tevékenységei lelassultabbnak tűnhetnek a nap folyamán.",
+      en: "Movement or activity may seem slower during the day."
     }
   },
   {
@@ -1212,7 +1199,6 @@ export const DEPRESSION_BANK = [
       en: "Action may involve more hesitation or stopping."
     }
   },
-
   {
     id: "DEP_101",
     domain: "DEPRESSION",
@@ -1293,8 +1279,8 @@ export const DEPRESSION_BANK = [
     reverse: false,
     stemKey: "empty_progress",
     text: {
-      hu: "Az előrehaladás sem mindig hoz valódi elégedettséget vagy lendületet.",
-      en: "Progress does not always bring real satisfaction or momentum."
+      hu: "Az előrehaladás időnként kevés valódi elégedettséget vagy lendületet ad neki.",
+      en: "Progress may sometimes bring little real satisfaction or momentum."
     }
   },
   {
@@ -1333,7 +1319,6 @@ export const DEPRESSION_BANK = [
       en: "Effort may feel less connected to any inner sense of reward."
     }
   },
-
   {
     id: "DEP_111",
     domain: "DEPRESSION",
@@ -1454,592 +1439,1564 @@ export const DEPRESSION_BANK = [
       en: "May most wish to become invisible or not burden others."
     }
   },
-
-  /* =========================
-     121-250
-  ========================= */
-
-  ...(() => {
-    const items = [];
-    let num = 121;
-
-    function makeId() {
-      return `DEP_${String(num++).padStart(3, "0")}`;
+  {
+    id: "DEP_121",
+    domain: "DEPRESSION",
+    subdomain: "low_mood",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "persistent_sadness",
+    text: {
+      hu: "Tartós lehangoltság vagy szomorúság jelenhet meg otthoni helyzetekben.",
+      en: "Persistent low mood or sadness may be present at home."
     }
-
-    function add(subdomain, weight, reverse, stemKey, hu, en) {
-      items.push({
-        id: makeId(),
-        domain: "DEPRESSION",
-        subdomain,
-        weight,
-        reverse,
-        stemKey,
-        text: { hu, en }
-      });
+  },
+  {
+    id: "DEP_122",
+    domain: "DEPRESSION",
+    subdomain: "low_mood",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "persistent_sadness",
+    text: {
+      hu: "Tartós lehangoltság vagy szomorúság jelenhet meg iskolai vagy munkahelyi helyzetekben.",
+      en: "Persistent low mood or sadness may be present in school or work situations."
     }
-
-    const contexts = [
-      { hu: "otthoni helyzetekben", en: "at home" },
-      { hu: "iskolai vagy munkahelyi helyzetekben", en: "in school or work situations" },
-      { hu: "társas helyzetekben", en: "in social situations" },
-      { hu: "egyedül töltött időben", en: "when alone" },
-      { hu: "a nap elején vagy a nap végén", en: "at the beginning or end of the day" }
-    ];
-
-    function contextualize(subdomain, weight, reverse, stemKey, huStem, enStem) {
-      contexts.forEach((ctx) => {
-        add(
-          subdomain,
-          weight,
-          reverse,
-          stemKey,
-          `${huStem} ${ctx.hu}.`,
-          `${enStem} ${ctx.en}.`
-        );
-      });
+  },
+  {
+    id: "DEP_123",
+    domain: "DEPRESSION",
+    subdomain: "low_mood",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "persistent_sadness",
+    text: {
+      hu: "Tartós lehangoltság vagy szomorúság jelenhet meg társas helyzetekben.",
+      en: "Persistent low mood or sadness may be present in social situations."
     }
-
-    contextualize(
-      "low_mood",
-      1.5,
-      false,
-      "persistent_sadness",
-      "Tartós lehangoltság vagy szomorúság jelenhet meg",
-      "Persistent low mood or sadness may be present"
-    );
-
-    contextualize(
-      "low_mood",
-      1.4,
-      false,
-      "emotional_heaviness",
-      "A mindennapok érzelmileg nehezebbnek tűnhetnek",
-      "Daily life may feel emotionally heavier"
-    );
-
-    contextualize(
-      "low_mood",
-      1.2,
-      true,
-      "mood_stability_reverse",
-      "Képes viszonylag stabil maradni érzelmileg",
-      "Can remain relatively emotionally stable"
-    );
-
-    contextualize(
-      "low_mood",
-      1.4,
-      false,
-      "lingering_sadness",
-      "A rosszabb hangulat nehezen múlik el",
-      "Low mood is slow to lift"
-    );
-
-    contextualize(
-      "low_mood",
-      1.3,
-      false,
-      "mood_drop_without_clear_reason",
-      "Látható ok nélkül is lejjebb kerülhet a hangulata",
-      "Mood may drop even without a visible reason"
-    );
-
-    contextualize(
-      "anhedonia_interest_loss",
-      1.5,
-      false,
-      "reduced_pleasure",
-      "Kevésbé tud örömet találni azokban a dolgokban, amelyek korábban jólesetek",
-      "Finds less pleasure in things that used to feel good"
-    );
-
-    contextualize(
-      "anhedonia_interest_loss",
-      1.4,
-      false,
-      "interest_loss",
-      "Csökkenhet az érdeklődése olyan tevékenységek iránt, amelyek korábban fontosak voltak",
-      "Interest may decrease in activities that were previously important"
-    );
-
-    contextualize(
-      "anhedonia_interest_loss",
-      1.2,
-      true,
-      "enjoyment_access_reverse",
-      "Továbbra is képes örömöt vagy kíváncsiságot átélni",
-      "Can still experience enjoyment or curiosity"
-    );
-
-    contextualize(
-      "anhedonia_interest_loss",
-      1.4,
-      false,
-      "motivation_for_fun_loss",
-      "Nehéz kedvet kapnia még kellemes programokhoz is",
-      "Has difficulty feeling motivated even for pleasant activities"
-    );
-
-    contextualize(
-      "anhedonia_interest_loss",
-      1.3,
-      false,
-      "positive_response_blunting",
-      "A pozitív élmények kevésbé elevenítik fel érzelmileg",
-      "Positive experiences feel less emotionally activating"
-    );
-
-    contextualize(
-      "energy_fatigue",
-      1.5,
-      false,
-      "low_energy",
-      "Kevés energiát érez magában a hétköznapi feladatokhoz",
-      "Feels low on energy for everyday tasks"
-    );
-
-    contextualize(
-      "energy_fatigue",
-      1.4,
-      false,
-      "effortful_daily_tasks",
-      "A napi teendők a szokásosnál nagyobb erőfeszítést igényelhetnek",
-      "Daily tasks may require more effort than usual"
-    );
-
-    contextualize(
-      "energy_fatigue",
-      1.2,
-      true,
-      "energy_access_reverse",
-      "Többnyire képes mozgósítani magát a szükséges dolgokra",
-      "Can usually mobilize enough energy for necessary things"
-    );
-
-    contextualize(
-      "energy_fatigue",
-      1.4,
-      false,
-      "fatigue_not_restored",
-      "Pihenés után sem feltétlenül érzi magát igazán feltöltődve",
-      "Does not necessarily feel restored even after rest"
-    );
-
-    contextualize(
-      "energy_fatigue",
-      1.3,
-      false,
-      "slow_starting",
-      "Nehéz lehet számára belelendülni a napba vagy egy feladatba",
-      "May find it hard to get started with the day or a task"
-    );
-
-    contextualize(
-      "self_worth_guilt",
-      1.5,
-      false,
-      "low_self_worth",
-      "Kevésbé értékesnek vagy elég jónak láthatja önmagát",
-      "May see self as less valuable or not good enough"
-    );
-
-    contextualize(
-      "self_worth_guilt",
-      1.4,
-      false,
-      "self_criticism",
-      "Bántóan vagy túl szigorúan bánhat önmagával",
-      "May treat self in an overly harsh or critical way"
-    );
-
-    contextualize(
-      "self_worth_guilt",
-      1.2,
-      true,
-      "self_acceptance_reverse",
-      "Képes együttérzőbben viszonyulni önmagához",
-      "Can relate to self with more compassion"
-    );
-
-    contextualize(
-      "self_worth_guilt",
-      1.4,
-      false,
-      "excessive_guilt",
-      "A hibáit vagy hiányosságait túlzott súllyal élheti meg",
-      "May experience faults or shortcomings with excessive weight"
-    );
-
-    contextualize(
-      "self_worth_guilt",
-      1.3,
-      false,
-      "worthlessness_theme",
-      "Megjelenhet benne az értéktelenség érzése",
-      "Feelings of worthlessness may appear"
-    );
-
-    contextualize(
-      "hopelessness_future",
-      1.5,
-      false,
-      "future_hopelessness",
-      "A jövő kevésbé tűnhet reményteljesnek",
-      "The future may feel less hopeful"
-    );
-
-    contextualize(
-      "hopelessness_future",
-      1.4,
-      false,
-      "nothing_will_change",
-      "Úgy érezheti, hogy a helyzete nemigen fog javulni",
-      "May feel that the situation is unlikely to improve"
-    );
-
-    contextualize(
-      "hopelessness_future",
-      1.2,
-      true,
-      "future_possibility_reverse",
-      "Képes meglátni, hogy lehetnek még előtte jó irányok",
-      "Can still see that good directions may exist ahead"
-    );
-
-    contextualize(
-      "hopelessness_future",
-      1.4,
-      false,
-      "future_effort_pointlessness",
-      "Az erőfeszítés kevésbé tűnhet értelmesnek vagy megtérülőnek",
-      "Effort may feel less meaningful or worthwhile"
-    );
-
-    contextualize(
-      "hopelessness_future",
-      1.3,
-      false,
-      "future_blankness",
-      "A jövő üresebbnek vagy nehezebben elképzelhetőnek tűnhet",
-      "The future may seem emptier or harder to imagine"
-    );
-
-    contextualize(
-      "concentration_decision",
-      1.4,
-      false,
-      "focus_difficulty",
-      "Nehezebben tud huzamosabban figyelni",
-      "Has more difficulty concentrating for longer periods"
-    );
-
-    contextualize(
-      "concentration_decision",
-      1.4,
-      false,
-      "decision_difficulty",
-      "A döntéshozatal a szokásosnál megterhelőbb lehet",
-      "Decision-making may feel more burdensome than usual"
-    );
-
-    contextualize(
-      "concentration_decision",
-      1.2,
-      true,
-      "clear_thinking_reverse",
-      "Többnyire képes tisztán gondolkodni és mérlegelni",
-      "Can usually think clearly and weigh things up"
-    );
-
-    contextualize(
-      "concentration_decision",
-      1.3,
-      false,
-      "mental_fog",
-      "Gondolkodása ködösebbnek vagy lassabbnak tűnhet",
-      "Thinking may feel foggier or slower"
-    );
-
-    contextualize(
-      "concentration_decision",
-      1.3,
-      false,
-      "small_decision_burden",
-      "Még kisebb döntések is aránytalanul nehéznek tűnhetnek",
-      "Even smaller decisions may feel disproportionately difficult"
-    );
-
-    contextualize(
-      "sleep_change",
-      1.4,
-      false,
-      "sleep_disturbance",
-      "Alvása kevésbé pihentető vagy nyugodt lehet",
-      "Sleep may be less restful or settled"
-    );
-
-    contextualize(
-      "sleep_change",
-      1.4,
-      false,
-      "nonrestorative_sleep",
-      "Alvás után sem feltétlenül érzi magát kipihentnek",
-      "May not feel rested even after sleep"
-    );
-
-    contextualize(
-      "sleep_change",
-      1.2,
-      true,
-      "restorative_sleep_reverse",
-      "Alvása többnyire helyreállító és pihentető tud lenni",
-      "Sleep is usually restorative and restful"
-    );
-
-    contextualize(
-      "sleep_change",
-      1.3,
-      false,
-      "morning_heaviness",
-      "Ébredés után nehézkesebbnek vagy kimerültebbnek érezheti magát",
-      "May feel heavier or more exhausted after waking"
-    );
-
-    contextualize(
-      "sleep_change",
-      1.3,
-      false,
-      "staying_in_bed",
-      "Nehéz lehet számára felkelni vagy elindítani a napot",
-      "May find it difficult to get up and start the day"
-    );
-
-    contextualize(
-      "appetite_body_change",
-      1.3,
-      false,
-      "appetite_reduction",
-      "Étkezése vagy étvágya csökkenhet",
-      "Appetite or eating may decrease"
-    );
-
-    contextualize(
-      "appetite_body_change",
-      1.3,
-      false,
-      "meal_skipping",
-      "Könnyebben kihagyhat étkezéseket vagy eltolhatja őket",
-      "May skip or delay meals more easily"
-    );
-
-    contextualize(
-      "appetite_body_change",
-      1.2,
-      true,
-      "appetite_stability_reverse",
-      "Étkezése és alapvető testi ritmusa többnyire rendezett marad",
-      "Eating and basic bodily rhythm usually remain fairly organized"
-    );
-
-    contextualize(
-      "appetite_body_change",
-      1.3,
-      false,
-      "body_heaviness",
-      "Testileg nehézkesebbnek vagy terheltebbnek érezheti magát",
-      "May feel physically heavier or more burdened"
-    );
-
-    contextualize(
-      "appetite_body_change",
-      1.3,
-      false,
-      "low_drive_for_meals",
-      "Nehéz lehet energiát mozgósítania az étkezéshez vagy önellátáshoz",
-      "May struggle to mobilize energy for meals or self-care"
-    );
-
-    contextualize(
-      "withdrawal_isolation",
-      1.4,
-      false,
-      "social_withdrawal",
-      "Hajlamosabb lehet visszahúzódni másoktól",
-      "May become more withdrawn from others"
-    );
-
-    contextualize(
-      "withdrawal_isolation",
-      1.4,
-      false,
-      "feeling_disconnected",
-      "Mások mellett is távolinak vagy leváltnak érezheti magát",
-      "May feel distant or disconnected even around others"
-    );
-
-    contextualize(
-      "withdrawal_isolation",
-      1.2,
-      true,
-      "connection_access_reverse",
-      "Képes kapcsolódni másokhoz, ha támogatásra lenne szüksége",
-      "Can connect with others when support is needed"
-    );
-
-    contextualize(
-      "withdrawal_isolation",
-      1.3,
-      false,
-      "reduced_contact",
-      "Kevesebb kedve lehet keresni vagy fenntartani a kapcsolatot",
-      "May have less desire to seek or maintain contact"
-    );
-
-    contextualize(
-      "withdrawal_isolation",
-      1.3,
-      false,
-      "social_effort_burden",
-      "A társas jelenlét a szokásosnál fárasztóbbnak tűnhet",
-      "Social presence may feel more tiring than usual"
-    );
-
-    contextualize(
-      "psychomotor_change",
-      1.3,
-      false,
-      "slowed_movement",
-      "Mozdulatai vagy cselekvései lelassultabbnak tűnhetnek",
-      "Movements or actions may seem slower"
-    );
-
-    contextualize(
-      "psychomotor_change",
-      1.3,
-      false,
-      "reduced_initiation",
-      "Nehezebb lehet elkezdenie mozdulatokat, feladatokat vagy válaszokat",
-      "May find it harder to initiate movements, tasks, or responses"
-    );
-
-    contextualize(
-      "psychomotor_change",
-      1.2,
-      true,
-      "natural_pace_reverse",
-      "Mozgása és reakciói többnyire természetes tempóban maradnak",
-      "Movement and reactions usually remain at a natural pace"
-    );
-
-    contextualize(
-      "psychomotor_change",
-      1.3,
-      false,
-      "low_drive_posture",
-      "Testtartásán vagy jelenlétén is érződhet a csökkent hajtóerő",
-      "Reduced drive may show in posture or general presence"
-    );
-
-    contextualize(
-      "psychomotor_change",
-      1.3,
-      false,
-      "hesitant_action",
-      "Cselekvésében több habozás vagy megtorpanás jelenhet meg",
-      "Action may involve more hesitation or stopping"
-    );
-
-    contextualize(
-      "meaning_motivation",
-      1.4,
-      false,
-      "loss_of_meaning",
-      "Kevesebb értelmet vagy célt érezhet a mindennapi tevékenységekben",
-      "May feel less meaning or purpose in everyday activities"
-    );
-
-    contextualize(
-      "meaning_motivation",
-      1.4,
-      false,
-      "why_bother_feeling",
-      "Nehéz lehet számára belső okot találni az erőfeszítésre",
-      "May find it hard to feel an inner reason to make the effort"
-    );
-
-    contextualize(
-      "meaning_motivation",
-      1.2,
-      true,
-      "purpose_access_reverse",
-      "Továbbra is képes kapcsolódni ahhoz, ami fontos vagy értékes számára",
-      "Can still connect with what feels important or valuable"
-    );
-
-    contextualize(
-      "meaning_motivation",
-      1.3,
-      false,
-      "reduced_drive",
-      "A belső hajtóerő és lendület csökkenhet",
-      "Inner drive and momentum may decrease"
-    );
-
-    contextualize(
-      "meaning_motivation",
-      1.3,
-      false,
-      "effort_without_reward",
-      "Az erőfeszítés nem mindig kapcsolódik együtt a sikerélmény vagy elégedettség érzésével",
-      "Effort may not feel connected to satisfaction or reward"
-    );
-
-    contextualize(
-      "burdensomeness_dark_thoughts",
-      1.4,
-      false,
-      "feeling_like_burden",
-      "Tehernek érezheti magát mások számára",
-      "May feel like a burden to others"
-    );
-
-    contextualize(
-      "burdensomeness_dark_thoughts",
-      1.4,
-      false,
-      "dark_inner_narrative",
-      "Belső gondolatai sötétebbé vagy leértékelőbbé válhatnak",
-      "Inner thoughts may become darker or more self-devaluing"
-    );
-
-    contextualize(
-      "burdensomeness_dark_thoughts",
-      1.2,
-      true,
-      "anchored_presence_reverse",
-      "Képes kapcsolódni ahhoz, hogy jelenléte számít és értéke van",
-      "Can connect with the sense that presence matters and has value"
-    );
-
-    contextualize(
-      "burdensomeness_dark_thoughts",
-      1.4,
-      false,
-      "disappearing_wish_passive",
-      "Megjelenhet benne a vágy, hogy inkább eltűnne vagy kivonulna",
-      "May feel a wish to disappear or withdraw"
-    );
-
-    contextualize(
-      "burdensomeness_dark_thoughts",
-      1.3,
-      false,
-      "withdraw_from_visibility",
-      "Legszívesebben nem lenne szem előtt és nem terhelne másokat",
-      "May most wish not to be visible or burdensome to others"
-    );
-
-    return items.slice(0, 130);
-})()
+  },
+  {
+    id: "DEP_124",
+    domain: "DEPRESSION",
+    subdomain: "low_mood",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "persistent_sadness",
+    text: {
+      hu: "Tartós lehangoltság vagy szomorúság jelenhet meg egyedül töltött időben.",
+      en: "Persistent low mood or sadness may be present when alone."
+    }
+  },
+  {
+    id: "DEP_125",
+    domain: "DEPRESSION",
+    subdomain: "low_mood",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "persistent_sadness",
+    text: {
+      hu: "Tartós lehangoltság vagy szomorúság jelenhet meg a nap elején vagy a nap végén.",
+      en: "Persistent low mood or sadness may be present at the beginning or end of the day."
+    }
+  },
+  {
+    id: "DEP_126",
+    domain: "DEPRESSION",
+    subdomain: "low_mood",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "emotional_heaviness",
+    text: {
+      hu: "A mindennapok érzelmileg nehezebbnek tűnhetnek otthoni helyzetekben.",
+      en: "Daily life may feel emotionally heavier at home."
+    }
+  },
+  {
+    id: "DEP_127",
+    domain: "DEPRESSION",
+    subdomain: "low_mood",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "emotional_heaviness",
+    text: {
+      hu: "A mindennapok érzelmileg nehezebbnek tűnhetnek iskolai vagy munkahelyi helyzetekben.",
+      en: "Daily life may feel emotionally heavier in school or work situations."
+    }
+  },
+  {
+    id: "DEP_128",
+    domain: "DEPRESSION",
+    subdomain: "low_mood",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "emotional_heaviness",
+    text: {
+      hu: "A mindennapok érzelmileg nehezebbnek tűnhetnek társas helyzetekben.",
+      en: "Daily life may feel emotionally heavier in social situations."
+    }
+  },
+  {
+    id: "DEP_129",
+    domain: "DEPRESSION",
+    subdomain: "low_mood",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "emotional_heaviness",
+    text: {
+      hu: "A mindennapok érzelmileg nehezebbnek tűnhetnek egyedül töltött időben.",
+      en: "Daily life may feel emotionally heavier when alone."
+    }
+  },
+  {
+    id: "DEP_130",
+    domain: "DEPRESSION",
+    subdomain: "low_mood",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "emotional_heaviness",
+    text: {
+      hu: "A mindennapok érzelmileg nehezebbnek tűnhetnek a nap elején vagy a nap végén.",
+      en: "Daily life may feel emotionally heavier at the beginning or end of the day."
+    }
+  },
+  {
+    id: "DEP_131",
+    domain: "DEPRESSION",
+    subdomain: "low_mood",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "mood_stability_reverse",
+    text: {
+      hu: "Képes viszonylag stabil maradni érzelmileg otthoni helyzetekben.",
+      en: "Can remain relatively emotionally stable at home."
+    }
+  },
+  {
+    id: "DEP_132",
+    domain: "DEPRESSION",
+    subdomain: "low_mood",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "mood_stability_reverse",
+    text: {
+      hu: "Képes viszonylag stabil maradni érzelmileg iskolai vagy munkahelyi helyzetekben.",
+      en: "Can remain relatively emotionally stable in school or work situations."
+    }
+  },
+  {
+    id: "DEP_133",
+    domain: "DEPRESSION",
+    subdomain: "low_mood",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "mood_stability_reverse",
+    text: {
+      hu: "Képes viszonylag stabil maradni érzelmileg társas helyzetekben.",
+      en: "Can remain relatively emotionally stable in social situations."
+    }
+  },
+  {
+    id: "DEP_134",
+    domain: "DEPRESSION",
+    subdomain: "low_mood",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "mood_stability_reverse",
+    text: {
+      hu: "Képes viszonylag stabil maradni érzelmileg egyedül töltött időben.",
+      en: "Can remain relatively emotionally stable when alone."
+    }
+  },
+  {
+    id: "DEP_135",
+    domain: "DEPRESSION",
+    subdomain: "low_mood",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "mood_stability_reverse",
+    text: {
+      hu: "Képes viszonylag stabil maradni érzelmileg a nap elején vagy a nap végén.",
+      en: "Can remain relatively emotionally stable at the beginning or end of the day."
+    }
+  },
+  {
+    id: "DEP_136",
+    domain: "DEPRESSION",
+    subdomain: "low_mood",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "lingering_sadness",
+    text: {
+      hu: "A rosszabb hangulat nehezen múlik el otthoni helyzetekben.",
+      en: "Low mood is slow to lift at home."
+    }
+  },
+  {
+    id: "DEP_137",
+    domain: "DEPRESSION",
+    subdomain: "low_mood",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "lingering_sadness",
+    text: {
+      hu: "A rosszabb hangulat nehezen múlik el iskolai vagy munkahelyi helyzetekben.",
+      en: "Low mood is slow to lift in school or work situations."
+    }
+  },
+  {
+    id: "DEP_138",
+    domain: "DEPRESSION",
+    subdomain: "low_mood",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "lingering_sadness",
+    text: {
+      hu: "A rosszabb hangulat nehezen múlik el társas helyzetekben.",
+      en: "Low mood is slow to lift in social situations."
+    }
+  },
+  {
+    id: "DEP_139",
+    domain: "DEPRESSION",
+    subdomain: "low_mood",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "lingering_sadness",
+    text: {
+      hu: "A rosszabb hangulat nehezen múlik el egyedül töltött időben.",
+      en: "Low mood is slow to lift when alone."
+    }
+  },
+  {
+    id: "DEP_140",
+    domain: "DEPRESSION",
+    subdomain: "low_mood",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "lingering_sadness",
+    text: {
+      hu: "A rosszabb hangulat nehezen múlik el a nap elején vagy a nap végén.",
+      en: "Low mood is slow to lift at the beginning or end of the day."
+    }
+  },
+  {
+    id: "DEP_141",
+    domain: "DEPRESSION",
+    subdomain: "low_mood",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "mood_drop_without_clear_reason",
+    text: {
+      hu: "Látható ok nélkül is lejjebb kerülhet a hangulata otthoni helyzetekben.",
+      en: "Mood may drop even without a visible reason at home."
+    }
+  },
+  {
+    id: "DEP_142",
+    domain: "DEPRESSION",
+    subdomain: "low_mood",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "mood_drop_without_clear_reason",
+    text: {
+      hu: "Látható ok nélkül is lejjebb kerülhet a hangulata iskolai vagy munkahelyi helyzetekben.",
+      en: "Mood may drop even without a visible reason in school or work situations."
+    }
+  },
+  {
+    id: "DEP_143",
+    domain: "DEPRESSION",
+    subdomain: "low_mood",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "mood_drop_without_clear_reason",
+    text: {
+      hu: "Látható ok nélkül is lejjebb kerülhet a hangulata társas helyzetekben.",
+      en: "Mood may drop even without a visible reason in social situations."
+    }
+  },
+  {
+    id: "DEP_144",
+    domain: "DEPRESSION",
+    subdomain: "low_mood",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "mood_drop_without_clear_reason",
+    text: {
+      hu: "Látható ok nélkül is lejjebb kerülhet a hangulata egyedül töltött időben.",
+      en: "Mood may drop even without a visible reason when alone."
+    }
+  },
+  {
+    id: "DEP_145",
+    domain: "DEPRESSION",
+    subdomain: "low_mood",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "mood_drop_without_clear_reason",
+    text: {
+      hu: "Látható ok nélkül is lejjebb kerülhet a hangulata a nap elején vagy a nap végén.",
+      en: "Mood may drop even without a visible reason at the beginning or end of the day."
+    }
+  },
+  {
+    id: "DEP_146",
+    domain: "DEPRESSION",
+    subdomain: "anhedonia_interest_loss",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "reduced_pleasure",
+    text: {
+      hu: "Kevésbé tud örömet találni azokban a dolgokban, amelyek korábban jólesetek otthoni helyzetekben.",
+      en: "Finds less pleasure in things that used to feel good at home."
+    }
+  },
+  {
+    id: "DEP_147",
+    domain: "DEPRESSION",
+    subdomain: "anhedonia_interest_loss",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "reduced_pleasure",
+    text: {
+      hu: "Kevésbé tud örömet találni azokban a dolgokban, amelyek korábban jólesetek iskolai vagy munkahelyi helyzetekben.",
+      en: "Finds less pleasure in things that used to feel good in school or work situations."
+    }
+  },
+  {
+    id: "DEP_148",
+    domain: "DEPRESSION",
+    subdomain: "anhedonia_interest_loss",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "reduced_pleasure",
+    text: {
+      hu: "Kevésbé tud örömet találni azokban a dolgokban, amelyek korábban jólesetek társas helyzetekben.",
+      en: "Finds less pleasure in things that used to feel good in social situations."
+    }
+  },
+  {
+    id: "DEP_149",
+    domain: "DEPRESSION",
+    subdomain: "anhedonia_interest_loss",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "reduced_pleasure",
+    text: {
+      hu: "Kevésbé tud örömet találni azokban a dolgokban, amelyek korábban jólesetek egyedül töltött időben.",
+      en: "Finds less pleasure in things that used to feel good when alone."
+    }
+  },
+  {
+    id: "DEP_150",
+    domain: "DEPRESSION",
+    subdomain: "anhedonia_interest_loss",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "reduced_pleasure",
+    text: {
+      hu: "Kevésbé tud örömet találni azokban a dolgokban, amelyek korábban jólesetek a nap elején vagy a nap végén.",
+      en: "Finds less pleasure in things that used to feel good at the beginning or end of the day."
+    }
+  },
+  {
+    id: "DEP_151",
+    domain: "DEPRESSION",
+    subdomain: "anhedonia_interest_loss",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "interest_loss",
+    text: {
+      hu: "Csökkenhet az érdeklődése olyan tevékenységek iránt, amelyek korábban fontosak voltak otthoni helyzetekben.",
+      en: "Interest may decrease in activities that were previously important at home."
+    }
+  },
+  {
+    id: "DEP_152",
+    domain: "DEPRESSION",
+    subdomain: "anhedonia_interest_loss",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "interest_loss",
+    text: {
+      hu: "Csökkenhet az érdeklődése olyan tevékenységek iránt, amelyek korábban fontosak voltak iskolai vagy munkahelyi helyzetekben.",
+      en: "Interest may decrease in activities that were previously important in school or work situations."
+    }
+  },
+  {
+    id: "DEP_153",
+    domain: "DEPRESSION",
+    subdomain: "anhedonia_interest_loss",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "interest_loss",
+    text: {
+      hu: "Csökkenhet az érdeklődése olyan tevékenységek iránt, amelyek korábban fontosak voltak társas helyzetekben.",
+      en: "Interest may decrease in activities that were previously important in social situations."
+    }
+  },
+  {
+    id: "DEP_154",
+    domain: "DEPRESSION",
+    subdomain: "anhedonia_interest_loss",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "interest_loss",
+    text: {
+      hu: "Csökkenhet az érdeklődése olyan tevékenységek iránt, amelyek korábban fontosak voltak egyedül töltött időben.",
+      en: "Interest may decrease in activities that were previously important when alone."
+    }
+  },
+  {
+    id: "DEP_155",
+    domain: "DEPRESSION",
+    subdomain: "anhedonia_interest_loss",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "interest_loss",
+    text: {
+      hu: "Csökkenhet az érdeklődése olyan tevékenységek iránt, amelyek korábban fontosak voltak a nap elején vagy a nap végén.",
+      en: "Interest may decrease in activities that were previously important at the beginning or end of the day."
+    }
+  },
+  {
+    id: "DEP_156",
+    domain: "DEPRESSION",
+    subdomain: "anhedonia_interest_loss",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "enjoyment_access_reverse",
+    text: {
+      hu: "Továbbra is képes örömöt vagy kíváncsiságot átélni otthoni helyzetekben.",
+      en: "Can still experience enjoyment or curiosity at home."
+    }
+  },
+  {
+    id: "DEP_157",
+    domain: "DEPRESSION",
+    subdomain: "anhedonia_interest_loss",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "enjoyment_access_reverse",
+    text: {
+      hu: "Továbbra is képes örömöt vagy kíváncsiságot átélni iskolai vagy munkahelyi helyzetekben.",
+      en: "Can still experience enjoyment or curiosity in school or work situations."
+    }
+  },
+  {
+    id: "DEP_158",
+    domain: "DEPRESSION",
+    subdomain: "anhedonia_interest_loss",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "enjoyment_access_reverse",
+    text: {
+      hu: "Továbbra is képes örömöt vagy kíváncsiságot átélni társas helyzetekben.",
+      en: "Can still experience enjoyment or curiosity in social situations."
+    }
+  },
+  {
+    id: "DEP_159",
+    domain: "DEPRESSION",
+    subdomain: "anhedonia_interest_loss",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "enjoyment_access_reverse",
+    text: {
+      hu: "Továbbra is képes örömöt vagy kíváncsiságot átélni egyedül töltött időben.",
+      en: "Can still experience enjoyment or curiosity when alone."
+    }
+  },
+  {
+    id: "DEP_160",
+    domain: "DEPRESSION",
+    subdomain: "anhedonia_interest_loss",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "enjoyment_access_reverse",
+    text: {
+      hu: "Továbbra is képes örömöt vagy kíváncsiságot átélni a nap elején vagy a nap végén.",
+      en: "Can still experience enjoyment or curiosity at the beginning or end of the day."
+    }
+  },
+  {
+    id: "DEP_161",
+    domain: "DEPRESSION",
+    subdomain: "anhedonia_interest_loss",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "motivation_for_fun_loss",
+    text: {
+      hu: "Nehéz kedvet kapnia még kellemes programokhoz is otthoni helyzetekben.",
+      en: "Has difficulty feeling motivated even for pleasant activities at home."
+    }
+  },
+  {
+    id: "DEP_162",
+    domain: "DEPRESSION",
+    subdomain: "anhedonia_interest_loss",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "motivation_for_fun_loss",
+    text: {
+      hu: "Nehéz kedvet kapnia még kellemes programokhoz is iskolai vagy munkahelyi helyzetekben.",
+      en: "Has difficulty feeling motivated even for pleasant activities in school or work situations."
+    }
+  },
+  {
+    id: "DEP_163",
+    domain: "DEPRESSION",
+    subdomain: "anhedonia_interest_loss",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "motivation_for_fun_loss",
+    text: {
+      hu: "Nehéz kedvet kapnia még kellemes programokhoz is társas helyzetekben.",
+      en: "Has difficulty feeling motivated even for pleasant activities in social situations."
+    }
+  },
+  {
+    id: "DEP_164",
+    domain: "DEPRESSION",
+    subdomain: "anhedonia_interest_loss",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "motivation_for_fun_loss",
+    text: {
+      hu: "Nehéz kedvet kapnia még kellemes programokhoz is egyedül töltött időben.",
+      en: "Has difficulty feeling motivated even for pleasant activities when alone."
+    }
+  },
+  {
+    id: "DEP_165",
+    domain: "DEPRESSION",
+    subdomain: "anhedonia_interest_loss",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "motivation_for_fun_loss",
+    text: {
+      hu: "Nehéz kedvet kapnia még kellemes programokhoz is a nap elején vagy a nap végén.",
+      en: "Has difficulty feeling motivated even for pleasant activities at the beginning or end of the day."
+    }
+  },
+  {
+    id: "DEP_166",
+    domain: "DEPRESSION",
+    subdomain: "anhedonia_interest_loss",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "positive_response_blunting",
+    text: {
+      hu: "A pozitív élmények kevésbé elevenítik fel érzelmileg otthoni helyzetekben.",
+      en: "Positive experiences feel less emotionally activating at home."
+    }
+  },
+  {
+    id: "DEP_167",
+    domain: "DEPRESSION",
+    subdomain: "anhedonia_interest_loss",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "positive_response_blunting",
+    text: {
+      hu: "A pozitív élmények kevésbé elevenítik fel érzelmileg iskolai vagy munkahelyi helyzetekben.",
+      en: "Positive experiences feel less emotionally activating in school or work situations."
+    }
+  },
+  {
+    id: "DEP_168",
+    domain: "DEPRESSION",
+    subdomain: "anhedonia_interest_loss",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "positive_response_blunting",
+    text: {
+      hu: "A pozitív élmények kevésbé elevenítik fel érzelmileg társas helyzetekben.",
+      en: "Positive experiences feel less emotionally activating in social situations."
+    }
+  },
+  {
+    id: "DEP_169",
+    domain: "DEPRESSION",
+    subdomain: "anhedonia_interest_loss",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "positive_response_blunting",
+    text: {
+      hu: "A pozitív élmények kevésbé elevenítik fel érzelmileg egyedül töltött időben.",
+      en: "Positive experiences feel less emotionally activating when alone."
+    }
+  },
+  {
+    id: "DEP_170",
+    domain: "DEPRESSION",
+    subdomain: "anhedonia_interest_loss",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "positive_response_blunting",
+    text: {
+      hu: "A pozitív élmények kevésbé elevenítik fel érzelmileg a nap elején vagy a nap végén.",
+      en: "Positive experiences feel less emotionally activating at the beginning or end of the day."
+    }
+  },
+  {
+    id: "DEP_171",
+    domain: "DEPRESSION",
+    subdomain: "energy_fatigue",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "low_energy",
+    text: {
+      hu: "Kevés energiát érez magában a hétköznapi feladatokhoz otthoni helyzetekben.",
+      en: "Feels low on energy for everyday tasks at home."
+    }
+  },
+  {
+    id: "DEP_172",
+    domain: "DEPRESSION",
+    subdomain: "energy_fatigue",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "low_energy",
+    text: {
+      hu: "Kevés energiát érez magában a hétköznapi feladatokhoz iskolai vagy munkahelyi helyzetekben.",
+      en: "Feels low on energy for everyday tasks in school or work situations."
+    }
+  },
+  {
+    id: "DEP_173",
+    domain: "DEPRESSION",
+    subdomain: "energy_fatigue",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "low_energy",
+    text: {
+      hu: "Kevés energiát érez magában a hétköznapi feladatokhoz társas helyzetekben.",
+      en: "Feels low on energy for everyday tasks in social situations."
+    }
+  },
+  {
+    id: "DEP_174",
+    domain: "DEPRESSION",
+    subdomain: "energy_fatigue",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "low_energy",
+    text: {
+      hu: "Kevés energiát érez magában a hétköznapi feladatokhoz egyedül töltött időben.",
+      en: "Feels low on energy for everyday tasks when alone."
+    }
+  },
+  {
+    id: "DEP_175",
+    domain: "DEPRESSION",
+    subdomain: "energy_fatigue",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "low_energy",
+    text: {
+      hu: "Kevés energiát érez magában a hétköznapi feladatokhoz a nap elején vagy a nap végén.",
+      en: "Feels low on energy for everyday tasks at the beginning or end of the day."
+    }
+  },
+  {
+    id: "DEP_176",
+    domain: "DEPRESSION",
+    subdomain: "energy_fatigue",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "effortful_daily_tasks",
+    text: {
+      hu: "A napi teendők a szokásosnál nagyobb erőfeszítést igényelhetnek otthoni helyzetekben.",
+      en: "Daily tasks may require more effort than usual at home."
+    }
+  },
+  {
+    id: "DEP_177",
+    domain: "DEPRESSION",
+    subdomain: "energy_fatigue",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "effortful_daily_tasks",
+    text: {
+      hu: "A napi teendők a szokásosnál nagyobb erőfeszítést igényelhetnek iskolai vagy munkahelyi helyzetekben.",
+      en: "Daily tasks may require more effort than usual in school or work situations."
+    }
+  },
+  {
+    id: "DEP_178",
+    domain: "DEPRESSION",
+    subdomain: "energy_fatigue",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "effortful_daily_tasks",
+    text: {
+      hu: "A napi teendők a szokásosnál nagyobb erőfeszítést igényelhetnek társas helyzetekben.",
+      en: "Daily tasks may require more effort than usual in social situations."
+    }
+  },
+  {
+    id: "DEP_179",
+    domain: "DEPRESSION",
+    subdomain: "energy_fatigue",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "effortful_daily_tasks",
+    text: {
+      hu: "A napi teendők a szokásosnál nagyobb erőfeszítést igényelhetnek egyedül töltött időben.",
+      en: "Daily tasks may require more effort than usual when alone."
+    }
+  },
+  {
+    id: "DEP_180",
+    domain: "DEPRESSION",
+    subdomain: "energy_fatigue",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "effortful_daily_tasks",
+    text: {
+      hu: "A napi teendők a szokásosnál nagyobb erőfeszítést igényelhetnek a nap elején vagy a nap végén.",
+      en: "Daily tasks may require more effort than usual at the beginning or end of the day."
+    }
+  },
+  {
+    id: "DEP_181",
+    domain: "DEPRESSION",
+    subdomain: "energy_fatigue",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "energy_access_reverse",
+    text: {
+      hu: "Többnyire képes mozgósítani magát a szükséges dolgokra otthoni helyzetekben.",
+      en: "Can usually mobilize enough energy for necessary things at home."
+    }
+  },
+  {
+    id: "DEP_182",
+    domain: "DEPRESSION",
+    subdomain: "energy_fatigue",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "energy_access_reverse",
+    text: {
+      hu: "Többnyire képes mozgósítani magát a szükséges dolgokra iskolai vagy munkahelyi helyzetekben.",
+      en: "Can usually mobilize enough energy for necessary things in school or work situations."
+    }
+  },
+  {
+    id: "DEP_183",
+    domain: "DEPRESSION",
+    subdomain: "energy_fatigue",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "energy_access_reverse",
+    text: {
+      hu: "Többnyire képes mozgósítani magát a szükséges dolgokra társas helyzetekben.",
+      en: "Can usually mobilize enough energy for necessary things in social situations."
+    }
+  },
+  {
+    id: "DEP_184",
+    domain: "DEPRESSION",
+    subdomain: "energy_fatigue",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "energy_access_reverse",
+    text: {
+      hu: "Többnyire képes mozgósítani magát a szükséges dolgokra egyedül töltött időben.",
+      en: "Can usually mobilize enough energy for necessary things when alone."
+    }
+  },
+  {
+    id: "DEP_185",
+    domain: "DEPRESSION",
+    subdomain: "energy_fatigue",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "energy_access_reverse",
+    text: {
+      hu: "Többnyire képes mozgósítani magát a szükséges dolgokra a nap elején vagy a nap végén.",
+      en: "Can usually mobilize enough energy for necessary things at the beginning or end of the day."
+    }
+  },
+  {
+    id: "DEP_186",
+    domain: "DEPRESSION",
+    subdomain: "energy_fatigue",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "fatigue_not_restored",
+    text: {
+      hu: "Pihenés után sem feltétlenül érzi magát igazán feltöltődve otthoni helyzetekben.",
+      en: "Does not necessarily feel restored even after rest at home."
+    }
+  },
+  {
+    id: "DEP_187",
+    domain: "DEPRESSION",
+    subdomain: "energy_fatigue",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "fatigue_not_restored",
+    text: {
+      hu: "Pihenés után sem feltétlenül érzi magát igazán feltöltődve iskolai vagy munkahelyi helyzetekben.",
+      en: "Does not necessarily feel restored even after rest in school or work situations."
+    }
+  },
+  {
+    id: "DEP_188",
+    domain: "DEPRESSION",
+    subdomain: "energy_fatigue",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "fatigue_not_restored",
+    text: {
+      hu: "Pihenés után sem feltétlenül érzi magát igazán feltöltődve társas helyzetekben.",
+      en: "Does not necessarily feel restored even after rest in social situations."
+    }
+  },
+  {
+    id: "DEP_189",
+    domain: "DEPRESSION",
+    subdomain: "energy_fatigue",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "fatigue_not_restored",
+    text: {
+      hu: "Pihenés után sem feltétlenül érzi magát igazán feltöltődve egyedül töltött időben.",
+      en: "Does not necessarily feel restored even after rest when alone."
+    }
+  },
+  {
+    id: "DEP_190",
+    domain: "DEPRESSION",
+    subdomain: "energy_fatigue",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "fatigue_not_restored",
+    text: {
+      hu: "Pihenés után sem feltétlenül érzi magát igazán feltöltődve a nap elején vagy a nap végén.",
+      en: "Does not necessarily feel restored even after rest at the beginning or end of the day."
+    }
+  },
+  {
+    id: "DEP_191",
+    domain: "DEPRESSION",
+    subdomain: "energy_fatigue",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "slow_starting",
+    text: {
+      hu: "Nehéz lehet számára belelendülni a napba vagy egy feladatba otthoni helyzetekben.",
+      en: "May find it hard to get started with the day or a task at home."
+    }
+  },
+  {
+    id: "DEP_192",
+    domain: "DEPRESSION",
+    subdomain: "energy_fatigue",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "slow_starting",
+    text: {
+      hu: "Nehéz lehet számára belelendülni a napba vagy egy feladatba iskolai vagy munkahelyi helyzetekben.",
+      en: "May find it hard to get started with the day or a task in school or work situations."
+    }
+  },
+  {
+    id: "DEP_193",
+    domain: "DEPRESSION",
+    subdomain: "energy_fatigue",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "slow_starting",
+    text: {
+      hu: "Nehéz lehet számára belelendülni a napba vagy egy feladatba társas helyzetekben.",
+      en: "May find it hard to get started with the day or a task in social situations."
+    }
+  },
+  {
+    id: "DEP_194",
+    domain: "DEPRESSION",
+    subdomain: "energy_fatigue",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "slow_starting",
+    text: {
+      hu: "Nehéz lehet számára belelendülni a napba vagy egy feladatba egyedül töltött időben.",
+      en: "May find it hard to get started with the day or a task when alone."
+    }
+  },
+  {
+    id: "DEP_195",
+    domain: "DEPRESSION",
+    subdomain: "energy_fatigue",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "slow_starting",
+    text: {
+      hu: "Nehéz lehet számára belelendülni a napba vagy egy feladatba a nap elején vagy a nap végén.",
+      en: "May find it hard to get started with the day or a task at the beginning or end of the day."
+    }
+  },
+  {
+    id: "DEP_196",
+    domain: "DEPRESSION",
+    subdomain: "self_worth_guilt",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "low_self_worth",
+    text: {
+      hu: "Kevésbé értékesnek vagy elég jónak láthatja önmagát otthoni helyzetekben.",
+      en: "May see self as less valuable or not good enough at home."
+    }
+  },
+  {
+    id: "DEP_197",
+    domain: "DEPRESSION",
+    subdomain: "self_worth_guilt",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "low_self_worth",
+    text: {
+      hu: "Kevésbé értékesnek vagy elég jónak láthatja önmagát iskolai vagy munkahelyi helyzetekben.",
+      en: "May see self as less valuable or not good enough in school or work situations."
+    }
+  },
+  {
+    id: "DEP_198",
+    domain: "DEPRESSION",
+    subdomain: "self_worth_guilt",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "low_self_worth",
+    text: {
+      hu: "Kevésbé értékesnek vagy elég jónak láthatja önmagát társas helyzetekben.",
+      en: "May see self as less valuable or not good enough in social situations."
+    }
+  },
+  {
+    id: "DEP_199",
+    domain: "DEPRESSION",
+    subdomain: "self_worth_guilt",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "low_self_worth",
+    text: {
+      hu: "Kevésbé értékesnek vagy elég jónak láthatja önmagát egyedül töltött időben.",
+      en: "May see self as less valuable or not good enough when alone."
+    }
+  },
+  {
+    id: "DEP_200",
+    domain: "DEPRESSION",
+    subdomain: "self_worth_guilt",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "low_self_worth",
+    text: {
+      hu: "Kevésbé értékesnek vagy elég jónak láthatja önmagát a nap elején vagy a nap végén.",
+      en: "May see self as less valuable or not good enough at the beginning or end of the day."
+    }
+  },
+  {
+    id: "DEP_201",
+    domain: "DEPRESSION",
+    subdomain: "self_worth_guilt",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "self_criticism",
+    text: {
+      hu: "Bántóan vagy túl szigorúan bánhat önmagával otthoni helyzetekben.",
+      en: "May treat self in an overly harsh or critical way at home."
+    }
+  },
+  {
+    id: "DEP_202",
+    domain: "DEPRESSION",
+    subdomain: "self_worth_guilt",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "self_criticism",
+    text: {
+      hu: "Bántóan vagy túl szigorúan bánhat önmagával iskolai vagy munkahelyi helyzetekben.",
+      en: "May treat self in an overly harsh or critical way in school or work situations."
+    }
+  },
+  {
+    id: "DEP_203",
+    domain: "DEPRESSION",
+    subdomain: "self_worth_guilt",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "self_criticism",
+    text: {
+      hu: "Bántóan vagy túl szigorúan bánhat önmagával társas helyzetekben.",
+      en: "May treat self in an overly harsh or critical way in social situations."
+    }
+  },
+  {
+    id: "DEP_204",
+    domain: "DEPRESSION",
+    subdomain: "self_worth_guilt",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "self_criticism",
+    text: {
+      hu: "Bántóan vagy túl szigorúan bánhat önmagával egyedül töltött időben.",
+      en: "May treat self in an overly harsh or critical way when alone."
+    }
+  },
+  {
+    id: "DEP_205",
+    domain: "DEPRESSION",
+    subdomain: "self_worth_guilt",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "self_criticism",
+    text: {
+      hu: "Bántóan vagy túl szigorúan bánhat önmagával a nap elején vagy a nap végén.",
+      en: "May treat self in an overly harsh or critical way at the beginning or end of the day."
+    }
+  },
+  {
+    id: "DEP_206",
+    domain: "DEPRESSION",
+    subdomain: "self_worth_guilt",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "self_acceptance_reverse",
+    text: {
+      hu: "Képes együttérzőbben viszonyulni önmagához otthoni helyzetekben.",
+      en: "Can relate to self with more compassion at home."
+    }
+  },
+  {
+    id: "DEP_207",
+    domain: "DEPRESSION",
+    subdomain: "self_worth_guilt",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "self_acceptance_reverse",
+    text: {
+      hu: "Képes együttérzőbben viszonyulni önmagához iskolai vagy munkahelyi helyzetekben.",
+      en: "Can relate to self with more compassion in school or work situations."
+    }
+  },
+  {
+    id: "DEP_208",
+    domain: "DEPRESSION",
+    subdomain: "self_worth_guilt",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "self_acceptance_reverse",
+    text: {
+      hu: "Képes együttérzőbben viszonyulni önmagához társas helyzetekben.",
+      en: "Can relate to self with more compassion in social situations."
+    }
+  },
+  {
+    id: "DEP_209",
+    domain: "DEPRESSION",
+    subdomain: "self_worth_guilt",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "self_acceptance_reverse",
+    text: {
+      hu: "Képes együttérzőbben viszonyulni önmagához egyedül töltött időben.",
+      en: "Can relate to self with more compassion when alone."
+    }
+  },
+  {
+    id: "DEP_210",
+    domain: "DEPRESSION",
+    subdomain: "self_worth_guilt",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "self_acceptance_reverse",
+    text: {
+      hu: "Képes együttérzőbben viszonyulni önmagához a nap elején vagy a nap végén.",
+      en: "Can relate to self with more compassion at the beginning or end of the day."
+    }
+  },
+  {
+    id: "DEP_211",
+    domain: "DEPRESSION",
+    subdomain: "self_worth_guilt",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "excessive_guilt",
+    text: {
+      hu: "A hibáit vagy hiányosságait túlzott súllyal élheti meg otthoni helyzetekben.",
+      en: "May experience faults or shortcomings with excessive weight at home."
+    }
+  },
+  {
+    id: "DEP_212",
+    domain: "DEPRESSION",
+    subdomain: "self_worth_guilt",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "excessive_guilt",
+    text: {
+      hu: "A hibáit vagy hiányosságait túlzott súllyal élheti meg iskolai vagy munkahelyi helyzetekben.",
+      en: "May experience faults or shortcomings with excessive weight in school or work situations."
+    }
+  },
+  {
+    id: "DEP_213",
+    domain: "DEPRESSION",
+    subdomain: "self_worth_guilt",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "excessive_guilt",
+    text: {
+      hu: "A hibáit vagy hiányosságait túlzott súllyal élheti meg társas helyzetekben.",
+      en: "May experience faults or shortcomings with excessive weight in social situations."
+    }
+  },
+  {
+    id: "DEP_214",
+    domain: "DEPRESSION",
+    subdomain: "self_worth_guilt",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "excessive_guilt",
+    text: {
+      hu: "A hibáit vagy hiányosságait túlzott súllyal élheti meg egyedül töltött időben.",
+      en: "May experience faults or shortcomings with excessive weight when alone."
+    }
+  },
+  {
+    id: "DEP_215",
+    domain: "DEPRESSION",
+    subdomain: "self_worth_guilt",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "excessive_guilt",
+    text: {
+      hu: "A hibáit vagy hiányosságait túlzott súllyal élheti meg a nap elején vagy a nap végén.",
+      en: "May experience faults or shortcomings with excessive weight at the beginning or end of the day."
+    }
+  },
+  {
+    id: "DEP_216",
+    domain: "DEPRESSION",
+    subdomain: "self_worth_guilt",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "worthlessness_theme",
+    text: {
+      hu: "Megjelenhet benne az értéktelenség érzése otthoni helyzetekben.",
+      en: "Feelings of worthlessness may appear at home."
+    }
+  },
+  {
+    id: "DEP_217",
+    domain: "DEPRESSION",
+    subdomain: "self_worth_guilt",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "worthlessness_theme",
+    text: {
+      hu: "Megjelenhet benne az értéktelenség érzése iskolai vagy munkahelyi helyzetekben.",
+      en: "Feelings of worthlessness may appear in school or work situations."
+    }
+  },
+  {
+    id: "DEP_218",
+    domain: "DEPRESSION",
+    subdomain: "self_worth_guilt",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "worthlessness_theme",
+    text: {
+      hu: "Megjelenhet benne az értéktelenség érzése társas helyzetekben.",
+      en: "Feelings of worthlessness may appear in social situations."
+    }
+  },
+  {
+    id: "DEP_219",
+    domain: "DEPRESSION",
+    subdomain: "self_worth_guilt",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "worthlessness_theme",
+    text: {
+      hu: "Megjelenhet benne az értéktelenség érzése egyedül töltött időben.",
+      en: "Feelings of worthlessness may appear when alone."
+    }
+  },
+  {
+    id: "DEP_220",
+    domain: "DEPRESSION",
+    subdomain: "self_worth_guilt",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "worthlessness_theme",
+    text: {
+      hu: "Megjelenhet benne az értéktelenség érzése a nap elején vagy a nap végén.",
+      en: "Feelings of worthlessness may appear at the beginning or end of the day."
+    }
+  },
+  {
+    id: "DEP_221",
+    domain: "DEPRESSION",
+    subdomain: "hopelessness_future",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "future_hopelessness",
+    text: {
+      hu: "A jövő kevésbé tűnhet reményteljesnek otthoni helyzetekben.",
+      en: "The future may feel less hopeful at home."
+    }
+  },
+  {
+    id: "DEP_222",
+    domain: "DEPRESSION",
+    subdomain: "hopelessness_future",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "future_hopelessness",
+    text: {
+      hu: "A jövő kevésbé tűnhet reményteljesnek iskolai vagy munkahelyi helyzetekben.",
+      en: "The future may feel less hopeful in school or work situations."
+    }
+  },
+  {
+    id: "DEP_223",
+    domain: "DEPRESSION",
+    subdomain: "hopelessness_future",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "future_hopelessness",
+    text: {
+      hu: "A jövő kevésbé tűnhet reményteljesnek társas helyzetekben.",
+      en: "The future may feel less hopeful in social situations."
+    }
+  },
+  {
+    id: "DEP_224",
+    domain: "DEPRESSION",
+    subdomain: "hopelessness_future",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "future_hopelessness",
+    text: {
+      hu: "A jövő kevésbé tűnhet reményteljesnek egyedül töltött időben.",
+      en: "The future may feel less hopeful when alone."
+    }
+  },
+  {
+    id: "DEP_225",
+    domain: "DEPRESSION",
+    subdomain: "hopelessness_future",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "future_hopelessness",
+    text: {
+      hu: "A jövő kevésbé tűnhet reményteljesnek a nap elején vagy a nap végén.",
+      en: "The future may feel less hopeful at the beginning or end of the day."
+    }
+  },
+  {
+    id: "DEP_226",
+    domain: "DEPRESSION",
+    subdomain: "hopelessness_future",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "nothing_will_change",
+    text: {
+      hu: "Úgy érezheti, hogy a helyzete nemigen fog javulni otthoni helyzetekben.",
+      en: "May feel that the situation is unlikely to improve at home."
+    }
+  },
+  {
+    id: "DEP_227",
+    domain: "DEPRESSION",
+    subdomain: "hopelessness_future",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "nothing_will_change",
+    text: {
+      hu: "Úgy érezheti, hogy a helyzete nemigen fog javulni iskolai vagy munkahelyi helyzetekben.",
+      en: "May feel that the situation is unlikely to improve in school or work situations."
+    }
+  },
+  {
+    id: "DEP_228",
+    domain: "DEPRESSION",
+    subdomain: "hopelessness_future",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "nothing_will_change",
+    text: {
+      hu: "Úgy érezheti, hogy a helyzete nemigen fog javulni társas helyzetekben.",
+      en: "May feel that the situation is unlikely to improve in social situations."
+    }
+  },
+  {
+    id: "DEP_229",
+    domain: "DEPRESSION",
+    subdomain: "hopelessness_future",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "nothing_will_change",
+    text: {
+      hu: "Úgy érezheti, hogy a helyzete nemigen fog javulni egyedül töltött időben.",
+      en: "May feel that the situation is unlikely to improve when alone."
+    }
+  },
+  {
+    id: "DEP_230",
+    domain: "DEPRESSION",
+    subdomain: "hopelessness_future",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "nothing_will_change",
+    text: {
+      hu: "Úgy érezheti, hogy a helyzete nemigen fog javulni a nap elején vagy a nap végén.",
+      en: "May feel that the situation is unlikely to improve at the beginning or end of the day."
+    }
+  },
+  {
+    id: "DEP_231",
+    domain: "DEPRESSION",
+    subdomain: "hopelessness_future",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "future_possibility_reverse",
+    text: {
+      hu: "Képes meglátni, hogy lehetnek még előtte jó irányok otthoni helyzetekben.",
+      en: "Can still see that good directions may exist ahead at home."
+    }
+  },
+  {
+    id: "DEP_232",
+    domain: "DEPRESSION",
+    subdomain: "hopelessness_future",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "future_possibility_reverse",
+    text: {
+      hu: "Képes meglátni, hogy lehetnek még előtte jó irányok iskolai vagy munkahelyi helyzetekben.",
+      en: "Can still see that good directions may exist ahead in school or work situations."
+    }
+  },
+  {
+    id: "DEP_233",
+    domain: "DEPRESSION",
+    subdomain: "hopelessness_future",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "future_possibility_reverse",
+    text: {
+      hu: "Képes meglátni, hogy lehetnek még előtte jó irányok társas helyzetekben.",
+      en: "Can still see that good directions may exist ahead in social situations."
+    }
+  },
+  {
+    id: "DEP_234",
+    domain: "DEPRESSION",
+    subdomain: "hopelessness_future",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "future_possibility_reverse",
+    text: {
+      hu: "Képes meglátni, hogy lehetnek még előtte jó irányok egyedül töltött időben.",
+      en: "Can still see that good directions may exist ahead when alone."
+    }
+  },
+  {
+    id: "DEP_235",
+    domain: "DEPRESSION",
+    subdomain: "hopelessness_future",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "future_possibility_reverse",
+    text: {
+      hu: "Képes meglátni, hogy lehetnek még előtte jó irányok a nap elején vagy a nap végén.",
+      en: "Can still see that good directions may exist ahead at the beginning or end of the day."
+    }
+  },
+  {
+    id: "DEP_236",
+    domain: "DEPRESSION",
+    subdomain: "hopelessness_future",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "future_effort_pointlessness",
+    text: {
+      hu: "Az erőfeszítés kevésbé tűnhet értelmesnek vagy megtérülőnek otthoni helyzetekben.",
+      en: "Effort may feel less meaningful or worthwhile at home."
+    }
+  },
+  {
+    id: "DEP_237",
+    domain: "DEPRESSION",
+    subdomain: "hopelessness_future",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "future_effort_pointlessness",
+    text: {
+      hu: "Az erőfeszítés kevésbé tűnhet értelmesnek vagy megtérülőnek iskolai vagy munkahelyi helyzetekben.",
+      en: "Effort may feel less meaningful or worthwhile in school or work situations."
+    }
+  },
+  {
+    id: "DEP_238",
+    domain: "DEPRESSION",
+    subdomain: "hopelessness_future",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "future_effort_pointlessness",
+    text: {
+      hu: "Az erőfeszítés kevésbé tűnhet értelmesnek vagy megtérülőnek társas helyzetekben.",
+      en: "Effort may feel less meaningful or worthwhile in social situations."
+    }
+  },
+  {
+    id: "DEP_239",
+    domain: "DEPRESSION",
+    subdomain: "hopelessness_future",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "future_effort_pointlessness",
+    text: {
+      hu: "Az erőfeszítés kevésbé tűnhet értelmesnek vagy megtérülőnek egyedül töltött időben.",
+      en: "Effort may feel less meaningful or worthwhile when alone."
+    }
+  },
+  {
+    id: "DEP_240",
+    domain: "DEPRESSION",
+    subdomain: "hopelessness_future",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "future_effort_pointlessness",
+    text: {
+      hu: "Az erőfeszítés kevésbé tűnhet értelmesnek vagy megtérülőnek a nap elején vagy a nap végén.",
+      en: "Effort may feel less meaningful or worthwhile at the beginning or end of the day."
+    }
+  },
+  {
+    id: "DEP_241",
+    domain: "DEPRESSION",
+    subdomain: "hopelessness_future",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "future_blankness",
+    text: {
+      hu: "A jövő üresebbnek vagy nehezebben elképzelhetőnek tűnhet otthoni helyzetekben.",
+      en: "The future may seem emptier or harder to imagine at home."
+    }
+  },
+  {
+    id: "DEP_242",
+    domain: "DEPRESSION",
+    subdomain: "hopelessness_future",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "future_blankness",
+    text: {
+      hu: "A jövő üresebbnek vagy nehezebben elképzelhetőnek tűnhet iskolai vagy munkahelyi helyzetekben.",
+      en: "The future may seem emptier or harder to imagine in school or work situations."
+    }
+  },
+  {
+    id: "DEP_243",
+    domain: "DEPRESSION",
+    subdomain: "hopelessness_future",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "future_blankness",
+    text: {
+      hu: "A jövő üresebbnek vagy nehezebben elképzelhetőnek tűnhet társas helyzetekben.",
+      en: "The future may seem emptier or harder to imagine in social situations."
+    }
+  },
+  {
+    id: "DEP_244",
+    domain: "DEPRESSION",
+    subdomain: "hopelessness_future",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "future_blankness",
+    text: {
+      hu: "A jövő üresebbnek vagy nehezebben elképzelhetőnek tűnhet egyedül töltött időben.",
+      en: "The future may seem emptier or harder to imagine when alone."
+    }
+  },
+  {
+    id: "DEP_245",
+    domain: "DEPRESSION",
+    subdomain: "hopelessness_future",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "future_blankness",
+    text: {
+      hu: "A jövő üresebbnek vagy nehezebben elképzelhetőnek tűnhet a nap elején vagy a nap végén.",
+      en: "The future may seem emptier or harder to imagine at the beginning or end of the day."
+    }
+  },
+  {
+    id: "DEP_246",
+    domain: "DEPRESSION",
+    subdomain: "concentration_decision",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "focus_difficulty",
+    text: {
+      hu: "Nehezebben tud huzamosabban figyelni otthoni helyzetekben.",
+      en: "Has more difficulty concentrating for longer periods at home."
+    }
+  },
+  {
+    id: "DEP_247",
+    domain: "DEPRESSION",
+    subdomain: "concentration_decision",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "focus_difficulty",
+    text: {
+      hu: "Nehezebben tud huzamosabban figyelni iskolai vagy munkahelyi helyzetekben.",
+      en: "Has more difficulty concentrating for longer periods in school or work situations."
+    }
+  },
+  {
+    id: "DEP_248",
+    domain: "DEPRESSION",
+    subdomain: "concentration_decision",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "focus_difficulty",
+    text: {
+      hu: "Nehezebben tud huzamosabban figyelni társas helyzetekben.",
+      en: "Has more difficulty concentrating for longer periods in social situations."
+    }
+  },
+  {
+    id: "DEP_249",
+    domain: "DEPRESSION",
+    subdomain: "concentration_decision",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "focus_difficulty",
+    text: {
+      hu: "Nehezebben tud huzamosabban figyelni egyedül töltött időben.",
+      en: "Has more difficulty concentrating for longer periods when alone."
+    }
+  },
+  {
+    id: "DEP_250",
+    domain: "DEPRESSION",
+    subdomain: "concentration_decision",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "focus_difficulty",
+    text: {
+      hu: "Nehezebben tud huzamosabban figyelni a nap elején vagy a nap végén.",
+      en: "Has more difficulty concentrating for longer periods at the beginning or end of the day."
+    }
+  }
 ];

@@ -1,8 +1,4 @@
 export const LEARNING_BANK = [
-  /* =========================
-     CORE 1-120
-  ========================= */
-
   {
     id: "LRN_001",
     domain: "LEARNING",
@@ -23,8 +19,8 @@ export const LEARNING_BANK = [
     reverse: false,
     stemKey: "distractibility_external",
     text: {
-      hu: "Külső ingerek könnyen elvonják a figyelmét.",
-      en: "External stimuli easily distract attention."
+      hu: "Külső ingerek tanulás közben könnyen elvonják a figyelmét.",
+      en: "External stimuli easily distract attention during learning tasks."
     }
   },
   {
@@ -35,8 +31,8 @@ export const LEARNING_BANK = [
     reverse: true,
     stemKey: "focus_stability_reverse",
     text: {
-      hu: "Általában stabilan fenn tudja tartani a figyelmét.",
-      en: "Can generally maintain stable attention."
+      hu: "Általában stabilan fenn tudja tartani figyelmét tanulási feladatoknál.",
+      en: "Can generally maintain stable attention during learning tasks."
     }
   },
   {
@@ -47,8 +43,8 @@ export const LEARNING_BANK = [
     reverse: false,
     stemKey: "attention_drift_midtask",
     text: {
-      hu: "Feladat közben könnyen elkalandozik a figyelme.",
-      en: "Attention easily drifts during tasks."
+      hu: "Feladat közben könnyen elkalandozik a figyelme hosszabb munkaszakaszokban.",
+      en: "Attention easily drifts during longer task periods."
     }
   },
   {
@@ -123,7 +119,6 @@ export const LEARNING_BANK = [
       en: "Easily loses the thread during longer explanations."
     }
   },
-
   {
     id: "LRN_011",
     domain: "LEARNING",
@@ -144,8 +139,8 @@ export const LEARNING_BANK = [
     reverse: false,
     stemKey: "multi_step_instructions",
     text: {
-      hu: "Többlépéses instrukciókat nehezebben követ.",
-      en: "Has difficulty following multi-step instructions."
+      hu: "Többlépéses instrukciókat nehezebben követ, ha kevés támpontot kap.",
+      en: "Has difficulty following multi-step instructions when few cues are provided."
     }
   },
   {
@@ -244,7 +239,6 @@ export const LEARNING_BANK = [
       en: "Finds it harder to think and simultaneously keep important details in mind."
     }
   },
-
   {
     id: "LRN_021",
     domain: "LEARNING",
@@ -265,8 +259,8 @@ export const LEARNING_BANK = [
     reverse: false,
     stemKey: "response_delay",
     text: {
-      hu: "Válaszadás előtt hosszabb időre van szüksége.",
-      en: "Needs more time before responding."
+      hu: "Válaszadás előtt hosszabb időre van szüksége új információ feldolgozásakor.",
+      en: "Needs more time before responding when processing new information."
     }
   },
   {
@@ -277,8 +271,8 @@ export const LEARNING_BANK = [
     reverse: true,
     stemKey: "fast_processing_reverse",
     text: {
-      hu: "Gyorsan képes feldolgozni az új információkat.",
-      en: "Can process new information quickly."
+      hu: "Gyorsan képes feldolgozni új információkat, ha a feladat világos.",
+      en: "Can process new information quickly when the task is clear."
     }
   },
   {
@@ -301,8 +295,8 @@ export const LEARNING_BANK = [
     reverse: false,
     stemKey: "mental_latency",
     text: {
-      hu: "Gondolkodása időnként lassabbnak tűnhet.",
-      en: "Thinking may seem slower at times."
+      hu: "Gondolkodása időnként lassabbnak tűnhet összetettebb feladatoknál.",
+      en: "Thinking may seem slower at times during more complex tasks."
     }
   },
   {
@@ -313,8 +307,8 @@ export const LEARNING_BANK = [
     reverse: false,
     stemKey: "under_time_pressure_slowing",
     text: {
-      hu: "Időnyomás alatt még inkább lelassulhat.",
-      en: "May slow down even more under time pressure."
+      hu: "Időnyomás alatt még inkább lelassulhat feladatmegoldás közben.",
+      en: "May slow down even more while solving tasks under time pressure."
     }
   },
   {
@@ -365,7 +359,6 @@ export const LEARNING_BANK = [
       en: "Takes longer to settle into a new task."
     }
   },
-
   {
     id: "LRN_031",
     domain: "LEARNING",
@@ -374,8 +367,8 @@ export const LEARNING_BANK = [
     reverse: false,
     stemKey: "task_initiation",
     text: {
-      hu: "Nehezen kezdi el a feladatokat.",
-      en: "Has difficulty initiating tasks."
+      hu: "Nehezen kezdi el a feladatokat, ha nem kap egyértelmű kezdőlépést.",
+      en: "Has difficulty initiating tasks when the first step is unclear."
     }
   },
   {
@@ -386,8 +379,8 @@ export const LEARNING_BANK = [
     reverse: false,
     stemKey: "planning_difficulty",
     text: {
-      hu: "Nehézséget okoz számára a tervezés.",
-      en: "Has difficulty planning tasks."
+      hu: "Nehézséget okoz számára a tervezés több lépésből álló feladatoknál.",
+      en: "Has difficulty planning tasks that involve several steps."
     }
   },
   {
@@ -398,8 +391,8 @@ export const LEARNING_BANK = [
     reverse: true,
     stemKey: "organization_reverse",
     text: {
-      hu: "Általában jól szervezi a feladatait.",
-      en: "Generally organizes tasks well."
+      hu: "Általában jól szervezi a feladatait, ha a követelmények világosak.",
+      en: "Generally organizes tasks well when expectations are clear."
     }
   },
   {
@@ -410,8 +403,8 @@ export const LEARNING_BANK = [
     reverse: false,
     stemKey: "task_completion",
     text: {
-      hu: "Nehezen fejez be elkezdett feladatokat.",
-      en: "Has difficulty finishing tasks once started."
+      hu: "Nehezen fejez be elkezdett feladatokat, különösen hosszabb munkaszakaszokban.",
+      en: "Has difficulty finishing tasks once started, especially during longer work periods."
     }
   },
   {
@@ -486,7 +479,6 @@ export const LEARNING_BANK = [
       en: "Has more difficulty monitoring progress on a task."
     }
   },
-
   {
     id: "LRN_041",
     domain: "LEARNING",
@@ -531,8 +523,8 @@ export const LEARNING_BANK = [
     reverse: true,
     stemKey: "time_structure_reverse",
     text: {
-      hu: "Általában jól tudja strukturálni az idejét.",
-      en: "Can generally structure time well."
+      hu: "Általában jól tudja strukturálni az idejét kiszámítható napirend mellett.",
+      en: "Can generally structure time well when the routine is predictable."
     }
   },
   {
@@ -555,8 +547,8 @@ export const LEARNING_BANK = [
     reverse: false,
     stemKey: "late_starting",
     text: {
-      hu: "A szükségesnél később kezd neki feladatoknak.",
-      en: "Starts tasks later than needed."
+      hu: "A szükségesnél később kezd neki feladatoknak kevés külső struktúra mellett.",
+      en: "Starts tasks later than needed when there is little external structure."
     }
   },
   {
@@ -607,7 +599,6 @@ export const LEARNING_BANK = [
       en: "Has more difficulty sticking to a planned schedule."
     }
   },
-
   {
     id: "LRN_051",
     domain: "LEARNING",
@@ -616,8 +607,8 @@ export const LEARNING_BANK = [
     reverse: false,
     stemKey: "instruction_comprehension",
     text: {
-      hu: "Előfordulhat, hogy elsőre nem teljesen érti meg a feladatot.",
-      en: "May not fully understand a task the first time."
+      hu: "Előfordulhat, hogy elsőre csak részben érti meg a feladatot.",
+      en: "May understand a task only partly on the first attempt."
     }
   },
   {
@@ -640,8 +631,8 @@ export const LEARNING_BANK = [
     reverse: true,
     stemKey: "verbal_understanding_reverse",
     text: {
-      hu: "Többnyire jól érti a szóbeli magyarázatokat.",
-      en: "Usually understands verbal explanations well."
+      hu: "Többnyire jól érti a szóbeli magyarázatokat nyugodt környezetben.",
+      en: "Usually understands verbal explanations well in a calm setting."
     }
   },
   {
@@ -712,8 +703,8 @@ export const LEARNING_BANK = [
     reverse: false,
     stemKey: "question_misreading",
     text: {
-      hu: "Előfordulhat, hogy nem pontosan azt válaszolja meg, amit a kérdés kér.",
-      en: "May not always answer exactly what the question asks."
+      hu: "Előfordulhat, hogy a kérdés lényegét csak részben válaszolja meg.",
+      en: "May answer only part of what the question is asking."
     }
   },
   {
@@ -728,7 +719,6 @@ export const LEARNING_BANK = [
       en: "Denser or information-heavy texts are more easily overwhelming."
     }
   },
-
   {
     id: "LRN_061",
     domain: "LEARNING",
@@ -797,8 +787,8 @@ export const LEARNING_BANK = [
     reverse: false,
     stemKey: "error_correction_shift",
     text: {
-      hu: "Hibajelzés után sem mindig könnyű új irányba indulnia.",
-      en: "Even after feedback, it may not be easy to move in a new direction."
+      hu: "Hibajelzés után is nehéz lehet új irányba indulnia.",
+      en: "After feedback, shifting to a new direction may still be difficult."
     }
   },
   {
@@ -849,7 +839,6 @@ export const LEARNING_BANK = [
       en: "Finds it harder to switch from one task type to another."
     }
   },
-
   {
     id: "LRN_071",
     domain: "LEARNING",
@@ -894,8 +883,8 @@ export const LEARNING_BANK = [
     reverse: false,
     stemKey: "low_reward_pull",
     text: {
-      hu: "A siker vagy eredmény ígérete sem mindig elég húzóerő számára.",
-      en: "The promise of success or reward is not always enough to pull effort forward."
+      hu: "A siker vagy jutalom ígérete időnként kevés húzóerőt ad számára.",
+      en: "The promise of success or reward may sometimes provide limited motivation."
     }
   },
   {
@@ -942,8 +931,8 @@ export const LEARNING_BANK = [
     reverse: true,
     stemKey: "goal_pull_reverse",
     text: {
-      hu: "A célok többnyire segítenek neki fenntartani az erőfeszítését.",
-      en: "Goals usually help maintain effort."
+      hu: "A célok többnyire segítenek neki fenntartani erőfeszítését feladat közben.",
+      en: "Goals usually help maintain effort during tasks."
     }
   },
   {
@@ -970,7 +959,6 @@ export const LEARNING_BANK = [
       en: "Approaches more difficult tasks with less willingness."
     }
   },
-
   {
     id: "LRN_081",
     domain: "LEARNING",
@@ -979,8 +967,8 @@ export const LEARNING_BANK = [
     reverse: false,
     stemKey: "error_detection",
     text: {
-      hu: "Nem mindig veszi észre időben a saját hibáit.",
-      en: "Does not always notice own mistakes in time."
+      hu: "Saját hibáit időnként későn veszi észre feladatmegoldás közben.",
+      en: "May notice own mistakes late while solving tasks."
     }
   },
   {
@@ -1039,8 +1027,8 @@ export const LEARNING_BANK = [
     reverse: false,
     stemKey: "feedback_integration",
     text: {
-      hu: "Kapott visszajelzést nem mindig épít be a következő próbálkozásba.",
-      en: "Does not always integrate feedback into the next attempt."
+      hu: "Kapott visszajelzést időnként nehezen épít be a következő próbálkozásba.",
+      en: "May have difficulty integrating feedback into the next attempt."
     }
   },
   {
@@ -1091,7 +1079,6 @@ export const LEARNING_BANK = [
       en: "May repeat the same mistake multiple times."
     }
   },
-
   {
     id: "LRN_091",
     domain: "LEARNING",
@@ -1160,8 +1147,8 @@ export const LEARNING_BANK = [
     reverse: false,
     stemKey: "one_size_strategy",
     text: {
-      hu: "Ugyanazt a módszert próbálhatja minden helyzetben használni, akkor is, ha az nem elég hatékony.",
-      en: "May try to use the same method in every situation even when it is not effective enough."
+      hu: "Ugyanazt a módszert többféle helyzetben is próbálhatja használni, kevés igazítással.",
+      en: "May try to use the same method across different situations with little adjustment."
     }
   },
   {
@@ -1212,7 +1199,6 @@ export const LEARNING_BANK = [
       en: "Uses methods requiring true retrieval less often."
     }
   },
-
   {
     id: "LRN_101",
     domain: "LEARNING",
@@ -1333,7 +1319,6 @@ export const LEARNING_BANK = [
       en: "Performance may depend strongly on context and environmental conditions."
     }
   },
-
   {
     id: "LRN_111",
     domain: "LEARNING",
@@ -1366,8 +1351,8 @@ export const LEARNING_BANK = [
     reverse: true,
     stemKey: "clear_output_reverse",
     text: {
-      hu: "Általában képes érthetően kifejezni a tudását.",
-      en: "Can generally express knowledge clearly."
+      hu: "Általában képes érthetően kifejezni a tudását támogató környezetben.",
+      en: "Can generally express knowledge clearly in a supportive setting."
     }
   },
   {
@@ -1454,637 +1439,1564 @@ export const LEARNING_BANK = [
       en: "Organizing thoughts into an output format may require extra effort."
     }
   },
-
-  /* =========================
-     121-250
-  ========================= */
-
-  ...(() => {
-    const items = [];
-    let num = 121;
-
-    function makeId() {
-      return `LRN_${String(num++).padStart(3, "0")}`;
+  {
+    id: "LRN_121",
+    domain: "LEARNING",
+    subdomain: "attention_focus",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "sustained_attention",
+    text: {
+      hu: "Nehezen tartja fenn a figyelmét tanulás közben.",
+      en: "Has difficulty sustaining attention during learning."
     }
-
-    function add(subdomain, weight, reverse, stemKey, hu, en) {
-      items.push({
-        id: makeId(),
-        domain: "LEARNING",
-        subdomain,
-        weight,
-        reverse,
-        stemKey,
-        text: { hu, en }
-      });
+  },
+  {
+    id: "LRN_122",
+    domain: "LEARNING",
+    subdomain: "attention_focus",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "sustained_attention",
+    text: {
+      hu: "Nehezen tartja fenn a figyelmét iskolai vagy munkahelyi helyzetekben.",
+      en: "Has difficulty sustaining attention in school or work situations."
     }
-
-    const contexts = [
-      { hu: "tanulás közben", en: "during learning" },
-      { hu: "iskolai vagy munkahelyi helyzetekben", en: "in school or work situations" },
-      { hu: "otthoni feladatoknál", en: "during home tasks" },
-      { hu: "online tanulás során", en: "during online learning" },
-      { hu: "időnyomás alatt", en: "under time pressure" }
-    ];
-
-    function contextualize(subdomain, weight, reverse, stemKey, huStem, enStem) {
-      contexts.forEach((ctx) => {
-        add(
-          subdomain,
-          weight,
-          reverse,
-          stemKey,
-          `${huStem} ${ctx.hu}.`,
-          `${enStem} ${ctx.en}.`
-        );
-      });
+  },
+  {
+    id: "LRN_123",
+    domain: "LEARNING",
+    subdomain: "attention_focus",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "sustained_attention",
+    text: {
+      hu: "Nehezen tartja fenn a figyelmét otthoni feladatoknál.",
+      en: "Has difficulty sustaining attention during home tasks."
     }
-
-    contextualize(
-      "attention_focus",
-      1.4,
-      false,
-      "sustained_attention",
-      "Nehezen tartja fenn a figyelmét",
-      "Has difficulty sustaining attention"
-    );
-
-    contextualize(
-      "attention_focus",
-      1.3,
-      false,
-      "distractibility_external",
-      "Könnyen elterelik a külső ingerek",
-      "Is easily distracted by external stimuli"
-    );
-
-    contextualize(
-      "attention_focus",
-      1.2,
-      true,
-      "focus_stability_reverse",
-      "Viszonylag stabilan fenn tudja tartani a figyelmét",
-      "Can maintain attention relatively steadily"
-    );
-
-    contextualize(
-      "attention_focus",
-      1.4,
-      false,
-      "task_reentry",
-      "Megszakítás után nehezen talál vissza a feladathoz",
-      "Has difficulty returning to a task after interruption"
-    );
-
-    contextualize(
-      "attention_focus",
-      1.3,
-      false,
-      "internal_distraction",
-      "Saját gondolatai is könnyen eltérítik a fókuszát",
-      "Own thoughts easily pull focus away"
-    );
-
-    contextualize(
-      "working_memory",
-      1.4,
-      false,
-      "holding_information",
-      "Nehéz több információt egyszerre fejben tartania",
-      "Has difficulty holding multiple pieces of information in mind at once"
-    );
-
-    contextualize(
-      "working_memory",
-      1.4,
-      false,
-      "multi_step_instructions",
-      "Nehezebben követ több lépésből álló instrukciókat",
-      "Has more difficulty following multi-step instructions"
-    );
-
-    contextualize(
-      "working_memory",
-      1.2,
-      true,
-      "memory_hold_reverse",
-      "Többnyire képes több részletet is fejben tartani egyszerre",
-      "Can usually hold several details in mind at once"
-    );
-
-    contextualize(
-      "working_memory",
-      1.3,
-      false,
-      "mental_tracking",
-      "Könnyen elveszíti, hogy éppen hol tart",
-      "Easily loses track of where things are"
-    );
-
-    contextualize(
-      "working_memory",
-      1.4,
-      false,
-      "updating_information",
-      "Nehezen frissíti fejben az információkat munka közben",
-      "Has difficulty mentally updating information while working"
-    );
-
-    contextualize(
-      "processing_speed",
-      1.4,
-      false,
-      "slow_processing",
-      "Több időre van szüksége az információk feldolgozásához",
-      "Needs more time to process information"
-    );
-
-    contextualize(
-      "processing_speed",
-      1.3,
-      false,
-      "response_delay",
-      "Válaszadás előtt hosszabb időre van szüksége",
-      "Needs more time before responding"
-    );
-
-    contextualize(
-      "processing_speed",
-      1.2,
-      true,
-      "fast_processing_reverse",
-      "Viszonylag gyorsan át tudja látni az új információkat",
-      "Can relatively quickly take in new information"
-    );
-
-    contextualize(
-      "processing_speed",
-      1.4,
-      false,
-      "slow_task_completion",
-      "A feladatok befejezése lassabban megy számára",
-      "Task completion tends to be slower"
-    );
-
-    contextualize(
-      "processing_speed",
-      1.3,
-      false,
-      "under_time_pressure_slowing",
-      "Időnyomás alatt még inkább lelassulhat",
-      "May slow down even more under time pressure"
-    );
-
-    contextualize(
-      "executive_function",
-      1.5,
-      false,
-      "task_initiation",
-      "Nehezen kezdi el a feladatokat",
-      "Has difficulty initiating tasks"
-    );
-
-    contextualize(
-      "executive_function",
-      1.4,
-      false,
-      "planning_difficulty",
-      "Nehézséget okoz számára a tervezés",
-      "Has difficulty planning"
-    );
-
-    contextualize(
-      "executive_function",
-      1.2,
-      true,
-      "organization_reverse",
-      "Többnyire jól szervezi a feladatait",
-      "Usually organizes tasks well"
-    );
-
-    contextualize(
-      "executive_function",
-      1.4,
-      false,
-      "task_completion",
-      "Nehezen jut el a feladat végét jelentő lezárásig",
-      "Has difficulty reaching task completion"
-    );
-
-    contextualize(
-      "executive_function",
-      1.3,
-      false,
-      "breaking_down_tasks",
-      "Nehéz kisebb lépésekre bontania egy nagyobb feladatot",
-      "Finds it hard to break a larger task into smaller steps"
-    );
-
-    contextualize(
-      "organization_time_management",
-      1.4,
-      false,
-      "time_estimation",
-      "Nehezen becsüli meg, mennyi idő kell egy feladathoz",
-      "Has difficulty estimating how much time a task will take"
-    );
-
-    contextualize(
-      "organization_time_management",
-      1.4,
-      false,
-      "deadline_management",
-      "Nehezebben követi a határidőket és időkereteket",
-      "Has more difficulty tracking deadlines and time limits"
-    );
-
-    contextualize(
-      "organization_time_management",
-      1.2,
-      true,
-      "time_structure_reverse",
-      "Viszonylag jól tudja strukturálni az idejét",
-      "Can structure time relatively well"
-    );
-
-    contextualize(
-      "organization_time_management",
-      1.3,
-      false,
-      "late_starting",
-      "A szükségesnél később kezd neki a feladatoknak",
-      "Starts tasks later than needed"
-    );
-
-    contextualize(
-      "organization_time_management",
-      1.3,
-      false,
-      "task_pacing",
-      "Nehezen osztja be az idejét a feladaton belül",
-      "Has difficulty pacing time within a task"
-    );
-
-    contextualize(
-      "comprehension_language",
-      1.4,
-      false,
-      "instruction_comprehension",
-      "Elsőre nem mindig érti meg teljesen a feladatot",
-      "Does not always fully understand a task the first time"
-    );
-
-    contextualize(
-      "comprehension_language",
-      1.3,
-      false,
-      "complex_sentence_parsing",
-      "Összetettebb megfogalmazásokat nehezebben dolgoz fel",
-      "Has more difficulty processing more complex wording"
-    );
-
-    contextualize(
-      "comprehension_language",
-      1.2,
-      true,
-      "verbal_understanding_reverse",
-      "Többnyire jól követi a szóbeli magyarázatokat",
-      "Usually follows verbal explanations well"
-    );
-
-    contextualize(
-      "comprehension_language",
-      1.4,
-      false,
-      "reading_comprehension_depth",
-      "Olvasás után nehezebben ragadja meg a lényeget",
-      "Has more difficulty grasping the main point after reading"
-    );
-
-    contextualize(
-      "comprehension_language",
-      1.3,
-      false,
-      "linking_concepts",
-      "Nehezebben kapcsolja össze az új információt a meglévő tudásával",
-      "Has more difficulty linking new information to existing knowledge"
-    );
-
-    contextualize(
-      "cognitive_flexibility",
-      1.4,
-      false,
-      "strategy_shifting",
-      "Nehezen vált át más megoldási módra",
-      "Has difficulty shifting to a different solution strategy"
-    );
-
-    contextualize(
-      "cognitive_flexibility",
-      1.3,
-      false,
-      "stuck_on_approach",
-      "Hajlamos lehet benne ragadni egy nem működő megközelítésben",
-      "May get stuck in an approach that is not working"
-    );
-
-    contextualize(
-      "cognitive_flexibility",
-      1.2,
-      true,
-      "flexible_adjustment_reverse",
-      "Viszonylag könnyen tud módosítani a megközelítésén",
-      "Can adjust approach relatively easily"
-    );
-
-    contextualize(
-      "cognitive_flexibility",
-      1.4,
-      false,
-      "switching_between_rules",
-      "Nehezebben vált eltérő szabályok vagy szempontok között",
-      "Has more difficulty switching between different rules or perspectives"
-    );
-
-    contextualize(
-      "cognitive_flexibility",
-      1.3,
-      false,
-      "transition_between_task_types",
-      "Nehéz számára egyik feladattípusról a másikra átállni",
-      "Finds it hard to switch from one task type to another"
-    );
-
-    contextualize(
-      "motivation_persistence",
-      1.4,
-      false,
-      "low_task_motivation",
-      "Nehezebben talál belső motivációt a munkához",
-      "Has more difficulty finding internal motivation for the work"
-    );
-
-    contextualize(
-      "motivation_persistence",
-      1.4,
-      false,
-      "effort_drop",
-      "Könnyebben csökken az erőfeszítése, ha valami nem megy rögtön",
-      "Effort drops more easily when something does not go well right away"
-    );
-
-    contextualize(
-      "motivation_persistence",
-      1.2,
-      true,
-      "persistence_reverse",
-      "Többnyire képes kitartani a nehezebb feladatok mellett is",
-      "Can usually persist even with harder tasks"
-    );
-
-    contextualize(
-      "motivation_persistence",
-      1.4,
-      false,
-      "giving_up_early",
-      "Hajlamos lehet túl korán feladni a nehezebb feladatokat",
-      "May give up too early on more difficult tasks"
-    );
-
-    contextualize(
-      "motivation_persistence",
-      1.3,
-      false,
-      "starting_without_drive",
-      "Több külső ösztönzésre van szüksége az elinduláshoz",
-      "Needs more external prompting to get started"
-    );
-
-    contextualize(
-      "self_monitoring_error_awareness",
-      1.4,
-      false,
-      "error_detection",
-      "Nem mindig veszi észre időben a saját hibáit",
-      "Does not always notice own mistakes in time"
-    );
-
-    contextualize(
-      "self_monitoring_error_awareness",
-      1.3,
-      false,
-      "checking_work",
-      "Ritkábban nézi át vissza a munkáját hibakeresés céljából",
-      "Reviews work back less consistently to catch errors"
-    );
-
-    contextualize(
-      "self_monitoring_error_awareness",
-      1.2,
-      true,
-      "self_review_reverse",
-      "Többnyire képes ellenőrizni és javítani a saját munkáját",
-      "Can usually check and correct own work"
-    );
-
-    contextualize(
-      "self_monitoring_error_awareness",
-      1.4,
-      false,
-      "monitoring_while_working",
-      "Munka közben nehezebben tartja szem előtt a pontosságot",
-      "Has more difficulty keeping accuracy in mind while working"
-    );
-
-    contextualize(
-      "self_monitoring_error_awareness",
-      1.3,
-      false,
-      "repeat_same_error",
-      "Előfordulhat, hogy ugyanazt a hibát többször is megismétli",
-      "May repeat the same mistake more than once"
-    );
-
-    contextualize(
-      "learning_strategy",
-      1.4,
-      false,
-      "strategy_selection",
-      "Nehezebben választ célravezető tanulási módszert",
-      "Has more difficulty choosing an effective learning method"
-    );
-
-    contextualize(
-      "learning_strategy",
-      1.3,
-      false,
-      "passive_learning",
-      "Hajlamosabb lehet passzívan átnézni az anyagot aktív feldolgozás helyett",
-      "May lean toward passively reviewing material instead of actively processing it"
-    );
-
-    contextualize(
-      "learning_strategy",
-      1.2,
-      true,
-      "effective_strategy_reverse",
-      "Többnyire képes a helyzethez illő tanulási stratégiát választani",
-      "Can usually choose a learning strategy that fits the situation"
-    );
-
-    contextualize(
-      "learning_strategy",
-      1.4,
-      false,
-      "poor_encoding_strategy",
-      "Nehezebben alakít ki olyan módszert, ami segíti a megjegyzést",
-      "Has more difficulty building methods that support remembering"
-    );
-
-    contextualize(
-      "learning_strategy",
-      1.3,
-      false,
-      "shallow_processing",
-      "Könnyebben marad felszínesebb feldolgozásnál",
-      "More easily stays at a shallower level of processing"
-    );
-
-    contextualize(
-      "environmental_regulation",
-      1.3,
-      false,
-      "noise_sensitivity_learning",
-      "A környezeti zajok különösen megnehezítik számára a tanulást",
-      "Environmental noise makes learning especially difficult"
-    );
-
-    contextualize(
-      "environmental_regulation",
-      1.3,
-      false,
-      "workspace_dependence",
-      "Erősen függ attól, mennyire rendezett és nyugodt a környezete",
-      "Performance depends strongly on how organized and calm the environment is"
-    );
-
-    contextualize(
-      "environmental_regulation",
-      1.2,
-      true,
-      "environment_adjustment_reverse",
-      "Különböző környezetekben is viszonylag jól tud működni",
-      "Can function relatively well across different environments"
-    );
-
-    contextualize(
-      "environmental_regulation",
-      1.4,
-      false,
-      "digital_distraction_load",
-      "Digitális ingerek vagy értesítések könnyen megszakítják a figyelmét",
-      "Digital stimuli or notifications easily interrupt attention"
-    );
-
-    contextualize(
-      "environmental_regulation",
-      1.3,
-      false,
-      "group_environment_load",
-      "Mozgalmasabb közegben könnyebben szétesik a fókusza",
-      "Focus breaks down more easily in busier environments"
-    );
-
-    contextualize(
-      "academic_expression_output",
-      1.4,
-      false,
-      "showing_knowledge",
-      "Nehezebben tudja megmutatni, hogy valójában mit tud",
-      "Has more difficulty showing what is actually known"
-    );
-
-    contextualize(
-      "academic_expression_output",
-      1.3,
-      false,
-      "written_expression_load",
-      "Írásban nehezebben rendezi össze a gondolatait",
-      "Finds it harder to organize thoughts in writing"
-    );
-
-    contextualize(
-      "academic_expression_output",
-      1.2,
-      true,
-      "clear_output_reverse",
-      "Többnyire érthetően ki tudja fejezni a tudását",
-      "Can usually express knowledge clearly"
-    );
-
-    contextualize(
-      "academic_expression_output",
-      1.4,
-      false,
-      "under_pressure_output_breakdown",
-      "Nyomás alatt könnyebben szétesik a teljesítménye",
-      "Performance breaks down more easily under pressure"
-    );
-
-    contextualize(
-      "academic_expression_output",
-      1.3,
-      false,
-      "output_organization",
-      "A gondolatok rendezése és kimeneti formába öntése több erőfeszítést igényel",
-      "Organizing thoughts into an output format requires more effort"
-    );
-
-    add(
-      "learning_strategy",
-      1.4,
-      false,
-      "retrieval_practice_gap",
-      "Ritkábban használ olyan módszereket, amelyek valódi felidézést kérnek tőle.",
-      "More rarely uses methods that require true retrieval practice."
-    );
-
-    add(
-      "organization_time_management",
-      1.3,
-      false,
-      "material_tracking",
-      "Előfordulhat, hogy nehezebben követi, melyik anyaggal hol tart.",
-      "May have more difficulty tracking where progress stands across materials."
-    );
-
-    add(
-      "motivation_persistence",
-      1.2,
-      true,
-      "reengagement_reverse",
-      "Egy nehezebb pillanat után is képes lehet újra visszakapcsolódni a feladathoz.",
-      "Can reconnect with a task even after a more difficult moment."
-    );
-
-    add(
-      "working_memory",
-      1.3,
-      false,
-      "remembering_requirements",
-      "Nehéz fejben tartania, hogy pontosan mit kér tőle a feladat.",
-      "Finds it difficult to keep in mind exactly what the task requires."
-    );
-
-    add(
-      "attention_focus",
-      1.3,
-      false,
-      "passive_attention_drop",
-      "Hosszabb idejű hallgatás vagy figyelés közben könnyebben kiesik a fókuszból.",
-      "During extended listening or attending, focus is more likely to drop."
-    );
-
-    return items.slice(0, 130);
-})()
+  },
+  {
+    id: "LRN_124",
+    domain: "LEARNING",
+    subdomain: "attention_focus",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "sustained_attention",
+    text: {
+      hu: "Nehezen tartja fenn a figyelmét online tanulás során.",
+      en: "Has difficulty sustaining attention during online learning."
+    }
+  },
+  {
+    id: "LRN_125",
+    domain: "LEARNING",
+    subdomain: "attention_focus",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "sustained_attention",
+    text: {
+      hu: "Nehezen tartja fenn a figyelmét időnyomás alatt.",
+      en: "Has difficulty sustaining attention under time pressure."
+    }
+  },
+  {
+    id: "LRN_126",
+    domain: "LEARNING",
+    subdomain: "attention_focus",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "distractibility_external",
+    text: {
+      hu: "Könnyen elterelik a külső ingerek tanulás közben.",
+      en: "Is easily distracted by external stimuli during learning."
+    }
+  },
+  {
+    id: "LRN_127",
+    domain: "LEARNING",
+    subdomain: "attention_focus",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "distractibility_external",
+    text: {
+      hu: "Könnyen elterelik a külső ingerek iskolai vagy munkahelyi helyzetekben.",
+      en: "Is easily distracted by external stimuli in school or work situations."
+    }
+  },
+  {
+    id: "LRN_128",
+    domain: "LEARNING",
+    subdomain: "attention_focus",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "distractibility_external",
+    text: {
+      hu: "Könnyen elterelik a külső ingerek otthoni feladatoknál.",
+      en: "Is easily distracted by external stimuli during home tasks."
+    }
+  },
+  {
+    id: "LRN_129",
+    domain: "LEARNING",
+    subdomain: "attention_focus",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "distractibility_external",
+    text: {
+      hu: "Könnyen elterelik a külső ingerek online tanulás során.",
+      en: "Is easily distracted by external stimuli during online learning."
+    }
+  },
+  {
+    id: "LRN_130",
+    domain: "LEARNING",
+    subdomain: "attention_focus",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "distractibility_external",
+    text: {
+      hu: "Könnyen elterelik a külső ingerek időnyomás alatt.",
+      en: "Is easily distracted by external stimuli under time pressure."
+    }
+  },
+  {
+    id: "LRN_131",
+    domain: "LEARNING",
+    subdomain: "attention_focus",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "focus_stability_reverse",
+    text: {
+      hu: "Viszonylag stabilan fenn tudja tartani a figyelmét tanulás közben.",
+      en: "Can maintain attention relatively steadily during learning."
+    }
+  },
+  {
+    id: "LRN_132",
+    domain: "LEARNING",
+    subdomain: "attention_focus",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "focus_stability_reverse",
+    text: {
+      hu: "Viszonylag stabilan fenn tudja tartani a figyelmét iskolai vagy munkahelyi helyzetekben.",
+      en: "Can maintain attention relatively steadily in school or work situations."
+    }
+  },
+  {
+    id: "LRN_133",
+    domain: "LEARNING",
+    subdomain: "attention_focus",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "focus_stability_reverse",
+    text: {
+      hu: "Viszonylag stabilan fenn tudja tartani a figyelmét otthoni feladatoknál.",
+      en: "Can maintain attention relatively steadily during home tasks."
+    }
+  },
+  {
+    id: "LRN_134",
+    domain: "LEARNING",
+    subdomain: "attention_focus",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "focus_stability_reverse",
+    text: {
+      hu: "Viszonylag stabilan fenn tudja tartani a figyelmét online tanulás során.",
+      en: "Can maintain attention relatively steadily during online learning."
+    }
+  },
+  {
+    id: "LRN_135",
+    domain: "LEARNING",
+    subdomain: "attention_focus",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "focus_stability_reverse",
+    text: {
+      hu: "Viszonylag stabilan fenn tudja tartani a figyelmét időnyomás alatt.",
+      en: "Can maintain attention relatively steadily under time pressure."
+    }
+  },
+  {
+    id: "LRN_136",
+    domain: "LEARNING",
+    subdomain: "attention_focus",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "task_reentry",
+    text: {
+      hu: "Megszakítás után nehezen talál vissza a feladathoz tanulás közben.",
+      en: "Has difficulty returning to a task after interruption during learning."
+    }
+  },
+  {
+    id: "LRN_137",
+    domain: "LEARNING",
+    subdomain: "attention_focus",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "task_reentry",
+    text: {
+      hu: "Megszakítás után nehezen talál vissza a feladathoz iskolai vagy munkahelyi helyzetekben.",
+      en: "Has difficulty returning to a task after interruption in school or work situations."
+    }
+  },
+  {
+    id: "LRN_138",
+    domain: "LEARNING",
+    subdomain: "attention_focus",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "task_reentry",
+    text: {
+      hu: "Megszakítás után nehezen talál vissza a feladathoz otthoni feladatoknál.",
+      en: "Has difficulty returning to a task after interruption during home tasks."
+    }
+  },
+  {
+    id: "LRN_139",
+    domain: "LEARNING",
+    subdomain: "attention_focus",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "task_reentry",
+    text: {
+      hu: "Megszakítás után nehezen talál vissza a feladathoz online tanulás során.",
+      en: "Has difficulty returning to a task after interruption during online learning."
+    }
+  },
+  {
+    id: "LRN_140",
+    domain: "LEARNING",
+    subdomain: "attention_focus",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "task_reentry",
+    text: {
+      hu: "Megszakítás után nehezen talál vissza a feladathoz időnyomás alatt.",
+      en: "Has difficulty returning to a task after interruption under time pressure."
+    }
+  },
+  {
+    id: "LRN_141",
+    domain: "LEARNING",
+    subdomain: "attention_focus",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "internal_distraction",
+    text: {
+      hu: "Saját gondolatai is könnyen eltérítik a fókuszát tanulás közben.",
+      en: "Own thoughts easily pull focus away during learning."
+    }
+  },
+  {
+    id: "LRN_142",
+    domain: "LEARNING",
+    subdomain: "attention_focus",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "internal_distraction",
+    text: {
+      hu: "Saját gondolatai is könnyen eltérítik a fókuszát iskolai vagy munkahelyi helyzetekben.",
+      en: "Own thoughts easily pull focus away in school or work situations."
+    }
+  },
+  {
+    id: "LRN_143",
+    domain: "LEARNING",
+    subdomain: "attention_focus",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "internal_distraction",
+    text: {
+      hu: "Saját gondolatai is könnyen eltérítik a fókuszát otthoni feladatoknál.",
+      en: "Own thoughts easily pull focus away during home tasks."
+    }
+  },
+  {
+    id: "LRN_144",
+    domain: "LEARNING",
+    subdomain: "attention_focus",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "internal_distraction",
+    text: {
+      hu: "Saját gondolatai is könnyen eltérítik a fókuszát online tanulás során.",
+      en: "Own thoughts easily pull focus away during online learning."
+    }
+  },
+  {
+    id: "LRN_145",
+    domain: "LEARNING",
+    subdomain: "attention_focus",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "internal_distraction",
+    text: {
+      hu: "Saját gondolatai is könnyen eltérítik a fókuszát időnyomás alatt.",
+      en: "Own thoughts easily pull focus away under time pressure."
+    }
+  },
+  {
+    id: "LRN_146",
+    domain: "LEARNING",
+    subdomain: "working_memory",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "holding_information",
+    text: {
+      hu: "Nehéz több információt egyszerre fejben tartania tanulás közben.",
+      en: "Has difficulty holding multiple pieces of information in mind at once during learning."
+    }
+  },
+  {
+    id: "LRN_147",
+    domain: "LEARNING",
+    subdomain: "working_memory",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "holding_information",
+    text: {
+      hu: "Nehéz több információt egyszerre fejben tartania iskolai vagy munkahelyi helyzetekben.",
+      en: "Has difficulty holding multiple pieces of information in mind at once in school or work situations."
+    }
+  },
+  {
+    id: "LRN_148",
+    domain: "LEARNING",
+    subdomain: "working_memory",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "holding_information",
+    text: {
+      hu: "Nehéz több információt egyszerre fejben tartania otthoni feladatoknál.",
+      en: "Has difficulty holding multiple pieces of information in mind at once during home tasks."
+    }
+  },
+  {
+    id: "LRN_149",
+    domain: "LEARNING",
+    subdomain: "working_memory",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "holding_information",
+    text: {
+      hu: "Nehéz több információt egyszerre fejben tartania online tanulás során.",
+      en: "Has difficulty holding multiple pieces of information in mind at once during online learning."
+    }
+  },
+  {
+    id: "LRN_150",
+    domain: "LEARNING",
+    subdomain: "working_memory",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "holding_information",
+    text: {
+      hu: "Nehéz több információt egyszerre fejben tartania időnyomás alatt.",
+      en: "Has difficulty holding multiple pieces of information in mind at once under time pressure."
+    }
+  },
+  {
+    id: "LRN_151",
+    domain: "LEARNING",
+    subdomain: "working_memory",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "multi_step_instructions",
+    text: {
+      hu: "Nehezebben követ több lépésből álló instrukciókat tanulás közben.",
+      en: "Has more difficulty following multi-step instructions during learning."
+    }
+  },
+  {
+    id: "LRN_152",
+    domain: "LEARNING",
+    subdomain: "working_memory",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "multi_step_instructions",
+    text: {
+      hu: "Nehezebben követ több lépésből álló instrukciókat iskolai vagy munkahelyi helyzetekben.",
+      en: "Has more difficulty following multi-step instructions in school or work situations."
+    }
+  },
+  {
+    id: "LRN_153",
+    domain: "LEARNING",
+    subdomain: "working_memory",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "multi_step_instructions",
+    text: {
+      hu: "Nehezebben követ több lépésből álló instrukciókat otthoni feladatoknál.",
+      en: "Has more difficulty following multi-step instructions during home tasks."
+    }
+  },
+  {
+    id: "LRN_154",
+    domain: "LEARNING",
+    subdomain: "working_memory",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "multi_step_instructions",
+    text: {
+      hu: "Nehezebben követ több lépésből álló instrukciókat online tanulás során.",
+      en: "Has more difficulty following multi-step instructions during online learning."
+    }
+  },
+  {
+    id: "LRN_155",
+    domain: "LEARNING",
+    subdomain: "working_memory",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "multi_step_instructions",
+    text: {
+      hu: "Nehezebben követ több lépésből álló instrukciókat időnyomás alatt.",
+      en: "Has more difficulty following multi-step instructions under time pressure."
+    }
+  },
+  {
+    id: "LRN_156",
+    domain: "LEARNING",
+    subdomain: "working_memory",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "memory_hold_reverse",
+    text: {
+      hu: "Többnyire képes több részletet is fejben tartani egyszerre tanulás közben.",
+      en: "Can usually hold several details in mind at once during learning."
+    }
+  },
+  {
+    id: "LRN_157",
+    domain: "LEARNING",
+    subdomain: "working_memory",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "memory_hold_reverse",
+    text: {
+      hu: "Többnyire képes több részletet is fejben tartani egyszerre iskolai vagy munkahelyi helyzetekben.",
+      en: "Can usually hold several details in mind at once in school or work situations."
+    }
+  },
+  {
+    id: "LRN_158",
+    domain: "LEARNING",
+    subdomain: "working_memory",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "memory_hold_reverse",
+    text: {
+      hu: "Többnyire képes több részletet is fejben tartani egyszerre otthoni feladatoknál.",
+      en: "Can usually hold several details in mind at once during home tasks."
+    }
+  },
+  {
+    id: "LRN_159",
+    domain: "LEARNING",
+    subdomain: "working_memory",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "memory_hold_reverse",
+    text: {
+      hu: "Többnyire képes több részletet is fejben tartani egyszerre online tanulás során.",
+      en: "Can usually hold several details in mind at once during online learning."
+    }
+  },
+  {
+    id: "LRN_160",
+    domain: "LEARNING",
+    subdomain: "working_memory",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "memory_hold_reverse",
+    text: {
+      hu: "Többnyire képes több részletet is fejben tartani egyszerre időnyomás alatt.",
+      en: "Can usually hold several details in mind at once under time pressure."
+    }
+  },
+  {
+    id: "LRN_161",
+    domain: "LEARNING",
+    subdomain: "working_memory",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "mental_tracking",
+    text: {
+      hu: "Könnyen elveszíti, hogy éppen hol tart tanulás közben.",
+      en: "Easily loses track of where things are during learning."
+    }
+  },
+  {
+    id: "LRN_162",
+    domain: "LEARNING",
+    subdomain: "working_memory",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "mental_tracking",
+    text: {
+      hu: "Könnyen elveszíti, hogy éppen hol tart iskolai vagy munkahelyi helyzetekben.",
+      en: "Easily loses track of where things are in school or work situations."
+    }
+  },
+  {
+    id: "LRN_163",
+    domain: "LEARNING",
+    subdomain: "working_memory",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "mental_tracking",
+    text: {
+      hu: "Könnyen elveszíti, hogy éppen hol tart otthoni feladatoknál.",
+      en: "Easily loses track of where things are during home tasks."
+    }
+  },
+  {
+    id: "LRN_164",
+    domain: "LEARNING",
+    subdomain: "working_memory",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "mental_tracking",
+    text: {
+      hu: "Könnyen elveszíti, hogy éppen hol tart online tanulás során.",
+      en: "Easily loses track of where things are during online learning."
+    }
+  },
+  {
+    id: "LRN_165",
+    domain: "LEARNING",
+    subdomain: "working_memory",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "mental_tracking",
+    text: {
+      hu: "Könnyen elveszíti, hogy éppen hol tart időnyomás alatt.",
+      en: "Easily loses track of where things are under time pressure."
+    }
+  },
+  {
+    id: "LRN_166",
+    domain: "LEARNING",
+    subdomain: "working_memory",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "updating_information",
+    text: {
+      hu: "Nehezen frissíti fejben az információkat munka közben tanulás közben.",
+      en: "Has difficulty mentally updating information while working during learning."
+    }
+  },
+  {
+    id: "LRN_167",
+    domain: "LEARNING",
+    subdomain: "working_memory",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "updating_information",
+    text: {
+      hu: "Nehezen frissíti fejben az információkat munka közben iskolai vagy munkahelyi helyzetekben.",
+      en: "Has difficulty mentally updating information while working in school or work situations."
+    }
+  },
+  {
+    id: "LRN_168",
+    domain: "LEARNING",
+    subdomain: "working_memory",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "updating_information",
+    text: {
+      hu: "Nehezen frissíti fejben az információkat munka közben otthoni feladatoknál.",
+      en: "Has difficulty mentally updating information while working during home tasks."
+    }
+  },
+  {
+    id: "LRN_169",
+    domain: "LEARNING",
+    subdomain: "working_memory",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "updating_information",
+    text: {
+      hu: "Nehezen frissíti fejben az információkat munka közben online tanulás során.",
+      en: "Has difficulty mentally updating information while working during online learning."
+    }
+  },
+  {
+    id: "LRN_170",
+    domain: "LEARNING",
+    subdomain: "working_memory",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "updating_information",
+    text: {
+      hu: "Nehezen frissíti fejben az információkat munka közben időnyomás alatt.",
+      en: "Has difficulty mentally updating information while working under time pressure."
+    }
+  },
+  {
+    id: "LRN_171",
+    domain: "LEARNING",
+    subdomain: "processing_speed",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "slow_processing",
+    text: {
+      hu: "Több időre van szüksége az információk feldolgozásához tanulás közben.",
+      en: "Needs more time to process information during learning."
+    }
+  },
+  {
+    id: "LRN_172",
+    domain: "LEARNING",
+    subdomain: "processing_speed",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "slow_processing",
+    text: {
+      hu: "Több időre van szüksége az információk feldolgozásához iskolai vagy munkahelyi helyzetekben.",
+      en: "Needs more time to process information in school or work situations."
+    }
+  },
+  {
+    id: "LRN_173",
+    domain: "LEARNING",
+    subdomain: "processing_speed",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "slow_processing",
+    text: {
+      hu: "Több időre van szüksége az információk feldolgozásához otthoni feladatoknál.",
+      en: "Needs more time to process information during home tasks."
+    }
+  },
+  {
+    id: "LRN_174",
+    domain: "LEARNING",
+    subdomain: "processing_speed",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "slow_processing",
+    text: {
+      hu: "Több időre van szüksége az információk feldolgozásához online tanulás során.",
+      en: "Needs more time to process information during online learning."
+    }
+  },
+  {
+    id: "LRN_175",
+    domain: "LEARNING",
+    subdomain: "processing_speed",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "slow_processing",
+    text: {
+      hu: "Több időre van szüksége az információk feldolgozásához időnyomás alatt.",
+      en: "Needs more time to process information under time pressure."
+    }
+  },
+  {
+    id: "LRN_176",
+    domain: "LEARNING",
+    subdomain: "processing_speed",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "response_delay",
+    text: {
+      hu: "Válaszadás előtt hosszabb időre van szüksége tanulás közben.",
+      en: "Needs more time before responding during learning."
+    }
+  },
+  {
+    id: "LRN_177",
+    domain: "LEARNING",
+    subdomain: "processing_speed",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "response_delay",
+    text: {
+      hu: "Válaszadás előtt hosszabb időre van szüksége iskolai vagy munkahelyi helyzetekben.",
+      en: "Needs more time before responding in school or work situations."
+    }
+  },
+  {
+    id: "LRN_178",
+    domain: "LEARNING",
+    subdomain: "processing_speed",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "response_delay",
+    text: {
+      hu: "Válaszadás előtt hosszabb időre van szüksége otthoni feladatoknál.",
+      en: "Needs more time before responding during home tasks."
+    }
+  },
+  {
+    id: "LRN_179",
+    domain: "LEARNING",
+    subdomain: "processing_speed",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "response_delay",
+    text: {
+      hu: "Válaszadás előtt hosszabb időre van szüksége online tanulás során.",
+      en: "Needs more time before responding during online learning."
+    }
+  },
+  {
+    id: "LRN_180",
+    domain: "LEARNING",
+    subdomain: "processing_speed",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "response_delay",
+    text: {
+      hu: "Válaszadás előtt hosszabb időre van szüksége időnyomás alatt.",
+      en: "Needs more time before responding under time pressure."
+    }
+  },
+  {
+    id: "LRN_181",
+    domain: "LEARNING",
+    subdomain: "processing_speed",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "fast_processing_reverse",
+    text: {
+      hu: "Viszonylag gyorsan át tudja látni az új információkat tanulás közben.",
+      en: "Can relatively quickly take in new information during learning."
+    }
+  },
+  {
+    id: "LRN_182",
+    domain: "LEARNING",
+    subdomain: "processing_speed",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "fast_processing_reverse",
+    text: {
+      hu: "Viszonylag gyorsan át tudja látni az új információkat iskolai vagy munkahelyi helyzetekben.",
+      en: "Can relatively quickly take in new information in school or work situations."
+    }
+  },
+  {
+    id: "LRN_183",
+    domain: "LEARNING",
+    subdomain: "processing_speed",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "fast_processing_reverse",
+    text: {
+      hu: "Viszonylag gyorsan át tudja látni az új információkat otthoni feladatoknál.",
+      en: "Can relatively quickly take in new information during home tasks."
+    }
+  },
+  {
+    id: "LRN_184",
+    domain: "LEARNING",
+    subdomain: "processing_speed",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "fast_processing_reverse",
+    text: {
+      hu: "Viszonylag gyorsan át tudja látni az új információkat online tanulás során.",
+      en: "Can relatively quickly take in new information during online learning."
+    }
+  },
+  {
+    id: "LRN_185",
+    domain: "LEARNING",
+    subdomain: "processing_speed",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "fast_processing_reverse",
+    text: {
+      hu: "Viszonylag gyorsan át tudja látni az új információkat időnyomás alatt.",
+      en: "Can relatively quickly take in new information under time pressure."
+    }
+  },
+  {
+    id: "LRN_186",
+    domain: "LEARNING",
+    subdomain: "processing_speed",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "slow_task_completion",
+    text: {
+      hu: "A feladatok befejezése lassabban megy számára tanulás közben.",
+      en: "Task completion tends to be slower during learning."
+    }
+  },
+  {
+    id: "LRN_187",
+    domain: "LEARNING",
+    subdomain: "processing_speed",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "slow_task_completion",
+    text: {
+      hu: "A feladatok befejezése lassabban megy számára iskolai vagy munkahelyi helyzetekben.",
+      en: "Task completion tends to be slower in school or work situations."
+    }
+  },
+  {
+    id: "LRN_188",
+    domain: "LEARNING",
+    subdomain: "processing_speed",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "slow_task_completion",
+    text: {
+      hu: "A feladatok befejezése lassabban megy számára otthoni feladatoknál.",
+      en: "Task completion tends to be slower during home tasks."
+    }
+  },
+  {
+    id: "LRN_189",
+    domain: "LEARNING",
+    subdomain: "processing_speed",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "slow_task_completion",
+    text: {
+      hu: "A feladatok befejezése lassabban megy számára online tanulás során.",
+      en: "Task completion tends to be slower during online learning."
+    }
+  },
+  {
+    id: "LRN_190",
+    domain: "LEARNING",
+    subdomain: "processing_speed",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "slow_task_completion",
+    text: {
+      hu: "A feladatok befejezése lassabban megy számára időnyomás alatt.",
+      en: "Task completion tends to be slower under time pressure."
+    }
+  },
+  {
+    id: "LRN_191",
+    domain: "LEARNING",
+    subdomain: "processing_speed",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "under_time_pressure_slowing",
+    text: {
+      hu: "Időnyomás alatt még inkább lelassulhat tanulás közben.",
+      en: "May slow down even more under time pressure during learning."
+    }
+  },
+  {
+    id: "LRN_192",
+    domain: "LEARNING",
+    subdomain: "processing_speed",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "under_time_pressure_slowing",
+    text: {
+      hu: "Időnyomás alatt még inkább lelassulhat iskolai vagy munkahelyi helyzetekben.",
+      en: "May slow down even more under time pressure in school or work situations."
+    }
+  },
+  {
+    id: "LRN_193",
+    domain: "LEARNING",
+    subdomain: "processing_speed",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "under_time_pressure_slowing",
+    text: {
+      hu: "Időnyomás alatt még inkább lelassulhat otthoni feladatoknál.",
+      en: "May slow down even more under time pressure during home tasks."
+    }
+  },
+  {
+    id: "LRN_194",
+    domain: "LEARNING",
+    subdomain: "processing_speed",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "under_time_pressure_slowing",
+    text: {
+      hu: "Időnyomás alatt még inkább lelassulhat online tanulás során.",
+      en: "May slow down even more under time pressure during online learning."
+    }
+  },
+  {
+    id: "LRN_195",
+    domain: "LEARNING",
+    subdomain: "processing_speed",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "under_time_pressure_slowing",
+    text: {
+      hu: "Időnyomás alatt még inkább lelassulhat időnyomás alatt.",
+      en: "May slow down even more under time pressure under time pressure."
+    }
+  },
+  {
+    id: "LRN_196",
+    domain: "LEARNING",
+    subdomain: "executive_function",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "task_initiation",
+    text: {
+      hu: "Nehezen kezdi el a feladatokat tanulás közben.",
+      en: "Has difficulty initiating tasks during learning."
+    }
+  },
+  {
+    id: "LRN_197",
+    domain: "LEARNING",
+    subdomain: "executive_function",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "task_initiation",
+    text: {
+      hu: "Nehezen kezdi el a feladatokat iskolai vagy munkahelyi helyzetekben.",
+      en: "Has difficulty initiating tasks in school or work situations."
+    }
+  },
+  {
+    id: "LRN_198",
+    domain: "LEARNING",
+    subdomain: "executive_function",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "task_initiation",
+    text: {
+      hu: "Nehezen kezdi el a feladatokat otthoni feladatoknál.",
+      en: "Has difficulty initiating tasks during home tasks."
+    }
+  },
+  {
+    id: "LRN_199",
+    domain: "LEARNING",
+    subdomain: "executive_function",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "task_initiation",
+    text: {
+      hu: "Nehezen kezdi el a feladatokat online tanulás során.",
+      en: "Has difficulty initiating tasks during online learning."
+    }
+  },
+  {
+    id: "LRN_200",
+    domain: "LEARNING",
+    subdomain: "executive_function",
+    weight: 1.5,
+    reverse: false,
+    stemKey: "task_initiation",
+    text: {
+      hu: "Nehezen kezdi el a feladatokat időnyomás alatt.",
+      en: "Has difficulty initiating tasks under time pressure."
+    }
+  },
+  {
+    id: "LRN_201",
+    domain: "LEARNING",
+    subdomain: "executive_function",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "planning_difficulty",
+    text: {
+      hu: "Nehézséget okoz számára a tervezés tanulás közben, főleg összetettebb feladatoknál.",
+      en: "Has difficulty planning during learning, especially with more complex tasks."
+    }
+  },
+  {
+    id: "LRN_202",
+    domain: "LEARNING",
+    subdomain: "executive_function",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "planning_difficulty",
+    text: {
+      hu: "Nehézséget okoz számára a tervezés iskolai vagy munkahelyi helyzetekben.",
+      en: "Has difficulty planning in school or work situations."
+    }
+  },
+  {
+    id: "LRN_203",
+    domain: "LEARNING",
+    subdomain: "executive_function",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "planning_difficulty",
+    text: {
+      hu: "Nehézséget okoz számára a tervezés otthoni feladatoknál.",
+      en: "Has difficulty planning during home tasks."
+    }
+  },
+  {
+    id: "LRN_204",
+    domain: "LEARNING",
+    subdomain: "executive_function",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "planning_difficulty",
+    text: {
+      hu: "Nehézséget okoz számára a tervezés online tanulás során.",
+      en: "Has difficulty planning during online learning."
+    }
+  },
+  {
+    id: "LRN_205",
+    domain: "LEARNING",
+    subdomain: "executive_function",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "planning_difficulty",
+    text: {
+      hu: "Nehézséget okoz számára a tervezés időnyomás alatt.",
+      en: "Has difficulty planning under time pressure."
+    }
+  },
+  {
+    id: "LRN_206",
+    domain: "LEARNING",
+    subdomain: "executive_function",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "organization_reverse",
+    text: {
+      hu: "Többnyire jól szervezi a feladatait tanulás közben.",
+      en: "Usually organizes tasks well during learning."
+    }
+  },
+  {
+    id: "LRN_207",
+    domain: "LEARNING",
+    subdomain: "executive_function",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "organization_reverse",
+    text: {
+      hu: "Többnyire jól szervezi a feladatait iskolai vagy munkahelyi helyzetekben.",
+      en: "Usually organizes tasks well in school or work situations."
+    }
+  },
+  {
+    id: "LRN_208",
+    domain: "LEARNING",
+    subdomain: "executive_function",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "organization_reverse",
+    text: {
+      hu: "Többnyire jól szervezi a feladatait otthoni feladatoknál.",
+      en: "Usually organizes tasks well during home tasks."
+    }
+  },
+  {
+    id: "LRN_209",
+    domain: "LEARNING",
+    subdomain: "executive_function",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "organization_reverse",
+    text: {
+      hu: "Többnyire jól szervezi a feladatait online tanulás során.",
+      en: "Usually organizes tasks well during online learning."
+    }
+  },
+  {
+    id: "LRN_210",
+    domain: "LEARNING",
+    subdomain: "executive_function",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "organization_reverse",
+    text: {
+      hu: "Többnyire jól szervezi a feladatait időnyomás alatt.",
+      en: "Usually organizes tasks well under time pressure."
+    }
+  },
+  {
+    id: "LRN_211",
+    domain: "LEARNING",
+    subdomain: "executive_function",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "task_completion",
+    text: {
+      hu: "Nehezen jut el a feladat végét jelentő lezárásig tanulás közben.",
+      en: "Has difficulty reaching task completion during learning."
+    }
+  },
+  {
+    id: "LRN_212",
+    domain: "LEARNING",
+    subdomain: "executive_function",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "task_completion",
+    text: {
+      hu: "Nehezen jut el a feladat végét jelentő lezárásig iskolai vagy munkahelyi helyzetekben.",
+      en: "Has difficulty reaching task completion in school or work situations."
+    }
+  },
+  {
+    id: "LRN_213",
+    domain: "LEARNING",
+    subdomain: "executive_function",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "task_completion",
+    text: {
+      hu: "Nehezen jut el a feladat végét jelentő lezárásig otthoni feladatoknál.",
+      en: "Has difficulty reaching task completion during home tasks."
+    }
+  },
+  {
+    id: "LRN_214",
+    domain: "LEARNING",
+    subdomain: "executive_function",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "task_completion",
+    text: {
+      hu: "Nehezen jut el a feladat végét jelentő lezárásig online tanulás során.",
+      en: "Has difficulty reaching task completion during online learning."
+    }
+  },
+  {
+    id: "LRN_215",
+    domain: "LEARNING",
+    subdomain: "executive_function",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "task_completion",
+    text: {
+      hu: "Nehezen jut el a feladat végét jelentő lezárásig időnyomás alatt.",
+      en: "Has difficulty reaching task completion under time pressure."
+    }
+  },
+  {
+    id: "LRN_216",
+    domain: "LEARNING",
+    subdomain: "executive_function",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "breaking_down_tasks",
+    text: {
+      hu: "Nehéz kisebb lépésekre bontania egy nagyobb feladatot tanulás közben.",
+      en: "Finds it hard to break a larger task into smaller steps during learning."
+    }
+  },
+  {
+    id: "LRN_217",
+    domain: "LEARNING",
+    subdomain: "executive_function",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "breaking_down_tasks",
+    text: {
+      hu: "Nehéz kisebb lépésekre bontania egy nagyobb feladatot iskolai vagy munkahelyi helyzetekben.",
+      en: "Finds it hard to break a larger task into smaller steps in school or work situations."
+    }
+  },
+  {
+    id: "LRN_218",
+    domain: "LEARNING",
+    subdomain: "executive_function",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "breaking_down_tasks",
+    text: {
+      hu: "Nehéz kisebb lépésekre bontania egy nagyobb feladatot otthoni feladatoknál.",
+      en: "Finds it hard to break a larger task into smaller steps during home tasks."
+    }
+  },
+  {
+    id: "LRN_219",
+    domain: "LEARNING",
+    subdomain: "executive_function",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "breaking_down_tasks",
+    text: {
+      hu: "Nehéz kisebb lépésekre bontania egy nagyobb feladatot online tanulás során.",
+      en: "Finds it hard to break a larger task into smaller steps during online learning."
+    }
+  },
+  {
+    id: "LRN_220",
+    domain: "LEARNING",
+    subdomain: "executive_function",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "breaking_down_tasks",
+    text: {
+      hu: "Nehéz kisebb lépésekre bontania egy nagyobb feladatot időnyomás alatt.",
+      en: "Finds it hard to break a larger task into smaller steps under time pressure."
+    }
+  },
+  {
+    id: "LRN_221",
+    domain: "LEARNING",
+    subdomain: "organization_time_management",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "time_estimation",
+    text: {
+      hu: "Nehezen becsüli meg, mennyi idő kell egy feladathoz tanulás közben.",
+      en: "Has difficulty estimating how much time a task will take during learning."
+    }
+  },
+  {
+    id: "LRN_222",
+    domain: "LEARNING",
+    subdomain: "organization_time_management",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "time_estimation",
+    text: {
+      hu: "Nehezen becsüli meg, mennyi idő kell egy feladathoz iskolai vagy munkahelyi helyzetekben.",
+      en: "Has difficulty estimating how much time a task will take in school or work situations."
+    }
+  },
+  {
+    id: "LRN_223",
+    domain: "LEARNING",
+    subdomain: "organization_time_management",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "time_estimation",
+    text: {
+      hu: "Nehezen becsüli meg, mennyi idő kell egy feladathoz otthoni feladatoknál.",
+      en: "Has difficulty estimating how much time a task will take during home tasks."
+    }
+  },
+  {
+    id: "LRN_224",
+    domain: "LEARNING",
+    subdomain: "organization_time_management",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "time_estimation",
+    text: {
+      hu: "Nehezen becsüli meg, mennyi idő kell egy feladathoz online tanulás során.",
+      en: "Has difficulty estimating how much time a task will take during online learning."
+    }
+  },
+  {
+    id: "LRN_225",
+    domain: "LEARNING",
+    subdomain: "organization_time_management",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "time_estimation",
+    text: {
+      hu: "Nehezen becsüli meg, mennyi idő kell egy feladathoz időnyomás alatt.",
+      en: "Has difficulty estimating how much time a task will take under time pressure."
+    }
+  },
+  {
+    id: "LRN_226",
+    domain: "LEARNING",
+    subdomain: "organization_time_management",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "deadline_management",
+    text: {
+      hu: "Nehezebben követi a határidőket és időkereteket tanulás közben.",
+      en: "Has more difficulty tracking deadlines and time limits during learning."
+    }
+  },
+  {
+    id: "LRN_227",
+    domain: "LEARNING",
+    subdomain: "organization_time_management",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "deadline_management",
+    text: {
+      hu: "Nehezebben követi a határidőket és időkereteket iskolai vagy munkahelyi helyzetekben.",
+      en: "Has more difficulty tracking deadlines and time limits in school or work situations."
+    }
+  },
+  {
+    id: "LRN_228",
+    domain: "LEARNING",
+    subdomain: "organization_time_management",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "deadline_management",
+    text: {
+      hu: "Nehezebben követi a határidőket és időkereteket otthoni feladatoknál.",
+      en: "Has more difficulty tracking deadlines and time limits during home tasks."
+    }
+  },
+  {
+    id: "LRN_229",
+    domain: "LEARNING",
+    subdomain: "organization_time_management",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "deadline_management",
+    text: {
+      hu: "Nehezebben követi a határidőket és időkereteket online tanulás során.",
+      en: "Has more difficulty tracking deadlines and time limits during online learning."
+    }
+  },
+  {
+    id: "LRN_230",
+    domain: "LEARNING",
+    subdomain: "organization_time_management",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "deadline_management",
+    text: {
+      hu: "Nehezebben követi a határidőket és időkereteket időnyomás alatt.",
+      en: "Has more difficulty tracking deadlines and time limits under time pressure."
+    }
+  },
+  {
+    id: "LRN_231",
+    domain: "LEARNING",
+    subdomain: "organization_time_management",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "time_structure_reverse",
+    text: {
+      hu: "Viszonylag jól tudja strukturálni az idejét tanulás közben.",
+      en: "Can structure time relatively well during learning."
+    }
+  },
+  {
+    id: "LRN_232",
+    domain: "LEARNING",
+    subdomain: "organization_time_management",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "time_structure_reverse",
+    text: {
+      hu: "Viszonylag jól tudja strukturálni az idejét iskolai vagy munkahelyi helyzetekben.",
+      en: "Can structure time relatively well in school or work situations."
+    }
+  },
+  {
+    id: "LRN_233",
+    domain: "LEARNING",
+    subdomain: "organization_time_management",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "time_structure_reverse",
+    text: {
+      hu: "Viszonylag jól tudja strukturálni az idejét otthoni feladatoknál.",
+      en: "Can structure time relatively well during home tasks."
+    }
+  },
+  {
+    id: "LRN_234",
+    domain: "LEARNING",
+    subdomain: "organization_time_management",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "time_structure_reverse",
+    text: {
+      hu: "Viszonylag jól tudja strukturálni az idejét online tanulás során.",
+      en: "Can structure time relatively well during online learning."
+    }
+  },
+  {
+    id: "LRN_235",
+    domain: "LEARNING",
+    subdomain: "organization_time_management",
+    weight: 1.2,
+    reverse: true,
+    stemKey: "time_structure_reverse",
+    text: {
+      hu: "Viszonylag jól tudja strukturálni az idejét időnyomás alatt.",
+      en: "Can structure time relatively well under time pressure."
+    }
+  },
+  {
+    id: "LRN_236",
+    domain: "LEARNING",
+    subdomain: "organization_time_management",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "late_starting",
+    text: {
+      hu: "A szükségesnél később kezd neki a feladatoknak tanulás közben.",
+      en: "Starts tasks later than needed during learning."
+    }
+  },
+  {
+    id: "LRN_237",
+    domain: "LEARNING",
+    subdomain: "organization_time_management",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "late_starting",
+    text: {
+      hu: "A szükségesnél később kezd neki a feladatoknak iskolai vagy munkahelyi helyzetekben.",
+      en: "Starts tasks later than needed in school or work situations."
+    }
+  },
+  {
+    id: "LRN_238",
+    domain: "LEARNING",
+    subdomain: "organization_time_management",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "late_starting",
+    text: {
+      hu: "A szükségesnél később kezd neki a feladatoknak otthoni feladatoknál.",
+      en: "Starts tasks later than needed during home tasks."
+    }
+  },
+  {
+    id: "LRN_239",
+    domain: "LEARNING",
+    subdomain: "organization_time_management",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "late_starting",
+    text: {
+      hu: "A szükségesnél később kezd neki a feladatoknak online tanulás során.",
+      en: "Starts tasks later than needed during online learning."
+    }
+  },
+  {
+    id: "LRN_240",
+    domain: "LEARNING",
+    subdomain: "organization_time_management",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "late_starting",
+    text: {
+      hu: "A szükségesnél később kezd neki a feladatoknak időnyomás alatt.",
+      en: "Starts tasks later than needed under time pressure."
+    }
+  },
+  {
+    id: "LRN_241",
+    domain: "LEARNING",
+    subdomain: "organization_time_management",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "task_pacing",
+    text: {
+      hu: "Nehezen osztja be az idejét a feladaton belül tanulás közben.",
+      en: "Has difficulty pacing time within a task during learning."
+    }
+  },
+  {
+    id: "LRN_242",
+    domain: "LEARNING",
+    subdomain: "organization_time_management",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "task_pacing",
+    text: {
+      hu: "Nehezen osztja be az idejét a feladaton belül iskolai vagy munkahelyi helyzetekben.",
+      en: "Has difficulty pacing time within a task in school or work situations."
+    }
+  },
+  {
+    id: "LRN_243",
+    domain: "LEARNING",
+    subdomain: "organization_time_management",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "task_pacing",
+    text: {
+      hu: "Nehezen osztja be az idejét a feladaton belül otthoni feladatoknál.",
+      en: "Has difficulty pacing time within a task during home tasks."
+    }
+  },
+  {
+    id: "LRN_244",
+    domain: "LEARNING",
+    subdomain: "organization_time_management",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "task_pacing",
+    text: {
+      hu: "Nehezen osztja be az idejét a feladaton belül online tanulás során.",
+      en: "Has difficulty pacing time within a task during online learning."
+    }
+  },
+  {
+    id: "LRN_245",
+    domain: "LEARNING",
+    subdomain: "organization_time_management",
+    weight: 1.3,
+    reverse: false,
+    stemKey: "task_pacing",
+    text: {
+      hu: "Nehezen osztja be az idejét a feladaton belül időnyomás alatt.",
+      en: "Has difficulty pacing time within a task under time pressure."
+    }
+  },
+  {
+    id: "LRN_246",
+    domain: "LEARNING",
+    subdomain: "comprehension_language",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "instruction_comprehension",
+    text: {
+      hu: "Elsőre gyakran csak részben érti meg a feladatot tanulás közben.",
+      en: "Often understands a task only partly on the first attempt during learning."
+    }
+  },
+  {
+    id: "LRN_247",
+    domain: "LEARNING",
+    subdomain: "comprehension_language",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "instruction_comprehension",
+    text: {
+      hu: "Elsőre gyakran csak részben érti meg a feladatot iskolai vagy munkahelyi helyzetekben.",
+      en: "Often understands a task only partly on the first attempt in school or work situations."
+    }
+  },
+  {
+    id: "LRN_248",
+    domain: "LEARNING",
+    subdomain: "comprehension_language",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "instruction_comprehension",
+    text: {
+      hu: "Elsőre gyakran csak részben érti meg a feladatot otthoni feladatoknál.",
+      en: "Often understands a task only partly on the first attempt during home tasks."
+    }
+  },
+  {
+    id: "LRN_249",
+    domain: "LEARNING",
+    subdomain: "comprehension_language",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "instruction_comprehension",
+    text: {
+      hu: "Elsőre gyakran csak részben érti meg a feladatot online tanulás során.",
+      en: "Often understands a task only partly on the first attempt during online learning."
+    }
+  },
+  {
+    id: "LRN_250",
+    domain: "LEARNING",
+    subdomain: "comprehension_language",
+    weight: 1.4,
+    reverse: false,
+    stemKey: "instruction_comprehension",
+    text: {
+      hu: "Elsőre gyakran csak részben érti meg a feladatot időnyomás alatt.",
+      en: "Often understands a task only partly on the first attempt under time pressure."
+    }
+  }
 ];

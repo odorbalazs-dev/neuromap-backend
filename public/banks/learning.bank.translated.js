@@ -17,7 +17,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z utrzymaniem uwagi na jednym zadaniu przez dłuższy czas.`,
       pt: `Tem dificuldade em manter a atenção em uma tarefa por longos períodos.`,
       fr: `A des difficultés à maintenir son attention sur une tâche pendant de longues périodes.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_002",
@@ -26,8 +27,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.3,
     reverse: false,
     text: {
-      hu: `Külső ingerek könnyen elvonják a figyelmét.`,
-      en: `External stimuli easily distract attention.`,
+      hu: `Külső ingerek tanulás közben könnyen elvonják a figyelmét.`,
+      en: `External stimuli easily distract attention during learning tasks.`,
       de: `Äußere Reize lenken die Aufmerksamkeit leicht ab.`,
       it: `Gli stimoli esterni distraggono facilmente l'attenzione.`,
       es: `Los estímulos externos distraen la atención fácilmente.`,
@@ -37,7 +38,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zewnętrzne bodźce łatwo odciągają uwagę.`,
       pt: `Estímulos externos distraem a atenção facilmente.`,
       fr: `Les stimuli externes distraient facilement l'attention.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_003",
@@ -46,8 +48,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.2,
     reverse: true,
     text: {
-      hu: `Általában stabilan fenn tudja tartani a figyelmét.`,
-      en: `Can generally maintain stable attention.`,
+      hu: `Általában stabilan fenn tudja tartani figyelmét tanulási feladatoknál.`,
+      en: `Can generally maintain stable attention during learning tasks.`,
       de: `Kann in der Regel eine konstante Aufmerksamkeit aufrechterhalten.`,
       it: `Generalmente riesce a mantenere stabile l'attenzione.`,
       es: `Generalmente puede mantener una atención estable.`,
@@ -57,7 +59,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zazwyczaj potrafi utrzymać stabilną uwagę.`,
       pt: `Geralmente consegue manter a atenção estável.`,
       fr: `Peut généralement maintenir une attention stable.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_004",
@@ -66,8 +69,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Feladat közben könnyen elkalandozik a figyelme.`,
-      en: `Attention easily drifts during tasks.`,
+      hu: `Feladat közben könnyen elkalandozik a figyelme hosszabb munkaszakaszokban.`,
+      en: `Attention easily drifts during longer task periods.`,
       de: `Die Aufmerksamkeit schweift bei Aufgaben leicht ab.`,
       it: `L'attenzione tende a distrarsi facilmente durante le attività.`,
       es: `La atención se desvía fácilmente durante las tareas.`,
@@ -77,7 +80,8 @@ window.NM_LEARNING_BANK = [
       pl: `Uwaga łatwo odpływa podczas wykonywania zadań.`,
       pt: `A atenção desvia-se facilmente durante as tarefas.`,
       fr: `L'attention dérive facilement pendant les tâches.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_005",
@@ -97,7 +101,8 @@ window.NM_LEARNING_BANK = [
       pl: `Wewnętrzne myśli łatwo rozpraszają podczas nauki.`,
       pt: `Pensamentos internos distraem facilmente durante a aprendizagem.`,
       fr: `Les pensées internes distrayent facilement pendant l'apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_006",
@@ -117,7 +122,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z powrotem do zadania po przerwie.`,
       pt: `Tem dificuldade em retomar uma tarefa após uma interrupção.`,
       fr: `A des difficultés à reprendre une tâche après une interruption.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_007",
@@ -137,7 +143,8 @@ window.NM_LEARNING_BANK = [
       pl: `Trudno mu pozostać mentalnie skupionym na zadaniu.`,
       pt: `Tem dificuldade em manter-se mentalmente focado numa tarefa.`,
       fr: `A du mal à rester mentalement ancré dans une tâche.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_008",
@@ -157,7 +164,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi stosunkowo szybko ponownie się skoncentrować po rozproszeniu.`,
       pt: `Consegue reenfocar-se relativamente rápido após distração.`,
       fr: `Peut se reconcentrer relativement vite après une distraction.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_009",
@@ -177,7 +185,8 @@ window.NM_LEARNING_BANK = [
       pl: `Uwaga może się wahać nawet podczas próby koncentracji.`,
       pt: `A atenção pode oscilar mesmo quando tenta concentrar-se.`,
       fr: `L'attention peut fluctuer même en essayant de se concentrer.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_010",
@@ -197,7 +206,8 @@ window.NM_LEARNING_BANK = [
       pl: `Łatwo gubi wątek podczas dłuższych wyjaśnień.`,
       pt: `Perde facilmente o fio da meada durante explicações mais longas.`,
       fr: `Perd le fil facilement lors d'explications longues.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_011",
@@ -217,7 +227,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z jednoczesnym utrzymaniem w pamięci kilku informacji.`,
       pt: `Tem dificuldade em manter várias informações na mente ao mesmo tempo.`,
       fr: `A des difficultés à retenir plusieurs informations en même temps.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_012",
@@ -226,8 +237,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Többlépéses instrukciókat nehezebben követ.`,
-      en: `Has difficulty following multi-step instructions.`,
+      hu: `Többlépéses instrukciókat nehezebben követ, ha kevés támpontot kap.`,
+      en: `Has difficulty following multi-step instructions when few cues are provided.`,
       de: `Hat Schwierigkeiten, mehrstufigen Anweisungen zu folgen.`,
       it: `Ha difficoltà a seguire istruzioni con più passaggi.`,
       es: `Tiene dificultad para seguir instrucciones con varios pasos.`,
@@ -237,7 +248,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z wykonywaniem wieloetapowych instrukcji.`,
       pt: `Tem dificuldade em seguir instruções com múltiplos passos.`,
       fr: `A des difficultés à suivre des consignes à plusieurs étapes.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_013",
@@ -257,7 +269,8 @@ window.NM_LEARNING_BANK = [
       pl: `Łatwo traci orientację w wykonywanym zadaniu.`,
       pt: `Perde facilmente o rasto de onde está numa tarefa.`,
       fr: `Perd facilement le fil de sa progression dans une tâche.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_014",
@@ -277,7 +290,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zwykle potrafi jednocześnie utrzymać w pamięci kilka informacji.`,
       pt: `Normalmente consegue manter várias informações na mente ao mesmo tempo.`,
       fr: `Peut généralement retenir plusieurs informations à la fois.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_015",
@@ -297,7 +311,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może mieć trudności z połączeniem końca instrukcji z jej początkiem.`,
       pt: `Pode ter dificuldade em ligar o fim de uma instrução ao seu início.`,
       fr: `Peut avoir du mal à relier la fin d’une consigne à son début.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_016",
@@ -317,7 +332,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może czuć się przeciążony przy próbie jednoczesnego utrzymania wielu informacji w pamięci.`,
       pt: `Pode ficar sobrecarregado ao tentar manter muitas informações na mente ao mesmo tempo.`,
       fr: `Peut être surchargé lorsqu’il doit retenir trop d’informations en même temps.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_017",
@@ -337,7 +353,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma większe trudności z krótkotrwałym zapamiętywaniem informacji werbalnych.`,
       pt: `Tem mais dificuldades para reter brevemente informação verbal.`,
       fr: `A plus de difficulté à retenir brièvement des informations verbales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_018",
@@ -357,7 +374,8 @@ window.NM_LEARNING_BANK = [
       pl: `Dość dobrze radzi sobie z mentalnym śledzeniem sekwencji i kroków.`,
       pt: `Consegue acompanhar relativamente bem sequências e passos mentalmente.`,
       fr: `Peut suivre relativement bien en mémoire les séquences et étapes.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_019",
@@ -377,7 +395,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może mieć trudności z mentalną aktualizacją informacji podczas pracy.`,
       pt: `Pode ter dificuldade em atualizar mentalmente informações enquanto trabalha.`,
       fr: `Peut avoir du mal à mettre à jour mentalement des informations pendant qu’il travaille.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_020",
@@ -397,7 +416,8 @@ window.NM_LEARNING_BANK = [
       pl: `Trudniej mu jednocześnie myśleć i utrzymywać w pamięci ważne szczegóły.`,
       pt: `Acha mais difícil pensar e manter detalhes importantes na mente ao mesmo tempo.`,
       fr: `A plus de difficultés à penser tout en gardant en mémoire des détails importants.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_021",
@@ -417,7 +437,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrzebuje więcej czasu na przetworzenie informacji.`,
       pt: `Precisa de mais tempo para processar as informações.`,
       fr: `A besoin de plus de temps pour assimiler les informations.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_022",
@@ -426,8 +447,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.3,
     reverse: false,
     text: {
-      hu: `Válaszadás előtt hosszabb időre van szüksége.`,
-      en: `Needs more time before responding.`,
+      hu: `Válaszadás előtt hosszabb időre van szüksége új információ feldolgozásakor.`,
+      en: `Needs more time before responding when processing new information.`,
       de: `Braucht mehr Zeit, bevor er antwortet.`,
       it: `Ha bisogno di più tempo prima di rispondere.`,
       es: `Necesita más tiempo antes de responder.`,
@@ -437,7 +458,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrzebuje więcej czasu, zanim odpowie.`,
       pt: `Precisa de mais tempo antes de responder.`,
       fr: `A besoin de plus de temps avant de répondre.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_023",
@@ -446,8 +468,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.2,
     reverse: true,
     text: {
-      hu: `Gyorsan képes feldolgozni az új információkat.`,
-      en: `Can process new information quickly.`,
+      hu: `Gyorsan képes feldolgozni új információkat, ha a feladat világos.`,
+      en: `Can process new information quickly when the task is clear.`,
       de: `Kann neue Informationen schnell verarbeiten.`,
       it: `Riesce a elaborare rapidamente nuove informazioni.`,
       es: `Puede procesar información nueva rápidamente.`,
@@ -457,7 +479,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi szybko przetwarzać nowe informacje.`,
       pt: `Consegue processar informações novas rapidamente.`,
       fr: `Peut assimiler rapidement de nouvelles informations.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_024",
@@ -477,7 +500,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może wykonywać zadania wolniej niż oczekiwano.`,
       pt: `Pode completar as tarefas mais devagar do que o esperado.`,
       fr: `Peut réaliser les tâches plus lentement que prévu.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_025",
@@ -486,8 +510,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.3,
     reverse: false,
     text: {
-      hu: `Gondolkodása időnként lassabbnak tűnhet.`,
-      en: `Thinking may seem slower at times.`,
+      hu: `Gondolkodása időnként lassabbnak tűnhet összetettebb feladatoknál.`,
+      en: `Thinking may seem slower at times during more complex tasks.`,
       de: `Das Denken kann manchmal langsamer wirken.`,
       it: `Il pensiero può sembrare più lento a volte.`,
       es: `El pensamiento puede parecer más lento a veces.`,
@@ -497,7 +521,8 @@ window.NM_LEARNING_BANK = [
       pl: `Myślenie czasem może wydawać się wolniejsze.`,
       pt: `O pensamento pode parecer mais lento às vezes.`,
       fr: `La pensée peut sembler parfois plus lente.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_026",
@@ -506,8 +531,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Időnyomás alatt még inkább lelassulhat.`,
-      en: `May slow down even more under time pressure.`,
+      hu: `Időnyomás alatt még inkább lelassulhat feladatmegoldás közben.`,
+      en: `May slow down even more while solving tasks under time pressure.`,
       de: `Kann sich unter Zeitdruck noch mehr verlangsamen.`,
       it: `Può rallentare ancora di più sotto pressione di tempo.`,
       es: `Puede desacelerar aún más bajo presión de tiempo.`,
@@ -517,7 +542,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może zwalniać jeszcze bardziej pod presją czasu.`,
       pt: `Pode ficar ainda mais lento sob pressão de tempo.`,
       fr: `Peut ralentir davantage sous pression du temps.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_027",
@@ -537,7 +563,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrzebuje więcej czasu podczas czytania, aby naprawdę przyswoić treść.`,
       pt: `Precisa de mais tempo durante a leitura para absorver bem o conteúdo.`,
       fr: `A besoin de plus de temps en lecture pour bien assimiler le contenu.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_028",
@@ -557,7 +584,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zazwyczaj nadąża za tempem pracy innych.`,
       pt: `Geralmente consegue acompanhar o ritmo de trabalho dos outros.`,
       fr: `Peut généralement suivre le rythme de travail des autres.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_029",
@@ -577,7 +605,8 @@ window.NM_LEARNING_BANK = [
       pl: `Wolniej przekształca usłyszane lub zobaczone informacje w użyteczne zrozumienie.`,
       pt: `Converte informações ouvidas ou vistas em compreensão útil mais lentamente.`,
       fr: `Transforme plus lentement les informations entendues ou vues en compréhension utilisable.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_030",
@@ -597,7 +626,8 @@ window.NM_LEARNING_BANK = [
       pl: `Dłużej zajmuje przystosowanie się do nowego zadania.`,
       pt: `Demora mais tempo para se ajustar a uma nova tarefa.`,
       fr: `Met plus de temps à se mettre à une nouvelle tâche.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_031",
@@ -606,8 +636,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.5,
     reverse: false,
     text: {
-      hu: `Nehezen kezdi el a feladatokat.`,
-      en: `Has difficulty initiating tasks.`,
+      hu: `Nehezen kezdi el a feladatokat, ha nem kap egyértelmű kezdőlépést.`,
+      en: `Has difficulty initiating tasks when the first step is unclear.`,
       de: `Hat Schwierigkeiten, Aufgaben zu beginnen.`,
       it: `Ha difficoltà a iniziare i compiti.`,
       es: `Tiene dificultad para iniciar tareas.`,
@@ -617,7 +647,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z rozpoczęciem zadań.`,
       pt: `Tem dificuldade em iniciar tarefas.`,
       fr: `A des difficultés à commencer les tâches.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_032",
@@ -626,8 +657,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Nehézséget okoz számára a tervezés.`,
-      en: `Has difficulty planning tasks.`,
+      hu: `Nehézséget okoz számára a tervezés több lépésből álló feladatoknál.`,
+      en: `Has difficulty planning tasks that involve several steps.`,
       de: `Hat Schwierigkeiten, Aufgaben zu planen.`,
       it: `Ha difficoltà a pianificare i compiti.`,
       es: `Tiene dificultad para planificar tareas.`,
@@ -637,7 +668,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z planowaniem zadań.`,
       pt: `Tem dificuldade em planejar tarefas.`,
       fr: `A des difficultés à planifier les tâches.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_033",
@@ -646,8 +678,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.2,
     reverse: true,
     text: {
-      hu: `Általában jól szervezi a feladatait.`,
-      en: `Generally organizes tasks well.`,
+      hu: `Általában jól szervezi a feladatait, ha a követelmények világosak.`,
+      en: `Generally organizes tasks well when expectations are clear.`,
       de: `Organisiert Aufgaben im Allgemeinen gut.`,
       it: `Generalmente organizza bene i compiti.`,
       es: `Generalmente organiza bien las tareas.`,
@@ -657,7 +689,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zwykle dobrze organizuje zadania.`,
       pt: `Geralmente organiza bem as tarefas.`,
       fr: `Organise généralement bien les tâches.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_034",
@@ -666,8 +699,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Nehezen fejez be elkezdett feladatokat.`,
-      en: `Has difficulty finishing tasks once started.`,
+      hu: `Nehezen fejez be elkezdett feladatokat, különösen hosszabb munkaszakaszokban.`,
+      en: `Has difficulty finishing tasks once started, especially during longer work periods.`,
       de: `Hat Schwierigkeiten, Aufgaben nach dem Beginn abzuschließen.`,
       it: `Ha difficoltà a finire i compiti una volta iniziati.`,
       es: `Tiene dificultad para terminar las tareas una vez comenzadas.`,
@@ -677,7 +710,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z ukończeniem zadań po ich rozpoczęciu.`,
       pt: `Tem dificuldade em terminar tarefas depois de iniciá-las.`,
       fr: `A des difficultés à terminer les tâches une fois commencées.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_035",
@@ -697,7 +731,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z ustaleniem kolejności zadań.`,
       pt: `Tem dificuldade em decidir a ordem das tarefas.`,
       fr: `A des difficultés à décider de l'ordre des tâches.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_036",
@@ -717,7 +752,8 @@ window.NM_LEARNING_BANK = [
       pl: `Trudno mu rozłożyć większe zadanie na mniejsze kroki.`,
       pt: `Acha difícil dividir uma tarefa maior em etapas menores.`,
       fr: `A du mal à décomposer une tâche importante en étapes plus petites.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_037",
@@ -737,7 +773,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może mieszać kolejność kroków zadania.`,
       pt: `Pode confundir a ordem dos passos da tarefa.`,
       fr: `Peut confondre l'ordre des étapes de la tâche.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_038",
@@ -757,7 +794,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zwykle potrafi doprowadzić plan do końca.`,
       pt: `Geralmente consegue levar um plano até a conclusão.`,
       fr: `Peut généralement mener un plan à son terme.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_039",
@@ -777,7 +815,8 @@ window.NM_LEARNING_BANK = [
       pl: `Nawet przygotowanie do zadania może być przytłaczające.`,
       pt: `Até preparar-se para uma tarefa pode parecer opressor.`,
       fr: `Même préparer une tâche peut sembler accablant.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_040",
@@ -797,7 +836,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma większe trudności z monitorowaniem postępu zadania.`,
       pt: `Tem mais dificuldade em monitorar o progresso de uma tarefa.`,
       fr: `A plus de difficultés à suivre l'avancement d'une tâche.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_041",
@@ -817,7 +857,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudność z oszacowaniem, ile czasu zajmie wykonanie zadania.`,
       pt: `Tem dificuldade em estimar quanto tempo uma tarefa levará.`,
       fr: `A des difficultés à estimer le temps nécessaire pour une tâche.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_042",
@@ -837,7 +878,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z dotrzymywaniem terminów.`,
       pt: `Tem dificuldade em cumprir prazos.`,
       fr: `A du mal à respecter les délais.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_043",
@@ -857,7 +899,8 @@ window.NM_LEARNING_BANK = [
       pl: `Materiały lub narzędzia do nauki łatwo ulegają dezorganizacji.`,
       pt: `Materiais ou ferramentas de aprendizado facilmente ficam desorganizados.`,
       fr: `Les matériels ou outils d’apprentissage deviennent facilement désorganisés.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_044",
@@ -866,8 +909,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.2,
     reverse: true,
     text: {
-      hu: `Általában jól tudja strukturálni az idejét.`,
-      en: `Can generally structure time well.`,
+      hu: `Általában jól tudja strukturálni az idejét kiszámítható napirend mellett.`,
+      en: `Can generally structure time well when the routine is predictable.`,
       de: `Kann die Zeit generell gut strukturieren.`,
       it: `In genere riesce a organizzare bene il tempo.`,
       es: `Generalmente puede organizar bien el tiempo.`,
@@ -877,7 +920,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zwykle dobrze potrafi organizować czas.`,
       pt: `Geralmente consegue estruturar bem o tempo.`,
       fr: `Parvient généralement à bien structurer son temps.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_045",
@@ -897,7 +941,8 @@ window.NM_LEARNING_BANK = [
       pl: `Częściej coś zostawia lub zapomina zabrać.`,
       pt: `Muitas vezes esquece algo ou o deixa para trás.`,
       fr: `Oublie souvent quelque chose ou oublie de l’apporter.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_046",
@@ -906,8 +951,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `A szükségesnél később kezd neki feladatoknak.`,
-      en: `Starts tasks later than needed.`,
+      hu: `A szükségesnél később kezd neki feladatoknak kevés külső struktúra mellett.`,
+      en: `Starts tasks later than needed when there is little external structure.`,
       de: `Beginnt Aufgaben später als nötig.`,
       it: `Inizia i compiti più tardi del necessario.`,
       es: `Comienza las tareas más tarde de lo necesario.`,
@@ -917,7 +962,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zaczyna zadania później niż powinien.`,
       pt: `Começa as tarefas mais tarde do que o necessário.`,
       fr: `Commence les tâches plus tard que nécessaire.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_047",
@@ -937,7 +983,8 @@ window.NM_LEARNING_BANK = [
       pl: `Mniejsze, ale ważne kroki organizacyjne są łatwo pomijane.`,
       pt: `Passos menores, mas importantes, de organização são facilmente ignorados.`,
       fr: `Les petites étapes d’organisation importantes sont facilement négligées.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_048",
@@ -957,7 +1004,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zwykle przychodzi przygotowany do zadań lub sytuacji edukacyjnych.`,
       pt: `Geralmente chega preparado para as tarefas ou situações de aprendizado.`,
       fr: `Arrive généralement préparé aux tâches ou situations d’apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_049",
@@ -977,7 +1025,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z planowaniem czasu podczas dłuższych zadań.`,
       pt: `Tem dificuldade em distribuir o tempo dentro de uma tarefa longa.`,
       fr: `A des difficultés à gérer son temps lors de tâches longues.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_050",
@@ -997,7 +1046,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma większe trudności z trzymaniem się zaplanowanego harmonogramu.`,
       pt: `Tem mais dificuldade em seguir um cronograma planejado.`,
       fr: `A plus de mal à respecter un planning prévu.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_051",
@@ -1006,8 +1056,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Előfordulhat, hogy elsőre nem teljesen érti meg a feladatot.`,
-      en: `May not fully understand a task the first time.`,
+      hu: `Előfordulhat, hogy elsőre csak részben érti meg a feladatot.`,
+      en: `May understand a task only partly on the first attempt.`,
       de: `Versteht eine Aufgabe beim ersten Mal möglicherweise nicht vollständig.`,
       it: `Potrebbe non comprendere completamente un compito la prima volta.`,
       es: `Puede que no entienda completamente una tarea la primera vez.`,
@@ -1017,7 +1067,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może nie zrozumieć zadania za pierwszym razem.`,
       pt: `Pode não compreender totalmente uma tarefa na primeira vez.`,
       fr: `Peut ne pas comprendre complètement une tâche dès la première fois.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_052",
@@ -1037,7 +1088,8 @@ window.NM_LEARNING_BANK = [
       pl: `Trudniej mu zrozumieć znaczenie bardziej złożonych słów.`,
       pt: `Tem mais dificuldade em entender o significado de palavras mais complexas.`,
       fr: `A plus de difficulté à comprendre le sens de formulations plus complexes.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_053",
@@ -1046,8 +1098,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.2,
     reverse: true,
     text: {
-      hu: `Többnyire jól érti a szóbeli magyarázatokat.`,
-      en: `Usually understands verbal explanations well.`,
+      hu: `Többnyire jól érti a szóbeli magyarázatokat nyugodt környezetben.`,
+      en: `Usually understands verbal explanations well in a calm setting.`,
       de: `Versteht verbale Erklärungen normalerweise gut.`,
       it: `Di solito comprende bene le spiegazioni verbali.`,
       es: `Generalmente entiende bien las explicaciones verbales.`,
@@ -1057,7 +1109,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zwykle dobrze rozumie wyjaśnienia werbalne.`,
       pt: `Geralmente entende bem as explicações orais.`,
       fr: `Comprend habituellement bien les explications verbales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_054",
@@ -1077,7 +1130,8 @@ window.NM_LEARNING_BANK = [
       pl: `Po przeczytaniu może być trudniej dokładnie przekazać główną myśl.`,
       pt: `Após a leitura, pode ser mais difícil relatar com precisão o ponto principal.`,
       fr: `Après la lecture, il peut être plus difficile de restituer précisément le point principal.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_055",
@@ -1097,7 +1151,8 @@ window.NM_LEARNING_BANK = [
       pl: `Czasami może interpretować instrukcje lub pytania zbyt dosłownie.`,
       pt: `Pode às vezes interpretar instruções ou perguntas de forma demasiado literal.`,
       fr: `Peut parfois interpréter les consignes ou questions de manière trop littérale.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_056",
@@ -1117,7 +1172,8 @@ window.NM_LEARNING_BANK = [
       pl: `Trudniej mu łączyć nowe informacje z istniejącą wiedzą.`,
       pt: `Tem mais dificuldade em conectar novas informações com o conhecimento existente.`,
       fr: `A plus de difficultés à relier les nouvelles informations aux connaissances existantes.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_057",
@@ -1137,7 +1193,8 @@ window.NM_LEARNING_BANK = [
       pl: `Trudniej mu zauważyć ukryte znaczenia lub oczekiwania.`,
       pt: `Tem mais dificuldade em notar significados ou expectativas implícitas.`,
       fr: `A plus de difficulté à percevoir les significations ou attentes implicites.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_058",
@@ -1157,7 +1214,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zwykle potrafi dobrze łączyć znaczenie informacji.`,
       pt: `Geralmente consegue integrar bem o significado das informações.`,
       fr: `Peut généralement bien intégrer le sens des informations.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_059",
@@ -1166,8 +1224,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.3,
     reverse: false,
     text: {
-      hu: `Előfordulhat, hogy nem pontosan azt válaszolja meg, amit a kérdés kér.`,
-      en: `May not always answer exactly what the question asks.`,
+      hu: `Előfordulhat, hogy a kérdés lényegét csak részben válaszolja meg.`,
+      en: `May answer only part of what the question is asking.`,
       de: `Antwortet nicht immer genau auf die gestellte Frage.`,
       it: `Potrebbe non rispondere sempre esattamente alla domanda posta.`,
       es: `Puede que no responda siempre exactamente a lo que pregunta la pregunta.`,
@@ -1177,7 +1235,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może nie zawsze odpowiadać dokładnie na zadane pytanie.`,
       pt: `Pode nem sempre responder exatamente ao que a pergunta pede.`,
       fr: `Ne répond pas toujours exactement à ce que la question demande.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_060",
@@ -1197,7 +1256,8 @@ window.NM_LEARNING_BANK = [
       pl: `Gęstsze lub bogate w informacje teksty są łatwiej przytłaczające.`,
       pt: `Textos mais densos ou carregados de informações são mais facilmente esmagadores.`,
       fr: `Les textes denses ou riches en informations sont plus facilement accablants.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_061",
@@ -1217,7 +1277,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może mieć trudności ze zmianą sposobu rozwiązywania problemu.`,
       pt: `Pode ter dificuldade em mudar para uma nova forma de resolver algo.`,
       fr: `Peut avoir des difficultés à passer à une nouvelle façon de résoudre un problème.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_062",
@@ -1237,7 +1298,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może upierać się przy podejściu, które już nie działa.`,
       pt: `Pode persistir em uma abordagem que já não funciona.`,
       fr: `Peut s'accrocher à une méthode qui ne fonctionne plus.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_063",
@@ -1257,7 +1319,8 @@ window.NM_LEARNING_BANK = [
       pl: `Dość łatwo dostosowuje się, gdy trzeba zmienić metodę.`,
       pt: `Consegue ajustar-se relativamente fácil quando um método precisa mudar.`,
       fr: `Peut s'adapter relativement facilement lorsqu'une méthode doit changer.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_064",
@@ -1277,7 +1340,8 @@ window.NM_LEARNING_BANK = [
       pl: `Trudniej mu przełączać się między różnymi zasadami lub punktami widzenia.`,
       pt: `Tem mais dificuldade em mudar entre diferentes regras ou perspectivas.`,
       fr: `Trouve plus difficile de passer d'une règle ou perspective à une autre.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_065",
@@ -1297,7 +1361,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma większe trudności z odejściem od znanych wzorców uczenia się lub myślenia.`,
       pt: `Tem mais dificuldade em deixar padrões familiares de aprendizagem ou pensamento.`,
       fr: `A plus de difficulté à abandonner des schémas d'apprentissage ou de pensée familiers.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_066",
@@ -1306,8 +1371,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Hibajelzés után sem mindig könnyű új irányba indulnia.`,
-      en: `Even after feedback, it may not be easy to move in a new direction.`,
+      hu: `Hibajelzés után is nehéz lehet új irányba indulnia.`,
+      en: `After feedback, shifting to a new direction may still be difficult.`,
       de: `Auch nach Rückmeldung kann es schwierig sein, eine neue Richtung einzuschlagen.`,
       it: `Anche dopo un feedback, potrebbe non essere facile prendere una nuova direzione.`,
       es: `Incluso después de recibir comentarios, puede no ser fácil tomar una nueva dirección.`,
@@ -1317,7 +1382,8 @@ window.NM_LEARNING_BANK = [
       pl: `Nawet po otrzymaniu informacji zwrotnej może być trudno obrać nowy kierunek.`,
       pt: `Mesmo após feedback, pode não ser fácil seguir uma nova direção.`,
       fr: `Même après un retour, il peut être difficile de prendre une nouvelle direction.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_067",
@@ -1337,7 +1403,8 @@ window.NM_LEARNING_BANK = [
       pl: `Trudniej zauważa, kiedy zadanie wymaga innego sposobu myślenia.`,
       pt: `Tem mais dificuldade em perceber quando uma tarefa exige um tipo diferente de pensamento.`,
       fr: `Trouve plus difficile de remarquer quand une tâche nécessite un autre type de réflexion.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_068",
@@ -1357,7 +1424,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi utrzymać w pamięci kilka możliwych rozwiązań.`,
       pt: `Consegue manter várias soluções possíveis em mente.`,
       fr: `Peut garder plusieurs solutions possibles en tête.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_069",
@@ -1377,7 +1445,8 @@ window.NM_LEARNING_BANK = [
       pl: `Po utknięciu ma trudności ze znalezieniem nowej drogi naprzód.`,
       pt: `Depois de ficar preso, tem mais dificuldade em encontrar uma nova forma de avançar.`,
       fr: `Après être bloqué, a plus de difficulté à trouver une nouvelle solution.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_070",
@@ -1397,7 +1466,8 @@ window.NM_LEARNING_BANK = [
       pl: `Trudniej mu przełączać się z jednego typu zadania na inny.`,
       pt: `Tem mais dificuldade em mudar de um tipo de tarefa para outro.`,
       fr: `Trouve plus difficile de passer d'un type de tâche à un autre.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_071",
@@ -1417,7 +1487,8 @@ window.NM_LEARNING_BANK = [
       pl: `Trudniej mu sięgnąć do wewnętrznej motywacji do nauki.`,
       pt: `Tem mais dificuldade em acessar a motivação interna para aprender.`,
       fr: `Trouve plus difficile d’accéder à la motivation interne pour apprendre.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_072",
@@ -1437,7 +1508,8 @@ window.NM_LEARNING_BANK = [
       pl: `Wysiłek szybko spada, gdy coś nie wychodzi od razu.`,
       pt: `O esforço diminui mais facilmente quando algo não tem sucesso imediato.`,
       fr: `L’effort diminue plus facilement quand quelque chose n’aboutit pas immédiatement.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_073",
@@ -1457,7 +1529,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zazwyczaj wytrzymuje przy zadaniu, nawet gdy jest trudne.`,
       pt: `Geralmente persiste em uma tarefa mesmo quando é difícil.`,
       fr: `Persévère généralement dans une tâche même si elle est difficile.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_074",
@@ -1466,8 +1539,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.3,
     reverse: false,
     text: {
-      hu: `A siker vagy eredmény ígérete sem mindig elég húzóerő számára.`,
-      en: `The promise of success or reward is not always enough to pull effort forward.`,
+      hu: `A siker vagy jutalom ígérete időnként kevés húzóerőt ad számára.`,
+      en: `The promise of success or reward may sometimes provide limited motivation.`,
       de: `Das Versprechen von Erfolg oder Belohnung reicht nicht immer aus, um den Einsatz zu fördern.`,
       it: `La promessa di successo o ricompensa non basta sempre a sostenere lo sforzo.`,
       es: `La promesa de éxito o recompensa no siempre es suficiente para motivar el esfuerzo.`,
@@ -1477,7 +1550,8 @@ window.NM_LEARNING_BANK = [
       pl: `Obietnica sukcesu lub nagrody nie zawsze wystarcza, by podtrzymać wysiłek.`,
       pt: `A promessa de sucesso ou recompensa nem sempre é suficiente para manter o esforço.`,
       fr: `La promesse de réussite ou de récompense ne suffit pas toujours à maintenir l’effort.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_075",
@@ -1497,7 +1571,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może zbyt wcześnie rezygnować z trudniejszych zadań.`,
       pt: `Pode desistir cedo demais em tarefas mais difíceis.`,
       fr: `Peut avoir tendance à abandonner trop tôt face à des tâches difficiles.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_076",
@@ -1517,7 +1592,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może potrzebować więcej zewnętrznych bodźców, aby zacząć zadanie.`,
       pt: `Pode precisar de mais estímulo externo para iniciar uma tarefa.`,
       fr: `Peut avoir besoin de plus de stimulus externes pour commencer une tâche.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_077",
@@ -1537,7 +1613,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma większe trudności z powrotem do działania po porażce lub błędach.`,
       pt: `Tem mais dificuldade para se reengajar após falhas ou erros.`,
       fr: `A plus de difficulté à se remotiver après un échec ou une erreur.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_078",
@@ -1546,8 +1623,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.2,
     reverse: true,
     text: {
-      hu: `A célok többnyire segítenek neki fenntartani az erőfeszítését.`,
-      en: `Goals usually help maintain effort.`,
+      hu: `A célok többnyire segítenek neki fenntartani erőfeszítését feladat közben.`,
+      en: `Goals usually help maintain effort during tasks.`,
       de: `Ziele helfen meist, den Einsatz aufrechtzuerhalten.`,
       it: `Gli obiettivi di solito aiutano a mantenere lo sforzo.`,
       es: `Las metas suelen ayudar a mantener el esfuerzo.`,
@@ -1557,7 +1634,8 @@ window.NM_LEARNING_BANK = [
       pl: `Cele zwykle pomagają utrzymać wysiłek.`,
       pt: `Metas geralmente ajudam a manter o esforço.`,
       fr: `Les objectifs aident généralement à maintenir l’effort.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_079",
@@ -1577,7 +1655,8 @@ window.NM_LEARNING_BANK = [
       pl: `Gdy jest zmęczony, wytrwałość może szybko spadać.`,
       pt: `Quando está cansado, a persistência pode cair especialmente rápido.`,
       fr: `Lorsque fatigué, la persévérance peut chuter particulièrement vite.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_080",
@@ -1597,7 +1676,8 @@ window.NM_LEARNING_BANK = [
       pl: `Podchodzi do trudniejszych zadań z mniejszą chęcią.`,
       pt: `Enfrenta tarefas mais difíceis com menos disposição.`,
       fr: `Aborde les tâches plus difficiles avec moins de volonté.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_081",
@@ -1606,8 +1686,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Nem mindig veszi észre időben a saját hibáit.`,
-      en: `Does not always notice own mistakes in time.`,
+      hu: `Saját hibáit időnként későn veszi észre feladatmegoldás közben.`,
+      en: `May notice own mistakes late while solving tasks.`,
       de: `Bemerkt eigene Fehler nicht immer rechtzeitig.`,
       it: `Non nota sempre i propri errori in tempo.`,
       es: `No siempre se da cuenta de sus propios errores a tiempo.`,
@@ -1617,7 +1697,8 @@ window.NM_LEARNING_BANK = [
       pl: `Nie zawsze zauważa własne błędy na czas.`,
       pt: `Nem sempre percebe os próprios erros a tempo.`,
       fr: `Ne remarque pas toujours ses erreurs à temps.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_082",
@@ -1637,7 +1718,8 @@ window.NM_LEARNING_BANK = [
       pl: `Sprawdza wykonaną pracę rzadziej, aby wychwycić błędy.`,
       pt: `Confere o trabalho com menos consistência para detectar erros.`,
       fr: `Relit moins systématiquement son travail pour repérer les erreurs.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_083",
@@ -1657,7 +1739,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zazwyczaj potrafi samodzielnie przejrzeć i poprawić swoją pracę.`,
       pt: `Geralmente consegue revisar e corrigir seu próprio trabalho.`,
       fr: `Peut généralement revoir et corriger son propre travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_084",
@@ -1677,7 +1760,8 @@ window.NM_LEARNING_BANK = [
       pl: `Błędy mogą pozostać w pracy z powodu nieuwagi.`,
       pt: `Erros podem permanecer no trabalho devido à falta de atenção.`,
       fr: `Des erreurs peuvent rester dans le travail par manque d’attention.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_085",
@@ -1697,7 +1781,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma większe trudności w ocenianiu, jak dokładna lub kompletna jest praca.`,
       pt: `Tem mais dificuldade para julgar a precisão ou completude do trabalho.`,
       fr: `A plus de difficulté à juger de l’exactitude ou de l’exhaustivité du travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_086",
@@ -1706,8 +1791,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Kapott visszajelzést nem mindig épít be a következő próbálkozásba.`,
-      en: `Does not always integrate feedback into the next attempt.`,
+      hu: `Kapott visszajelzést időnként nehezen épít be a következő próbálkozásba.`,
+      en: `May have difficulty integrating feedback into the next attempt.`,
       de: `Nimmt nicht immer Rückmeldungen in den nächsten Versuch auf.`,
       it: `Non sempre integra i feedback nel tentativo successivo.`,
       es: `No siempre incorpora la retroalimentación en el siguiente intento.`,
@@ -1717,7 +1802,8 @@ window.NM_LEARNING_BANK = [
       pl: `Nie zawsze wykorzystuje informacje zwrotne przy następnym podejściu.`,
       pt: `Nem sempre integra o feedback na próxima tentativa.`,
       fr: `N’intègre pas toujours les retours dans la tentative suivante.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_087",
@@ -1737,7 +1823,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może oddać pracę, nie zauważając brakujących części.`,
       pt: `Pode entregar o trabalho sem notar partes faltantes.`,
       fr: `Peut rendre un travail sans remarquer les parties manquantes.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_088",
@@ -1757,7 +1844,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zazwyczaj zauważa, kiedy coś trzeba poprawić.`,
       pt: `Normalmente percebe quando algo precisa ser corrigido.`,
       fr: `Remarque généralement quand quelque chose doit être corrigé.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_089",
@@ -1777,7 +1865,8 @@ window.NM_LEARNING_BANK = [
       pl: `Trudniej mu monitorować postęp i dokładność podczas pracy.`,
       pt: `Tem mais dificuldade para monitorar o progresso e a precisão enquanto trabalha.`,
       fr: `A plus de difficulté à suivre la progression et l’exactitude pendant le travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_090",
@@ -1797,7 +1886,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może powtarzać ten sam błąd wielokrotnie.`,
       pt: `Pode repetir o mesmo erro várias vezes.`,
       fr: `Peut répéter la même erreur plusieurs fois.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_091",
@@ -1817,7 +1907,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma większe trudności z wyborem skutecznej strategii uczenia się.`,
       pt: `Tem mais dificuldade em escolher uma estratégia de aprendizagem eficaz.`,
       fr: `A plus de difficultés à choisir une stratégie d'apprentissage efficace.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_092",
@@ -1837,7 +1928,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może skłaniać się do biernego ponownego czytania zamiast aktywnego przetwarzania materiału.`,
       pt: `Pode tender a reler passivamente em vez de processar ativamente o material.`,
       fr: `Peut avoir tendance à relire passivement plutôt qu'à traiter activement le matériel.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_093",
@@ -1857,7 +1949,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zwykle potrafi wybrać metodę uczenia się odpowiednią do zadania.`,
       pt: `Geralmente consegue escolher um método de aprendizagem adequado à tarefa.`,
       fr: `Peut généralement choisir une méthode d'apprentissage adaptée à la tâche.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_094",
@@ -1877,7 +1970,8 @@ window.NM_LEARNING_BANK = [
       pl: `Trudniej mu opracować strategie wspierające pamięć.`,
       pt: `Tem mais dificuldade em criar estratégias que ajudem a lembrar.`,
       fr: `A plus de difficultés à élaborer des stratégies qui soutiennent la mémorisation.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_095",
@@ -1897,7 +1991,8 @@ window.NM_LEARNING_BANK = [
       pl: `W nauce widoczny jest mniejszy system celowego powtórzenia.`,
       pt: `A aprendizagem mostra menos um sistema deliberado de revisão.`,
       fr: `L'apprentissage montre moins un système délibéré de révision.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_096",
@@ -1906,8 +2001,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Ugyanazt a módszert próbálhatja minden helyzetben használni, akkor is, ha az nem elég hatékony.`,
-      en: `May try to use the same method in every situation even when it is not effective enough.`,
+      hu: `Ugyanazt a módszert többféle helyzetben is próbálhatja használni, kevés igazítással.`,
+      en: `May try to use the same method across different situations with little adjustment.`,
       de: `Versucht möglicherweise, in jeder Situation dieselbe Methode anzuwenden, auch wenn sie nicht effektiv genug ist.`,
       it: `Potrebbe provare a usare lo stesso metodo in ogni situazione anche quando non è abbastanza efficace.`,
       es: `Puede intentar usar el mismo método en todas las situaciones, incluso cuando no es lo suficientemente efectivo.`,
@@ -1917,7 +2012,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może próbować stosować tę samą metodę w każdej sytuacji, nawet gdy nie jest ona wystarczająco skuteczna.`,
       pt: `Pode tentar usar o mesmo método em todas as situações, mesmo quando não é suficientemente eficaz.`,
       fr: `Peut essayer d'utiliser la même méthode dans chaque situation, même si elle n'est pas assez efficace.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_097",
@@ -1937,7 +2033,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma większe trudności z wyjaśnieniem przyswojonego materiału własnymi słowami.`,
       pt: `Tem mais dificuldade em explicar o material aprendido com suas próprias palavras.`,
       fr: `A plus de difficultés à expliquer le matériel appris avec ses propres mots.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_098",
@@ -1957,7 +2054,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi elastycznie zmieniać metody nauki w razie potrzeby.`,
       pt: `Consegue mudar os métodos de aprendizagem de forma flexível quando necessário.`,
       fr: `Peut changer les méthodes d'apprentissage de façon flexible si nécessaire.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_099",
@@ -1977,7 +2075,8 @@ window.NM_LEARNING_BANK = [
       pl: `Łatwiej pozostaje na powierzchownym poziomie przetwarzania zamiast na głębszym zrozumieniu.`,
       pt: `Fica com mais facilidade em um nível superficial de processamento em vez de um entendimento mais profundo.`,
       fr: `Reste plus facilement à un niveau superficiel de traitement plutôt qu'à une compréhension approfondie.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_100",
@@ -1997,7 +2096,8 @@ window.NM_LEARNING_BANK = [
       pl: `Rzadziej korzysta z metod wymagających prawdziwego przypominania sobie.`,
       pt: `Usa menos frequentemente métodos que exigem verdadeira recuperação da informação.`,
       fr: `Utilise moins souvent des méthodes nécessitant une récupération réelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_101",
@@ -2017,7 +2117,8 @@ window.NM_LEARNING_BANK = [
       pl: `Hałas lub ruch w tle mogą znacznie utrudniać naukę.`,
       pt: `O ruído ou movimento de fundo podem tornar a aprendizagem especialmente difícil.`,
       fr: `Le bruit ou les mouvements en arrière-plan peuvent particulièrement gêner l'apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_102",
@@ -2037,7 +2138,8 @@ window.NM_LEARNING_BANK = [
       pl: `Wydajność zależy w dużym stopniu od tego, jak spokojne lub uporządkowane jest otoczenie.`,
       pt: `O desempenho depende muito de quão calmo ou organizado está o ambiente.`,
       fr: `Les performances dépendent fortement du calme ou de l'organisation de l'environnement.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_103",
@@ -2057,7 +2159,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi stosunkowo dobrze uczyć się w różnych środowiskach.`,
       pt: `Consegue aprender relativamente bem em diferentes ambientes.`,
       fr: `Peut apprendre relativement bien dans différents environnements.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_104",
@@ -2077,7 +2180,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zatłoczenie wizualne również łatwo rozprasza uwagę.`,
       pt: `A desordem visual também distrai facilmente a atenção.`,
       fr: `Le désordre visuel distrait également facilement l'attention.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_105",
@@ -2097,7 +2201,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrzebuje więcej czasu, aby przystosować się do nauki w nowym środowisku lub otoczeniu.`,
       pt: `Demora mais para se adaptar ao aprendizado em um ambiente ou configuração novos.`,
       fr: `Met plus de temps à se stabiliser pour apprendre dans un nouvel environnement ou cadre.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_106",
@@ -2117,7 +2222,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może potrzebować więcej wsparcia środowiskowego, aby dobrze funkcjonować.`,
       pt: `Pode precisar de mais apoios ambientais para funcionar bem.`,
       fr: `Peut nécessiter plus de soutiens environnementaux pour bien fonctionner.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_107",
@@ -2137,7 +2243,8 @@ window.NM_LEARNING_BANK = [
       pl: `Uwaga łatwiej rozprasza się w grupach lub zatłoczonych miejscach.`,
       pt: `A atenção é mais facilmente interrompida em ambientes de grupo ou movimentados.`,
       fr: `L'attention se dégrade plus facilement en groupe ou dans des environnements fréquentés.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_108",
@@ -2157,7 +2264,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zazwyczaj potrafi działać stosunkowo dobrze nawet przy pewnych rozproszeniach.`,
       pt: `Normalmente consegue desempenhar-se relativamente bem mesmo com algum ambiente distrativo.`,
       fr: `Peut généralement bien fonctionner même avec un certain niveau de distractions.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_109",
@@ -2177,7 +2285,8 @@ window.NM_LEARNING_BANK = [
       pl: `Cyfrowe urządzenia lub powiadomienia szczególnie łatwo przerywają uwagę.`,
       pt: `Dispositivos digitais ou notificações interrompem especialmente facilmente a atenção.`,
       fr: `Les appareils numériques ou les notifications interrompent particulièrement facilement l'attention.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_110",
@@ -2197,7 +2306,8 @@ window.NM_LEARNING_BANK = [
       pl: `Wydajność może silnie zależeć od kontekstu i warunków środowiskowych.`,
       pt: `O desempenho pode depender fortemente do contexto e das condições ambientais.`,
       fr: `Les performances peuvent dépendre fortement du contexte et des conditions environnementales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_111",
@@ -2217,7 +2327,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może mieć trudności z pokazaniem faktycznej wiedzy.`,
       pt: `Pode ter dificuldade para mostrar o que realmente sabe.`,
       fr: `Peut avoir du mal à montrer ce qu'il sait réellement.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_112",
@@ -2237,7 +2348,8 @@ window.NM_LEARNING_BANK = [
       pl: `Trudniej mu organizować myśli na piśmie.`,
       pt: `Acha mais difícil organizar os pensamentos por escrito.`,
       fr: `A plus de difficulté à organiser ses pensées à l'écrit.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_113",
@@ -2246,8 +2358,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.2,
     reverse: true,
     text: {
-      hu: `Általában képes érthetően kifejezni a tudását.`,
-      en: `Can generally express knowledge clearly.`,
+      hu: `Általában képes érthetően kifejezni a tudását támogató környezetben.`,
+      en: `Can generally express knowledge clearly in a supportive setting.`,
       de: `Kann Wissen meist klar ausdrücken.`,
       it: `Generalmente riesce a esprimere chiaramente le conoscenze.`,
       es: `Generalmente puede expresar el conocimiento claramente.`,
@@ -2257,7 +2369,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zazwyczaj potrafi jasno wyrazić wiedzę.`,
       pt: `Geralmente consegue expressar o conhecimento claramente.`,
       fr: `Peut généralement exprimer clairement ses connaissances.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_114",
@@ -2277,7 +2390,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma większe trudności z logicznym budowaniem odpowiedzi.`,
       pt: `Tem mais dificuldade em construir uma resposta de forma lógica.`,
       fr: `A plus de difficulté à construire une réponse de façon logique.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_115",
@@ -2297,7 +2411,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może wydawać się, że wie więcej, niż pokazuje wykonanie.`,
       pt: `Pode parecer que sabe mais do que demonstra no desempenho.`,
       fr: `Peut sembler en savoir plus que ce qui est montré par sa performance.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_116",
@@ -2317,7 +2432,8 @@ window.NM_LEARNING_BANK = [
       pl: `Wykonanie łatwiej się pogarsza pod presją, nawet jeśli materiał jest znany.`,
       pt: `O desempenho se deteriora mais facilmente sob pressão, mesmo quando o material é conhecido.`,
       fr: `La performance se dégrade plus facilement sous pression même si le contenu est connu.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_117",
@@ -2337,7 +2453,8 @@ window.NM_LEARNING_BANK = [
       pl: `Odpowiedzi mogą być krótsze lub mniej kompletne niż sugeruje faktyczna wiedza.`,
       pt: `As respostas podem ser mais curtas ou incompletas do que o conhecimento real sugere.`,
       fr: `Les réponses peuvent être plus courtes ou moins complètes que ce que suggère la connaissance réelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_118",
@@ -2357,7 +2474,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zazwyczaj potrafi zamienić wiedzę w użyteczne odpowiedzi lub rozwiązania.`,
       pt: `Geralmente consegue transformar o conhecimento em respostas ou soluções úteis.`,
       fr: `Parvient habituellement à transformer ses connaissances en réponses ou solutions utilisables.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_119",
@@ -2377,7 +2495,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może też potrzebować więcej czasu ustnie, by dobrze sformułować myśli.`,
       pt: `Pode também precisar de mais tempo para formular bem os pensamentos verbalmente.`,
       fr: `Peut aussi avoir besoin de plus de temps pour bien formuler ses pensées à l'oral.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_120",
@@ -2397,7 +2516,8 @@ window.NM_LEARNING_BANK = [
       pl: `Organizacja myśli w formę odpowiedzi może wymagać dodatkowego wysiłku.`,
       pt: `Organizar os pensamentos em um formato de resposta pode requerer esforço extra.`,
       fr: `Organiser les pensées en une forme exploitable peut demander un effort supplémentaire.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_121",
@@ -2417,7 +2537,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z utrzymaniem uwagi podczas nauki.`,
       pt: `Tem dificuldade em manter a atenção durante a aprendizagem.`,
       fr: `A des difficultés à maintenir son attention pendant l'apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_122",
@@ -2437,7 +2558,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z utrzymaniem uwagi w szkole lub w pracy.`,
       pt: `Tem dificuldade em manter a atenção na escola ou no trabalho.`,
       fr: `A des difficultés à maintenir son attention à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_123",
@@ -2457,7 +2579,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z utrzymaniem uwagi podczas zadań domowych.`,
       pt: `Tem dificuldade em manter a atenção durante as tarefas em casa.`,
       fr: `A des difficultés à maintenir son attention pendant les tâches à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_124",
@@ -2477,7 +2600,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z utrzymaniem uwagi podczas nauki online.`,
       pt: `Tem dificuldade em manter a atenção durante o aprendizado online.`,
       fr: `A des difficultés à maintenir son attention lors de l'apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_125",
@@ -2497,7 +2621,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z utrzymaniem uwagi pod presją czasu.`,
       pt: `Tem dificuldade em manter a atenção sob pressão de tempo.`,
       fr: `A des difficultés à maintenir son attention sous pression temporelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_126",
@@ -2517,7 +2642,8 @@ window.NM_LEARNING_BANK = [
       pl: `Łatwo rozprasza się bodźcami zewnętrznymi podczas nauki.`,
       pt: `Distrai-se facilmente com estímulos externos durante a aprendizagem.`,
       fr: `Se laisse facilement distraire par des stimuli externes pendant l'apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_127",
@@ -2537,7 +2663,8 @@ window.NM_LEARNING_BANK = [
       pl: `Łatwo rozprasza się bodźcami zewnętrznymi w szkole lub pracy.`,
       pt: `Distrai-se facilmente com estímulos externos na escola ou no trabalho.`,
       fr: `Se laisse facilement distraire par des stimuli externes à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_128",
@@ -2557,7 +2684,8 @@ window.NM_LEARNING_BANK = [
       pl: `Łatwo rozprasza się bodźcami zewnętrznymi podczas zadań domowych.`,
       pt: `Distrai-se facilmente com estímulos externos durante as tarefas em casa.`,
       fr: `Se laisse facilement distraire par des stimuli externes pendant les tâches à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_129",
@@ -2577,7 +2705,8 @@ window.NM_LEARNING_BANK = [
       pl: `Łatwo rozprasza się bodźcami zewnętrznymi podczas nauki online.`,
       pt: `Distrai-se facilmente com estímulos externos durante o aprendizado online.`,
       fr: `Se laisse facilement distraire par des stimuli externes lors de l'apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_130",
@@ -2597,7 +2726,8 @@ window.NM_LEARNING_BANK = [
       pl: `Łatwo rozprasza się bodźcami zewnętrznymi pod presją czasu.`,
       pt: `Distrai-se facilmente com estímulos externos sob pressão de tempo.`,
       fr: `Se laisse facilement distraire par des stimuli externes sous pression temporelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_131",
@@ -2617,7 +2747,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi stosunkowo stabilnie utrzymywać uwagę podczas nauki.`,
       pt: `Consegue manter a atenção relativamente estável durante a aprendizagem.`,
       fr: `Peut maintenir son attention de manière relativement stable pendant l'apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_132",
@@ -2637,7 +2768,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi stosunkowo stabilnie utrzymywać uwagę w sytuacjach szkolnych lub zawodowych.`,
       pt: `Consegue manter a atenção relativamente estável em situações escolares ou de trabalho.`,
       fr: `Peut maintenir son attention de manière relativement stable dans les situations scolaires ou professionnelles.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_133",
@@ -2657,7 +2789,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi stosunkowo stabilnie utrzymywać uwagę podczas wykonywania zadań domowych.`,
       pt: `Consegue manter a atenção relativamente estável durante as tarefas domésticas.`,
       fr: `Peut maintenir son attention de manière relativement stable pendant les tâches à domicile.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_134",
@@ -2677,7 +2810,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi stosunkowo stabilnie utrzymywać uwagę podczas nauki online.`,
       pt: `Consegue manter a atenção relativamente estável durante a aprendizagem online.`,
       fr: `Peut maintenir son attention de manière relativement stable pendant l'apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_135",
@@ -2697,7 +2831,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi stosunkowo stabilnie utrzymywać uwagę pod presją czasu.`,
       pt: `Consegue manter a atenção relativamente estável sob pressão de tempo.`,
       fr: `Peut maintenir son attention de manière relativement stable sous pression temporelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_136",
@@ -2717,7 +2852,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z powrotem do zadania po przerwaniu podczas nauki.`,
       pt: `Tem dificuldade em retomar uma tarefa após uma interrupção durante a aprendizagem.`,
       fr: `A des difficultés à reprendre une tâche après une interruption pendant l'apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_137",
@@ -2737,7 +2873,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z powrotem do zadania po przerwaniu w sytuacjach szkolnych lub zawodowych.`,
       pt: `Tem dificuldade em retomar uma tarefa após uma interrupção em situações escolares ou de trabalho.`,
       fr: `A des difficultés à reprendre une tâche après une interruption dans des situations scolaires ou professionnelles.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_138",
@@ -2757,7 +2894,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z powrotem do zadania po przerwaniu podczas wykonywania zadań domowych.`,
       pt: `Tem dificuldade em retomar uma tarefa após uma interrupção durante as tarefas domésticas.`,
       fr: `A des difficultés à reprendre une tâche après une interruption pendant les tâches à domicile.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_139",
@@ -2777,7 +2915,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z powrotem do zadania po przerwaniu podczas nauki online.`,
       pt: `Tem dificuldade em retomar uma tarefa após uma interrupção durante a aprendizagem online.`,
       fr: `A des difficultés à reprendre une tâche après une interruption pendant l'apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_140",
@@ -2797,7 +2936,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z powrotem do zadania po przerwaniu pod presją czasu.`,
       pt: `Tem dificuldade em retomar uma tarefa após uma interrupção sob pressão de tempo.`,
       fr: `A des difficultés à reprendre une tâche après une interruption sous pression temporelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_141",
@@ -2817,7 +2957,8 @@ window.NM_LEARNING_BANK = [
       pl: `Własne myśli łatwo odwracają uwagę podczas nauki.`,
       pt: `Os próprios pensamentos desviam facilmente o foco durante o aprendizado.`,
       fr: `Les propres pensées éloignent facilement l'attention pendant l'apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_142",
@@ -2837,7 +2978,8 @@ window.NM_LEARNING_BANK = [
       pl: `Własne myśli łatwo odwracają uwagę w sytuacjach szkolnych lub zawodowych.`,
       pt: `Os próprios pensamentos desviam facilmente o foco em situações escolares ou de trabalho.`,
       fr: `Les propres pensées éloignent facilement l'attention en milieu scolaire ou professionnel.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_143",
@@ -2857,7 +2999,8 @@ window.NM_LEARNING_BANK = [
       pl: `Własne myśli łatwo odwracają uwagę podczas zadań domowych.`,
       pt: `Os próprios pensamentos desviam facilmente o foco durante tarefas em casa.`,
       fr: `Les propres pensées éloignent facilement l'attention pendant les tâches à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_144",
@@ -2877,7 +3020,8 @@ window.NM_LEARNING_BANK = [
       pl: `Własne myśli łatwo odwracają uwagę podczas nauki online.`,
       pt: `Os próprios pensamentos desviam facilmente o foco durante o aprendizado online.`,
       fr: `Les propres pensées éloignent facilement l'attention pendant l'apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_145",
@@ -2897,7 +3041,8 @@ window.NM_LEARNING_BANK = [
       pl: `Własne myśli łatwo odwracają uwagę pod presją czasu.`,
       pt: `Os próprios pensamentos desviam facilmente o foco sob pressão de tempo.`,
       fr: `Les propres pensées éloignent facilement l'attention sous pression temporelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_146",
@@ -2917,7 +3062,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z jednoczesnym utrzymaniem w pamięci wielu informacji podczas nauki.`,
       pt: `Tem dificuldade em manter várias informações na mente ao mesmo tempo durante o aprendizado.`,
       fr: `A des difficultés à garder plusieurs informations en tête à la fois pendant l'apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_147",
@@ -2937,7 +3083,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z jednoczesnym utrzymaniem w pamięci wielu informacji w sytuacjach szkolnych lub zawodowych.`,
       pt: `Tem dificuldade em manter várias informações na mente ao mesmo tempo em situações escolares ou de trabalho.`,
       fr: `A des difficultés à garder plusieurs informations en tête à la fois en milieu scolaire ou professionnel.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_148",
@@ -2957,7 +3104,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z jednoczesnym utrzymaniem w pamięci wielu informacji podczas zadań domowych.`,
       pt: `Tem dificuldade em manter várias informações na mente ao mesmo tempo durante as tarefas em casa.`,
       fr: `A des difficultés à garder plusieurs informations en tête à la fois pendant les tâches à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_149",
@@ -2977,7 +3125,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z jednoczesnym utrzymaniem w pamięci wielu informacji podczas nauki online.`,
       pt: `Tem dificuldade em manter várias informações na mente ao mesmo tempo durante o aprendizado online.`,
       fr: `A des difficultés à garder plusieurs informations en tête à la fois pendant l'apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_150",
@@ -2997,7 +3146,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z jednoczesnym utrzymaniem w pamięci wielu informacji pod presją czasu.`,
       pt: `Tem dificuldade em manter várias informações na mente ao mesmo tempo sob pressão de tempo.`,
       fr: `A des difficultés à garder plusieurs informations en tête à la fois sous pression temporelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_151",
@@ -3017,7 +3167,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma większe trudności ze stosowaniem się do instrukcji wieloetapowych podczas nauki.`,
       pt: `Tem mais dificuldade em seguir instruções com vários passos durante a aprendizagem.`,
       fr: `A plus de difficultés à suivre des consignes en plusieurs étapes pendant l'apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_152",
@@ -3037,7 +3188,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma większe trudności ze stosowaniem się do instrukcji wieloetapowych w szkole lub w pracy.`,
       pt: `Tem mais dificuldade em seguir instruções com vários passos em situações escolares ou de trabalho.`,
       fr: `A plus de difficultés à suivre des consignes en plusieurs étapes à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_153",
@@ -3057,7 +3209,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma większe trudności ze stosowaniem się do instrukcji wieloetapowych podczas domowych obowiązków.`,
       pt: `Tem mais dificuldade em seguir instruções com vários passos durante tarefas domésticas.`,
       fr: `A plus de difficultés à suivre des consignes en plusieurs étapes lors des tâches à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_154",
@@ -3077,7 +3230,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma większe trudności ze stosowaniem się do instrukcji wieloetapowych podczas nauki online.`,
       pt: `Tem mais dificuldade em seguir instruções com vários passos durante o aprendizado online.`,
       fr: `A plus de difficultés à suivre des consignes en plusieurs étapes lors de l'apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_155",
@@ -3097,7 +3251,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma większe trudności ze stosowaniem się do instrukcji wieloetapowych pod presją czasu.`,
       pt: `Tem mais dificuldade em seguir instruções com vários passos sob pressão de tempo.`,
       fr: `A plus de difficultés à suivre des consignes en plusieurs étapes sous pression temporelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_156",
@@ -3117,7 +3272,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zazwyczaj potrafi jednocześnie pamiętać kilka szczegółów podczas nauki.`,
       pt: `Geralmente consegue manter vários detalhes na mente ao mesmo tempo durante a aprendizagem.`,
       fr: `Peut généralement garder plusieurs détails en tête à la fois pendant l'apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_157",
@@ -3137,7 +3293,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zazwyczaj potrafi jednocześnie pamiętać kilka szczegółów w szkole lub w pracy.`,
       pt: `Geralmente consegue manter vários detalhes na mente ao mesmo tempo em situações escolares ou de trabalho.`,
       fr: `Peut généralement garder plusieurs détails en tête à la fois à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_158",
@@ -3157,7 +3314,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zazwyczaj potrafi jednocześnie pamiętać kilka szczegółów podczas domowych obowiązków.`,
       pt: `Geralmente consegue manter vários detalhes na mente ao mesmo tempo durante tarefas domésticas.`,
       fr: `Peut généralement garder plusieurs détails en tête à la fois lors des tâches à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_159",
@@ -3177,7 +3335,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zazwyczaj potrafi jednocześnie pamiętać kilka szczegółów podczas nauki online.`,
       pt: `Geralmente consegue manter vários detalhes na mente ao mesmo tempo durante o aprendizado online.`,
       fr: `Peut généralement garder plusieurs détails en tête à la fois lors de l'apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_160",
@@ -3197,7 +3356,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zazwyczaj potrafi jednocześnie pamiętać kilka szczegółów pod presją czasu.`,
       pt: `Geralmente consegue manter vários detalhes na mente ao mesmo tempo sob pressão de tempo.`,
       fr: `Peut généralement garder plusieurs détails en tête à la fois sous pression temporelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_161",
@@ -3217,7 +3377,8 @@ window.NM_LEARNING_BANK = [
       pl: `Łatwo traci orientację, gdzie są rzeczy podczas nauki.`,
       pt: `Perde facilmente o rastro de onde estão as coisas durante o aprendizado.`,
       fr: `Perd facilement la notion de l’endroit où se trouvent les choses lors de l’apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_162",
@@ -3237,7 +3398,8 @@ window.NM_LEARNING_BANK = [
       pl: `Łatwo traci orientację, gdzie są rzeczy w szkole lub w pracy.`,
       pt: `Perde facilmente o rastro de onde estão as coisas em situações escolares ou de trabalho.`,
       fr: `Perd facilement la notion de l’endroit où se trouvent les choses en milieu scolaire ou professionnel.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_163",
@@ -3257,7 +3419,8 @@ window.NM_LEARNING_BANK = [
       pl: `Łatwo traci orientację, gdzie są rzeczy podczas wykonywania obowiązków domowych.`,
       pt: `Perde facilmente o rastro de onde estão as coisas durante as tarefas domésticas.`,
       fr: `Perd facilement la notion de l’endroit où se trouvent les choses lors des tâches ménagères.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_164",
@@ -3277,7 +3440,8 @@ window.NM_LEARNING_BANK = [
       pl: `Łatwo traci orientację, gdzie są rzeczy podczas nauki online.`,
       pt: `Perde facilmente o rastro de onde estão as coisas durante o aprendizado online.`,
       fr: `Perd facilement la notion de l’endroit où se trouvent les choses lors de l’apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_165",
@@ -3297,7 +3461,8 @@ window.NM_LEARNING_BANK = [
       pl: `Łatwo traci orientację, gdzie są rzeczy pod presją czasu.`,
       pt: `Perde facilmente o rastro de onde estão as coisas sob pressão de tempo.`,
       fr: `Perd facilement la notion de l’endroit où se trouvent les choses sous pression de temps.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_166",
@@ -3317,7 +3482,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z mentalnym aktualizowaniem informacji podczas nauki.`,
       pt: `Tem dificuldade em atualizar mentalmente as informações enquanto trabalha durante o aprendizado.`,
       fr: `A des difficultés à actualiser mentalement les informations lors du travail d’apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_167",
@@ -3337,7 +3503,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z mentalnym aktualizowaniem informacji podczas pracy w szkole lub pracy.`,
       pt: `Tem dificuldade em atualizar mentalmente as informações enquanto trabalha em situações escolares ou de trabalho.`,
       fr: `A des difficultés à actualiser mentalement les informations lors du travail en milieu scolaire ou professionnel.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_168",
@@ -3357,7 +3524,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z mentalnym aktualizowaniem informacji podczas wykonywania obowiązków domowych.`,
       pt: `Tem dificuldade em atualizar mentalmente as informações enquanto trabalha durante as tarefas domésticas.`,
       fr: `A des difficultés à actualiser mentalement les informations lors des tâches ménagères.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_169",
@@ -3377,7 +3545,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z mentalnym aktualizowaniem informacji podczas nauki online.`,
       pt: `Tem dificuldade em atualizar mentalmente as informações enquanto trabalha durante o aprendizado online.`,
       fr: `A des difficultés à actualiser mentalement les informations lors de l’apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_170",
@@ -3397,7 +3566,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z mentalnym aktualizowaniem informacji pod presją czasu.`,
       pt: `Tem dificuldade em atualizar mentalmente as informações enquanto trabalha sob pressão de tempo.`,
       fr: `A des difficultés à actualiser mentalement les informations sous pression de temps.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_171",
@@ -3417,7 +3587,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrzebuje więcej czasu na przetwarzanie informacji podczas nauki.`,
       pt: `Precisa de mais tempo para processar informações durante a aprendizagem.`,
       fr: `A besoin de plus de temps pour traiter les informations lors de l’apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_172",
@@ -3437,7 +3608,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrzebuje więcej czasu na przetwarzanie informacji w szkole lub w pracy.`,
       pt: `Precisa de mais tempo para processar informações em situações escolares ou de trabalho.`,
       fr: `A besoin de plus de temps pour traiter les informations à l’école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_173",
@@ -3457,7 +3629,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrzebuje więcej czasu na przetwarzanie informacji podczas zadań domowych.`,
       pt: `Precisa de mais tempo para processar informações nas tarefas de casa.`,
       fr: `A besoin de plus de temps pour traiter les informations lors des tâches à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_174",
@@ -3477,7 +3650,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrzebuje więcej czasu na przetwarzanie informacji podczas nauki online.`,
       pt: `Precisa de mais tempo para processar informações durante o aprendizado online.`,
       fr: `A besoin de plus de temps pour traiter les informations lors de l’apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_175",
@@ -3497,7 +3671,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrzebuje więcej czasu na przetwarzanie informacji pod presją czasu.`,
       pt: `Precisa de mais tempo para processar informações sob pressão de tempo.`,
       fr: `A besoin de plus de temps pour traiter les informations sous pression du temps.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_176",
@@ -3517,7 +3692,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrzebuje więcej czasu, zanim odpowie podczas nauki.`,
       pt: `Precisa de mais tempo antes de responder durante a aprendizagem.`,
       fr: `A besoin de plus de temps avant de répondre lors de l’apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_177",
@@ -3537,7 +3713,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrzebuje więcej czasu, zanim odpowie w szkole lub w pracy.`,
       pt: `Precisa de mais tempo antes de responder em situações escolares ou de trabalho.`,
       fr: `A besoin de plus de temps avant de répondre à l’école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_178",
@@ -3557,7 +3734,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrzebuje więcej czasu, zanim odpowie podczas zadań domowych.`,
       pt: `Precisa de mais tempo antes de responder nas tarefas de casa.`,
       fr: `A besoin de plus de temps avant de répondre lors des tâches à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_179",
@@ -3577,7 +3755,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrzebuje więcej czasu, zanim odpowie podczas nauki online.`,
       pt: `Precisa de mais tempo antes de responder durante o aprendizado online.`,
       fr: `A besoin de plus de temps avant de répondre lors de l’apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_180",
@@ -3597,7 +3776,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrzebuje więcej czasu, zanim odpowie pod presją czasu.`,
       pt: `Precisa de mais tempo antes de responder sob pressão de tempo.`,
       fr: `A besoin de plus de temps avant de répondre sous pression du temps.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_181",
@@ -3617,7 +3797,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi stosunkowo szybko przyswajać nowe informacje podczas nauki.`,
       pt: `Consegue absorver novas informações relativamente rápido durante o aprendizado.`,
       fr: `Peut assimiler relativement rapidement de nouvelles informations lors de l’apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_182",
@@ -3637,7 +3818,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi stosunkowo szybko przyswajać nowe informacje w sytuacjach szkolnych lub zawodowych.`,
       pt: `Consegue absorver novas informações relativamente rápido em situações escolares ou de trabalho.`,
       fr: `Peut assimiler relativement rapidement de nouvelles informations en situation scolaire ou professionnelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_183",
@@ -3657,7 +3839,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi stosunkowo szybko przyswajać nowe informacje podczas zadań domowych.`,
       pt: `Consegue absorver novas informações relativamente rápido durante as tarefas domésticas.`,
       fr: `Peut assimiler relativement rapidement de nouvelles informations lors des tâches à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_184",
@@ -3677,7 +3860,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi stosunkowo szybko przyswajać nowe informacje podczas nauki online.`,
       pt: `Consegue absorver novas informações relativamente rápido durante o aprendizado online.`,
       fr: `Peut assimiler relativement rapidement de nouvelles informations lors de l’apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_185",
@@ -3697,7 +3881,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi stosunkowo szybko przyswajać nowe informacje pod presją czasu.`,
       pt: `Consegue absorver novas informações relativamente rápido sob pressão de tempo.`,
       fr: `Peut assimiler relativement rapidement de nouvelles informations sous pression de temps.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_186",
@@ -3717,7 +3902,8 @@ window.NM_LEARNING_BANK = [
       pl: `Wykonywanie zadań podczas nauki ma tendencję do wolniejszego przebiegu.`,
       pt: `A conclusão das tarefas tende a ser mais lenta durante o aprendizado.`,
       fr: `L’exécution des tâches a tendance à être plus lente lors de l’apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_187",
@@ -3737,7 +3923,8 @@ window.NM_LEARNING_BANK = [
       pl: `Wykonywanie zadań w sytuacjach szkolnych lub zawodowych ma tendencję do wolniejszego przebiegu.`,
       pt: `A conclusão das tarefas tende a ser mais lenta em situações escolares ou de trabalho.`,
       fr: `L’exécution des tâches a tendance à être plus lente en situation scolaire ou professionnelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_188",
@@ -3757,7 +3944,8 @@ window.NM_LEARNING_BANK = [
       pl: `Wykonywanie zadań domowych ma tendencję do wolniejszego przebiegu.`,
       pt: `A conclusão das tarefas tende a ser mais lenta durante as tarefas domésticas.`,
       fr: `L’exécution des tâches a tendance à être plus lente lors des tâches à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_189",
@@ -3777,7 +3965,8 @@ window.NM_LEARNING_BANK = [
       pl: `Wykonywanie zadań podczas nauki online ma tendencję do wolniejszego przebiegu.`,
       pt: `A conclusão das tarefas tende a ser mais lenta durante o aprendizado online.`,
       fr: `L’exécution des tâches a tendance à être plus lente lors de l’apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_190",
@@ -3797,7 +3986,8 @@ window.NM_LEARNING_BANK = [
       pl: `Wykonywanie zadań pod presją czasu ma tendencję do wolniejszego przebiegu.`,
       pt: `A conclusão das tarefas tende a ser mais lenta sob pressão de tempo.`,
       fr: `L’exécution des tâches a tendance à être plus lente sous pression de temps.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_191",
@@ -3817,7 +4007,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może zwalniać jeszcze bardziej pod presją czasu podczas nauki.`,
       pt: `Pode desacelerar ainda mais sob pressão de tempo durante o aprendizado.`,
       fr: `Peut ralentir encore plus sous pression de temps pendant l'apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_192",
@@ -3837,7 +4028,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może zwalniać jeszcze bardziej pod presją czasu w sytuacjach szkolnych lub zawodowych.`,
       pt: `Pode desacelerar ainda mais sob pressão de tempo em situações escolares ou de trabalho.`,
       fr: `Peut ralentir encore plus sous pression de temps à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_193",
@@ -3857,7 +4049,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może zwalniać jeszcze bardziej pod presją czasu podczas zadań domowych.`,
       pt: `Pode desacelerar ainda mais sob pressão de tempo durante as tarefas domésticas.`,
       fr: `Peut ralentir encore plus sous pression de temps lors des tâches à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_194",
@@ -3877,7 +4070,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może zwalniać jeszcze bardziej pod presją czasu podczas nauki online.`,
       pt: `Pode desacelerar ainda mais sob pressão de tempo durante o aprendizado online.`,
       fr: `Peut ralentir encore plus sous pression de temps pendant l'apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_195",
@@ -3897,7 +4091,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może zwalniać jeszcze bardziej pod presją czasu.`,
       pt: `Pode desacelerar ainda mais sob pressão de tempo.`,
       fr: `Peut ralentir encore plus sous pression de temps.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_196",
@@ -3917,7 +4112,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z rozpoczęciem zadań podczas nauki.`,
       pt: `Tem dificuldade para iniciar tarefas durante o aprendizado.`,
       fr: `A des difficultés à commencer les tâches pendant l'apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_197",
@@ -3937,7 +4133,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z rozpoczęciem zadań w szkole lub w pracy.`,
       pt: `Tem dificuldade para iniciar tarefas em situações escolares ou de trabalho.`,
       fr: `A des difficultés à commencer les tâches à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_198",
@@ -3957,7 +4154,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z rozpoczęciem zadań podczas wykonywania obowiązków domowych.`,
       pt: `Tem dificuldade para iniciar tarefas durante as tarefas domésticas.`,
       fr: `A des difficultés à commencer les tâches lors des travaux à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_199",
@@ -3977,7 +4175,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z rozpoczęciem zadań podczas nauki online.`,
       pt: `Tem dificuldade para iniciar tarefas durante o aprendizado online.`,
       fr: `A des difficultés à commencer les tâches pendant l'apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_200",
@@ -3997,7 +4196,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z rozpoczęciem zadań pod presją czasu.`,
       pt: `Tem dificuldade para iniciar tarefas sob pressão de tempo.`,
       fr: `A des difficultés à commencer les tâches sous pression de temps.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_201",
@@ -4006,8 +4206,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Nehézséget okoz számára a tervezés tanulás közben.`,
-      en: `Has difficulty planning during learning.`,
+      hu: `Nehézséget okoz számára a tervezés tanulás közben, főleg összetettebb feladatoknál.`,
+      en: `Has difficulty planning during learning, especially with more complex tasks.`,
       de: `Hat Schwierigkeiten beim Planen während des Lernens.`,
       it: `Ha difficoltà a pianificare durante l'apprendimento.`,
       es: `Tiene dificultades para planificar durante el aprendizaje.`,
@@ -4017,7 +4217,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z planowaniem podczas nauki.`,
       pt: `Tem dificuldade em planejar durante o aprendizado.`,
       fr: `A des difficultés à planifier lors de l'apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_202",
@@ -4037,7 +4238,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z planowaniem w sytuacjach szkolnych lub zawodowych.`,
       pt: `Tem dificuldade em planejar em situações escolares ou de trabalho.`,
       fr: `A des difficultés à planifier en situation scolaire ou professionnelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_203",
@@ -4057,7 +4259,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z planowaniem podczas wykonywania obowiązków domowych.`,
       pt: `Tem dificuldade em planejar durante as tarefas domésticas.`,
       fr: `A des difficultés à planifier lors des tâches à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_204",
@@ -4077,7 +4280,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z planowaniem podczas nauki online.`,
       pt: `Tem dificuldade em planejar durante o aprendizado online.`,
       fr: `A des difficultés à planifier lors de l'apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_205",
@@ -4097,7 +4301,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z planowaniem pod presją czasu.`,
       pt: `Tem dificuldade em planejar sob pressão de tempo.`,
       fr: `A des difficultés à planifier sous pression temporelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_206",
@@ -4117,7 +4322,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zwykle dobrze organizuje zadania podczas nauki.`,
       pt: `Geralmente organiza bem as tarefas durante o aprendizado.`,
       fr: `Organise généralement bien les tâches lors de l'apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_207",
@@ -4137,7 +4343,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zwykle dobrze organizuje zadania w sytuacjach szkolnych lub zawodowych.`,
       pt: `Geralmente organiza bem as tarefas em situações escolares ou de trabalho.`,
       fr: `Organise généralement bien les tâches en situation scolaire ou professionnelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_208",
@@ -4157,7 +4364,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zwykle dobrze organizuje zadania podczas obowiązków domowych.`,
       pt: `Geralmente organiza bem as tarefas durante as tarefas domésticas.`,
       fr: `Organise généralement bien les tâches lors des tâches à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_209",
@@ -4177,7 +4385,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zwykle dobrze organizuje zadania podczas nauki online.`,
       pt: `Geralmente organiza bem as tarefas durante o aprendizado online.`,
       fr: `Organise généralement bien les tâches lors de l'apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_210",
@@ -4197,7 +4406,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zwykle dobrze organizuje zadania pod presją czasu.`,
       pt: `Geralmente organiza bem as tarefas sob pressão de tempo.`,
       fr: `Organise généralement bien les tâches sous pression temporelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_211",
@@ -4217,7 +4427,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z ukończeniem zadania podczas nauki.`,
       pt: `Tem dificuldade em concluir tarefas durante o aprendizado.`,
       fr: `A du mal à terminer les tâches lors de l'apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_212",
@@ -4237,7 +4448,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z ukończeniem zadania w szkole lub pracy.`,
       pt: `Tem dificuldade em concluir tarefas em situações escolares ou de trabalho.`,
       fr: `A du mal à terminer les tâches à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_213",
@@ -4257,7 +4469,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z ukończeniem zadań domowych.`,
       pt: `Tem dificuldade em concluir tarefas domésticas.`,
       fr: `A du mal à terminer les tâches ménagères.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_214",
@@ -4277,7 +4490,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z ukończeniem zadań podczas nauki online.`,
       pt: `Tem dificuldade em concluir tarefas durante o aprendizado online.`,
       fr: `A du mal à terminer les tâches lors de l'apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_215",
@@ -4297,7 +4511,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z ukończeniem zadań pod presją czasu.`,
       pt: `Tem dificuldade em concluir tarefas sob pressão de tempo.`,
       fr: `A du mal à terminer les tâches sous pression temporelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_216",
@@ -4317,7 +4532,8 @@ window.NM_LEARNING_BANK = [
       pl: `Trudno mu podzielić większe zadanie na mniejsze kroki podczas nauki.`,
       pt: `Tem dificuldade em dividir uma tarefa maior em passos menores durante o aprendizado.`,
       fr: `A du mal à décomposer une tâche importante en étapes plus petites lors de l'apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_217",
@@ -4337,7 +4553,8 @@ window.NM_LEARNING_BANK = [
       pl: `Trudno mu podzielić większe zadanie na mniejsze kroki w szkole lub pracy.`,
       pt: `Tem dificuldade em dividir uma tarefa maior em passos menores na escola ou no trabalho.`,
       fr: `A du mal à décomposer une tâche importante en étapes plus petites à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_218",
@@ -4357,7 +4574,8 @@ window.NM_LEARNING_BANK = [
       pl: `Trudno mu podzielić większe zadanie na mniejsze kroki podczas prac domowych.`,
       pt: `Tem dificuldade em dividir uma tarefa maior em passos menores durante as tarefas domésticas.`,
       fr: `A du mal à décomposer une tâche importante en étapes plus petites lors des tâches ménagères.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_219",
@@ -4377,7 +4595,8 @@ window.NM_LEARNING_BANK = [
       pl: `Trudno mu podzielić większe zadanie na mniejsze kroki podczas nauki online.`,
       pt: `Tem dificuldade em dividir uma tarefa maior em passos menores durante o aprendizado online.`,
       fr: `A du mal à décomposer une tâche importante en étapes plus petites lors de l'apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_220",
@@ -4397,7 +4616,8 @@ window.NM_LEARNING_BANK = [
       pl: `Trudno mu podzielić większe zadanie na mniejsze kroki pod presją czasu.`,
       pt: `Tem dificuldade em dividir uma tarefa maior em passos menores sob pressão de tempo.`,
       fr: `A du mal à décomposer une tâche importante en étapes plus petites sous pression temporelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_221",
@@ -4417,7 +4637,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z oszacowaniem, ile czasu zajmie zadanie podczas nauki.`,
       pt: `Tem dificuldade em estimar quanto tempo uma tarefa levará durante o aprendizado.`,
       fr: `A des difficultés à estimer le temps nécessaire pour une tâche lors de l’apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_222",
@@ -4437,7 +4658,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z oszacowaniem, ile czasu zajmie zadanie w sytuacjach szkolnych lub zawodowych.`,
       pt: `Tem dificuldade em estimar quanto tempo uma tarefa levará em situações escolares ou de trabalho.`,
       fr: `A des difficultés à estimer le temps nécessaire pour une tâche en milieu scolaire ou professionnel.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_223",
@@ -4457,7 +4679,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z oszacowaniem, ile czasu zajmie zadanie podczas prac domowych.`,
       pt: `Tem dificuldade em estimar quanto tempo uma tarefa levará durante as tarefas domésticas.`,
       fr: `A des difficultés à estimer le temps nécessaire pour une tâche lors des tâches à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_224",
@@ -4477,7 +4700,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z oszacowaniem, ile czasu zajmie zadanie podczas nauki online.`,
       pt: `Tem dificuldade em estimar quanto tempo uma tarefa levará durante o aprendizado online.`,
       fr: `A des difficultés à estimer le temps nécessaire pour une tâche lors de l’apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_225",
@@ -4497,7 +4721,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z oszacowaniem, ile czasu zajmie zadanie pod presją czasu.`,
       pt: `Tem dificuldade em estimar quanto tempo uma tarefa levará sob pressão de tempo.`,
       fr: `A des difficultés à estimer le temps nécessaire pour une tâche sous pression temporelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_226",
@@ -4517,7 +4742,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma większe trudności z przestrzeganiem terminów i ograniczeń czasowych podczas nauki.`,
       pt: `Tem mais dificuldade em cumprir prazos e limites de tempo durante o aprendizado.`,
       fr: `A plus de difficultés à respecter les délais et les limites de temps lors de l’apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_227",
@@ -4537,7 +4763,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma większe trudności z przestrzeganiem terminów i ograniczeń czasowych w sytuacjach szkolnych lub zawodowych.`,
       pt: `Tem mais dificuldade em cumprir prazos e limites de tempo em situações escolares ou de trabalho.`,
       fr: `A plus de difficultés à respecter les délais et les limites de temps en milieu scolaire ou professionnel.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_228",
@@ -4557,7 +4784,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma większe trudności z przestrzeganiem terminów i ograniczeń czasowych podczas prac domowych.`,
       pt: `Tem mais dificuldade em cumprir prazos e limites de tempo durante as tarefas domésticas.`,
       fr: `A plus de difficultés à respecter les délais et les limites de temps lors des tâches à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_229",
@@ -4577,7 +4805,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma większe trudności z przestrzeganiem terminów i ograniczeń czasowych podczas nauki online.`,
       pt: `Tem mais dificuldade em cumprir prazos e limites de tempo durante o aprendizado online.`,
       fr: `A plus de difficultés à respecter les délais et les limites de temps lors de l’apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_230",
@@ -4597,7 +4826,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma większe trudności z przestrzeganiem terminów i ograniczeń czasowych pod presją czasu.`,
       pt: `Tem mais dificuldade em cumprir prazos e limites de tempo sob pressão de tempo.`,
       fr: `A plus de difficultés à respecter les délais et les limites de temps sous pression temporelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_231",
@@ -4617,7 +4847,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi stosunkowo dobrze zarządzać czasem podczas nauki.`,
       pt: `Consegue estruturar o tempo relativamente bem durante a aprendizagem.`,
       fr: `Parvient à structurer le temps relativement bien pendant l’apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_232",
@@ -4637,7 +4868,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi stosunkowo dobrze zarządzać czasem w sytuacjach szkolnych lub zawodowych.`,
       pt: `Consegue estruturar o tempo relativamente bem em situações de escola ou trabalho.`,
       fr: `Parvient à structurer le temps relativement bien à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_233",
@@ -4657,7 +4889,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi stosunkowo dobrze zarządzać czasem podczas domowych obowiązków.`,
       pt: `Consegue estruturar o tempo relativamente bem durante as tarefas domésticas.`,
       fr: `Parvient à structurer le temps relativement bien pendant les tâches à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_234",
@@ -4677,7 +4910,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi stosunkowo dobrze zarządzać czasem podczas nauki online.`,
       pt: `Consegue estruturar o tempo relativamente bem durante a aprendizagem online.`,
       fr: `Parvient à structurer le temps relativement bien lors de l’apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_235",
@@ -4697,7 +4931,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi stosunkowo dobrze zarządzać czasem pod presją czasu.`,
       pt: `Consegue estruturar o tempo relativamente bem sob pressão de tempo.`,
       fr: `Parvient à structurer le temps relativement bien sous pression.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_236",
@@ -4717,7 +4952,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zaczyna zadania później niż to potrzebne podczas nauki.`,
       pt: `Começa as tarefas mais tarde do que o necessário durante a aprendizagem.`,
       fr: `Commence les tâches plus tard que nécessaire pendant l’apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_237",
@@ -4737,7 +4973,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zaczyna zadania później niż to potrzebne w sytuacjach szkolnych lub zawodowych.`,
       pt: `Começa as tarefas mais tarde do que o necessário em situações de escola ou trabalho.`,
       fr: `Commence les tâches plus tard que nécessaire à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_238",
@@ -4757,7 +4994,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zaczyna zadania później niż to potrzebne podczas domowych obowiązków.`,
       pt: `Começa as tarefas mais tarde do que o necessário durante as tarefas domésticas.`,
       fr: `Commence les tâches plus tard que nécessaire pendant les tâches à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_239",
@@ -4777,7 +5015,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zaczyna zadania później niż to potrzebne podczas nauki online.`,
       pt: `Começa as tarefas mais tarde do que o necessário durante a aprendizagem online.`,
       fr: `Commence les tâches plus tard que nécessaire lors de l’apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_240",
@@ -4797,7 +5036,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zaczyna zadania później niż to potrzebne pod presją czasu.`,
       pt: `Começa as tarefas mais tarde do que o necessário sob pressão de tempo.`,
       fr: `Commence les tâches plus tard que nécessaire sous pression.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_241",
@@ -4817,7 +5057,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z zarządzaniem czasem podczas wykonywania zadania w nauce.`,
       pt: `Tem dificuldade em controlar o tempo dentro de uma tarefa durante o aprendizado.`,
       fr: `A des difficultés à gérer le temps pour une tâche lors de l'apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_242",
@@ -4837,7 +5078,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z zarządzaniem czasem podczas wykonywania zadania w szkole lub pracy.`,
       pt: `Tem dificuldade em controlar o tempo dentro de uma tarefa na escola ou no trabalho.`,
       fr: `A des difficultés à gérer le temps pour une tâche à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_243",
@@ -4857,7 +5099,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z zarządzaniem czasem podczas wykonywania zadania w pracach domowych.`,
       pt: `Tem dificuldade em controlar o tempo dentro de uma tarefa nas atividades domésticas.`,
       fr: `A des difficultés à gérer le temps pour une tâche lors des tâches ménagères.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_244",
@@ -4877,7 +5120,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z zarządzaniem czasem podczas wykonywania zadania w nauce online.`,
       pt: `Tem dificuldade em controlar o tempo dentro de uma tarefa durante o aprendizado online.`,
       fr: `A des difficultés à gérer le temps pour une tâche lors de l'apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_245",
@@ -4897,7 +5141,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z zarządzaniem czasem podczas wykonywania zadania pod presją czasu.`,
       pt: `Tem dificuldade em controlar o tempo dentro de uma tarefa sob pressão de tempo.`,
       fr: `A des difficultés à gérer le temps pour une tâche sous pression temporelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_246",
@@ -4906,8 +5151,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Elsőre nem mindig érti meg teljesen a feladatot tanulás közben.`,
-      en: `Does not always fully understand a task the first time during learning.`,
+      hu: `Elsőre gyakran csak részben érti meg a feladatot tanulás közben.`,
+      en: `Often understands a task only partly on the first attempt during learning.`,
       de: `Versteht eine Aufgabe beim ersten Mal beim Lernen nicht immer vollständig.`,
       it: `Non comprende sempre completamente un compito al primo tentativo durante l'apprendimento.`,
       es: `No siempre entiende completamente una tarea la primera vez durante el aprendizaje.`,
@@ -4917,7 +5162,8 @@ window.NM_LEARNING_BANK = [
       pl: `Nie zawsze w pełni rozumie zadanie za pierwszym razem podczas nauki.`,
       pt: `Nem sempre compreende completamente uma tarefa na primeira vez durante o aprendizado.`,
       fr: `Ne comprend pas toujours entièrement une tâche du premier coup lors de l'apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_247",
@@ -4926,8 +5172,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Elsőre nem mindig érti meg teljesen a feladatot iskolai vagy munkahelyi helyzetekben.`,
-      en: `Does not always fully understand a task the first time in school or work situations.`,
+      hu: `Elsőre gyakran csak részben érti meg a feladatot iskolai vagy munkahelyi helyzetekben.`,
+      en: `Often understands a task only partly on the first attempt in school or work situations.`,
       de: `Versteht eine Aufgabe beim ersten Mal in der Schule oder bei der Arbeit nicht immer vollständig.`,
       it: `Non comprende sempre completamente un compito al primo tentativo a scuola o sul lavoro.`,
       es: `No siempre entiende completamente una tarea la primera vez en la escuela o el trabajo.`,
@@ -4937,7 +5183,8 @@ window.NM_LEARNING_BANK = [
       pl: `Nie zawsze w pełni rozumie zadanie za pierwszym razem w szkole lub pracy.`,
       pt: `Nem sempre compreende completamente uma tarefa na primeira vez na escola ou no trabalho.`,
       fr: `Ne comprend pas toujours entièrement une tâche du premier coup à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_248",
@@ -4946,8 +5193,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Elsőre nem mindig érti meg teljesen a feladatot otthoni feladatoknál.`,
-      en: `Does not always fully understand a task the first time during home tasks.`,
+      hu: `Elsőre gyakran csak részben érti meg a feladatot otthoni feladatoknál.`,
+      en: `Often understands a task only partly on the first attempt during home tasks.`,
       de: `Versteht eine Aufgabe beim ersten Mal bei Hausarbeiten nicht immer vollständig.`,
       it: `Non comprende sempre completamente un compito al primo tentativo durante le faccende domestiche.`,
       es: `No siempre entiende completamente una tarea la primera vez durante las labores del hogar.`,
@@ -4957,7 +5204,8 @@ window.NM_LEARNING_BANK = [
       pl: `Nie zawsze w pełni rozumie zadanie za pierwszym razem podczas prac domowych.`,
       pt: `Nem sempre compreende completamente uma tarefa na primeira vez nas tarefas domésticas.`,
       fr: `Ne comprend pas toujours entièrement une tâche du premier coup lors des tâches ménagères.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_249",
@@ -4966,8 +5214,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Elsőre nem mindig érti meg teljesen a feladatot online tanulás során.`,
-      en: `Does not always fully understand a task the first time during online learning.`,
+      hu: `Elsőre gyakran csak részben érti meg a feladatot online tanulás során.`,
+      en: `Often understands a task only partly on the first attempt during online learning.`,
       de: `Versteht eine Aufgabe beim ersten Mal beim Online-Lernen nicht immer vollständig.`,
       it: `Non comprende sempre completamente un compito al primo tentativo durante l'apprendimento online.`,
       es: `No siempre entiende completamente una tarea la primera vez durante el aprendizaje en línea.`,
@@ -4977,7 +5225,8 @@ window.NM_LEARNING_BANK = [
       pl: `Nie zawsze w pełni rozumie zadanie za pierwszym razem podczas nauki online.`,
       pt: `Nem sempre compreende completamente uma tarefa na primeira vez durante o aprendizado online.`,
       fr: `Ne comprend pas toujours entièrement une tâche du premier coup lors de l'apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_250",
@@ -4986,8 +5235,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Elsőre nem mindig érti meg teljesen a feladatot időnyomás alatt.`,
-      en: `Does not always fully understand a task the first time under time pressure.`,
+      hu: `Elsőre gyakran csak részben érti meg a feladatot időnyomás alatt.`,
+      en: `Often understands a task only partly on the first attempt under time pressure.`,
       de: `Versteht eine Aufgabe beim ersten Mal unter Zeitdruck nicht immer vollständig.`,
       it: `Non comprende sempre completamente un compito al primo tentativo sotto pressione di tempo.`,
       es: `No siempre entiende completamente una tarea la primera vez bajo presión de tiempo.`,
@@ -4997,8 +5246,7 @@ window.NM_LEARNING_BANK = [
       pl: `Nie zawsze w pełni rozumie zadanie za pierwszym razem pod presją czasu.`,
       pt: `Nem sempre compreende completamente uma tarefa na primeira vez sob pressão de tempo.`,
       fr: `Ne comprend pas toujours entièrement une tâche du premier coup sous pression temporelle.`,
-    }
-  },
+    },
+    stemKey: ""
+  }
 ];
-
-console.log("✅ window.NM_LEARNING_BANK LOADED:", window.NM_LEARNING_BANK.length);

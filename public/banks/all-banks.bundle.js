@@ -10286,7 +10286,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Często się martwi, nawet gdy nie ma oczywistego powodu.`,
       pt: `Frequentemente se preocupa mesmo quando não há uma razão óbvia.`,
       fr: `S'inquiète souvent même lorsqu'il n'y a pas de raison évidente.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_002",
@@ -10306,7 +10307,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Spędza dużo czasu myśląc o tym, co może pójść źle w przyszłości.`,
       pt: `Passa muito tempo pensando no que pode dar errado no futuro.`,
       fr: `Passe beaucoup de temps à penser à ce qui pourrait mal tourner à l'avenir.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_003",
@@ -10326,7 +10328,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Ma skłonność do postrzegania drobnych problemów jako poważniejszych niż są naprawdę.`,
       pt: `Tende a ver pequenos problemas como mais sérios do que realmente são.`,
       fr: `A tendance à considérer les petits problèmes comme plus graves qu'ils ne le sont.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_004",
@@ -10335,8 +10338,8 @@ window.NM_ANXIETY_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Nehéz számára leállítani az aggodalmas gondolatokat.`,
-      en: `Has difficulty stopping worried thoughts.`,
+      hu: `Nehezen tudja félretenni az aggodalmas gondolatokat hétköznapi helyzetekben.`,
+      en: `Has difficulty setting worried thoughts aside in everyday situations.`,
       de: `Hat Schwierigkeiten, besorgte Gedanken zu stoppen.`,
       it: `Ha difficoltà a fermare i pensieri preoccupati.`,
       es: `Tiene dificultad para detener los pensamientos preocupantes.`,
@@ -10346,7 +10349,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Ma trudności z zatrzymaniem zmartwień.`,
       pt: `Tem dificuldade em parar pensamentos preocupantes.`,
       fr: `A du mal à arrêter les pensées inquiètes.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_005",
@@ -10366,7 +10370,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Potrafi zachować względny spokój w większości sytuacji.`,
       pt: `Consegue manter-se relativamente calmo na maioria das situações.`,
       fr: `Peut rester relativement calme dans la plupart des situations.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_006",
@@ -10386,7 +10391,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Jedna troska może utrzymywać się u nich przez długi czas.`,
       pt: `Uma única preocupação pode permanecer com eles por muito tempo.`,
       fr: `Une seule inquiétude peut persister longtemps.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_007",
@@ -10406,7 +10412,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Ma tendencję do martwienia się o kilka rzeczy jednocześnie.`,
       pt: `Tende a preocupar-se com várias coisas ao mesmo tempo.`,
       fr: `A tendance à s'inquiéter de plusieurs choses en même temps.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_008",
@@ -10415,8 +10422,8 @@ window.NM_ANXIETY_BANK = [
     weight: 1.3,
     reverse: false,
     text: {
-      hu: `A hétköznapi helyzetek is gyakran feszültséget keltenek benne.`,
-      en: `Everyday situations often create tension.`,
+      hu: `Hétköznapi helyzetekben is könnyen megjelenhet benne feszültség.`,
+      en: `Everyday situations can easily bring up tension for them.`,
       de: `Alltägliche Situationen erzeugen oft Spannung.`,
       it: `Le situazioni quotidiane creano spesso tensione.`,
       es: `Las situaciones cotidianas a menudo generan tensión.`,
@@ -10426,7 +10433,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Codzienne sytuacje często wywołują napięcie.`,
       pt: `Situações do dia a dia frequentemente criam tensão.`,
       fr: `Les situations quotidiennes créent souvent de la tension.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_009",
@@ -10446,7 +10454,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Zazwyczaj utrzymuje rozsądną perspektywę problemów.`,
       pt: `Geralmente mantém os problemas numa perspetiva razoável.`,
       fr: `Garde habituellement une perspective raisonnable sur les problèmes.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_010",
@@ -10466,7 +10475,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Czasami wydaje się napięty nawet bez wyraźnego powodu.`,
       pt: `Às vezes parece tenso mesmo sem um gatilho claro.`,
       fr: `Parfois, semble tendu même sans déclencheur clair.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_011",
@@ -10486,7 +10496,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Staje się bardzo zestresowany, gdy nie wie, co się wydarzy.`,
       pt: `Fica muito ansioso quando não sabe o que vai acontecer.`,
       fr: `Devient très stressé lorsqu'il ne sait pas ce qui va se passer.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_012",
@@ -10506,7 +10517,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Mocno potrzebuje, aby rzeczy były przewidywalne.`,
       pt: `Precisa muito que as coisas sejam previsíveis.`,
       fr: `A un fort besoin que les choses soient prévisibles.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_013",
@@ -10526,7 +10538,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Szczególnie trudno mu znieść sytuacje o niepewnych wynikach.`,
       pt: `Acha especialmente difícil tolerar situações com resultados incertos.`,
       fr: `A du mal à tolérer les situations dont le dénouement est incertain.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_014",
@@ -10546,7 +10559,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Czekanie i niepewność znacznie zwiększają napięcie.`,
       pt: `A espera e a incerteza aumentam muito a tensão.`,
       fr: `L'attente et l'incertitude augmentent beaucoup la tension.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_015",
@@ -10555,8 +10569,8 @@ window.NM_ANXIETY_BANK = [
     weight: 1.2,
     reverse: true,
     text: {
-      hu: `Viszonylag jól tud együtt élni azzal, ha nem ismert minden részlet.`,
-      en: `Can cope relatively well even when not all details are known.`,
+      hu: `Viszonylag jól tud együtt élni azzal, ha néhány részlet még bizonytalan.`,
+      en: `Can cope relatively well when some details remain uncertain.`,
       de: `Kann sich relativ gut anpassen, auch wenn nicht alle Details bekannt sind.`,
       it: `Sa gestire abbastanza bene anche quando non conosce tutti i dettagli.`,
       es: `Puede manejarse bastante bien incluso cuando no conoce todos los detalles.`,
@@ -10566,7 +10580,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Radzi sobie stosunkowo dobrze, nawet gdy nie zna wszystkich szczegółów.`,
       pt: `Consegue lidar relativamente bem mesmo quando não conhece todos os detalhes.`,
       fr: `Peut gérer relativement bien même lorsqu'il ne connaît pas tous les détails.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_016",
@@ -10586,7 +10601,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Miewa tendencję do nadmiernego planowania, aby zmniejszyć niepewność.`,
       pt: `Tende a planejar demais para reduzir a incerteza.`,
       fr: `A tendance à trop planifier pour réduire l'incertitude.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_017",
@@ -10606,7 +10622,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Ma trudności z tolerowaniem sytuacji bez jasnych odpowiedzi.`,
       pt: `Tem dificuldade em tolerar situações sem respostas claras.`,
       fr: `A du mal à tolérer les situations sans réponses claires.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_018",
@@ -10626,7 +10643,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Zmiany w ostatniej chwili mogą go łatwo zdenerwować.`,
       pt: `Mudanças de última hora podem facilmente perturbá-lo.`,
       fr: `Les changements de dernière minute peuvent facilement le perturber.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_019",
@@ -10635,8 +10653,8 @@ window.NM_ANXIETY_BANK = [
     weight: 1.2,
     reverse: true,
     text: {
-      hu: `Nyitottabb, ha egy helyzet nem teljesen kiszámítható.`,
-      en: `Can stay open even when a situation is not fully predictable.`,
+      hu: `Nyitottabb tud maradni, ha egy helyzet csak részben kiszámítható.`,
+      en: `Can stay open when a situation is only partly predictable.`,
       de: `Kann auch dann offen bleiben, wenn eine Situation nicht vollständig vorhersehbar ist.`,
       it: `Può rimanere aperto anche quando una situazione non è completamente prevedibile.`,
       es: `Puede mantenerse abierto incluso cuando una situación no es totalmente previsible.`,
@@ -10646,7 +10664,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Potrafi pozostać otwarty, nawet gdy sytuacja nie jest w pełni przewidywalna.`,
       pt: `Consegue manter-se aberto mesmo quando uma situação não é totalmente previsível.`,
       fr: `Peut rester ouvert même lorsqu'une situation n'est pas entièrement prévisible.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_020",
@@ -10666,7 +10685,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Często stara się uzyskać pełną pewność przed podjęciem decyzji.`,
       pt: `Muitas vezes tenta obter certeza completa antes de tomar decisões.`,
       fr: `Essaie souvent d'obtenir une certitude complète avant de prendre des décisions.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_021",
@@ -10686,7 +10706,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Napięcie objawia się również poprzez objawy fizyczne.`,
       pt: `A tensão também aparece por meio de sintomas físicos.`,
       fr: `La tension se manifeste également par des symptômes physiques.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_022",
@@ -10706,7 +10727,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Serce może przyspieszyć w reakcji na stres lub niepokój.`,
       pt: `O coração pode disparar em resposta ao estresse ou à preocupação.`,
       fr: `Le cœur peut s'emballer en réponse au stress ou à l'inquiétude.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_023",
@@ -10726,7 +10748,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Może odczuwać dolegliwości żołądkowe w stresujących sytuacjach.`,
       pt: `Pode sentir desconforto estomacal em situações de estresse.`,
       fr: `Peut ressentir une gêne gastrique dans des situations stressantes.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_024",
@@ -10746,7 +10769,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Napięcie może być zauważalne również w oddychaniu.`,
       pt: `A tensão também pode ser notada na respiração.`,
       fr: `La tension peut aussi se remarquer dans la respiration.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_025",
@@ -10766,7 +10790,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Ciało zwykle pozostaje stosunkowo spokojne w większości sytuacji.`,
       pt: `O corpo geralmente permanece relativamente calmo na maioria das situações.`,
       fr: `Le corps reste généralement relativement calme dans la plupart des situations.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_026",
@@ -10786,7 +10811,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Ciało czasem reaguje, jakby zagrożenie istniało, nawet gdy inni tego nie widzą.`,
       pt: `O corpo às vezes reage como se houvesse perigo, mesmo que outros não percebam assim.`,
       fr: `Le corps réagit parfois comme s'il y avait un danger, même si les autres ne le perçoivent pas ainsi.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_027",
@@ -10806,7 +10832,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Stres może powodować drżenie lub wewnętrzne drganie.`,
       pt: `O estresse pode causar tremores ou tremores internos.`,
       fr: `Le stress peut provoquer des tremblements ou des frémissements internes.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_028",
@@ -10826,7 +10853,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Napięcie może wiązać się z poceniem się lub wzmożoną czujnością ciała.`,
       pt: `A tensão pode envolver suor ou alerta corporal aumentado.`,
       fr: `La tension peut inclure la transpiration ou une vigilance corporelle accrue.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_029",
@@ -10846,7 +10874,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Ciało może stosunkowo szybko się uspokoić po stresie.`,
       pt: `O corpo pode se acalmar relativamente rápido após o estresse.`,
       fr: `Le corps peut se calmer relativement rapidement après un stress.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_030",
@@ -10866,7 +10895,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Napięcie fizyczne łatwo narasta w ciągu dnia.`,
       pt: `A tensão física tende a se acumular facilmente ao longo do dia.`,
       fr: `La tension physique a tendance à s'accumuler facilement au cours de la journée.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_031",
@@ -10875,8 +10905,8 @@ window.NM_ANXIETY_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Gyakran belső nyugtalanság jellemzi.`,
-      en: `Often experiences inner restlessness.`,
+      hu: `Gyakran belső nyugtalanság látszik rajta nyugodtabb környezetben is.`,
+      en: `Often shows inner restlessness even in calmer settings.`,
       de: `Erlebt oft innere Unruhe.`,
       it: `Spesso prova irrequietezza interiore.`,
       es: `A menudo experimenta inquietud interna.`,
@@ -10886,7 +10916,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Często doświadcza wewnętrznego niepokoju.`,
       pt: `Frequentemente sente inquietação interior.`,
       fr: `Ressent souvent une agitation intérieure.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_032",
@@ -10895,8 +10926,8 @@ window.NM_ANXIETY_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Nehezen tud igazán ellazulni.`,
-      en: `Has difficulty truly relaxing.`,
+      hu: `Nehezen tud igazán ellazulni, még támogató környezetben is.`,
+      en: `Has difficulty truly relaxing, even in supportive settings.`,
       de: `Hat Schwierigkeiten, wirklich zu entspannen.`,
       it: `Ha difficoltà a rilassarsi davvero.`,
       es: `Tiene dificultad para relajarse verdaderamente.`,
@@ -10906,7 +10937,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Ma trudności z prawdziwym relaksem.`,
       pt: `Tem dificuldade em relaxar verdadeiramente.`,
       fr: `A du mal à se détendre complètement.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_033",
@@ -10915,8 +10947,8 @@ window.NM_ANXIETY_BANK = [
     weight: 1.3,
     reverse: false,
     text: {
-      hu: `Izmai gyakran feszesek vagy megterheltek.`,
-      en: `Muscles are often tense or tight.`,
+      hu: `Izmai gyakran feszesnek vagy megterheltnek tűnnek stresszesebb időszakokban.`,
+      en: `Muscles often seem tense or strained during stressful periods.`,
       de: `Die Muskeln sind oft angespannt oder verkrampft.`,
       it: `I muscoli sono spesso tesi o contratti.`,
       es: `Los músculos suelen estar tensos o rígidos.`,
@@ -10926,7 +10958,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Mięśnie są często napięte lub ściśnięte.`,
       pt: `Os músculos costumam estar tensos ou apertados.`,
       fr: `Les muscles sont souvent tendus ou contractés.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_034",
@@ -10946,7 +10979,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Ma trudności z wyłączeniem się, jakby stale był w stanie gotowości.`,
       pt: `Tem dificuldade em desligar, como se estivesse sempre alerta.`,
       fr: `A du mal à se déconnecter, comme s’il était constamment en alerte.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_035",
@@ -10966,7 +11000,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Zwykle pozostaje spokojny i obecny w sytuacjach.`,
       pt: `Geralmente mantém uma presença calma nas situações.`,
       fr: `Reste généralement calme et posé dans les situations.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_036",
@@ -10975,8 +11010,8 @@ window.NM_ANXIETY_BANK = [
     weight: 1.3,
     reverse: false,
     text: {
-      hu: `Feszültség alatt ingerlékenyebbé válhat.`,
-      en: `May become more irritable under stress.`,
+      hu: `Feszültség alatt könnyebben válhat ingerlékennyé vagy türelmetlenné.`,
+      en: `May become more irritable or impatient under tension.`,
       de: `Kann unter Stress reizbarer werden.`,
       it: `Può diventare più irritabile sotto stress.`,
       es: `Puede volverse más irritable bajo estrés.`,
@@ -10986,7 +11021,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Może stać się bardziej drażliwy pod wpływem stresu.`,
       pt: `Pode ficar mais irritável sob estresse.`,
       fr: `Peut devenir plus irritable sous stress.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_037",
@@ -11006,7 +11042,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Ma trudności z uspokojeniem się podczas stresujących okresów.`,
       pt: `Tem dificuldade em se acalmar durante períodos de estresse.`,
       fr: `A du mal à se calmer en période de stress.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_038",
@@ -11026,7 +11063,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Może się napiąć przed nadchodzącą sytuacją.`,
       pt: `Pode ficar tenso antes de uma situação próxima.`,
       fr: `Peut devenir tendu avant une situation à venir.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_039",
@@ -11046,7 +11084,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Potrafi zauważyć i uwolnić nagromadzone napięcie.`,
       pt: `Consegue perceber e aliviar a tensão acumulada.`,
       fr: `Peut détecter et relâcher la tension accumulée.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_040",
@@ -11066,7 +11105,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Często wydaje się pozostawać w stanie napięcia.`,
       pt: `Pode frequentemente parecer estar em estado de tensão.`,
       fr: `Semble souvent rester dans un état de tension.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_041",
@@ -11086,7 +11126,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Stara się unikać sytuacji wywołujących niepokój.`,
       pt: `Tenta evitar situações que desencadeiam preocupação.`,
       fr: `Essaie d’éviter les situations qui déclenchent de l’inquiétude.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_042",
@@ -11106,7 +11147,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Często sprawdza rzeczy, aby się upewnić.`,
       pt: `Costuma verificar as coisas para se sentir seguro.`,
       fr: `Vérifie souvent les choses pour se rassurer.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_043",
@@ -11126,7 +11168,8 @@ window.NM_ANXIETY_BANK = [
       pl: `W stresujących sytuacjach woli się wycofać lub trzymać na dystans.`,
       pt: `Em situações estressantes, prefere se retirar ou ficar afastado.`,
       fr: `Dans des situations stressantes, préfère se retirer ou rester à l’écart.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_044",
@@ -11146,7 +11189,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Często unika sytuacji wydających się ryzykowne.`,
       pt: `Costuma evitar situações que parecem arriscadas.`,
       fr: `Évite souvent les situations qui semblent risquées.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_045",
@@ -11166,7 +11210,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Potrafi znosić łagodny dyskomfort bez natychmiastowego unikania.`,
       pt: `Consegue enfrentar desconforto leve sem evitá-lo imediatamente.`,
       fr: `Peut supporter un léger inconfort sans l’éviter instantanément.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_046",
@@ -11186,7 +11231,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Funkcjonuje dużo łatwiej w sytuacjach postrzeganych jako bezpieczne.`,
       pt: `Funciona muito mais facilmente em situações que se sentem seguras.`,
       fr: `Fonctionne beaucoup plus facilement dans des situations jugées sûres.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_047",
@@ -11206,7 +11252,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Często działanie podejmuje dopiero po uzyskaniu poczucia bezpieczeństwa.`,
       pt: `Frequentemente só age após receber garantias.`,
       fr: `Souvent, n’avance qu’après s’être senti rassuré.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_048",
@@ -11226,7 +11273,8 @@ window.NM_ANXIETY_BANK = [
       pl: `W stresujących sytuacjach ważne jest, by wiedzieć, jak szybko opuścić miejsce.`,
       pt: `Em situações estressantes, é importante saber como sair rápido.`,
       fr: `Dans des situations stressantes, il est important de savoir comment partir rapidement.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_049",
@@ -11246,7 +11294,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Potrafi podjąć się niepewnych sytuacji, gdy jest to konieczne.`,
       pt: `Consegue enfrentar situações incertas quando necessário.`,
       fr: `Peut affronter des situations incertaines si nécessaire.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_050",
@@ -11266,7 +11315,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Może unikać rzeczy z wyprzedzeniem, aby zapobiec późniejszemu stresowi.`,
       pt: `Pode evitar coisas antecipadamente para prevenir stress posterior.`,
       fr: `Peut éviter certaines choses à l’avance pour prévenir un stress ultérieur.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_051",
@@ -11286,7 +11336,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Często boi się negatywnej oceny ze strony innych.`,
       pt: `Costuma temer ser julgado negativamente pelos outros.`,
       fr: `Craint souvent d'être jugé négativement par les autres.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_052",
@@ -11306,7 +11357,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Odczuwa silne napięcie w sytuacjach związanych z występami.`,
       pt: `Sente forte tensão em situações de desempenho.`,
       fr: `Ressent une forte tension lors de situations de performance.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_053",
@@ -11326,7 +11378,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Martwi się z wyprzedzeniem, że się zawstydzi.`,
       pt: `Preocupa-se antecipadamente em ficar envergonhado.`,
       fr: `S'inquiète à l'avance de devenir embarrassé.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_054",
@@ -11346,7 +11399,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Może długo analizować, co zostało powiedziane lub zrobione po sytuacjach społecznych.`,
       pt: `Pode passar muito tempo analisando o que foi dito ou feito após situações sociais.`,
       fr: `Peut passer beaucoup de temps à analyser ce qui a été dit ou fait après des situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_055",
@@ -11366,7 +11420,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Zazwyczaj potrafi pewnie uczestniczyć w sytuacjach społecznych.`,
       pt: `Normalmente consegue estar presente com confiança em situações sociais.`,
       fr: `Peut généralement être sûr de lui dans les situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_056",
@@ -11386,7 +11441,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Silnie wpływa na niego poczucie, że popełnił błąd społeczny.`,
       pt: `Fica fortemente afetado por sentir que cometeu um erro social.`,
       fr: `Est fortement affecté par le sentiment d'avoir commis une erreur sociale.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_057",
@@ -11406,7 +11462,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Trudno mu mówić, gdy wiele osób zwraca uwagę.`,
       pt: `Tem dificuldade em falar quando várias pessoas estão a prestar atenção.`,
       fr: `Trouve difficile de prendre la parole quand plusieurs personnes prêtent attention.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_058",
@@ -11426,7 +11483,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Czuje się niekomfortowo, gdy staje się centrum uwagi.`,
       pt: `Sente-se desconfortável ao tornar-se o centro das atenções.`,
       fr: `Se sent mal à l'aise lorsqu'il devient le centre d'attention.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_059",
@@ -11446,7 +11504,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Zazwyczaj dobrze znosi bycie obserwowanym lub słuchanym.`,
       pt: `Normalmente tolera bastante bem ser observado ou escutado.`,
       fr: `Tolère généralement assez bien d'être observé ou écouté.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_060",
@@ -11466,7 +11525,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Może się napiąć już na myśl o nadchodzącej sytuacji społecznej.`,
       pt: `Pode ficar tenso só de pensar numa situação social que se aproxima.`,
       fr: `Peut devenir tendu rien qu'en pensant à une situation sociale à venir.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_061",
@@ -11486,7 +11546,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Zmartwienia utrudniają utrzymanie koncentracji.`,
       pt: `A preocupação dificulta manter o foco.`,
       fr: `L'inquiétude rend difficile de rester concentré.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_062",
@@ -11506,7 +11567,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Przed zaśnięciem trudno uspokoić myśli.`,
       pt: `Os pensamentos são difíceis de se acalmar antes de dormir.`,
       fr: `Il est difficile d'apaiser les pensées avant de s'endormir.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_063",
@@ -11526,7 +11588,8 @@ window.NM_ANXIETY_BANK = [
       pl: `W nocy ma tendencję do nadmiernego rozmyślania o problemach.`,
       pt: `À noite tende a pensar demais nos problemas.`,
       fr: `La nuit, il/elle a tendance à trop réfléchir aux problèmes.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_064",
@@ -11535,8 +11598,8 @@ window.NM_ANXIETY_BANK = [
     weight: 1.3,
     reverse: false,
     text: {
-      hu: `Az állandó aggodalom kifáraszthatja.`,
-      en: `Constant worry may leave them tired.`,
+      hu: `A visszatérő aggodalom érezhetően kifáraszthatja a nap végére.`,
+      en: `Recurring worry may leave them noticeably tired by the end of the day.`,
       de: `Ständige Sorgen können ihn/sie müde machen.`,
       it: `La preoccupazione costante può stancarlo/a.`,
       es: `La preocupación constante puede dejarlo/a cansado/a.`,
@@ -11546,7 +11609,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Ciągłe zmartwienia mogą go/ją męczyć.`,
       pt: `A preocupação constante pode deixá-lo(a) cansado(a).`,
       fr: `L'inquiétude constante peut le/la fatiguer.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_065",
@@ -11566,7 +11630,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Zazwyczaj potrafi uspokoić myśli, gdy nadchodzi czas odpoczynku.`,
       pt: `Geralmente consegue acalmar os pensamentos quando é hora de descansar.`,
       fr: `Peut généralement apaiser ses pensées quand il est temps de se reposer.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_066",
@@ -11586,7 +11651,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Myśli często zajmują się możliwymi problemami.`,
       pt: `Os pensamentos são frequentemente ocupados com possíveis problemas.`,
       fr: `Les pensées sont souvent occupées par des problèmes potentiels.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_067",
@@ -11606,7 +11672,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Pod wpływem stresu łatwiej traci koncentrację na zadaniach.`,
       pt: `Sob estresse, a concentração nas tarefas diminui mais facilmente.`,
       fr: `Sous stress, la concentration sur les tâches diminue plus facilement.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_068",
@@ -11626,7 +11693,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Zmartwienia mogą również wpływać na jakość snu.`,
       pt: `A preocupação também pode interferir na qualidade do sono.`,
       fr: `L'inquiétude peut également nuire à la qualité du sommeil.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_069",
@@ -11646,7 +11714,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Potrafi stosunkowo łatwo wrócić do zadania po rozpraszających myślach.`,
       pt: `Consegue retornar relativamente fácil a uma tarefa após pensamentos distrativos.`,
       fr: `Peut revenir assez facilement à une tâche après des pensées distrayantes.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_070",
@@ -11666,7 +11735,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Przed snem myśli pełne zmartwień mogą łatwo się pojawić.`,
       pt: `Na hora de dormir, pensamentos preocupantes podem surgir facilmente.`,
       fr: `Au moment du coucher, les pensées anxieuses peuvent facilement apparaître.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_071",
@@ -11675,8 +11745,8 @@ window.NM_ANXIETY_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Gyakran kér megerősítést másoktól, hogy minden rendben lesz-e.`,
-      en: `Often seeks reassurance from others that things will be okay.`,
+      hu: `Gyakran kér megerősítést másoktól, hogy biztonságosnak érezze a helyzetet.`,
+      en: `Often seeks reassurance from others to feel safer in the situation.`,
       de: `Sucht oft bei anderen Bestätigung, dass alles in Ordnung sein wird.`,
       it: `Spesso cerca rassicurazioni dagli altri che andrà tutto bene.`,
       es: `A menudo busca que otros le aseguren que todo estará bien.`,
@@ -11686,7 +11756,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Często szuka zapewnienia od innych, że wszystko będzie dobrze.`,
       pt: `Frequentemente busca garantias de outras pessoas de que tudo ficará bem.`,
       fr: `Cherche souvent des assurances auprès des autres que tout ira bien.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_072",
@@ -11706,7 +11777,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Czuje się spokojniej, gdy może kontrolować, co się dzieje.`,
       pt: `Sente-se mais calmo quando consegue controlar o que está a acontecer.`,
       fr: `Se sent plus calme lorsqu'il peut garder le contrôle de ce qui se passe.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_073",
@@ -11726,7 +11798,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Może wielokrotnie sprawdzać rzeczy, by się upewnić.`,
       pt: `Pode verificar repetidamente as coisas para ter certeza.`,
       fr: `Peut vérifier plusieurs fois pour s'assurer.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_074",
@@ -11746,7 +11819,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Może ponownie pytać o potwierdzenie nawet po otrzymaniu odpowiedzi.`,
       pt: `Pode pedir confirmação novamente mesmo após receber uma resposta.`,
       fr: `Peut redemander une confirmation même après avoir reçu une réponse.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_075",
@@ -11755,8 +11829,8 @@ window.NM_ANXIETY_BANK = [
     weight: 1.2,
     reverse: true,
     text: {
-      hu: `El tud engedni helyzeteket akkor is, ha nincs minden részlet teljesen kézben tartva.`,
-      en: `Can let go even when not every detail is fully under control.`,
+      hu: `El tud engedni helyzeteket akkor is, ha néhány részlet nincs kézben tartva.`,
+      en: `Can let go of situations even when some details are not under control.`,
       de: `Kann loslassen, selbst wenn nicht jedes Detail vollständig kontrolliert wird.`,
       it: `È in grado di lasciar andare anche se non tutti i dettagli sono completamente sotto controllo.`,
       es: `Puede dejar ir aunque no todos los detalles estén bajo control completo.`,
@@ -11766,7 +11840,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Potrafi odpuścić, nawet jeśli nie ma pełnej kontroli nad każdym szczegółem.`,
       pt: `Consegue deixar ir mesmo quando nem todos os detalhes estão totalmente sob controlo.`,
       fr: `Peut lâcher prise même si tous les détails ne sont pas parfaitement maîtrisés.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_076",
@@ -11786,7 +11861,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Może mieć trudności z delegowaniem, gdy martwi się o rezultat.`,
       pt: `Pode achar difícil delegar quando está preocupado com o resultado.`,
       fr: `Peut avoir du mal à déléguer quand il s'inquiète du résultat.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_077",
@@ -11806,7 +11882,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Może nadmiernie przygotowywać się z wyprzedzeniem, by uniknąć późniejszych niepewności.`,
       pt: `Pode preparar-se excessivamente com antecedência para evitar incertezas futuras.`,
       fr: `Peut se préparer excessivement à l'avance pour éviter des incertitudes ultérieures.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_078",
@@ -11826,7 +11903,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Lubi sprawdzać więcej niż raz, czy nie popełniono błędu.`,
       pt: `Gosta de verificar mais de uma vez para garantir que não ficou nenhum erro.`,
       fr: `Aime vérifier plusieurs fois qu'aucune erreur n'a été laissée.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_079",
@@ -11835,8 +11913,8 @@ window.NM_ANXIETY_BANK = [
     weight: 1.2,
     reverse: true,
     text: {
-      hu: `El tud fogadni olyan helyzeteket is, amelyek nem teljesen tökéletesek.`,
-      en: `Can accept situations that are not completely perfect.`,
+      hu: `El tud fogadni olyan helyzeteket is, amelyek csak elég jónak érződnek.`,
+      en: `Can accept situations that feel good enough rather than perfect.`,
       de: `Kann Situationen akzeptieren, die nicht vollkommen perfekt sind.`,
       it: `Può accettare situazioni che non siano completamente perfette.`,
       es: `Puede aceptar situaciones que no sean completamente perfectas.`,
@@ -11846,7 +11924,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Potrafi zaakceptować sytuacje, które nie są całkowicie idealne.`,
       pt: `Consegue aceitar situações que não são completamente perfeitas.`,
       fr: `Peut accepter des situations qui ne sont pas complètement parfaites.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_080",
@@ -11866,7 +11945,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Ukojenie często zależy od uzyskania wystarczających zapewnień z zewnątrz.`,
       pt: `O alívio muitas vezes depende de receber garantias suficientes de fora.`,
       fr: `Le soulagement dépend souvent d'avoir suffisamment d'assurances venant de l'extérieur.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_081",
@@ -11886,7 +11966,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Łatwo wyobraża sobie możliwe negatywne scenariusze przyszłości.`,
       pt: `Imagina facilmente possíveis cenários futuros negativos.`,
       fr: `Imagine facilement des scénarios négatifs possibles pour l’avenir.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_082",
@@ -11906,7 +11987,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Gdy się martwi, trudno mu przenieść uwagę gdzie indziej.`,
       pt: `Quando está preocupado, tem dificuldade em mudar a atenção para outra coisa.`,
       fr: `A du mal à détourner son attention quand il est inquiet.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_083",
@@ -11926,7 +12008,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Zazwyczaj potrafi odpuścić rzeczy, których nie da się kontrolować.`,
       pt: `Normalmente consegue deixar de lado coisas que não pode controlar.`,
       fr: `Peut généralement lâcher prise sur ce qui ne peut être contrôlé.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_084",
@@ -11946,7 +12029,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Jedna obawa może łatwo rozprzestrzenić się na kilka innych.`,
       pt: `Uma preocupação pode se espalhar facilmente para várias outras.`,
       fr: `Une inquiétude peut facilement se propager à plusieurs autres.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_085",
@@ -11966,7 +12050,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Może wyglądać na to, że nosi uogólnione napięcie obaw.`,
       pt: `Pode parecer que carrega um nível básico de tensão apreensiva.`,
       fr: `Peut sembler porter un niveau de tension anxieuse de base.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_086",
@@ -11986,7 +12071,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Niepewne oczekiwanie jest szczególnie trudne do zniesienia.`,
       pt: `Esperar na incerteza é especialmente difícil de tolerar.`,
       fr: `L’attente dans l’incertitude est particulièrement difficile à supporter.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_087",
@@ -12006,7 +12092,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Może zbierać nadmierną ilość informacji przed podjęciem decyzji, aby zmniejszyć niepewność.`,
       pt: `Pode reunir informação em excesso antes de decidir para reduzir a incerteza.`,
       fr: `Peut recueillir des informations excessives avant de décider pour réduire l’incertitude.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_088",
@@ -12015,8 +12102,8 @@ window.NM_ANXIETY_BANK = [
     weight: 1.2,
     reverse: true,
     text: {
-      hu: `Viszonylag rugalmas tud maradni akkor is, ha nincs minden előre tisztázva.`,
-      en: `Can stay relatively flexible even when not everything is clarified in advance.`,
+      hu: `Viszonylag rugalmas tud maradni akkor is, ha több részlet még nem tisztázott.`,
+      en: `Can stay relatively flexible when several details are still unclear.`,
       de: `Bleibt relativ flexibel, auch wenn nicht alles im Voraus geklärt ist.`,
       it: `Riesce a rimanere abbastanza flessibile anche se non tutto è chiaro in anticipo.`,
       es: `Puede mantenerse relativamente flexible incluso cuando no todo está claro de antemano.`,
@@ -12026,7 +12113,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Potrafi pozostać względnie elastyczny, nawet jeśli nie wszystko jest wcześniej wyjaśnione.`,
       pt: `Consegue manter-se relativamente flexível mesmo quando nem tudo está esclarecido antecipadamente.`,
       fr: `Reste relativement flexible même si tout n’est pas clarifié à l’avance.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_089",
@@ -12035,8 +12123,8 @@ window.NM_ANXIETY_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `A bizonytalanság önmagában is feszültséget kelt benne.`,
-      en: `Uncertainty itself creates tension.`,
+      hu: `A bizonytalanság önmagában is könnyen feszültséget kelt benne.`,
+      en: `Uncertainty by itself can easily create tension for them.`,
       de: `Unsicherheit erzeugt selbst Spannung.`,
       it: `L’incertezza crea tensione di per sé.`,
       es: `La incertidumbre en sí misma genera tensión.`,
@@ -12046,7 +12134,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Sama niepewność tworzy napięcie.`,
       pt: `A incerteza em si gera tensão.`,
       fr: `L’incertitude crée elle-même de la tension.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_090",
@@ -12066,7 +12155,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Łatwiej funkcjonuje, gdy kroki i oczekiwania są znane wcześniej.`,
       pt: `Funciona melhor quando os passos e expectativas são conhecidos de antemão.`,
       fr: `Fonctionne plus facilement lorsque les étapes et attentes sont connues à l’avance.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_091",
@@ -12086,7 +12176,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Napięcie fizyczne pojawia się często szybciej niż u innych.`,
       pt: `A tensão física geralmente aparece mais rapidamente do que em outras pessoas.`,
       fr: `La tension physique apparaît souvent plus rapidement que chez les autres.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_092",
@@ -12106,7 +12197,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Zmartwienia mogą powodować napięcie lub dyskomfort w żołądku.`,
       pt: `A preocupação pode causar sensação de aperto ou desconforto no estômago.`,
       fr: `L'inquiétude peut provoquer une sensation de tension ou d'inconfort dans l'estomac.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_093",
@@ -12126,7 +12218,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Zazwyczaj radzi sobie z sygnałami stresu fizycznego, nie powodując wzrostu lęku.`,
       pt: `Costuma lidar com sinais corporais de estresse sem que eles aumentem o medo.`,
       fr: `Gère généralement les signes de stress corporel sans que cela n'amplifie la peur.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_094",
@@ -12146,7 +12239,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Pod wpływem presji oddech może stać się płytszy lub spięty.`,
       pt: `Sob pressão, a respiração pode ficar mais curta ou tensa.`,
       fr: `Sous pression, la respiration peut devenir plus courte ou plus tendue.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_095",
@@ -12166,7 +12260,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Przedłużające się napięcie może prowadzić do silnego zmęczenia fizycznego pod koniec dnia.`,
       pt: `A tensão prolongada pode levar a um forte cansaço físico no final do dia.`,
       fr: `Une tension prolongée peut entraîner une grande fatigue physique en fin de journée.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_096",
@@ -12186,7 +12281,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Wewnętrzne napięcie może być zauważalne nawet w spokojnych sytuacjach.`,
       pt: `A tensão interior pode ser perceptível mesmo em situações calmas.`,
       fr: `La tension intérieure peut être perceptible même dans des situations calmes.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_097",
@@ -12206,7 +12302,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Czasami trudno jest poczuć się naprawdę bezpiecznie i spuścić gardę.`,
       pt: `Às vezes é difícil sentir-se realmente seguro e baixar a guarda.`,
       fr: `Parfois, il est difficile de se sentir vraiment en sécurité et de lâcher prise.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_098",
@@ -12226,7 +12323,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Potrafi zwolnić nawet po napięciu.`,
       pt: `Consegue desacelerar mesmo após estar tenso.`,
       fr: `Peut ralentir même après avoir été tendu.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_099",
@@ -12246,7 +12344,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Może być napięty na kilka godzin przed nadchodzącym wydarzeniem.`,
       pt: `Pode ficar tenso horas antes de um evento próximo.`,
       fr: `Peut devenir tendu des heures avant un événement à venir.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_100",
@@ -12266,7 +12365,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Potrzebuje czasu na relaks, ponieważ trudniej mu przejść do stanu spokoju.`,
       pt: `Precisa de tempo para relaxar porque é mais difícil mudar para um estado calmo.`,
       fr: `A besoin de temps pour se détendre car il lui est plus difficile de passer à un état calme.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_101",
@@ -12286,7 +12386,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Może sprawdzać coś więcej niż raz, aby mieć pewność.`,
       pt: `Pode verificar algo mais de uma vez para garantir.`,
       fr: `Peut vérifier quelque chose plusieurs fois pour être sûr.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_102",
@@ -12306,7 +12407,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Może wycofać się z wyprzedzeniem z sytuacji, które wydają się zbyt stresujące.`,
       pt: `Pode afastar-se antecipadamente de situações que parecem muito estressantes.`,
       fr: `Peut s'éloigner à l'avance des situations qui semblent trop stressantes.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_103",
@@ -12326,7 +12428,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Może stopniowo wchodzić w mniej komfortowe sytuacje krok po kroku.`,
       pt: `Consegue entrar em situações menos confortáveis gradualmente, passo a passo.`,
       fr: `Peut entrer progressivement dans des situations moins confortables, étape par étape.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_104",
@@ -12346,7 +12449,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Silnie polega na środowiskach, które są mu znane i bezpieczne.`,
       pt: `Depende bastante de ambientes que parecem familiares e seguros.`,
       fr: `Dépend beaucoup des environnements familiers et sûrs.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_105",
@@ -12366,7 +12470,8 @@ window.NM_ANXIETY_BANK = [
       pl: `W trudnych sytuacjach szybko przychodzi mu na myśl wycofanie się lub odejście.`,
       pt: `Em situações difíceis, recuar ou sair vem rapidamente à mente.`,
       fr: `Dans les situations difficiles, reculer ou partir vient rapidement à l'esprit.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_106",
@@ -12386,7 +12491,8 @@ window.NM_ANXIETY_BANK = [
       pl: `To, jak inni ich postrzegają, bardzo się liczy i może łatwo powodować napięcie.`,
       pt: `A forma como os outros os veem importa muito e pode facilmente criar tensão.`,
       fr: `Le regard des autres compte beaucoup et peut facilement créer de la tension.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_107",
@@ -12406,7 +12512,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Może długo odtwarzać w myślach interakcję społeczną.`,
       pt: `Pode revisitar mentalmente uma interação social por bastante tempo depois.`,
       fr: `Peut repasser longtemps une interaction sociale dans sa tête.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_108",
@@ -12426,7 +12533,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Potrafi względnie szybko przejść dalej, nawet po mniej udanej sytuacji społecznej.`,
       pt: `Conssegue seguir em frente relativamente rápido mesmo após uma situação social menos bem-sucedida.`,
       fr: `Peut passer à autre chose assez rapidement même après une situation sociale moins réussie.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_109",
@@ -12446,7 +12554,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Trudno mu się odezwać, gdy boi się popełnić błąd.`,
       pt: `Tem dificuldade em falar quando está preocupado em cometer um erro.`,
       fr: `A du mal à s'exprimer quand il a peur de faire une erreur.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_110",
@@ -12466,7 +12575,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Może wyobrażać sobie zawczasu kłopotliwą sytuację społeczną.`,
       pt: `Pode imaginar antecipadamente um momento social constrangedor.`,
       fr: `Peut imaginer à l'avance un moment social embarrassant.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_111",
@@ -12486,7 +12596,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Zmartwienia mogą łatwo przerywać tok uwagi.`,
       pt: `A preocupação pode facilmente interromper o fluxo de atenção.`,
       fr: `L'inquiétude peut facilement interrompre le flux de l'attention.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_112",
@@ -12506,7 +12617,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Myśli często wracają do tych samych możliwych problemów.`,
       pt: `Os pensamentos frequentemente retornam aos mesmos possíveis problemas.`,
       fr: `Les pensées reviendraient souvent aux mêmes problèmes possibles.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_113",
@@ -12526,7 +12638,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Zazwyczaj potrafi się uspokoić i wyciszyć przed snem.`,
       pt: `Geralmente consegue se acalmar e se acomodar antes de dormir.`,
       fr: `Se calme généralement et s'installe avant de dormir.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_114",
@@ -12546,7 +12659,8 @@ window.NM_ANXIETY_BANK = [
       pl: `O zmierzchu obawy, które podczas dnia pozostawały w tle, często stają się silniejsze.`,
       pt: `À hora de dormir, as preocupações que ficaram em segundo plano durante o dia muitas vezes se tornam mais fortes.`,
       fr: `Au coucher, les inquiétudes qui restaient en arrière-plan pendant la journée deviennent souvent plus fortes.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_115",
@@ -12566,7 +12680,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Napięcie psychiczne może powodować znaczne zmęczenie pod koniec dnia.`,
       pt: `A tensão mental pode causar fadiga significativa ao final do dia.`,
       fr: `La tension mentale peut provoquer une fatigue importante en fin de journée.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_116",
@@ -12586,7 +12701,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Czuje się uspokojony, gdy inni potwierdzają tę samą rzecz więcej niż raz.`,
       pt: `É reconfortante quando outras pessoas confirmam a mesma coisa mais de uma vez.`,
       fr: `C'est rassurant lorsque d'autres confirment la même chose plusieurs fois.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_117",
@@ -12606,7 +12722,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Trudno mu uznać coś za zakończone bez ponownego sprawdzenia.`,
       pt: `Tem dificuldade em considerar algo concluído sem verificar mais uma vez.`,
       fr: `Trouve difficile de considérer une chose comme terminée sans vérifier une fois de plus.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_118",
@@ -12615,8 +12732,8 @@ window.NM_ANXIETY_BANK = [
     weight: 1.2,
     reverse: true,
     text: {
-      hu: `Képes megbízni a folyamatban akkor is, ha nincs minden végig ellenőrizve.`,
-      en: `Can trust the process even when not every part has been checked.`,
+      hu: `Képes megbízni a folyamatban akkor is, ha néhány rész még nincs ellenőrizve.`,
+      en: `Can trust the process even when some parts have not been checked.`,
       de: `Kann dem Prozess vertrauen, auch wenn nicht jeder Teil überprüft wurde.`,
       it: `Può fidarsi del processo anche quando non tutte le parti sono state controllate.`,
       es: `Puede confiar en el proceso incluso cuando no se ha revisado cada parte.`,
@@ -12626,7 +12743,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Potrafi zaufać procesowi, nawet jeśli nie każda część została sprawdzona.`,
       pt: `Consegue confiar no processo mesmo quando nem todas as partes foram verificadas.`,
       fr: `Peut faire confiance au processus même si toutes les parties n'ont pas été vérifiées.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_119",
@@ -12646,7 +12764,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Możliwość utraty kontroli może sama w sobie tworzyć napięcie.`,
       pt: `A possibilidade de perder o controle pode, por si só, criar tensão.`,
       fr: `La possibilité de perdre le contrôle peut elle-même créer une tension.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_120",
@@ -12666,7 +12785,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Łatwiej się uspokaja, gdy ktoś inny daje jasne zapewnienie.`,
       pt: `Acalma-se mais facilmente quando outra pessoa oferece uma garantia clara.`,
       fr: `Se calme plus facilement lorsqu'une autre personne offre une assurance claire.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_121",
@@ -12686,7 +12806,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Zmartwienia trudno uspokoić w domu.`,
       pt: `As preocupações são difíceis de se acalmar em casa.`,
       fr: `Les inquiétudes sont difficiles à apaiser à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_122",
@@ -12706,7 +12827,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Zmartwienia trudno uspokoić w szkole lub pracy.`,
       pt: `As preocupações são difíceis de se acalmar na escola ou no trabalho.`,
       fr: `Les inquiétudes sont difficiles à apaiser à l’école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_123",
@@ -12726,7 +12848,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Zmartwienia trudno uspokoić w sytuacjach społecznych.`,
       pt: `As preocupações são difíceis de se acalmar em situações sociais.`,
       fr: `Les inquiétudes sont difficiles à apaiser dans les situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_124",
@@ -12746,7 +12869,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Zmartwienia trudno uspokoić w nieoczekiwanych lub niepewnych sytuacjach.`,
       pt: `As preocupações são difíceis de se acalmar em situações inesperadas ou incertas.`,
       fr: `Les inquiétudes sont difficiles à apaiser dans des situations inattendues ou incertaines.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_125",
@@ -12766,7 +12890,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Zmartwienia trudno uspokoić w sytuacjach wymagających wykazania się.`,
       pt: `As preocupações são difíceis de se acalmar em situações de desempenho.`,
       fr: `Les inquiétudes sont difficiles à apaiser dans des situations de performance.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_126",
@@ -12786,7 +12911,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Spędza dużo czasu myśląc o tym, co może pójść źle w domu.`,
       pt: `Passa muito tempo pensando no que pode dar errado em casa.`,
       fr: `Passe beaucoup de temps à penser à ce qui pourrait mal tourner à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_127",
@@ -12806,7 +12932,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Spędza dużo czasu myśląc o tym, co może pójść źle w szkole lub pracy.`,
       pt: `Passa muito tempo pensando no que pode dar errado na escola ou no trabalho.`,
       fr: `Passe beaucoup de temps à penser à ce qui pourrait mal tourner à l’école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_128",
@@ -12826,7 +12953,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Spędza dużo czasu myśląc o tym, co może pójść źle w sytuacjach społecznych.`,
       pt: `Passa muito tempo pensando no que pode dar errado em situações sociais.`,
       fr: `Passe beaucoup de temps à penser à ce qui pourrait mal tourner dans les situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_129",
@@ -12846,7 +12974,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Spędza dużo czasu myśląc o tym, co może pójść źle w nieoczekiwanych lub niepewnych sytuacjach.`,
       pt: `Passa muito tempo pensando no que pode dar errado em situações inesperadas ou incertas.`,
       fr: `Passe beaucoup de temps à penser à ce qui pourrait mal tourner dans des situations inattendues ou incertaines.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_130",
@@ -12866,7 +12995,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Spędza dużo czasu myśląc o tym, co może pójść źle w sytuacjach wymagających wykazania się.`,
       pt: `Passa muito tempo pensando no que pode dar errado em situações de desempenho.`,
       fr: `Passe beaucoup de temps à penser à ce qui pourrait mal tourner dans des situations de performance.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_131",
@@ -12886,7 +13016,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Potrafi stosunkowo dobrze powstrzymać się od zmartwień w domu.`,
       pt: `Consegue manter as preocupações relativamente contidas em casa.`,
       fr: `Peut garder ses inquiétudes relativement contenues à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_132",
@@ -12906,7 +13037,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Potrafi stosunkowo dobrze powstrzymać się od zmartwień w sytuacjach szkolnych lub zawodowych.`,
       pt: `Consegue manter as preocupações relativamente contidas na escola ou no trabalho.`,
       fr: `Peut garder ses inquiétudes relativement contenues à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_133",
@@ -12926,7 +13058,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Potrafi stosunkowo dobrze powstrzymać się od zmartwień w sytuacjach społecznych.`,
       pt: `Consegue manter as preocupações relativamente contidas em situações sociais.`,
       fr: `Peut garder ses inquiétudes relativement contenues en situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_134",
@@ -12946,7 +13079,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Potrafi stosunkowo dobrze powstrzymać się od zmartwień w niespodziewanych lub niepewnych sytuacjach.`,
       pt: `Consegue manter as preocupações relativamente contidas em situações inesperadas ou incertas.`,
       fr: `Peut garder ses inquiétudes relativement contenues dans des situations inattendues ou incertaines.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_135",
@@ -12966,7 +13100,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Potrafi stosunkowo dobrze powstrzymać się od zmartwień w sytuacjach wymagających występu.`,
       pt: `Consegue manter as preocupações relativamente contidas em situações de desempenho.`,
       fr: `Peut garder ses inquiétudes relativement contenues dans des situations de performance.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_136",
@@ -12986,7 +13121,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Ma trudności z wyłączeniem myśli podtrzymujących napięcie w domu.`,
       pt: `Tem dificuldade em desligar pensamentos que mantêm a tensão em casa.`,
       fr: `A du mal à arrêter les pensées qui maintiennent la tension à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_137",
@@ -13006,7 +13142,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Ma trudności z wyłączeniem myśli podtrzymujących napięcie w sytuacjach szkolnych lub zawodowych.`,
       pt: `Tem dificuldade em desligar pensamentos que mantêm a tensão na escola ou no trabalho.`,
       fr: `A du mal à arrêter les pensées qui maintiennent la tension à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_138",
@@ -13026,7 +13163,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Ma trudności z wyłączeniem myśli podtrzymujących napięcie w sytuacjach społecznych.`,
       pt: `Tem dificuldade em desligar pensamentos que mantêm a tensão em situações sociais.`,
       fr: `A du mal à arrêter les pensées qui maintiennent la tension en situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_139",
@@ -13046,7 +13184,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Ma trudności z wyłączeniem myśli podtrzymujących napięcie w niespodziewanych lub niepewnych sytuacjach.`,
       pt: `Tem dificuldade em desligar pensamentos que mantêm a tensão em situações inesperadas ou incertas.`,
       fr: `A du mal à arrêter les pensées qui maintiennent la tension dans des situations inattendues ou incertaines.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_140",
@@ -13066,7 +13205,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Ma trudności z wyłączeniem myśli podtrzymujących napięcie w sytuacjach wymagających występu.`,
       pt: `Tem dificuldade em desligar pensamentos que mantêm a tensão em situações de desempenho.`,
       fr: `A du mal à arrêter les pensées qui maintiennent la tension dans des situations de performance.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_141",
@@ -13086,7 +13226,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Mniejsze problemy mogą łatwo przerodzić się w większe zmartwienia w domu.`,
       pt: `Questões menores podem facilmente se transformar em maiores preocupações em casa.`,
       fr: `De petits problèmes peuvent facilement devenir de grandes inquiétudes à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_142",
@@ -13106,7 +13247,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Mniejsze problemy mogą łatwo przerodzić się w większe zmartwienia w szkole lub pracy.`,
       pt: `Questões menores podem facilmente se transformar em maiores preocupações na escola ou no trabalho.`,
       fr: `De petits problèmes peuvent facilement devenir de grandes inquiétudes à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_143",
@@ -13126,7 +13268,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Mniejsze problemy mogą łatwo przerodzić się w większe zmartwienia w sytuacjach społecznych.`,
       pt: `Questões menores podem facilmente se transformar em maiores preocupações em situações sociais.`,
       fr: `De petits problèmes peuvent facilement devenir de grandes inquiétudes dans les situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_144",
@@ -13146,7 +13289,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Mniejsze problemy mogą łatwo przerodzić się w większe zmartwienia w nieoczekiwanych lub niepewnych sytuacjach.`,
       pt: `Questões menores podem facilmente se transformar em maiores preocupações em situações inesperadas ou incertas.`,
       fr: `De petits problèmes peuvent facilement devenir de grandes inquiétudes dans des situations inattendues ou incertaines.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_145",
@@ -13166,7 +13310,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Mniejsze problemy mogą łatwo przerodzić się w większe zmartwienia w sytuacjach wystąpień.`,
       pt: `Questões menores podem facilmente se transformar em maiores preocupações em situações de desempenho.`,
       fr: `De petits problèmes peuvent facilement devenir de grandes inquiétudes en situation de performance.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_146",
@@ -13186,7 +13331,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Odczuwa silne napięcie, gdy nie wie dokładnie, czego oczekiwać w domu.`,
       pt: `Sente forte tensão quando não sabe exatamente o que esperar em casa.`,
       fr: `Ressent une forte tension lorsqu'il ne sait pas exactement à quoi s'attendre à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_147",
@@ -13206,7 +13352,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Odczuwa silne napięcie, gdy nie wie dokładnie, czego oczekiwać w szkole lub pracy.`,
       pt: `Sente forte tensão quando não sabe exatamente o que esperar na escola ou no trabalho.`,
       fr: `Ressent une forte tension lorsqu'il ne sait pas exactement à quoi s'attendre à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_148",
@@ -13226,7 +13373,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Odczuwa silne napięcie, gdy nie wie dokładnie, czego oczekiwać w sytuacjach społecznych.`,
       pt: `Sente forte tensão quando não sabe exatamente o que esperar em situações sociais.`,
       fr: `Ressent une forte tension lorsqu'il ne sait pas exactement à quoi s'attendre dans les situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_149",
@@ -13246,7 +13394,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Odczuwa silne napięcie, gdy nie wie dokładnie, czego oczekiwać w nieoczekiwanych lub niepewnych sytuacjach.`,
       pt: `Sente forte tensão quando não sabe exatamente o que esperar em situações inesperadas ou incertas.`,
       fr: `Ressent une forte tension lorsqu'il ne sait pas exactement à quoi s'attendre dans des situations inattendues ou incertaines.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_150",
@@ -13266,7 +13415,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Odczuwa silne napięcie, gdy nie wie dokładnie, czego oczekiwać w sytuacjach wystąpień.`,
       pt: `Sente forte tensão quando não sabe exatamente o que esperar em situações de desempenho.`,
       fr: `Ressent une forte tension lorsqu'il ne sait pas exactement à quoi s'attendre en situation de performance.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_151",
@@ -13286,7 +13436,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Czuje się spokojniej, gdy rzeczy w domu są przewidywalne z wyprzedzeniem.`,
       pt: `Sente-se mais calmo quando as coisas são previsíveis em casa.`,
       fr: `Se sent plus calme lorsque les choses sont prévisibles à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_152",
@@ -13306,7 +13457,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Czuje się spokojniej, gdy rzeczy w szkole lub pracy są przewidywalne z wyprzedzeniem.`,
       pt: `Sente-se mais calmo quando as coisas são previsíveis na escola ou no trabalho.`,
       fr: `Se sent plus calme lorsque les choses sont prévisibles à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_153",
@@ -13326,7 +13478,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Czuje się spokojniej, gdy rzeczy w sytuacjach społecznych są przewidywalne z wyprzedzeniem.`,
       pt: `Sente-se mais calmo quando as coisas são previsíveis em situações sociais.`,
       fr: `Se sent plus calme lorsque les choses sont prévisibles dans les situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_154",
@@ -13346,7 +13499,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Czuje się spokojniej, gdy rzeczy w nieoczekiwanych lub niepewnych sytuacjach są przewidywalne z wyprzedzeniem.`,
       pt: `Sente-se mais calmo quando as coisas são previsíveis em situações inesperadas ou incertas.`,
       fr: `Se sent plus calme lorsque les choses sont prévisibles dans des situations inattendues ou incertaines.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_155",
@@ -13366,7 +13520,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Czuje się spokojniej, gdy rzeczy w sytuacjach występów są przewidywalne z wyprzedzeniem.`,
       pt: `Sente-se mais calmo quando as coisas são previsíveis em situações de desempenho.`,
       fr: `Se sent plus calme lorsque les choses sont prévisibles dans les situations de performance.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_156",
@@ -13375,8 +13530,8 @@ window.NM_ANXIETY_BANK = [
     weight: 1.2,
     reverse: true,
     text: {
-      hu: `Viszonylag jól tud működni akkor is, ha nem ismert minden részlet otthoni helyzetekben.`,
-      en: `Can function relatively well even when not every detail is known at home.`,
+      hu: `Viszonylag jól tud működni otthon akkor is, ha néhány részlet még nem ismert.`,
+      en: `Can function relatively well at home when some details are still unknown.`,
       de: `Kann zu Hause relativ gut funktionieren, auch wenn nicht alle Details bekannt sind.`,
       it: `Può funzionare abbastanza bene a casa anche quando non conosce ogni dettaglio.`,
       es: `Puede funcionar relativamente bien en casa incluso cuando no conoce todos los detalles.`,
@@ -13386,7 +13541,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Potrafi całkiem dobrze funkcjonować w domu, nawet jeśli nie zna wszystkich szczegółów.`,
       pt: `Consegue funcionar relativamente bem em casa mesmo quando não conhece todos os detalhes.`,
       fr: `Peut fonctionner assez bien à la maison même si tous les détails ne sont pas connus.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_157",
@@ -13395,8 +13551,8 @@ window.NM_ANXIETY_BANK = [
     weight: 1.2,
     reverse: true,
     text: {
-      hu: `Viszonylag jól tud működni akkor is, ha nem ismert minden részlet iskolai vagy munkahelyi helyzetekben.`,
-      en: `Can function relatively well even when not every detail is known in school or work situations.`,
+      hu: `Viszonylag jól tud működni iskolai vagy munkahelyi helyzetekben, ha néhány részlet még nem ismert.`,
+      en: `Can function relatively well in school or work settings when some details are still unknown.`,
       de: `Kann in Schule oder Arbeit relativ gut funktionieren, auch wenn nicht alle Details bekannt sind.`,
       it: `Può funzionare abbastanza bene a scuola o al lavoro anche quando non conosce ogni dettaglio.`,
       es: `Puede funcionar relativamente bien en la escuela o el trabajo incluso cuando no conoce todos los detalles.`,
@@ -13406,7 +13562,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Potrafi całkiem dobrze funkcjonować w szkole lub pracy, nawet jeśli nie zna wszystkich szczegółów.`,
       pt: `Consegue funcionar relativamente bem na escola ou no trabalho mesmo quando não conhece todos os detalhes.`,
       fr: `Peut fonctionner assez bien à l'école ou au travail même si tous les détails ne sont pas connus.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_158",
@@ -13415,8 +13572,8 @@ window.NM_ANXIETY_BANK = [
     weight: 1.2,
     reverse: true,
     text: {
-      hu: `Viszonylag jól tud működni akkor is, ha nem ismert minden részlet társas helyzetekben.`,
-      en: `Can function relatively well even when not every detail is known in social situations.`,
+      hu: `Viszonylag jól tud működni társas helyzetekben, ha néhány részlet még nem ismert.`,
+      en: `Can function relatively well in social situations when some details are still unknown.`,
       de: `Kann in sozialen Situationen relativ gut funktionieren, auch wenn nicht alle Details bekannt sind.`,
       it: `Può funzionare abbastanza bene nelle situazioni sociali anche quando non conosce ogni dettaglio.`,
       es: `Puede funcionar relativamente bien en situaciones sociales incluso cuando no conoce todos los detalles.`,
@@ -13426,7 +13583,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Potrafi całkiem dobrze funkcjonować w sytuacjach społecznych, nawet jeśli nie zna wszystkich szczegółów.`,
       pt: `Consegue funcionar relativamente bem em situações sociais mesmo quando não conhece todos os detalhes.`,
       fr: `Peut fonctionner assez bien dans les situations sociales même si tous les détails ne sont pas connus.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_159",
@@ -13435,8 +13593,8 @@ window.NM_ANXIETY_BANK = [
     weight: 1.2,
     reverse: true,
     text: {
-      hu: `Viszonylag jól tud működni akkor is, ha nem ismert minden részlet váratlan vagy bizonytalan helyzetekben.`,
-      en: `Can function relatively well even when not every detail is known in unexpected or uncertain situations.`,
+      hu: `Viszonylag jól tud működni váratlan helyzetekben, ha néhány részlet bizonytalan marad.`,
+      en: `Can function relatively well in unexpected situations when some details remain uncertain.`,
       de: `Kann in unerwarteten oder unsicheren Situationen relativ gut funktionieren, auch wenn nicht alle Details bekannt sind.`,
       it: `Può funzionare abbastanza bene in situazioni impreviste o incerte anche quando non conosce ogni dettaglio.`,
       es: `Puede funcionar relativamente bien en situaciones inesperadas o inciertas incluso cuando no conoce todos los detalles.`,
@@ -13446,7 +13604,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Potrafi całkiem dobrze funkcjonować w nieoczekiwanych lub niepewnych sytuacjach, nawet jeśli nie zna wszystkich szczegółów.`,
       pt: `Consegue funcionar relativamente bem em situações inesperadas ou incertas mesmo quando não conhece todos os detalhes.`,
       fr: `Peut fonctionner assez bien dans des situations inattendues ou incertaines même si tous les détails ne sont pas connus.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_160",
@@ -13455,8 +13614,8 @@ window.NM_ANXIETY_BANK = [
     weight: 1.2,
     reverse: true,
     text: {
-      hu: `Viszonylag jól tud működni akkor is, ha nem ismert minden részlet teljesítményhelyzetekben.`,
-      en: `Can function relatively well even when not every detail is known in performance situations.`,
+      hu: `Viszonylag jól tud működni teljesítményhelyzetekben, ha néhány részlet még nem ismert.`,
+      en: `Can function relatively well in performance situations when some details are still unknown.`,
       de: `Kann in Leistungssituationen relativ gut funktionieren, auch wenn nicht alle Details bekannt sind.`,
       it: `Può funzionare abbastanza bene in situazioni di performance anche quando non conosce ogni dettaglio.`,
       es: `Puede funcionar relativamente bien en situaciones de rendimiento incluso cuando no conoce todos los detalles.`,
@@ -13466,7 +13625,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Potrafi całkiem dobrze funkcjonować w sytuacjach występów, nawet jeśli nie zna wszystkich szczegółów.`,
       pt: `Consegue funcionar relativamente bem em situações de desempenho mesmo quando não conhece todos os detalhes.`,
       fr: `Peut fonctionner assez bien dans les situations de performance même si tous les détails ne sont pas connus.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_161",
@@ -13486,7 +13646,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Czekanie i nierozwiązane pytania są szczególnie trudne do zniesienia w domu.`,
       pt: `Esperar e perguntas não resolvidas são especialmente difíceis de tolerar em casa.`,
       fr: `Attendre et les questions non résolues sont particulièrement difficiles à supporter à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_162",
@@ -13506,7 +13667,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Czekanie i nierozwiązane pytania są szczególnie trudne do zniesienia w szkole lub pracy.`,
       pt: `Esperar e perguntas não resolvidas são especialmente difíceis de tolerar na escola ou no trabalho.`,
       fr: `Attendre et les questions non résolues sont particulièrement difficiles à supporter à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_163",
@@ -13526,7 +13688,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Czekanie i nierozwiązane pytania są szczególnie trudne do zniesienia w sytuacjach społecznych.`,
       pt: `Esperar e perguntas não resolvidas são especialmente difíceis de tolerar em situações sociais.`,
       fr: `Attendre et les questions non résolues sont particulièrement difficiles à supporter dans les situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_164",
@@ -13546,7 +13709,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Czekanie i nierozwiązane pytania są szczególnie trudne do zniesienia w nieoczekiwanych lub niepewnych sytuacjach.`,
       pt: `Esperar e perguntas não resolvidas são especialmente difíceis de tolerar em situações inesperadas ou incertas.`,
       fr: `Attendre et les questions non résolues sont particulièrement difficiles à supporter dans des situations inattendues ou incertaines.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_165",
@@ -13566,7 +13730,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Czekanie i nierozwiązane pytania są szczególnie trudne do zniesienia w sytuacjach wymagających wykonania zadania.`,
       pt: `Esperar e perguntas não resolvidas são especialmente difíceis de tolerar em situações de desempenho.`,
       fr: `Attendre et les questions non résolues sont particulièrement difficiles à supporter dans les situations de performance.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_166",
@@ -13586,7 +13751,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Chce mieć pewne odpowiedzi, zanim przejdzie dalej w domu.`,
       pt: `Quer respostas definitivas antes de seguir em frente em casa.`,
       fr: `Veut des réponses claires avant d'aller de l'avant à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_167",
@@ -13606,7 +13772,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Chce mieć pewne odpowiedzi, zanim przejdzie dalej w szkole lub pracy.`,
       pt: `Quer respostas definitivas antes de seguir em frente na escola ou no trabalho.`,
       fr: `Veut des réponses claires avant d'aller de l'avant à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_168",
@@ -13626,7 +13793,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Chce mieć pewne odpowiedzi, zanim przejdzie dalej w sytuacjach społecznych.`,
       pt: `Quer respostas definitivas antes de seguir em frente em situações sociais.`,
       fr: `Veut des réponses claires avant d'aller de l'avant dans les situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_169",
@@ -13646,7 +13814,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Chce mieć pewne odpowiedzi, zanim przejdzie dalej w nieoczekiwanych lub niepewnych sytuacjach.`,
       pt: `Quer respostas definitivas antes de seguir em frente em situações inesperadas ou incertas.`,
       fr: `Veut des réponses claires avant d'aller de l'avant dans des situations inattendues ou incertaines.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_170",
@@ -13666,7 +13835,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Chce mieć pewne odpowiedzi, zanim przejdzie dalej w sytuacjach wymagających wykonania zadania.`,
       pt: `Quer respostas definitivas antes de seguir em frente em situações de desempenho.`,
       fr: `Veut des réponses claires avant d'aller de l'avant dans les situations de performance.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_171",
@@ -13686,7 +13856,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Napięcie wyraźnie objawia się w ciele w domu.`,
       pt: `A tensão manifesta-se fortemente no corpo em casa.`,
       fr: `La tension se manifeste fortement dans le corps à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_172",
@@ -13706,7 +13877,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Napięcie wyraźnie objawia się w ciele w szkole lub pracy.`,
       pt: `A tensão manifesta-se fortemente no corpo na escola ou no trabalho.`,
       fr: `La tension se manifeste fortement dans le corps à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_173",
@@ -13726,7 +13898,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Napięcie wyraźnie objawia się w ciele w sytuacjach społecznych.`,
       pt: `A tensão manifesta-se fortemente no corpo em situações sociais.`,
       fr: `La tension se manifeste fortement dans le corps dans des situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_174",
@@ -13746,7 +13919,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Napięcie wyraźnie objawia się w ciele w nieoczekiwanych lub niepewnych sytuacjach.`,
       pt: `A tensão manifesta-se fortemente no corpo em situações inesperadas ou incertas.`,
       fr: `La tension se manifeste fortement dans le corps dans des situations inattendues ou incertaines.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_175",
@@ -13766,7 +13940,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Napięcie wyraźnie objawia się w ciele w sytuacjach występów.`,
       pt: `A tensão manifesta-se fortemente no corpo em situações de desempenho.`,
       fr: `La tension se manifeste fortement dans le corps dans des situations de performance.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_176",
@@ -13786,7 +13961,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Ciało czasami reaguje, jakby w domu było zwiększone niebezpieczeństwo.`,
       pt: `O corpo às vezes reage como se houvesse perigo aumentado em casa.`,
       fr: `Le corps réagit parfois à la maison comme s'il y avait un danger accru.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_177",
@@ -13806,7 +13982,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Ciało czasami reaguje, jakby w szkole lub pracy było zwiększone niebezpieczeństwo.`,
       pt: `O corpo às vezes reage como se houvesse perigo aumentado na escola ou no trabalho.`,
       fr: `Le corps réagit parfois à l'école ou au travail comme s'il y avait un danger accru.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_178",
@@ -13826,7 +14003,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Ciało czasami reaguje, jakby w sytuacjach społecznych było zwiększone niebezpieczeństwo.`,
       pt: `O corpo às vezes reage como se houvesse perigo aumentado em situações sociais.`,
       fr: `Le corps réagit parfois dans des situations sociales comme s'il y avait un danger accru.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_179",
@@ -13846,7 +14024,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Ciało czasami reaguje, jakby w nieoczekiwanych lub niepewnych sytuacjach było zwiększone niebezpieczeństwo.`,
       pt: `O corpo às vezes reage como se houvesse perigo aumentado em situações inesperadas ou incertas.`,
       fr: `Le corps réagit parfois dans des situations inattendues ou incertaines comme s'il y avait un danger accru.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_180",
@@ -13866,7 +14045,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Ciało czasami reaguje, jakby w sytuacjach występów było zwiększone niebezpieczeństwo.`,
       pt: `O corpo às vezes reage como se houvesse perigo aumentado em situações de desempenho.`,
       fr: `Le corps réagit parfois dans des situations de performance comme s'il y avait un danger accru.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_181",
@@ -13886,7 +14066,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Ciało zazwyczaj potrafi pozostać stosunkowo spokojne nawet w bardziej wymagających sytuacjach w domu.`,
       pt: `O corpo geralmente consegue permanecer relativamente calmo mesmo em situações mais exigentes em casa.`,
       fr: `Le corps peut généralement rester relativement calme même dans des situations plus exigeantes à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_182",
@@ -13906,7 +14087,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Ciało zazwyczaj potrafi pozostać stosunkowo spokojne nawet w bardziej wymagających sytuacjach w szkole lub pracy.`,
       pt: `O corpo geralmente consegue permanecer relativamente calmo mesmo em situações mais exigentes na escola ou no trabalho.`,
       fr: `Le corps peut généralement rester relativement calme même dans des situations plus exigeantes à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_183",
@@ -13926,7 +14108,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Ciało zazwyczaj potrafi pozostać stosunkowo spokojne nawet w bardziej wymagających sytuacjach społecznych.`,
       pt: `O corpo geralmente consegue permanecer relativamente calmo mesmo em situações sociais mais exigentes.`,
       fr: `Le corps peut généralement rester relativement calme même dans des situations sociales plus exigeantes.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_184",
@@ -13946,7 +14129,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Ciało zazwyczaj potrafi pozostać stosunkowo spokojne nawet w bardziej wymagających, nieoczekiwanych lub niepewnych sytuacjach.`,
       pt: `O corpo geralmente consegue permanecer relativamente calmo mesmo em situações inesperadas ou incertas mais exigentes.`,
       fr: `Le corps peut généralement rester relativement calme même dans des situations inattendues ou incertaines plus exigeantes.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_185",
@@ -13966,7 +14150,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Ciało zazwyczaj potrafi pozostać stosunkowo spokojne nawet w bardziej wymagających sytuacjach związanych z wykonywaniem zadań.`,
       pt: `O corpo geralmente consegue permanecer relativamente calmo mesmo em situações de desempenho mais exigentes.`,
       fr: `Le corps peut généralement rester relativement calme même dans des situations de performance plus exigeantes.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_186",
@@ -13986,7 +14171,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Napięcie można również zauważyć w oddechu w domu.`,
       pt: `Também é possível notar tensão na respiração em casa.`,
       fr: `La tension peut aussi se faire sentir dans la respiration à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_187",
@@ -14006,7 +14192,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Napięcie można również zauważyć w oddechu w szkole lub w pracy.`,
       pt: `Também é possível notar tensão na respiração em situações escolares ou de trabalho.`,
       fr: `La tension peut aussi se faire sentir dans la respiration à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_188",
@@ -14026,7 +14213,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Napięcie można również zauważyć w oddechu w sytuacjach społecznych.`,
       pt: `Também é possível notar tensão na respiração em situações sociais.`,
       fr: `La tension peut aussi se faire sentir dans la respiration dans des situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_189",
@@ -14046,7 +14234,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Napięcie można również zauważyć w oddechu w nieoczekiwanych lub niepewnych sytuacjach.`,
       pt: `Também é possível notar tensão na respiração em situações inesperadas ou incertas.`,
       fr: `La tension peut aussi se faire sentir dans la respiration dans des situations inattendues ou incertaines.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_190",
@@ -14066,7 +14255,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Napięcie można również zauważyć w oddechu w sytuacjach związanych z wykonywaniem zadań.`,
       pt: `Também é possível notar tensão na respiração em situações de desempenho.`,
       fr: `La tension peut aussi se faire sentir dans la respiration dans des situations de performance.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_191",
@@ -14086,7 +14276,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Napięcie może powodować dyskomfort żołądkowy lub ucisk ciała w domu.`,
       pt: `A tensão pode causar desconforto no estômago ou pressão corporal em casa.`,
       fr: `La tension peut provoquer une gêne gastrique ou une sensation de pression corporelle à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_192",
@@ -14106,7 +14297,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Napięcie może powodować dyskomfort żołądkowy lub ucisk ciała w sytuacjach szkolnych lub zawodowych.`,
       pt: `A tensão pode causar desconforto no estômago ou pressão corporal em situações escolares ou de trabalho.`,
       fr: `La tension peut provoquer une gêne gastrique ou une sensation de pression corporelle à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_193",
@@ -14126,7 +14318,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Napięcie może powodować dyskomfort żołądkowy lub ucisk ciała w sytuacjach społecznych.`,
       pt: `A tensão pode causar desconforto no estômago ou pressão corporal em situações sociais.`,
       fr: `La tension peut provoquer une gêne gastrique ou une sensation de pression corporelle dans les situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_194",
@@ -14146,7 +14339,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Napięcie może powodować dyskomfort żołądkowy lub ucisk ciała w nieoczekiwanych lub niepewnych sytuacjach.`,
       pt: `A tensão pode causar desconforto no estômago ou pressão corporal em situações inesperadas ou incertas.`,
       fr: `La tension peut provoquer une gêne gastrique ou une sensation de pression corporelle dans des situations inattendues ou incertaines.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_195",
@@ -14166,7 +14360,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Napięcie może powodować dyskomfort żołądkowy lub ucisk ciała w sytuacjach występów.`,
       pt: `A tensão pode causar desconforto no estômago ou pressão corporal em situações de desempenho.`,
       fr: `La tension peut provoquer une gêne gastrique ou une sensation de pression corporelle lors de situations de performance.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_196",
@@ -14175,8 +14370,8 @@ window.NM_ANXIETY_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Belső nyugtalanság jellemzi otthoni helyzetekben.`,
-      en: `Is characterized by inner restlessness at home.`,
+      hu: `Belső nyugtalanság jellemzi otthoni helyzetekben, még külső nyomás nélkül is.`,
+      en: `Shows inner restlessness at home, even without obvious external pressure.`,
       de: `Zeichnet sich durch innere Unruhe zu Hause aus.`,
       it: `Si manifesta con irrequietezza interiore a casa.`,
       es: `Se caracteriza por inquietud interior en casa.`,
@@ -14186,7 +14381,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Charakteryzuje się wewnętrznym niepokojem w domu.`,
       pt: `Caracteriza-se por inquietação interior em casa.`,
       fr: `Se caractérise par une agitation intérieure à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_197",
@@ -14206,7 +14402,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Charakteryzuje się wewnętrznym niepokojem w sytuacjach szkolnych lub zawodowych.`,
       pt: `Caracteriza-se por inquietação interior em situações escolares ou de trabalho.`,
       fr: `Se caractérise par une agitation intérieure à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_198",
@@ -14215,8 +14412,8 @@ window.NM_ANXIETY_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Belső nyugtalanság jellemzi társas helyzetekben.`,
-      en: `Is characterized by inner restlessness in social situations.`,
+      hu: `Belső nyugtalanság jellemzi társas helyzetekben, különösen új közegben.`,
+      en: `Shows inner restlessness in social situations, especially in new settings.`,
       de: `Zeichnet sich durch innere Unruhe in sozialen Situationen aus.`,
       it: `Si manifesta con irrequietezza interiore in situazioni sociali.`,
       es: `Se caracteriza por inquietud interior en situaciones sociales.`,
@@ -14226,7 +14423,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Charakteryzuje się wewnętrznym niepokojem w sytuacjach społecznych.`,
       pt: `Caracteriza-se por inquietação interior em situações sociais.`,
       fr: `Se caractérise par une agitation intérieure dans les situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_199",
@@ -14246,7 +14444,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Charakteryzuje się wewnętrznym niepokojem w nieoczekiwanych lub niepewnych sytuacjach.`,
       pt: `Caracteriza-se por inquietação interior em situações inesperadas ou incertas.`,
       fr: `Se caractérise par une agitation intérieure dans des situations inattendues ou incertaines.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_200",
@@ -14255,8 +14454,8 @@ window.NM_ANXIETY_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Belső nyugtalanság jellemzi teljesítményhelyzetekben.`,
-      en: `Is characterized by inner restlessness in performance situations.`,
+      hu: `Belső nyugtalanság jellemzi teljesítményhelyzetekben, amikor értékelést vár.`,
+      en: `Shows inner restlessness in performance situations when evaluation is expected.`,
       de: `Zeichnet sich durch innere Unruhe in Leistungssituationen aus.`,
       it: `Si manifesta con irrequietezza interiore in situazioni di rendimento.`,
       es: `Se caracteriza por inquietud interior en situaciones de rendimiento.`,
@@ -14266,7 +14465,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Charakteryzuje się wewnętrznym niepokojem w sytuacjach występów.`,
       pt: `Caracteriza-se por inquietação interior em situações de desempenho.`,
       fr: `Se caractérise par une agitation intérieure lors de situations de performance.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_201",
@@ -14286,7 +14486,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Ma trudności z prawdziwym odprężeniem się i zwolnieniem tempa w domu.`,
       pt: `Tem dificuldade em realmente relaxar e desacelerar em casa.`,
       fr: `A du mal à se détendre vraiment et à ralentir à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_202",
@@ -14306,7 +14507,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Ma trudności z prawdziwym odprężeniem się i zwolnieniem tempa w sytuacjach szkolnych lub zawodowych.`,
       pt: `Tem dificuldade em realmente relaxar e desacelerar em situações escolares ou de trabalho.`,
       fr: `A du mal à se détendre vraiment et à ralentir dans des situations scolaires ou professionnelles.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_203",
@@ -14326,7 +14528,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Ma trudności z prawdziwym odprężeniem się i zwolnieniem tempa w sytuacjach społecznych.`,
       pt: `Tem dificuldade em realmente relaxar e desacelerar em situações sociais.`,
       fr: `A du mal à se détendre vraiment et à ralentir dans des situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_204",
@@ -14346,7 +14549,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Ma trudności z prawdziwym odprężeniem się i zwolnieniem tempa w nieoczekiwanych lub niepewnych sytuacjach.`,
       pt: `Tem dificuldade em realmente relaxar e desacelerar em situações inesperadas ou incertas.`,
       fr: `A du mal à se détendre vraiment et à ralentir dans des situations inattendues ou incertaines.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_205",
@@ -14366,7 +14570,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Ma trudności z prawdziwym odprężeniem się i zwolnieniem tempa w sytuacjach występów.`,
       pt: `Tem dificuldade em realmente relaxar e desacelerar em situações de desempenho.`,
       fr: `A du mal à se détendre vraiment et à ralentir dans des situations de performance.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_206",
@@ -14386,7 +14591,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Potrafi wrócić do spokojniejszego stanu wewnętrznego w domu.`,
       pt: `Consegue voltar a um estado interior mais calmo em casa.`,
       fr: `Peut retrouver un état intérieur plus calme à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_207",
@@ -14406,7 +14612,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Potrafi wrócić do spokojniejszego stanu wewnętrznego w sytuacjach szkolnych lub zawodowych.`,
       pt: `Consegue voltar a um estado interior mais calmo em situações escolares ou de trabalho.`,
       fr: `Peut retrouver un état intérieur plus calme dans des situations scolaires ou professionnelles.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_208",
@@ -14426,7 +14633,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Potrafi wrócić do spokojniejszego stanu wewnętrznego w sytuacjach społecznych.`,
       pt: `Consegue voltar a um estado interior mais calmo em situações sociais.`,
       fr: `Peut retrouver un état intérieur plus calme dans des situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_209",
@@ -14446,7 +14654,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Potrafi wrócić do spokojniejszego stanu wewnętrznego w nieoczekiwanych lub niepewnych sytuacjach.`,
       pt: `Consegue voltar a um estado interior mais calmo em situações inesperadas ou incertas.`,
       fr: `Peut retrouver un état intérieur plus calme dans des situations inattendues ou incertaines.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_210",
@@ -14466,7 +14675,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Potrafi wrócić do spokojniejszego stanu wewnętrznego w sytuacjach występów.`,
       pt: `Consegue voltar a um estado interior mais calmo em situações de desempenho.`,
       fr: `Peut retrouver un état intérieur plus calme dans des situations de performance.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_211",
@@ -14486,7 +14696,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Wydaje się być ciągle w stanie czujności w domu.`,
       pt: `Parece permanecer em um estado contínuo de alerta em casa.`,
       fr: `Semble rester dans un état d'alerte continu à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_212",
@@ -14506,7 +14717,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Wydaje się być ciągle w stanie czujności w sytuacjach szkolnych lub zawodowych.`,
       pt: `Parece permanecer em um estado contínuo de alerta em situações escolares ou de trabalho.`,
       fr: `Semble rester dans un état d'alerte continu à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_213",
@@ -14526,7 +14738,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Wydaje się być ciągle w stanie czujności w sytuacjach społecznych.`,
       pt: `Parece permanecer em um estado contínuo de alerta em situações sociais.`,
       fr: `Semble rester dans un état d'alerte continu dans les situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_214",
@@ -14546,7 +14759,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Wydaje się być ciągle w stanie czujności w niespodziewanych lub niepewnych sytuacjach.`,
       pt: `Parece permanecer em um estado contínuo de alerta em situações inesperadas ou incertas.`,
       fr: `Semble rester dans un état d'alerte continu dans des situations inattendues ou incertaines.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_215",
@@ -14555,8 +14769,8 @@ window.NM_ANXIETY_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Mintha folyamatos készenlétben lenne teljesítményhelyzetekben.`,
-      en: `Seems to remain in a continuous state of alertness in performance situations.`,
+      hu: `Mintha fokozott készenlétben lenne teljesítményhelyzetekben, különösen időnyomás alatt.`,
+      en: `Seems to remain in a heightened alert state in performance situations, especially under time pressure.`,
       de: `Scheint in Leistungssituationen dauerhaft wachsam zu sein.`,
       it: `Sembra rimanere in uno stato continuo di allerta in situazioni di performance.`,
       es: `Parece mantenerse en un estado continuo de alerta en situaciones de rendimiento.`,
@@ -14566,7 +14780,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Wydaje się być ciągle w stanie czujności w sytuacjach wystąpień.`,
       pt: `Parece permanecer em um estado contínuo de alerta em situações de desempenho.`,
       fr: `Semble rester dans un état d'alerte continu dans des situations de performance.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_216",
@@ -14586,7 +14801,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Może stać się napięty na zapas z powodu nadchodzącej sytuacji w domu.`,
       pt: `Pode ficar tenso antecipadamente devido a uma situação iminente em casa.`,
       fr: `Peut devenir tendu à l'avance à cause d'une situation à venir à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_217",
@@ -14606,7 +14822,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Może stać się napięty na zapas z powodu nadchodzącej sytuacji w szkole lub pracy.`,
       pt: `Pode ficar tenso antecipadamente devido a uma situação iminente na escola ou no trabalho.`,
       fr: `Peut devenir tendu à l'avance à cause d'une situation à venir à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_218",
@@ -14626,7 +14843,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Może stać się napięty na zapas z powodu nadchodzącej sytuacji społecznej.`,
       pt: `Pode ficar tenso antecipadamente devido a uma situação social iminente.`,
       fr: `Peut devenir tendu à l'avance à cause d'une situation sociale à venir.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_219",
@@ -14646,7 +14864,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Może stać się napięty na zapas z powodu nadchodzącej nieoczekiwanej lub niepewnej sytuacji.`,
       pt: `Pode ficar tenso antecipadamente devido a uma situação inesperada ou incerta iminente.`,
       fr: `Peut devenir tendu à l'avance à cause d'une situation inattendue ou incertaine à venir.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_220",
@@ -14666,7 +14885,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Może stać się napięty na zapas z powodu nadchodzącej sytuacji wystąpienia.`,
       pt: `Pode ficar tenso antecipadamente devido a uma situação iminente de desempenho.`,
       fr: `Peut devenir tendu à l'avance à cause d'une situation de performance à venir.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_221",
@@ -14686,7 +14906,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Ma tendencję do unikania sytuacji wywołujących napięcie w domu.`,
       pt: `Tende a evitar situações que criam tensão em casa.`,
       fr: `A tendance à éviter les situations qui créent de la tension à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_222",
@@ -14706,7 +14927,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Ma tendencję do unikania sytuacji wywołujących napięcie w szkole lub pracy.`,
       pt: `Tende a evitar situações que criam tensão na escola ou no trabalho.`,
       fr: `A tendance à éviter les situations qui créent de la tension à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_223",
@@ -14726,7 +14948,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Ma tendencję do unikania sytuacji wywołujących napięcie w sytuacjach społecznych.`,
       pt: `Tende a evitar situações que criam tensão em situações sociais.`,
       fr: `A tendance à éviter les situations qui créent de la tension dans les situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_224",
@@ -14746,7 +14969,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Ma tendencję do unikania sytuacji wywołujących napięcie w sytuacjach nieoczekiwanych lub niepewnych.`,
       pt: `Tende a evitar situações que criam tensão em situações inesperadas ou incertas.`,
       fr: `A tendance à éviter les situations qui créent de la tension dans des situations inattendues ou incertaines.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_225",
@@ -14766,7 +14990,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Ma tendencję do unikania sytuacji wywołujących napięcie w sytuacjach występów.`,
       pt: `Tende a evitar situações que criam tensão em situações de desempenho.`,
       fr: `A tendance à éviter les situations qui créent de la tension dans les situations de performance.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_226",
@@ -14786,7 +15011,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Może powtarzalnie sprawdzać rzeczy, aby poczuć się pewniej w domu.`,
       pt: `Pode verificar as coisas repetidamente para se sentir seguro em casa.`,
       fr: `Peut vérifier les choses à plusieurs reprises pour se sentir rassuré à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_227",
@@ -14806,7 +15032,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Może powtarzalnie sprawdzać rzeczy, aby poczuć się pewniej w szkole lub pracy.`,
       pt: `Pode verificar as coisas repetidamente para se sentir seguro na escola ou no trabalho.`,
       fr: `Peut vérifier les choses à plusieurs reprises pour se sentir rassuré à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_228",
@@ -14826,7 +15053,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Może powtarzalnie sprawdzać rzeczy, aby poczuć się pewniej w sytuacjach społecznych.`,
       pt: `Pode verificar as coisas repetidamente para se sentir seguro em situações sociais.`,
       fr: `Peut vérifier les choses à plusieurs reprises pour se sentir rassuré dans les situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_229",
@@ -14846,7 +15074,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Może powtarzalnie sprawdzać rzeczy, aby poczuć się pewniej w sytuacjach nieoczekiwanych lub niepewnych.`,
       pt: `Pode verificar as coisas repetidamente para se sentir seguro em situações inesperadas ou incertas.`,
       fr: `Peut vérifier les choses à plusieurs reprises pour se sentir rassuré dans des situations inattendues ou incertaines.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_230",
@@ -14866,7 +15095,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Może powtarzalnie sprawdzać rzeczy, aby poczuć się pewniej w sytuacjach występów.`,
       pt: `Pode verificar as coisas repetidamente para se sentir seguro em situações de desempenho.`,
       fr: `Peut vérifier les choses à plusieurs reprises pour se sentir rassuré dans les situations de performance.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_231",
@@ -14886,7 +15116,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Potrafi znosić łagodny dyskomfort w domu, nie wycofując się natychmiast.`,
       pt: `Consegue tolerar desconforto leve em casa sem se retirar imediatamente.`,
       fr: `Peut tolérer un léger inconfort à la maison sans se retirer immédiatement.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_232",
@@ -14906,7 +15137,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Potrafi znosić łagodny dyskomfort w sytuacjach szkolnych lub zawodowych, nie wycofując się natychmiast.`,
       pt: `Consegue tolerar desconforto leve em situações escolares ou de trabalho sem se retirar imediatamente.`,
       fr: `Peut tolérer un léger inconfort à l'école ou au travail sans se retirer immédiatement.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_233",
@@ -14926,7 +15158,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Potrafi znosić łagodny dyskomfort w sytuacjach społecznych, nie wycofując się natychmiast.`,
       pt: `Consegue tolerar desconforto leve em situações sociais sem se retirar imediatamente.`,
       fr: `Peut tolérer un léger inconfort dans les situations sociales sans se retirer immédiatement.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_234",
@@ -14946,7 +15179,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Potrafi znosić łagodny dyskomfort w nieoczekiwanych lub niepewnych sytuacjach, nie wycofując się natychmiast.`,
       pt: `Consegue tolerar desconforto leve em situações inesperadas ou incertas sem se retirar imediatamente.`,
       fr: `Peut tolérer un léger inconfort dans des situations inattendues ou incertaines sans se retirer immédiatement.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_235",
@@ -14966,7 +15200,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Potrafi znosić łagodny dyskomfort w sytuacjach wymagających wykonania, nie wycofując się natychmiast.`,
       pt: `Consegue tolerar desconforto leve em situações de desempenho sem se retirar imediatamente.`,
       fr: `Peut tolérer un léger inconfort dans des situations de performance sans se retirer immédiatement.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_236",
@@ -14986,7 +15221,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Funkcjonuje znacznie łatwiej, gdy otoczenie w domu wydaje się bezpieczne.`,
       pt: `Funciona muito mais facilmente quando o ambiente em casa é sentido como seguro.`,
       fr: `Fonctionne beaucoup plus facilement lorsque l'environnement à la maison semble sûr.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_237",
@@ -15006,7 +15242,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Funkcjonuje znacznie łatwiej, gdy otoczenie w szkole lub pracy wydaje się bezpieczne.`,
       pt: `Funciona muito mais facilmente quando o ambiente escolar ou de trabalho é sentido como seguro.`,
       fr: `Fonctionne beaucoup plus facilement lorsque l'environnement à l'école ou au travail semble sûr.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_238",
@@ -15026,7 +15263,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Funkcjonuje znacznie łatwiej, gdy otoczenie w sytuacjach społecznych wydaje się bezpieczne.`,
       pt: `Funciona muito mais facilmente quando o ambiente social é sentido como seguro.`,
       fr: `Fonctionne beaucoup plus facilement lorsque l'environnement dans les situations sociales semble sûr.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_239",
@@ -15046,7 +15284,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Funkcjonuje znacznie łatwiej, gdy otoczenie w nieoczekiwanych lub niepewnych sytuacjach wydaje się bezpieczne.`,
       pt: `Funciona muito mais facilmente quando o ambiente em situações inesperadas ou incertas é sentido como seguro.`,
       fr: `Fonctionne beaucoup plus facilement lorsque l'environnement dans des situations inattendues ou incertaines semble sûr.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_240",
@@ -15066,7 +15305,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Funkcjonuje znacznie łatwiej, gdy otoczenie w sytuacjach wymagających wykonania wydaje się bezpieczne.`,
       pt: `Funciona muito mais facilmente quando o ambiente em situações de desempenho é sentido como seguro.`,
       fr: `Fonctionne beaucoup plus facilement lorsque l'environnement dans des situations de performance semble sûr.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_241",
@@ -15086,7 +15326,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Chciałby najbardziej odejść lub się wycofać, gdy napięcie w domu staje się zbyt wysokie.`,
       pt: `Prefere sair ou se afastar quando a tensão em casa fica muito alta.`,
       fr: `Préférait partir ou se retirer lorsque la tension à la maison devient trop forte.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_242",
@@ -15106,7 +15347,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Chciałby najbardziej odejść lub się wycofać, gdy napięcie w szkole lub pracy staje się zbyt wysokie.`,
       pt: `Prefere sair ou se afastar quando a tensão na escola ou no trabalho fica muito alta.`,
       fr: `Préférait partir ou se retirer lorsque la tension à l'école ou au travail devient trop forte.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_243",
@@ -15126,7 +15368,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Chciałby najbardziej odejść lub się wycofać, gdy napięcie w sytuacjach społecznych staje się zbyt wysokie.`,
       pt: `Prefere sair ou se afastar quando a tensão em situações sociais fica muito alta.`,
       fr: `Préférait partir ou se retirer lorsque la tension dans des situations sociales devient trop forte.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_244",
@@ -15146,7 +15389,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Chciałby najbardziej odejść lub się wycofać, gdy napięcie w nieoczekiwanych lub niepewnych sytuacjach staje się zbyt wysokie.`,
       pt: `Prefere sair ou se afastar quando a tensão em situações inesperadas ou incertas fica muito alta.`,
       fr: `Préférait partir ou se retirer lorsque la tension dans des situations inattendues ou incertaines devient trop forte.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_245",
@@ -15166,7 +15410,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Chciałby najbardziej odejść lub się wycofać, gdy napięcie w sytuacjach występów staje się zbyt wysokie.`,
       pt: `Prefere sair ou se afastar quando a tensão em situações de desempenho fica muito alta.`,
       fr: `Préférait partir ou se retirer lorsque la tension dans des situations de performance devient trop forte.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_246",
@@ -15186,7 +15431,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Boi się negatywnej oceny przez innych w domu.`,
       pt: `Teme ser julgado negativamente pelos outros em casa.`,
       fr: `Craint d'être jugé négativement par les autres à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_247",
@@ -15206,7 +15452,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Boi się negatywnej oceny przez innych w szkole lub pracy.`,
       pt: `Teme ser julgado negativamente pelos outros na escola ou no trabalho.`,
       fr: `Craint d'être jugé négativement par les autres à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_248",
@@ -15226,7 +15473,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Boi się negatywnej oceny przez innych w sytuacjach społecznych.`,
       pt: `Teme ser julgado negativamente pelos outros em situações sociais.`,
       fr: `Craint d'être jugé négativement par les autres dans des situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_249",
@@ -15246,7 +15494,8 @@ window.NM_ANXIETY_BANK = [
       pl: `Boi się negatywnej oceny przez innych w nieoczekiwanych lub niepewnych sytuacjach.`,
       pt: `Teme ser julgado negativamente pelos outros em situações inesperadas ou incertas.`,
       fr: `Craint d'être jugé négativement par les autres dans des situations inattendues ou incertaines.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "ANX_250",
@@ -15266,11 +15515,10 @@ window.NM_ANXIETY_BANK = [
       pl: `Boi się negatywnej oceny przez innych w sytuacjach występów.`,
       pt: `Teme ser julgado negativamente pelos outros em situações de desempenho.`,
       fr: `Craint d'être jugé négativement par les autres dans des situations de performance.`,
-    }
-  },
+    },
+    stemKey: ""
+  }
 ];
-
-
 
 /* ===== depression.bank.translated.js ===== */
 window.NM_DEPRESSION_BANK = [
@@ -15281,8 +15529,8 @@ window.NM_DEPRESSION_BANK = [
     weight: 1.5,
     reverse: false,
     text: {
-      hu: `Gyakran tartós lehangoltság jellemzi.`,
-      en: `Is often characterized by persistent low mood.`,
+      hu: `Gyakran tartós lehangoltság jellemzi több hétköznapi helyzetben.`,
+      en: `Often shows persistent low mood across everyday situations.`,
       de: `Ist oft durch anhaltende gedrückte Stimmung gekennzeichnet.`,
       it: `Si manifesta spesso con un umore basso persistente.`,
       es: `A menudo se caracteriza por un estado de ánimo bajo persistente.`,
@@ -15292,7 +15540,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Często charakteryzuje się uporczywym niskim nastrojem.`,
       pt: `Geralmente é caracterizado por um humor persistentemente baixo.`,
       fr: `Se caractérise souvent par une humeur basse et persistante.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_002",
@@ -15312,7 +15561,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Łatwiej niż wcześniej staje się smutny lub płaczliwy.`,
       pt: `Fica triste ou choroso mais facilmente do que antes.`,
       fr: `Devient triste ou en larmes plus facilement qu'avant.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_003",
@@ -15332,7 +15582,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Codzienne życie może wydawać się emocjonalnie cięższe.`,
       pt: `A vida diária pode parecer emocionalmente mais pesada.`,
       fr: `La vie quotidienne peut sembler émotionnellement plus lourde.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_004",
@@ -15352,7 +15603,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może odczuwać szczególnie niski nastrój na początku dnia.`,
       pt: `Pode sentir-se especialmente para baixo no início do dia.`,
       fr: `Peut se sentir particulièrement bas au début de la journée.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_005",
@@ -15361,8 +15613,8 @@ window.NM_DEPRESSION_BANK = [
     weight: 1.2,
     reverse: true,
     text: {
-      hu: `Hangulata többnyire kiegyensúlyozott tud maradni.`,
-      en: `Mood can usually remain relatively stable.`,
+      hu: `Hangulata többnyire kiegyensúlyozott tud maradni kisebb nehézségek mellett is.`,
+      en: `Mood can usually remain relatively stable despite smaller difficulties.`,
       de: `Die Stimmung bleibt meistens relativ stabil.`,
       it: `L'umore solitamente rimane relativamente stabile.`,
       es: `El estado de ánimo suele mantenerse relativamente estable.`,
@@ -15372,7 +15624,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Nastrój zwykle pozostaje stosunkowo stabilny.`,
       pt: `O humor geralmente permanece relativamente estável.`,
       fr: `L'humeur peut généralement rester relativement stable.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_006",
@@ -15392,7 +15645,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Beznadziejność często pojawia się w mowie lub postawie.`,
       pt: `A desesperança muitas vezes aparece na fala ou atitude.`,
       fr: `Le sentiment de désespoir apparaît souvent dans le discours ou l'attitude.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_007",
@@ -15412,7 +15666,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Nastrój może spaść nawet bez wyraźnego powodu.`,
       pt: `O humor pode cair mesmo sem uma razão clara.`,
       fr: `L'humeur peut baisser même sans raison évidente.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_008",
@@ -15432,7 +15687,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Niski nastrój może być odczuwany jako cicha, ciągła obecność.`,
       pt: `O humor baixo pode parecer mais como uma presença silenciosa e contínua.`,
       fr: `Une humeur basse peut ressembler à une présence calme et persistante.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_009",
@@ -15452,7 +15708,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może stosunkowo łatwo wrócić do normy po niskim momencie.`,
       pt: `Pode recuperar-se relativamente facilmente após um momento baixo.`,
       fr: `Peut se rétablir relativement facilement après un moment de baisse.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_010",
@@ -15472,7 +15729,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Uczucia smutku mogą utrzymywać się przez długi czas.`,
       pt: `Sentimentos de tristeza podem persistir por muito tempo.`,
       fr: `Les sentiments de tristesse peuvent durer longtemps.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_011",
@@ -15492,7 +15750,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Czerpie mniej przyjemności z rzeczy, które kiedyś sprawiały mu radość.`,
       pt: `Sente menos prazer nas coisas que antes eram agradáveis.`,
       fr: `Prend moins de plaisir aux choses qui étaient auparavant agréables.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_012",
@@ -15501,8 +15760,8 @@ window.NM_DEPRESSION_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Érdeklődése több területen is csökkenhet.`,
-      en: `Interest may decrease across several areas.`,
+      hu: `Érdeklődése több számára korábban fontos területen is csökkenhet.`,
+      en: `Interest may decrease across several areas that used to matter to them.`,
       de: `Das Interesse kann in mehreren Bereichen abnehmen.`,
       it: `L'interesse può diminuire in più ambiti.`,
       es: `El interés puede disminuir en varias áreas.`,
@@ -15512,7 +15771,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Zainteresowanie może zmniejszyć się w kilku obszarach.`,
       pt: `O interesse pode diminuir em várias áreas.`,
       fr: `L'intérêt peut diminuer dans plusieurs domaines.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_013",
@@ -15521,8 +15781,8 @@ window.NM_DEPRESSION_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Korábban kedvelt tevékenységektől is eltávolodhat.`,
-      en: `May pull away even from activities once enjoyed.`,
+      hu: `Korábban kedvelt tevékenységektől is eltávolodhat, még ha elérhetők maradnak.`,
+      en: `May pull away from previously enjoyed activities even when they remain available.`,
       de: `Zieht sich möglicherweise sogar von Aktivitäten zurück, die früher genossen wurden.`,
       it: `Si allontana anche dalle attività che una volta piacevano.`,
       es: `Puede alejarse incluso de actividades que antes disfrutaba.`,
@@ -15532,7 +15792,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może się wycofywać nawet z aktywności, które wcześniej sprawiały przyjemność.`,
       pt: `Pode afastar-se até mesmo das atividades que gostava anteriormente.`,
       fr: `Peut se désintéresser même des activités autrefois appréciées.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_014",
@@ -15552,7 +15813,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Pozytywne doświadczenia wywołują mniejszy wpływ emocjonalny.`,
       pt: `Experiências positivas têm menos impacto emocional.`,
       fr: `Les expériences positives ont moins d'impact émotionnel.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_015",
@@ -15572,7 +15834,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Wciąż potrafi czerpać radość z ważnych rzeczy.`,
       pt: `Ainda consegue encontrar prazer em coisas importantes.`,
       fr: `Peut encore trouver du plaisir dans les choses importantes.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_016",
@@ -15592,7 +15855,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Nawet przyjemne aktywności są trudniejsze do zmotywowania.`,
       pt: `Até atividades prazerosas são mais difíceis de sentir motivação.`,
       fr: `Même les activités agréables sont plus difficiles à motiver.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_017",
@@ -15612,7 +15876,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Doświadczenia społeczne mogą wydawać się mniej atrakcyjne.`,
       pt: `As experiências sociais podem parecer menos atrativas.`,
       fr: `Les expériences sociales peuvent sembler moins attirantes.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_018",
@@ -15632,7 +15897,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może reagować emocjonalnie mniej wyraziście nawet na przyjemne rzeczy.`,
       pt: `Pode reagir emocionalmente de forma mais apagada mesmo a coisas agradáveis.`,
       fr: `Peut réagir de manière émotionnellement plus plate même aux choses agréables.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_019",
@@ -15652,7 +15918,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Zazwyczaj potrafi uczestniczyć w aktywnościach, które mogą przynieść przyjemność.`,
       pt: `Geralmente consegue engajar em atividades que podem proporcionar prazer.`,
       fr: `Peut généralement participer à des activités pouvant apporter du plaisir.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_020",
@@ -15672,7 +15939,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Nie cieszy się już tak bardzo na miłe rzeczy jak wcześniej.`,
       pt: `Já não espera com tanta antecipação pelas coisas agradáveis como antes.`,
       fr: `Ne se réjouit plus autant des choses agréables qu'avant.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_021",
@@ -15692,7 +15960,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Często odczuwa niski poziom energii na co dzień.`,
       pt: `Frequentemente sente pouca energia para a vida diária.`,
       fr: `Ressent souvent un manque d'énergie pour la vie quotidienne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_022",
@@ -15712,7 +15981,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Zmęczenie może pojawić się zarówno fizycznie, jak i psychicznie.`,
       pt: `A fadiga pode aparecer tanto mental quanto fisicamente.`,
       fr: `La fatigue peut être présente tant mentalement que physiquement.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_023",
@@ -15732,7 +16002,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Nawet zwykłe zadania mogą wymagać więcej wysiłku niż zwykle.`,
       pt: `Mesmo tarefas comuns podem exigir mais esforço que o habitual.`,
       fr: `Même les tâches ordinaires peuvent nécessiter plus d'efforts que d'habitude.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_024",
@@ -15752,7 +16023,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Ma trudności z rozpoczęciem dnia lub zadań.`,
       pt: `Tem dificuldade em começar o dia ou as tarefas.`,
       fr: `Difficultés à commencer la journée ou les tâches.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_025",
@@ -15772,7 +16044,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Zazwyczaj ma wystarczająco energii na codzienne obowiązki.`,
       pt: `Geralmente tem energia suficiente para as responsabilidades diárias.`,
       fr: `A généralement assez d'énergie pour les responsabilités quotidiennes.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_026",
@@ -15781,8 +16054,8 @@ window.NM_DEPRESSION_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Pihenés után sem mindig érzi magát igazán feltöltődve.`,
-      en: `Does not always feel restored even after rest.`,
+      hu: `Pihenés után is előfordulhat, hogy nem érzi magát igazán feltöltődve.`,
+      en: `Even after rest, they may still not feel truly restored.`,
       de: `Fühlt sich nicht immer erholt, selbst nach Ruhepausen.`,
       it: `Non si sente sempre ristabilito nemmeno dopo il riposo.`,
       es: `No siempre se siente recuperado incluso después de descansar.`,
@@ -15792,7 +16065,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Nie zawsze czuje się wypoczęty nawet po odpoczynku.`,
       pt: `Nem sempre se sente renovado mesmo após o descanso.`,
       fr: `Ne se sent pas toujours reposé même après un temps de repos.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_027",
@@ -15812,7 +16086,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Poczucie ciężkości lub wyczerpania często utrzymuje się przez cały dzień.`,
       pt: `Um sentimento de peso ou exaustão frequentemente permanece ao longo do dia.`,
       fr: `Un sentiment de lourdeur ou d'épuisement persiste souvent toute la journée.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_028",
@@ -15832,7 +16107,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Trudniej jest utrzymać aktywność przez dłuższy czas.`,
       pt: `É mais difícil sustentar a atividade por mais tempo.`,
       fr: `Il est plus difficile de maintenir une activité sur la durée.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_029",
@@ -15852,7 +16128,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Zazwyczaj może kontynuować zadania bez szybkiego zmęczenia.`,
       pt: `Normalmente consegue continuar as tarefas sem cansar-se muito rápido.`,
       fr: `Peut généralement poursuivre les tâches sans se fatiguer trop vite.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_030",
@@ -15872,7 +16149,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Nawet podstawowe czynności mogą być trudne do rozpoczęcia.`,
       pt: `Mesmo atividades básicas podem ser difíceis de iniciar.`,
       fr: `Même les activités de base peuvent être difficiles à engager.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_031",
@@ -15892,7 +16170,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Często myśli o sobie, że jest mniej wartościowy.`,
       pt: `Frequentemente pode pensar que tem menos valor.`,
       fr: `Pense souvent qu’il a moins de valeur.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_032",
@@ -15912,7 +16191,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może odczuwać błędy lub niedociągnięcia jako zbyt poważne.`,
       pt: `Pode ver erros ou falhas como excessivamente graves.`,
       fr: `Peut percevoir les erreurs ou défauts comme excessivement graves.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_033",
@@ -15921,8 +16201,8 @@ window.NM_DEPRESSION_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Szigorúan, bántóan kritikus lehet önmagával szemben.`,
-      en: `May be harshly self-critical.`,
+      hu: `Szigorúan és bántóan kritikus lehet önmagával szemben hibák után.`,
+      en: `May be harshly self-critical after mistakes or setbacks.`,
       de: `Kann sich selbst stark kritisieren.`,
       it: `Può essere molto autocritico.`,
       es: `Puede ser muy autocrítico.`,
@@ -15932,7 +16212,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może być surowy dla siebie.`,
       pt: `Pode ser muito autocrítico.`,
       fr: `Peut être très autocritique.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_034",
@@ -15952,7 +16233,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Ma tendencję do odczuwania, że nie jest wystarczająco dobry.`,
       pt: `Tende a sentir-se insuficiente.`,
       fr: `A tendance à se sentir insuffisant.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_035",
@@ -15961,8 +16243,8 @@ window.NM_DEPRESSION_BANK = [
     weight: 1.2,
     reverse: true,
     text: {
-      hu: `Többnyire képes együttérzően viszonyulni önmagához.`,
-      en: `Can usually relate to self with compassion.`,
+      hu: `Többnyire képes együttérzően viszonyulni önmagához nehéz helyzetekben is.`,
+      en: `Can usually relate to self with compassion in difficult situations.`,
       de: `Kann sich meist mit Mitgefühl betrachten.`,
       it: `Di solito riesce a trattarsi con compassione.`,
       es: `Generalmente puede relacionarse consigo mismo con compasión.`,
@@ -15972,7 +16254,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Zazwyczaj odnosi się do siebie z współczuciem.`,
       pt: `Normalmente é capaz de se relacionar consigo mesmo com compaixão.`,
       fr: `Peut généralement se traiter avec compassion.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_036",
@@ -15992,7 +16275,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Łatwo obwinia siebie, gdy coś idzie nie tak.`,
       pt: `Pode culpar-se facilmente quando algo corre mal.`,
       fr: `Se blâme facilement quand les choses tournent mal.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_037",
@@ -16012,7 +16296,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Uczucia wstydu mogą być silniej obecne.`,
       pt: `Sentimentos de vergonha podem estar mais presentes.`,
       fr: `Les sentiments de honte peuvent être plus présents.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_038",
@@ -16032,7 +16317,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może czuć, że mniej zasługuje na dobre rzeczy.`,
       pt: `Pode sentir-se menos merecedor de coisas boas.`,
       fr: `Peut se sentir moins digne des bonnes choses.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_039",
@@ -16052,7 +16338,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Potrafi ocenić mocne i słabe strony w zrównoważony sposób.`,
       pt: `Consegue ver pontos fortes e fracos de forma equilibrada.`,
       fr: `Peut voir les forces et les faiblesses de façon équilibrée.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_040",
@@ -16072,7 +16359,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Czasem mogą pojawić się myśli o bezwartościowości.`,
       pt: `Às vezes podem surgir pensamentos de inutilidade.`,
       fr: `Des pensées d’inutilité peuvent parfois apparaître.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_041",
@@ -16092,7 +16380,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Często widzi mniej nadziei na przyszłość.`,
       pt: `Frequentemente vê menos possibilidades esperançosas no futuro.`,
       fr: `Voit souvent moins de possibilités porteuses d'espoir pour l'avenir.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_042",
@@ -16112,7 +16401,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może czuć, że sytuacja prawdopodobnie się nie poprawi.`,
       pt: `Pode sentir que as coisas provavelmente não vão melhorar.`,
       fr: `Peut avoir le sentiment que les choses ne vont probablement pas s'améliorer.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_043",
@@ -16132,7 +16422,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Przyszłość może wydawać się trudna do wyobrażenia lub ograniczona.`,
       pt: `O futuro pode parecer difícil de imaginar ou restrito.`,
       fr: `L'avenir peut sembler difficile à imaginer ou restreint.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_044",
@@ -16141,8 +16432,8 @@ window.NM_DEPRESSION_BANK = [
     weight: 1.3,
     reverse: false,
     text: {
-      hu: `Kevésbé számít arra, hogy jó dolgok történnek majd vele.`,
-      en: `Expects positive things less often.`,
+      hu: `Kevésbé számít arra, hogy a közeljövőben jó dolgok történhetnek vele.`,
+      en: `Expects positive things to happen in the near future less often.`,
       de: `Erwartet seltener positive Dinge.`,
       it: `Si aspetta meno spesso cose positive.`,
       es: `Espera cosas positivas con menos frecuencia.`,
@@ -16152,7 +16443,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Rzadziej oczekuje pozytywnych rzeczy.`,
       pt: `Espera coisas positivas com menos frequência.`,
       fr: `Attend moins souvent des choses positives.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_045",
@@ -16172,7 +16464,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Wciąż widzi znaczące lub pełne nadziei kierunki przed sobą.`,
       pt: `Ainda vê direções significativas ou esperançosas pela frente.`,
       fr: `Voit encore des directions porteuses de sens ou d'espoir à venir.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_046",
@@ -16192,7 +16485,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Zniechęcenie wobec przyszłości często pojawia się w spojrzeniu.`,
       pt: `Desânimo em relação ao futuro aparece frequentemente na perspectiva.`,
       fr: `Le découragement vis-à-vis de l'avenir apparaît souvent dans sa vision.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_047",
@@ -16212,7 +16506,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Trudniej oczekiwać czegoś naprawdę dobrego.`,
       pt: `Está mais difícil esperar algo genuinamente bom.`,
       fr: `Il est plus difficile d'attendre quelque chose de vraiment bon.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_048",
@@ -16232,7 +16527,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Czasami wysiłek może wydawać się bezcelowy.`,
       pt: `Às vezes, o esforço pode parecer sem propósito.`,
       fr: `Parfois, l'effort peut sembler manquer de sens.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_049",
@@ -16252,7 +16548,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Zazwyczaj potrafi wyobrazić sobie, że obecne trudności mogą z czasem ustąpić.`,
       pt: `Geralmente pode imaginar que as dificuldades atuais podem diminuir com o tempo.`,
       fr: `Peut généralement imaginer que les difficultés actuelles peuvent s'atténuer avec le temps.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_050",
@@ -16272,7 +16569,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Przyszłość czasem może wydawać się pusta lub trudna do uchwycenia.`,
       pt: `O futuro às vezes pode parecer vazio ou difícil de compreender.`,
       fr: `L'avenir peut parfois sembler vide ou difficile à appréhender.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_051",
@@ -16292,7 +16590,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Ma większe trudności z utrzymaniem uwagi lub koncentracji.`,
       pt: `Tem mais dificuldade em manter a atenção ou concentração.`,
       fr: `A plus de difficultés à maintenir l'attention ou la concentration.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_052",
@@ -16312,7 +16611,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Podejmowanie decyzji może wydawać się bardziej uciążliwe niż zwykle.`,
       pt: `Tomar decisões pode parecer mais difícil que o habitual.`,
       fr: `Prendre des décisions peut sembler plus difficile que d’habitude.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_053",
@@ -16332,7 +16632,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Myślenie czasami może wydawać się spowolnione lub wymagać wysiłku.`,
       pt: `O pensamento pode às vezes parecer mais lento ou esforçado.`,
       fr: `La pensée peut parfois sembler ralentie ou difficile.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_054",
@@ -16352,7 +16653,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Niski nastrój może powodować większe rozproszenie uwagi.`,
       pt: `O mau humor pode tornar a atenção mais fragmentada.`,
       fr: `Une humeur basse peut rendre l’attention plus fragmentée.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_055",
@@ -16372,7 +16674,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Zazwyczaj potrafi jasno przemyśleć sytuacje.`,
       pt: `Geralmente consegue pensar claramente nas situações.`,
       fr: `Peut généralement réfléchir clairement aux situations.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_056",
@@ -16392,7 +16695,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może mieć większe trudności ze skupieniem się na początku zadania.`,
       pt: `Pode ter mais dificuldade para focar ao iniciar uma tarefa.`,
       fr: `Peut avoir plus de mal à se concentrer au début d’une tâche.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_057",
@@ -16412,7 +16716,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Nawet małe decyzje mogą wydawać się nieproporcjonalnie trudne.`,
       pt: `Até pequenas decisões podem parecer desproporcionalmente difíceis.`,
       fr: `Même les petites décisions peuvent sembler disproportionnément difficiles.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_058",
@@ -16421,8 +16726,8 @@ window.NM_DEPRESSION_BANK = [
     weight: 1.3,
     reverse: false,
     text: {
-      hu: `Időnként mintha ködösebbnek érezné a gondolkodását.`,
-      en: `Thinking may sometimes feel foggier.`,
+      hu: `Időnként mintha ködösebbnek érezné a gondolkodását feladatok közben.`,
+      en: `Thinking may sometimes feel foggier during tasks.`,
       de: `Das Denken kann sich manchmal verschwommener anfühlen.`,
       it: `Il pensiero a volte può sembrare più confuso.`,
       es: `El pensamiento a veces puede sentirse más confuso.`,
@@ -16432,7 +16737,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Myślenie czasami może wydawać się mniej jasne.`,
       pt: `O pensamento pode às vezes parecer mais confuso.`,
       fr: `La pensée peut parfois sembler plus embrouillée.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_059",
@@ -16452,7 +16758,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Zazwyczaj potrafi podejmować decyzje bez nadmiernego zablokowania.`,
       pt: `Geralmente consegue tomar decisões sem ficar muito preso.`,
       fr: `Peut généralement prendre des décisions sans rester bloqué.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_060",
@@ -16472,7 +16779,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Łatwiej traci wątek uwagi.`,
       pt: `Perde a linha da atenção com mais facilidade.`,
       fr: `Perd plus facilement le fil de son attention.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_061",
@@ -16492,7 +16800,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Sen może być mniej wypoczywający lub niespokojny.`,
       pt: `O sono pode parecer menos reparador ou tranquilo.`,
       fr: `Le sommeil peut sembler moins reposant ou moins calme.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_062",
@@ -16501,8 +16810,8 @@ window.NM_DEPRESSION_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Nehezebben alszik el, mint szeretne.`,
-      en: `Has more difficulty falling asleep than desired.`,
+      hu: `Nehezebben alszik el, mint szeretne, különösen feszültebb estéken.`,
+      en: `Has more difficulty falling asleep than desired, especially on tense evenings.`,
       de: `Hat mehr Schwierigkeiten einzuschlafen als gewünscht.`,
       it: `Ha più difficoltà ad addormentarsi rispetto al desiderato.`,
       es: `Tiene más dificultad para conciliar el sueño de lo deseado.`,
@@ -16512,7 +16821,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Ma większe trudności z zasypianiem niż chciałoby.`,
       pt: `Tem mais dificuldade para adormecer do que desejado.`,
       fr: `A plus de difficulté à s'endormir que souhaité.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_063",
@@ -16532,7 +16842,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może budzić się wielokrotnie lub spać niespokojnie.`,
       pt: `Pode acordar várias vezes ou dormir de forma mais inquieta.`,
       fr: `Peut se réveiller plusieurs fois ou dormir de façon plus agitée.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_064",
@@ -16552,7 +16863,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może chcieć spać lub pozostać w łóżku dłużej niż zazwyczaj.`,
       pt: `Pode querer dormir ou ficar na cama mais do que o habitual.`,
       fr: `Peut vouloir dormir ou rester au lit plus que d'habitude.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_065",
@@ -16561,8 +16873,8 @@ window.NM_DEPRESSION_BANK = [
     weight: 1.2,
     reverse: true,
     text: {
-      hu: `Alvása többnyire pihentető és helyreállító tud lenni.`,
-      en: `Sleep is usually restorative.`,
+      hu: `Alvása többnyire pihentető tud lenni rendezettebb napirend mellett.`,
+      en: `Sleep is usually restorative when the daily rhythm is more settled.`,
       de: `Der Schlaf ist gewöhnlich erholsam.`,
       it: `Il sonno è di solito rigenerante.`,
       es: `El sueño suele ser reparador.`,
@@ -16572,7 +16884,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Sen zwykle jest regenerujący.`,
       pt: `O sono geralmente é restaurador.`,
       fr: `Le sommeil est généralement réparateur.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_066",
@@ -16592,7 +16905,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Często po przebudzeniu czuje się ciężko lub wyczerpany.`,
       pt: `Frequentemente sente-se pesado ou exausto ao acordar.`,
       fr: `Se sent souvent lourd ou épuisé après le réveil.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_067",
@@ -16612,7 +16926,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Nie zawsze czuje się wypoczęty nawet po śnie.`,
       pt: `Nem sempre se sente descansado mesmo após dormir.`,
       fr: `Ne se sent pas forcément reposé même après le sommeil.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_068",
@@ -16621,8 +16936,8 @@ window.NM_DEPRESSION_BANK = [
     weight: 1.3,
     reverse: false,
     text: {
-      hu: `Alvási ritmusa könnyebben felborulhat.`,
-      en: `Sleep schedule may become more disrupted.`,
+      hu: `Alvási ritmusa könnyebben felborulhat érzelmileg terheltebb időszakokban.`,
+      en: `Sleep schedule may become more disrupted during emotionally demanding periods.`,
       de: `Der Schlafrhythmus kann unregelmäßiger werden.`,
       it: `Il ritmo del sonno può diventare più irregolare.`,
       es: `El horario de sueño puede volverse más irregular.`,
@@ -16632,7 +16947,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Harmonogram snu może stać się bardziej zaburzony.`,
       pt: `O horário de sono pode ficar mais irregular.`,
       fr: `Le rythme de sommeil peut devenir plus perturbé.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_069",
@@ -16652,7 +16968,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Zazwyczaj stosunkowo szybko się regeneruje po przebudzeniu.`,
       pt: `Geralmente recupera-se relativamente rápido após acordar.`,
       fr: `Se rétablit généralement assez vite après le réveil.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_070",
@@ -16672,7 +16989,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Wstanie i rozpoczęcie dnia może być trudne.`,
       pt: `Levantar-se e começar o dia pode ser difícil.`,
       fr: `Se lever et commencer la journée peut être difficile.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_071",
@@ -16681,8 +16999,8 @@ window.NM_DEPRESSION_BANK = [
     weight: 1.3,
     reverse: false,
     text: {
-      hu: `Étvágya csökkenhet vagy rendszertelenebbé válhat.`,
-      en: `Appetite may decrease or become more irregular.`,
+      hu: `Étvágya csökkenhet vagy rendszertelenebbé válhat terheltebb napokon.`,
+      en: `Appetite may decrease or become more irregular on more demanding days.`,
       de: `Der Appetit kann abnehmen oder unregelmäßiger werden.`,
       it: `L'appetito può diminuire o diventare più irregolare.`,
       es: `El apetito puede disminuir o volverse más irregular.`,
@@ -16692,7 +17010,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Apetyt może się zmniejszyć lub stać się bardziej nieregularny.`,
       pt: `O apetite pode diminuir ou tornar-se mais irregular.`,
       fr: `L'appétit peut diminuer ou devenir plus irrégulier.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_072",
@@ -16712,7 +17031,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może jeść więcej niż zwykle z powodu nastroju.`,
       pt: `Pode comer mais do que o habitual por causa do humor.`,
       fr: `Peut manger plus que d'habitude en raison de l'humeur.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_073",
@@ -16732,7 +17052,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może odczuwać większą ciężkość lub obciążenie fizyczne.`,
       pt: `Pode sentir-se fisicamente mais pesado ou sobrecarregado.`,
       fr: `Peut se sentir physiquement plus lourd ou accablé.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_074",
@@ -16752,7 +17073,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Jedzenie i apetyt zwykle pozostają dość stabilne.`,
       pt: `A alimentação e o apetite geralmente permanecem bastante estáveis.`,
       fr: `L'alimentation et l'appétit restent généralement assez stables.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_075",
@@ -16772,7 +17094,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może mniej zauważać lub reagować na sygnały głodu.`,
       pt: `Pode notar ou responder menos aos sinais de fome.`,
       fr: `Peut remarquer ou répondre moins aux signaux de faim.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_076",
@@ -16792,7 +17115,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Planowanie lub rozpoczynanie posiłków może być trudne.`,
       pt: `Planejar ou iniciar as refeições pode ser difícil.`,
       fr: `Planifier ou commencer les repas peut sembler difficile.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_077",
@@ -16812,7 +17136,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Zwykle potrafi zadbać o podstawowe potrzeby ciała.`,
       pt: `Geralmente consegue atender às necessidades básicas do corpo.`,
       fr: `Peut généralement répondre aux besoins corporels de base.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_078",
@@ -16832,7 +17157,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może częściej opuszczać lub opóźniać posiłki.`,
       pt: `Pode saltar ou atrasar as refeições com mais frequência.`,
       fr: `Peut sauter ou retarder les repas plus souvent.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_079",
@@ -16852,7 +17178,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Trudności nastroju mogą wiązać się z gorszym samopoczuciem fizycznym.`,
       pt: `Dificuldades de humor podem estar associadas a um bem-estar físico pior.`,
       fr: `Les difficultés d'humeur peuvent s'accompagner d'un bien-être physique moindre.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_080",
@@ -16872,7 +17199,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Zwykle potrafi utrzymać względnie uporządkowany rytm dnia.`,
       pt: `Geralmente consegue manter um ritmo diário relativamente organizado.`,
       fr: `Peut généralement maintenir un rythme quotidien relativement organisé.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_081",
@@ -16881,8 +17209,8 @@ window.NM_DEPRESSION_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Hajlamosabb lehet visszahúzódni másoktól.`,
-      en: `May become more withdrawn from others.`,
+      hu: `Hajlamosabb lehet visszahúzódni másoktól, amikor lehangoltabbnak érzi magát.`,
+      en: `May become more withdrawn from others when feeling lower.`,
       de: `Kann sich mehr von anderen zurückziehen.`,
       it: `Potrebbe diventare più riservato con gli altri.`,
       es: `Puede volverse más retraído con los demás.`,
@@ -16892,7 +17220,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może stać się bardziej wycofany w kontaktach z innymi.`,
       pt: `Pode tornar-se mais isolado dos outros.`,
       fr: `Peut devenir plus renfermé avec les autres.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_082",
@@ -16912,7 +17241,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może mieć mniejszą chęć nawiązywania lub podtrzymywania kontaktu.`,
       pt: `Pode ter menos desejo de procurar ou manter contato.`,
       fr: `Peut avoir moins envie de chercher ou de maintenir le contact.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_083",
@@ -16921,8 +17251,8 @@ window.NM_DEPRESSION_BANK = [
     weight: 1.3,
     reverse: false,
     text: {
-      hu: `Lehangoltabban inkább egyedül maradna.`,
-      en: `When feeling low, would rather be alone.`,
+      hu: `Lehangoltabb állapotban inkább egyedül maradna, még társas lehetőségek mellett is.`,
+      en: `When feeling low, may prefer being alone even when social options are available.`,
       de: `Möchte bei Niedergeschlagenheit lieber allein sein.`,
       it: `Quando si sente giù, preferisce stare da solo.`,
       es: `Cuando se siente bajo, prefiere estar solo.`,
@@ -16932,7 +17262,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Gdy czuje się przygnębiony, woli być sam.`,
       pt: `Quando se sente em baixo, prefere estar sozinho.`,
       fr: `Préfère souvent être seul en cas de baisse de moral.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_084",
@@ -16952,7 +17283,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Przebywanie wśród innych może być bardziej męczące niż wcześniej.`,
       pt: `Estar com outras pessoas pode parecer mais cansativo do que antes.`,
       fr: `Être avec les autres peut sembler plus fatigant qu'avant.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_085",
@@ -16972,7 +17304,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `W razie potrzeby nadal potrafi nawiązać kontakt.`,
       pt: `Ainda pode buscar conexão quando necessário.`,
       fr: `Peut encore chercher du lien quand c'est nécessaire.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_086",
@@ -16992,7 +17325,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może łatwiej odwoływać plany towarzyskie.`,
       pt: `Pode cancelar planos sociais com mais facilidade.`,
       fr: `Peut annuler plus facilement des plans sociaux.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_087",
@@ -17012,7 +17346,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może czuć się odległy lub odłączony nawet będąc wśród innych.`,
       pt: `Pode sentir-se distante ou desconectado mesmo estando com outros.`,
       fr: `Peut se sentir distant ou déconnecté même en présence des autres.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_088",
@@ -17021,8 +17356,8 @@ window.NM_DEPRESSION_BANK = [
     weight: 1.3,
     reverse: false,
     text: {
-      hu: `Kevésbé kezdeményez beszélgetést vagy kapcsolódást.`,
-      en: `Initiates conversation or connection less often.`,
+      hu: `Kevésbé kezdeményez beszélgetést vagy kapcsolódást társas helyzetekben.`,
+      en: `Initiates conversation or connection less often in social situations.`,
       de: `Initiiert seltener Gespräche oder Kontakt.`,
       it: `Avvia meno spesso conversazioni o connessioni.`,
       es: `Inicia menos conversaciones o contactos.`,
@@ -17032,7 +17367,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Rzadziej inicjuje rozmowy lub kontakty.`,
       pt: `Inicia conversa ou conexão com menos frequência.`,
       fr: `Initie moins souvent des conversations ou des liens.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_089",
@@ -17052,7 +17388,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może wrócić do innych nawet podczas trudnego okresu.`,
       pt: `Ainda pode retornar aos outros mesmo durante um período difícil.`,
       fr: `Peut encore revenir vers les autres même durant une période difficile.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_090",
@@ -17072,7 +17409,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Izolacja bywa czasem najłatwiejszą opcją.`,
       pt: `O isolamento pode às vezes parecer a opção mais fácil.`,
       fr: `L’isolement peut parfois sembler l’option la plus simple.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_091",
@@ -17081,8 +17419,8 @@ window.NM_DEPRESSION_BANK = [
     weight: 1.3,
     reverse: false,
     text: {
-      hu: `Mozdulatai vagy tevékenységei lelassultabbnak tűnhetnek.`,
-      en: `Movement or activity may seem slower.`,
+      hu: `Mozdulatai vagy tevékenységei lelassultabbnak tűnhetnek a nap folyamán.`,
+      en: `Movement or activity may seem slower during the day.`,
       de: `Bewegungen oder Aktivitäten wirken langsamer.`,
       it: `I movimenti o l'attività possono sembrare più lenti.`,
       es: `El movimiento o la actividad pueden parecer más lentos.`,
@@ -17092,7 +17430,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Ruch lub aktywność mogą wydawać się wolniejsze.`,
       pt: `O movimento ou a atividade podem parecer mais lentos.`,
       fr: `Les mouvements ou l’activité peuvent sembler plus lents.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_092",
@@ -17112,7 +17451,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Mowa może stać się wolniejsza lub cichsza.`,
       pt: `A fala pode ficar mais lenta ou mais baixa.`,
       fr: `La parole peut devenir plus lente ou plus douce.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_093",
@@ -17132,7 +17472,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Ma większe trudności z rozpoczęciem działań, zadań lub reakcji.`,
       pt: `Pode ter mais dificuldade em iniciar ações, tarefas ou respostas.`,
       fr: `A plus de difficulté à initier des actions, des tâches ou des réponses.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_094",
@@ -17152,7 +17493,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `W innych momentach obniżony nastrój może objawiać się niespokojnymi ruchami.`,
       pt: `Em outros momentos, o humor triste pode se manifestar como movimentos inquietos.`,
       fr: `Parfois, un état d’humeur bas peut se manifester par des mouvements agités.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_095",
@@ -17172,7 +17514,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Ruch i mowa zazwyczaj zachowują naturalne tempo.`,
       pt: `Movimento e fala geralmente mantêm um ritmo natural.`,
       fr: `Les mouvements et la parole restent généralement à un rythme naturel.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_096",
@@ -17192,7 +17535,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może wydawać się, że fizycznie przeciąga się przez zadania.`,
       pt: `Pode parecer que arrasta fisicamente as tarefas.`,
       fr: `Peut sembler traîner physiquement pendant les tâches.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_097",
@@ -17212,7 +17556,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Wyrazistość fizyczna i emocjonalna może być bardziej ograniczona.`,
       pt: `A expressividade física e emocional pode estar mais reduzida.`,
       fr: `L'expressivité physique et émotionnelle peut être plus réduite.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_098",
@@ -17232,7 +17577,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Zazwyczaj odpowiada z odpowiednią szybkością i żywiołowością.`,
       pt: `Costuma responder com velocidade e vivacidade adequadas.`,
       fr: `Répond généralement avec une vitesse et une vivacité adéquates.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_099",
@@ -17252,7 +17598,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Zmniejszona wewnętrzna motywacja może przejawiać się w postawie lub ogólnej prezencji.`,
       pt: `A redução da motivação interna pode aparecer na postura ou na presença geral.`,
       fr: `Une réduction de la motivation intérieure peut se voir dans la posture ou la présence générale.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_100",
@@ -17272,7 +17619,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Działanie może wiązać się z większą niepewnością lub zatrzymaniami.`,
       pt: `A ação pode envolver mais hesitação ou paradas.`,
       fr: `L’action peut comporter plus d’hésitations ou d’arrêts.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_101",
@@ -17292,7 +17640,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może odczuwać mniejsze znaczenie lub cel codziennych działań.`,
       pt: `Pode sentir menos significado ou propósito nas atividades diárias.`,
       fr: `Peut ressentir moins de sens ou d'objectif dans les activités quotidiennes.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_102",
@@ -17312,7 +17661,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Czasami trudno znaleźć powód, aby się starać.`,
       pt: `Às vezes, pode ser difícil encontrar um motivo para se esforçar.`,
       fr: `Parfois, il peut être difficile de trouver une raison de faire un effort.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_103",
@@ -17332,7 +17682,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Poprzednie cele lub plany mogą wydawać się bardziej odległe lub obce.`,
       pt: `Metas ou planos anteriores podem parecer mais distantes ou desconhecidos.`,
       fr: `Les objectifs ou plans antérieurs peuvent sembler plus éloignés ou inconnus.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_104",
@@ -17352,7 +17703,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Wewnętrzny napęd i impet mogą zauważalnie maleć.`,
       pt: `O impulso e a motivação internos podem diminuir visivelmente.`,
       fr: `La motivation intérieure et l'élan peuvent diminuer notablement.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_105",
@@ -17372,7 +17724,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Wciąż potrafi łączyć się z tym, co jest dla niego ważne osobiście.`,
       pt: `Ainda pode se conectar com o que é importante pessoalmente.`,
       fr: `Peut encore se connecter à ce qui compte personnellement.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_106",
@@ -17392,7 +17745,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Często trudno mu zacząć, nawet gdy wie, co robić.`,
       pt: `Frequentemente tem dificuldade em começar mesmo sabendo o que fazer.`,
       fr: `Trouve souvent difficile de commencer même en sachant quoi faire.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_107",
@@ -17401,8 +17755,8 @@ window.NM_DEPRESSION_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Az előrehaladás sem mindig hoz valódi elégedettséget vagy lendületet.`,
-      en: `Progress does not always bring real satisfaction or momentum.`,
+      hu: `Az előrehaladás időnként kevés valódi elégedettséget vagy lendületet ad neki.`,
+      en: `Progress may sometimes bring little real satisfaction or momentum.`,
       de: `Fortschritte bringen nicht immer echte Zufriedenheit oder Schwung.`,
       it: `I progressi non sempre portano vera soddisfazione o slancio.`,
       es: `El progreso no siempre genera satisfacción real o impulso.`,
@@ -17412,7 +17766,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Postępy nie zawsze przynoszą prawdziwą satysfakcję lub impet.`,
       pt: `O progresso nem sempre traz satisfação real ou impulso.`,
       fr: `Le progrès n'apporte pas toujours une vraie satisfaction ou un élan.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_108",
@@ -17432,7 +17787,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Potrafi ponownie połączyć się z celami lub zadaniami w razie potrzeby.`,
       pt: `Pode se reconectar com metas ou tarefas quando necessário.`,
       fr: `Peut se reconnecter aux objectifs ou tâches si nécessaire.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_109",
@@ -17452,7 +17808,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Motywacja może wydać się mniej intensywna lub żywa.`,
       pt: `A motivação pode parecer mais fraca ou menos viva.`,
       fr: `La motivation peut sembler moins intense ou moins vivante.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_110",
@@ -17472,7 +17829,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Wysiłek może wydawać się mniej powiązany z wewnętrznym poczuciem nagrody.`,
       pt: `O esforço pode parecer menos conectado a uma sensação interna de recompensa.`,
       fr: `L'effort peut sembler moins lié à une sensation intérieure de récompense.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_111",
@@ -17492,7 +17850,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Czasami może czuć się ciężarem dla innych.`,
       pt: `Às vezes pode sentir-se um fardo para os outros.`,
       fr: `Peut parfois se sentir comme un fardeau pour les autres.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_112",
@@ -17512,7 +17871,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Mogą pojawiać się myśli, że innym byłoby łatwiej bez nich.`,
       pt: `Podem surgir pensamentos de que os outros estariam melhor sem eles.`,
       fr: `Des pensées peuvent apparaître que les autres iraient mieux sans eux.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_113",
@@ -17532,7 +17892,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Wewnętrzne myśli czasem stają się ciemniejsze lub bardziej samokrytyczne.`,
       pt: `Os pensamentos internos podem às vezes tornar-se mais sombrios ou autodesvalorizadores.`,
       fr: `Les pensées intérieures peuvent parfois devenir plus sombres ou dévalorisantes.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_114",
@@ -17552,7 +17913,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Czasami może pragnąć zniknąć lub wycofać się ze świata.`,
       pt: `Por vezes pode desejar desaparecer ou afastar-se do mundo.`,
       fr: `Peut parfois souhaiter disparaître ou se retirer du monde.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_115",
@@ -17572,7 +17934,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może nadal odczuwać, że jego obecność ma znaczenie dla innych.`,
       pt: `Ainda pode conectar-se com a sensação de que a sua presença importa para os outros.`,
       fr: `Peut encore percevoir que sa présence importe aux autres.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_116",
@@ -17592,7 +17955,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Czasami może czuć się mniej związany z życiem lub codziennym istnieniem.`,
       pt: `Por vezes pode sentir-se menos ligado à vida ou à existência diária.`,
       fr: `Peut parfois se sentir moins connecté à la vie ou à l'existence quotidienne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_117",
@@ -17612,7 +17976,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może mieć trudności z dostrzeżeniem powodu, by szukać pomocy lub kontaktu.`,
       pt: `Pode achar difícil ver uma razão para procurar ajuda ou conexão.`,
       fr: `Peut avoir du mal parfois à voir une raison de chercher de l'aide ou un lien.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_118",
@@ -17632,7 +17997,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Zazwyczaj potrafi nawiązać kontakt z osobami lub rzeczami, które zapewniają stabilność.`,
       pt: `Normalmente consegue conectar-se com pessoas ou coisas que proporcionam estabilidade.`,
       fr: `Peut généralement se connecter avec des personnes ou des choses qui apportent de la stabilité.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_119",
@@ -17652,7 +18018,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Czasem może pragnąć nie musieć być obecnym lub dźwigać wszystkiego.`,
       pt: `Por vezes pode desejar não ter de estar presente ou carregar tudo.`,
       fr: `Peut parfois souhaiter ne pas avoir à être présent ou à tout porter.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_120",
@@ -17672,7 +18039,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może najbardziej pragnąć stać się niewidzialnym lub nie być ciężarem dla innych.`,
       pt: `Pode desejar mais tornar-se invisível ou não ser um fardo para os outros.`,
       fr: `Peut souhaiter par-dessus tout devenir invisible ou ne pas être un fardeau pour les autres.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_121",
@@ -17692,7 +18060,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Utrzymujący się niski nastrój lub smutek może występować w domu.`,
       pt: `Humor baixo ou tristeza persistente pode estar presente em casa.`,
       fr: `Une humeur basse ou une tristesse persistante peut être présente à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_122",
@@ -17712,7 +18081,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Utrzymujący się niski nastrój lub smutek może występować w sytuacjach szkolnych lub zawodowych.`,
       pt: `Humor baixo ou tristeza persistente pode estar presente em situações escolares ou de trabalho.`,
       fr: `Une humeur basse ou une tristesse persistante peut être présente à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_123",
@@ -17732,7 +18102,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Utrzymujący się niski nastrój lub smutek może występować w sytuacjach społecznych.`,
       pt: `Humor baixo ou tristeza persistente pode estar presente em situações sociais.`,
       fr: `Une humeur basse ou une tristesse persistante peut être présente dans des situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_124",
@@ -17752,7 +18123,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Utrzymujący się niski nastrój lub smutek może występować, gdy jest się samemu.`,
       pt: `Humor baixo ou tristeza persistente pode estar presente quando sozinho.`,
       fr: `Une humeur basse ou une tristesse persistante peut être présente lorsqu'on est seul.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_125",
@@ -17772,7 +18144,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Utrzymujący się niski nastrój lub smutek może występować na początku lub na końcu dnia.`,
       pt: `Humor baixo ou tristeza persistente pode estar presente no início ou no fim do dia.`,
       fr: `Une humeur basse ou une tristesse persistante peut être présente au début ou à la fin de la journée.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_126",
@@ -17792,7 +18165,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Codzienne życie może wydawać się emocjonalnie cięższe w domu.`,
       pt: `A vida diária pode parecer emocionalmente mais pesada em casa.`,
       fr: `La vie quotidienne peut sembler émotionnellement plus lourde à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_127",
@@ -17812,7 +18186,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Codzienne życie może wydawać się emocjonalnie cięższe w sytuacjach szkolnych lub zawodowych.`,
       pt: `A vida diária pode parecer emocionalmente mais pesada em situações escolares ou de trabalho.`,
       fr: `La vie quotidienne peut sembler émotionnellement plus lourde à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_128",
@@ -17832,7 +18207,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Codzienne życie może wydawać się emocjonalnie cięższe w sytuacjach społecznych.`,
       pt: `A vida diária pode parecer emocionalmente mais pesada em situações sociais.`,
       fr: `La vie quotidienne peut sembler émotionnellement plus lourde dans des situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_129",
@@ -17852,7 +18228,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Codzienne życie może wydawać się emocjonalnie cięższe, gdy jest się samemu.`,
       pt: `A vida diária pode parecer emocionalmente mais pesada quando sozinho.`,
       fr: `La vie quotidienne peut sembler émotionnellement plus lourde lorsqu'on est seul.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_130",
@@ -17872,7 +18249,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Codzienne życie może wydawać się emocjonalnie cięższe na początku lub na końcu dnia.`,
       pt: `A vida diária pode parecer emocionalmente mais pesada no início ou no fim do dia.`,
       fr: `La vie quotidienne peut sembler émotionnellement plus lourde au début ou à la fin de la journée.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_131",
@@ -17892,7 +18270,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Potrafi pozostać względnie emocjonalnie stabilny w domu.`,
       pt: `Consegue manter-se relativamente estável emocionalmente em casa.`,
       fr: `Peut rester relativement stable émotionnellement à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_132",
@@ -17912,7 +18291,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Potrafi pozostać względnie emocjonalnie stabilny w sytuacjach szkolnych lub zawodowych.`,
       pt: `Consegue manter-se relativamente estável emocionalmente na escola ou no trabalho.`,
       fr: `Peut rester relativement stable émotionnellement à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_133",
@@ -17932,7 +18312,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Potrafi pozostać względnie emocjonalnie stabilny w sytuacjach towarzyskich.`,
       pt: `Consegue manter-se relativamente estável emocionalmente em situações sociais.`,
       fr: `Peut rester relativement stable émotionnellement en situation sociale.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_134",
@@ -17952,7 +18333,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Potrafi pozostać względnie emocjonalnie stabilny będąc samemu.`,
       pt: `Consegue manter-se relativamente estável emocionalmente quando está sozinho.`,
       fr: `Peut rester relativement stable émotionnellement lorsqu'il est seul.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_135",
@@ -17972,7 +18354,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Potrafi pozostać względnie emocjonalnie stabilny na początku lub na końcu dnia.`,
       pt: `Consegue manter-se relativamente estável emocionalmente no início ou no fim do dia.`,
       fr: `Peut rester relativement stable émotionnellement au début ou à la fin de la journée.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_136",
@@ -17992,7 +18375,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Nastrój poprawia się powoli w domu.`,
       pt: `O ânimo baixo demora a melhorar em casa.`,
       fr: `L'humeur basse met du temps à remonter à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_137",
@@ -18012,7 +18396,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Nastrój poprawia się powoli w szkole lub w pracy.`,
       pt: `O ânimo baixo demora a melhorar na escola ou no trabalho.`,
       fr: `L'humeur basse met du temps à remonter à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_138",
@@ -18032,7 +18417,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Nastrój poprawia się powoli w sytuacjach społecznych.`,
       pt: `O ânimo baixo demora a melhorar em situações sociais.`,
       fr: `L'humeur basse met du temps à remonter en situation sociale.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_139",
@@ -18052,7 +18438,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Nastrój poprawia się powoli będąc samemu.`,
       pt: `O ânimo baixo demora a melhorar quando está sozinho.`,
       fr: `L'humeur basse met du temps à remonter lorsqu'il est seul.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_140",
@@ -18072,7 +18459,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Nastrój poprawia się powoli na początku lub na końcu dnia.`,
       pt: `O ânimo baixo demora a melhorar no início ou no fim do dia.`,
       fr: `L'humeur basse met du temps à remonter au début ou à la fin de la journée.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_141",
@@ -18092,7 +18480,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Naśtrój może się pogorszyć nawet bez widocznego powodu w domu.`,
       pt: `O humor pode cair mesmo sem uma razão aparente em casa.`,
       fr: `L’humeur peut baisser sans raison visible à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_142",
@@ -18112,7 +18501,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Naśtrój może się pogorszyć nawet bez widocznego powodu w środowisku szkolnym lub pracy.`,
       pt: `O humor pode cair mesmo sem uma razão aparente na escola ou no trabalho.`,
       fr: `L’humeur peut baisser sans raison visible à l’école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_143",
@@ -18132,7 +18522,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Naśtrój może się pogorszyć nawet bez widocznego powodu w sytuacjach społecznych.`,
       pt: `O humor pode cair mesmo sem uma razão aparente em situações sociais.`,
       fr: `L’humeur peut baisser sans raison visible dans des situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_144",
@@ -18152,7 +18543,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Naśtrój może się pogorszyć nawet bez widocznego powodu będąc samemu.`,
       pt: `O humor pode cair mesmo sem uma razão aparente quando sozinho.`,
       fr: `L’humeur peut baisser sans raison visible lorsqu’on est seul.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_145",
@@ -18172,7 +18564,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Naśtrój może się pogorszyć nawet bez widocznego powodu na początku lub pod koniec dnia.`,
       pt: `O humor pode cair mesmo sem uma razão aparente no começo ou no fim do dia.`,
       fr: `L’humeur peut baisser sans raison visible au début ou à la fin de la journée.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_146",
@@ -18192,7 +18585,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Znajduje mniej przyjemności w rzeczach, które wcześniej sprawiały mu/jej radość w domu.`,
       pt: `Sente menos prazer nas coisas que costumavam ser agradáveis em casa.`,
       fr: `Prend moins de plaisir à des activités qui lui plaisaient à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_147",
@@ -18212,7 +18606,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Znajduje mniej przyjemności w rzeczach, które wcześniej sprawiały mu/jej radość w szkole lub pracy.`,
       pt: `Sente menos prazer nas coisas que costumavam ser agradáveis na escola ou no trabalho.`,
       fr: `Prend moins de plaisir à des activités qui lui plaisaient à l’école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_148",
@@ -18232,7 +18627,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Znajduje mniej przyjemności w rzeczach, które wcześniej sprawiały mu/jej radość w sytuacjach społecznych.`,
       pt: `Sente menos prazer nas coisas que costumavam ser agradáveis em situações sociais.`,
       fr: `Prend moins de plaisir à des activités qui lui plaisaient dans des situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_149",
@@ -18252,7 +18648,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Znajduje mniej przyjemności w rzeczach, które wcześniej sprawiały mu/jej radość będąc samemu.`,
       pt: `Sente menos prazer nas coisas que costumavam ser agradáveis quando está só.`,
       fr: `Prend moins de plaisir à des activités qui lui plaisaient lorsqu’il est seul.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_150",
@@ -18272,7 +18669,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Znajduje mniej przyjemności w rzeczach, które wcześniej sprawiały mu/jej radość na początku lub pod koniec dnia.`,
       pt: `Sente menos prazer nas coisas que costumavam ser agradáveis no começo ou no fim do dia.`,
       fr: `Prend moins de plaisir à des activités qui lui plaisaient au début ou à la fin de la journée.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_151",
@@ -18292,7 +18690,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Zainteresowanie aktywnościami, które wcześniej były ważne w domu, może się zmniejszyć.`,
       pt: `O interesse pode diminuir nas atividades que eram importantes em casa anteriormente.`,
       fr: `L'intérêt peut diminuer pour des activités qui étaient auparavant importantes à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_152",
@@ -18312,7 +18711,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Zainteresowanie aktywnościami, które wcześniej były ważne w szkole lub pracy, może się zmniejszyć.`,
       pt: `O interesse pode diminuir nas atividades que eram importantes na escola ou no trabalho anteriormente.`,
       fr: `L'intérêt peut diminuer pour des activités qui étaient auparavant importantes à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_153",
@@ -18332,7 +18732,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Zainteresowanie aktywnościami, które wcześniej były ważne w sytuacjach społecznych, może się zmniejszyć.`,
       pt: `O interesse pode diminuir nas atividades que eram importantes em situações sociais anteriormente.`,
       fr: `L'intérêt peut diminuer pour des activités qui étaient auparavant importantes dans des situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_154",
@@ -18352,7 +18753,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Zainteresowanie aktywnościami, które wcześniej były ważne podczas samotności, może się zmniejszyć.`,
       pt: `O interesse pode diminuir nas atividades que eram importantes quando sozinho anteriormente.`,
       fr: `L'intérêt peut diminuer pour des activités qui étaient auparavant importantes lorsqu'on est seul.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_155",
@@ -18372,7 +18774,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Zainteresowanie aktywnościami, które wcześniej były ważne na początku lub na końcu dnia, może się zmniejszyć.`,
       pt: `O interesse pode diminuir nas atividades que eram importantes no início ou no final do dia anteriormente.`,
       fr: `L'intérêt peut diminuer pour des activités qui étaient auparavant importantes au début ou à la fin de la journée.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_156",
@@ -18392,7 +18795,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może nadal odczuwać radość lub ciekawość w domu.`,
       pt: `Ainda pode sentir prazer ou curiosidade em casa.`,
       fr: `Peut encore éprouver du plaisir ou de la curiosité à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_157",
@@ -18412,7 +18816,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może nadal odczuwać radość lub ciekawość w szkole lub pracy.`,
       pt: `Ainda pode sentir prazer ou curiosidade na escola ou no trabalho.`,
       fr: `Peut encore éprouver du plaisir ou de la curiosité à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_158",
@@ -18432,7 +18837,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może nadal odczuwać radość lub ciekawość w sytuacjach społecznych.`,
       pt: `Ainda pode sentir prazer ou curiosidade em situações sociais.`,
       fr: `Peut encore éprouver du plaisir ou de la curiosité dans des situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_159",
@@ -18452,7 +18858,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może nadal odczuwać radość lub ciekawość będąc samemu.`,
       pt: `Ainda pode sentir prazer ou curiosidade quando estiver sozinho.`,
       fr: `Peut encore éprouver du plaisir ou de la curiosité lorsqu'il est seul.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_160",
@@ -18472,7 +18879,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może nadal odczuwać radość lub ciekawość na początku lub na końcu dnia.`,
       pt: `Ainda pode sentir prazer ou curiosidade no início ou no final do dia.`,
       fr: `Peut encore éprouver du plaisir ou de la curiosité au début ou à la fin de la journée.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_161",
@@ -18492,7 +18900,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Ma trudności z odczuwaniem motywacji nawet do przyjemnych zajęć w domu.`,
       pt: `Tem dificuldade em sentir-se motivado mesmo para atividades prazerosas em casa.`,
       fr: `A des difficultés à se sentir motivé même pour des activités agréables à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_162",
@@ -18512,7 +18921,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Ma trudności z odczuwaniem motywacji nawet do przyjemnych zajęć w szkole lub pracy.`,
       pt: `Tem dificuldade em sentir-se motivado mesmo para atividades prazerosas na escola ou no trabalho.`,
       fr: `A des difficultés à se sentir motivé même pour des activités agréables à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_163",
@@ -18532,7 +18942,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Ma trudności z odczuwaniem motywacji nawet do przyjemnych zajęć w sytuacjach społecznych.`,
       pt: `Tem dificuldade em sentir-se motivado mesmo para atividades prazerosas em situações sociais.`,
       fr: `A des difficultés à se sentir motivé même pour des activités agréables en situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_164",
@@ -18552,7 +18963,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Ma trudności z odczuwaniem motywacji nawet do przyjemnych zajęć, gdy jest sam.`,
       pt: `Tem dificuldade em sentir-se motivado mesmo para atividades prazerosas quando está sozinho.`,
       fr: `A des difficultés à se sentir motivé même pour des activités agréables lorsqu'il est seul.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_165",
@@ -18572,7 +18984,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Ma trudności z odczuwaniem motywacji nawet do przyjemnych zajęć na początku lub końcu dnia.`,
       pt: `Tem dificuldade em sentir-se motivado mesmo para atividades prazerosas no começo ou no final do dia.`,
       fr: `A des difficultés à se sentir motivé même pour des activités agréables au début ou à la fin de la journée.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_166",
@@ -18592,7 +19005,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Pozytywne doświadczenia wydają się mniej emocjonalnie pobudzające w domu.`,
       pt: `As experiências positivas parecem menos emocionalmente ativadoras em casa.`,
       fr: `Les expériences positives semblent moins émotionnellement activantes à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_167",
@@ -18612,7 +19026,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Pozytywne doświadczenia wydają się mniej emocjonalnie pobudzające w szkole lub pracy.`,
       pt: `As experiências positivas parecem menos emocionalmente ativadoras na escola ou no trabalho.`,
       fr: `Les expériences positives semblent moins émotionnellement activantes à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_168",
@@ -18632,7 +19047,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Pozytywne doświadczenia wydają się mniej emocjonalnie pobudzające w sytuacjach społecznych.`,
       pt: `As experiências positivas parecem menos emocionalmente ativadoras em situações sociais.`,
       fr: `Les expériences positives semblent moins émotionnellement activantes en situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_169",
@@ -18652,7 +19068,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Pozytywne doświadczenia wydają się mniej emocjonalnie pobudzające, gdy jest sam.`,
       pt: `As experiências positivas parecem menos emocionalmente ativadoras quando está sozinho.`,
       fr: `Les expériences positives semblent moins émotionnellement activantes lorsqu'il est seul.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_170",
@@ -18672,7 +19089,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Pozytywne doświadczenia wydają się mniej emocjonalnie pobudzające na początku lub końcu dnia.`,
       pt: `As experiências positivas parecem menos emocionalmente ativadoras no começo ou no final do dia.`,
       fr: `Les expériences positives semblent moins émotionnellement activantes au début ou à la fin de la journée.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_171",
@@ -18692,7 +19110,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Czuje się mało energii do codziennych zadań w domu.`,
       pt: `Sente pouca energia para as tarefas diárias em casa.`,
       fr: `Se sent à court d'énergie pour les tâches quotidiennes à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_172",
@@ -18712,7 +19131,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Czuje się mało energii do codziennych zadań w szkole lub w pracy.`,
       pt: `Sente pouca energia para as tarefas diárias na escola ou no trabalho.`,
       fr: `Se sent à court d'énergie pour les tâches quotidiennes à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_173",
@@ -18732,7 +19152,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Czuje się mało energii do codziennych zadań w sytuacjach społecznych.`,
       pt: `Sente pouca energia para as tarefas diárias em situações sociais.`,
       fr: `Se sent à court d'énergie pour les tâches quotidiennes en situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_174",
@@ -18752,7 +19173,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Czuje się mało energii do codziennych zadań, gdy jest sam.`,
       pt: `Sente pouca energia para as tarefas diárias quando está sozinho.`,
       fr: `Se sent à court d'énergie pour les tâches quotidiennes lorsqu'il est seul.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_175",
@@ -18772,7 +19194,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Czuje się mało energii do codziennych zadań na początku lub końcu dnia.`,
       pt: `Sente pouca energia para as tarefas diárias no início ou no fim do dia.`,
       fr: `Se sent à court d'énergie pour les tâches quotidiennes au début ou à la fin de la journée.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_176",
@@ -18792,7 +19215,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Codzienne zadania w domu mogą wymagać więcej wysiłku niż zwykle.`,
       pt: `As tarefas diárias em casa podem exigir mais esforço do que o habitual.`,
       fr: `Les tâches quotidiennes à la maison peuvent demander plus d'effort que d'habitude.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_177",
@@ -18812,7 +19236,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Codzienne zadania w szkole lub pracy mogą wymagać więcej wysiłku niż zwykle.`,
       pt: `As tarefas diárias na escola ou no trabalho podem exigir mais esforço do que o habitual.`,
       fr: `Les tâches quotidiennes à l'école ou au travail peuvent demander plus d'effort que d'habitude.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_178",
@@ -18832,7 +19257,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Codzienne zadania w sytuacjach społecznych mogą wymagać więcej wysiłku niż zwykle.`,
       pt: `As tarefas diárias em situações sociais podem exigir mais esforço do que o habitual.`,
       fr: `Les tâches quotidiennes en situations sociales peuvent demander plus d'effort que d'habitude.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_179",
@@ -18852,7 +19278,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Codzienne zadania, gdy jest sam, mogą wymagać więcej wysiłku niż zwykle.`,
       pt: `As tarefas diárias quando está sozinho podem exigir mais esforço do que o habitual.`,
       fr: `Les tâches quotidiennes lorsqu'il est seul peuvent demander plus d'effort que d'habitude.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_180",
@@ -18872,7 +19299,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Codzienne zadania na początku lub końcu dnia mogą wymagać więcej wysiłku niż zwykle.`,
       pt: `As tarefas diárias no início ou no fim do dia podem exigir mais esforço do que o habitual.`,
       fr: `Les tâches quotidiennes au début ou à la fin de la journée peuvent demander plus d'effort que d'habitude.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_181",
@@ -18892,7 +19320,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Zazwyczaj potrafi zmobilizować wystarczająco energii na niezbędne rzeczy w domu.`,
       pt: `Normalmente consegue mobilizar energia suficiente para as coisas necessárias em casa.`,
       fr: `Mobilise généralement assez d’énergie pour les choses nécessaires à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_182",
@@ -18912,7 +19341,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Zazwyczaj potrafi zmobilizować wystarczająco energii na niezbędne rzeczy w szkole lub w pracy.`,
       pt: `Normalmente consegue mobilizar energia suficiente para as coisas necessárias na escola ou no trabalho.`,
       fr: `Mobilise généralement assez d’énergie pour les choses nécessaires à l’école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_183",
@@ -18932,7 +19362,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Zazwyczaj potrafi zmobilizować wystarczająco energii na niezbędne rzeczy w sytuacjach towarzyskich.`,
       pt: `Normalmente consegue mobilizar energia suficiente para as coisas necessárias em situações sociais.`,
       fr: `Mobilise généralement assez d’énergie pour les choses nécessaires dans des situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_184",
@@ -18952,7 +19383,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Zazwyczaj potrafi zmobilizować wystarczająco energii na niezbędne rzeczy będąc samemu.`,
       pt: `Normalmente consegue mobilizar energia suficiente para as coisas necessárias quando está sozinho.`,
       fr: `Mobilise généralement assez d’énergie pour les choses nécessaires quand il/elle est seul(e).`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_185",
@@ -18972,7 +19404,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Zazwyczaj potrafi zmobilizować wystarczająco energii na niezbędne rzeczy na początku lub pod koniec dnia.`,
       pt: `Normalmente consegue mobilizar energia suficiente para as coisas necessárias no início ou no fim do dia.`,
       fr: `Mobilise généralement assez d’énergie pour les choses nécessaires au début ou à la fin de la journée.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_186",
@@ -18992,7 +19425,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Nie czuje się koniecznie wypoczęty/a nawet po odpoczynku w domu.`,
       pt: `Nem sempre se sente restaurado mesmo após descansar em casa.`,
       fr: `Ne se sent pas forcément reposé(e) même après un repos à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_187",
@@ -19012,7 +19446,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Nie czuje się koniecznie wypoczęty/a nawet po odpoczynku w szkole lub pracy.`,
       pt: `Nem sempre se sente restaurado mesmo após descansar na escola ou no trabalho.`,
       fr: `Ne se sent pas forcément reposé(e) même après un repos à l’école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_188",
@@ -19032,7 +19467,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Nie czuje się koniecznie wypoczęty/a nawet po odpoczynku w sytuacjach towarzyskich.`,
       pt: `Nem sempre se sente restaurado mesmo após descansar em situações sociais.`,
       fr: `Ne se sent pas forcément reposé(e) même après un repos dans des situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_189",
@@ -19052,7 +19488,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Nie czuje się koniecznie wypoczęty/a nawet po odpoczynku będąc samemu.`,
       pt: `Nem sempre se sente restaurado mesmo após descansar sozinho.`,
       fr: `Ne se sent pas forcément reposé(e) même après un repos lorsqu’il/elle est seul(e).`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_190",
@@ -19072,7 +19509,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Nie czuje się koniecznie wypoczęty/a nawet po odpoczynku na początku lub pod koniec dnia.`,
       pt: `Nem sempre se sente restaurado mesmo após descansar no início ou no fim do dia.`,
       fr: `Ne se sent pas forcément reposé(e) même après un repos au début ou à la fin de la journée.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_191",
@@ -19092,7 +19530,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może mieć trudności z rozpoczęciem dnia lub zadania w domu.`,
       pt: `Pode achar difícil começar o dia ou uma tarefa em casa.`,
       fr: `Peut avoir du mal à commencer la journée ou une tâche à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_192",
@@ -19112,7 +19551,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może mieć trudności z rozpoczęciem dnia lub zadania w szkole lub w pracy.`,
       pt: `Pode achar difícil começar o dia ou uma tarefa na escola ou no trabalho.`,
       fr: `Peut avoir du mal à commencer la journée ou une tâche à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_193",
@@ -19132,7 +19572,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może mieć trudności z rozpoczęciem dnia lub zadania w sytuacjach społecznych.`,
       pt: `Pode achar difícil começar o dia ou uma tarefa em situações sociais.`,
       fr: `Peut avoir du mal à commencer la journée ou une tâche en situation sociale.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_194",
@@ -19152,7 +19593,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może mieć trudności z rozpoczęciem dnia lub zadania, gdy jest sam.`,
       pt: `Pode achar difícil começar o dia ou uma tarefa quando está sozinho.`,
       fr: `Peut avoir du mal à commencer la journée ou une tâche lorsqu'il est seul.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_195",
@@ -19172,7 +19614,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może mieć trudności z rozpoczęciem dnia lub zadania na początku lub na końcu dnia.`,
       pt: `Pode achar difícil começar o dia ou uma tarefa no início ou no fim do dia.`,
       fr: `Peut avoir du mal à commencer la journée ou une tâche au début ou à la fin de la journée.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_196",
@@ -19192,7 +19635,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może postrzegać siebie w domu jako mniej wartościowego lub niewystarczającego.`,
       pt: `Pode ver-se em casa como menos valioso ou não bom o suficiente.`,
       fr: `Peut se percevoir comme moins valable ou pas assez bon à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_197",
@@ -19212,7 +19656,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może postrzegać siebie w szkole lub pracy jako mniej wartościowego lub niewystarczającego.`,
       pt: `Pode ver-se na escola ou no trabalho como menos valioso ou não bom o suficiente.`,
       fr: `Peut se percevoir comme moins valable ou pas assez bon à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_198",
@@ -19232,7 +19677,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może postrzegać siebie w sytuacjach społecznych jako mniej wartościowego lub niewystarczającego.`,
       pt: `Pode ver-se em situações sociais como menos valioso ou não bom o suficiente.`,
       fr: `Peut se percevoir comme moins valable ou pas assez bon en situation sociale.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_199",
@@ -19252,7 +19698,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może postrzegać siebie jako mniej wartościowego lub niewystarczającego, gdy jest sam.`,
       pt: `Pode ver-se sozinho como menos valioso ou não bom o suficiente.`,
       fr: `Peut se percevoir comme moins valable ou pas assez bon quand il est seul.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_200",
@@ -19272,7 +19719,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może postrzegać siebie na początku lub na końcu dnia jako mniej wartościowego lub niewystarczającego.`,
       pt: `Pode ver-se no início ou no fim do dia como menos valioso ou não bom o suficiente.`,
       fr: `Peut se percevoir comme moins valable ou pas assez bon au début ou à la fin de la journée.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_201",
@@ -19292,7 +19740,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może traktować siebie zbyt surowo lub krytycznie w domu.`,
       pt: `Pode tratar-se de maneira excessivamente dura ou crítica em casa.`,
       fr: `Peut se traiter de manière trop dure ou critique à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_202",
@@ -19312,7 +19761,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może traktować siebie zbyt surowo lub krytycznie w sytuacjach szkolnych lub zawodowych.`,
       pt: `Pode tratar-se de maneira excessivamente dura ou crítica em situações escolares ou de trabalho.`,
       fr: `Peut se traiter de manière trop dure ou critique à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_203",
@@ -19332,7 +19782,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może traktować siebie zbyt surowo lub krytycznie w sytuacjach społecznych.`,
       pt: `Pode tratar-se de maneira excessivamente dura ou crítica em situações sociais.`,
       fr: `Peut se traiter de manière trop dure ou critique dans des situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_204",
@@ -19352,7 +19803,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może traktować siebie zbyt surowo lub krytycznie, gdy jest sam.`,
       pt: `Pode tratar-se de maneira excessivamente dura ou crítica quando está sozinho.`,
       fr: `Peut se traiter de manière trop dure ou critique lorsqu'il est seul.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_205",
@@ -19372,7 +19824,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może traktować siebie zbyt surowo lub krytycznie na początku lub na końcu dnia.`,
       pt: `Pode tratar-se de maneira excessivamente dura ou crítica no início ou no fim do dia.`,
       fr: `Peut se traiter de manière trop dure ou critique au début ou à la fin de la journée.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_206",
@@ -19392,7 +19845,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może odnosić się do siebie z większym współczuciem w domu.`,
       pt: `Consegue relacionar-se consigo mesmo com mais compaixão em casa.`,
       fr: `Peut se montrer plus compatissant envers lui-même à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_207",
@@ -19412,7 +19866,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może odnosić się do siebie z większym współczuciem w sytuacjach szkolnych lub zawodowych.`,
       pt: `Consegue relacionar-se consigo mesmo com mais compaixão em situações escolares ou de trabalho.`,
       fr: `Peut se montrer plus compatissant envers lui-même à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_208",
@@ -19432,7 +19887,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może odnosić się do siebie z większym współczuciem w sytuacjach społecznych.`,
       pt: `Consegue relacionar-se consigo mesmo com mais compaixão em situações sociais.`,
       fr: `Peut se montrer plus compatissant envers lui-même dans des situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_209",
@@ -19452,7 +19908,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może odnosić się do siebie z większym współczuciem, gdy jest sam.`,
       pt: `Consegue relacionar-se consigo mesmo com mais compaixão quando está sozinho.`,
       fr: `Peut se montrer plus compatissant envers lui-même lorsqu'il est seul.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_210",
@@ -19472,7 +19929,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może odnosić się do siebie z większym współczuciem na początku lub na końcu dnia.`,
       pt: `Consegue relacionar-se consigo mesmo com mais compaixão no início ou no fim do dia.`,
       fr: `Peut se montrer plus compatissant envers lui-même au début ou à la fin de la journée.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_211",
@@ -19492,7 +19950,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może odczuwać nadmierną wagę błędów lub niedociągnięć w domu.`,
       pt: `Pode experienciar falhas ou deficiências com peso excessivo em casa.`,
       fr: `Peut ressentir des défauts ou des insuffisances avec un poids excessif à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_212",
@@ -19512,7 +19971,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może odczuwać nadmierną wagę błędów lub niedociągnięć w sytuacjach szkolnych lub zawodowych.`,
       pt: `Pode experienciar falhas ou deficiências com peso excessivo em situações escolares ou de trabalho.`,
       fr: `Peut ressentir des défauts ou des insuffisances avec un poids excessif à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_213",
@@ -19532,7 +19992,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może odczuwać nadmierną wagę błędów lub niedociągnięć w sytuacjach społecznych.`,
       pt: `Pode experienciar falhas ou deficiências com peso excessivo em situações sociais.`,
       fr: `Peut ressentir des défauts ou des insuffisances avec un poids excessif en situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_214",
@@ -19552,7 +20013,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może odczuwać nadmierną wagę błędów lub niedociągnięć, gdy jest sam.`,
       pt: `Pode experienciar falhas ou deficiências com peso excessivo quando sozinho.`,
       fr: `Peut ressentir des défauts ou des insuffisances avec un poids excessif lorsqu'il est seul.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_215",
@@ -19572,7 +20034,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może odczuwać nadmierną wagę błędów lub niedociągnięć na początku lub na końcu dnia.`,
       pt: `Pode experienciar falhas ou deficiências com peso excessivo no início ou no fim do dia.`,
       fr: `Peut ressentir des défauts ou des insuffisances avec un poids excessif en début ou en fin de journée.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_216",
@@ -19592,7 +20055,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Uczucia bezwartościowości mogą pojawić się w domu.`,
       pt: `Podem surgir sentimentos de inutilidade em casa.`,
       fr: `Des sentiments de inutilité peuvent apparaître à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_217",
@@ -19612,7 +20076,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Uczucia bezwartościowości mogą pojawić się w sytuacjach szkolnych lub zawodowych.`,
       pt: `Podem surgir sentimentos de inutilidade em situações escolares ou de trabalho.`,
       fr: `Des sentiments de inutilité peuvent apparaître à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_218",
@@ -19632,7 +20097,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Uczucia bezwartościowości mogą pojawić się w sytuacjach społecznych.`,
       pt: `Podem surgir sentimentos de inutilidade em situações sociais.`,
       fr: `Des sentiments de inutilité peuvent apparaître en situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_219",
@@ -19652,7 +20118,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Uczucia bezwartościowości mogą pojawić się, gdy jest sam.`,
       pt: `Podem surgir sentimentos de inutilidade quando sozinho.`,
       fr: `Des sentiments de inutilité peuvent apparaître lorsqu'il est seul.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_220",
@@ -19672,7 +20139,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Uczucia bezwartościowości mogą pojawić się na początku lub na końcu dnia.`,
       pt: `Podem surgir sentimentos de inutilidade no início ou no fim do dia.`,
       fr: `Des sentiments de inutilité peuvent apparaître en début ou en fin de journée.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_221",
@@ -19692,7 +20160,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Przyszłość może się wydawać mniej obiecująca w domu.`,
       pt: `O futuro pode parecer menos esperançoso em casa.`,
       fr: `L'avenir peut sembler moins prometteur à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_222",
@@ -19712,7 +20181,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Przyszłość może wydać się mniej obiecująca w szkole lub pracy.`,
       pt: `O futuro pode parecer menos esperançoso na escola ou no trabalho.`,
       fr: `L'avenir peut sembler moins prometteur à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_223",
@@ -19732,7 +20202,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Przyszłość może się wydawać mniej obiecująca w sytuacjach społecznych.`,
       pt: `O futuro pode parecer menos esperançoso em situações sociais.`,
       fr: `L'avenir peut sembler moins prometteur dans les situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_224",
@@ -19752,7 +20223,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Przyszłość może wydawać się mniej obiecująca, gdy jest się samemu.`,
       pt: `O futuro pode parecer menos esperançoso quando sozinho.`,
       fr: `L'avenir peut sembler moins prometteur lorsqu'on est seul.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_225",
@@ -19772,7 +20244,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Przyszłość może wydawać się mniej obiecująca na początku lub na końcu dnia.`,
       pt: `O futuro pode parecer menos esperançoso no início ou no fim do dia.`,
       fr: `L'avenir peut sembler moins prometteur au début ou à la fin de la journée.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_226",
@@ -19792,7 +20265,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może się wydawać, że sytuacja w domu prawdopodobnie się nie poprawi.`,
       pt: `Pode sentir que a situação em casa é improvável de melhorar.`,
       fr: `On peut ressentir que la situation à la maison est peu susceptible de s'améliorer.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_227",
@@ -19812,7 +20286,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może się wydawać, że sytuacja w szkole lub pracy prawdopodobnie się nie poprawi.`,
       pt: `Pode sentir que a situação na escola ou trabalho é improvável de melhorar.`,
       fr: `On peut ressentir que la situation à l'école ou au travail est peu susceptible de s'améliorer.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_228",
@@ -19832,7 +20307,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może się wydawać, że sytuacja w sytuacjach społecznych prawdopodobnie się nie poprawi.`,
       pt: `Pode sentir que a situação em situações sociais é improvável de melhorar.`,
       fr: `On peut ressentir que la situation dans les situations sociales est peu susceptible de s'améliorer.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_229",
@@ -19852,7 +20328,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może się wydawać, że sytuacja podczas samotności prawdopodobnie się nie poprawi.`,
       pt: `Pode sentir que a situação quando sozinho é improvável de melhorar.`,
       fr: `On peut ressentir que la situation lorsqu'on est seul est peu susceptible de s'améliorer.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_230",
@@ -19872,7 +20349,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Może się wydawać, że sytuacja na początku lub końcu dnia prawdopodobnie się nie poprawi.`,
       pt: `Pode sentir que a situação no início ou no fim do dia é improvável de melhorar.`,
       fr: `On peut ressentir que la situation au début ou à la fin de la journée est peu susceptible de s'améliorer.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_231",
@@ -19892,7 +20370,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Wciąż potrafi dostrzec, że w domu mogą czekać dobre kierunki.`,
       pt: `Ainda pode ver que podem existir bons caminhos pela frente em casa.`,
       fr: `Peut encore voir que de bonnes directions peuvent exister à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_232",
@@ -19912,7 +20391,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Wciąż potrafi dostrzec, że w szkole lub w pracy mogą czekać dobre kierunki.`,
       pt: `Ainda pode ver que podem existir bons caminhos pela frente na escola ou no trabalho.`,
       fr: `Peut encore voir que de bonnes directions peuvent exister à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_233",
@@ -19932,7 +20412,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Wciąż potrafi dostrzec, że w sytuacjach towarzyskich mogą czekać dobre kierunki.`,
       pt: `Ainda pode ver que podem existir bons caminhos pela frente em situações sociais.`,
       fr: `Peut encore voir que de bonnes directions peuvent exister dans des situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_234",
@@ -19952,7 +20433,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Wciąż potrafi dostrzec, że będą dobre kierunki nawet będąc samemu.`,
       pt: `Ainda pode ver que podem existir bons caminhos pela frente quando está sozinho.`,
       fr: `Peut encore voir que de bonnes directions peuvent exister lorsqu'il est seul.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_235",
@@ -19972,7 +20454,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Wciąż potrafi dostrzec, że na początku lub końcu dnia mogą czekać dobre kierunki.`,
       pt: `Ainda pode ver que podem existir bons caminhos pela frente no início ou no fim do dia.`,
       fr: `Peut encore voir que de bonnes directions peuvent exister au début ou à la fin de la journée.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_236",
@@ -19992,7 +20475,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Wysiłek może wydawać się mniej znaczący lub wartościowy w domu.`,
       pt: `O esforço pode parecer menos significativo ou proveitoso em casa.`,
       fr: `L'effort peut sembler moins significatif ou utile à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_237",
@@ -20012,7 +20496,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Wysiłek może wydawać się mniej znaczący lub wartościowy w szkole lub pracy.`,
       pt: `O esforço pode parecer menos significativo ou proveitoso na escola ou no trabalho.`,
       fr: `L'effort peut sembler moins significatif ou utile à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_238",
@@ -20032,7 +20517,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Wysiłek może wydawać się mniej znaczący lub wartościowy w sytuacjach towarzyskich.`,
       pt: `O esforço pode parecer menos significativo ou proveitoso em situações sociais.`,
       fr: `L'effort peut sembler moins significatif ou utile dans les situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_239",
@@ -20052,7 +20538,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Wysiłek może wydawać się mniej znaczący lub wartościowy, gdy jest sam.`,
       pt: `O esforço pode parecer menos significativo ou proveitoso quando está sozinho.`,
       fr: `L'effort peut sembler moins significatif ou utile lorsqu'il est seul.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_240",
@@ -20072,7 +20559,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Wysiłek może wydawać się mniej znaczący lub wartościowy na początku lub końcu dnia.`,
       pt: `O esforço pode parecer menos significativo ou proveitoso no início ou no fim do dia.`,
       fr: `L'effort peut sembler moins significatif ou utile au début ou à la fin de la journée.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_241",
@@ -20092,7 +20580,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `W domu przyszłość może wydawać się pusta lub trudniejsza do wyobrażenia.`,
       pt: `No ambiente doméstico, o futuro pode parecer mais vazio ou difícil de imaginar.`,
       fr: `L'avenir peut sembler plus vide ou plus difficile à imaginer à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_242",
@@ -20112,7 +20601,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `W sytuacjach szkolnych lub zawodowych przyszłość może wydawać się pusta lub trudniejsza do wyobrażenia.`,
       pt: `Em situações escolares ou de trabalho, o futuro pode parecer mais vazio ou difícil de imaginar.`,
       fr: `L'avenir peut sembler plus vide ou plus difficile à imaginer à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_243",
@@ -20132,7 +20622,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `W sytuacjach społecznych przyszłość może wydawać się pusta lub trudniejsza do wyobrażenia.`,
       pt: `Em situações sociais, o futuro pode parecer mais vazio ou difícil de imaginar.`,
       fr: `L'avenir peut sembler plus vide ou plus difficile à imaginer dans les situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_244",
@@ -20152,7 +20643,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Gdy jest sam, przyszłość może wydawać się pusta lub trudniejsza do wyobrażenia.`,
       pt: `Quando está sozinho, o futuro pode parecer mais vazio ou difícil de imaginar.`,
       fr: `L'avenir peut sembler plus vide ou plus difficile à imaginer lorsqu'on est seul.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_245",
@@ -20172,7 +20664,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Na początku lub pod koniec dnia przyszłość może wydawać się pusta lub trudniejsza do wyobrażenia.`,
       pt: `No início ou no fim do dia, o futuro pode parecer mais vazio ou difícil de imaginar.`,
       fr: `L'avenir peut sembler plus vide ou plus difficile à imaginer au début ou à la fin de la journée.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_246",
@@ -20192,7 +20685,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Ma większe trudności z koncentracją przez dłuższy czas w domu.`,
       pt: `Tem mais dificuldade em manter a concentração por períodos mais longos em casa.`,
       fr: `A plus de difficulté à se concentrer pendant de longues périodes à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_247",
@@ -20212,7 +20706,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Ma większe trudności z koncentracją przez dłuższy czas w szkole lub pracy.`,
       pt: `Tem mais dificuldade em manter a concentração por períodos mais longos na escola ou no trabalho.`,
       fr: `A plus de difficulté à se concentrer pendant de longues périodes à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_248",
@@ -20232,7 +20727,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Ma większe trudności z koncentracją przez dłuższy czas w sytuacjach społecznych.`,
       pt: `Tem mais dificuldade em manter a concentração por períodos mais longos em situações sociais.`,
       fr: `A plus de difficulté à se concentrer pendant de longues périodes dans les situations sociales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_249",
@@ -20252,7 +20748,8 @@ window.NM_DEPRESSION_BANK = [
       pl: `Ma większe trudności z koncentracją przez dłuższy czas, gdy jest sam.`,
       pt: `Tem mais dificuldade em manter a concentração por períodos mais longos quando está sozinho.`,
       fr: `A plus de difficulté à se concentrer pendant de longues périodes lorsqu'il est seul.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "DEP_250",
@@ -20272,11 +20769,10 @@ window.NM_DEPRESSION_BANK = [
       pl: `Ma większe trudności z koncentracją przez dłuższy czas na początku lub końcu dnia.`,
       pt: `Tem mais dificuldade em manter a concentração por períodos mais longos no início ou no fim do dia.`,
       fr: `A plus de difficulté à se concentrer pendant de longues périodes au début ou à la fin de la journée.`,
-    }
-  },
+    },
+    stemKey: ""
+  }
 ];
-
-
 
 /* ===== learning.bank.translated.js ===== */
 window.NM_LEARNING_BANK = [
@@ -20298,7 +20794,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z utrzymaniem uwagi na jednym zadaniu przez dłuższy czas.`,
       pt: `Tem dificuldade em manter a atenção em uma tarefa por longos períodos.`,
       fr: `A des difficultés à maintenir son attention sur une tâche pendant de longues périodes.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_002",
@@ -20307,8 +20804,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.3,
     reverse: false,
     text: {
-      hu: `Külső ingerek könnyen elvonják a figyelmét.`,
-      en: `External stimuli easily distract attention.`,
+      hu: `Külső ingerek tanulás közben könnyen elvonják a figyelmét.`,
+      en: `External stimuli easily distract attention during learning tasks.`,
       de: `Äußere Reize lenken die Aufmerksamkeit leicht ab.`,
       it: `Gli stimoli esterni distraggono facilmente l'attenzione.`,
       es: `Los estímulos externos distraen la atención fácilmente.`,
@@ -20318,7 +20815,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zewnętrzne bodźce łatwo odciągają uwagę.`,
       pt: `Estímulos externos distraem a atenção facilmente.`,
       fr: `Les stimuli externes distraient facilement l'attention.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_003",
@@ -20327,8 +20825,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.2,
     reverse: true,
     text: {
-      hu: `Általában stabilan fenn tudja tartani a figyelmét.`,
-      en: `Can generally maintain stable attention.`,
+      hu: `Általában stabilan fenn tudja tartani figyelmét tanulási feladatoknál.`,
+      en: `Can generally maintain stable attention during learning tasks.`,
       de: `Kann in der Regel eine konstante Aufmerksamkeit aufrechterhalten.`,
       it: `Generalmente riesce a mantenere stabile l'attenzione.`,
       es: `Generalmente puede mantener una atención estable.`,
@@ -20338,7 +20836,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zazwyczaj potrafi utrzymać stabilną uwagę.`,
       pt: `Geralmente consegue manter a atenção estável.`,
       fr: `Peut généralement maintenir une attention stable.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_004",
@@ -20347,8 +20846,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Feladat közben könnyen elkalandozik a figyelme.`,
-      en: `Attention easily drifts during tasks.`,
+      hu: `Feladat közben könnyen elkalandozik a figyelme hosszabb munkaszakaszokban.`,
+      en: `Attention easily drifts during longer task periods.`,
       de: `Die Aufmerksamkeit schweift bei Aufgaben leicht ab.`,
       it: `L'attenzione tende a distrarsi facilmente durante le attività.`,
       es: `La atención se desvía fácilmente durante las tareas.`,
@@ -20358,7 +20857,8 @@ window.NM_LEARNING_BANK = [
       pl: `Uwaga łatwo odpływa podczas wykonywania zadań.`,
       pt: `A atenção desvia-se facilmente durante as tarefas.`,
       fr: `L'attention dérive facilement pendant les tâches.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_005",
@@ -20378,7 +20878,8 @@ window.NM_LEARNING_BANK = [
       pl: `Wewnętrzne myśli łatwo rozpraszają podczas nauki.`,
       pt: `Pensamentos internos distraem facilmente durante a aprendizagem.`,
       fr: `Les pensées internes distrayent facilement pendant l'apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_006",
@@ -20398,7 +20899,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z powrotem do zadania po przerwie.`,
       pt: `Tem dificuldade em retomar uma tarefa após uma interrupção.`,
       fr: `A des difficultés à reprendre une tâche après une interruption.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_007",
@@ -20418,7 +20920,8 @@ window.NM_LEARNING_BANK = [
       pl: `Trudno mu pozostać mentalnie skupionym na zadaniu.`,
       pt: `Tem dificuldade em manter-se mentalmente focado numa tarefa.`,
       fr: `A du mal à rester mentalement ancré dans une tâche.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_008",
@@ -20438,7 +20941,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi stosunkowo szybko ponownie się skoncentrować po rozproszeniu.`,
       pt: `Consegue reenfocar-se relativamente rápido após distração.`,
       fr: `Peut se reconcentrer relativement vite après une distraction.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_009",
@@ -20458,7 +20962,8 @@ window.NM_LEARNING_BANK = [
       pl: `Uwaga może się wahać nawet podczas próby koncentracji.`,
       pt: `A atenção pode oscilar mesmo quando tenta concentrar-se.`,
       fr: `L'attention peut fluctuer même en essayant de se concentrer.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_010",
@@ -20478,7 +20983,8 @@ window.NM_LEARNING_BANK = [
       pl: `Łatwo gubi wątek podczas dłuższych wyjaśnień.`,
       pt: `Perde facilmente o fio da meada durante explicações mais longas.`,
       fr: `Perd le fil facilement lors d'explications longues.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_011",
@@ -20498,7 +21004,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z jednoczesnym utrzymaniem w pamięci kilku informacji.`,
       pt: `Tem dificuldade em manter várias informações na mente ao mesmo tempo.`,
       fr: `A des difficultés à retenir plusieurs informations en même temps.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_012",
@@ -20507,8 +21014,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Többlépéses instrukciókat nehezebben követ.`,
-      en: `Has difficulty following multi-step instructions.`,
+      hu: `Többlépéses instrukciókat nehezebben követ, ha kevés támpontot kap.`,
+      en: `Has difficulty following multi-step instructions when few cues are provided.`,
       de: `Hat Schwierigkeiten, mehrstufigen Anweisungen zu folgen.`,
       it: `Ha difficoltà a seguire istruzioni con più passaggi.`,
       es: `Tiene dificultad para seguir instrucciones con varios pasos.`,
@@ -20518,7 +21025,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z wykonywaniem wieloetapowych instrukcji.`,
       pt: `Tem dificuldade em seguir instruções com múltiplos passos.`,
       fr: `A des difficultés à suivre des consignes à plusieurs étapes.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_013",
@@ -20538,7 +21046,8 @@ window.NM_LEARNING_BANK = [
       pl: `Łatwo traci orientację w wykonywanym zadaniu.`,
       pt: `Perde facilmente o rasto de onde está numa tarefa.`,
       fr: `Perd facilement le fil de sa progression dans une tâche.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_014",
@@ -20558,7 +21067,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zwykle potrafi jednocześnie utrzymać w pamięci kilka informacji.`,
       pt: `Normalmente consegue manter várias informações na mente ao mesmo tempo.`,
       fr: `Peut généralement retenir plusieurs informations à la fois.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_015",
@@ -20578,7 +21088,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może mieć trudności z połączeniem końca instrukcji z jej początkiem.`,
       pt: `Pode ter dificuldade em ligar o fim de uma instrução ao seu início.`,
       fr: `Peut avoir du mal à relier la fin d’une consigne à son début.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_016",
@@ -20598,7 +21109,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może czuć się przeciążony przy próbie jednoczesnego utrzymania wielu informacji w pamięci.`,
       pt: `Pode ficar sobrecarregado ao tentar manter muitas informações na mente ao mesmo tempo.`,
       fr: `Peut être surchargé lorsqu’il doit retenir trop d’informations en même temps.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_017",
@@ -20618,7 +21130,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma większe trudności z krótkotrwałym zapamiętywaniem informacji werbalnych.`,
       pt: `Tem mais dificuldades para reter brevemente informação verbal.`,
       fr: `A plus de difficulté à retenir brièvement des informations verbales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_018",
@@ -20638,7 +21151,8 @@ window.NM_LEARNING_BANK = [
       pl: `Dość dobrze radzi sobie z mentalnym śledzeniem sekwencji i kroków.`,
       pt: `Consegue acompanhar relativamente bem sequências e passos mentalmente.`,
       fr: `Peut suivre relativement bien en mémoire les séquences et étapes.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_019",
@@ -20658,7 +21172,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może mieć trudności z mentalną aktualizacją informacji podczas pracy.`,
       pt: `Pode ter dificuldade em atualizar mentalmente informações enquanto trabalha.`,
       fr: `Peut avoir du mal à mettre à jour mentalement des informations pendant qu’il travaille.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_020",
@@ -20678,7 +21193,8 @@ window.NM_LEARNING_BANK = [
       pl: `Trudniej mu jednocześnie myśleć i utrzymywać w pamięci ważne szczegóły.`,
       pt: `Acha mais difícil pensar e manter detalhes importantes na mente ao mesmo tempo.`,
       fr: `A plus de difficultés à penser tout en gardant en mémoire des détails importants.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_021",
@@ -20698,7 +21214,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrzebuje więcej czasu na przetworzenie informacji.`,
       pt: `Precisa de mais tempo para processar as informações.`,
       fr: `A besoin de plus de temps pour assimiler les informations.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_022",
@@ -20707,8 +21224,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.3,
     reverse: false,
     text: {
-      hu: `Válaszadás előtt hosszabb időre van szüksége.`,
-      en: `Needs more time before responding.`,
+      hu: `Válaszadás előtt hosszabb időre van szüksége új információ feldolgozásakor.`,
+      en: `Needs more time before responding when processing new information.`,
       de: `Braucht mehr Zeit, bevor er antwortet.`,
       it: `Ha bisogno di più tempo prima di rispondere.`,
       es: `Necesita más tiempo antes de responder.`,
@@ -20718,7 +21235,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrzebuje więcej czasu, zanim odpowie.`,
       pt: `Precisa de mais tempo antes de responder.`,
       fr: `A besoin de plus de temps avant de répondre.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_023",
@@ -20727,8 +21245,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.2,
     reverse: true,
     text: {
-      hu: `Gyorsan képes feldolgozni az új információkat.`,
-      en: `Can process new information quickly.`,
+      hu: `Gyorsan képes feldolgozni új információkat, ha a feladat világos.`,
+      en: `Can process new information quickly when the task is clear.`,
       de: `Kann neue Informationen schnell verarbeiten.`,
       it: `Riesce a elaborare rapidamente nuove informazioni.`,
       es: `Puede procesar información nueva rápidamente.`,
@@ -20738,7 +21256,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi szybko przetwarzać nowe informacje.`,
       pt: `Consegue processar informações novas rapidamente.`,
       fr: `Peut assimiler rapidement de nouvelles informations.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_024",
@@ -20758,7 +21277,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może wykonywać zadania wolniej niż oczekiwano.`,
       pt: `Pode completar as tarefas mais devagar do que o esperado.`,
       fr: `Peut réaliser les tâches plus lentement que prévu.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_025",
@@ -20767,8 +21287,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.3,
     reverse: false,
     text: {
-      hu: `Gondolkodása időnként lassabbnak tűnhet.`,
-      en: `Thinking may seem slower at times.`,
+      hu: `Gondolkodása időnként lassabbnak tűnhet összetettebb feladatoknál.`,
+      en: `Thinking may seem slower at times during more complex tasks.`,
       de: `Das Denken kann manchmal langsamer wirken.`,
       it: `Il pensiero può sembrare più lento a volte.`,
       es: `El pensamiento puede parecer más lento a veces.`,
@@ -20778,7 +21298,8 @@ window.NM_LEARNING_BANK = [
       pl: `Myślenie czasem może wydawać się wolniejsze.`,
       pt: `O pensamento pode parecer mais lento às vezes.`,
       fr: `La pensée peut sembler parfois plus lente.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_026",
@@ -20787,8 +21308,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Időnyomás alatt még inkább lelassulhat.`,
-      en: `May slow down even more under time pressure.`,
+      hu: `Időnyomás alatt még inkább lelassulhat feladatmegoldás közben.`,
+      en: `May slow down even more while solving tasks under time pressure.`,
       de: `Kann sich unter Zeitdruck noch mehr verlangsamen.`,
       it: `Può rallentare ancora di più sotto pressione di tempo.`,
       es: `Puede desacelerar aún más bajo presión de tiempo.`,
@@ -20798,7 +21319,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może zwalniać jeszcze bardziej pod presją czasu.`,
       pt: `Pode ficar ainda mais lento sob pressão de tempo.`,
       fr: `Peut ralentir davantage sous pression du temps.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_027",
@@ -20818,7 +21340,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrzebuje więcej czasu podczas czytania, aby naprawdę przyswoić treść.`,
       pt: `Precisa de mais tempo durante a leitura para absorver bem o conteúdo.`,
       fr: `A besoin de plus de temps en lecture pour bien assimiler le contenu.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_028",
@@ -20838,7 +21361,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zazwyczaj nadąża za tempem pracy innych.`,
       pt: `Geralmente consegue acompanhar o ritmo de trabalho dos outros.`,
       fr: `Peut généralement suivre le rythme de travail des autres.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_029",
@@ -20858,7 +21382,8 @@ window.NM_LEARNING_BANK = [
       pl: `Wolniej przekształca usłyszane lub zobaczone informacje w użyteczne zrozumienie.`,
       pt: `Converte informações ouvidas ou vistas em compreensão útil mais lentamente.`,
       fr: `Transforme plus lentement les informations entendues ou vues en compréhension utilisable.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_030",
@@ -20878,7 +21403,8 @@ window.NM_LEARNING_BANK = [
       pl: `Dłużej zajmuje przystosowanie się do nowego zadania.`,
       pt: `Demora mais tempo para se ajustar a uma nova tarefa.`,
       fr: `Met plus de temps à se mettre à une nouvelle tâche.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_031",
@@ -20887,8 +21413,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.5,
     reverse: false,
     text: {
-      hu: `Nehezen kezdi el a feladatokat.`,
-      en: `Has difficulty initiating tasks.`,
+      hu: `Nehezen kezdi el a feladatokat, ha nem kap egyértelmű kezdőlépést.`,
+      en: `Has difficulty initiating tasks when the first step is unclear.`,
       de: `Hat Schwierigkeiten, Aufgaben zu beginnen.`,
       it: `Ha difficoltà a iniziare i compiti.`,
       es: `Tiene dificultad para iniciar tareas.`,
@@ -20898,7 +21424,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z rozpoczęciem zadań.`,
       pt: `Tem dificuldade em iniciar tarefas.`,
       fr: `A des difficultés à commencer les tâches.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_032",
@@ -20907,8 +21434,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Nehézséget okoz számára a tervezés.`,
-      en: `Has difficulty planning tasks.`,
+      hu: `Nehézséget okoz számára a tervezés több lépésből álló feladatoknál.`,
+      en: `Has difficulty planning tasks that involve several steps.`,
       de: `Hat Schwierigkeiten, Aufgaben zu planen.`,
       it: `Ha difficoltà a pianificare i compiti.`,
       es: `Tiene dificultad para planificar tareas.`,
@@ -20918,7 +21445,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z planowaniem zadań.`,
       pt: `Tem dificuldade em planejar tarefas.`,
       fr: `A des difficultés à planifier les tâches.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_033",
@@ -20927,8 +21455,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.2,
     reverse: true,
     text: {
-      hu: `Általában jól szervezi a feladatait.`,
-      en: `Generally organizes tasks well.`,
+      hu: `Általában jól szervezi a feladatait, ha a követelmények világosak.`,
+      en: `Generally organizes tasks well when expectations are clear.`,
       de: `Organisiert Aufgaben im Allgemeinen gut.`,
       it: `Generalmente organizza bene i compiti.`,
       es: `Generalmente organiza bien las tareas.`,
@@ -20938,7 +21466,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zwykle dobrze organizuje zadania.`,
       pt: `Geralmente organiza bem as tarefas.`,
       fr: `Organise généralement bien les tâches.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_034",
@@ -20947,8 +21476,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Nehezen fejez be elkezdett feladatokat.`,
-      en: `Has difficulty finishing tasks once started.`,
+      hu: `Nehezen fejez be elkezdett feladatokat, különösen hosszabb munkaszakaszokban.`,
+      en: `Has difficulty finishing tasks once started, especially during longer work periods.`,
       de: `Hat Schwierigkeiten, Aufgaben nach dem Beginn abzuschließen.`,
       it: `Ha difficoltà a finire i compiti una volta iniziati.`,
       es: `Tiene dificultad para terminar las tareas una vez comenzadas.`,
@@ -20958,7 +21487,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z ukończeniem zadań po ich rozpoczęciu.`,
       pt: `Tem dificuldade em terminar tarefas depois de iniciá-las.`,
       fr: `A des difficultés à terminer les tâches une fois commencées.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_035",
@@ -20978,7 +21508,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z ustaleniem kolejności zadań.`,
       pt: `Tem dificuldade em decidir a ordem das tarefas.`,
       fr: `A des difficultés à décider de l'ordre des tâches.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_036",
@@ -20998,7 +21529,8 @@ window.NM_LEARNING_BANK = [
       pl: `Trudno mu rozłożyć większe zadanie na mniejsze kroki.`,
       pt: `Acha difícil dividir uma tarefa maior em etapas menores.`,
       fr: `A du mal à décomposer une tâche importante en étapes plus petites.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_037",
@@ -21018,7 +21550,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może mieszać kolejność kroków zadania.`,
       pt: `Pode confundir a ordem dos passos da tarefa.`,
       fr: `Peut confondre l'ordre des étapes de la tâche.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_038",
@@ -21038,7 +21571,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zwykle potrafi doprowadzić plan do końca.`,
       pt: `Geralmente consegue levar um plano até a conclusão.`,
       fr: `Peut généralement mener un plan à son terme.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_039",
@@ -21058,7 +21592,8 @@ window.NM_LEARNING_BANK = [
       pl: `Nawet przygotowanie do zadania może być przytłaczające.`,
       pt: `Até preparar-se para uma tarefa pode parecer opressor.`,
       fr: `Même préparer une tâche peut sembler accablant.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_040",
@@ -21078,7 +21613,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma większe trudności z monitorowaniem postępu zadania.`,
       pt: `Tem mais dificuldade em monitorar o progresso de uma tarefa.`,
       fr: `A plus de difficultés à suivre l'avancement d'une tâche.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_041",
@@ -21098,7 +21634,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudność z oszacowaniem, ile czasu zajmie wykonanie zadania.`,
       pt: `Tem dificuldade em estimar quanto tempo uma tarefa levará.`,
       fr: `A des difficultés à estimer le temps nécessaire pour une tâche.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_042",
@@ -21118,7 +21655,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z dotrzymywaniem terminów.`,
       pt: `Tem dificuldade em cumprir prazos.`,
       fr: `A du mal à respecter les délais.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_043",
@@ -21138,7 +21676,8 @@ window.NM_LEARNING_BANK = [
       pl: `Materiały lub narzędzia do nauki łatwo ulegają dezorganizacji.`,
       pt: `Materiais ou ferramentas de aprendizado facilmente ficam desorganizados.`,
       fr: `Les matériels ou outils d’apprentissage deviennent facilement désorganisés.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_044",
@@ -21147,8 +21686,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.2,
     reverse: true,
     text: {
-      hu: `Általában jól tudja strukturálni az idejét.`,
-      en: `Can generally structure time well.`,
+      hu: `Általában jól tudja strukturálni az idejét kiszámítható napirend mellett.`,
+      en: `Can generally structure time well when the routine is predictable.`,
       de: `Kann die Zeit generell gut strukturieren.`,
       it: `In genere riesce a organizzare bene il tempo.`,
       es: `Generalmente puede organizar bien el tiempo.`,
@@ -21158,7 +21697,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zwykle dobrze potrafi organizować czas.`,
       pt: `Geralmente consegue estruturar bem o tempo.`,
       fr: `Parvient généralement à bien structurer son temps.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_045",
@@ -21178,7 +21718,8 @@ window.NM_LEARNING_BANK = [
       pl: `Częściej coś zostawia lub zapomina zabrać.`,
       pt: `Muitas vezes esquece algo ou o deixa para trás.`,
       fr: `Oublie souvent quelque chose ou oublie de l’apporter.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_046",
@@ -21187,8 +21728,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `A szükségesnél később kezd neki feladatoknak.`,
-      en: `Starts tasks later than needed.`,
+      hu: `A szükségesnél később kezd neki feladatoknak kevés külső struktúra mellett.`,
+      en: `Starts tasks later than needed when there is little external structure.`,
       de: `Beginnt Aufgaben später als nötig.`,
       it: `Inizia i compiti più tardi del necessario.`,
       es: `Comienza las tareas más tarde de lo necesario.`,
@@ -21198,7 +21739,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zaczyna zadania później niż powinien.`,
       pt: `Começa as tarefas mais tarde do que o necessário.`,
       fr: `Commence les tâches plus tard que nécessaire.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_047",
@@ -21218,7 +21760,8 @@ window.NM_LEARNING_BANK = [
       pl: `Mniejsze, ale ważne kroki organizacyjne są łatwo pomijane.`,
       pt: `Passos menores, mas importantes, de organização são facilmente ignorados.`,
       fr: `Les petites étapes d’organisation importantes sont facilement négligées.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_048",
@@ -21238,7 +21781,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zwykle przychodzi przygotowany do zadań lub sytuacji edukacyjnych.`,
       pt: `Geralmente chega preparado para as tarefas ou situações de aprendizado.`,
       fr: `Arrive généralement préparé aux tâches ou situations d’apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_049",
@@ -21258,7 +21802,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z planowaniem czasu podczas dłuższych zadań.`,
       pt: `Tem dificuldade em distribuir o tempo dentro de uma tarefa longa.`,
       fr: `A des difficultés à gérer son temps lors de tâches longues.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_050",
@@ -21278,7 +21823,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma większe trudności z trzymaniem się zaplanowanego harmonogramu.`,
       pt: `Tem mais dificuldade em seguir um cronograma planejado.`,
       fr: `A plus de mal à respecter un planning prévu.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_051",
@@ -21287,8 +21833,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Előfordulhat, hogy elsőre nem teljesen érti meg a feladatot.`,
-      en: `May not fully understand a task the first time.`,
+      hu: `Előfordulhat, hogy elsőre csak részben érti meg a feladatot.`,
+      en: `May understand a task only partly on the first attempt.`,
       de: `Versteht eine Aufgabe beim ersten Mal möglicherweise nicht vollständig.`,
       it: `Potrebbe non comprendere completamente un compito la prima volta.`,
       es: `Puede que no entienda completamente una tarea la primera vez.`,
@@ -21298,7 +21844,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może nie zrozumieć zadania za pierwszym razem.`,
       pt: `Pode não compreender totalmente uma tarefa na primeira vez.`,
       fr: `Peut ne pas comprendre complètement une tâche dès la première fois.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_052",
@@ -21318,7 +21865,8 @@ window.NM_LEARNING_BANK = [
       pl: `Trudniej mu zrozumieć znaczenie bardziej złożonych słów.`,
       pt: `Tem mais dificuldade em entender o significado de palavras mais complexas.`,
       fr: `A plus de difficulté à comprendre le sens de formulations plus complexes.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_053",
@@ -21327,8 +21875,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.2,
     reverse: true,
     text: {
-      hu: `Többnyire jól érti a szóbeli magyarázatokat.`,
-      en: `Usually understands verbal explanations well.`,
+      hu: `Többnyire jól érti a szóbeli magyarázatokat nyugodt környezetben.`,
+      en: `Usually understands verbal explanations well in a calm setting.`,
       de: `Versteht verbale Erklärungen normalerweise gut.`,
       it: `Di solito comprende bene le spiegazioni verbali.`,
       es: `Generalmente entiende bien las explicaciones verbales.`,
@@ -21338,7 +21886,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zwykle dobrze rozumie wyjaśnienia werbalne.`,
       pt: `Geralmente entende bem as explicações orais.`,
       fr: `Comprend habituellement bien les explications verbales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_054",
@@ -21358,7 +21907,8 @@ window.NM_LEARNING_BANK = [
       pl: `Po przeczytaniu może być trudniej dokładnie przekazać główną myśl.`,
       pt: `Após a leitura, pode ser mais difícil relatar com precisão o ponto principal.`,
       fr: `Après la lecture, il peut être plus difficile de restituer précisément le point principal.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_055",
@@ -21378,7 +21928,8 @@ window.NM_LEARNING_BANK = [
       pl: `Czasami może interpretować instrukcje lub pytania zbyt dosłownie.`,
       pt: `Pode às vezes interpretar instruções ou perguntas de forma demasiado literal.`,
       fr: `Peut parfois interpréter les consignes ou questions de manière trop littérale.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_056",
@@ -21398,7 +21949,8 @@ window.NM_LEARNING_BANK = [
       pl: `Trudniej mu łączyć nowe informacje z istniejącą wiedzą.`,
       pt: `Tem mais dificuldade em conectar novas informações com o conhecimento existente.`,
       fr: `A plus de difficultés à relier les nouvelles informations aux connaissances existantes.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_057",
@@ -21418,7 +21970,8 @@ window.NM_LEARNING_BANK = [
       pl: `Trudniej mu zauważyć ukryte znaczenia lub oczekiwania.`,
       pt: `Tem mais dificuldade em notar significados ou expectativas implícitas.`,
       fr: `A plus de difficulté à percevoir les significations ou attentes implicites.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_058",
@@ -21438,7 +21991,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zwykle potrafi dobrze łączyć znaczenie informacji.`,
       pt: `Geralmente consegue integrar bem o significado das informações.`,
       fr: `Peut généralement bien intégrer le sens des informations.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_059",
@@ -21447,8 +22001,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.3,
     reverse: false,
     text: {
-      hu: `Előfordulhat, hogy nem pontosan azt válaszolja meg, amit a kérdés kér.`,
-      en: `May not always answer exactly what the question asks.`,
+      hu: `Előfordulhat, hogy a kérdés lényegét csak részben válaszolja meg.`,
+      en: `May answer only part of what the question is asking.`,
       de: `Antwortet nicht immer genau auf die gestellte Frage.`,
       it: `Potrebbe non rispondere sempre esattamente alla domanda posta.`,
       es: `Puede que no responda siempre exactamente a lo que pregunta la pregunta.`,
@@ -21458,7 +22012,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może nie zawsze odpowiadać dokładnie na zadane pytanie.`,
       pt: `Pode nem sempre responder exatamente ao que a pergunta pede.`,
       fr: `Ne répond pas toujours exactement à ce que la question demande.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_060",
@@ -21478,7 +22033,8 @@ window.NM_LEARNING_BANK = [
       pl: `Gęstsze lub bogate w informacje teksty są łatwiej przytłaczające.`,
       pt: `Textos mais densos ou carregados de informações são mais facilmente esmagadores.`,
       fr: `Les textes denses ou riches en informations sont plus facilement accablants.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_061",
@@ -21498,7 +22054,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może mieć trudności ze zmianą sposobu rozwiązywania problemu.`,
       pt: `Pode ter dificuldade em mudar para uma nova forma de resolver algo.`,
       fr: `Peut avoir des difficultés à passer à une nouvelle façon de résoudre un problème.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_062",
@@ -21518,7 +22075,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może upierać się przy podejściu, które już nie działa.`,
       pt: `Pode persistir em uma abordagem que já não funciona.`,
       fr: `Peut s'accrocher à une méthode qui ne fonctionne plus.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_063",
@@ -21538,7 +22096,8 @@ window.NM_LEARNING_BANK = [
       pl: `Dość łatwo dostosowuje się, gdy trzeba zmienić metodę.`,
       pt: `Consegue ajustar-se relativamente fácil quando um método precisa mudar.`,
       fr: `Peut s'adapter relativement facilement lorsqu'une méthode doit changer.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_064",
@@ -21558,7 +22117,8 @@ window.NM_LEARNING_BANK = [
       pl: `Trudniej mu przełączać się między różnymi zasadami lub punktami widzenia.`,
       pt: `Tem mais dificuldade em mudar entre diferentes regras ou perspectivas.`,
       fr: `Trouve plus difficile de passer d'une règle ou perspective à une autre.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_065",
@@ -21578,7 +22138,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma większe trudności z odejściem od znanych wzorców uczenia się lub myślenia.`,
       pt: `Tem mais dificuldade em deixar padrões familiares de aprendizagem ou pensamento.`,
       fr: `A plus de difficulté à abandonner des schémas d'apprentissage ou de pensée familiers.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_066",
@@ -21587,8 +22148,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Hibajelzés után sem mindig könnyű új irányba indulnia.`,
-      en: `Even after feedback, it may not be easy to move in a new direction.`,
+      hu: `Hibajelzés után is nehéz lehet új irányba indulnia.`,
+      en: `After feedback, shifting to a new direction may still be difficult.`,
       de: `Auch nach Rückmeldung kann es schwierig sein, eine neue Richtung einzuschlagen.`,
       it: `Anche dopo un feedback, potrebbe non essere facile prendere una nuova direzione.`,
       es: `Incluso después de recibir comentarios, puede no ser fácil tomar una nueva dirección.`,
@@ -21598,7 +22159,8 @@ window.NM_LEARNING_BANK = [
       pl: `Nawet po otrzymaniu informacji zwrotnej może być trudno obrać nowy kierunek.`,
       pt: `Mesmo após feedback, pode não ser fácil seguir uma nova direção.`,
       fr: `Même après un retour, il peut être difficile de prendre une nouvelle direction.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_067",
@@ -21618,7 +22180,8 @@ window.NM_LEARNING_BANK = [
       pl: `Trudniej zauważa, kiedy zadanie wymaga innego sposobu myślenia.`,
       pt: `Tem mais dificuldade em perceber quando uma tarefa exige um tipo diferente de pensamento.`,
       fr: `Trouve plus difficile de remarquer quand une tâche nécessite un autre type de réflexion.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_068",
@@ -21638,7 +22201,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi utrzymać w pamięci kilka możliwych rozwiązań.`,
       pt: `Consegue manter várias soluções possíveis em mente.`,
       fr: `Peut garder plusieurs solutions possibles en tête.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_069",
@@ -21658,7 +22222,8 @@ window.NM_LEARNING_BANK = [
       pl: `Po utknięciu ma trudności ze znalezieniem nowej drogi naprzód.`,
       pt: `Depois de ficar preso, tem mais dificuldade em encontrar uma nova forma de avançar.`,
       fr: `Après être bloqué, a plus de difficulté à trouver une nouvelle solution.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_070",
@@ -21678,7 +22243,8 @@ window.NM_LEARNING_BANK = [
       pl: `Trudniej mu przełączać się z jednego typu zadania na inny.`,
       pt: `Tem mais dificuldade em mudar de um tipo de tarefa para outro.`,
       fr: `Trouve plus difficile de passer d'un type de tâche à un autre.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_071",
@@ -21698,7 +22264,8 @@ window.NM_LEARNING_BANK = [
       pl: `Trudniej mu sięgnąć do wewnętrznej motywacji do nauki.`,
       pt: `Tem mais dificuldade em acessar a motivação interna para aprender.`,
       fr: `Trouve plus difficile d’accéder à la motivation interne pour apprendre.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_072",
@@ -21718,7 +22285,8 @@ window.NM_LEARNING_BANK = [
       pl: `Wysiłek szybko spada, gdy coś nie wychodzi od razu.`,
       pt: `O esforço diminui mais facilmente quando algo não tem sucesso imediato.`,
       fr: `L’effort diminue plus facilement quand quelque chose n’aboutit pas immédiatement.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_073",
@@ -21738,7 +22306,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zazwyczaj wytrzymuje przy zadaniu, nawet gdy jest trudne.`,
       pt: `Geralmente persiste em uma tarefa mesmo quando é difícil.`,
       fr: `Persévère généralement dans une tâche même si elle est difficile.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_074",
@@ -21747,8 +22316,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.3,
     reverse: false,
     text: {
-      hu: `A siker vagy eredmény ígérete sem mindig elég húzóerő számára.`,
-      en: `The promise of success or reward is not always enough to pull effort forward.`,
+      hu: `A siker vagy jutalom ígérete időnként kevés húzóerőt ad számára.`,
+      en: `The promise of success or reward may sometimes provide limited motivation.`,
       de: `Das Versprechen von Erfolg oder Belohnung reicht nicht immer aus, um den Einsatz zu fördern.`,
       it: `La promessa di successo o ricompensa non basta sempre a sostenere lo sforzo.`,
       es: `La promesa de éxito o recompensa no siempre es suficiente para motivar el esfuerzo.`,
@@ -21758,7 +22327,8 @@ window.NM_LEARNING_BANK = [
       pl: `Obietnica sukcesu lub nagrody nie zawsze wystarcza, by podtrzymać wysiłek.`,
       pt: `A promessa de sucesso ou recompensa nem sempre é suficiente para manter o esforço.`,
       fr: `La promesse de réussite ou de récompense ne suffit pas toujours à maintenir l’effort.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_075",
@@ -21778,7 +22348,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może zbyt wcześnie rezygnować z trudniejszych zadań.`,
       pt: `Pode desistir cedo demais em tarefas mais difíceis.`,
       fr: `Peut avoir tendance à abandonner trop tôt face à des tâches difficiles.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_076",
@@ -21798,7 +22369,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może potrzebować więcej zewnętrznych bodźców, aby zacząć zadanie.`,
       pt: `Pode precisar de mais estímulo externo para iniciar uma tarefa.`,
       fr: `Peut avoir besoin de plus de stimulus externes pour commencer une tâche.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_077",
@@ -21818,7 +22390,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma większe trudności z powrotem do działania po porażce lub błędach.`,
       pt: `Tem mais dificuldade para se reengajar após falhas ou erros.`,
       fr: `A plus de difficulté à se remotiver après un échec ou une erreur.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_078",
@@ -21827,8 +22400,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.2,
     reverse: true,
     text: {
-      hu: `A célok többnyire segítenek neki fenntartani az erőfeszítését.`,
-      en: `Goals usually help maintain effort.`,
+      hu: `A célok többnyire segítenek neki fenntartani erőfeszítését feladat közben.`,
+      en: `Goals usually help maintain effort during tasks.`,
       de: `Ziele helfen meist, den Einsatz aufrechtzuerhalten.`,
       it: `Gli obiettivi di solito aiutano a mantenere lo sforzo.`,
       es: `Las metas suelen ayudar a mantener el esfuerzo.`,
@@ -21838,7 +22411,8 @@ window.NM_LEARNING_BANK = [
       pl: `Cele zwykle pomagają utrzymać wysiłek.`,
       pt: `Metas geralmente ajudam a manter o esforço.`,
       fr: `Les objectifs aident généralement à maintenir l’effort.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_079",
@@ -21858,7 +22432,8 @@ window.NM_LEARNING_BANK = [
       pl: `Gdy jest zmęczony, wytrwałość może szybko spadać.`,
       pt: `Quando está cansado, a persistência pode cair especialmente rápido.`,
       fr: `Lorsque fatigué, la persévérance peut chuter particulièrement vite.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_080",
@@ -21878,7 +22453,8 @@ window.NM_LEARNING_BANK = [
       pl: `Podchodzi do trudniejszych zadań z mniejszą chęcią.`,
       pt: `Enfrenta tarefas mais difíceis com menos disposição.`,
       fr: `Aborde les tâches plus difficiles avec moins de volonté.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_081",
@@ -21887,8 +22463,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Nem mindig veszi észre időben a saját hibáit.`,
-      en: `Does not always notice own mistakes in time.`,
+      hu: `Saját hibáit időnként későn veszi észre feladatmegoldás közben.`,
+      en: `May notice own mistakes late while solving tasks.`,
       de: `Bemerkt eigene Fehler nicht immer rechtzeitig.`,
       it: `Non nota sempre i propri errori in tempo.`,
       es: `No siempre se da cuenta de sus propios errores a tiempo.`,
@@ -21898,7 +22474,8 @@ window.NM_LEARNING_BANK = [
       pl: `Nie zawsze zauważa własne błędy na czas.`,
       pt: `Nem sempre percebe os próprios erros a tempo.`,
       fr: `Ne remarque pas toujours ses erreurs à temps.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_082",
@@ -21918,7 +22495,8 @@ window.NM_LEARNING_BANK = [
       pl: `Sprawdza wykonaną pracę rzadziej, aby wychwycić błędy.`,
       pt: `Confere o trabalho com menos consistência para detectar erros.`,
       fr: `Relit moins systématiquement son travail pour repérer les erreurs.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_083",
@@ -21938,7 +22516,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zazwyczaj potrafi samodzielnie przejrzeć i poprawić swoją pracę.`,
       pt: `Geralmente consegue revisar e corrigir seu próprio trabalho.`,
       fr: `Peut généralement revoir et corriger son propre travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_084",
@@ -21958,7 +22537,8 @@ window.NM_LEARNING_BANK = [
       pl: `Błędy mogą pozostać w pracy z powodu nieuwagi.`,
       pt: `Erros podem permanecer no trabalho devido à falta de atenção.`,
       fr: `Des erreurs peuvent rester dans le travail par manque d’attention.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_085",
@@ -21978,7 +22558,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma większe trudności w ocenianiu, jak dokładna lub kompletna jest praca.`,
       pt: `Tem mais dificuldade para julgar a precisão ou completude do trabalho.`,
       fr: `A plus de difficulté à juger de l’exactitude ou de l’exhaustivité du travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_086",
@@ -21987,8 +22568,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Kapott visszajelzést nem mindig épít be a következő próbálkozásba.`,
-      en: `Does not always integrate feedback into the next attempt.`,
+      hu: `Kapott visszajelzést időnként nehezen épít be a következő próbálkozásba.`,
+      en: `May have difficulty integrating feedback into the next attempt.`,
       de: `Nimmt nicht immer Rückmeldungen in den nächsten Versuch auf.`,
       it: `Non sempre integra i feedback nel tentativo successivo.`,
       es: `No siempre incorpora la retroalimentación en el siguiente intento.`,
@@ -21998,7 +22579,8 @@ window.NM_LEARNING_BANK = [
       pl: `Nie zawsze wykorzystuje informacje zwrotne przy następnym podejściu.`,
       pt: `Nem sempre integra o feedback na próxima tentativa.`,
       fr: `N’intègre pas toujours les retours dans la tentative suivante.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_087",
@@ -22018,7 +22600,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może oddać pracę, nie zauważając brakujących części.`,
       pt: `Pode entregar o trabalho sem notar partes faltantes.`,
       fr: `Peut rendre un travail sans remarquer les parties manquantes.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_088",
@@ -22038,7 +22621,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zazwyczaj zauważa, kiedy coś trzeba poprawić.`,
       pt: `Normalmente percebe quando algo precisa ser corrigido.`,
       fr: `Remarque généralement quand quelque chose doit être corrigé.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_089",
@@ -22058,7 +22642,8 @@ window.NM_LEARNING_BANK = [
       pl: `Trudniej mu monitorować postęp i dokładność podczas pracy.`,
       pt: `Tem mais dificuldade para monitorar o progresso e a precisão enquanto trabalha.`,
       fr: `A plus de difficulté à suivre la progression et l’exactitude pendant le travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_090",
@@ -22078,7 +22663,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może powtarzać ten sam błąd wielokrotnie.`,
       pt: `Pode repetir o mesmo erro várias vezes.`,
       fr: `Peut répéter la même erreur plusieurs fois.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_091",
@@ -22098,7 +22684,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma większe trudności z wyborem skutecznej strategii uczenia się.`,
       pt: `Tem mais dificuldade em escolher uma estratégia de aprendizagem eficaz.`,
       fr: `A plus de difficultés à choisir une stratégie d'apprentissage efficace.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_092",
@@ -22118,7 +22705,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może skłaniać się do biernego ponownego czytania zamiast aktywnego przetwarzania materiału.`,
       pt: `Pode tender a reler passivamente em vez de processar ativamente o material.`,
       fr: `Peut avoir tendance à relire passivement plutôt qu'à traiter activement le matériel.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_093",
@@ -22138,7 +22726,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zwykle potrafi wybrać metodę uczenia się odpowiednią do zadania.`,
       pt: `Geralmente consegue escolher um método de aprendizagem adequado à tarefa.`,
       fr: `Peut généralement choisir une méthode d'apprentissage adaptée à la tâche.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_094",
@@ -22158,7 +22747,8 @@ window.NM_LEARNING_BANK = [
       pl: `Trudniej mu opracować strategie wspierające pamięć.`,
       pt: `Tem mais dificuldade em criar estratégias que ajudem a lembrar.`,
       fr: `A plus de difficultés à élaborer des stratégies qui soutiennent la mémorisation.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_095",
@@ -22178,7 +22768,8 @@ window.NM_LEARNING_BANK = [
       pl: `W nauce widoczny jest mniejszy system celowego powtórzenia.`,
       pt: `A aprendizagem mostra menos um sistema deliberado de revisão.`,
       fr: `L'apprentissage montre moins un système délibéré de révision.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_096",
@@ -22187,8 +22778,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Ugyanazt a módszert próbálhatja minden helyzetben használni, akkor is, ha az nem elég hatékony.`,
-      en: `May try to use the same method in every situation even when it is not effective enough.`,
+      hu: `Ugyanazt a módszert többféle helyzetben is próbálhatja használni, kevés igazítással.`,
+      en: `May try to use the same method across different situations with little adjustment.`,
       de: `Versucht möglicherweise, in jeder Situation dieselbe Methode anzuwenden, auch wenn sie nicht effektiv genug ist.`,
       it: `Potrebbe provare a usare lo stesso metodo in ogni situazione anche quando non è abbastanza efficace.`,
       es: `Puede intentar usar el mismo método en todas las situaciones, incluso cuando no es lo suficientemente efectivo.`,
@@ -22198,7 +22789,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może próbować stosować tę samą metodę w każdej sytuacji, nawet gdy nie jest ona wystarczająco skuteczna.`,
       pt: `Pode tentar usar o mesmo método em todas as situações, mesmo quando não é suficientemente eficaz.`,
       fr: `Peut essayer d'utiliser la même méthode dans chaque situation, même si elle n'est pas assez efficace.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_097",
@@ -22218,7 +22810,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma większe trudności z wyjaśnieniem przyswojonego materiału własnymi słowami.`,
       pt: `Tem mais dificuldade em explicar o material aprendido com suas próprias palavras.`,
       fr: `A plus de difficultés à expliquer le matériel appris avec ses propres mots.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_098",
@@ -22238,7 +22831,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi elastycznie zmieniać metody nauki w razie potrzeby.`,
       pt: `Consegue mudar os métodos de aprendizagem de forma flexível quando necessário.`,
       fr: `Peut changer les méthodes d'apprentissage de façon flexible si nécessaire.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_099",
@@ -22258,7 +22852,8 @@ window.NM_LEARNING_BANK = [
       pl: `Łatwiej pozostaje na powierzchownym poziomie przetwarzania zamiast na głębszym zrozumieniu.`,
       pt: `Fica com mais facilidade em um nível superficial de processamento em vez de um entendimento mais profundo.`,
       fr: `Reste plus facilement à un niveau superficiel de traitement plutôt qu'à une compréhension approfondie.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_100",
@@ -22278,7 +22873,8 @@ window.NM_LEARNING_BANK = [
       pl: `Rzadziej korzysta z metod wymagających prawdziwego przypominania sobie.`,
       pt: `Usa menos frequentemente métodos que exigem verdadeira recuperação da informação.`,
       fr: `Utilise moins souvent des méthodes nécessitant une récupération réelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_101",
@@ -22298,7 +22894,8 @@ window.NM_LEARNING_BANK = [
       pl: `Hałas lub ruch w tle mogą znacznie utrudniać naukę.`,
       pt: `O ruído ou movimento de fundo podem tornar a aprendizagem especialmente difícil.`,
       fr: `Le bruit ou les mouvements en arrière-plan peuvent particulièrement gêner l'apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_102",
@@ -22318,7 +22915,8 @@ window.NM_LEARNING_BANK = [
       pl: `Wydajność zależy w dużym stopniu od tego, jak spokojne lub uporządkowane jest otoczenie.`,
       pt: `O desempenho depende muito de quão calmo ou organizado está o ambiente.`,
       fr: `Les performances dépendent fortement du calme ou de l'organisation de l'environnement.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_103",
@@ -22338,7 +22936,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi stosunkowo dobrze uczyć się w różnych środowiskach.`,
       pt: `Consegue aprender relativamente bem em diferentes ambientes.`,
       fr: `Peut apprendre relativement bien dans différents environnements.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_104",
@@ -22358,7 +22957,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zatłoczenie wizualne również łatwo rozprasza uwagę.`,
       pt: `A desordem visual também distrai facilmente a atenção.`,
       fr: `Le désordre visuel distrait également facilement l'attention.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_105",
@@ -22378,7 +22978,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrzebuje więcej czasu, aby przystosować się do nauki w nowym środowisku lub otoczeniu.`,
       pt: `Demora mais para se adaptar ao aprendizado em um ambiente ou configuração novos.`,
       fr: `Met plus de temps à se stabiliser pour apprendre dans un nouvel environnement ou cadre.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_106",
@@ -22398,7 +22999,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może potrzebować więcej wsparcia środowiskowego, aby dobrze funkcjonować.`,
       pt: `Pode precisar de mais apoios ambientais para funcionar bem.`,
       fr: `Peut nécessiter plus de soutiens environnementaux pour bien fonctionner.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_107",
@@ -22418,7 +23020,8 @@ window.NM_LEARNING_BANK = [
       pl: `Uwaga łatwiej rozprasza się w grupach lub zatłoczonych miejscach.`,
       pt: `A atenção é mais facilmente interrompida em ambientes de grupo ou movimentados.`,
       fr: `L'attention se dégrade plus facilement en groupe ou dans des environnements fréquentés.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_108",
@@ -22438,7 +23041,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zazwyczaj potrafi działać stosunkowo dobrze nawet przy pewnych rozproszeniach.`,
       pt: `Normalmente consegue desempenhar-se relativamente bem mesmo com algum ambiente distrativo.`,
       fr: `Peut généralement bien fonctionner même avec un certain niveau de distractions.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_109",
@@ -22458,7 +23062,8 @@ window.NM_LEARNING_BANK = [
       pl: `Cyfrowe urządzenia lub powiadomienia szczególnie łatwo przerywają uwagę.`,
       pt: `Dispositivos digitais ou notificações interrompem especialmente facilmente a atenção.`,
       fr: `Les appareils numériques ou les notifications interrompent particulièrement facilement l'attention.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_110",
@@ -22478,7 +23083,8 @@ window.NM_LEARNING_BANK = [
       pl: `Wydajność może silnie zależeć od kontekstu i warunków środowiskowych.`,
       pt: `O desempenho pode depender fortemente do contexto e das condições ambientais.`,
       fr: `Les performances peuvent dépendre fortement du contexte et des conditions environnementales.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_111",
@@ -22498,7 +23104,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może mieć trudności z pokazaniem faktycznej wiedzy.`,
       pt: `Pode ter dificuldade para mostrar o que realmente sabe.`,
       fr: `Peut avoir du mal à montrer ce qu'il sait réellement.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_112",
@@ -22518,7 +23125,8 @@ window.NM_LEARNING_BANK = [
       pl: `Trudniej mu organizować myśli na piśmie.`,
       pt: `Acha mais difícil organizar os pensamentos por escrito.`,
       fr: `A plus de difficulté à organiser ses pensées à l'écrit.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_113",
@@ -22527,8 +23135,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.2,
     reverse: true,
     text: {
-      hu: `Általában képes érthetően kifejezni a tudását.`,
-      en: `Can generally express knowledge clearly.`,
+      hu: `Általában képes érthetően kifejezni a tudását támogató környezetben.`,
+      en: `Can generally express knowledge clearly in a supportive setting.`,
       de: `Kann Wissen meist klar ausdrücken.`,
       it: `Generalmente riesce a esprimere chiaramente le conoscenze.`,
       es: `Generalmente puede expresar el conocimiento claramente.`,
@@ -22538,7 +23146,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zazwyczaj potrafi jasno wyrazić wiedzę.`,
       pt: `Geralmente consegue expressar o conhecimento claramente.`,
       fr: `Peut généralement exprimer clairement ses connaissances.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_114",
@@ -22558,7 +23167,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma większe trudności z logicznym budowaniem odpowiedzi.`,
       pt: `Tem mais dificuldade em construir uma resposta de forma lógica.`,
       fr: `A plus de difficulté à construire une réponse de façon logique.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_115",
@@ -22578,7 +23188,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może wydawać się, że wie więcej, niż pokazuje wykonanie.`,
       pt: `Pode parecer que sabe mais do que demonstra no desempenho.`,
       fr: `Peut sembler en savoir plus que ce qui est montré par sa performance.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_116",
@@ -22598,7 +23209,8 @@ window.NM_LEARNING_BANK = [
       pl: `Wykonanie łatwiej się pogarsza pod presją, nawet jeśli materiał jest znany.`,
       pt: `O desempenho se deteriora mais facilmente sob pressão, mesmo quando o material é conhecido.`,
       fr: `La performance se dégrade plus facilement sous pression même si le contenu est connu.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_117",
@@ -22618,7 +23230,8 @@ window.NM_LEARNING_BANK = [
       pl: `Odpowiedzi mogą być krótsze lub mniej kompletne niż sugeruje faktyczna wiedza.`,
       pt: `As respostas podem ser mais curtas ou incompletas do que o conhecimento real sugere.`,
       fr: `Les réponses peuvent être plus courtes ou moins complètes que ce que suggère la connaissance réelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_118",
@@ -22638,7 +23251,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zazwyczaj potrafi zamienić wiedzę w użyteczne odpowiedzi lub rozwiązania.`,
       pt: `Geralmente consegue transformar o conhecimento em respostas ou soluções úteis.`,
       fr: `Parvient habituellement à transformer ses connaissances en réponses ou solutions utilisables.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_119",
@@ -22658,7 +23272,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może też potrzebować więcej czasu ustnie, by dobrze sformułować myśli.`,
       pt: `Pode também precisar de mais tempo para formular bem os pensamentos verbalmente.`,
       fr: `Peut aussi avoir besoin de plus de temps pour bien formuler ses pensées à l'oral.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_120",
@@ -22678,7 +23293,8 @@ window.NM_LEARNING_BANK = [
       pl: `Organizacja myśli w formę odpowiedzi może wymagać dodatkowego wysiłku.`,
       pt: `Organizar os pensamentos em um formato de resposta pode requerer esforço extra.`,
       fr: `Organiser les pensées en une forme exploitable peut demander un effort supplémentaire.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_121",
@@ -22698,7 +23314,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z utrzymaniem uwagi podczas nauki.`,
       pt: `Tem dificuldade em manter a atenção durante a aprendizagem.`,
       fr: `A des difficultés à maintenir son attention pendant l'apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_122",
@@ -22718,7 +23335,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z utrzymaniem uwagi w szkole lub w pracy.`,
       pt: `Tem dificuldade em manter a atenção na escola ou no trabalho.`,
       fr: `A des difficultés à maintenir son attention à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_123",
@@ -22738,7 +23356,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z utrzymaniem uwagi podczas zadań domowych.`,
       pt: `Tem dificuldade em manter a atenção durante as tarefas em casa.`,
       fr: `A des difficultés à maintenir son attention pendant les tâches à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_124",
@@ -22758,7 +23377,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z utrzymaniem uwagi podczas nauki online.`,
       pt: `Tem dificuldade em manter a atenção durante o aprendizado online.`,
       fr: `A des difficultés à maintenir son attention lors de l'apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_125",
@@ -22778,7 +23398,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z utrzymaniem uwagi pod presją czasu.`,
       pt: `Tem dificuldade em manter a atenção sob pressão de tempo.`,
       fr: `A des difficultés à maintenir son attention sous pression temporelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_126",
@@ -22798,7 +23419,8 @@ window.NM_LEARNING_BANK = [
       pl: `Łatwo rozprasza się bodźcami zewnętrznymi podczas nauki.`,
       pt: `Distrai-se facilmente com estímulos externos durante a aprendizagem.`,
       fr: `Se laisse facilement distraire par des stimuli externes pendant l'apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_127",
@@ -22818,7 +23440,8 @@ window.NM_LEARNING_BANK = [
       pl: `Łatwo rozprasza się bodźcami zewnętrznymi w szkole lub pracy.`,
       pt: `Distrai-se facilmente com estímulos externos na escola ou no trabalho.`,
       fr: `Se laisse facilement distraire par des stimuli externes à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_128",
@@ -22838,7 +23461,8 @@ window.NM_LEARNING_BANK = [
       pl: `Łatwo rozprasza się bodźcami zewnętrznymi podczas zadań domowych.`,
       pt: `Distrai-se facilmente com estímulos externos durante as tarefas em casa.`,
       fr: `Se laisse facilement distraire par des stimuli externes pendant les tâches à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_129",
@@ -22858,7 +23482,8 @@ window.NM_LEARNING_BANK = [
       pl: `Łatwo rozprasza się bodźcami zewnętrznymi podczas nauki online.`,
       pt: `Distrai-se facilmente com estímulos externos durante o aprendizado online.`,
       fr: `Se laisse facilement distraire par des stimuli externes lors de l'apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_130",
@@ -22878,7 +23503,8 @@ window.NM_LEARNING_BANK = [
       pl: `Łatwo rozprasza się bodźcami zewnętrznymi pod presją czasu.`,
       pt: `Distrai-se facilmente com estímulos externos sob pressão de tempo.`,
       fr: `Se laisse facilement distraire par des stimuli externes sous pression temporelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_131",
@@ -22898,7 +23524,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi stosunkowo stabilnie utrzymywać uwagę podczas nauki.`,
       pt: `Consegue manter a atenção relativamente estável durante a aprendizagem.`,
       fr: `Peut maintenir son attention de manière relativement stable pendant l'apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_132",
@@ -22918,7 +23545,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi stosunkowo stabilnie utrzymywać uwagę w sytuacjach szkolnych lub zawodowych.`,
       pt: `Consegue manter a atenção relativamente estável em situações escolares ou de trabalho.`,
       fr: `Peut maintenir son attention de manière relativement stable dans les situations scolaires ou professionnelles.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_133",
@@ -22938,7 +23566,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi stosunkowo stabilnie utrzymywać uwagę podczas wykonywania zadań domowych.`,
       pt: `Consegue manter a atenção relativamente estável durante as tarefas domésticas.`,
       fr: `Peut maintenir son attention de manière relativement stable pendant les tâches à domicile.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_134",
@@ -22958,7 +23587,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi stosunkowo stabilnie utrzymywać uwagę podczas nauki online.`,
       pt: `Consegue manter a atenção relativamente estável durante a aprendizagem online.`,
       fr: `Peut maintenir son attention de manière relativement stable pendant l'apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_135",
@@ -22978,7 +23608,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi stosunkowo stabilnie utrzymywać uwagę pod presją czasu.`,
       pt: `Consegue manter a atenção relativamente estável sob pressão de tempo.`,
       fr: `Peut maintenir son attention de manière relativement stable sous pression temporelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_136",
@@ -22998,7 +23629,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z powrotem do zadania po przerwaniu podczas nauki.`,
       pt: `Tem dificuldade em retomar uma tarefa após uma interrupção durante a aprendizagem.`,
       fr: `A des difficultés à reprendre une tâche après une interruption pendant l'apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_137",
@@ -23018,7 +23650,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z powrotem do zadania po przerwaniu w sytuacjach szkolnych lub zawodowych.`,
       pt: `Tem dificuldade em retomar uma tarefa após uma interrupção em situações escolares ou de trabalho.`,
       fr: `A des difficultés à reprendre une tâche après une interruption dans des situations scolaires ou professionnelles.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_138",
@@ -23038,7 +23671,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z powrotem do zadania po przerwaniu podczas wykonywania zadań domowych.`,
       pt: `Tem dificuldade em retomar uma tarefa após uma interrupção durante as tarefas domésticas.`,
       fr: `A des difficultés à reprendre une tâche après une interruption pendant les tâches à domicile.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_139",
@@ -23058,7 +23692,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z powrotem do zadania po przerwaniu podczas nauki online.`,
       pt: `Tem dificuldade em retomar uma tarefa após uma interrupção durante a aprendizagem online.`,
       fr: `A des difficultés à reprendre une tâche après une interruption pendant l'apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_140",
@@ -23078,7 +23713,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z powrotem do zadania po przerwaniu pod presją czasu.`,
       pt: `Tem dificuldade em retomar uma tarefa após uma interrupção sob pressão de tempo.`,
       fr: `A des difficultés à reprendre une tâche après une interruption sous pression temporelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_141",
@@ -23098,7 +23734,8 @@ window.NM_LEARNING_BANK = [
       pl: `Własne myśli łatwo odwracają uwagę podczas nauki.`,
       pt: `Os próprios pensamentos desviam facilmente o foco durante o aprendizado.`,
       fr: `Les propres pensées éloignent facilement l'attention pendant l'apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_142",
@@ -23118,7 +23755,8 @@ window.NM_LEARNING_BANK = [
       pl: `Własne myśli łatwo odwracają uwagę w sytuacjach szkolnych lub zawodowych.`,
       pt: `Os próprios pensamentos desviam facilmente o foco em situações escolares ou de trabalho.`,
       fr: `Les propres pensées éloignent facilement l'attention en milieu scolaire ou professionnel.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_143",
@@ -23138,7 +23776,8 @@ window.NM_LEARNING_BANK = [
       pl: `Własne myśli łatwo odwracają uwagę podczas zadań domowych.`,
       pt: `Os próprios pensamentos desviam facilmente o foco durante tarefas em casa.`,
       fr: `Les propres pensées éloignent facilement l'attention pendant les tâches à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_144",
@@ -23158,7 +23797,8 @@ window.NM_LEARNING_BANK = [
       pl: `Własne myśli łatwo odwracają uwagę podczas nauki online.`,
       pt: `Os próprios pensamentos desviam facilmente o foco durante o aprendizado online.`,
       fr: `Les propres pensées éloignent facilement l'attention pendant l'apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_145",
@@ -23178,7 +23818,8 @@ window.NM_LEARNING_BANK = [
       pl: `Własne myśli łatwo odwracają uwagę pod presją czasu.`,
       pt: `Os próprios pensamentos desviam facilmente o foco sob pressão de tempo.`,
       fr: `Les propres pensées éloignent facilement l'attention sous pression temporelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_146",
@@ -23198,7 +23839,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z jednoczesnym utrzymaniem w pamięci wielu informacji podczas nauki.`,
       pt: `Tem dificuldade em manter várias informações na mente ao mesmo tempo durante o aprendizado.`,
       fr: `A des difficultés à garder plusieurs informations en tête à la fois pendant l'apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_147",
@@ -23218,7 +23860,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z jednoczesnym utrzymaniem w pamięci wielu informacji w sytuacjach szkolnych lub zawodowych.`,
       pt: `Tem dificuldade em manter várias informações na mente ao mesmo tempo em situações escolares ou de trabalho.`,
       fr: `A des difficultés à garder plusieurs informations en tête à la fois en milieu scolaire ou professionnel.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_148",
@@ -23238,7 +23881,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z jednoczesnym utrzymaniem w pamięci wielu informacji podczas zadań domowych.`,
       pt: `Tem dificuldade em manter várias informações na mente ao mesmo tempo durante as tarefas em casa.`,
       fr: `A des difficultés à garder plusieurs informations en tête à la fois pendant les tâches à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_149",
@@ -23258,7 +23902,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z jednoczesnym utrzymaniem w pamięci wielu informacji podczas nauki online.`,
       pt: `Tem dificuldade em manter várias informações na mente ao mesmo tempo durante o aprendizado online.`,
       fr: `A des difficultés à garder plusieurs informations en tête à la fois pendant l'apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_150",
@@ -23278,7 +23923,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z jednoczesnym utrzymaniem w pamięci wielu informacji pod presją czasu.`,
       pt: `Tem dificuldade em manter várias informações na mente ao mesmo tempo sob pressão de tempo.`,
       fr: `A des difficultés à garder plusieurs informations en tête à la fois sous pression temporelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_151",
@@ -23298,7 +23944,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma większe trudności ze stosowaniem się do instrukcji wieloetapowych podczas nauki.`,
       pt: `Tem mais dificuldade em seguir instruções com vários passos durante a aprendizagem.`,
       fr: `A plus de difficultés à suivre des consignes en plusieurs étapes pendant l'apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_152",
@@ -23318,7 +23965,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma większe trudności ze stosowaniem się do instrukcji wieloetapowych w szkole lub w pracy.`,
       pt: `Tem mais dificuldade em seguir instruções com vários passos em situações escolares ou de trabalho.`,
       fr: `A plus de difficultés à suivre des consignes en plusieurs étapes à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_153",
@@ -23338,7 +23986,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma większe trudności ze stosowaniem się do instrukcji wieloetapowych podczas domowych obowiązków.`,
       pt: `Tem mais dificuldade em seguir instruções com vários passos durante tarefas domésticas.`,
       fr: `A plus de difficultés à suivre des consignes en plusieurs étapes lors des tâches à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_154",
@@ -23358,7 +24007,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma większe trudności ze stosowaniem się do instrukcji wieloetapowych podczas nauki online.`,
       pt: `Tem mais dificuldade em seguir instruções com vários passos durante o aprendizado online.`,
       fr: `A plus de difficultés à suivre des consignes en plusieurs étapes lors de l'apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_155",
@@ -23378,7 +24028,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma większe trudności ze stosowaniem się do instrukcji wieloetapowych pod presją czasu.`,
       pt: `Tem mais dificuldade em seguir instruções com vários passos sob pressão de tempo.`,
       fr: `A plus de difficultés à suivre des consignes en plusieurs étapes sous pression temporelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_156",
@@ -23398,7 +24049,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zazwyczaj potrafi jednocześnie pamiętać kilka szczegółów podczas nauki.`,
       pt: `Geralmente consegue manter vários detalhes na mente ao mesmo tempo durante a aprendizagem.`,
       fr: `Peut généralement garder plusieurs détails en tête à la fois pendant l'apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_157",
@@ -23418,7 +24070,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zazwyczaj potrafi jednocześnie pamiętać kilka szczegółów w szkole lub w pracy.`,
       pt: `Geralmente consegue manter vários detalhes na mente ao mesmo tempo em situações escolares ou de trabalho.`,
       fr: `Peut généralement garder plusieurs détails en tête à la fois à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_158",
@@ -23438,7 +24091,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zazwyczaj potrafi jednocześnie pamiętać kilka szczegółów podczas domowych obowiązków.`,
       pt: `Geralmente consegue manter vários detalhes na mente ao mesmo tempo durante tarefas domésticas.`,
       fr: `Peut généralement garder plusieurs détails en tête à la fois lors des tâches à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_159",
@@ -23458,7 +24112,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zazwyczaj potrafi jednocześnie pamiętać kilka szczegółów podczas nauki online.`,
       pt: `Geralmente consegue manter vários detalhes na mente ao mesmo tempo durante o aprendizado online.`,
       fr: `Peut généralement garder plusieurs détails en tête à la fois lors de l'apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_160",
@@ -23478,7 +24133,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zazwyczaj potrafi jednocześnie pamiętać kilka szczegółów pod presją czasu.`,
       pt: `Geralmente consegue manter vários detalhes na mente ao mesmo tempo sob pressão de tempo.`,
       fr: `Peut généralement garder plusieurs détails en tête à la fois sous pression temporelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_161",
@@ -23498,7 +24154,8 @@ window.NM_LEARNING_BANK = [
       pl: `Łatwo traci orientację, gdzie są rzeczy podczas nauki.`,
       pt: `Perde facilmente o rastro de onde estão as coisas durante o aprendizado.`,
       fr: `Perd facilement la notion de l’endroit où se trouvent les choses lors de l’apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_162",
@@ -23518,7 +24175,8 @@ window.NM_LEARNING_BANK = [
       pl: `Łatwo traci orientację, gdzie są rzeczy w szkole lub w pracy.`,
       pt: `Perde facilmente o rastro de onde estão as coisas em situações escolares ou de trabalho.`,
       fr: `Perd facilement la notion de l’endroit où se trouvent les choses en milieu scolaire ou professionnel.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_163",
@@ -23538,7 +24196,8 @@ window.NM_LEARNING_BANK = [
       pl: `Łatwo traci orientację, gdzie są rzeczy podczas wykonywania obowiązków domowych.`,
       pt: `Perde facilmente o rastro de onde estão as coisas durante as tarefas domésticas.`,
       fr: `Perd facilement la notion de l’endroit où se trouvent les choses lors des tâches ménagères.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_164",
@@ -23558,7 +24217,8 @@ window.NM_LEARNING_BANK = [
       pl: `Łatwo traci orientację, gdzie są rzeczy podczas nauki online.`,
       pt: `Perde facilmente o rastro de onde estão as coisas durante o aprendizado online.`,
       fr: `Perd facilement la notion de l’endroit où se trouvent les choses lors de l’apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_165",
@@ -23578,7 +24238,8 @@ window.NM_LEARNING_BANK = [
       pl: `Łatwo traci orientację, gdzie są rzeczy pod presją czasu.`,
       pt: `Perde facilmente o rastro de onde estão as coisas sob pressão de tempo.`,
       fr: `Perd facilement la notion de l’endroit où se trouvent les choses sous pression de temps.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_166",
@@ -23598,7 +24259,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z mentalnym aktualizowaniem informacji podczas nauki.`,
       pt: `Tem dificuldade em atualizar mentalmente as informações enquanto trabalha durante o aprendizado.`,
       fr: `A des difficultés à actualiser mentalement les informations lors du travail d’apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_167",
@@ -23618,7 +24280,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z mentalnym aktualizowaniem informacji podczas pracy w szkole lub pracy.`,
       pt: `Tem dificuldade em atualizar mentalmente as informações enquanto trabalha em situações escolares ou de trabalho.`,
       fr: `A des difficultés à actualiser mentalement les informations lors du travail en milieu scolaire ou professionnel.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_168",
@@ -23638,7 +24301,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z mentalnym aktualizowaniem informacji podczas wykonywania obowiązków domowych.`,
       pt: `Tem dificuldade em atualizar mentalmente as informações enquanto trabalha durante as tarefas domésticas.`,
       fr: `A des difficultés à actualiser mentalement les informations lors des tâches ménagères.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_169",
@@ -23658,7 +24322,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z mentalnym aktualizowaniem informacji podczas nauki online.`,
       pt: `Tem dificuldade em atualizar mentalmente as informações enquanto trabalha durante o aprendizado online.`,
       fr: `A des difficultés à actualiser mentalement les informations lors de l’apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_170",
@@ -23678,7 +24343,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z mentalnym aktualizowaniem informacji pod presją czasu.`,
       pt: `Tem dificuldade em atualizar mentalmente as informações enquanto trabalha sob pressão de tempo.`,
       fr: `A des difficultés à actualiser mentalement les informations sous pression de temps.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_171",
@@ -23698,7 +24364,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrzebuje więcej czasu na przetwarzanie informacji podczas nauki.`,
       pt: `Precisa de mais tempo para processar informações durante a aprendizagem.`,
       fr: `A besoin de plus de temps pour traiter les informations lors de l’apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_172",
@@ -23718,7 +24385,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrzebuje więcej czasu na przetwarzanie informacji w szkole lub w pracy.`,
       pt: `Precisa de mais tempo para processar informações em situações escolares ou de trabalho.`,
       fr: `A besoin de plus de temps pour traiter les informations à l’école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_173",
@@ -23738,7 +24406,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrzebuje więcej czasu na przetwarzanie informacji podczas zadań domowych.`,
       pt: `Precisa de mais tempo para processar informações nas tarefas de casa.`,
       fr: `A besoin de plus de temps pour traiter les informations lors des tâches à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_174",
@@ -23758,7 +24427,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrzebuje więcej czasu na przetwarzanie informacji podczas nauki online.`,
       pt: `Precisa de mais tempo para processar informações durante o aprendizado online.`,
       fr: `A besoin de plus de temps pour traiter les informations lors de l’apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_175",
@@ -23778,7 +24448,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrzebuje więcej czasu na przetwarzanie informacji pod presją czasu.`,
       pt: `Precisa de mais tempo para processar informações sob pressão de tempo.`,
       fr: `A besoin de plus de temps pour traiter les informations sous pression du temps.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_176",
@@ -23798,7 +24469,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrzebuje więcej czasu, zanim odpowie podczas nauki.`,
       pt: `Precisa de mais tempo antes de responder durante a aprendizagem.`,
       fr: `A besoin de plus de temps avant de répondre lors de l’apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_177",
@@ -23818,7 +24490,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrzebuje więcej czasu, zanim odpowie w szkole lub w pracy.`,
       pt: `Precisa de mais tempo antes de responder em situações escolares ou de trabalho.`,
       fr: `A besoin de plus de temps avant de répondre à l’école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_178",
@@ -23838,7 +24511,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrzebuje więcej czasu, zanim odpowie podczas zadań domowych.`,
       pt: `Precisa de mais tempo antes de responder nas tarefas de casa.`,
       fr: `A besoin de plus de temps avant de répondre lors des tâches à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_179",
@@ -23858,7 +24532,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrzebuje więcej czasu, zanim odpowie podczas nauki online.`,
       pt: `Precisa de mais tempo antes de responder durante o aprendizado online.`,
       fr: `A besoin de plus de temps avant de répondre lors de l’apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_180",
@@ -23878,7 +24553,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrzebuje więcej czasu, zanim odpowie pod presją czasu.`,
       pt: `Precisa de mais tempo antes de responder sob pressão de tempo.`,
       fr: `A besoin de plus de temps avant de répondre sous pression du temps.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_181",
@@ -23898,7 +24574,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi stosunkowo szybko przyswajać nowe informacje podczas nauki.`,
       pt: `Consegue absorver novas informações relativamente rápido durante o aprendizado.`,
       fr: `Peut assimiler relativement rapidement de nouvelles informations lors de l’apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_182",
@@ -23918,7 +24595,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi stosunkowo szybko przyswajać nowe informacje w sytuacjach szkolnych lub zawodowych.`,
       pt: `Consegue absorver novas informações relativamente rápido em situações escolares ou de trabalho.`,
       fr: `Peut assimiler relativement rapidement de nouvelles informations en situation scolaire ou professionnelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_183",
@@ -23938,7 +24616,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi stosunkowo szybko przyswajać nowe informacje podczas zadań domowych.`,
       pt: `Consegue absorver novas informações relativamente rápido durante as tarefas domésticas.`,
       fr: `Peut assimiler relativement rapidement de nouvelles informations lors des tâches à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_184",
@@ -23958,7 +24637,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi stosunkowo szybko przyswajać nowe informacje podczas nauki online.`,
       pt: `Consegue absorver novas informações relativamente rápido durante o aprendizado online.`,
       fr: `Peut assimiler relativement rapidement de nouvelles informations lors de l’apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_185",
@@ -23978,7 +24658,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi stosunkowo szybko przyswajać nowe informacje pod presją czasu.`,
       pt: `Consegue absorver novas informações relativamente rápido sob pressão de tempo.`,
       fr: `Peut assimiler relativement rapidement de nouvelles informations sous pression de temps.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_186",
@@ -23998,7 +24679,8 @@ window.NM_LEARNING_BANK = [
       pl: `Wykonywanie zadań podczas nauki ma tendencję do wolniejszego przebiegu.`,
       pt: `A conclusão das tarefas tende a ser mais lenta durante o aprendizado.`,
       fr: `L’exécution des tâches a tendance à être plus lente lors de l’apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_187",
@@ -24018,7 +24700,8 @@ window.NM_LEARNING_BANK = [
       pl: `Wykonywanie zadań w sytuacjach szkolnych lub zawodowych ma tendencję do wolniejszego przebiegu.`,
       pt: `A conclusão das tarefas tende a ser mais lenta em situações escolares ou de trabalho.`,
       fr: `L’exécution des tâches a tendance à être plus lente en situation scolaire ou professionnelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_188",
@@ -24038,7 +24721,8 @@ window.NM_LEARNING_BANK = [
       pl: `Wykonywanie zadań domowych ma tendencję do wolniejszego przebiegu.`,
       pt: `A conclusão das tarefas tende a ser mais lenta durante as tarefas domésticas.`,
       fr: `L’exécution des tâches a tendance à être plus lente lors des tâches à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_189",
@@ -24058,7 +24742,8 @@ window.NM_LEARNING_BANK = [
       pl: `Wykonywanie zadań podczas nauki online ma tendencję do wolniejszego przebiegu.`,
       pt: `A conclusão das tarefas tende a ser mais lenta durante o aprendizado online.`,
       fr: `L’exécution des tâches a tendance à être plus lente lors de l’apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_190",
@@ -24078,7 +24763,8 @@ window.NM_LEARNING_BANK = [
       pl: `Wykonywanie zadań pod presją czasu ma tendencję do wolniejszego przebiegu.`,
       pt: `A conclusão das tarefas tende a ser mais lenta sob pressão de tempo.`,
       fr: `L’exécution des tâches a tendance à être plus lente sous pression de temps.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_191",
@@ -24098,7 +24784,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może zwalniać jeszcze bardziej pod presją czasu podczas nauki.`,
       pt: `Pode desacelerar ainda mais sob pressão de tempo durante o aprendizado.`,
       fr: `Peut ralentir encore plus sous pression de temps pendant l'apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_192",
@@ -24118,7 +24805,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może zwalniać jeszcze bardziej pod presją czasu w sytuacjach szkolnych lub zawodowych.`,
       pt: `Pode desacelerar ainda mais sob pressão de tempo em situações escolares ou de trabalho.`,
       fr: `Peut ralentir encore plus sous pression de temps à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_193",
@@ -24138,7 +24826,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może zwalniać jeszcze bardziej pod presją czasu podczas zadań domowych.`,
       pt: `Pode desacelerar ainda mais sob pressão de tempo durante as tarefas domésticas.`,
       fr: `Peut ralentir encore plus sous pression de temps lors des tâches à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_194",
@@ -24158,7 +24847,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może zwalniać jeszcze bardziej pod presją czasu podczas nauki online.`,
       pt: `Pode desacelerar ainda mais sob pressão de tempo durante o aprendizado online.`,
       fr: `Peut ralentir encore plus sous pression de temps pendant l'apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_195",
@@ -24178,7 +24868,8 @@ window.NM_LEARNING_BANK = [
       pl: `Może zwalniać jeszcze bardziej pod presją czasu.`,
       pt: `Pode desacelerar ainda mais sob pressão de tempo.`,
       fr: `Peut ralentir encore plus sous pression de temps.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_196",
@@ -24198,7 +24889,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z rozpoczęciem zadań podczas nauki.`,
       pt: `Tem dificuldade para iniciar tarefas durante o aprendizado.`,
       fr: `A des difficultés à commencer les tâches pendant l'apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_197",
@@ -24218,7 +24910,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z rozpoczęciem zadań w szkole lub w pracy.`,
       pt: `Tem dificuldade para iniciar tarefas em situações escolares ou de trabalho.`,
       fr: `A des difficultés à commencer les tâches à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_198",
@@ -24238,7 +24931,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z rozpoczęciem zadań podczas wykonywania obowiązków domowych.`,
       pt: `Tem dificuldade para iniciar tarefas durante as tarefas domésticas.`,
       fr: `A des difficultés à commencer les tâches lors des travaux à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_199",
@@ -24258,7 +24952,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z rozpoczęciem zadań podczas nauki online.`,
       pt: `Tem dificuldade para iniciar tarefas durante o aprendizado online.`,
       fr: `A des difficultés à commencer les tâches pendant l'apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_200",
@@ -24278,7 +24973,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z rozpoczęciem zadań pod presją czasu.`,
       pt: `Tem dificuldade para iniciar tarefas sob pressão de tempo.`,
       fr: `A des difficultés à commencer les tâches sous pression de temps.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_201",
@@ -24287,8 +24983,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Nehézséget okoz számára a tervezés tanulás közben.`,
-      en: `Has difficulty planning during learning.`,
+      hu: `Nehézséget okoz számára a tervezés tanulás közben, főleg összetettebb feladatoknál.`,
+      en: `Has difficulty planning during learning, especially with more complex tasks.`,
       de: `Hat Schwierigkeiten beim Planen während des Lernens.`,
       it: `Ha difficoltà a pianificare durante l'apprendimento.`,
       es: `Tiene dificultades para planificar durante el aprendizaje.`,
@@ -24298,7 +24994,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z planowaniem podczas nauki.`,
       pt: `Tem dificuldade em planejar durante o aprendizado.`,
       fr: `A des difficultés à planifier lors de l'apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_202",
@@ -24318,7 +25015,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z planowaniem w sytuacjach szkolnych lub zawodowych.`,
       pt: `Tem dificuldade em planejar em situações escolares ou de trabalho.`,
       fr: `A des difficultés à planifier en situation scolaire ou professionnelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_203",
@@ -24338,7 +25036,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z planowaniem podczas wykonywania obowiązków domowych.`,
       pt: `Tem dificuldade em planejar durante as tarefas domésticas.`,
       fr: `A des difficultés à planifier lors des tâches à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_204",
@@ -24358,7 +25057,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z planowaniem podczas nauki online.`,
       pt: `Tem dificuldade em planejar durante o aprendizado online.`,
       fr: `A des difficultés à planifier lors de l'apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_205",
@@ -24378,7 +25078,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z planowaniem pod presją czasu.`,
       pt: `Tem dificuldade em planejar sob pressão de tempo.`,
       fr: `A des difficultés à planifier sous pression temporelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_206",
@@ -24398,7 +25099,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zwykle dobrze organizuje zadania podczas nauki.`,
       pt: `Geralmente organiza bem as tarefas durante o aprendizado.`,
       fr: `Organise généralement bien les tâches lors de l'apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_207",
@@ -24418,7 +25120,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zwykle dobrze organizuje zadania w sytuacjach szkolnych lub zawodowych.`,
       pt: `Geralmente organiza bem as tarefas em situações escolares ou de trabalho.`,
       fr: `Organise généralement bien les tâches en situation scolaire ou professionnelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_208",
@@ -24438,7 +25141,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zwykle dobrze organizuje zadania podczas obowiązków domowych.`,
       pt: `Geralmente organiza bem as tarefas durante as tarefas domésticas.`,
       fr: `Organise généralement bien les tâches lors des tâches à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_209",
@@ -24458,7 +25162,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zwykle dobrze organizuje zadania podczas nauki online.`,
       pt: `Geralmente organiza bem as tarefas durante o aprendizado online.`,
       fr: `Organise généralement bien les tâches lors de l'apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_210",
@@ -24478,7 +25183,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zwykle dobrze organizuje zadania pod presją czasu.`,
       pt: `Geralmente organiza bem as tarefas sob pressão de tempo.`,
       fr: `Organise généralement bien les tâches sous pression temporelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_211",
@@ -24498,7 +25204,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z ukończeniem zadania podczas nauki.`,
       pt: `Tem dificuldade em concluir tarefas durante o aprendizado.`,
       fr: `A du mal à terminer les tâches lors de l'apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_212",
@@ -24518,7 +25225,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z ukończeniem zadania w szkole lub pracy.`,
       pt: `Tem dificuldade em concluir tarefas em situações escolares ou de trabalho.`,
       fr: `A du mal à terminer les tâches à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_213",
@@ -24538,7 +25246,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z ukończeniem zadań domowych.`,
       pt: `Tem dificuldade em concluir tarefas domésticas.`,
       fr: `A du mal à terminer les tâches ménagères.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_214",
@@ -24558,7 +25267,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z ukończeniem zadań podczas nauki online.`,
       pt: `Tem dificuldade em concluir tarefas durante o aprendizado online.`,
       fr: `A du mal à terminer les tâches lors de l'apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_215",
@@ -24578,7 +25288,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z ukończeniem zadań pod presją czasu.`,
       pt: `Tem dificuldade em concluir tarefas sob pressão de tempo.`,
       fr: `A du mal à terminer les tâches sous pression temporelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_216",
@@ -24598,7 +25309,8 @@ window.NM_LEARNING_BANK = [
       pl: `Trudno mu podzielić większe zadanie na mniejsze kroki podczas nauki.`,
       pt: `Tem dificuldade em dividir uma tarefa maior em passos menores durante o aprendizado.`,
       fr: `A du mal à décomposer une tâche importante en étapes plus petites lors de l'apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_217",
@@ -24618,7 +25330,8 @@ window.NM_LEARNING_BANK = [
       pl: `Trudno mu podzielić większe zadanie na mniejsze kroki w szkole lub pracy.`,
       pt: `Tem dificuldade em dividir uma tarefa maior em passos menores na escola ou no trabalho.`,
       fr: `A du mal à décomposer une tâche importante en étapes plus petites à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_218",
@@ -24638,7 +25351,8 @@ window.NM_LEARNING_BANK = [
       pl: `Trudno mu podzielić większe zadanie na mniejsze kroki podczas prac domowych.`,
       pt: `Tem dificuldade em dividir uma tarefa maior em passos menores durante as tarefas domésticas.`,
       fr: `A du mal à décomposer une tâche importante en étapes plus petites lors des tâches ménagères.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_219",
@@ -24658,7 +25372,8 @@ window.NM_LEARNING_BANK = [
       pl: `Trudno mu podzielić większe zadanie na mniejsze kroki podczas nauki online.`,
       pt: `Tem dificuldade em dividir uma tarefa maior em passos menores durante o aprendizado online.`,
       fr: `A du mal à décomposer une tâche importante en étapes plus petites lors de l'apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_220",
@@ -24678,7 +25393,8 @@ window.NM_LEARNING_BANK = [
       pl: `Trudno mu podzielić większe zadanie na mniejsze kroki pod presją czasu.`,
       pt: `Tem dificuldade em dividir uma tarefa maior em passos menores sob pressão de tempo.`,
       fr: `A du mal à décomposer une tâche importante en étapes plus petites sous pression temporelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_221",
@@ -24698,7 +25414,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z oszacowaniem, ile czasu zajmie zadanie podczas nauki.`,
       pt: `Tem dificuldade em estimar quanto tempo uma tarefa levará durante o aprendizado.`,
       fr: `A des difficultés à estimer le temps nécessaire pour une tâche lors de l’apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_222",
@@ -24718,7 +25435,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z oszacowaniem, ile czasu zajmie zadanie w sytuacjach szkolnych lub zawodowych.`,
       pt: `Tem dificuldade em estimar quanto tempo uma tarefa levará em situações escolares ou de trabalho.`,
       fr: `A des difficultés à estimer le temps nécessaire pour une tâche en milieu scolaire ou professionnel.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_223",
@@ -24738,7 +25456,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z oszacowaniem, ile czasu zajmie zadanie podczas prac domowych.`,
       pt: `Tem dificuldade em estimar quanto tempo uma tarefa levará durante as tarefas domésticas.`,
       fr: `A des difficultés à estimer le temps nécessaire pour une tâche lors des tâches à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_224",
@@ -24758,7 +25477,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z oszacowaniem, ile czasu zajmie zadanie podczas nauki online.`,
       pt: `Tem dificuldade em estimar quanto tempo uma tarefa levará durante o aprendizado online.`,
       fr: `A des difficultés à estimer le temps nécessaire pour une tâche lors de l’apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_225",
@@ -24778,7 +25498,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z oszacowaniem, ile czasu zajmie zadanie pod presją czasu.`,
       pt: `Tem dificuldade em estimar quanto tempo uma tarefa levará sob pressão de tempo.`,
       fr: `A des difficultés à estimer le temps nécessaire pour une tâche sous pression temporelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_226",
@@ -24798,7 +25519,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma większe trudności z przestrzeganiem terminów i ograniczeń czasowych podczas nauki.`,
       pt: `Tem mais dificuldade em cumprir prazos e limites de tempo durante o aprendizado.`,
       fr: `A plus de difficultés à respecter les délais et les limites de temps lors de l’apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_227",
@@ -24818,7 +25540,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma większe trudności z przestrzeganiem terminów i ograniczeń czasowych w sytuacjach szkolnych lub zawodowych.`,
       pt: `Tem mais dificuldade em cumprir prazos e limites de tempo em situações escolares ou de trabalho.`,
       fr: `A plus de difficultés à respecter les délais et les limites de temps en milieu scolaire ou professionnel.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_228",
@@ -24838,7 +25561,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma większe trudności z przestrzeganiem terminów i ograniczeń czasowych podczas prac domowych.`,
       pt: `Tem mais dificuldade em cumprir prazos e limites de tempo durante as tarefas domésticas.`,
       fr: `A plus de difficultés à respecter les délais et les limites de temps lors des tâches à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_229",
@@ -24858,7 +25582,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma większe trudności z przestrzeganiem terminów i ograniczeń czasowych podczas nauki online.`,
       pt: `Tem mais dificuldade em cumprir prazos e limites de tempo durante o aprendizado online.`,
       fr: `A plus de difficultés à respecter les délais et les limites de temps lors de l’apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_230",
@@ -24878,7 +25603,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma większe trudności z przestrzeganiem terminów i ograniczeń czasowych pod presją czasu.`,
       pt: `Tem mais dificuldade em cumprir prazos e limites de tempo sob pressão de tempo.`,
       fr: `A plus de difficultés à respecter les délais et les limites de temps sous pression temporelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_231",
@@ -24898,7 +25624,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi stosunkowo dobrze zarządzać czasem podczas nauki.`,
       pt: `Consegue estruturar o tempo relativamente bem durante a aprendizagem.`,
       fr: `Parvient à structurer le temps relativement bien pendant l’apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_232",
@@ -24918,7 +25645,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi stosunkowo dobrze zarządzać czasem w sytuacjach szkolnych lub zawodowych.`,
       pt: `Consegue estruturar o tempo relativamente bem em situações de escola ou trabalho.`,
       fr: `Parvient à structurer le temps relativement bien à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_233",
@@ -24938,7 +25666,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi stosunkowo dobrze zarządzać czasem podczas domowych obowiązków.`,
       pt: `Consegue estruturar o tempo relativamente bem durante as tarefas domésticas.`,
       fr: `Parvient à structurer le temps relativement bien pendant les tâches à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_234",
@@ -24958,7 +25687,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi stosunkowo dobrze zarządzać czasem podczas nauki online.`,
       pt: `Consegue estruturar o tempo relativamente bem durante a aprendizagem online.`,
       fr: `Parvient à structurer le temps relativement bien lors de l’apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_235",
@@ -24978,7 +25708,8 @@ window.NM_LEARNING_BANK = [
       pl: `Potrafi stosunkowo dobrze zarządzać czasem pod presją czasu.`,
       pt: `Consegue estruturar o tempo relativamente bem sob pressão de tempo.`,
       fr: `Parvient à structurer le temps relativement bien sous pression.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_236",
@@ -24998,7 +25729,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zaczyna zadania później niż to potrzebne podczas nauki.`,
       pt: `Começa as tarefas mais tarde do que o necessário durante a aprendizagem.`,
       fr: `Commence les tâches plus tard que nécessaire pendant l’apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_237",
@@ -25018,7 +25750,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zaczyna zadania później niż to potrzebne w sytuacjach szkolnych lub zawodowych.`,
       pt: `Começa as tarefas mais tarde do que o necessário em situações de escola ou trabalho.`,
       fr: `Commence les tâches plus tard que nécessaire à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_238",
@@ -25038,7 +25771,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zaczyna zadania później niż to potrzebne podczas domowych obowiązków.`,
       pt: `Começa as tarefas mais tarde do que o necessário durante as tarefas domésticas.`,
       fr: `Commence les tâches plus tard que nécessaire pendant les tâches à la maison.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_239",
@@ -25058,7 +25792,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zaczyna zadania później niż to potrzebne podczas nauki online.`,
       pt: `Começa as tarefas mais tarde do que o necessário durante a aprendizagem online.`,
       fr: `Commence les tâches plus tard que nécessaire lors de l’apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_240",
@@ -25078,7 +25813,8 @@ window.NM_LEARNING_BANK = [
       pl: `Zaczyna zadania później niż to potrzebne pod presją czasu.`,
       pt: `Começa as tarefas mais tarde do que o necessário sob pressão de tempo.`,
       fr: `Commence les tâches plus tard que nécessaire sous pression.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_241",
@@ -25098,7 +25834,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z zarządzaniem czasem podczas wykonywania zadania w nauce.`,
       pt: `Tem dificuldade em controlar o tempo dentro de uma tarefa durante o aprendizado.`,
       fr: `A des difficultés à gérer le temps pour une tâche lors de l'apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_242",
@@ -25118,7 +25855,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z zarządzaniem czasem podczas wykonywania zadania w szkole lub pracy.`,
       pt: `Tem dificuldade em controlar o tempo dentro de uma tarefa na escola ou no trabalho.`,
       fr: `A des difficultés à gérer le temps pour une tâche à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_243",
@@ -25138,7 +25876,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z zarządzaniem czasem podczas wykonywania zadania w pracach domowych.`,
       pt: `Tem dificuldade em controlar o tempo dentro de uma tarefa nas atividades domésticas.`,
       fr: `A des difficultés à gérer le temps pour une tâche lors des tâches ménagères.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_244",
@@ -25158,7 +25897,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z zarządzaniem czasem podczas wykonywania zadania w nauce online.`,
       pt: `Tem dificuldade em controlar o tempo dentro de uma tarefa durante o aprendizado online.`,
       fr: `A des difficultés à gérer le temps pour une tâche lors de l'apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_245",
@@ -25178,7 +25918,8 @@ window.NM_LEARNING_BANK = [
       pl: `Ma trudności z zarządzaniem czasem podczas wykonywania zadania pod presją czasu.`,
       pt: `Tem dificuldade em controlar o tempo dentro de uma tarefa sob pressão de tempo.`,
       fr: `A des difficultés à gérer le temps pour une tâche sous pression temporelle.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_246",
@@ -25187,8 +25928,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Elsőre nem mindig érti meg teljesen a feladatot tanulás közben.`,
-      en: `Does not always fully understand a task the first time during learning.`,
+      hu: `Elsőre gyakran csak részben érti meg a feladatot tanulás közben.`,
+      en: `Often understands a task only partly on the first attempt during learning.`,
       de: `Versteht eine Aufgabe beim ersten Mal beim Lernen nicht immer vollständig.`,
       it: `Non comprende sempre completamente un compito al primo tentativo durante l'apprendimento.`,
       es: `No siempre entiende completamente una tarea la primera vez durante el aprendizaje.`,
@@ -25198,7 +25939,8 @@ window.NM_LEARNING_BANK = [
       pl: `Nie zawsze w pełni rozumie zadanie za pierwszym razem podczas nauki.`,
       pt: `Nem sempre compreende completamente uma tarefa na primeira vez durante o aprendizado.`,
       fr: `Ne comprend pas toujours entièrement une tâche du premier coup lors de l'apprentissage.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_247",
@@ -25207,8 +25949,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Elsőre nem mindig érti meg teljesen a feladatot iskolai vagy munkahelyi helyzetekben.`,
-      en: `Does not always fully understand a task the first time in school or work situations.`,
+      hu: `Elsőre gyakran csak részben érti meg a feladatot iskolai vagy munkahelyi helyzetekben.`,
+      en: `Often understands a task only partly on the first attempt in school or work situations.`,
       de: `Versteht eine Aufgabe beim ersten Mal in der Schule oder bei der Arbeit nicht immer vollständig.`,
       it: `Non comprende sempre completamente un compito al primo tentativo a scuola o sul lavoro.`,
       es: `No siempre entiende completamente una tarea la primera vez en la escuela o el trabajo.`,
@@ -25218,7 +25960,8 @@ window.NM_LEARNING_BANK = [
       pl: `Nie zawsze w pełni rozumie zadanie za pierwszym razem w szkole lub pracy.`,
       pt: `Nem sempre compreende completamente uma tarefa na primeira vez na escola ou no trabalho.`,
       fr: `Ne comprend pas toujours entièrement une tâche du premier coup à l'école ou au travail.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_248",
@@ -25227,8 +25970,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Elsőre nem mindig érti meg teljesen a feladatot otthoni feladatoknál.`,
-      en: `Does not always fully understand a task the first time during home tasks.`,
+      hu: `Elsőre gyakran csak részben érti meg a feladatot otthoni feladatoknál.`,
+      en: `Often understands a task only partly on the first attempt during home tasks.`,
       de: `Versteht eine Aufgabe beim ersten Mal bei Hausarbeiten nicht immer vollständig.`,
       it: `Non comprende sempre completamente un compito al primo tentativo durante le faccende domestiche.`,
       es: `No siempre entiende completamente una tarea la primera vez durante las labores del hogar.`,
@@ -25238,7 +25981,8 @@ window.NM_LEARNING_BANK = [
       pl: `Nie zawsze w pełni rozumie zadanie za pierwszym razem podczas prac domowych.`,
       pt: `Nem sempre compreende completamente uma tarefa na primeira vez nas tarefas domésticas.`,
       fr: `Ne comprend pas toujours entièrement une tâche du premier coup lors des tâches ménagères.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_249",
@@ -25247,8 +25991,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Elsőre nem mindig érti meg teljesen a feladatot online tanulás során.`,
-      en: `Does not always fully understand a task the first time during online learning.`,
+      hu: `Elsőre gyakran csak részben érti meg a feladatot online tanulás során.`,
+      en: `Often understands a task only partly on the first attempt during online learning.`,
       de: `Versteht eine Aufgabe beim ersten Mal beim Online-Lernen nicht immer vollständig.`,
       it: `Non comprende sempre completamente un compito al primo tentativo durante l'apprendimento online.`,
       es: `No siempre entiende completamente una tarea la primera vez durante el aprendizaje en línea.`,
@@ -25258,7 +26002,8 @@ window.NM_LEARNING_BANK = [
       pl: `Nie zawsze w pełni rozumie zadanie za pierwszym razem podczas nauki online.`,
       pt: `Nem sempre compreende completamente uma tarefa na primeira vez durante o aprendizado online.`,
       fr: `Ne comprend pas toujours entièrement une tâche du premier coup lors de l'apprentissage en ligne.`,
-    }
+    },
+    stemKey: ""
   },
   {
     id: "LRN_250",
@@ -25267,8 +26012,8 @@ window.NM_LEARNING_BANK = [
     weight: 1.4,
     reverse: false,
     text: {
-      hu: `Elsőre nem mindig érti meg teljesen a feladatot időnyomás alatt.`,
-      en: `Does not always fully understand a task the first time under time pressure.`,
+      hu: `Elsőre gyakran csak részben érti meg a feladatot időnyomás alatt.`,
+      en: `Often understands a task only partly on the first attempt under time pressure.`,
       de: `Versteht eine Aufgabe beim ersten Mal unter Zeitdruck nicht immer vollständig.`,
       it: `Non comprende sempre completamente un compito al primo tentativo sotto pressione di tempo.`,
       es: `No siempre entiende completamente una tarea la primera vez bajo presión de tiempo.`,
@@ -25278,11 +26023,10 @@ window.NM_LEARNING_BANK = [
       pl: `Nie zawsze w pełni rozumie zadanie za pierwszym razem pod presją czasu.`,
       pt: `Nem sempre compreende completamente uma tarefa na primeira vez sob pressão de tempo.`,
       fr: `Ne comprend pas toujours entièrement une tâche du premier coup sous pression temporelle.`,
-    }
-  },
+    },
+    stemKey: ""
+  }
 ];
-
-
 
 
 window.NM_SPECIFIC_BANK = {
