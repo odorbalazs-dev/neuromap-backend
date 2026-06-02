@@ -12,11 +12,13 @@ import { deliverReportEmailForSession } from "../../services/report-email-delive
 import { retryReportEmailsBatch } from "../../services/report-email-retry.service.js";
 import { generatePdfBuffer } from "../../services/pdf.service.js";
 import {
+  runBankQualityAlertCheck,
   getRecentAdminAlerts,
   runProductionHealthAlertCheck
 } from "../../services/admin-alert.service.js";
 import { buildAdminSessionReportSummary } from "../../services/admin-session-summary.service.js";
 import { buildEngineLiveDecisionAudit } from "../../services/engine-live-audit.service.js";
+import { buildBankQualityAudit } from "../../services/bank-quality-audit.service.js";
 import { buildEmailDeliverabilityMonitor } from "../../services/email-deliverability.service.js";
 import { buildPostPaymentMonitor } from "../../services/post-payment-monitoring.service.js";
 import { env } from "../../config/env.js";
@@ -1839,6 +1841,44 @@ export async function triggerAdminAlertCheck(req, res) {
   }
 }
 
+export async function triggerBankQualityAlertCheck(req, res) {
+  try {
+    const cooldownMinutes = clampNumber(
+      req.query.cooldownMinutes ?? req.body?.cooldownMinutes,
+      30,
+      1,
+      1440
+    );
+
+    const force =
+      String(req.query.force ?? req.body?.force ?? "false").toLowerCase() === "true";
+
+    const strict =
+      String(req.query.strict ?? req.body?.strict ?? "false").toLowerCase() === "true";
+
+    const minLevel = String(
+      req.query.minLevel ?? req.body?.minLevel ?? "review"
+    ).toLowerCase();
+
+    const result =
+      await runBankQualityAlertCheck({
+        cooldownMinutes,
+        force,
+        strict,
+        minLevel
+      });
+
+    return res.status(result.ok === false ? 500 : 200).json(result);
+  } catch (error) {
+    console.error("Admin bank quality alert check error:", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: error.message || "Failed to run bank quality alert check"
+    });
+  }
+}
+
 export async function getEngineAnalytics(req, res) {
   try {
     const limit = clampNumber(req.query.limit, 300, 20, 1000);
@@ -2038,6 +2078,24 @@ export async function getEngineDecisionAudit(req, res) {
     return res.status(500).json({
       ok: false,
       error: error.message || "Failed to run engine decision audit"
+    });
+  }
+}
+
+export async function getBankQualityAudit(req, res) {
+  try {
+    const audit = await buildBankQualityAudit({
+      strict: req.query.strict === "true",
+      includePublic: req.query.public !== "false"
+    });
+
+    return res.status(200).json(audit);
+  } catch (error) {
+    console.error("Admin bank quality audit error:", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: error.message || "Failed to run bank quality audit"
     });
   }
 }

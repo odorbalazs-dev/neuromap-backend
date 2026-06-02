@@ -12,6 +12,10 @@ function round(value, digits = 3) {
   return Number.isFinite(number) ? Number(number.toFixed(digits)) : null;
 }
 
+function ratio(value, total) {
+  return round(Number(value || 0) / Math.max(1, Number(total || 0)));
+}
+
 function countBy(items, getKey) {
   return items.reduce((counts, item) => {
     const key = getKey(item) || "unknown";
@@ -114,6 +118,77 @@ function isActionableIssueLevel(level) {
 
 function isActionableReviewSession(session) {
   return Boolean(session?.auditable) && isActionableIssueLevel(session.issueLevel);
+}
+
+function getAuditRiskLevel(summary = {}) {
+  if (summary.criticalSessions > 0 || summary.primaryMismatchCount > 0) {
+    return "critical";
+  }
+
+  if (
+    summary.warningSessions > 0 ||
+    summary.extraMismatchCount > 0 ||
+    Number(summary.averageConfidence || 0) < 0.55
+  ) {
+    return "warning";
+  }
+
+  if (summary.infoSessions > 0 || summary.nonAuditableSessions > 0) {
+    return "review";
+  }
+
+  return "healthy";
+}
+
+function buildAuditRecommendations(summary = {}) {
+  const recommendations = [];
+
+  if (summary.primaryMismatchCount > 0) {
+    recommendations.push({
+      level: "critical",
+      code: "primary_mismatch_review",
+      title: "Review primary decision mismatches",
+      detail: `${summary.primaryMismatchCount} auditable session(s) differ between stored primary decision and Engine v2 recomputation.`
+    });
+  }
+
+  if (summary.extraMismatchCount > 0) {
+    recommendations.push({
+      level: "warning",
+      code: "extra_decision_review",
+      title: "Review extra-question threshold",
+      detail: `${summary.extraMismatchCount} session(s) differ on whether extra questions should have been asked.`
+    });
+  }
+
+  if (summary.warningSessions > 0 && Number(summary.averageConfidence || 1) < 0.6) {
+    recommendations.push({
+      level: "warning",
+      code: "low_confidence_cluster",
+      title: "Watch low-confidence decision cluster",
+      detail: `Average confidence is ${summary.averageConfidence}; review the low-confidence queue before changing thresholds.`
+    });
+  }
+
+  if (summary.nonAuditableSessions > 0) {
+    recommendations.push({
+      level: "review",
+      code: "legacy_payload_gap",
+      title: "Legacy sessions excluded",
+      detail: `${summary.nonAuditableSessions} session(s) do not contain enough Engine v2 input for recomputation.`
+    });
+  }
+
+  if (!recommendations.length) {
+    recommendations.push({
+      level: "healthy",
+      code: "audit_stable",
+      title: "Engine decision audit is stable",
+      detail: "No blocking decision drift was found in the loaded session window."
+    });
+  }
+
+  return recommendations;
 }
 
 function auditIssues({ stored, engine, payload }) {
@@ -238,17 +313,10 @@ export function buildEngineLiveAuditSession(row = {}) {
       reportEmailStatus: row.report_email_status || null,
       stored: getStoredDecision(row),
       engine: null,
-      issues: [
-        buildIssue(
-          "missing_engine_input",
-          "critical",
-          "Nincs auditálható engine input",
-          "Nem található triageRanking vagy triageScores a payloadban."
-        )
-      ],
-      issueCodes: ["missing_engine_input"],
       issues: [issue],
       issueCodes: [issue.code],
+      primaryIssueCode: issue.code,
+      reviewReason: issue.label,
       nonAuditableReason: issue.code,
       createdAt: row.created_at || null,
       paidAt: row.paid_at || null,
@@ -303,6 +371,8 @@ export function buildEngineLiveAuditSession(row = {}) {
     engine,
     issues,
     issueCodes: issues.map((issue) => issue.code),
+    primaryIssueCode: issues[0]?.code || "clean",
+    reviewReason: issues[0]?.label || "Clean audit",
     createdAt: row.created_at || null,
     paidAt: row.paid_at || null,
     updatedAt: row.updated_at || null
@@ -355,34 +425,49 @@ export function buildEngineLiveDecisionAudit(rows = []) {
     return round(values.reduce((sum, value) => sum + value, 0) / values.length);
   };
 
+  const cleanSessions = auditableSessions.filter((session) => session.issueLevel === "clean").length;
+  const nonAuditableSessions = skippedSessions.length;
+  const summary = {
+    loadedSessions: rows.length,
+    auditedSessions: auditableSessions.length,
+    auditableSessions: auditableSessions.length,
+    auditCoverageRatio: ratio(auditableSessions.length, rows.length),
+    nonAuditableSessions,
+    skippedSessions: nonAuditableSessions,
+    skippedLegacySessions: skippedSessions.filter((session) =>
+      session.issueCodes.includes("legacy_engine_payload")
+    ).length,
+    cleanSessions,
+    reviewSessions: reviewSessions.length,
+    criticalSessions,
+    warningSessions,
+    infoSessions,
+    reviewRatio: ratio(reviewSessions.length, auditableSessions.length),
+    cleanRatio: ratio(cleanSessions, auditableSessions.length),
+    primaryMismatchCount,
+    primaryMismatchRate: ratio(primaryMismatchCount, auditableSessions.length),
+    extraMismatchCount,
+    extraMismatchRate: ratio(extraMismatchCount, auditableSessions.length),
+    averageConfidence: average(confidenceValues),
+    averageOverlapScore: average(overlapValues)
+  };
+
+  summary.riskLevel = getAuditRiskLevel(summary);
+  summary.recommendations = buildAuditRecommendations(summary);
+
   return {
     ok: true,
     generatedAt: new Date().toISOString(),
-    summary: {
-      loadedSessions: rows.length,
-      auditedSessions: auditableSessions.length,
-      auditableSessions: auditableSessions.length,
-      nonAuditableSessions: skippedSessions.length,
-      skippedSessions: skippedSessions.length,
-      skippedLegacySessions: skippedSessions.filter((session) =>
-        session.issueCodes.includes("legacy_engine_payload")
-      ).length,
-      cleanSessions: auditableSessions.filter((session) => session.issueLevel === "clean").length,
-      reviewSessions: reviewSessions.length,
-      criticalSessions,
-      warningSessions,
-      infoSessions,
-      primaryMismatchCount,
-      extraMismatchCount,
-      averageConfidence: average(confidenceValues),
-      averageOverlapScore: average(overlapValues)
-    },
+    summary,
     distributions: {
       issueLevels: sortedCounts(countBy(sessions, (session) => session.issueLevel)),
       issueCodes: sortedCounts(issueCounts),
       storedPrimaryDomains: sortedCounts(countBy(auditableSessions, (session) => session.stored?.primaryDomain)),
       enginePrimaryDomains: sortedCounts(countBy(auditableSessions, (session) => session.engine?.primaryDomain)),
-      decisionQuality: sortedCounts(countBy(auditableSessions, (session) => session.engine?.decisionQuality))
+      decisionQuality: sortedCounts(countBy(auditableSessions, (session) => session.engine?.decisionQuality)),
+      confidenceLabels: sortedCounts(countBy(auditableSessions, (session) => session.engine?.confidenceLabel)),
+      patternTypes: sortedCounts(countBy(auditableSessions, (session) => session.engine?.patternType)),
+      scoreSources: sortedCounts(countBy(auditableSessions, (session) => session.engine?.scoreSource))
     },
     reviewQueue: reviewSessions.slice(0, 30),
     sessions

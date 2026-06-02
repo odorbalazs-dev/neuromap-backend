@@ -16,6 +16,7 @@
     processOneBtn: document.getElementById("processOneBtn"),
     retryEmailBatchBtn: document.getElementById("retryEmailBatchBtn"),
     alertCheckBtn: document.getElementById("alertCheckBtn"),
+    bankQualityAlertBtn: document.getElementById("bankQualityAlertBtn"),
     refreshLaunchReadinessBtn: document.getElementById("refreshLaunchReadinessBtn"),
     statusText: document.getElementById("statusText"),
     controlCenterHeadline: document.getElementById("controlCenterHeadline"),
@@ -87,6 +88,12 @@
     engineAuditReviewMeta: document.getElementById("engineAuditReviewMeta"),
     engineAuditPrimaryMismatch: document.getElementById("engineAuditPrimaryMismatch"),
     engineAuditExtraMismatch: document.getElementById("engineAuditExtraMismatch"),
+    bankQualityGeneratedAt: document.getElementById("bankQualityGeneratedAt"),
+    bankQualityAverageScore: document.getElementById("bankQualityAverageScore"),
+    bankQualityCritical: document.getElementById("bankQualityCritical"),
+    bankQualityWarning: document.getElementById("bankQualityWarning"),
+    bankQualityReview: document.getElementById("bankQualityReview"),
+    bankQualityRows: document.getElementById("bankQualityRows"),
     engineDomainRows: document.getElementById("engineDomainRows"),
     engineQualityRows: document.getElementById("engineQualityRows"),
     engineOverlapRows: document.getElementById("engineOverlapRows"),
@@ -161,6 +168,7 @@
       els.processOneBtn,
       els.retryEmailBatchBtn,
       els.alertCheckBtn,
+      els.bankQualityAlertBtn,
       els.refreshLaunchReadinessBtn,
       els.refreshEmailDeliveryCenterBtn,
       els.sessionSearchBtn
@@ -1822,6 +1830,7 @@
       alerts,
       engineAnalytics,
       engineDecisionAudit,
+      bankQualityAudit,
       emailDeliverability,
       postPaymentMonitoring
     } = context;
@@ -1832,6 +1841,7 @@
     const email = health?.email || {};
     const latestAlert = alerts?.items?.[0] || null;
     const auditSummary = engineDecisionAudit?.summary || {};
+    const bankQualitySummary = bankQualityAudit?.summary || {};
     const engineReviewCount = countValue(engineAnalytics?.reviewQueue?.length);
     const deliverabilityMetrics = emailDeliverability?.metrics || {};
 
@@ -1888,9 +1898,12 @@
     );
 
     const criticalEngineCount = countValue(auditSummary.criticalSessions);
+    const criticalBankIssueCount = countValue(bankQualitySummary.issueCounts?.critical);
+    const warningBankIssueCount = countValue(bankQualitySummary.issueCounts?.warning);
+    const reviewBankIssueCount = countValue(bankQualitySummary.issueCounts?.review);
     const reviewEngineCount =
-      countValue(auditSummary.reviewSessions) + engineReviewCount;
-    const engineLevel = criticalEngineCount > 0
+      countValue(auditSummary.reviewSessions) + engineReviewCount + warningBankIssueCount + reviewBankIssueCount;
+    const engineLevel = criticalEngineCount > 0 || criticalBankIssueCount > 0
       ? "critical"
       : reviewEngineCount > 0
         ? "warning"
@@ -1902,8 +1915,10 @@
     setPulseCard(
       els.pulseEngine,
       engineLevel,
-      criticalEngineCount > 0 ? `${criticalEngineCount} kritikus` : `${reviewEngineCount} atnezes`,
-      `${auditedEngineCount} auditolt session, ${engineReviewCount} review queue.`
+      criticalEngineCount + criticalBankIssueCount > 0
+        ? `${criticalEngineCount + criticalBankIssueCount} kritikus`
+        : `${reviewEngineCount} atnezes`,
+      `${auditedEngineCount} auditolt session, ${engineReviewCount} review queue, bank score ${bankQualitySummary.averageScore ?? "-"}.`
     );
 
     const alertLevel = latestAlert?.level || "healthy";
@@ -2077,6 +2092,52 @@
       })
     );
     renderEngineReviewRows(data?.reviewQueue || []);
+  }
+
+  function renderBankQualityAudit(data) {
+    const summary = data?.summary || {};
+    const issueCounts = summary.issueCounts || {};
+
+    if (els.bankQualityGeneratedAt) {
+      els.bankQualityGeneratedAt.textContent = data?.generatedAt
+        ? `Bank audit: ${formatDate(data.generatedAt)}`
+        : "Meg nincs bank audit";
+    }
+
+    if (els.bankQualityAverageScore) {
+      els.bankQualityAverageScore.textContent =
+        summary.averageScore === undefined ? "-" : `${formatNumber(summary.averageScore, 1)}/100`;
+    }
+
+    if (els.bankQualityCritical) {
+      els.bankQualityCritical.textContent = Number(issueCounts.critical || 0);
+    }
+
+    if (els.bankQualityWarning) {
+      els.bankQualityWarning.textContent = Number(issueCounts.warning || 0);
+    }
+
+    if (els.bankQualityReview) {
+      els.bankQualityReview.textContent = Number(issueCounts.review || 0);
+    }
+
+    renderEngineList(
+      els.bankQualityRows,
+      data?.banks || [],
+      (bank) => {
+        const topIssue = bank.issues?.[0];
+        const readiness = text(bank.readiness || "unknown");
+        const score = formatNumber(bank.score, 1);
+        const issueMeta = topIssue
+          ? `${topIssue.severity}: ${topIssue.code}`
+          : "nincs issue";
+
+        return {
+          title: `${bank.name}: ${score}/100 (${readiness})`,
+          meta: `${Number(bank.items || 0)} item, public ${Number(bank.publicItems || 0)}, ${Number(bank.subdomainCount || 0)} subdomain, reverse ${formatPercent(bank.reverseRatio)} | ${issueMeta}`
+        };
+      }
+    );
   }
 
   function renderEngineDecisionAudit(data) {
@@ -2591,6 +2652,7 @@
       launchReadiness,
       engineAnalytics,
       engineDecisionAudit,
+      bankQualityAudit,
       emailDeliverability,
       postPaymentMonitoring,
       recent
@@ -2604,6 +2666,7 @@
     const latestAlert = alerts?.items?.[0];
     const deliverabilityMetrics = emailDeliverability?.metrics || {};
     const postPaymentMetrics = postPaymentMonitoring?.metrics || {};
+    const bankQualitySummary = bankQualityAudit?.summary || {};
 
     if (postPaymentMonitoring?.level === "critical") {
       addOperatorTask(
@@ -2744,6 +2807,26 @@
       );
     }
 
+    if (countValue(bankQualitySummary.issueCounts?.critical) > 0) {
+      addOperatorTask(
+        tasks,
+        "critical",
+        "Bank quality kritikus issue",
+        `${countValue(bankQualitySummary.issueCounts?.critical)} kritikus bankminosegi jelzes. Legalacsonyabb score: ${(bankQualitySummary.lowestScoringBanks || []).map((bank) => `${bank.name} ${bank.score}`).join(", ") || "-"}.`,
+        "engineAnalyticsPanel",
+        "Bank audit"
+      );
+    } else if (countValue(bankQualitySummary.issueCounts?.warning) > 0) {
+      addOperatorTask(
+        tasks,
+        "warning",
+        "Bank quality figyelendo",
+        `${countValue(bankQualitySummary.issueCounts?.warning)} warning es ${countValue(bankQualitySummary.issueCounts?.review)} review bankminosegi jelzes.`,
+        "engineAnalyticsPanel",
+        "Bank audit"
+      );
+    }
+
     if (countValue(launchReadiness?.summary?.failed) > 0) {
       addOperatorTask(
         tasks,
@@ -2801,6 +2884,7 @@
         launchReadiness,
         engineAnalytics,
         engineDecisionAudit,
+        bankQualityAudit,
         emailDeliveryCenter,
         emailDeliverability,
         postPaymentMonitoring
@@ -2815,6 +2899,7 @@
         api("/admin/launch-readiness"),
         api("/admin/engine-analytics?limit=300"),
         api("/admin/engine-decision-audit?limit=300"),
+        api("/admin/bank-quality-audit"),
         api(`/admin/email-delivery-center?status=${encodeURIComponent(currentEmailDeliveryStatusFilter())}&limit=60`),
         api("/admin/email-deliverability?hours=168&limit=30"),
         api("/admin/post-payment-monitoring?hours=168&limit=30")
@@ -2832,6 +2917,7 @@
       renderLaunchReadiness(launchReadiness);
       renderEngineAnalytics(engineAnalytics);
       renderEngineDecisionAudit(engineDecisionAudit);
+      renderBankQualityAudit(bankQualityAudit);
       renderEmailDeliveryCenter(emailDeliveryCenter);
       renderEmailDeliverability(emailDeliverability);
       renderPostPaymentMonitoring(postPaymentMonitoring);
@@ -2841,6 +2927,7 @@
         alerts,
         engineAnalytics,
         engineDecisionAudit,
+        bankQualityAudit,
         emailDeliverability,
         postPaymentMonitoring
       });
@@ -2855,6 +2942,7 @@
         launchReadiness,
         engineAnalytics,
         engineDecisionAudit,
+        bankQualityAudit,
         emailDeliverability,
         postPaymentMonitoring
       });
@@ -3154,6 +3242,13 @@
       postAction("/admin/trigger-alert-check", "Riasztásellenőrzés lefutott.");
     });
 
+    bindClick(els.bankQualityAlertBtn, () => {
+      postAction(
+        "/admin/trigger-bank-quality-alert-check?minLevel=review",
+        "Bank audit riasztas lefutott."
+      );
+    });
+
     document.querySelectorAll("[data-control-action]").forEach((button) => {
       button.addEventListener("click", () => {
         const action = button.dataset.controlAction;
@@ -3172,6 +3267,13 @@
 
         if (action === "alert-check") {
           postAction("/admin/trigger-alert-check", "Riasztásellenőrzés lefutott.");
+        }
+
+        if (action === "bank-quality-alert") {
+          postAction(
+            "/admin/trigger-bank-quality-alert-check?minLevel=review",
+            "Bank audit riasztas lefutott."
+          );
         }
       });
     });

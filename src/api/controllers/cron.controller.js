@@ -6,7 +6,10 @@ import {
 
 import { sendCheckoutRecoveryEmail } from "../../services/email.service.js";
 import { retryReportEmailsBatch } from "../../services/report-email-retry.service.js";
-import { runProductionHealthAlertCheck } from "../../services/admin-alert.service.js";
+import {
+  runBankQualityAlertCheck,
+  runProductionHealthAlertCheck
+} from "../../services/admin-alert.service.js";
 
 import { env } from "../../config/env.js";
 import { secureCompare } from "../../utils/secureCompare.js";
@@ -236,6 +239,53 @@ export async function sendProductionHealthAlert(req, res) {
   } catch (error) {
     console.error(
       "[cron] sendProductionHealthAlert failed:",
+      error
+    );
+
+    return res.status(500).json({
+      ok: false,
+      error: error.message || "Cron failed"
+    });
+  }
+}
+
+export async function sendBankQualityAlert(req, res) {
+  try {
+    if (!isAuthorizedCron(req)) {
+      return res.status(401).json({
+        ok: false,
+        error: "Unauthorized"
+      });
+    }
+
+    const cooldownMinutes = normalizeNumber(
+      req.query.cooldownMinutes,
+      30,
+      1,
+      1440
+    );
+
+    const force =
+      String(req.query.force || "false").toLowerCase() === "true";
+
+    const strict =
+      String(req.query.strict || "false").toLowerCase() === "true";
+
+    const minLevel = String(req.query.minLevel || "warning").toLowerCase();
+
+    const result =
+      await runBankQualityAlertCheck({
+        cooldownMinutes,
+        force,
+        strict,
+        minLevel
+      });
+
+    return res.status(result.ok === false ? 500 : 200).json(result);
+
+  } catch (error) {
+    console.error(
+      "[cron] sendBankQualityAlert failed:",
       error
     );
 

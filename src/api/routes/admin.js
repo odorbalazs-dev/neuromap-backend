@@ -12,8 +12,10 @@ import {
   getOperationsLog,
   getAdminAlerts,
   triggerAdminAlertCheck,
+  triggerBankQualityAlertCheck,
   getEngineAnalytics,
   getEngineDecisionAudit,
+  getBankQualityAudit,
   getQueueStatus,
   getRecentSessions,
   searchAdminSessions,
@@ -43,8 +45,10 @@ router.get("/post-payment-monitoring", getPostPaymentMonitoring);
 router.get("/operations-log", getOperationsLog);
 router.get("/alerts", getAdminAlerts);
 router.post("/trigger-alert-check", triggerAdminAlertCheck);
+router.post("/trigger-bank-quality-alert-check", triggerBankQualityAlertCheck);
 router.get("/engine-analytics", getEngineAnalytics);
 router.get("/engine-decision-audit", getEngineDecisionAudit);
+router.get("/bank-quality-audit", getBankQualityAudit);
 
 router.get("/queue-status", getQueueStatus);
 router.get("/recent-sessions", getRecentSessions);

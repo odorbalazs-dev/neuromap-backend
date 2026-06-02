@@ -45,6 +45,7 @@ export function getAdminDashboard(_req, res) {
         <button id="retryEmailBatchBtn" type="button" class="warn">Riport emailek újrapróbálása</button>
         <button id="alertCheckBtn" type="button" class="secondary">Riasztásellenőrzés</button>
         <button id="clearTokenBtn" type="button" class="secondary">Token törlése</button>
+        <button id="bankQualityAlertBtn" type="button" class="secondary">Bank audit riasztas</button>
         <span id="statusText" class="status-text" role="status"></span>
       </section>
 
@@ -86,6 +87,7 @@ export function getAdminDashboard(_req, res) {
             <button type="button" data-control-action="process-job" class="secondary">1 job feldolgozása</button>
             <button type="button" data-control-action="retry-email" class="warn">Riport emailek újrapróbálása</button>
             <button type="button" data-control-action="alert-check" class="secondary">Riasztásellenőrzés</button>
+            <button type="button" data-control-action="bank-quality-alert" class="secondary">Bank audit riasztas</button>
           </div>
         </article>
       </section>
@@ -409,6 +411,39 @@ export function getAdminDashboard(_req, res) {
             <p>Mentett extra vs ujraszamolt extra.</p>
           </article>
         </div>
+        <div class="subpanel-head">
+          <div>
+            <h3>Bank quality audit</h3>
+            <p>Schema, fordítás, subdomain arány és kérdésszöveg minőség bankonként.</p>
+          </div>
+          <span id="bankQualityGeneratedAt" class="snapshot-time">Meg nincs bank audit</span>
+        </div>
+        <div class="engine-decision-audit-grid">
+          <article class="health-card">
+            <span>Atlag bank score</span>
+            <strong id="bankQualityAverageScore">-</strong>
+            <p>0-100 kozotti minosegi pontszam.</p>
+          </article>
+          <article class="health-card">
+            <span>Kritikus issue</span>
+            <strong id="bankQualityCritical">0</strong>
+            <p>Blokkolo schema, darabszam vagy duplikacio.</p>
+          </article>
+          <article class="health-card">
+            <span>Figyelmeztetes</span>
+            <strong id="bankQualityWarning">0</strong>
+            <p>Arany, forditas vagy item hossz jelzesek.</p>
+          </article>
+          <article class="health-card">
+            <span>Review jelzes</span>
+            <strong id="bankQualityReview">0</strong>
+            <p>Finomhangolasi bankminosegi teendok.</p>
+          </article>
+        </div>
+        <article class="engine-card bank-quality-card">
+          <h3>Bank quality sorok</h3>
+          <div id="bankQualityRows" class="engine-list"></div>
+        </article>
         <div class="engine-analytics-grid">
           <article class="engine-card">
             <h3>Fo teruletek</h3>

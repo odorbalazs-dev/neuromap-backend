@@ -841,6 +841,11 @@ input:focus {
   margin: 0 0 12px;
 }
 
+.bank-quality-card {
+  margin: 0 18px 18px;
+  min-height: 0;
+}
+
 .engine-bars,
 .engine-list {
   display: grid;

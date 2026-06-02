@@ -153,6 +153,22 @@ assert(
   "Dashboard HTML should include live engine decision audit rows."
 );
 assert(
+  res.body.includes("bankQualityAverageScore"),
+  "Dashboard HTML should include bank quality audit metrics."
+);
+assert(
+  res.body.includes("bankQualityRows"),
+  "Dashboard HTML should include bank quality audit rows."
+);
+assert(
+  res.body.includes("bankQualityAlertBtn"),
+  "Dashboard HTML should include the bank quality alert button."
+);
+assert(
+  res.body.includes('data-control-action="bank-quality-alert"'),
+  "Dashboard HTML should include the bank quality command action."
+);
+assert(
   res.body.includes("toggleEngineDecisionAuditBtn"),
   "Dashboard HTML should include the engine decision audit collapse toggle."
 );
@@ -329,6 +345,14 @@ assert(
   "Dashboard JS should call the live engine decision audit endpoint."
 );
 assert(
+  dashboardJs.includes("/admin/bank-quality-audit"),
+  "Dashboard JS should call the bank quality audit endpoint."
+);
+assert(
+  dashboardJs.includes("/admin/trigger-bank-quality-alert-check?minLevel=review"),
+  "Dashboard JS should call the bank quality alert endpoint."
+);
+assert(
   dashboardJs.includes("/admin/email-deliverability?hours=168&limit=30"),
   "Dashboard JS should call the email deliverability monitor endpoint."
 );
@@ -369,8 +393,16 @@ assert(
   "Dashboard JS should render live engine decision audit results."
 );
 assert(
+  dashboardJs.includes("renderBankQualityAudit"),
+  "Dashboard JS should render bank quality audit results."
+);
+assert(
   dashboardJs.includes("primaryMismatchCount"),
   "Dashboard JS should surface primary engine decision mismatches."
+);
+assert(
+  dashboardJs.includes("bankQualityAudit"),
+  "Dashboard JS should include bank quality audit data in dashboard refresh."
 );
 assert(
   dashboardJs.includes("setOperationsLogCollapsed"),
@@ -411,6 +443,10 @@ assert(
 assert(
   dashboardJs.includes("setPulseCard"),
   "Dashboard JS should update pulse card statuses."
+);
+assert(
+  dashboardJs.includes("bankQualitySummary"),
+  "Dashboard JS should include bank quality signals in the control pulse."
 );
 assert(
   dashboardJs.includes("bindClick"),
@@ -583,6 +619,10 @@ assert(
 assert(
   dashboardCss.includes(".pulse-card"),
   "Dashboard CSS should style the control pulse cards."
+);
+assert(
+  dashboardCss.includes(".bank-quality-card"),
+  "Dashboard CSS should style the bank quality audit card."
 );
 assert(
   dashboardCss.includes(".delivery-center-toolbar"),
