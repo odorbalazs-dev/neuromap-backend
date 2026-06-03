@@ -33,7 +33,7 @@ const PAGE_LAYOUT = {
   blockGap: 18
 };
 
-const PDF_REPORT_VERSION = "pdf_report_v3";
+const PDF_REPORT_VERSION = "pdf_report_v4_customer_experience";
 const BODY_TEXT_COLOR = "#374151";
 const BULLET = "\u2022";
 
@@ -769,6 +769,115 @@ function drawPanel(doc, { x, y, w, h, fill = "#FFFFFF", stroke = BRAND.softBorde
   if (accent) {
     doc.rect(x, y, 7, h).fill(accent);
   }
+}
+
+function getPremiumPdfCopy(lang = "en") {
+  if (lang === "hu") {
+    return {
+      title: "Hogyan hasznald ezt a riportot?",
+      body: "Kezdd a gyors attekintessel, utana olvasd el a korosztalyi javaslatokat. A riport celja, hogy ertelmezheto mintazatokat adjon a kovetkezo szuloi lepesekhez.",
+      points: [
+        "Emeld ki azt a 2-3 helyzetet, ahol a jelzes a legerosebb.",
+        "Ne egyetlen valaszt nezz, hanem a visszatero mintazatot.",
+        "Ha a jelzes eros vagy tartos, erdemes szakemberrel is atbeszelni."
+      ]
+    };
+  }
+
+  return {
+    title: "How to use this report",
+    body: "Start with the quick overview, then read the age-aware recommendations. The report is designed to turn questionnaire answers into practical patterns for the next parent steps.",
+    points: [
+      "Mark the 2-3 everyday situations where the signal is clearest.",
+      "Look for recurring patterns rather than one isolated answer.",
+      "If the signal feels strong or persistent, discuss it with a qualified professional."
+    ]
+  };
+}
+
+function addPremiumReadingGuide(doc, labels, lang, pageState = null) {
+  const copy = getPremiumPdfCopy(lang);
+  const x = 56;
+  const w = doc.page.width - 112;
+  const bodyWidth = w - 48;
+  const align = getTextAlign(lang);
+  const titleHeight = measureText(doc, copy.title, {
+    font: getFont(lang, true),
+    fontSize: 12.5,
+    width: bodyWidth,
+    lineGap: 2,
+    align
+  });
+  const bodyHeight = measureText(doc, copy.body, {
+    font: getFont(lang),
+    fontSize: 9.5,
+    width: bodyWidth,
+    lineGap: 3,
+    align
+  });
+  const pointHeight = copy.points.reduce((sum, point) => {
+    return sum + measureText(doc, point, {
+      font: getFont(lang),
+      fontSize: 9.1,
+      width: bodyWidth - 22,
+      lineGap: 2.5,
+      align
+    }) + 7;
+  }, 0);
+  const h = Math.max(156, Math.ceil(titleHeight + bodyHeight + pointHeight + 66));
+
+  ensureSpace(doc, h + 18, labels, lang, pageState);
+
+  const y = doc.y;
+  drawPanel(doc, {
+    x,
+    y,
+    w,
+    h,
+    fill: "#F8FBFE",
+    stroke: BRAND.softBorder,
+    accent: BRAND.blue
+  });
+
+  doc.circle(x + 28, y + 28, 9).fill(BRAND.blue);
+  doc.fillColor(BRAND.dark)
+    .font(getFont(lang, true))
+    .fontSize(12.5)
+    .text(copy.title, x + 46, y + 18, {
+      width: bodyWidth - 24,
+      align
+    });
+
+  doc.fillColor(BODY_TEXT_COLOR)
+    .font(getFont(lang))
+    .fontSize(9.5)
+    .text(copy.body, x + 24, y + 48 + titleHeight, {
+      width: bodyWidth,
+      align,
+      lineGap: 3
+    });
+
+  let pointY = y + 72 + titleHeight + bodyHeight;
+  copy.points.forEach((point) => {
+    doc.circle(x + 30, pointY + 6, 3).fill(BRAND.orange);
+    doc.fillColor(BODY_TEXT_COLOR)
+      .font(getFont(lang))
+      .fontSize(9.1)
+      .text(point, x + 42, pointY, {
+        width: bodyWidth - 22,
+        align,
+        lineGap: 2.5
+      });
+    pointY += measureText(doc, point, {
+      font: getFont(lang),
+      fontSize: 9.1,
+      width: bodyWidth - 22,
+      lineGap: 2.5,
+      align
+    }) + 7;
+  });
+
+  doc.y = y + h + 14;
 }
 
 function addInfoCard(doc, { name, lang }) {
@@ -1544,7 +1653,7 @@ export async function generatePdfBuffer({ name, reportText, lang = "en", payload
           Title: labels.title,
           Author: "NeuroMap Kids",
           Subject: `${labels.subtitle} (${PDF_REPORT_VERSION})`,
-          Keywords: "NeuroMap Kids, screening report, parent report, pdf v3"
+          Keywords: "NeuroMap Kids, screening report, parent report, pdf v4"
         }
       });
 
@@ -1566,6 +1675,7 @@ export async function generatePdfBuffer({ name, reportText, lang = "en", payload
 
       doc.y = 246;
 
+      addPremiumReadingGuide(doc, labels, safeLang, pageState);
       addOverviewBlock(doc, payload, labels, safeLang, pageState);
       addReportV2AgeBlock(doc, payload, labels, safeLang, pageState);
       addSectionTitle(doc, labels.reportTitle, labels, safeLang, pageState);

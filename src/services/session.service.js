@@ -120,6 +120,25 @@ export async function getSessionById(sessionId) {
   return result.rows[0] || null;
 }
 
+export async function getSessionByPublicIdentifier(identifier) {
+  const value = String(identifier || "").trim();
+
+  if (!value) return null;
+
+  const result = await db.query(
+    `
+    SELECT *
+    FROM sessions
+    WHERE id = $1
+       OR stripe_session_id = $1
+    LIMIT 1
+    `,
+    [value]
+  );
+
+  return result.rows[0] || null;
+}
+
 export async function markSessionPaid(sessionId) {
   const result = await db.query(
     `

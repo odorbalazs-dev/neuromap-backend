@@ -9,7 +9,7 @@ function assert(condition, message) {
 function main() {
   console.log("\n=== CHECKOUT PAGES SMOKE ===");
 
-  const currentVersion = "20260603-analytics-schema-v2";
+  const currentVersion = "20260603-customer-experience-v1";
   const script = fs.readFileSync("public/webflow/checkout-pages.js", "utf8");
   const sharedEmbed = fs.readFileSync("web/checkout-pages-embed.html", "utf8").trim();
   const successEmbed = fs.readFileSync("web/checkout-success-embed.html", "utf8").trim();
@@ -40,6 +40,9 @@ function main() {
   assert(script.includes("&#10003;"), "Success page should render a safe checkmark entity.");
   assert(script.includes("trackOnce(\"purchase\""), "Success page should send a purchase event.");
   assert(script.includes("neuromap_kids_report"), "Purchase event should include product item metadata.");
+  assert(script.includes("/session/status/"), "Success page should load the customer-facing report status.");
+  assert(script.includes("nmReportStatusPanel"), "Success page should render a report status panel.");
+  assert(script.includes("What happens next?"), "Success page should explain the post-payment next steps.");
   assert(script.includes("trackOnce(\"checkout_cancelled\""), "Cancel page should send a checkout_cancelled event.");
   assert(script.includes("hasDataLayerEvent"), "Checkout tracking should protect against duplicate dataLayer events.");
   assert(script.includes("/checkout/retry/"), "Cancel page should support retry checkout.");

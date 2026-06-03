@@ -5,7 +5,7 @@
 (function () {
   if (typeof window === "undefined" || typeof document === "undefined") return;
 
-  const CHECKOUT_PAGES_VERSION = "20260603-analytics-schema-v2";
+  const CHECKOUT_PAGES_VERSION = "20260603-customer-experience-v1";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
   const DEFAULT_API_BASE_URL = "https://neuromap-backend-production-969d.up.railway.app";
   const SUPPORTED_LANGS = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];
@@ -20,6 +20,26 @@
     sessionLabel: "Session",
     statusReady: "The page is ready.",
     noSession: "Missing checkout session identifier.",
+    reportStatusTitle: "Report status",
+    reportStatusLead: "We are preparing your personalized PDF and email.",
+    statusLoading: "Checking report status...",
+    statusUnavailable: "Status is not available yet. Your report is still being processed.",
+    statusSent: "Your report email has been sent.",
+    statusAttention: "The report needs a quick manual check. We will keep trying automatically.",
+    statusPayment: "Payment",
+    statusAnalysis: "Analysis",
+    statusReport: "PDF report",
+    statusEmail: "Email",
+    stateComplete: "Done",
+    stateActive: "In progress",
+    statePending: "Waiting",
+    stateFailed: "Needs attention",
+    nextTitle: "What happens next?",
+    nextItems: [
+      "The analysis worker prepares the personalized interpretation.",
+      "The PDF report is generated and attached to the email.",
+      "Please also check Spam or Promotions if the email is delayed."
+    ],
     successTitle: "Payment successful",
     successLead: "Thank you. Your purchase was successful.",
     successBody: "The detailed parent-friendly report and PDF will be sent by email.",
@@ -38,6 +58,26 @@
       sessionLabel: "Azonos\u00edt\u00f3",
       statusReady: "Az oldal k\u00e9szen \u00e1ll.",
       noSession: "Hi\u00e1nyzik a fizet\u00e9si azonos\u00edt\u00f3.",
+      reportStatusTitle: "Riport \u00e1llapota",
+      reportStatusLead: "K\u00e9sz\u00edtj\u00fck a szem\u00e9lyre szabott PDF-et \u00e9s az emailt.",
+      statusLoading: "Riport \u00e1llapot ellen\u0151rz\u00e9se...",
+      statusUnavailable: "Az \u00e1llapot m\u00e9g nem el\u00e9rhet\u0151. A riport feldolgoz\u00e1sa folyamatban van.",
+      statusSent: "A riport email elk\u00fcldve.",
+      statusAttention: "A riport gyors ellen\u0151rz\u00e9st ig\u00e9nyel. Az automatikus \u00fajrapr\u00f3b\u00e1lkoz\u00e1s fut.",
+      statusPayment: "Fizet\u00e9s",
+      statusAnalysis: "Elemz\u00e9s",
+      statusReport: "PDF riport",
+      statusEmail: "Email",
+      stateComplete: "K\u00e9sz",
+      stateActive: "Folyamatban",
+      statePending: "V\u00e1rakozik",
+      stateFailed: "Figyelmet ig\u00e9nyel",
+      nextTitle: "Mi t\u00f6rt\u00e9nik most?",
+      nextItems: [
+        "Az elemz\u0151 worker elk\u00e9sz\u00edti a szem\u00e9lyre szabott \u00e9rtelmez\u00e9st.",
+        "A PDF riport gener\u00e1l\u00f3dik \u00e9s csatolm\u00e1nyk\u00e9nt ker\u00fcl az emailbe.",
+        "Ha p\u00e1r percen bel\u00fcl nem l\u00e1tod, ellen\u0151rizd a Spam vagy Prom\u00f3ci\u00f3k mapp\u00e1t is."
+      ],
       successTitle: "K\u00f6sz\u00f6nj\u00fck! A fizet\u00e9s sikeres volt.",
       successLead: "A szem\u00e9lyre szabott NeuroMap Kids riport elk\u00e9sz\u00edt\u00e9se elindult.",
       successBody: "A r\u00e9szletes \u00e9rt\u00e9kel\u00e9s \u00e9s a PDF riport emailben \u00e9rkezik. Ez \u00e1ltal\u00e1ban 1-2 percen bel\u00fcl megt\u00f6rt\u00e9nik.",
@@ -381,6 +421,103 @@
         word-break: break-all;
       }
 
+      .nm-checkout-next,
+      .nm-report-status-panel {
+        margin: 0 auto 24px;
+        max-width: 620px;
+        text-align: left;
+        border: 1px solid #dbe8f1;
+        border-radius: 16px;
+        background: #f8fbfe;
+        padding: 18px;
+      }
+
+      [dir="rtl"] .nm-checkout-next,
+      [dir="rtl"] .nm-report-status-panel {
+        text-align: right;
+      }
+
+      .nm-checkout-next h2,
+      .nm-report-status-panel h2 {
+        margin: 0 0 8px;
+        font-size: 16px;
+        line-height: 1.3;
+        color: #102033;
+      }
+
+      .nm-checkout-next ol {
+        margin: 10px 0 0;
+        padding-left: 22px;
+        color: #506780;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      [dir="rtl"] .nm-checkout-next ol {
+        padding-left: 0;
+        padding-right: 22px;
+      }
+
+      .nm-report-status-lead {
+        margin: 0 0 14px;
+        color: #506780;
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      .nm-status-steps {
+        display: grid;
+        gap: 9px;
+      }
+
+      .nm-status-step {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        background: #fff;
+        border: 1px solid #e6eef5;
+      }
+
+      .nm-status-step-main {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        min-width: 0;
+        color: #24394d;
+        font-weight: 800;
+        font-size: 13px;
+      }
+
+      .nm-status-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        background: #cbd5e1;
+        flex: 0 0 auto;
+      }
+
+      .nm-status-step[data-state="complete"] .nm-status-dot {
+        background: #15a66d;
+      }
+
+      .nm-status-step[data-state="active"] .nm-status-dot {
+        background: #1098d5;
+        box-shadow: 0 0 0 4px rgba(16, 152, 213, 0.12);
+      }
+
+      .nm-status-step[data-state="failed"] .nm-status-dot {
+        background: #ff5b00;
+      }
+
+      .nm-status-state {
+        color: #506780;
+        font-size: 12px;
+        white-space: nowrap;
+      }
+
       .nm-checkout-actions {
         display: flex;
         justify-content: center;
@@ -445,6 +582,78 @@
     return "/" + lang;
   }
 
+  function getStateLabel(copy, state) {
+    if (state === "complete") return copy.stateComplete;
+    if (state === "active") return copy.stateActive;
+    if (state === "failed") return copy.stateFailed;
+    return copy.statePending;
+  }
+
+  function getStageLabel(copy, key, fallback) {
+    const labels = {
+      payment: copy.statusPayment,
+      analysis: copy.statusAnalysis,
+      report: copy.statusReport,
+      email: copy.statusEmail
+    };
+
+    return labels[key] || fallback || key;
+  }
+
+  function renderStatusSteps(copy, stages) {
+    const safeStages = Array.isArray(stages) && stages.length
+      ? stages
+      : [
+          { key: "payment", label: copy.statusPayment, state: "complete" },
+          { key: "analysis", label: copy.statusAnalysis, state: "active" },
+          { key: "report", label: copy.statusReport, state: "pending" },
+          { key: "email", label: copy.statusEmail, state: "pending" }
+        ];
+
+    return safeStages.map((stage) => {
+      const state = ["complete", "active", "pending", "failed"].includes(stage.state)
+        ? stage.state
+        : "pending";
+
+      return `
+        <div class="nm-status-step" data-state="${escapeHtml(state)}">
+          <div class="nm-status-step-main">
+            <span class="nm-status-dot" aria-hidden="true"></span>
+            <span>${escapeHtml(getStageLabel(copy, stage.key, stage.label))}</span>
+          </div>
+          <span class="nm-status-state">${escapeHtml(getStateLabel(copy, state))}</span>
+        </div>
+      `;
+    }).join("");
+  }
+
+  function getStatusMessage(copy, status) {
+    if (!status) return copy.statusLoading;
+    if (status.overall === "sent") return copy.statusSent;
+    if (status.overall === "attention") return copy.statusAttention;
+    return copy.reportStatusLead;
+  }
+
+  function renderSuccessExtras(copy) {
+    const nextItems = Array.isArray(copy.nextItems) ? copy.nextItems : BASE_COPY.nextItems;
+
+    return `
+      <div class="nm-checkout-next">
+        <h2>${escapeHtml(copy.nextTitle)}</h2>
+        <ol>
+          ${nextItems.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
+        </ol>
+      </div>
+      <div class="nm-report-status-panel" id="nmReportStatusPanel">
+        <h2>${escapeHtml(copy.reportStatusTitle)}</h2>
+        <p class="nm-report-status-lead" id="nmReportStatusLead">${escapeHtml(copy.statusLoading)}</p>
+        <div class="nm-status-steps" id="nmReportStatusSteps">
+          ${renderStatusSteps(copy)}
+        </div>
+      </div>
+    `;
+  }
+
   function renderPage(kind, lang, sessionId) {
     const copy = getCopy(lang);
     const isSuccess = kind === "success";
@@ -463,6 +672,7 @@
         <p class="nm-checkout-lead">${escapeHtml(isSuccess ? copy.successLead : copy.cancelLead)}</p>
         <p class="nm-checkout-body">${escapeHtml(isSuccess ? copy.successBody : copy.cancelBody)}</p>
         ${sessionId ? `<div class="nm-checkout-meta">${escapeHtml(copy.sessionLabel)}: ${escapeHtml(sessionId)}</div>` : ""}
+        ${isSuccess ? renderSuccessExtras(copy) : ""}
         <div class="nm-checkout-actions">
           <a class="nm-checkout-button dark" href="${escapeHtml(safeHref(getHomeHref(lang), "/"))}">${escapeHtml(copy.home)}</a>
           ${!isSuccess ? `<button class="nm-checkout-button" type="button" id="nmRetryCheckout">${escapeHtml(copy.retry)}</button>` : ""}
@@ -481,6 +691,50 @@
       retryButton.addEventListener("click", function () {
         retryCheckout(sessionId, copy);
       });
+    }
+  }
+
+  async function loadReportStatus(sessionId, copy, attempt) {
+    const lead = document.getElementById("nmReportStatusLead");
+    const steps = document.getElementById("nmReportStatusSteps");
+
+    if (!lead || !steps) return;
+
+    if (!sessionId) {
+      lead.textContent = copy.noSession;
+      return;
+    }
+
+    try {
+      const response = await fetch(`${getApiBaseUrl()}/session/status/${encodeURIComponent(sessionId)}`, {
+        method: "GET",
+        credentials: "omit"
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok || !data || !data.status) {
+        throw new Error(copy.statusUnavailable);
+      }
+
+      lead.textContent = getStatusMessage(copy, data.status);
+      steps.innerHTML = renderStatusSteps(copy, data.status.stages);
+
+      trackOnce("nm_report_status_view", {
+        checkout_session_id: sessionId || "",
+        session_id: sessionId || "",
+        report_status: data.status.overall || "",
+        report_email_status: data.status.reportEmailStatus || "",
+        lang: data.status.lang || "",
+        source: "webflow_success_page",
+        version: CHECKOUT_PAGES_VERSION
+      });
+
+      if (data.status.overall !== "sent" && data.status.overall !== "attention" && attempt < 5) {
+        window.setTimeout(() => loadReportStatus(sessionId, copy, attempt + 1), 12000);
+      }
+    } catch (_error) {
+      lead.textContent = copy.statusUnavailable;
     }
   }
 
@@ -588,6 +842,10 @@
     installDesign();
     renderPage(kind, lang, sessionId);
     trackPage(kind, lang, sessionId);
+
+    if (kind === "success") {
+      loadReportStatus(sessionId, getCopy(lang), 1);
+    }
   }
 
   if (document.readyState === "loading") {

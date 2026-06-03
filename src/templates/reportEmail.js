@@ -49,6 +49,36 @@ function buildSubject(baseSubject, payload, lang) {
   return `NeuroMap Kids – report ready: ${label}`;
 }
 
+function getCustomerExperienceCopy(lang) {
+  const safeLang = getSafeLang(lang);
+  const copy = {
+    en: {
+      title: "Your PDF report is attached",
+      body: "The attached PDF is designed as the clean, parent-friendly version of the report. You can save it, print it, or share it with a professional if needed.",
+      nextTitle: "Suggested next steps",
+      nextSteps: [
+        "Read the quick overview first, then the age-aware recommendations.",
+        "Write down 2-3 everyday situations where the pattern appears most clearly.",
+        "If the signals feel strong or persistent, discuss the report with a qualified professional."
+      ],
+      support: "Need help or did not receive the attachment? Reply to this email or contact info@neuromapkids.com."
+    },
+    hu: {
+      title: "A PDF riport csatolva van",
+      body: "A csatolt PDF a letisztult, szulobarat riportverzio. Elmentheted, kinyomtathatod, vagy szukseg eseten szakemberrel is megoszthatod.",
+      nextTitle: "Javasolt kovetkezo lepesek",
+      nextSteps: [
+        "Eloszor a gyors attekintest es a korosztalyi javaslatokat olvasd el.",
+        "Ird fel azt a 2-3 hetkoznapi helyzetet, ahol a minta a legerosebben latszik.",
+        "Ha a jelzesek erosek vagy tartosak, erdemes szakemberrel is atbeszelni a riportot."
+      ],
+      support: "Segitseg kell, vagy nem latszik a csatolmany? Valaszolj erre az emailre, vagy irj az info@neuromapkids.com cimre."
+    }
+  };
+
+  return copy[safeLang] || copy.en;
+}
+
 export function buildReportEmail({ lang, name, reportText, payload = null }) {
   const safeLang = getSafeLang(lang);
   const safeName = escapeHtml(name || "");
@@ -62,6 +92,17 @@ export function buildReportEmail({ lang, name, reportText, payload = null }) {
     .slice(0, 3)
     .map((item) => `- ${item}`)
     .join("\n");
+  const customerExperience = getCustomerExperienceCopy(safeLang);
+  const customerExperienceStepsHtml = customerExperience.nextSteps
+    .map((item) => `<li style="margin:0 0 8px 0;">${escapeHtml(item)}</li>`)
+    .join("");
+  const customerExperienceText = [
+    customerExperience.title,
+    customerExperience.body,
+    customerExperience.nextTitle,
+    ...customerExperience.nextSteps.map((item) => `- ${item}`),
+    customerExperience.support
+  ].join("\n");
 
   const content = {
     hu: {
@@ -284,6 +325,22 @@ export function buildReportEmail({ lang, name, reportText, payload = null }) {
 
             <tr>
               <td style="padding:0 32px 24px 32px;">
+                <div style="border:1px solid rgba(17,151,213,0.18);border-radius:18px;background:#f1faff;overflow:hidden;">
+                  <div style="padding:16px 20px;border-bottom:1px solid rgba(17,151,213,0.14);font-family:Arial,sans-serif;font-size:15px;font-weight:700;color:#102033;">
+                    ${escapeHtml(customerExperience.title)}
+                  </div>
+                  <div style="padding:18px 20px;font-family:Arial,sans-serif;font-size:14px;line-height:1.7;color:#334155;">
+                    <p style="margin:0 0 12px 0;">${escapeHtml(customerExperience.body)}</p>
+                    <div style="font-weight:700;margin:0 0 8px 0;color:#1f2937;">${escapeHtml(customerExperience.nextTitle)}</div>
+                    <ul style="margin:0 0 14px 0;padding-left:20px;">${customerExperienceStepsHtml}</ul>
+                    <p style="margin:0;color:#506780;font-size:13px;">${escapeHtml(customerExperience.support)}</p>
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding:0 32px 24px 32px;">
                 <div style="border:1px solid rgba(114,190,0,0.28);border-radius:18px;background:#f8fff4;overflow:hidden;">
                   <div style="padding:14px 20px;border-bottom:1px solid rgba(114,190,0,0.18);font-family:Arial,sans-serif;font-size:15px;font-weight:700;color:#1f2937;">
                     ${escapeHtml(reportV2.title)}
@@ -343,6 +400,8 @@ export function buildReportEmail({ lang, name, reportText, payload = null }) {
 NeuroMap Kids
 
 ${t.plainIntro}
+
+${customerExperienceText}
 
 ${reportV2.title}
 ${reportV2.ageBandLabel}
