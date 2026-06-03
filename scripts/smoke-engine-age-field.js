@@ -20,11 +20,11 @@ function main() {
     "Webflow Engine loader should load the public engine file."
   );
   assert(
-    loaderHtml.includes("20260603-landing-polish-analytics-v2"),
+    loaderHtml.includes("20260603-landing-rescue-v1"),
     "Webflow Engine loader should include the landing polish and analytics v2 cache-busting version."
   );
   assert(script.includes("ENGINE_VERSION"), "Engine should expose an engine version.");
-  assert(script.includes("20260603-landing-polish-analytics-v2"), "Engine should expose the current landing polish version.");
+  assert(script.includes("20260603-landing-rescue-v1"), "Engine should expose the current landing rescue version.");
   assert(script.includes("ANALYTICS_SCHEMA_VERSION"), "Engine should define an analytics schema version.");
   assert(script.includes("analytics-event-schema-v2"), "Engine should use analytics event schema v2.");
   assert(script.includes("trackSchemaEvent"), "Engine should send normalized analytics events.");
@@ -32,6 +32,8 @@ function main() {
   assert(script.includes("client_session_id"), "Engine analytics events should include a client session id.");
   assert(script.includes("installLandingPolishV2"), "Engine should install landing polish v2.");
   assert(script.includes("nm-landing-polish-v2"), "Engine should include the scoped landing polish stylesheet.");
+  assert(script.includes("applyLandingFallbackLanguage"), "Engine should include the landing text rescue fallback.");
+  assert(script.includes("ensureLandingStartHandlers"), "Engine should bind landing start buttons.");
   assert(script.includes("nm_landing_view"), "Engine should send a landing view event.");
   assert(script.includes("nm_questionnaire_loaded"), "Engine should send a questionnaire loaded event.");
   assert(script.includes("specific_bank_adhd_count"), "Engine should expose flat specific bank counts for analytics.");

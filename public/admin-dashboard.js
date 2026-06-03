@@ -169,8 +169,29 @@
     element.addEventListener("click", handler);
   }
 
+  function normalizeToken(value) {
+    return String(value || "").replace(/\s+/g, "").trim();
+  }
+
+  function readSavedToken() {
+    return normalizeToken(
+      localStorage.getItem(TOKEN_KEY) ||
+        localStorage.getItem("adminToken") ||
+        localStorage.getItem("ADMIN_TOKEN") ||
+        ""
+    );
+  }
+
   function getToken() {
-    return (els.token?.value || "").trim();
+    const fromInput = normalizeToken(els.token?.value || "");
+    if (fromInput) return fromInput;
+
+    const saved = readSavedToken();
+    if (saved && els.token) {
+      els.token.value = saved;
+    }
+
+    return saved;
   }
 
   function setBusy(isBusy) {
@@ -354,6 +375,7 @@
       headers: {
         "Content-Type": "application/json",
         "x-admin-token": token,
+        Authorization: `Bearer ${token}`,
         ...(options.headers || {})
       }
     });
@@ -378,6 +400,7 @@
       ...options,
       headers: {
         "x-admin-token": token,
+        Authorization: `Bearer ${token}`,
         ...(options.headers || {})
       }
     });
@@ -3333,13 +3356,21 @@
   }
 
   function init() {
-    const savedToken = localStorage.getItem(TOKEN_KEY);
+    const savedToken = readSavedToken();
     if (savedToken && els.token) {
       els.token.value = savedToken;
+      localStorage.setItem(TOKEN_KEY, savedToken);
     }
 
     bindClick(els.saveTokenBtn, () => {
-      localStorage.setItem(TOKEN_KEY, getToken());
+      const token = getToken();
+      if (!token) {
+        setStatus("Add meg az ADMIN_TOKEN értékét.", true);
+        return;
+      }
+
+      localStorage.setItem(TOKEN_KEY, token);
+      if (els.token) els.token.value = token;
       setStatus("Token mentve.");
       refreshDashboard();
     });

@@ -5,7 +5,7 @@
 (function () {
   if (typeof window === "undefined" || typeof document === "undefined") return;
 
-  const CHECKOUT_PAGES_VERSION = "20260603-customer-experience-v1";
+  const CHECKOUT_PAGES_VERSION = "20260603-customer-experience-v3";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
   const DEFAULT_API_BASE_URL = "https://neuromap-backend-production-969d.up.railway.app";
   const SUPPORTED_LANGS = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];
@@ -17,9 +17,41 @@
     retryError: "Could not restart checkout. Please contact support.",
     support: "Contact support",
     supportHref: "mailto:info@neuromapkids.com",
+    supportSubject: "NeuroMap Kids checkout support",
+    supportBody: "Hello NeuroMap Kids team,\n\nI need help with my checkout/report.\n\nSession: {{sessionId}}\nPage: {{pageKind}}\nStatus: {{status}}\n\nThank you.",
     sessionLabel: "Session",
     statusReady: "The page is ready.",
     noSession: "Missing checkout session identifier.",
+    copySession: "Copy session ID",
+    copiedSession: "Session ID copied.",
+    refreshStatus: "Refresh status",
+    refreshingStatus: "Refreshing status...",
+    lastCheckedLabel: "Last checked",
+    statusEmailMasked: "Report email",
+    statusSupportReference: "Support reference",
+    deliveryEstimateTitle: "Estimated delivery",
+    deliveryEstimateLoading: "We are checking the current report progress.",
+    deliveryEstimateSoon: "Most reports arrive within 1-2 minutes after payment.",
+    deliveryEstimateQueued: "Your report is in the processing queue. This is normal right after payment.",
+    deliveryEstimateDelayed: "This is taking longer than usual, but the automatic recovery checks are still watching it.",
+    deliveryEstimateSent: "The report has been sent. Please check your inbox and Spam or Promotions folders.",
+    deliveryEstimateAttention: "The report needs attention from the system. Support can use your session ID to check it quickly.",
+    deliveryEstimateNoSession: "Without a session ID we cannot show live progress, but your payment confirmation email remains valid.",
+    delayedHelpTitle: "If the email is delayed",
+    delayedHelpItems: [
+      "Wait a few minutes while the analysis and PDF generation finish.",
+      "Check Spam, Promotions, or Updates folders.",
+      "Send the support reference if the email has not arrived after several minutes."
+    ],
+    delayedHelpNote: "The system keeps retrying eligible report and email steps automatically.",
+    pageTipTitle: "Good to know",
+    successPageTip: "You can keep this page open and refresh the status without repeating the payment.",
+    cancelPageTip: "The payment page can be reopened from this session, so you do not need to restart the questionnaire.",
+    feedbackTitle: "Was this page helpful?",
+    feedbackPositive: "Looks good",
+    feedbackNeedHelp: "I need help",
+    feedbackThanks: "Thanks for the feedback.",
+    openingSupport: "Opening support email...",
     reportStatusTitle: "Report status",
     reportStatusLead: "We are preparing your personalized PDF and email.",
     statusLoading: "Checking report status...",
@@ -40,6 +72,13 @@
       "The PDF report is generated and attached to the email.",
       "Please also check Spam or Promotions if the email is delayed."
     ],
+    cancelRecoveryTitle: "Your answers are safe",
+    cancelRecoveryItems: [
+      "No payment was completed and no charge was made.",
+      "You can retry checkout without filling out the questionnaire again.",
+      "If checkout still fails, send the session ID to support."
+    ],
+    cancelSafeNote: "The saved questionnaire session can be reopened from this page while the session is available.",
     successTitle: "Payment successful",
     successLead: "Thank you. Your purchase was successful.",
     successBody: "The detailed parent-friendly report and PDF will be sent by email.",
@@ -55,9 +94,41 @@
       retrying: "\u00c1tir\u00e1ny\u00edt\u00e1s a fizet\u00e9si oldalra...",
       retryError: "Nem siker\u00fclt \u00fajraind\u00edtani a fizet\u00e9st. K\u00e9rlek, \u00edrj az \u00fcgyf\u00e9lszolg\u00e1latnak.",
       support: "Seg\u00edts\u00e9get k\u00e9rek",
+      supportSubject: "NeuroMap Kids fizet\u00e9si seg\u00edts\u00e9g",
+      supportBody: "Szia NeuroMap Kids csapat,\n\nSeg\u00edts\u00e9get k\u00e9rek a fizet\u00e9ssel vagy a riporttal kapcsolatban.\n\nAzonos\u00edt\u00f3: {{sessionId}}\nOldal: {{pageKind}}\n\u00c1llapot: {{status}}\n\nK\u00f6sz\u00f6n\u00f6m.",
       sessionLabel: "Azonos\u00edt\u00f3",
       statusReady: "Az oldal k\u00e9szen \u00e1ll.",
       noSession: "Hi\u00e1nyzik a fizet\u00e9si azonos\u00edt\u00f3.",
+      copySession: "Azonos\u00edt\u00f3 m\u00e1sol\u00e1sa",
+      copiedSession: "Az azonos\u00edt\u00f3 m\u00e1solva.",
+      refreshStatus: "\u00c1llapot friss\u00edt\u00e9se",
+      refreshingStatus: "\u00c1llapot friss\u00edt\u00e9se...",
+      lastCheckedLabel: "Utols\u00f3 ellen\u0151rz\u00e9s",
+      statusEmailMasked: "Riport email",
+      statusSupportReference: "Support hivatkoz\u00e1s",
+      deliveryEstimateTitle: "V\u00e1rhat\u00f3 \u00e9rkez\u00e9s",
+      deliveryEstimateLoading: "Ellen\u0151rizz\u00fck a riport aktu\u00e1lis \u00e1llapot\u00e1t.",
+      deliveryEstimateSoon: "A legt\u00f6bb riport a fizet\u00e9s ut\u00e1n 1-2 percen bel\u00fcl meg\u00e9rkezik.",
+      deliveryEstimateQueued: "A riport feldolgoz\u00e1si sorban van. Ez k\u00f6zvetlen\u00fcl fizet\u00e9s ut\u00e1n norm\u00e1lis.",
+      deliveryEstimateDelayed: "Ez most tov\u00e1bb tart a szok\u00e1sosn\u00e1l, de az automatikus helyre\u00e1ll\u00edt\u00e1si ellen\u0151rz\u00e9sek tov\u00e1bb figyelik.",
+      deliveryEstimateSent: "A riport elk\u00fcldve. Ellen\u0151rizd a be\u00e9rkez\u0151, Spam \u00e9s Prom\u00f3ci\u00f3k mapp\u00e1t is.",
+      deliveryEstimateAttention: "A riport figyelmet ig\u00e9nyel a rendszert\u0151l. A support az azonos\u00edt\u00f3 alapj\u00e1n gyorsabban r\u00e1 tud n\u00e9zni.",
+      deliveryEstimateNoSession: "\u00c9l\u0151 \u00e1llapotot azonos\u00edt\u00f3 n\u00e9lk\u00fcl nem tudunk mutatni, de a fizet\u00e9si visszaigazol\u00e1s \u00e9rv\u00e9nyes.",
+      delayedHelpTitle: "Ha k\u00e9sik az email",
+      delayedHelpItems: [
+        "V\u00e1rj n\u00e9h\u00e1ny percet, am\u00edg az elemz\u00e9s \u00e9s a PDF gener\u00e1l\u00e1s befejez\u0151dik.",
+        "N\u00e9zd meg a Spam, Prom\u00f3ci\u00f3k vagy Friss\u00edt\u00e9sek mapp\u00e1t is.",
+        "Ha t\u00f6bb perc ut\u00e1n sem \u00e9rkezik meg, k\u00fcldd el a support hivatkoz\u00e1st."
+      ],
+      delayedHelpNote: "A rendszer az alkalmas riport- \u00e9s email-l\u00e9p\u00e9seket automatikusan \u00fajrapr\u00f3b\u00e1lja.",
+      pageTipTitle: "J\u00f3 tudni",
+      successPageTip: "Ezt az oldalt nyitva hagyhatod, \u00e9s fizet\u00e9s ism\u00e9tl\u00e9se n\u00e9lk\u00fcl friss\u00edtheted az \u00e1llapotot.",
+      cancelPageTip: "A fizet\u00e9si oldal ebb\u0151l a sessionb\u0151l \u00fajranyithat\u00f3, ez\u00e9rt nem kell el\u00f6lr\u0151l kezdened a k\u00e9rd\u0151\u00edvet.",
+      feedbackTitle: "Hasznos volt ez az oldal?",
+      feedbackPositive: "Rendben van",
+      feedbackNeedHelp: "Seg\u00edts\u00e9get k\u00e9rek",
+      feedbackThanks: "K\u00f6sz\u00f6nj\u00fck a visszajelz\u00e9st.",
+      openingSupport: "Support email megnyit\u00e1sa...",
       reportStatusTitle: "Riport \u00e1llapota",
       reportStatusLead: "K\u00e9sz\u00edtj\u00fck a szem\u00e9lyre szabott PDF-et \u00e9s az emailt.",
       statusLoading: "Riport \u00e1llapot ellen\u0151rz\u00e9se...",
@@ -78,6 +149,13 @@
         "A PDF riport gener\u00e1l\u00f3dik \u00e9s csatolm\u00e1nyk\u00e9nt ker\u00fcl az emailbe.",
         "Ha p\u00e1r percen bel\u00fcl nem l\u00e1tod, ellen\u0151rizd a Spam vagy Prom\u00f3ci\u00f3k mapp\u00e1t is."
       ],
+      cancelRecoveryTitle: "A v\u00e1laszaid biztons\u00e1gban vannak",
+      cancelRecoveryItems: [
+        "A fizet\u00e9s nem fejez\u0151d\u00f6tt be, \u00edgy nem t\u00f6rt\u00e9nt terhel\u00e9s.",
+        "\u00dajraind\u00edthatod a fizet\u00e9st an\u00e9lk\u00fcl, hogy \u00fajra ki kellene t\u00f6ltened a k\u00e9rd\u0151\u00edvet.",
+        "Ha a fizet\u00e9s tov\u00e1bbra sem indul, k\u00fcldd el az azonos\u00edt\u00f3t az \u00fcgyf\u00e9lszolg\u00e1latnak."
+      ],
+      cancelSafeNote: "A mentett k\u00e9rd\u0151\u00edv session err\u0151l az oldalr\u00f3l \u00fajraind\u00edthat\u00f3, am\u00edg a session el\u00e9rhet\u0151.",
       successTitle: "K\u00f6sz\u00f6nj\u00fck! A fizet\u00e9s sikeres volt.",
       successLead: "A szem\u00e9lyre szabott NeuroMap Kids riport elk\u00e9sz\u00edt\u00e9se elindult.",
       successBody: "A r\u00e9szletes \u00e9rt\u00e9kel\u00e9s \u00e9s a PDF riport emailben \u00e9rkezik. Ez \u00e1ltal\u00e1ban 1-2 percen bel\u00fcl megt\u00f6rt\u00e9nik.",
@@ -255,6 +333,17 @@
     return fallback;
   }
 
+  function buildSupportHref(copy, sessionId, pageKind, statusText) {
+    const subject = copy.supportSubject || BASE_COPY.supportSubject;
+    const body = String(copy.supportBody || BASE_COPY.supportBody)
+      .replace(/\{\{sessionId\}\}/g, sessionId || "missing")
+      .replace(/\{\{pageKind\}\}/g, pageKind || getPageKind())
+      .replace(/\{\{status\}\}/g, statusText || "unknown");
+
+    const href = `${copy.supportHref || BASE_COPY.supportHref}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    return safeHref(href, BASE_COPY.supportHref);
+  }
+
   function escapeHtml(value) {
     return String(value == null ? "" : value)
       .replace(/&/g, "&amp;")
@@ -422,7 +511,12 @@
       }
 
       .nm-checkout-next,
-      .nm-report-status-panel {
+      .nm-report-status-panel,
+      .nm-cancel-recovery,
+      .nm-customer-tip,
+      .nm-delivery-estimate,
+      .nm-delayed-help,
+      .nm-feedback-panel {
         margin: 0 auto 24px;
         max-width: 620px;
         text-align: left;
@@ -433,16 +527,57 @@
       }
 
       [dir="rtl"] .nm-checkout-next,
-      [dir="rtl"] .nm-report-status-panel {
+      [dir="rtl"] .nm-report-status-panel,
+      [dir="rtl"] .nm-cancel-recovery,
+      [dir="rtl"] .nm-customer-tip,
+      [dir="rtl"] .nm-delivery-estimate,
+      [dir="rtl"] .nm-delayed-help,
+      [dir="rtl"] .nm-feedback-panel {
         text-align: right;
       }
 
       .nm-checkout-next h2,
-      .nm-report-status-panel h2 {
+      .nm-report-status-panel h2,
+      .nm-cancel-recovery h2,
+      .nm-customer-tip h2,
+      .nm-delivery-estimate h2,
+      .nm-delayed-help h2,
+      .nm-feedback-panel h2 {
         margin: 0 0 8px;
         font-size: 16px;
         line-height: 1.3;
         color: #102033;
+      }
+
+      .nm-customer-tip,
+      .nm-delivery-estimate {
+        border-color: #cfe8f7;
+        background: #f3fbff;
+      }
+
+      .nm-customer-tip p,
+      .nm-delivery-estimate p,
+      .nm-delayed-help p {
+        margin: 0;
+        color: #506780;
+        font-size: 13px;
+        line-height: 1.6;
+      }
+
+      .nm-delivery-estimate[data-tone="sent"] {
+        border-color: #bcebd5;
+        background: #f1fcf6;
+      }
+
+      .nm-delivery-estimate[data-tone="delayed"],
+      .nm-delayed-help {
+        border-color: #ffd7b4;
+        background: #fff8f1;
+      }
+
+      .nm-delivery-estimate[data-tone="attention"] {
+        border-color: #ffc6bd;
+        background: #fff4f2;
       }
 
       .nm-checkout-next ol {
@@ -451,6 +586,43 @@
         color: #506780;
         font-size: 14px;
         line-height: 1.6;
+      }
+
+      .nm-cancel-recovery ul {
+        margin: 10px 0 0;
+        padding-left: 20px;
+        color: #506780;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      [dir="rtl"] .nm-cancel-recovery ul {
+        padding-left: 0;
+        padding-right: 20px;
+      }
+
+      .nm-cancel-note {
+        margin: 12px 0 0;
+        color: #32526f;
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      .nm-delayed-help[hidden] {
+        display: none !important;
+      }
+
+      .nm-delayed-help ul {
+        margin: 10px 0 0;
+        padding-left: 20px;
+        color: #506780;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      [dir="rtl"] .nm-delayed-help ul {
+        padding-left: 0;
+        padding-right: 20px;
       }
 
       [dir="rtl"] .nm-checkout-next ol {
@@ -516,6 +688,49 @@
         color: #506780;
         font-size: 12px;
         white-space: nowrap;
+      }
+
+      .nm-status-meta {
+        display: grid;
+        gap: 7px;
+        margin: 13px 0 0;
+        padding-top: 13px;
+        border-top: 1px solid #e6eef5;
+        color: #506780;
+        font-size: 12px;
+        line-height: 1.45;
+      }
+
+      .nm-status-controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 14px;
+      }
+
+      .nm-mini-button {
+        appearance: none;
+        border: 1px solid #d7e6f0;
+        border-radius: 9px;
+        background: #fff;
+        color: #102033;
+        cursor: pointer;
+        font-weight: 800;
+        font-size: 12px;
+        line-height: 1;
+        padding: 10px 12px;
+      }
+
+      .nm-mini-button:disabled {
+        opacity: .6;
+        cursor: wait;
+      }
+
+      .nm-feedback-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 12px;
       }
 
       .nm-checkout-actions {
@@ -634,6 +849,140 @@
     return copy.reportStatusLead;
   }
 
+  function minutesSince(value) {
+    if (!value) return 0;
+
+    const timestamp = new Date(value).getTime();
+    if (!Number.isFinite(timestamp)) return 0;
+
+    return Math.max(0, Math.round((Date.now() - timestamp) / 60000));
+  }
+
+  function getDeliveryEstimate(copy, status, hasSessionId) {
+    if (!hasSessionId) {
+      return {
+        tone: "attention",
+        message: copy.deliveryEstimateNoSession
+      };
+    }
+
+    if (!status) {
+      return {
+        tone: "active",
+        message: copy.deliveryEstimateLoading
+      };
+    }
+
+    if (status.overall === "sent") {
+      return {
+        tone: "sent",
+        message: copy.deliveryEstimateSent
+      };
+    }
+
+    if (status.overall === "attention") {
+      return {
+        tone: "attention",
+        message: copy.deliveryEstimateAttention
+      };
+    }
+
+    const minutesFromPayment = minutesSince(status.paidAt || status.createdAt);
+    const analysisStatus = String(status.analysisStatus || "").toLowerCase();
+
+    if (minutesFromPayment >= 5) {
+      return {
+        tone: "delayed",
+        message: copy.deliveryEstimateDelayed
+      };
+    }
+
+    if (analysisStatus === "queued" || analysisStatus === "pending") {
+      return {
+        tone: "active",
+        message: copy.deliveryEstimateQueued
+      };
+    }
+
+    return {
+      tone: "active",
+      message: copy.deliveryEstimateSoon
+    };
+  }
+
+  function renderCustomerTip(copy, isSuccess) {
+    const text = isSuccess ? copy.successPageTip : copy.cancelPageTip;
+
+    return `
+      <div class="nm-customer-tip">
+        <h2>${escapeHtml(copy.pageTipTitle)}</h2>
+        <p>${escapeHtml(text)}</p>
+      </div>
+    `;
+  }
+
+  function renderDeliveryEstimate(copy, sessionId, status) {
+    const estimate = getDeliveryEstimate(copy, status, Boolean(sessionId));
+
+    return `
+      <div class="nm-delivery-estimate" id="nmDeliveryEstimate" data-tone="${escapeHtml(estimate.tone)}">
+        <h2>${escapeHtml(copy.deliveryEstimateTitle)}</h2>
+        <p id="nmDeliveryEstimateText">${escapeHtml(estimate.message)}</p>
+      </div>
+    `;
+  }
+
+  function updateDeliveryEstimate(copy, sessionId, status) {
+    const panel = document.getElementById("nmDeliveryEstimate");
+    const text = document.getElementById("nmDeliveryEstimateText");
+    if (!panel || !text) return;
+
+    const estimate = getDeliveryEstimate(copy, status, Boolean(sessionId));
+    panel.setAttribute("data-tone", estimate.tone);
+    text.textContent = estimate.message;
+  }
+
+  function renderDelayedHelp(copy) {
+    const items = Array.isArray(copy.delayedHelpItems)
+      ? copy.delayedHelpItems
+      : BASE_COPY.delayedHelpItems;
+
+    return `
+      <div class="nm-delayed-help" id="nmDelayedHelp" hidden>
+        <h2>${escapeHtml(copy.delayedHelpTitle)}</h2>
+        <ul>
+          ${items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
+        </ul>
+        <p>${escapeHtml(copy.delayedHelpNote)}</p>
+      </div>
+    `;
+  }
+
+  function updateDelayedHelp(status) {
+    const panel = document.getElementById("nmDelayedHelp");
+    if (!panel) return;
+
+    const minutesFromPayment = status ? minutesSince(status.paidAt || status.createdAt) : 0;
+    const shouldShow =
+      !status ||
+      status.overall === "attention" ||
+      (status.overall !== "sent" && minutesFromPayment >= 3);
+
+    panel.hidden = !shouldShow;
+  }
+
+  function renderFeedbackPanel(copy) {
+    return `
+      <div class="nm-feedback-panel">
+        <h2>${escapeHtml(copy.feedbackTitle)}</h2>
+        <div class="nm-feedback-actions">
+          <button class="nm-mini-button" type="button" data-nm-feedback="positive">${escapeHtml(copy.feedbackPositive)}</button>
+          <button class="nm-mini-button" type="button" data-nm-feedback="need_help">${escapeHtml(copy.feedbackNeedHelp)}</button>
+        </div>
+      </div>
+    `;
+  }
+
   function renderSuccessExtras(copy) {
     const nextItems = Array.isArray(copy.nextItems) ? copy.nextItems : BASE_COPY.nextItems;
 
@@ -644,14 +993,57 @@
           ${nextItems.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
         </ol>
       </div>
+      ${renderDeliveryEstimate(copy, getSessionId("success"), null)}
       <div class="nm-report-status-panel" id="nmReportStatusPanel">
         <h2>${escapeHtml(copy.reportStatusTitle)}</h2>
         <p class="nm-report-status-lead" id="nmReportStatusLead">${escapeHtml(copy.statusLoading)}</p>
         <div class="nm-status-steps" id="nmReportStatusSteps">
           ${renderStatusSteps(copy)}
         </div>
+        <div class="nm-status-meta" id="nmReportStatusMeta" hidden></div>
+        <div class="nm-status-controls">
+          <button class="nm-mini-button" type="button" id="nmRefreshStatus">${escapeHtml(copy.refreshStatus)}</button>
+        </div>
+      </div>
+      ${renderDelayedHelp(copy)}
+    `;
+  }
+
+  function renderCancelExtras(copy) {
+    const items = Array.isArray(copy.cancelRecoveryItems)
+      ? copy.cancelRecoveryItems
+      : BASE_COPY.cancelRecoveryItems;
+
+    return `
+      <div class="nm-cancel-recovery">
+        <h2>${escapeHtml(copy.cancelRecoveryTitle)}</h2>
+        <ul>
+          ${items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
+        </ul>
+        <p class="nm-cancel-note">${escapeHtml(copy.cancelSafeNote)}</p>
       </div>
     `;
+  }
+
+  function renderStatusMeta(copy, sessionId, status) {
+    const meta = document.getElementById("nmReportStatusMeta");
+    if (!meta) return;
+
+    const rows = [];
+    const checkedAt = new Date().toLocaleString();
+
+    rows.push(`${copy.lastCheckedLabel}: ${checkedAt}`);
+
+    if (status && status.emailMasked) {
+      rows.push(`${copy.statusEmailMasked}: ${status.emailMasked}`);
+    }
+
+    if (sessionId) {
+      rows.push(`${copy.statusSupportReference}: ${sessionId}`);
+    }
+
+    meta.innerHTML = rows.map((row) => `<div>${escapeHtml(row)}</div>`).join("");
+    meta.hidden = false;
   }
 
   function renderPage(kind, lang, sessionId) {
@@ -671,12 +1063,15 @@
         <h1>${escapeHtml(isSuccess ? copy.successTitle : copy.cancelTitle)}</h1>
         <p class="nm-checkout-lead">${escapeHtml(isSuccess ? copy.successLead : copy.cancelLead)}</p>
         <p class="nm-checkout-body">${escapeHtml(isSuccess ? copy.successBody : copy.cancelBody)}</p>
+        ${renderCustomerTip(copy, isSuccess)}
         ${sessionId ? `<div class="nm-checkout-meta">${escapeHtml(copy.sessionLabel)}: ${escapeHtml(sessionId)}</div>` : ""}
-        ${isSuccess ? renderSuccessExtras(copy) : ""}
+        ${isSuccess ? renderSuccessExtras(copy) : renderCancelExtras(copy)}
+        ${renderFeedbackPanel(copy)}
         <div class="nm-checkout-actions">
           <a class="nm-checkout-button dark" href="${escapeHtml(safeHref(getHomeHref(lang), "/"))}">${escapeHtml(copy.home)}</a>
           ${!isSuccess ? `<button class="nm-checkout-button" type="button" id="nmRetryCheckout">${escapeHtml(copy.retry)}</button>` : ""}
-          <a class="nm-checkout-button secondary" href="${escapeHtml(safeHref(copy.supportHref, "mailto:info@neuromapkids.com"))}">${escapeHtml(copy.support)}</a>
+          ${sessionId ? `<button class="nm-checkout-button secondary" type="button" id="nmCopySession">${escapeHtml(copy.copySession)}</button>` : ""}
+          <a class="nm-checkout-button secondary" id="nmSupportLink" href="${escapeHtml(buildSupportHref(copy, sessionId, kind, isSuccess ? "success_page" : "cancel_page"))}">${escapeHtml(copy.support)}</a>
         </div>
         <div class="nm-checkout-status" id="nmCheckoutStatus">${escapeHtml(copy.statusReady)}</div>
       </section>
@@ -692,11 +1087,26 @@
         retryCheckout(sessionId, copy);
       });
     }
+
+    const copyButton = document.getElementById("nmCopySession");
+    if (copyButton) {
+      copyButton.addEventListener("click", function () {
+        copySessionId(sessionId, copy);
+      });
+    }
+
+    document.querySelectorAll("[data-nm-feedback]").forEach((button) => {
+      button.addEventListener("click", function () {
+        handleFeedback(button.getAttribute("data-nm-feedback"), copy, sessionId, kind);
+      });
+    });
   }
 
   async function loadReportStatus(sessionId, copy, attempt) {
     const lead = document.getElementById("nmReportStatusLead");
     const steps = document.getElementById("nmReportStatusSteps");
+    const refreshButton = document.getElementById("nmRefreshStatus");
+    const supportLink = document.getElementById("nmSupportLink");
 
     if (!lead || !steps) return;
 
@@ -706,6 +1116,11 @@
     }
 
     try {
+      if (refreshButton) {
+        refreshButton.disabled = true;
+        refreshButton.textContent = copy.refreshingStatus;
+      }
+
       const response = await fetch(`${getApiBaseUrl()}/session/status/${encodeURIComponent(sessionId)}`, {
         method: "GET",
         credentials: "omit"
@@ -719,6 +1134,13 @@
 
       lead.textContent = getStatusMessage(copy, data.status);
       steps.innerHTML = renderStatusSteps(copy, data.status.stages);
+      renderStatusMeta(copy, sessionId, data.status);
+      updateDeliveryEstimate(copy, sessionId, data.status);
+      updateDelayedHelp(data.status);
+
+      if (supportLink) {
+        supportLink.href = buildSupportHref(copy, sessionId, "success", data.status.overall || "unknown");
+      }
 
       trackOnce("nm_report_status_view", {
         checkout_session_id: sessionId || "",
@@ -735,12 +1157,78 @@
       }
     } catch (_error) {
       lead.textContent = copy.statusUnavailable;
+      renderStatusMeta(copy, sessionId, null);
+      updateDeliveryEstimate(copy, sessionId, null);
+      updateDelayedHelp(null);
+    } finally {
+      if (refreshButton) {
+        refreshButton.disabled = false;
+        refreshButton.textContent = copy.refreshStatus;
+      }
     }
   }
 
   function setRuntimeStatus(message) {
     const el = document.getElementById("nmCheckoutStatus");
     if (el) el.textContent = message || "";
+  }
+
+  async function copySessionId(sessionId, copy) {
+    if (!sessionId) {
+      setRuntimeStatus(copy.noSession);
+      return;
+    }
+
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(sessionId);
+      } else {
+        const input = document.createElement("input");
+        input.value = sessionId;
+        input.setAttribute("readonly", "readonly");
+        input.style.position = "fixed";
+        input.style.left = "-9999px";
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand("copy");
+        input.remove();
+      }
+
+      setRuntimeStatus(copy.copiedSession);
+      trackOnce("nm_support_reference_copied", {
+        checkout_session_id: sessionId || "",
+        session_id: sessionId || "",
+        source: "webflow_checkout_pages",
+        version: CHECKOUT_PAGES_VERSION
+      });
+    } catch (_error) {
+      setRuntimeStatus(sessionId);
+    }
+  }
+
+  function handleFeedback(value, copy, sessionId, kind) {
+    const normalized = value === "need_help" ? "need_help" : "positive";
+
+    trackOnce(`nm_checkout_page_feedback_${normalized}`, {
+      checkout_session_id: sessionId || "",
+      session_id: sessionId || "",
+      feedback: normalized,
+      source: kind === "success" ? "webflow_success_page" : "webflow_cancel_page",
+      version: CHECKOUT_PAGES_VERSION
+    });
+
+    if (normalized === "need_help") {
+      setRuntimeStatus(copy.openingSupport);
+
+      const link = document.getElementById("nmSupportLink");
+      if (link && link.href) {
+        window.location.href = link.href;
+      }
+
+      return;
+    }
+
+    setRuntimeStatus(copy.feedbackThanks);
   }
 
   async function retryCheckout(sessionId, copy) {
@@ -844,7 +1332,24 @@
     trackPage(kind, lang, sessionId);
 
     if (kind === "success") {
-      loadReportStatus(sessionId, getCopy(lang), 1);
+      const copy = getCopy(lang);
+      const refreshButton = document.getElementById("nmRefreshStatus");
+
+      if (refreshButton) {
+        refreshButton.addEventListener("click", function () {
+          loadReportStatus(sessionId, copy, 6);
+        });
+      }
+
+      loadReportStatus(sessionId, copy, 1);
+    } else {
+      trackOnce("checkout_recovery_view", {
+        checkout_session_id: sessionId || "",
+        session_id: sessionId || "",
+        lang,
+        source: "webflow_cancel_page",
+        version: CHECKOUT_PAGES_VERSION
+      });
     }
   }
 

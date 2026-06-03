@@ -5,7 +5,7 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260603-landing-polish-analytics-v2";
+  const ENGINE_VERSION = "20260603-landing-rescue-v1";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
 
   const state = {
@@ -792,6 +792,126 @@
     `;
 
     document.head.appendChild(style);
+  }
+
+  const LANDING_FALLBACK_TEXT = {
+    hu: {
+      modalTitle: "Válassz nyelvet",
+      heroTitle: "Értsd meg, mi állhat gyermeked viselkedése mögött",
+      heroSub: "10 perces kérdőív után személyre szabott, szülőbarát riportot és PDF-et kapsz.",
+      primaryCta: "Kezdjük →",
+      microcopy: "Csak $5 • Nincs előfizetés • PDF riport emailben",
+      trust1: "kb. 10 perc",
+      trust2: "PDF riport emailben",
+      trust3: "strukturált elemzés",
+      valueTitle: "Mit kapsz pontosan?",
+      value1: "személyre szabott értelmezés a válaszok alapján",
+      value2: "viselkedési, érzelmi és tanulási mintázatok kiemelve",
+      value3: "gyakorlati, szülőként is azonnal használható javaslatok",
+      value4: "brandelt PDF riport emailben",
+      stepsTitle: "Így működik",
+      step1: "1. Kitöltöd a rövid előszűrő kérdőívet",
+      step2: "2. A rendszer kiválasztja a releváns specifikus kérdéssort",
+      step3: "3. Fizetés után elkészül és emailben megérkezik a riport",
+      previewTitle: "Így néz ki a riport",
+      previewCaption: "Minta előnézet: a teljes riport személyre szabottan, PDF-ben érkezik.",
+      trustTitle: "Fontos tudni",
+      trustText: "A NeuroMap Kids nem diagnózis, hanem strukturált előszűrés.",
+      priceTitle: "Egyszeri díj",
+      priceValue: "Csak $5",
+      priceCta: "Riport elkészítése →",
+      priceMicrocopy: "Nincs előfizetés • Biztonságos fizetés • PDF emailben",
+      stickyCta: "Kezdjük →"
+    },
+    en: {
+      modalTitle: "Choose language",
+      heroTitle: "Understand what may be behind your child's behavior",
+      heroSub: "After a 10-minute questionnaire, you receive a personalized, parent-friendly report and PDF.",
+      primaryCta: "Start →",
+      microcopy: "Only $5 • No subscription • PDF report by email",
+      trust1: "about 10 minutes",
+      trust2: "PDF report by email",
+      trust3: "structured analysis",
+      valueTitle: "What you get",
+      value1: "personalized interpretation based on your answers",
+      value2: "behavioral, emotional, and learning patterns highlighted",
+      value3: "practical parent-friendly suggestions",
+      value4: "branded PDF report by email",
+      stepsTitle: "How it works",
+      step1: "1. Complete the short screening questionnaire",
+      step2: "2. The system selects the relevant specific question set",
+      step3: "3. After payment, the report is generated and sent by email",
+      previewTitle: "What the report looks like",
+      previewCaption: "Sample preview: the full report is personalized and delivered as a PDF.",
+      trustTitle: "Important to know",
+      trustText: "NeuroMap Kids is not a diagnosis.",
+      priceTitle: "One-time payment",
+      priceValue: "Only $5",
+      priceCta: "Get report →",
+      priceMicrocopy: "No subscription • Secure payment • PDF by email",
+      stickyCta: "Start →"
+    }
+  };
+
+  function getLandingFallbackText(lang = state.lang) {
+    return LANDING_FALLBACK_TEXT[lang] || LANDING_FALLBACK_TEXT.en;
+  }
+
+  function applyLandingFallbackLanguage(lang = state.lang) {
+    const copy = getLandingFallbackText(lang);
+
+    document.querySelectorAll("[data-nm-i18n]").forEach((element) => {
+      const key = element.getAttribute("data-nm-i18n");
+      const value = copy[key];
+      if (typeof value === "string") {
+        element.textContent = value;
+      }
+    });
+
+    const modalTitle = document.getElementById("modalTitle");
+    if (modalTitle && copy.modalTitle) {
+      modalTitle.textContent = copy.modalTitle;
+    }
+  }
+
+  function showQuestionnaireFromLanding() {
+    const app = document.getElementById("nmApp");
+    const target =
+      document.getElementById("questionnaireStart") ||
+      app ||
+      document.getElementById("triageSection");
+
+    if (app) {
+      app.style.display = "block";
+    }
+
+    if (target) {
+      setTimeout(() => {
+        target.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      }, 20);
+    }
+  }
+
+  function ensureLandingStartHandlers() {
+    const selectors = [
+      ".nm-start-btn",
+      "[data-nm-cta]",
+      "a[href='#questionnaireStart']",
+      "a[href*='questionnaireStart']"
+    ];
+
+    document.querySelectorAll(selectors.join(",")).forEach((element) => {
+      if (element.dataset.nmEngineStartBound === "1") return;
+
+      element.dataset.nmEngineStartBound = "1";
+      element.addEventListener("click", (event) => {
+        event.preventDefault();
+        showQuestionnaireFromLanding();
+      });
+    });
   }
 
   function getQuestionMark(lang) {
@@ -2250,6 +2370,8 @@
     localStorage.setItem("nm_lang", lang);
 
     applyLang(lang);
+    applyLandingFallbackLanguage(lang);
+    ensureLandingStartHandlers();
 
     trackSchemaEvent("nm_language_selected", {
       funnel_step: state.step || "landing",
@@ -2269,12 +2391,14 @@
     installLandingPolishV2();
     buildLangButtons();
     ensureChildAgeField();
+    state.lang = getLang();
+    applyLandingFallbackLanguage(state.lang);
+    ensureLandingStartHandlers();
 
     if (!validateRuntimeBanks()) {
       return;
     }
 
-    state.lang = getLang();
     state.triageQuestions = buildTriageQuestions();
 
     const langSwitch = document.getElementById("langSwitch");

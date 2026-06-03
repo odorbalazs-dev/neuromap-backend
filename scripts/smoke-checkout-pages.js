@@ -9,7 +9,7 @@ function assert(condition, message) {
 function main() {
   console.log("\n=== CHECKOUT PAGES SMOKE ===");
 
-  const currentVersion = "20260603-customer-experience-v1";
+  const currentVersion = "20260603-customer-experience-v3";
   const script = fs.readFileSync("public/webflow/checkout-pages.js", "utf8");
   const sharedEmbed = fs.readFileSync("web/checkout-pages-embed.html", "utf8").trim();
   const successEmbed = fs.readFileSync("web/checkout-success-embed.html", "utf8").trim();
@@ -43,6 +43,16 @@ function main() {
   assert(script.includes("/session/status/"), "Success page should load the customer-facing report status.");
   assert(script.includes("nmReportStatusPanel"), "Success page should render a report status panel.");
   assert(script.includes("What happens next?"), "Success page should explain the post-payment next steps.");
+  assert(script.includes("nmRefreshStatus"), "Success page should allow manual report status refresh.");
+  assert(script.includes("nmCopySession"), "Checkout pages should allow copying the support session id.");
+  assert(script.includes("nmDeliveryEstimate"), "Success page should show customer-facing delivery expectations.");
+  assert(script.includes("nmDelayedHelp"), "Success page should explain what to do if the email is delayed.");
+  assert(script.includes("data-nm-feedback=\"need_help\""), "Checkout pages should render support-intent feedback.");
+  assert(script.includes("nm_checkout_page_feedback_${normalized}"), "Checkout pages should track checkout page feedback.");
+  assert(script.includes("nm_support_reference_copied"), "Checkout pages should track copied support references.");
+  assert(script.includes("Good to know"), "Checkout pages should include a customer guidance tip.");
+  assert(script.includes("checkout_recovery_view"), "Cancel page should track the recovery guidance view.");
+  assert(script.includes("Your answers are safe"), "Cancel page should reassure customers after a failed payment.");
   assert(script.includes("trackOnce(\"checkout_cancelled\""), "Cancel page should send a checkout_cancelled event.");
   assert(script.includes("hasDataLayerEvent"), "Checkout tracking should protect against duplicate dataLayer events.");
   assert(script.includes("/checkout/retry/"), "Cancel page should support retry checkout.");
