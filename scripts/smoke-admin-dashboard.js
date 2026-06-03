@@ -165,6 +165,18 @@ assert(
   "Dashboard HTML should include the bank quality alert button."
 );
 assert(
+  res.body.includes("operationalAlertBtn"),
+  "Dashboard HTML should include the operational alert button."
+);
+assert(
+  res.body.includes("operationalAlertLevel"),
+  "Dashboard HTML should include operational alert snapshot metrics."
+);
+assert(
+  res.body.includes('data-control-action="operational-alert"'),
+  "Dashboard HTML should include the operational alert command action."
+);
+assert(
   res.body.includes('data-control-action="bank-quality-alert"'),
   "Dashboard HTML should include the bank quality command action."
 );
@@ -367,6 +379,14 @@ assert(
 assert(
   dashboardJs.includes("/admin/trigger-bank-quality-alert-check?minLevel=review"),
   "Dashboard JS should call the bank quality alert endpoint."
+);
+assert(
+  dashboardJs.includes("/admin/trigger-operational-alert-check?minLevel=warning"),
+  "Dashboard JS should call the operational alert endpoint."
+);
+assert(
+  dashboardJs.includes("renderOperationalAlertSnapshot"),
+  "Dashboard JS should render the operational alert snapshot."
 );
 assert(
   dashboardJs.includes("/admin/email-deliverability?hours=168&limit=30"),

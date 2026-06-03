@@ -12,8 +12,10 @@ import { deliverReportEmailForSession } from "../../services/report-email-delive
 import { retryReportEmailsBatch } from "../../services/report-email-retry.service.js";
 import { generatePdfBuffer } from "../../services/pdf.service.js";
 import {
+  buildOperationalAlertSnapshot,
   runBankQualityAlertCheck,
   getRecentAdminAlerts,
+  runOperationalAlertCheck,
   runProductionHealthAlertCheck
 } from "../../services/admin-alert.service.js";
 import { buildAdminSessionReportSummary } from "../../services/admin-session-summary.service.js";
@@ -1831,10 +1833,17 @@ export async function getOperationsLog(req, res) {
 export async function getAdminAlerts(req, res) {
   try {
     const limit = clampNumber(req.query.limit, 10, 1, 100);
-    const items = await getRecentAdminAlerts({ limit });
+    const [items, operational] = await Promise.all([
+      getRecentAdminAlerts({ limit }),
+      buildOperationalAlertSnapshot({
+        windowHours: clampNumber(req.query.windowHours, 24, 1, 720),
+        limit: 30
+      })
+    ]);
 
     return res.status(200).json({
       ok: true,
+      operational,
       items
     });
   } catch (error) {
@@ -1872,6 +1881,48 @@ export async function triggerAdminAlertCheck(req, res) {
     return res.status(500).json({
       ok: false,
       error: error.message || "Failed to run admin alert check"
+    });
+  }
+}
+
+export async function triggerOperationalAlertCheck(req, res) {
+  try {
+    const cooldownMinutes = clampNumber(
+      req.query.cooldownMinutes ?? req.body?.cooldownMinutes,
+      30,
+      1,
+      1440
+    );
+
+    const windowHours = clampNumber(
+      req.query.windowHours ?? req.body?.windowHours,
+      24,
+      1,
+      720
+    );
+
+    const force =
+      String(req.query.force ?? req.body?.force ?? "false").toLowerCase() === "true";
+
+    const minLevel = String(
+      req.query.minLevel ?? req.body?.minLevel ?? "warning"
+    ).toLowerCase();
+
+    const result =
+      await runOperationalAlertCheck({
+        cooldownMinutes,
+        force,
+        minLevel,
+        windowHours
+      });
+
+    return res.status(result.ok === false ? 500 : 200).json(result);
+  } catch (error) {
+    console.error("Admin operational alert check error:", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: error.message || "Failed to run operational alert check"
     });
   }
 }

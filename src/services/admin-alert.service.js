@@ -2,6 +2,8 @@ import { db } from "../db/db.js";
 import { env } from "../config/env.js";
 import { sendAdminAlertEmail } from "./email.service.js";
 import { buildBankQualityAudit } from "./bank-quality-audit.service.js";
+import { buildEmailDeliverabilityMonitor } from "./email-deliverability.service.js";
+import { buildPostPaymentMonitor } from "./post-payment-monitoring.service.js";
 
 function normalizeNumber(value, fallback, min, max) {
   const number = Number(value);
@@ -320,6 +322,200 @@ function buildBankQualityEmailContent({ level, audit, threshold }) {
   };
 }
 
+function buildOperationalIssue({
+  key,
+  level,
+  label,
+  count = 0,
+  detail,
+  recommendation
+}) {
+  return {
+    key,
+    level,
+    label,
+    count: Number(count || 0),
+    detail: detail || "",
+    recommendation: recommendation || ""
+  };
+}
+
+function buildOperationalIssues({ health, postPayment, emailDeliverability }) {
+  const issues = [];
+
+  for (const reason of health.reasons || []) {
+    issues.push(
+      buildOperationalIssue({
+        key: `health_${reason.key}`,
+        level: "critical",
+        label: reason.label,
+        count: reason.count,
+        detail: "Production health monitor detected a critical backend condition.",
+        recommendation: reason.recommendation
+      })
+    );
+  }
+
+  for (const stage of postPayment.stages || []) {
+    if (severityRank(stage.level) < severityRank("warning")) continue;
+
+    issues.push(
+      buildOperationalIssue({
+        key: `post_payment_${stage.key}`,
+        level: stage.level,
+        label: stage.label,
+        count: stage.count,
+        detail: stage.detail,
+        recommendation: (postPayment.recommendations || [])[0] || "Open the post-payment monitoring panel and inspect affected sessions."
+      })
+    );
+  }
+
+  const emailMetrics = emailDeliverability.metrics || {};
+  if (severityRank(emailDeliverability.level) >= severityRank("warning")) {
+    issues.push(
+      buildOperationalIssue({
+        key: "email_deliverability",
+        level: emailDeliverability.level,
+        label: "Email deliverability",
+        count:
+          Number(emailMetrics.failedCount || 0) +
+          Number(emailMetrics.retryLimitCount || 0) +
+          Number(emailMetrics.staleSendingCount || 0) +
+          Number(emailMetrics.unsentDoneCount || 0),
+        detail:
+          `failed=${Number(emailMetrics.failedCount || 0)}, ` +
+          `retryLimit=${Number(emailMetrics.retryLimitCount || 0)}, ` +
+          `staleSending=${Number(emailMetrics.staleSendingCount || 0)}, ` +
+          `failureRate=${emailMetrics.failureRate === null || emailMetrics.failureRate === undefined
+            ? "-"
+            : Math.round(Number(emailMetrics.failureRate || 0) * 100) + "%"}`,
+        recommendation: (emailDeliverability.recommendations || [])[0] || "Open the email deliverability panel and run retry if appropriate."
+      })
+    );
+  }
+
+  return issues.sort((a, b) => {
+    if (severityRank(b.level) !== severityRank(a.level)) {
+      return severityRank(b.level) - severityRank(a.level);
+    }
+
+    return Number(b.count || 0) - Number(a.count || 0);
+  });
+}
+
+function resolveOperationalLevel({ health, postPayment, emailDeliverability, issues }) {
+  if (issues.length) {
+    return issues[0].level;
+  }
+
+  const levels = [
+    health.level,
+    postPayment.level,
+    emailDeliverability.level
+  ].filter(Boolean);
+
+  return levels.sort((a, b) => severityRank(b) - severityRank(a))[0] || "healthy";
+}
+
+function buildOperationalAlertKey(level, issues) {
+  if (!issues.length) {
+    return `operational:${level}`;
+  }
+
+  return `operational:${level}:${issues
+    .map((issue) => issue.key)
+    .filter(Boolean)
+    .sort()
+    .join("+")}`;
+}
+
+function buildOperationalEmailContent({ snapshot, threshold }) {
+  const dashboardUrl = `${env.APP_BASE_URL}/admin/dashboard`;
+  const issueLines = snapshot.issues.map((issue) => {
+    return `- [${issue.level}] ${issue.label}: ${issue.count}. ${issue.detail} ${issue.recommendation}`.trim();
+  });
+
+  const metrics = snapshot.metrics || {};
+  const subject = `[NeuroMap] ${snapshot.level.toUpperCase()} operational alert`;
+  const summary = snapshot.issues.length
+    ? snapshot.issues
+        .slice(0, 4)
+        .map((issue) => `${issue.label}: ${issue.count}`)
+        .join("; ")
+    : `Operational health is ${snapshot.level}.`;
+
+  const metricLines = [
+    `threshold=${threshold}`,
+    `windowHours=${snapshot.window.hours}`,
+    `productionHealth=${snapshot.health.level}`,
+    `postPayment=${snapshot.postPaymentMonitoring.level}`,
+    `emailDeliverability=${snapshot.emailDeliverability.level}`,
+    `paidSessions=${metrics.paidSessions}`,
+    `postPaymentIssues=${metrics.postPaymentIssueCount}`,
+    `emailFailed=${metrics.emailFailedCount}`,
+    `emailRetryLimit=${metrics.emailRetryLimitCount}`,
+    `staleProcessingJobs=${metrics.staleProcessingJobs}`,
+    `failedWebhooks24h=${metrics.failedWebhooks24h}`
+  ];
+
+  const text = [
+    `NeuroMap operational alert: ${snapshot.level}`,
+    "",
+    summary,
+    "",
+    "Issues:",
+    ...(issueLines.length ? issueLines : ["- No issue above threshold detected."]),
+    "",
+    "Metrics:",
+    ...metricLines.map((line) => `- ${line}`),
+    "",
+    `Dashboard: ${dashboardUrl}`,
+    `Generated at: ${snapshot.generatedAt}`
+  ].join("\n");
+
+  const html = `
+    <div style="font-family:Arial,sans-serif;line-height:1.5;color:#102033;">
+      <h1 style="margin:0 0 12px;">NeuroMap operational alert</h1>
+      <p><strong>Level:</strong> ${escapeHtml(snapshot.level)}</p>
+      <p><strong>Threshold:</strong> ${escapeHtml(threshold)}</p>
+      <p><strong>Summary:</strong> ${escapeHtml(summary)}</p>
+      <h2 style="font-size:18px;margin-top:20px;">Issues</h2>
+      <ul>
+        ${
+          snapshot.issues.length
+            ? snapshot.issues.map((issue) => `
+                <li>
+                  <strong>[${escapeHtml(issue.level)}] ${escapeHtml(issue.label)}:</strong>
+                  ${escapeHtml(issue.count)}
+                  <br>${escapeHtml(issue.detail)}
+                  <br>${escapeHtml(issue.recommendation)}
+                </li>
+              `).join("")
+            : "<li>No issue above threshold detected.</li>"
+        }
+      </ul>
+      <h2 style="font-size:18px;margin-top:20px;">Metrics</h2>
+      <ul>
+        ${metricLines.map((line) => `<li>${escapeHtml(line)}</li>`).join("")}
+      </ul>
+      <p>
+        <a href="${escapeHtml(dashboardUrl)}" style="color:#1197d5;font-weight:bold;">
+          Open admin dashboard
+        </a>
+      </p>
+      <p style="color:#64748b;font-size:12px;">Generated at: ${escapeHtml(snapshot.generatedAt)}</p>
+    </div>
+  `;
+
+  return {
+    subject,
+    summary,
+    text,
+    html
+  };
+}
+
 async function getHealthMetrics() {
   const [
     staleJobs,
@@ -427,6 +623,66 @@ async function getHealthMetrics() {
       lastReportEmailAttemptAt: emailRow.last_attempt_at || null,
       lastReportEmailAttemptMinutesAgo: minutesSince(emailRow.last_attempt_at)
     }
+  };
+}
+
+export async function buildOperationalAlertSnapshot(options = {}) {
+  const windowHours = normalizeNumber(
+    options.windowHours ?? options.hours ?? env.ADMIN_OPERATIONAL_ALERT_WINDOW_HOURS,
+    24,
+    1,
+    720
+  );
+
+  const [health, postPaymentMonitoring, emailDeliverability] = await Promise.all([
+    getHealthMetrics(),
+    buildPostPaymentMonitor({
+      hours: windowHours,
+      limit: normalizeNumber(options.limit, 30, 5, 100)
+    }),
+    buildEmailDeliverabilityMonitor({
+      windowHours,
+      limit: normalizeNumber(options.limit, 30, 1, 100)
+    })
+  ]);
+
+  const issues = buildOperationalIssues({
+    health,
+    postPayment: postPaymentMonitoring,
+    emailDeliverability
+  });
+
+  const level = resolveOperationalLevel({
+    health,
+    postPayment: postPaymentMonitoring,
+    emailDeliverability,
+    issues
+  });
+
+  const postPaymentMetrics = postPaymentMonitoring.metrics || {};
+  const emailMetrics = emailDeliverability.metrics || {};
+
+  return {
+    ok: true,
+    generatedAt: new Date().toISOString(),
+    level,
+    window: {
+      hours: windowHours
+    },
+    issues,
+    metrics: {
+      paidSessions: Number(postPaymentMetrics.paidSessions || 0),
+      postPaymentIssueCount: Number(postPaymentMetrics.issueCount || 0),
+      emailFailedCount: Number(emailMetrics.failedCount || 0),
+      emailRetryLimitCount: Number(emailMetrics.retryLimitCount || 0),
+      emailStaleSendingCount: Number(emailMetrics.staleSendingCount || 0),
+      emailFailureRate: emailMetrics.failureRate,
+      staleProcessingJobs: Number(health.metrics?.staleProcessingJobs || 0),
+      failedWebhooks24h: Number(health.metrics?.failedWebhooks24h || 0)
+    },
+    health,
+    postPaymentMonitoring,
+    emailDeliverability
   };
 }
 
@@ -765,6 +1021,148 @@ export async function runBankQualityAlertCheck(options = {}) {
       threshold,
       error: error.message || "Failed to send bank quality alert",
       audit
+    };
+  }
+}
+
+export async function runOperationalAlertCheck(options = {}) {
+  const cooldownMinutes = normalizeNumber(
+    options.cooldownMinutes ?? env.ADMIN_ALERT_COOLDOWN_MINUTES,
+    30,
+    1,
+    1440
+  );
+
+  const threshold = normalizeAlertThreshold(
+    options.minLevel || options.threshold || env.ADMIN_OPERATIONAL_ALERT_MIN_LEVEL,
+    "warning"
+  );
+
+  const force = Boolean(options.force);
+  const snapshot = await buildOperationalAlertSnapshot(options);
+  const alertKey = buildOperationalAlertKey(snapshot.level, snapshot.issues || []);
+  const shouldSend =
+    force || severityRank(snapshot.level) >= severityRank(threshold);
+
+  const recipient = env.ADMIN_ALERT_EMAIL;
+  const emailContent = buildOperationalEmailContent({
+    snapshot,
+    threshold
+  });
+
+  if (!recipient) {
+    return {
+      ok: true,
+      sent: false,
+      skipped: true,
+      reason: "missing_admin_alert_email",
+      alertKey,
+      level: snapshot.level,
+      threshold,
+      snapshot
+    };
+  }
+
+  if (!shouldSend) {
+    return {
+      ok: true,
+      sent: false,
+      skipped: true,
+      reason: "below_threshold",
+      alertKey,
+      level: snapshot.level,
+      threshold,
+      snapshot
+    };
+  }
+
+  if (!force) {
+    const recent = await db.query(
+      `
+      SELECT created_at
+      FROM admin_alerts
+      WHERE alert_key = $1
+        AND status = 'sent'
+        AND created_at > NOW() - ($2::int * INTERVAL '1 minute')
+      ORDER BY created_at DESC
+      LIMIT 1
+      `,
+      [alertKey, cooldownMinutes]
+    );
+
+    if (recent.rows.length > 0) {
+      return {
+        ok: true,
+        sent: false,
+        skipped: true,
+        reason: "cooldown",
+        alertKey,
+        level: snapshot.level,
+        threshold,
+        cooldownMinutes,
+        lastSentAt: recent.rows[0].created_at,
+        snapshot
+      };
+    }
+  }
+
+  try {
+    const emailResponse = await sendAdminAlertEmail({
+      to: recipient,
+      subject: emailContent.subject,
+      html: emailContent.html,
+      text: emailContent.text
+    });
+
+    const alert = await insertAlertLog({
+      alertKey,
+      level: snapshot.level,
+      status: "sent",
+      subject: emailContent.subject,
+      summary: emailContent.summary,
+      details: {
+        threshold,
+        snapshot,
+        emailResponse
+      },
+      sentTo: recipient
+    });
+
+    return {
+      ok: true,
+      sent: true,
+      skipped: false,
+      alert,
+      alertKey,
+      level: snapshot.level,
+      threshold,
+      snapshot
+    };
+  } catch (error) {
+    const alert = await insertAlertLog({
+      alertKey,
+      level: snapshot.level,
+      status: "failed",
+      subject: emailContent.subject,
+      summary: emailContent.summary,
+      details: {
+        threshold,
+        snapshot
+      },
+      sentTo: recipient,
+      errorMessage: error.message || "Failed to send operational alert"
+    });
+
+    return {
+      ok: false,
+      sent: false,
+      skipped: false,
+      alert,
+      alertKey,
+      level: snapshot.level,
+      threshold,
+      error: error.message || "Failed to send operational alert",
+      snapshot
     };
   }
 }

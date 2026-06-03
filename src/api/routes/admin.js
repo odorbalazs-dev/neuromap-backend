@@ -15,6 +15,7 @@ import {
   getAdminAlerts,
   triggerAdminAlertCheck,
   triggerBankQualityAlertCheck,
+  triggerOperationalAlertCheck,
   getEngineAnalytics,
   getEngineDecisionAudit,
   getBankQualityAudit,
@@ -49,6 +50,7 @@ router.get("/webflow-embed-manager", getWebflowEmbedManager);
 router.get("/operations-log", getOperationsLog);
 router.get("/alerts", getAdminAlerts);
 router.post("/trigger-alert-check", triggerAdminAlertCheck);
+router.post("/trigger-operational-alert-check", triggerOperationalAlertCheck);
 router.post("/trigger-bank-quality-alert-check", triggerBankQualityAlertCheck);
 router.get("/engine-analytics", getEngineAnalytics);
 router.get("/engine-decision-audit", getEngineDecisionAudit);

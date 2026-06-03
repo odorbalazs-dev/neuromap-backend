@@ -16,6 +16,7 @@
     processOneBtn: document.getElementById("processOneBtn"),
     retryEmailBatchBtn: document.getElementById("retryEmailBatchBtn"),
     alertCheckBtn: document.getElementById("alertCheckBtn"),
+    operationalAlertBtn: document.getElementById("operationalAlertBtn"),
     bankQualityAlertBtn: document.getElementById("bankQualityAlertBtn"),
     postPaymentRecoveryBtn: document.getElementById("postPaymentRecoveryBtn"),
     postPaymentRecoveryPanelBtn: document.getElementById("postPaymentRecoveryPanelBtn"),
@@ -109,6 +110,10 @@
     engineReviewRows: document.getElementById("engineReviewRows"),
     engineDecisionAuditRows: document.getElementById("engineDecisionAuditRows"),
     alertRows: document.getElementById("alertRows"),
+    operationalAlertLevel: document.getElementById("operationalAlertLevel"),
+    operationalAlertSummary: document.getElementById("operationalAlertSummary"),
+    operationalAlertWindow: document.getElementById("operationalAlertWindow"),
+    operationalAlertMetrics: document.getElementById("operationalAlertMetrics"),
     emailIssueRows: document.getElementById("emailIssueRows"),
     emailDeliverabilityLevel: document.getElementById("emailDeliverabilityLevel"),
     emailDeliverabilityWindow: document.getElementById("emailDeliverabilityWindow"),
@@ -176,6 +181,7 @@
       els.processOneBtn,
       els.retryEmailBatchBtn,
       els.alertCheckBtn,
+      els.operationalAlertBtn,
       els.bankQualityAlertBtn,
       els.postPaymentRecoveryBtn,
       els.postPaymentRecoveryPanelBtn,
@@ -1897,6 +1903,33 @@
     });
   }
 
+  function renderOperationalAlertSnapshot(snapshot) {
+    if (!els.operationalAlertLevel) return;
+
+    if (!snapshot) {
+      els.operationalAlertLevel.textContent = "-";
+      els.operationalAlertSummary.textContent = "Még nincs operational snapshot.";
+      els.operationalAlertWindow.textContent = "-";
+      els.operationalAlertMetrics.textContent = "Post-payment / email / health egyben.";
+      return;
+    }
+
+    const metrics = snapshot.metrics || {};
+    const issues = snapshot.issues || [];
+    const firstIssue = issues[0] || null;
+
+    els.operationalAlertLevel.textContent = statusLabel(snapshot.level || "healthy");
+    els.operationalAlertSummary.textContent = firstIssue
+      ? `${firstIssue.label}: ${firstIssue.count} (${firstIssue.level})`
+      : "Nincs threshold feletti operational gond.";
+    els.operationalAlertWindow.textContent = `${Number(snapshot.window?.hours || 0)} óra`;
+    els.operationalAlertMetrics.textContent =
+      `post-payment: ${Number(metrics.postPaymentIssueCount || 0)}, ` +
+      `email hiba: ${Number(metrics.emailFailedCount || 0)}, ` +
+      `retry limit: ${Number(metrics.emailRetryLimitCount || 0)}, ` +
+      `webhook 24h: ${Number(metrics.failedWebhooks24h || 0)}`;
+  }
+
   function renderCounts(counts = {}) {
     els.queuedCount.textContent = Number(counts.queued || 0);
     els.processingCount.textContent = Number(counts.processing || 0);
@@ -1956,6 +1989,7 @@
     const sessions = health?.sessions || {};
     const email = health?.email || {};
     const latestAlert = alerts?.items?.[0] || null;
+    const operationalAlert = alerts?.operational || null;
     const auditSummary = engineDecisionAudit?.summary || {};
     const bankQualitySummary = bankQualityAudit?.summary || {};
     const engineReviewCount = countValue(engineAnalytics?.reviewQueue?.length);
@@ -2037,12 +2071,17 @@
       `${auditedEngineCount} auditolt session, ${engineReviewCount} review queue, bank score ${bankQualitySummary.averageScore ?? "-"}.`
     );
 
-    const alertLevel = latestAlert?.level || "healthy";
+    const alertLevel = operationalAlert?.level || latestAlert?.level || "healthy";
+    const operationalIssue = operationalAlert?.issues?.[0] || null;
     setPulseCard(
       els.pulseAlerts,
       alertLevel,
-      latestAlert ? statusLabel(latestAlert.level) : "rendben",
-      latestAlert ? compact(latestAlert.summary || latestAlert.alert_key, 86) : "Nincs friss proaktiv riasztas."
+      statusLabel(alertLevel),
+      operationalIssue
+        ? compact(`${operationalIssue.label}: ${operationalIssue.count}`, 86)
+        : latestAlert
+          ? compact(latestAlert.summary || latestAlert.alert_key, 86)
+          : "Nincs friss proaktiv riasztas."
     );
 
     els.controlPulseUpdatedAt.textContent = health?.generatedAt
@@ -3031,6 +3070,7 @@
       renderSessionRows(els.failedRows, failed.items || [], "failed");
       renderOperationLogRows(operations.items || []);
       renderAlertRows(alerts.items || []);
+      renderOperationalAlertSnapshot(alerts.operational || null);
       renderControlCenter(status, health, queue, alerts);
       renderLaunchReadiness(launchReadiness);
       renderEngineAnalytics(engineAnalytics);
@@ -3324,6 +3364,7 @@
       renderHealth(null);
       renderControlCenter(null, null, { counts: {} }, { items: [] });
       renderControlPulse(null);
+      renderOperationalAlertSnapshot(null);
       renderLaunchReadiness(null);
       renderEngineAnalytics(null);
       renderEngineDecisionAudit(null);
@@ -3372,6 +3413,13 @@
       postAction("/admin/trigger-alert-check", "Riasztásellenőrzés lefutott.");
     });
 
+    bindClick(els.operationalAlertBtn, () => {
+      postAction(
+        "/admin/trigger-operational-alert-check?minLevel=warning",
+        "Operational alert ellenőrzés lefutott."
+      );
+    });
+
     bindClick(els.bankQualityAlertBtn, () => {
       postAction(
         "/admin/trigger-bank-quality-alert-check?minLevel=review",
@@ -3401,6 +3449,13 @@
 
         if (action === "alert-check") {
           postAction("/admin/trigger-alert-check", "Riasztásellenőrzés lefutott.");
+        }
+
+        if (action === "operational-alert") {
+          postAction(
+            "/admin/trigger-operational-alert-check?minLevel=warning",
+            "Operational alert ellenőrzés lefutott."
+          );
         }
 
         if (action === "bank-quality-alert") {

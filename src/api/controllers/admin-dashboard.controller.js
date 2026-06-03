@@ -1,4 +1,4 @@
-const ADMIN_DASHBOARD_ASSET_VERSION = "20260602-recovery-embed-manager-v1";
+const ADMIN_DASHBOARD_ASSET_VERSION = "20260603-operational-alerts-v1";
 
 export function getAdminDashboard(_req, res) {
   res.setHeader(
@@ -45,6 +45,7 @@ export function getAdminDashboard(_req, res) {
         <button id="retryEmailBatchBtn" type="button" class="warn">Riport emailek újrapróbálása</button>
         <button id="postPaymentRecoveryBtn" type="button" class="warn">Post-payment recovery v2</button>
         <button id="alertCheckBtn" type="button" class="secondary">Riasztásellenőrzés</button>
+        <button id="operationalAlertBtn" type="button" class="secondary">Operational alert</button>
         <button id="clearTokenBtn" type="button" class="secondary">Token törlése</button>
         <button id="bankQualityAlertBtn" type="button" class="secondary">Bank audit riasztas</button>
         <span id="statusText" class="status-text" role="status"></span>
@@ -90,6 +91,7 @@ export function getAdminDashboard(_req, res) {
             <button type="button" data-control-action="retry-email" class="warn">Riport emailek újrapróbálása</button>
             <button type="button" data-control-action="post-payment-recovery" class="warn">Post-payment recovery v2</button>
             <button type="button" data-control-action="alert-check" class="secondary">Riasztásellenőrzés</button>
+            <button type="button" data-control-action="operational-alert" class="secondary">Operational alert</button>
             <button type="button" data-control-action="bank-quality-alert" class="secondary">Bank audit riasztas</button>
           </div>
         </article>
@@ -551,6 +553,18 @@ export function getAdminDashboard(_req, res) {
             <h2>Proaktív riasztások</h2>
             <p>Kritikus éles rendszerállapot-riasztások az admin email címre.</p>
           </div>
+        </div>
+        <div class="health-grid compact-grid">
+          <article class="health-card">
+            <span>Operational szint</span>
+            <strong id="operationalAlertLevel">-</strong>
+            <p id="operationalAlertSummary">Még nincs operational snapshot.</p>
+          </article>
+          <article class="health-card">
+            <span>Operational ablak</span>
+            <strong id="operationalAlertWindow">-</strong>
+            <p id="operationalAlertMetrics">Post-payment / email / health egyben.</p>
+          </article>
         </div>
         <div class="table-wrap">
           <table>
