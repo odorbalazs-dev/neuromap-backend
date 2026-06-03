@@ -5,7 +5,7 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260603-landing-rescue-v2";
+  const ENGINE_VERSION = "20260603-landing-rescue-v3";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
 
   const state = {
@@ -688,6 +688,53 @@
         font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       }
 
+      .nm-social-landing,
+      .nm-landing {
+        min-height: auto !important;
+      }
+
+      .nm-social-landing .nm-topbar,
+      .nm-landing .nm-topbar {
+        align-items: center !important;
+        display: flex !important;
+        gap: 16px !important;
+        justify-content: space-between !important;
+        padding: 14px clamp(16px, 3vw, 36px) !important;
+      }
+
+      .nm-social-landing .nm-topbar-logo,
+      .nm-landing .nm-topbar-logo {
+        height: clamp(38px, 5vw, 58px) !important;
+        max-height: 58px !important;
+        max-width: min(260px, 46vw) !important;
+        object-fit: contain !important;
+        width: auto !important;
+      }
+
+      .nm-social-landing .nm-section,
+      .nm-landing .nm-section {
+        display: block;
+      }
+
+      .nm-social-landing .nm-hero {
+        display: block !important;
+        min-height: auto !important;
+        padding-top: clamp(56px, 8vh, 92px) !important;
+      }
+
+      .nm-social-landing .nm-container {
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 960px;
+        padding-left: clamp(18px, 4vw, 32px);
+        padding-right: clamp(18px, 4vw, 32px);
+      }
+
+      .nm-social-landing .nm-logo-mark {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
       .nm-landing-hero,
       .nm-social-landing,
       [data-nm-section="hero"] {
@@ -912,8 +959,92 @@
     }
   });
 
+  Object.assign(LANDING_FALLBACK_TEXT, {
+    hu: {
+      modalTitle: "Valassz nyelvet",
+      heroTitle: "Ertsd meg, mi allhat gyermeked viselkedese mogott",
+      heroSub: "10 perces kerdoiv utan szemelyre szabott, szulobarat riportot es PDF-et kapsz.",
+      primaryCta: "Kezdjuk ->",
+      microcopy: "Csak $5 - Nincs elofizetes - PDF riport emailben",
+      trust1: "kb. 10 perc",
+      trust2: "PDF riport emailben",
+      trust3: "strukturalt elemzes",
+      valueTitle: "Mit kapsz pontosan?",
+      value1: "szemelyre szabott ertelmezes a valaszok alapjan",
+      value2: "viselkedesi, erzelmi es tanulasi mintazatok kiemelve",
+      value3: "gyakorlati, szulokent is azonnal hasznalhato javaslatok",
+      value4: "brandelt PDF riport emailben",
+      stepsTitle: "Igy mukodik",
+      step1: "1. Kitoltod a rovid eloszuro kerdoivet",
+      step2: "2. A rendszer kivalasztja a relevans specifikus kerdessort",
+      step3: "3. Fizetes utan elkeszul es emailben megerkezik a riport",
+      previewTitle: "Igy nez ki a riport",
+      previewCaption: "Minta elonezet: a teljes riport szemelyre szabottan, PDF-ben erkezik.",
+      trustTitle: "Fontos tudni",
+      trustText: "A NeuroMap Kids nem diagnozis, hanem strukturalt eloszures.",
+      priceTitle: "Egyszeri dij",
+      priceValue: "Csak $5",
+      priceCta: "Riport elkeszitese ->",
+      priceMicrocopy: "Nincs elofizetes - Biztonsagos fizetes - PDF emailben",
+      stickyCta: "Kezdjuk ->"
+    },
+    en: {
+      modalTitle: "Choose language",
+      heroTitle: "Understand what may be behind your child's behavior",
+      heroSub: "After a 10-minute questionnaire, you receive a personalized, parent-friendly report and PDF.",
+      primaryCta: "Start ->",
+      microcopy: "Only $5 - No subscription - PDF report by email",
+      trust1: "about 10 minutes",
+      trust2: "PDF report by email",
+      trust3: "structured analysis",
+      valueTitle: "What you get",
+      value1: "personalized interpretation based on your answers",
+      value2: "behavioral, emotional, and learning patterns highlighted",
+      value3: "practical parent-friendly suggestions",
+      value4: "branded PDF report by email",
+      stepsTitle: "How it works",
+      step1: "1. Complete the short screening questionnaire",
+      step2: "2. The system selects the relevant specific question set",
+      step3: "3. After payment, the report is generated and sent by email",
+      previewTitle: "What the report looks like",
+      previewCaption: "Sample preview: the full report is personalized and delivered as a PDF.",
+      trustTitle: "Important to know",
+      trustText: "NeuroMap Kids is not a diagnosis.",
+      priceTitle: "One-time payment",
+      priceValue: "Only $5",
+      priceCta: "Get report ->",
+      priceMicrocopy: "No subscription - Secure payment - PDF by email",
+      stickyCta: "Start ->"
+    }
+  });
+
   function getLandingFallbackText(lang = state.lang) {
     return LANDING_FALLBACK_TEXT[lang] || LANDING_FALLBACK_TEXT.en;
+  }
+
+  let landingRescueInProgress = false;
+
+  function restoreLandingSections() {
+    const app = document.getElementById("nmApp");
+    const questionnaireVisible =
+      app && app.style.display !== "none" && app.offsetParent !== null;
+
+    if (questionnaireVisible) return;
+
+    document
+      .querySelectorAll(".nm-social-landing .nm-section, .nm-landing .nm-section")
+      .forEach((section) => {
+        section.style.display = "block";
+      });
+
+    const hero =
+      document.querySelector(".nm-social-landing .nm-hero") ||
+      document.querySelector(".nm-landing .nm-hero") ||
+      document.querySelector("[data-nm-section='hero']");
+
+    if (hero) {
+      hero.style.display = "block";
+    }
   }
 
   function applyLandingFallbackLanguage(lang = state.lang) {
@@ -941,20 +1072,35 @@
     if (landing) {
       landing.style.visibility = "visible";
       landing.style.opacity = "1";
+      if (landing.style.display === "none") {
+        landing.style.display = "block";
+      }
     }
 
     return applied;
   }
 
   function rescueLandingText(lang = state.lang) {
-    const applied = applyLandingFallbackLanguage(lang);
-    ensureLandingStartHandlers();
+    if (landingRescueInProgress) return 0;
 
-    if (applied > 0) {
-      document.documentElement.dataset.nmLandingRescued = "1";
+    landingRescueInProgress = true;
+
+    try {
+      restoreLandingSections();
+
+      const applied = applyLandingFallbackLanguage(lang);
+      ensureLandingStartHandlers();
+
+      restoreLandingSections();
+
+      if (applied > 0) {
+        document.documentElement.dataset.nmLandingRescued = "1";
+      }
+
+      return applied;
+    } finally {
+      landingRescueInProgress = false;
     }
-
-    return applied;
   }
 
   function scheduleLandingTextRescue(lang = state.lang) {
@@ -969,6 +1115,30 @@
     }
 
     window.addEventListener("load", () => rescueLandingText(lang), { once: true });
+
+    if (!window.__nmLandingRescueObserverInstalled && "MutationObserver" in window) {
+      window.__nmLandingRescueObserverInstalled = true;
+
+      let rescueTimer = null;
+      const queueRescue = () => {
+        window.clearTimeout(rescueTimer);
+        rescueTimer = window.setTimeout(() => rescueLandingText(state.lang || lang), 40);
+      };
+
+      const target =
+        document.getElementById("nmSocialLanding") ||
+        document.querySelector(".nm-social-landing") ||
+        document.body;
+
+      if (target) {
+        new MutationObserver(queueRescue).observe(target, {
+          attributes: true,
+          attributeFilter: ["class", "style"],
+          childList: true,
+          subtree: true
+        });
+      }
+    }
   }
 
   function showQuestionnaireFromLanding() {

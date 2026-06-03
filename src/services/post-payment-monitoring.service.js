@@ -133,19 +133,30 @@ export async function buildPostPaymentMonitor(options = {}) {
   const hours = clampNumber(options.hours, DEFAULT_WINDOW_HOURS, 1, 24 * 30);
   const limit = clampNumber(options.limit, DEFAULT_LIMIT, 5, 100);
 
-  const params = [
+  const summaryParams = [
     hours,
-    STALE_WEBHOOK_MINUTES,
+    STALE_QUEUE_MINUTES,
+    STALE_PROCESSING_MINUTES,
+    STALE_EMAIL_MINUTES,
+    MAX_RETRY_ATTEMPTS
+  ];
+  const jobParams = [
+    hours,
+    STALE_QUEUE_MINUTES,
+    STALE_PROCESSING_MINUTES
+  ];
+  const webhookParams = [
+    hours,
+    STALE_WEBHOOK_MINUTES
+  ];
+  const issueParams = [
+    hours,
     STALE_QUEUE_MINUTES,
     STALE_PROCESSING_MINUTES,
     STALE_EMAIL_MINUTES,
     MAX_RETRY_ATTEMPTS,
     limit
   ];
-  const summaryParams = params.slice(0, 6);
-  const jobParams = params.slice(0, 4);
-  const webhookParams = params.slice(0, 2);
-  const issueParams = params;
 
   const [
     summaryResult,
@@ -195,11 +206,11 @@ export async function buildPostPaymentMonitor(options = {}) {
         )::int AS paid_without_active_job,
         COUNT(*) FILTER (
           WHERE analysis_status = 'queued'
-            AND paid_at < NOW() - ($3::int * INTERVAL '1 minute')
+            AND paid_at < NOW() - ($2::int * INTERVAL '1 minute')
         )::int AS stale_queued_sessions,
         COUNT(*) FILTER (
           WHERE analysis_status = 'processing'
-            AND COALESCE(analysis_started_at, updated_at, paid_at) < NOW() - ($4::int * INTERVAL '1 minute')
+            AND COALESCE(analysis_started_at, updated_at, paid_at) < NOW() - ($3::int * INTERVAL '1 minute')
         )::int AS stale_processing_sessions,
         COUNT(*) FILTER (
           WHERE analysis_status = 'done'
@@ -216,17 +227,17 @@ export async function buildPostPaymentMonitor(options = {}) {
         COUNT(*) FILTER (
           WHERE analysis_status = 'done'
             AND report_email_status = 'sending'
-            AND COALESCE(report_email_last_attempt_at, updated_at) < NOW() - ($5::int * INTERVAL '1 minute')
+            AND COALESCE(report_email_last_attempt_at, updated_at) < NOW() - ($4::int * INTERVAL '1 minute')
         )::int AS stale_sending_emails,
         COUNT(*) FILTER (
           WHERE analysis_status = 'done'
             AND report_email_status IN ('failed', 'not_sent', 'sending')
-            AND COALESCE(report_email_attempts, 0) < $6::int
+            AND COALESCE(report_email_attempts, 0) < $5::int
         )::int AS retryable_emails,
         COUNT(*) FILTER (
           WHERE analysis_status = 'done'
             AND report_email_status IN ('failed', 'not_sent', 'sending')
-            AND COALESCE(report_email_attempts, 0) >= $6::int
+            AND COALESCE(report_email_attempts, 0) >= $5::int
         )::int AS retry_limit_emails,
         MAX(paid_at) AS last_paid_at,
         MAX(analysis_completed_at) AS last_analysis_completed_at,
@@ -241,11 +252,11 @@ export async function buildPostPaymentMonitor(options = {}) {
         COUNT(*) FILTER (WHERE status = 'failed')::int AS failed_jobs,
         COUNT(*) FILTER (
           WHERE status = 'queued'
-            AND created_at < NOW() - ($3::int * INTERVAL '1 minute')
+            AND created_at < NOW() - ($2::int * INTERVAL '1 minute')
         )::int AS old_queued_jobs,
         COUNT(*) FILTER (
           WHERE status = 'processing'
-            AND locked_at < NOW() - ($4::int * INTERVAL '1 minute')
+            AND locked_at < NOW() - ($3::int * INTERVAL '1 minute')
         )::int AS stale_processing_jobs,
         MAX(processed_at) AS last_processed_at
       FROM analysis_jobs
@@ -305,17 +316,17 @@ export async function buildPostPaymentMonitor(options = {}) {
           WHEN analysis_status = 'failed' THEN 'analysis_failed'
           WHEN analysis_status IN ('pending', 'queued', 'processing') AND NOT has_active_job THEN 'paid_without_active_job'
           WHEN analysis_status = 'queued'
-            AND paid_at < NOW() - ($3::int * INTERVAL '1 minute') THEN 'analysis_queue_stale'
+            AND paid_at < NOW() - ($2::int * INTERVAL '1 minute') THEN 'analysis_queue_stale'
           WHEN analysis_status = 'processing'
-            AND COALESCE(analysis_started_at, updated_at, paid_at) < NOW() - ($4::int * INTERVAL '1 minute') THEN 'analysis_processing_stale'
+            AND COALESCE(analysis_started_at, updated_at, paid_at) < NOW() - ($3::int * INTERVAL '1 minute') THEN 'analysis_processing_stale'
           WHEN analysis_status = 'done'
             AND report_email_status = 'failed'
-            AND COALESCE(report_email_attempts, 0) >= $6::int THEN 'email_retry_limit'
+            AND COALESCE(report_email_attempts, 0) >= $5::int THEN 'email_retry_limit'
           WHEN analysis_status = 'done'
             AND report_email_status = 'failed' THEN 'email_failed'
           WHEN analysis_status = 'done'
             AND report_email_status = 'sending'
-            AND COALESCE(report_email_last_attempt_at, updated_at) < NOW() - ($5::int * INTERVAL '1 minute') THEN 'email_sending_stale'
+            AND COALESCE(report_email_last_attempt_at, updated_at) < NOW() - ($4::int * INTERVAL '1 minute') THEN 'email_sending_stale'
           WHEN analysis_status = 'done'
             AND report_email_status = 'not_sent' THEN 'email_not_sent'
           ELSE 'watch'
@@ -324,7 +335,7 @@ export async function buildPostPaymentMonitor(options = {}) {
           WHEN analysis_status = 'failed'
             OR NOT has_processed_webhook
             OR (analysis_status IN ('queued', 'processing') AND NOT has_active_job)
-            OR (analysis_status = 'done' AND report_email_status = 'failed' AND COALESCE(report_email_attempts, 0) >= $6::int)
+            OR (analysis_status = 'done' AND report_email_status = 'failed' AND COALESCE(report_email_attempts, 0) >= $5::int)
           THEN 'critical'
           ELSE 'warning'
         END AS severity,
@@ -345,8 +356,8 @@ export async function buildPostPaymentMonitor(options = {}) {
         NOT has_processed_webhook
         OR analysis_status = 'failed'
         OR (analysis_status IN ('pending', 'queued', 'processing') AND NOT has_active_job)
-        OR (analysis_status = 'queued' AND paid_at < NOW() - ($3::int * INTERVAL '1 minute'))
-        OR (analysis_status = 'processing' AND COALESCE(analysis_started_at, updated_at, paid_at) < NOW() - ($4::int * INTERVAL '1 minute'))
+        OR (analysis_status = 'queued' AND paid_at < NOW() - ($2::int * INTERVAL '1 minute'))
+        OR (analysis_status = 'processing' AND COALESCE(analysis_started_at, updated_at, paid_at) < NOW() - ($3::int * INTERVAL '1 minute'))
         OR (
           analysis_status = 'done'
           AND report_email_status IN ('failed', 'not_sent', 'sending')
@@ -360,7 +371,7 @@ export async function buildPostPaymentMonitor(options = {}) {
           ELSE 5
         END,
         reference_at DESC NULLS LAST
-      LIMIT $7::int
+      LIMIT $6::int
       `,
       issueParams
     )
