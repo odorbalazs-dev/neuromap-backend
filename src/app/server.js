@@ -51,6 +51,12 @@ app.use(createRateLimit({
   }
 }));
 
+app.use("/public/webflow", express.static("public/webflow", {
+  setHeaders: (res) => {
+    res.setHeader("Cache-Control", "no-cache, must-revalidate");
+  }
+}));
+
 app.use("/public", express.static("public"));
 
 app.use("/webhook", express.raw({ type: "application/json" }));

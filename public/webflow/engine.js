@@ -5,7 +5,7 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260603-landing-rescue-v1";
+  const ENGINE_VERSION = "20260603-landing-rescue-v2";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
 
   const state = {
@@ -853,18 +853,79 @@
     }
   };
 
+  Object.assign(LANDING_FALLBACK_TEXT, {
+    hu: {
+      modalTitle: "Válassz nyelvet",
+      heroTitle: "Értsd meg, mi állhat gyermeked viselkedése mögött",
+      heroSub: "10 perces kérdőív után személyre szabott, szülőbarát riportot és PDF-et kapsz.",
+      primaryCta: "Kezdjük →",
+      microcopy: "Csak $5 • Nincs előfizetés • PDF riport emailben",
+      trust1: "kb. 10 perc",
+      trust2: "PDF riport emailben",
+      trust3: "strukturált elemzés",
+      valueTitle: "Mit kapsz pontosan?",
+      value1: "személyre szabott értelmezés a válaszok alapján",
+      value2: "viselkedési, érzelmi és tanulási mintázatok kiemelve",
+      value3: "gyakorlati, szülőként is azonnal használható javaslatok",
+      value4: "brandelt PDF riport emailben",
+      stepsTitle: "Így működik",
+      step1: "1. Kitöltöd a rövid előszűrő kérdőívet",
+      step2: "2. A rendszer kiválasztja a releváns specifikus kérdéssort",
+      step3: "3. Fizetés után elkészül és emailben megérkezik a riport",
+      previewTitle: "Így néz ki a riport",
+      previewCaption: "Minta előnézet: a teljes riport személyre szabottan, PDF-ben érkezik.",
+      trustTitle: "Fontos tudni",
+      trustText: "A NeuroMap Kids nem diagnózis, hanem strukturált előszűrés.",
+      priceTitle: "Egyszeri díj",
+      priceValue: "Csak $5",
+      priceCta: "Riport elkészítése →",
+      priceMicrocopy: "Nincs előfizetés • Biztonságos fizetés • PDF emailben",
+      stickyCta: "Kezdjük →"
+    },
+    en: {
+      modalTitle: "Choose language",
+      heroTitle: "Understand what may be behind your child's behavior",
+      heroSub: "After a 10-minute questionnaire, you receive a personalized, parent-friendly report and PDF.",
+      primaryCta: "Start →",
+      microcopy: "Only $5 • No subscription • PDF report by email",
+      trust1: "about 10 minutes",
+      trust2: "PDF report by email",
+      trust3: "structured analysis",
+      valueTitle: "What you get",
+      value1: "personalized interpretation based on your answers",
+      value2: "behavioral, emotional, and learning patterns highlighted",
+      value3: "practical parent-friendly suggestions",
+      value4: "branded PDF report by email",
+      stepsTitle: "How it works",
+      step1: "1. Complete the short screening questionnaire",
+      step2: "2. The system selects the relevant specific question set",
+      step3: "3. After payment, the report is generated and sent by email",
+      previewTitle: "What the report looks like",
+      previewCaption: "Sample preview: the full report is personalized and delivered as a PDF.",
+      trustTitle: "Important to know",
+      trustText: "NeuroMap Kids is not a diagnosis.",
+      priceTitle: "One-time payment",
+      priceValue: "Only $5",
+      priceCta: "Get report →",
+      priceMicrocopy: "No subscription • Secure payment • PDF by email",
+      stickyCta: "Start →"
+    }
+  });
+
   function getLandingFallbackText(lang = state.lang) {
     return LANDING_FALLBACK_TEXT[lang] || LANDING_FALLBACK_TEXT.en;
   }
 
   function applyLandingFallbackLanguage(lang = state.lang) {
     const copy = getLandingFallbackText(lang);
+    let applied = 0;
 
     document.querySelectorAll("[data-nm-i18n]").forEach((element) => {
       const key = element.getAttribute("data-nm-i18n");
       const value = copy[key];
       if (typeof value === "string") {
         element.textContent = value;
+        applied += 1;
       }
     });
 
@@ -872,6 +933,42 @@
     if (modalTitle && copy.modalTitle) {
       modalTitle.textContent = copy.modalTitle;
     }
+
+    const landing = document.getElementById("nmSocialLanding") ||
+      document.querySelector(".nm-social-landing") ||
+      document.querySelector("[data-nm-landing]");
+
+    if (landing) {
+      landing.style.visibility = "visible";
+      landing.style.opacity = "1";
+    }
+
+    return applied;
+  }
+
+  function rescueLandingText(lang = state.lang) {
+    const applied = applyLandingFallbackLanguage(lang);
+    ensureLandingStartHandlers();
+
+    if (applied > 0) {
+      document.documentElement.dataset.nmLandingRescued = "1";
+    }
+
+    return applied;
+  }
+
+  function scheduleLandingTextRescue(lang = state.lang) {
+    rescueLandingText(lang);
+
+    [50, 250, 800, 1600].forEach((delay) => {
+      window.setTimeout(() => rescueLandingText(lang), delay);
+    });
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", () => rescueLandingText(lang), { once: true });
+    }
+
+    window.addEventListener("load", () => rescueLandingText(lang), { once: true });
   }
 
   function showQuestionnaireFromLanding() {
@@ -2370,8 +2467,7 @@
     localStorage.setItem("nm_lang", lang);
 
     applyLang(lang);
-    applyLandingFallbackLanguage(lang);
-    ensureLandingStartHandlers();
+    scheduleLandingTextRescue(lang);
 
     trackSchemaEvent("nm_language_selected", {
       funnel_step: state.step || "landing",
@@ -2387,56 +2483,62 @@
   };
 
   function init() {
-    installFrontendDesign();
-    installLandingPolishV2();
-    buildLangButtons();
-    ensureChildAgeField();
-    state.lang = getLang();
-    applyLandingFallbackLanguage(state.lang);
-    ensureLandingStartHandlers();
+    try {
+      installFrontendDesign();
+      installLandingPolishV2();
+      buildLangButtons();
+      ensureChildAgeField();
+      state.lang = getLang();
+      scheduleLandingTextRescue(state.lang);
 
-    if (!validateRuntimeBanks()) {
-      return;
+      if (!validateRuntimeBanks()) {
+        return;
+      }
+
+      state.triageQuestions = buildTriageQuestions();
+
+      const langSwitch = document.getElementById("langSwitch");
+      const nextBtn = document.getElementById("nextBtn");
+      const backBtn = document.getElementById("backBtn");
+      const paymentBtn = document.getElementById("paymentBtn");
+
+      if (langSwitch) langSwitch.addEventListener("click", showModal);
+      if (nextBtn) nextBtn.addEventListener("click", nextStep);
+      if (backBtn) backBtn.addEventListener("click", prevStep);
+      if (paymentBtn) paymentBtn.addEventListener("click", startCheckout);
+
+      applyLang(state.lang);
+      scheduleLandingTextRescue(state.lang);
+
+      const specificBankCounts = DISORDERS.reduce((counts, domain) => {
+        const bank = (window.NM_SPECIFIC_BANK || {})[domain] || [];
+        counts[domain] = Array.isArray(bank) ? bank.length : 0;
+        return counts;
+      }, {});
+
+      trackSchemaEvent("nm_landing_view", {
+        funnel_step: "landing_view"
+      }, {
+        dedupeKey: `landing:${window.location.pathname || "/"}:${state.lang}`
+      });
+
+      trackSchemaEvent("nm_questionnaire_loaded", {
+        funnel_step: "questionnaire_loaded",
+        triage_question_count: state.triageQuestions.length,
+        specific_bank_count: specificBankCounts,
+        specific_bank_adhd_count: specificBankCounts.ADHD || 0,
+        specific_bank_asd_count: specificBankCounts.ASD || 0,
+        specific_bank_anxiety_count: specificBankCounts.ANXIETY || 0,
+        specific_bank_depression_count: specificBankCounts.DEPRESSION || 0,
+        specific_bank_learning_count: specificBankCounts.LEARNING || 0
+      }, {
+        dedupeKey: `questionnaire_loaded:${window.location.pathname || "/"}:${state.lang}`
+      });
+    } catch (error) {
+      console.error("NeuroMap engine init failed:", error);
+      state.lang = state.lang || "hu";
+      scheduleLandingTextRescue(state.lang);
     }
-
-    state.triageQuestions = buildTriageQuestions();
-
-    const langSwitch = document.getElementById("langSwitch");
-    const nextBtn = document.getElementById("nextBtn");
-    const backBtn = document.getElementById("backBtn");
-    const paymentBtn = document.getElementById("paymentBtn");
-
-    if (langSwitch) langSwitch.addEventListener("click", showModal);
-    if (nextBtn) nextBtn.addEventListener("click", nextStep);
-    if (backBtn) backBtn.addEventListener("click", prevStep);
-    if (paymentBtn) paymentBtn.addEventListener("click", startCheckout);
-
-    applyLang(state.lang);
-
-    const specificBankCounts = DISORDERS.reduce((counts, domain) => {
-      const bank = (window.NM_SPECIFIC_BANK || {})[domain] || [];
-      counts[domain] = Array.isArray(bank) ? bank.length : 0;
-      return counts;
-    }, {});
-
-    trackSchemaEvent("nm_landing_view", {
-      funnel_step: "landing_view"
-    }, {
-      dedupeKey: `landing:${window.location.pathname || "/"}:${state.lang}`
-    });
-
-    trackSchemaEvent("nm_questionnaire_loaded", {
-      funnel_step: "questionnaire_loaded",
-      triage_question_count: state.triageQuestions.length,
-      specific_bank_count: specificBankCounts,
-      specific_bank_adhd_count: specificBankCounts.ADHD || 0,
-      specific_bank_asd_count: specificBankCounts.ASD || 0,
-      specific_bank_anxiety_count: specificBankCounts.ANXIETY || 0,
-      specific_bank_depression_count: specificBankCounts.DEPRESSION || 0,
-      specific_bank_learning_count: specificBankCounts.LEARNING || 0
-    }, {
-      dedupeKey: `questionnaire_loaded:${window.location.pathname || "/"}:${state.lang}`
-    });
   }
 
   window.NM_DEBUG_STATE = state;
