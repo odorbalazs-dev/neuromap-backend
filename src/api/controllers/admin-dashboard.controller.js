@@ -1,4 +1,4 @@
-const ADMIN_DASHBOARD_ASSET_VERSION = "20260603-token-cache-rescue-v1";
+const ADMIN_DASHBOARD_ASSET_VERSION = "20260603-token-normalize-v2";
 
 export function getAdminDashboard(_req, res) {
   res.setHeader(

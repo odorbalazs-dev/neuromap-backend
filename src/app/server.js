@@ -11,6 +11,7 @@ import checkoutRoutes from "../api/routes/checkout.js";
 import sessionRoutes from "../api/routes/session.js";
 import webhookRoutes from "../api/routes/webhook.js";
 import healthRoutes from "../api/routes/health.js";
+import adminStatusRoutes from "../api/routes/admin-status.js";
 import adminRoutes from "../api/routes/admin.js";
 import cronRoutes from "../api/routes/cron.js";
 import jobsRoutes from "../api/routes/jobs.js";
@@ -77,6 +78,7 @@ app.use("/session", createRateLimit({
 
 app.use("/webhook", webhookRoutes);
 app.use("/health", healthRoutes);
+app.use("/admin-status", adminStatusRoutes);
 
 app.use("/admin", adminRoutes);
 

@@ -170,7 +170,10 @@
   }
 
   function normalizeToken(value) {
-    return String(value || "").replace(/\s+/g, "").trim();
+    return String(value || "")
+      .normalize("NFKC")
+      .replace(/[\s\u200B-\u200D\uFEFF]/g, "")
+      .replace(/^["'`]+|["'`]+$/g, "");
   }
 
   function readSavedToken() {

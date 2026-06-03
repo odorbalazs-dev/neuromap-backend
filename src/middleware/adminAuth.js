@@ -1,6 +1,13 @@
 import { env } from "../config/env.js";
 import { secureCompare } from "../utils/secureCompare.js";
 
+function normalizeAdminToken(value) {
+  return String(value || "")
+    .normalize("NFKC")
+    .replace(/[\s\u200B-\u200D\uFEFF]/g, "")
+    .replace(/^["'`]+|["'`]+$/g, "");
+}
+
 export function adminAuth(req, res, next) {
   const headerToken = req.headers["x-admin-token"];
   const authorization = req.headers.authorization || "";
@@ -8,10 +15,10 @@ export function adminAuth(req, res, next) {
     ? authorization.slice("Bearer ".length)
     : "";
 
-  const token = String(
+  const token = normalizeAdminToken(
     Array.isArray(headerToken) ? headerToken[0] : headerToken || bearerToken || ""
-  ).trim();
-  const expectedToken = String(env.ADMIN_TOKEN || "").trim();
+  );
+  const expectedToken = normalizeAdminToken(env.ADMIN_TOKEN);
 
   if (!expectedToken) {
     return res.status(500).json({
