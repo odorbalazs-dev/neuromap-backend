@@ -1,5 +1,6 @@
 import express from "express";
 import { adminAuth } from "../../middleware/adminAuth.js";
+import { createRateLimit } from "../../middleware/security.js";
 import { getAdminDashboard } from "../controllers/admin-dashboard.controller.js";
 
 import {
@@ -36,6 +37,12 @@ import {
 const router = express.Router();
 
 router.get("/dashboard", getAdminDashboard);
+
+router.use(createRateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 220,
+  keyPrefix: "admin-api"
+}));
 
 router.use(adminAuth);
 

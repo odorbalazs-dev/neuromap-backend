@@ -70,11 +70,7 @@ app.use("/session", createRateLimit({
 app.use("/webhook", webhookRoutes);
 app.use("/health", healthRoutes);
 
-app.use("/admin", createRateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 40,
-  keyPrefix: "admin"
-}), adminRoutes);
+app.use("/admin", adminRoutes);
 
 app.use("/cron", createRateLimit({
   windowMs: 15 * 60 * 1000,
