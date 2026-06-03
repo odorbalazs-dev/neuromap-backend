@@ -5,7 +5,7 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260603-landing-rescue-v3";
+  const ENGINE_VERSION = "20260603-landing-rescue-v4";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
 
   const state = {
@@ -699,14 +699,14 @@
         display: flex !important;
         gap: 16px !important;
         justify-content: space-between !important;
-        padding: 14px clamp(16px, 3vw, 36px) !important;
+        padding: 10px clamp(16px, 3vw, 34px) !important;
       }
 
       .nm-social-landing .nm-topbar-logo,
       .nm-landing .nm-topbar-logo {
-        height: clamp(38px, 5vw, 58px) !important;
-        max-height: 58px !important;
-        max-width: min(260px, 46vw) !important;
+        height: clamp(32px, 4vw, 46px) !important;
+        max-height: 46px !important;
+        max-width: min(190px, 42vw) !important;
         object-fit: contain !important;
         width: auto !important;
       }
@@ -719,13 +719,13 @@
       .nm-social-landing .nm-hero {
         display: block !important;
         min-height: auto !important;
-        padding-top: clamp(56px, 8vh, 92px) !important;
+        padding-top: clamp(24px, 4vh, 42px) !important;
       }
 
       .nm-social-landing .nm-container {
         margin-left: auto;
         margin-right: auto;
-        max-width: 960px;
+        max-width: 860px;
         padding-left: clamp(18px, 4vw, 32px);
         padding-right: clamp(18px, 4vw, 32px);
       }
@@ -741,20 +741,21 @@
         background:
           linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(244, 249, 252, 0.88)),
           #f4f9fc;
-        min-height: min(760px, 92vh);
-        padding-bottom: clamp(28px, 7vh, 72px);
-        padding-top: clamp(72px, 10vh, 116px);
+        min-height: auto !important;
+        padding-bottom: clamp(22px, 4vh, 42px) !important;
+        padding-top: clamp(26px, 5vh, 52px) !important;
       }
 
       .nm-landing h1,
       .nm-social-landing h1,
       [data-nm-section="hero"] h1 {
         color: #102033;
-        font-size: clamp(36px, 5vw, 66px);
+        font-size: clamp(34px, 4vw, 52px);
         font-weight: 950;
         letter-spacing: 0;
-        line-height: 1.04;
-        margin-bottom: 18px;
+        line-height: 1.08;
+        margin: 0 auto 14px;
+        max-width: 760px;
         text-wrap: balance;
       }
 
@@ -762,8 +763,11 @@
       .nm-social-landing p,
       [data-nm-section="hero"] p {
         color: #40566d;
-        font-size: clamp(16px, 2vw, 20px);
-        line-height: 1.65;
+        font-size: clamp(15px, 1.5vw, 18px);
+        line-height: 1.55;
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 720px;
         text-wrap: pretty;
       }
 
@@ -787,8 +791,9 @@
         display: inline-flex;
         font-weight: 900;
         justify-content: center;
-        min-height: 50px;
-        padding: 14px 22px;
+        max-width: 720px;
+        min-height: 46px;
+        padding: 12px 20px;
         text-decoration: none !important;
         transition: transform 0.16s ease, box-shadow 0.16s ease;
       }
@@ -819,14 +824,14 @@
         .nm-social-landing,
         [data-nm-section="hero"] {
           min-height: auto;
-          padding-bottom: 42px;
-          padding-top: 76px;
+          padding-bottom: 34px;
+          padding-top: 52px;
         }
 
         .nm-landing h1,
         .nm-social-landing h1,
         [data-nm-section="hero"] h1 {
-          font-size: clamp(32px, 10vw, 44px);
+          font-size: clamp(30px, 9vw, 42px);
         }
 
         .nm-landing [data-nm-cta],
