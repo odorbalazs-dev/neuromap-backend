@@ -9,7 +9,7 @@ function assert(condition, message) {
 function main() {
   console.log("\n=== CHECKOUT PAGES SMOKE ===");
 
-  const currentVersion = "20260602-webflow-stable-v1";
+  const currentVersion = "20260603-analytics-schema-v2";
   const script = fs.readFileSync("public/webflow/checkout-pages.js", "utf8");
   const sharedEmbed = fs.readFileSync("web/checkout-pages-embed.html", "utf8").trim();
   const successEmbed = fs.readFileSync("web/checkout-success-embed.html", "utf8").trim();
@@ -30,6 +30,11 @@ function main() {
   });
 
   assert(script.includes(currentVersion), "Checkout pages should expose the current stable version.");
+  assert(script.includes("ANALYTICS_SCHEMA_VERSION"), "Checkout pages should define an analytics schema version.");
+  assert(script.includes("analytics-event-schema-v2"), "Checkout pages should use analytics event schema v2.");
+  assert(script.includes("buildAnalyticsPayload"), "Checkout pages should build normalized analytics payloads.");
+  assert(script.includes("event_schema_version"), "Checkout events should include the schema version.");
+  assert(script.includes("client_session_id"), "Checkout events should include a client session id.");
   assert(script.includes("nm-checkout-pages-stable-v1"), "Checkout pages should install the stable design layer.");
   assert(!/[\u0102\u00c2\u0103\u00e2\u0107\u0158\u0151\u0170\u0147]/.test(script), "Checkout pages should not contain mojibake characters.");
   assert(script.includes("&#10003;"), "Success page should render a safe checkmark entity.");

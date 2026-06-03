@@ -19,6 +19,22 @@ function main() {
     loaderHtml.includes("/public/webflow/engine.js"),
     "Webflow Engine loader should load the public engine file."
   );
+  assert(
+    loaderHtml.includes("20260603-landing-polish-analytics-v2"),
+    "Webflow Engine loader should include the landing polish and analytics v2 cache-busting version."
+  );
+  assert(script.includes("ENGINE_VERSION"), "Engine should expose an engine version.");
+  assert(script.includes("20260603-landing-polish-analytics-v2"), "Engine should expose the current landing polish version.");
+  assert(script.includes("ANALYTICS_SCHEMA_VERSION"), "Engine should define an analytics schema version.");
+  assert(script.includes("analytics-event-schema-v2"), "Engine should use analytics event schema v2.");
+  assert(script.includes("trackSchemaEvent"), "Engine should send normalized analytics events.");
+  assert(script.includes("event_schema_version"), "Engine analytics events should include the schema version.");
+  assert(script.includes("client_session_id"), "Engine analytics events should include a client session id.");
+  assert(script.includes("installLandingPolishV2"), "Engine should install landing polish v2.");
+  assert(script.includes("nm-landing-polish-v2"), "Engine should include the scoped landing polish stylesheet.");
+  assert(script.includes("nm_landing_view"), "Engine should send a landing view event.");
+  assert(script.includes("nm_questionnaire_loaded"), "Engine should send a questionnaire loaded event.");
+  assert(script.includes("specific_bank_adhd_count"), "Engine should expose flat specific bank counts for analytics.");
   assert(script.includes("ensureChildAgeField"), "Engine should create the child age field.");
   assert(script.includes("installFrontendDesign"), "Engine should install the Webflow frontend design layer.");
   assert(script.includes("nm-frontend-design-v3"), "Engine should include the scoped frontend design stylesheet.");

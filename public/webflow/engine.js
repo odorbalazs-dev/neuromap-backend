@@ -5,6 +5,8 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
+  const ENGINE_VERSION = "20260603-landing-polish-analytics-v2";
+  const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
 
   const state = {
     lang: "hu",
@@ -30,6 +32,87 @@
 
     needsExtra: false
   };
+
+  function randomIdPart() {
+    return Math.random().toString(36).slice(2, 10);
+  }
+
+  function getClientSessionId() {
+    const key = "nm_client_session_id";
+
+    try {
+      const existing = window.sessionStorage && window.sessionStorage.getItem(key);
+      if (existing) return existing;
+
+      const generated = `nmcs_${Date.now()}_${randomIdPart()}`;
+      if (window.sessionStorage) window.sessionStorage.setItem(key, generated);
+      return generated;
+    } catch (_error) {
+      return `nmcs_${Date.now()}_${randomIdPart()}`;
+    }
+  }
+
+  function getAnalyticsPageKind() {
+    const path = String(window.location.pathname || "").toLowerCase();
+    if (path.includes("checkout-success")) return "checkout_success";
+    if (path.includes("checkout-cancel")) return "checkout_cancel";
+    return "landing";
+  }
+
+  function getAnalyticsBasePayload(extra = {}) {
+    const childAge = typeof getChildAgeValue === "function" ? getChildAgeValue() : null;
+
+    return Object.assign({
+      event_schema_version: ANALYTICS_SCHEMA_VERSION,
+      app_name: "neuromap_kids",
+      app_surface: "webflow",
+      source: "webflow_engine",
+      page_kind: getAnalyticsPageKind(),
+      page_path: window.location.pathname || "",
+      page_url: window.location.href || "",
+      lang: state.lang || getLang(),
+      client_session_id: getClientSessionId(),
+      questionnaire_version: "v5-browser-adaptive-picker",
+      engine_version: ENGINE_VERSION,
+      child_age: childAge == null ? "" : childAge,
+      detected_risk: state.detectedRisk || "",
+      secondary_risk: state.secondaryRisk || "",
+      needs_extra: Boolean(state.needsExtra),
+      funnel_step: state.step || "landing",
+      generated_at: new Date().toISOString()
+    }, extra || {});
+  }
+
+  function hasSchemaV2Event(eventName, dedupeKey) {
+    const dataLayer = Array.isArray(window.dataLayer) ? window.dataLayer : [];
+
+    return dataLayer.some((entry) => {
+      if (!entry || entry.event !== eventName) return false;
+      if (entry.event_schema_version !== ANALYTICS_SCHEMA_VERSION) return false;
+      return !dedupeKey || entry.dedupe_key === dedupeKey;
+    });
+  }
+
+  function trackSchemaEvent(eventName, payload = {}, options = {}) {
+    const dedupeKey = options.dedupeKey || "";
+
+    if (dedupeKey && hasSchemaV2Event(eventName, dedupeKey)) {
+      return;
+    }
+
+    const enhancedPayload = getAnalyticsBasePayload(Object.assign({
+      event_id: `${eventName}_${Date.now()}_${randomIdPart()}`,
+      dedupe_key: dedupeKey
+    }, payload || {}));
+
+    if (typeof window.nmTrack === "function") {
+      window.nmTrack(eventName, enhancedPayload);
+      return;
+    }
+
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({ event: eventName }, enhancedPayload));
+  }
 
   function getConfig() {
     return window.NM_CONFIG || {};
@@ -574,6 +657,136 @@
         #languageModal * {
           scroll-behavior: auto !important;
           transition: none !important;
+        }
+      }
+    `;
+
+    document.head.appendChild(style);
+  }
+
+  function installLandingPolishV2() {
+    if (document.getElementById("nm-landing-polish-v2")) return;
+
+    const style = document.createElement("style");
+    style.id = "nm-landing-polish-v2";
+    style.textContent = `
+      body:has(#questionnaireStart),
+      body:has(#nmApp) {
+        background: #f4f9fc;
+        color: #132235;
+      }
+
+      #questionnaireStart {
+        scroll-margin-top: 96px;
+      }
+
+      .nm-landing,
+      .nm-social-landing,
+      [data-nm-landing],
+      [data-nm-section="landing"] {
+        color: #132235;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      .nm-landing-hero,
+      .nm-social-landing,
+      [data-nm-section="hero"] {
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(244, 249, 252, 0.88)),
+          #f4f9fc;
+        min-height: min(760px, 92vh);
+        padding-bottom: clamp(28px, 7vh, 72px);
+        padding-top: clamp(72px, 10vh, 116px);
+      }
+
+      .nm-landing h1,
+      .nm-social-landing h1,
+      [data-nm-section="hero"] h1 {
+        color: #102033;
+        font-size: clamp(36px, 5vw, 66px);
+        font-weight: 950;
+        letter-spacing: 0;
+        line-height: 1.04;
+        margin-bottom: 18px;
+        text-wrap: balance;
+      }
+
+      .nm-landing p,
+      .nm-social-landing p,
+      [data-nm-section="hero"] p {
+        color: #40566d;
+        font-size: clamp(16px, 2vw, 20px);
+        line-height: 1.65;
+        text-wrap: pretty;
+      }
+
+      .nm-landing a,
+      .nm-social-landing a,
+      [data-nm-section="hero"] a,
+      [data-nm-cta] {
+        text-decoration-thickness: 2px;
+        text-underline-offset: 4px;
+      }
+
+      .nm-landing [data-nm-cta],
+      .nm-social-landing [data-nm-cta],
+      a[href="#questionnaireStart"],
+      a[href*="questionnaireStart"] {
+        align-items: center;
+        background: linear-gradient(135deg, #1197d5, #0b86bf);
+        border-radius: 14px;
+        box-shadow: 0 16px 34px rgba(17, 151, 213, 0.22);
+        color: #ffffff !important;
+        display: inline-flex;
+        font-weight: 900;
+        justify-content: center;
+        min-height: 50px;
+        padding: 14px 22px;
+        text-decoration: none !important;
+        transition: transform 0.16s ease, box-shadow 0.16s ease;
+      }
+
+      .nm-landing [data-nm-cta]:hover,
+      .nm-social-landing [data-nm-cta]:hover,
+      a[href="#questionnaireStart"]:hover,
+      a[href*="questionnaireStart"]:hover {
+        box-shadow: 0 18px 38px rgba(17, 151, 213, 0.28);
+        transform: translateY(-1px);
+      }
+
+      .nm-landing img,
+      .nm-social-landing img,
+      [data-nm-section="hero"] img {
+        height: auto;
+        max-width: 100%;
+      }
+
+      .nm-landing .w-button,
+      .nm-social-landing .w-button {
+        letter-spacing: 0;
+        white-space: normal;
+      }
+
+      @media (max-width: 720px) {
+        .nm-landing-hero,
+        .nm-social-landing,
+        [data-nm-section="hero"] {
+          min-height: auto;
+          padding-bottom: 42px;
+          padding-top: 76px;
+        }
+
+        .nm-landing h1,
+        .nm-social-landing h1,
+        [data-nm-section="hero"] h1 {
+          font-size: clamp(32px, 10vw, 44px);
+        }
+
+        .nm-landing [data-nm-cta],
+        .nm-social-landing [data-nm-cta],
+        a[href="#questionnaireStart"],
+        a[href*="questionnaireStart"] {
+          width: 100%;
         }
       }
     `;
@@ -1769,15 +1982,15 @@
         stemKey: q.stemKey
       }));
 
-      if (typeof window.nmTrack === "function") {
-        window.nmTrack("nm_triage_completed", {
-          lang: state.lang,
-          detectedRisk: state.detectedRisk,
-          secondaryRisk: state.secondaryRisk || "",
-          needsExtra: state.needsExtra,
-          answers: state.triageAnswers.length
-        });
-      }
+      trackSchemaEvent("nm_triage_completed", {
+        funnel_step: "triage_completed",
+        detected_risk: state.detectedRisk,
+        secondary_risk: state.secondaryRisk || "",
+        needs_extra: state.needsExtra,
+        answer_count: state.triageAnswers.length,
+        primary_score: Number(risks.primaryScore || 0),
+        secondary_score: Number(risks.secondaryScore || 0)
+      });
 
       state.step = "specific";
       renderCurrentStep();
@@ -1810,15 +2023,17 @@
         state.secondaryRisk
       );
 
-      if (typeof window.nmTrack === "function") {
-        window.nmTrack("nm_specific_completed", {
-          lang: state.lang,
-          detectedRisk: state.detectedRisk,
-          secondaryRisk: state.secondaryRisk || "",
-          needsExtra: state.needsExtra,
-          answers: state.specificAnswers.length + state.extraAnswers.length
-        });
-      }
+      trackSchemaEvent("nm_specific_completed", {
+        funnel_step: "specific_completed",
+        detected_risk: state.detectedRisk,
+        secondary_risk: state.secondaryRisk || "",
+        needs_extra: state.needsExtra,
+        answer_count: state.specificAnswers.length + state.extraAnswers.length,
+        specific_answer_count: state.specificAnswers.length,
+        extra_answer_count: state.extraAnswers.length,
+        normalized_average: Number(state.specificScoring?.normalizedAverage || 0),
+        severity: state.specificProfile?.severity || ""
+      });
 
       state.step = "summary";
       renderCurrentStep();
@@ -1980,15 +2195,15 @@
 
     const payload = buildCheckoutPayload();
 
-    if (typeof window.nmTrack === "function") {
-      window.nmTrack("nm_checkout_started", {
-        value: 5,
-        currency: "USD",
-        lang: state.lang,
-        detectedRisk: state.detectedRisk,
-        secondaryRisk: state.secondaryRisk || ""
-      });
-    }
+    trackSchemaEvent("nm_checkout_started", {
+      funnel_step: "checkout_started",
+      value: 5,
+      currency: "USD",
+      detected_risk: state.detectedRisk,
+      secondary_risk: state.secondaryRisk || "",
+      normalized_average: Number(state.specificScoring?.normalizedAverage || 0),
+      severity: state.specificProfile?.severity || ""
+    });
 
     try {
       if (button) button.disabled = true;
@@ -2030,9 +2245,17 @@
   }
 
   window.selectLang = function (lang) {
+    const previousLang = state.lang || getLang();
+
     localStorage.setItem("nm_lang", lang);
 
     applyLang(lang);
+
+    trackSchemaEvent("nm_language_selected", {
+      funnel_step: state.step || "landing",
+      previous_lang: previousLang,
+      selected_lang: lang
+    });
 
     if (typeof window.NM_APPLY_LANDING_LANGUAGE === "function") {
       window.NM_APPLY_LANDING_LANGUAGE(lang);
@@ -2043,6 +2266,7 @@
 
   function init() {
     installFrontendDesign();
+    installLandingPolishV2();
     buildLangButtons();
     ensureChildAgeField();
 
@@ -2064,6 +2288,31 @@
     if (paymentBtn) paymentBtn.addEventListener("click", startCheckout);
 
     applyLang(state.lang);
+
+    const specificBankCounts = DISORDERS.reduce((counts, domain) => {
+      const bank = (window.NM_SPECIFIC_BANK || {})[domain] || [];
+      counts[domain] = Array.isArray(bank) ? bank.length : 0;
+      return counts;
+    }, {});
+
+    trackSchemaEvent("nm_landing_view", {
+      funnel_step: "landing_view"
+    }, {
+      dedupeKey: `landing:${window.location.pathname || "/"}:${state.lang}`
+    });
+
+    trackSchemaEvent("nm_questionnaire_loaded", {
+      funnel_step: "questionnaire_loaded",
+      triage_question_count: state.triageQuestions.length,
+      specific_bank_count: specificBankCounts,
+      specific_bank_adhd_count: specificBankCounts.ADHD || 0,
+      specific_bank_asd_count: specificBankCounts.ASD || 0,
+      specific_bank_anxiety_count: specificBankCounts.ANXIETY || 0,
+      specific_bank_depression_count: specificBankCounts.DEPRESSION || 0,
+      specific_bank_learning_count: specificBankCounts.LEARNING || 0
+    }, {
+      dedupeKey: `questionnaire_loaded:${window.location.pathname || "/"}:${state.lang}`
+    });
   }
 
   window.NM_DEBUG_STATE = state;

@@ -5,7 +5,8 @@
 (function () {
   if (typeof window === "undefined" || typeof document === "undefined") return;
 
-  const CHECKOUT_PAGES_VERSION = "20260602-webflow-stable-v1";
+  const CHECKOUT_PAGES_VERSION = "20260603-analytics-schema-v2";
+  const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
   const DEFAULT_API_BASE_URL = "https://neuromap-backend-production-969d.up.railway.app";
   const SUPPORTED_LANGS = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];
 
@@ -232,6 +233,41 @@
     });
   }
 
+  function randomIdPart() {
+    return Math.random().toString(36).slice(2, 10);
+  }
+
+  function getClientSessionId() {
+    const key = "nm_client_session_id";
+
+    try {
+      const existing = window.sessionStorage && window.sessionStorage.getItem(key);
+      if (existing) return existing;
+
+      const generated = `nmcs_${Date.now()}_${randomIdPart()}`;
+      if (window.sessionStorage) window.sessionStorage.setItem(key, generated);
+      return generated;
+    } catch (_error) {
+      return `nmcs_${Date.now()}_${randomIdPart()}`;
+    }
+  }
+
+  function buildAnalyticsPayload(eventName, payload) {
+    return Object.assign({
+      event_id: `${eventName}_${Date.now()}_${randomIdPart()}`,
+      event_schema_version: ANALYTICS_SCHEMA_VERSION,
+      app_name: "neuromap_kids",
+      app_surface: "webflow",
+      page_kind: getPageKind() === "success" ? "checkout_success" : "checkout_cancel",
+      page_path: window.location.pathname || "",
+      page_url: window.location.href || "",
+      client_session_id: getClientSessionId(),
+      source: "webflow_checkout_pages",
+      version: CHECKOUT_PAGES_VERSION,
+      generated_at: new Date().toISOString()
+    }, payload || {});
+  }
+
   function trackOnce(eventName, payload) {
     window.dataLayer = window.dataLayer || [];
 
@@ -246,7 +282,10 @@
       if (hasDataLayerEvent(eventName, sessionId)) return;
     }
 
-    window.dataLayer.push(Object.assign({ event: eventName }, payload || {}));
+    window.dataLayer.push(Object.assign(
+      { event: eventName },
+      buildAnalyticsPayload(eventName, payload || {})
+    ));
   }
 
   function installDesign() {
