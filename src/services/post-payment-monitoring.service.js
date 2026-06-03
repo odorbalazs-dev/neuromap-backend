@@ -142,6 +142,10 @@ export async function buildPostPaymentMonitor(options = {}) {
     MAX_RETRY_ATTEMPTS,
     limit
   ];
+  const summaryParams = params.slice(0, 6);
+  const jobParams = params.slice(0, 4);
+  const webhookParams = params.slice(0, 2);
+  const issueParams = params;
 
   const [
     summaryResult,
@@ -229,7 +233,7 @@ export async function buildPostPaymentMonitor(options = {}) {
         MAX(report_email_sent_at) AS last_email_sent_at
       FROM paid_sessions
       `,
-      params
+      summaryParams
     ),
     db.query(
       `
@@ -248,7 +252,7 @@ export async function buildPostPaymentMonitor(options = {}) {
       WHERE created_at >= NOW() - ($1::int * INTERVAL '1 hour')
          OR updated_at >= NOW() - ($1::int * INTERVAL '1 hour')
       `,
-      params
+      jobParams
     ),
     db.query(
       `
@@ -263,7 +267,7 @@ export async function buildPostPaymentMonitor(options = {}) {
       FROM webhook_events
       WHERE created_at >= NOW() - ($1::int * INTERVAL '1 hour')
       `,
-      params
+      webhookParams
     ),
     db.query(
       `
@@ -358,7 +362,7 @@ export async function buildPostPaymentMonitor(options = {}) {
         reference_at DESC NULLS LAST
       LIMIT $7::int
       `,
-      params
+      issueParams
     )
   ]);
 
