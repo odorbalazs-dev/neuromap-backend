@@ -17,6 +17,8 @@
     retryEmailBatchBtn: document.getElementById("retryEmailBatchBtn"),
     alertCheckBtn: document.getElementById("alertCheckBtn"),
     bankQualityAlertBtn: document.getElementById("bankQualityAlertBtn"),
+    postPaymentRecoveryBtn: document.getElementById("postPaymentRecoveryBtn"),
+    postPaymentRecoveryPanelBtn: document.getElementById("postPaymentRecoveryPanelBtn"),
     refreshLaunchReadinessBtn: document.getElementById("refreshLaunchReadinessBtn"),
     statusText: document.getElementById("statusText"),
     controlCenterHeadline: document.getElementById("controlCenterHeadline"),
@@ -49,6 +51,12 @@
     postPaymentStageRows: document.getElementById("postPaymentStageRows"),
     postPaymentRecommendationRows: document.getElementById("postPaymentRecommendationRows"),
     postPaymentIssueRows: document.getElementById("postPaymentIssueRows"),
+    webflowEmbedGeneratedAt: document.getElementById("webflowEmbedGeneratedAt"),
+    webflowEmbedTotal: document.getElementById("webflowEmbedTotal"),
+    webflowEmbedReadyMeta: document.getElementById("webflowEmbedReadyMeta"),
+    webflowEmbedLoaders: document.getElementById("webflowEmbedLoaders"),
+    webflowEmbedLimit: document.getElementById("webflowEmbedLimit"),
+    webflowEmbedRows: document.getElementById("webflowEmbedRows"),
     launchReadinessLevel: document.getElementById("launchReadinessLevel"),
     launchReadinessSummary: document.getElementById("launchReadinessSummary"),
     launchReadinessGeneratedAt: document.getElementById("launchReadinessGeneratedAt"),
@@ -169,6 +177,8 @@
       els.retryEmailBatchBtn,
       els.alertCheckBtn,
       els.bankQualityAlertBtn,
+      els.postPaymentRecoveryBtn,
+      els.postPaymentRecoveryPanelBtn,
       els.refreshLaunchReadinessBtn,
       els.refreshEmailDeliveryCenterBtn,
       els.sessionSearchBtn
@@ -195,6 +205,20 @@
   function compact(value, max = 96) {
     const raw = text(value);
     return raw.length > max ? `${raw.slice(0, max)}...` : raw;
+  }
+
+  function summaryChip(label, value) {
+    const chip = document.createElement("div");
+    chip.className = "summary-chip";
+
+    const title = document.createElement("span");
+    title.textContent = label;
+
+    const body = document.createElement("strong");
+    body.textContent = text(value);
+
+    chip.append(title, body);
+    return chip;
   }
 
   function formatDate(value) {
@@ -1694,6 +1718,98 @@
     });
   }
 
+  function renderWebflowEmbedManager(data = {}) {
+    data = data || {};
+    const summary = data.summary || {};
+    const embeds = Array.isArray(data.embeds) ? data.embeds : [];
+
+    if (els.webflowEmbedGeneratedAt) {
+      els.webflowEmbedGeneratedAt.textContent =
+        data.generatedAt
+          ? `Frissitve: ${formatDate(data.generatedAt)}`
+          : "Meg nincs embed allapotkep";
+    }
+
+    if (els.webflowEmbedTotal) {
+      els.webflowEmbedTotal.textContent = Number(summary.total || embeds.length || 0);
+    }
+
+    if (els.webflowEmbedReadyMeta) {
+      els.webflowEmbedReadyMeta.textContent =
+        `Ready: ${Number(summary.ready || 0)}, limit feletti snippet: ${Number(summary.overLimitSnippets || 0)}`;
+    }
+
+    if (els.webflowEmbedLoaders) {
+      els.webflowEmbedLoaders.textContent = Number(summary.loaders || 0);
+    }
+
+    if (els.webflowEmbedLimit) {
+      els.webflowEmbedLimit.textContent =
+        Number(data.webflowEmbedCharacterLimit || 50000).toLocaleString("hu-HU");
+    }
+
+    if (!els.webflowEmbedRows) return;
+    els.webflowEmbedRows.replaceChildren();
+
+    if (!embeds.length) {
+      const empty = document.createElement("div");
+      empty.className = "empty-detail";
+      empty.textContent = "Add meg az admin tokent, majd frissits a Webflow embed allapotkephez.";
+      els.webflowEmbedRows.appendChild(empty);
+      return;
+    }
+
+    embeds.forEach((item) => {
+      const card = document.createElement("article");
+      card.className = "embed-card";
+
+      const head = document.createElement("div");
+      head.className = "embed-card-head";
+
+      const titleWrap = document.createElement("div");
+      const title = document.createElement("h3");
+      title.textContent = text(item.label);
+
+      const meta = document.createElement("p");
+      meta.textContent =
+        `${text(item.type)} - ${text(item.placement)} - ${compact(item.note, 150)}`;
+
+      titleWrap.append(title, meta);
+      head.append(titleWrap, statusPill(item.ready ? "ready" : "blocked"));
+
+      const details = document.createElement("div");
+      details.className = "embed-meta";
+      details.append(
+        summaryChip("Forras", item.source?.path || "-"),
+        summaryChip("Forras karakter", Number(item.source?.characters || 0).toLocaleString("hu-HU")),
+        summaryChip("Snippet karakter", Number(item.snippet?.characters || 0).toLocaleString("hu-HU")),
+        summaryChip("Verzio", item.version || "-")
+      );
+
+      const code = document.createElement("textarea");
+      code.className = "embed-code";
+      code.readOnly = true;
+      code.value = item.copyCode || "";
+
+      const actionRow = document.createElement("div");
+      actionRow.className = "embed-actions";
+
+      const copyButton = document.createElement("button");
+      copyButton.type = "button";
+      copyButton.className = "secondary";
+      copyButton.dataset.copyCode = item.copyCode || "";
+      copyButton.textContent = "Kod masolasa";
+
+      const publicLink = document.createElement("span");
+      publicLink.className = "snapshot-time";
+      publicLink.textContent = item.publicUrl || "Nincs publikus URL";
+
+      actionRow.append(copyButton, publicLink);
+      card.append(head, details, code, actionRow);
+      els.webflowEmbedRows.appendChild(card);
+    });
+  }
+
   function renderOperationLogRows(items) {
     els.operationsLogRows.replaceChildren();
 
@@ -2887,7 +3003,8 @@
         bankQualityAudit,
         emailDeliveryCenter,
         emailDeliverability,
-        postPaymentMonitoring
+        postPaymentMonitoring,
+        webflowEmbedManager
       ] = await Promise.all([
         api("/admin/status"),
         api("/admin/production-health"),
@@ -2902,7 +3019,8 @@
         api("/admin/bank-quality-audit"),
         api(`/admin/email-delivery-center?status=${encodeURIComponent(currentEmailDeliveryStatusFilter())}&limit=60`),
         api("/admin/email-deliverability?hours=168&limit=30"),
-        api("/admin/post-payment-monitoring?hours=168&limit=30")
+        api("/admin/post-payment-monitoring?hours=168&limit=30"),
+        api("/admin/webflow-embed-manager")
       ]);
 
       els.apiStatus.textContent = status.ok ? "Elérhető" : "Hiba";
@@ -2921,6 +3039,7 @@
       renderEmailDeliveryCenter(emailDeliveryCenter);
       renderEmailDeliverability(emailDeliverability);
       renderPostPaymentMonitoring(postPaymentMonitoring);
+      renderWebflowEmbedManager(webflowEmbedManager);
       renderControlPulse({
         health,
         queue,
@@ -2985,6 +3104,13 @@
     } finally {
       setBusy(false);
     }
+  }
+
+  async function runPostPaymentRecovery() {
+    await postAction(
+      "/admin/post-payment-recovery",
+      "Post-payment recovery v2 lefutott."
+    );
   }
 
   async function searchSessions() {
@@ -3204,6 +3330,7 @@
       renderEmailDeliveryCenter(null);
       renderEmailDeliverability(null);
       renderPostPaymentMonitoring(null);
+      renderWebflowEmbedManager(null);
       renderOperatorFocus(null);
       if (els.apiStatus) els.apiStatus.textContent = "-";
       setStatus("Token törölve.");
@@ -3238,6 +3365,9 @@
       postAction("/admin/retry-report-emails", "Riport email újrapróbálás lefutott.");
     });
 
+    bindClick(els.postPaymentRecoveryBtn, runPostPaymentRecovery);
+    bindClick(els.postPaymentRecoveryPanelBtn, runPostPaymentRecovery);
+
     bindClick(els.alertCheckBtn, () => {
       postAction("/admin/trigger-alert-check", "Riasztásellenőrzés lefutott.");
     });
@@ -3263,6 +3393,10 @@
 
         if (action === "retry-email") {
           postAction("/admin/retry-report-emails", "Riport email újrapróbálás lefutott.");
+        }
+
+        if (action === "post-payment-recovery") {
+          runPostPaymentRecovery();
         }
 
         if (action === "alert-check") {
@@ -3291,6 +3425,24 @@
     });
 
     document.addEventListener("click", handleActionClick);
+    document.addEventListener("click", async (event) => {
+      const button = event.target.closest("button[data-copy-code]");
+      if (!button) return;
+
+      event.preventDefault();
+      const code = button.dataset.copyCode || "";
+
+      try {
+        await navigator.clipboard.writeText(code);
+        const originalText = button.textContent;
+        button.textContent = "Masolva";
+        setTimeout(() => {
+          button.textContent = originalText || "Kod masolasa";
+        }, 1400);
+      } catch (_error) {
+        setStatus("A bongeszo nem engedte az automatikus masolast. Jelold ki a kodmezot.", true);
+      }
+    });
     document.addEventListener("click", (event) => {
       const button = event.target.closest("[data-scroll-target]");
       if (!button) return;

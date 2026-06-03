@@ -21,6 +21,8 @@ import { buildEngineLiveDecisionAudit } from "../../services/engine-live-audit.s
 import { buildBankQualityAudit } from "../../services/bank-quality-audit.service.js";
 import { buildEmailDeliverabilityMonitor } from "../../services/email-deliverability.service.js";
 import { buildPostPaymentMonitor } from "../../services/post-payment-monitoring.service.js";
+import { runPostPaymentRecoveryV2 } from "../../services/post-payment-recovery.service.js";
+import { buildWebflowEmbedManager } from "../../services/webflow-embed-manager.service.js";
 import { env } from "../../config/env.js";
 
 function shortText(value = "", max = 600) {
@@ -1584,6 +1586,39 @@ export async function getPostPaymentMonitoring(req, res) {
     return res.status(500).json({
       ok: false,
       error: error.message || "Failed to get post-payment monitor"
+    });
+  }
+}
+
+export async function triggerPostPaymentRecovery(req, res) {
+  try {
+    const result = await runPostPaymentRecoveryV2({
+      ...(req.query || {}),
+      ...(req.body || {})
+    });
+
+    return res.status(200).json(result);
+  } catch (error) {
+    console.error("Admin post-payment recovery error:", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: error.message || "Failed to run post-payment recovery"
+    });
+  }
+}
+
+export async function getWebflowEmbedManager(_req, res) {
+  try {
+    const manager = await buildWebflowEmbedManager();
+
+    return res.status(200).json(manager);
+  } catch (error) {
+    console.error("Admin Webflow embed manager error:", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: error.message || "Failed to get Webflow embed manager"
     });
   }
 }

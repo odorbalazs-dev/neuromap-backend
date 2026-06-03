@@ -9,6 +9,8 @@ import {
   getEmailDeliverability,
   getEmailDeliveryCenter,
   getPostPaymentMonitoring,
+  triggerPostPaymentRecovery,
+  getWebflowEmbedManager,
   getOperationsLog,
   getAdminAlerts,
   triggerAdminAlertCheck,
@@ -42,6 +44,8 @@ router.get("/production-health", getProductionHealth);
 router.get("/email-deliverability", getEmailDeliverability);
 router.get("/email-delivery-center", getEmailDeliveryCenter);
 router.get("/post-payment-monitoring", getPostPaymentMonitoring);
+router.post("/post-payment-recovery", triggerPostPaymentRecovery);
+router.get("/webflow-embed-manager", getWebflowEmbedManager);
 router.get("/operations-log", getOperationsLog);
 router.get("/alerts", getAdminAlerts);
 router.post("/trigger-alert-check", triggerAdminAlertCheck);

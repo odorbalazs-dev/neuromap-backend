@@ -1,4 +1,4 @@
-const ADMIN_DASHBOARD_ASSET_VERSION = "20260602-post-payment-monitor-v1";
+const ADMIN_DASHBOARD_ASSET_VERSION = "20260602-recovery-embed-manager-v1";
 
 export function getAdminDashboard(_req, res) {
   res.setHeader(
@@ -43,6 +43,7 @@ export function getAdminDashboard(_req, res) {
         <button id="refreshBtn" type="button">Frissítés</button>
         <button id="processOneBtn" type="button">1 várakozó job futtatása</button>
         <button id="retryEmailBatchBtn" type="button" class="warn">Riport emailek újrapróbálása</button>
+        <button id="postPaymentRecoveryBtn" type="button" class="warn">Post-payment recovery v2</button>
         <button id="alertCheckBtn" type="button" class="secondary">Riasztásellenőrzés</button>
         <button id="clearTokenBtn" type="button" class="secondary">Token törlése</button>
         <button id="bankQualityAlertBtn" type="button" class="secondary">Bank audit riasztas</button>
@@ -54,6 +55,7 @@ export function getAdminDashboard(_req, res) {
         <button type="button" data-scroll-target="operatorFocusPanel">Teendők</button>
         <button type="button" data-scroll-target="pipelinePanel">Folyamat</button>
         <button type="button" data-scroll-target="postPaymentPanel">Post-payment</button>
+        <button type="button" data-scroll-target="webflowEmbedPanel">Webflow embedek</button>
         <button type="button" data-scroll-target="queuePanel">Queue</button>
         <button type="button" data-scroll-target="emailDeliveryPanel">Email</button>
         <button type="button" data-scroll-target="engineAnalyticsPanel">Engine</button>
@@ -86,6 +88,7 @@ export function getAdminDashboard(_req, res) {
             <button type="button" data-control-action="refresh">Állapot frissítése</button>
             <button type="button" data-control-action="process-job" class="secondary">1 job feldolgozása</button>
             <button type="button" data-control-action="retry-email" class="warn">Riport emailek újrapróbálása</button>
+            <button type="button" data-control-action="post-payment-recovery" class="warn">Post-payment recovery v2</button>
             <button type="button" data-control-action="alert-check" class="secondary">Riasztásellenőrzés</button>
             <button type="button" data-control-action="bank-quality-alert" class="secondary">Bank audit riasztas</button>
           </div>
@@ -176,7 +179,10 @@ export function getAdminDashboard(_req, res) {
             <h2>Post-payment monitoring</h2>
             <p>Fizetes utani lanc: Stripe webhook, worker, PDF/riport es email kezbesites egy nezoben.</p>
           </div>
-          <span id="postPaymentWindow" class="snapshot-time">Meg nincs post-payment allapotkep</span>
+          <div class="panel-actions">
+            <button id="postPaymentRecoveryPanelBtn" type="button" class="warn">Recovery v2 futtatasa</button>
+            <span id="postPaymentWindow" class="snapshot-time">Meg nincs post-payment allapotkep</span>
+          </div>
         </div>
         <div class="health-grid">
           <article class="health-card">
@@ -235,6 +241,34 @@ export function getAdminDashboard(_req, res) {
             <tbody id="postPaymentIssueRows"></tbody>
           </table>
         </div>
+      </section>
+
+      <section id="webflowEmbedPanel" class="panel webflow-embed-panel" aria-label="Webflow embed manager">
+        <div class="panel-head">
+          <div>
+            <h2>Webflow Embed Manager</h2>
+            <p>Bemasolhato loader kodok, forrasfajl-meretek es Webflow 50k limit figyeles egy helyen.</p>
+          </div>
+          <span id="webflowEmbedGeneratedAt" class="snapshot-time">Meg nincs embed allapotkep</span>
+        </div>
+        <div class="health-grid">
+          <article class="health-card">
+            <span>Embedek</span>
+            <strong id="webflowEmbedTotal">0</strong>
+            <p id="webflowEmbedReadyMeta">Ready: 0</p>
+          </article>
+          <article class="health-card">
+            <span>Loader embedek</span>
+            <strong id="webflowEmbedLoaders">0</strong>
+            <p>Kulso script loader a Webflow karakterlimit miatt.</p>
+          </article>
+          <article class="health-card">
+            <span>Webflow limit</span>
+            <strong id="webflowEmbedLimit">50 000</strong>
+            <p>Forras es snippet karakterellenorzes.</p>
+          </article>
+        </div>
+        <div id="webflowEmbedRows" class="embed-manager-list"></div>
       </section>
 
       <section id="launchPanel" class="panel launch-panel" aria-label="Élesítési ellenőrzés">

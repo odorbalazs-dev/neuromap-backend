@@ -193,6 +193,22 @@ assert(
   "Dashboard HTML should include post-payment monitoring issue rows."
 );
 assert(
+  res.body.includes("postPaymentRecoveryBtn"),
+  "Dashboard HTML should include the post-payment recovery toolbar button."
+);
+assert(
+  res.body.includes("postPaymentRecoveryPanelBtn"),
+  "Dashboard HTML should include the post-payment recovery panel button."
+);
+assert(
+  res.body.includes("webflowEmbedPanel"),
+  "Dashboard HTML should include the Webflow embed manager panel."
+);
+assert(
+  res.body.includes("webflowEmbedRows"),
+  "Dashboard HTML should include Webflow embed manager rows."
+);
+assert(
   res.body.includes("emailIssueRows"),
   "Dashboard HTML should include the email issue rows container."
 );
@@ -365,6 +381,14 @@ assert(
   "Dashboard JS should call the post-payment monitoring endpoint."
 );
 assert(
+  dashboardJs.includes("/admin/post-payment-recovery"),
+  "Dashboard JS should call the post-payment recovery endpoint."
+);
+assert(
+  dashboardJs.includes("/admin/webflow-embed-manager"),
+  "Dashboard JS should call the Webflow embed manager endpoint."
+);
+assert(
   dashboardJs.includes("renderEmailDeliveryCenter"),
   "Dashboard JS should render email delivery center results."
 );
@@ -379,6 +403,18 @@ assert(
 assert(
   dashboardJs.includes("renderPostPaymentMonitoring"),
   "Dashboard JS should render post-payment monitoring results."
+);
+assert(
+  dashboardJs.includes("runPostPaymentRecovery"),
+  "Dashboard JS should expose a post-payment recovery action."
+);
+assert(
+  dashboardJs.includes("renderWebflowEmbedManager"),
+  "Dashboard JS should render Webflow embed manager results."
+);
+assert(
+  dashboardJs.includes("data-copy-code"),
+  "Dashboard JS should support copying Webflow embed code."
 );
 assert(
   dashboardJs.includes("postPaymentMonitoring"),
@@ -615,6 +651,14 @@ assert(
 assert(
   dashboardCss.includes(".control-pulse-grid"),
   "Dashboard CSS should style the control pulse grid."
+);
+assert(
+  dashboardCss.includes(".embed-manager-list"),
+  "Dashboard CSS should style the Webflow embed manager list."
+);
+assert(
+  dashboardCss.includes(".embed-card"),
+  "Dashboard CSS should style Webflow embed cards."
 );
 assert(
   dashboardCss.includes(".pulse-card"),

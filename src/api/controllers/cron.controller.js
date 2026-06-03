@@ -10,6 +10,7 @@ import {
   runBankQualityAlertCheck,
   runProductionHealthAlertCheck
 } from "../../services/admin-alert.service.js";
+import { runPostPaymentRecoveryV2 } from "../../services/post-payment-recovery.service.js";
 
 import { env } from "../../config/env.js";
 import { secureCompare } from "../../utils/secureCompare.js";
@@ -199,6 +200,36 @@ export async function retryReportEmails(req, res) {
   } catch (error) {
     console.error(
       "[cron] retryReportEmails failed:",
+      error
+    );
+
+    return res.status(500).json({
+      ok: false,
+      error: error.message || "Cron failed"
+    });
+  }
+}
+
+export async function runPostPaymentRecovery(req, res) {
+  try {
+    if (!isAuthorizedCron(req)) {
+      return res.status(401).json({
+        ok: false,
+        error: "Unauthorized"
+      });
+    }
+
+    const result =
+      await runPostPaymentRecoveryV2({
+        ...(req.query || {}),
+        ...(req.body || {})
+      });
+
+    return res.json(result);
+
+  } catch (error) {
+    console.error(
+      "[cron] runPostPaymentRecovery failed:",
       error
     );
 
