@@ -437,6 +437,14 @@ assert(
   "Dashboard JS should support copying Webflow embed code."
 );
 assert(
+  dashboardJs.includes("embed-code-details"),
+  "Dashboard JS should keep Webflow embed snippets behind a collapsible technical details section."
+);
+assert(
+  dashboardJs.includes("Technikai snippet megnyitasa"),
+  "Dashboard JS should label the collapsible Webflow snippet section."
+);
+assert(
   dashboardJs.includes("postPaymentMonitoring"),
   "Dashboard JS should include post-payment data in the dashboard refresh."
 );
@@ -679,6 +687,10 @@ assert(
 assert(
   dashboardCss.includes(".embed-card"),
   "Dashboard CSS should style Webflow embed cards."
+);
+assert(
+  dashboardCss.includes(".embed-code-details"),
+  "Dashboard CSS should style collapsible Webflow embed snippets."
 );
 assert(
   dashboardCss.includes(".pulse-card"),

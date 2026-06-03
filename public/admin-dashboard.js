@@ -1831,7 +1831,7 @@
 
       const meta = document.createElement("p");
       meta.textContent =
-        `${text(item.type)} - ${text(item.placement)} - ${compact(item.note, 150)}`;
+        `${text(item.placement)} - ${compact(item.note, 150)}`;
 
       titleWrap.append(title, meta);
       head.append(titleWrap, statusPill(item.ready ? "ready" : "blocked"));
@@ -1839,16 +1839,24 @@
       const details = document.createElement("div");
       details.className = "embed-meta";
       details.append(
-        summaryChip("Forras", item.source?.path || "-"),
-        summaryChip("Forras karakter", Number(item.source?.characters || 0).toLocaleString("hu-HU")),
-        summaryChip("Snippet karakter", Number(item.snippet?.characters || 0).toLocaleString("hu-HU")),
-        summaryChip("Verzio", item.version || "-")
+        summaryChip("Hova tedd", item.placement || "-"),
+        summaryChip("Verzio", item.version || "-"),
+        summaryChip("Tipus", item.type || "-"),
+        summaryChip("Forras", item.source?.path || "-")
       );
 
       const code = document.createElement("textarea");
       code.className = "embed-code";
       code.readOnly = true;
       code.value = item.copyCode || "";
+
+      const codeDetails = document.createElement("details");
+      codeDetails.className = "embed-code-details";
+
+      const codeSummary = document.createElement("summary");
+      codeSummary.textContent = "Technikai snippet megnyitasa";
+
+      codeDetails.append(codeSummary, code);
 
       const actionRow = document.createElement("div");
       actionRow.className = "embed-actions";
@@ -1861,10 +1869,12 @@
 
       const publicLink = document.createElement("span");
       publicLink.className = "snapshot-time";
-      publicLink.textContent = item.publicUrl || "Nincs publikus URL";
+      publicLink.textContent = item.publicUrl
+        ? `Publikus URL: ${item.publicUrl}`
+        : "Nincs publikus URL";
 
       actionRow.append(copyButton, publicLink);
-      card.append(head, details, code, actionRow);
+      card.append(head, details, actionRow, codeDetails);
       els.webflowEmbedRows.appendChild(card);
     });
   }
