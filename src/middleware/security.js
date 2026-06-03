@@ -36,9 +36,14 @@ export function securityHeaders(_req, res, next) {
 export function createRateLimit({
   windowMs = DEFAULT_WINDOW_MS,
   max = 100,
-  keyPrefix = "global"
+  keyPrefix = "global",
+  skip = null
 } = {}) {
   return function rateLimit(req, res, next) {
+    if (typeof skip === "function" && skip(req)) {
+      return next();
+    }
+
     const now = Date.now();
 
     if (Math.random() < 0.01) {

@@ -39,7 +39,15 @@ app.use(securityHeaders);
 app.use(createRateLimit({
   windowMs: 15 * 60 * 1000,
   max: 300,
-  keyPrefix: "global"
+  keyPrefix: "global",
+  skip: (req) => {
+    const path = req.path || "";
+    return (
+      path === "/admin/dashboard" ||
+      path === "/public/admin-dashboard.css" ||
+      path === "/public/admin-dashboard.js"
+    );
+  }
 }));
 
 app.use("/public", express.static("public"));
