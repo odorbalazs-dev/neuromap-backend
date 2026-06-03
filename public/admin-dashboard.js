@@ -1,5 +1,6 @@
 (function () {
   const TOKEN_KEY = "nm_admin_token";
+  const TOKEN_STORAGE_KEYS = [TOKEN_KEY, "adminToken", "ADMIN_TOKEN"];
   const OPERATIONS_LOG_KEY = "nm_operations_log_open";
   const COLLAPSIBLE_SECTION_KEY_PREFIX = "nm_dashboard_collapsed_";
   const DEFAULT_COLLAPSED_SECTIONS = new Set([
@@ -177,12 +178,28 @@
   }
 
   function readSavedToken() {
-    return normalizeToken(
-      localStorage.getItem(TOKEN_KEY) ||
-        localStorage.getItem("adminToken") ||
-        localStorage.getItem("ADMIN_TOKEN") ||
-        ""
-    );
+    for (const key of TOKEN_STORAGE_KEYS) {
+      const token = normalizeToken(localStorage.getItem(key) || "");
+      if (token) return token;
+    }
+
+    return "";
+  }
+
+  function saveToken(token) {
+    const normalized = normalizeToken(token);
+
+    TOKEN_STORAGE_KEYS.forEach((key) => localStorage.removeItem(key));
+
+    if (normalized) {
+      localStorage.setItem(TOKEN_KEY, normalized);
+    }
+
+    return normalized;
+  }
+
+  function clearSavedTokens() {
+    TOKEN_STORAGE_KEYS.forEach((key) => localStorage.removeItem(key));
   }
 
   function getToken() {
@@ -386,6 +403,16 @@
     const data = await response.json().catch(() => ({}));
 
     if (!response.ok || data.ok === false) {
+      if (response.status === 401) {
+        throw new Error(
+          "Az admin token nem egyezik az éles backend ADMIN_TOKEN változójával. Töröld a mentett tokent, másold be újra a neuromap-backend service ADMIN_TOKEN értékét, majd szükség esetén indíts új deployt."
+        );
+      }
+
+      if (response.status === 429) {
+        throw new Error("Túl sok admin kérés futott rövid időn belül. Várj 1-2 percet, majd frissíts újra.");
+      }
+
       throw new Error(data.error || `Admin API hiba (${response.status})`);
     }
 
@@ -3362,7 +3389,7 @@
     const savedToken = readSavedToken();
     if (savedToken && els.token) {
       els.token.value = savedToken;
-      localStorage.setItem(TOKEN_KEY, savedToken);
+      saveToken(savedToken);
     }
 
     bindClick(els.saveTokenBtn, () => {
@@ -3372,14 +3399,14 @@
         return;
       }
 
-      localStorage.setItem(TOKEN_KEY, token);
-      if (els.token) els.token.value = token;
+      const saved = saveToken(token);
+      if (els.token) els.token.value = saved;
       setStatus("Token mentve.");
       refreshDashboard();
     });
 
     bindClick(els.clearTokenBtn, () => {
-      localStorage.removeItem(TOKEN_KEY);
+      clearSavedTokens();
       if (els.token) els.token.value = "";
       showEmptyDetail();
       if (els.sessionSearchInput) els.sessionSearchInput.value = "";

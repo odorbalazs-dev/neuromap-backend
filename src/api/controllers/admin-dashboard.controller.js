@@ -1,4 +1,4 @@
-const ADMIN_DASHBOARD_ASSET_VERSION = "20260603-token-normalize-v2";
+const ADMIN_DASHBOARD_ASSET_VERSION = "20260603-token-storage-v3";
 
 export function getAdminDashboard(_req, res) {
   res.setHeader(
