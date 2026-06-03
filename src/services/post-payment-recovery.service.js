@@ -44,7 +44,7 @@ async function enqueuePaidSessionsWithoutActiveJobs({ limit = 20 } = {}) {
       s.paid_at ASC NULLS LAST,
       s.updated_at ASC NULLS LAST,
       s.created_at ASC
-    LIMIT $1
+    LIMIT $1::int
     `,
     [limit]
   );

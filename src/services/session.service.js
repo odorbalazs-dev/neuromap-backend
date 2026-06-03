@@ -84,7 +84,7 @@ export async function getRecoverableCheckoutSessions({ olderThanMinutes = 30, li
       AND recovery_email_sent_at IS NULL
       AND checkout_started_at < NOW() - ($1::int * INTERVAL '1 minute')
     ORDER BY checkout_started_at ASC
-    LIMIT $2
+    LIMIT $2::int
     `,
     [olderThanMinutes, limit]
   );
@@ -346,7 +346,7 @@ export async function getReportEmailRetryCandidates({
       report_email_last_attempt_at ASC NULLS FIRST,
       analysis_completed_at ASC NULLS LAST,
       updated_at ASC
-    LIMIT $1
+    LIMIT $1::int
     `,
     [
       limit,

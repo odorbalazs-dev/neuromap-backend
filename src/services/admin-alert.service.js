@@ -744,7 +744,7 @@ export async function getRecentAdminAlerts({ limit = 10 } = {}) {
       created_at
     FROM admin_alerts
     ORDER BY created_at DESC
-    LIMIT $1
+    LIMIT $1::int
     `,
     [safeLimit]
   );

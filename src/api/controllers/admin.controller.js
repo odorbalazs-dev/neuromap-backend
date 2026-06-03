@@ -1516,10 +1516,10 @@ export async function getEmailDeliveryCenter(req, res) {
           OR report_email_sent_at IS NOT NULL
         )
         AND (
-          $1 = 'all'
-          OR ($1 = 'actionable' AND COALESCE(report_email_status, 'not_sent') IN ('failed', 'not_sent', 'sending'))
-          OR ($1 = 'retry_limit' AND COALESCE(report_email_status, 'not_sent') IN ('failed', 'not_sent', 'sending') AND COALESCE(report_email_attempts, 0) >= 3)
-          OR ($1 NOT IN ('all', 'actionable', 'retry_limit') AND COALESCE(report_email_status, 'not_sent') = $1)
+          $1::text = 'all'
+          OR ($1::text = 'actionable' AND COALESCE(report_email_status, 'not_sent') IN ('failed', 'not_sent', 'sending'))
+          OR ($1::text = 'retry_limit' AND COALESCE(report_email_status, 'not_sent') IN ('failed', 'not_sent', 'sending') AND COALESCE(report_email_attempts, 0) >= 3)
+          OR ($1::text NOT IN ('all', 'actionable', 'retry_limit') AND COALESCE(report_email_status, 'not_sent') = $1::text)
         )
       ORDER BY
         CASE
@@ -1534,7 +1534,7 @@ export async function getEmailDeliveryCenter(req, res) {
         report_email_sent_at DESC NULLS LAST,
         updated_at DESC NULLS LAST,
         created_at DESC
-      LIMIT $2
+      LIMIT $2::int
       `,
       [normalizedStatus, limit]
     );
@@ -1667,7 +1667,7 @@ export async function getOperationsLog(req, res) {
           updated_at
         FROM sessions
         ORDER BY updated_at DESC NULLS LAST, created_at DESC
-        LIMIT $1
+        LIMIT $1::int
         `,
         [Math.max(limit, 100)]
       ),
@@ -1689,7 +1689,7 @@ export async function getOperationsLog(req, res) {
         FROM analysis_jobs j
         LEFT JOIN sessions s ON s.id = j.session_id
         ORDER BY j.updated_at DESC NULLS LAST, j.created_at DESC
-        LIMIT $1
+        LIMIT $1::int
         `,
         [Math.max(limit, 100)]
       ),
@@ -1704,7 +1704,7 @@ export async function getOperationsLog(req, res) {
           processed_at
         FROM webhook_events
         ORDER BY created_at DESC
-        LIMIT $1
+        LIMIT $1::int
         `,
         [Math.max(limit, 100)]
       )
@@ -1989,7 +1989,7 @@ export async function getEngineAnalytics(req, res) {
       FROM sessions
       WHERE payload IS NOT NULL
       ORDER BY created_at DESC
-      LIMIT $1
+      LIMIT $1::int
       `,
       [limit]
     );
@@ -2144,7 +2144,7 @@ export async function getEngineDecisionAudit(req, res) {
       FROM sessions
       WHERE payload IS NOT NULL
       ORDER BY created_at DESC
-      LIMIT $1
+      LIMIT $1::int
       `,
       [limit]
     );
@@ -2195,7 +2195,7 @@ export async function getRecentSessions(req, res) {
       SELECT *
       FROM sessions
       ORDER BY created_at DESC
-      LIMIT $1
+      LIMIT $1::int
       `,
       [limit]
     );
@@ -2238,7 +2238,7 @@ export async function searchAdminSessions(req, res) {
         OR name ILIKE $1 ESCAPE '\\'
         OR stripe_session_id ILIKE $1 ESCAPE '\\'
       ORDER BY updated_at DESC NULLS LAST, created_at DESC
-      LIMIT $2
+      LIMIT $2::int
       `,
       [pattern, limit]
     );
@@ -2269,7 +2269,7 @@ export async function getFailedAnalyses(req, res) {
       FROM sessions
       WHERE analysis_status = 'failed'
       ORDER BY updated_at DESC NULLS LAST, created_at DESC
-      LIMIT $1
+      LIMIT $1::int
       `,
       [limit]
     );

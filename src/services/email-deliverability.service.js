@@ -176,7 +176,7 @@ export async function buildEmailDeliverabilityMonitor(options = {}) {
             AND analysis_result IS NOT NULL
             AND LENGTH(TRIM(analysis_result)) > 0
             AND COALESCE(report_email_status, 'not_sent') IN ('failed', 'not_sent', 'sending')
-            AND COALESCE(report_email_attempts, 0) < $2
+            AND COALESCE(report_email_attempts, 0) < $2::int
         )::int AS retryable_count,
         COUNT(*) FILTER (
           WHERE payment_status = 'paid'
@@ -184,7 +184,7 @@ export async function buildEmailDeliverabilityMonitor(options = {}) {
             AND analysis_result IS NOT NULL
             AND LENGTH(TRIM(analysis_result)) > 0
             AND COALESCE(report_email_status, 'not_sent') IN ('failed', 'not_sent', 'sending')
-            AND COALESCE(report_email_attempts, 0) >= $2
+            AND COALESCE(report_email_attempts, 0) >= $2::int
         )::int AS retry_limit_count,
         COUNT(*) FILTER (
           WHERE report_email_status = 'sending'
@@ -253,14 +253,14 @@ export async function buildEmailDeliverabilityMonitor(options = {}) {
         AND COALESCE(report_email_status, 'not_sent') IN ('failed', 'not_sent', 'sending')
       ORDER BY
         CASE
-          WHEN COALESCE(report_email_attempts, 0) >= $2 THEN 1
+          WHEN COALESCE(report_email_attempts, 0) >= $2::int THEN 1
           WHEN report_email_status = 'failed' THEN 2
           WHEN report_email_status = 'sending' THEN 3
           ELSE 4
         END,
         report_email_last_attempt_at DESC NULLS LAST,
         updated_at DESC
-      LIMIT $1
+      LIMIT $1::int
       `,
       [limit, MAX_RETRY_ATTEMPTS]
     )
