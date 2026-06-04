@@ -5,7 +5,7 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260603-landing-rescue-v4";
+  const ENGINE_VERSION = "20260604-landing-compact-v5";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
 
   const state = {
@@ -819,19 +819,72 @@
         white-space: normal;
       }
 
+      .nm-landing-hero,
+      .nm-social-landing,
+      [data-nm-section="hero"] {
+        padding-bottom: clamp(16px, 3vh, 28px) !important;
+        padding-top: clamp(18px, 3vh, 32px) !important;
+      }
+
+      .nm-social-landing .nm-logo-mark,
+      .nm-landing .nm-logo-mark {
+        margin-bottom: 12px !important;
+        transform: scale(0.82);
+        transform-origin: center;
+      }
+
+      .nm-landing h1,
+      .nm-social-landing h1,
+      [data-nm-section="hero"] h1 {
+        font-size: clamp(28px, 3.2vw, 42px) !important;
+        line-height: 1.08 !important;
+        margin-bottom: 10px !important;
+        max-width: 680px !important;
+      }
+
+      .nm-landing p,
+      .nm-social-landing p,
+      [data-nm-section="hero"] p {
+        font-size: clamp(14px, 1.25vw, 16px) !important;
+        line-height: 1.45 !important;
+        margin-bottom: 12px !important;
+        max-width: 620px !important;
+      }
+
+      .nm-landing [data-nm-cta],
+      .nm-social-landing [data-nm-cta],
+      a[href="#questionnaireStart"],
+      a[href*="questionnaireStart"] {
+        max-width: 620px !important;
+        min-height: 42px !important;
+        padding: 10px 18px !important;
+      }
+
+      .nm-social-landing .nm-trust-row,
+      .nm-landing .nm-trust-row {
+        gap: 8px !important;
+        margin-top: 12px !important;
+      }
+
+      .nm-social-landing .nm-trust-pill,
+      .nm-landing .nm-trust-pill {
+        min-height: 34px !important;
+        padding: 7px 12px !important;
+      }
+
       @media (max-width: 720px) {
         .nm-landing-hero,
         .nm-social-landing,
         [data-nm-section="hero"] {
           min-height: auto;
-          padding-bottom: 34px;
-          padding-top: 52px;
+          padding-bottom: 28px !important;
+          padding-top: 34px !important;
         }
 
         .nm-landing h1,
         .nm-social-landing h1,
         [data-nm-section="hero"] h1 {
-          font-size: clamp(30px, 9vw, 42px);
+          font-size: clamp(28px, 8vw, 38px) !important;
         }
 
         .nm-landing [data-nm-cta],
