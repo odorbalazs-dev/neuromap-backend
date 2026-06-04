@@ -20,11 +20,11 @@ function main() {
     "Webflow Engine loader should load the public engine file."
   );
   assert(
-    loaderHtml.includes("20260604-landing-preview-header-v1"),
+    loaderHtml.includes("20260604-questionnaire-ux-v2"),
     "Webflow Engine loader should include the landing polish and analytics v2 cache-busting version."
   );
   assert(script.includes("ENGINE_VERSION"), "Engine should expose an engine version.");
-  assert(script.includes("20260604-landing-preview-header-v1"), "Engine should expose the current landing preview/header version.");
+  assert(script.includes("20260604-questionnaire-ux-v2"), "Engine should expose the current questionnaire UX version.");
   assert(script.includes("ANALYTICS_SCHEMA_VERSION"), "Engine should define an analytics schema version.");
   assert(script.includes("analytics-event-schema-v2"), "Engine should use analytics event schema v2.");
   assert(script.includes("trackSchemaEvent"), "Engine should send normalized analytics events.");
@@ -52,6 +52,11 @@ function main() {
   assert(script.includes("installFrontendDesign"), "Engine should install the Webflow frontend design layer.");
   assert(script.includes("nm-frontend-design-v3"), "Engine should include the scoped frontend design stylesheet.");
   assert(script.includes(".nm-q-card"), "Engine design should style rendered question cards.");
+  assert(script.includes(".nm-answer-scale"), "Engine should render the four-button answer scale.");
+  assert(script.includes("bindAnswerScaleButtons"), "Engine should bind answer scale buttons to hidden select state.");
+  assert(script.includes("getProgressStepLabels"), "Engine should render clear progress step labels.");
+  assert(script.includes("buildSpecificStepIntro"), "Engine should include clearer specific/extra step context.");
+  assert(script.includes("getSubdomainLabel"), "Engine should show human subdomain labels in the summary.");
   assert(script.includes(".nm-summary-pills"), "Engine design should style summary pills.");
   assert(script.includes("#childAgeField"), "Engine design should style the child age field.");
   assert(script.includes("@media (max-width: 480px)"), "Engine design should include a compact mobile breakpoint.");

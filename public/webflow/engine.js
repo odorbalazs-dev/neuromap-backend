@@ -5,7 +5,7 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260604-landing-preview-header-v1";
+  const ENGINE_VERSION = "20260604-questionnaire-ux-v2";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
 
   const state = {
@@ -257,6 +257,54 @@
         min-height: 8px;
       }
 
+      .nm-progress-steps {
+        display: grid;
+        gap: 8px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        margin: 10px 0 4px;
+      }
+
+      .nm-progress-step {
+        align-items: center;
+        background: #f6fbff;
+        border: 1px solid #d8edf8;
+        border-radius: 999px;
+        color: #526579;
+        display: flex;
+        font-size: 12px;
+        font-weight: 850;
+        gap: 7px;
+        justify-content: center;
+        line-height: 1.2;
+        min-height: 34px;
+        padding: 7px 10px;
+        text-align: center;
+      }
+
+      .nm-progress-step-index {
+        align-items: center;
+        background: #e4f5fc;
+        border-radius: 50%;
+        color: #0b86bf;
+        display: inline-flex;
+        flex: 0 0 auto;
+        font-size: 11px;
+        height: 21px;
+        justify-content: center;
+        width: 21px;
+      }
+
+      .nm-progress-step.is-active {
+        background: #eff9ff;
+        border-color: #9bd8f4;
+        color: #142033;
+      }
+
+      .nm-progress-step.is-active .nm-progress-step-index {
+        background: #1197d5;
+        color: #ffffff;
+      }
+
       #triageSection,
       #specificSection,
       #summarySection {
@@ -311,21 +359,28 @@
       }
 
       .nm-q-card {
-        align-items: center;
+        align-items: start;
         background: rgba(255, 255, 255, 0.96);
         border: 1px solid #d9ecf7;
         border-radius: 18px;
         box-shadow: 0 12px 28px rgba(20, 32, 51, 0.055);
         display: grid;
         gap: 16px;
-        grid-template-columns: 44px minmax(0, 1fr) minmax(190px, 240px);
+        grid-template-columns: 44px minmax(0, 1fr);
         margin: 12px 0;
-        padding: 16px;
+        padding: 18px;
       }
 
       .nm-q-card:hover {
         border-color: #bfe5f7;
         box-shadow: 0 16px 34px rgba(20, 32, 51, 0.075);
+      }
+
+      .nm-q-card.is-answered {
+        border-color: #b8e8cb;
+        background:
+          linear-gradient(135deg, rgba(114, 190, 0, 0.06), rgba(17, 151, 213, 0.04)),
+          #ffffff;
       }
 
       .nm-q-number {
@@ -347,6 +402,87 @@
         font-size: 16px;
         font-weight: 750;
         line-height: 1.52;
+        overflow-wrap: anywhere;
+      }
+
+      .nm-q-body {
+        min-width: 0;
+        width: 100%;
+      }
+
+      .nm-answer-select {
+        block-size: 1px !important;
+        inline-size: 1px !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+        position: absolute !important;
+      }
+
+      .nm-answer-scale {
+        display: grid;
+        gap: 8px;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        margin-top: 14px;
+      }
+
+      .nm-answer-btn {
+        align-items: center;
+        background: #f8fcff;
+        border: 1px solid #cfeefa;
+        border-radius: 14px;
+        color: #17304a;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        font: inherit;
+        gap: 5px;
+        justify-content: center;
+        min-height: 58px;
+        padding: 9px 8px;
+        text-align: center;
+        transition: background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, color 0.18s ease, transform 0.18s ease;
+      }
+
+      .nm-answer-btn:hover,
+      .nm-answer-btn:focus {
+        border-color: #1197d5;
+        box-shadow: 0 10px 20px rgba(17, 151, 213, 0.12);
+        outline: none;
+        transform: translateY(-1px);
+      }
+
+      .nm-answer-btn.is-selected,
+      .nm-answer-btn[aria-pressed="true"] {
+        background: linear-gradient(135deg, #1197d5, #0b86bf);
+        border-color: #0b86bf;
+        box-shadow: 0 12px 24px rgba(17, 151, 213, 0.22);
+        color: #ffffff;
+      }
+
+      .nm-answer-value {
+        align-items: center;
+        background: rgba(255, 255, 255, 0.76);
+        border-radius: 999px;
+        color: #0b86bf;
+        display: inline-flex;
+        font-size: 13px;
+        font-weight: 950;
+        height: 23px;
+        justify-content: center;
+        min-width: 23px;
+        padding: 0 7px;
+      }
+
+      .nm-answer-btn.is-selected .nm-answer-value,
+      .nm-answer-btn[aria-pressed="true"] .nm-answer-value {
+        background: rgba(255, 255, 255, 0.22);
+        color: #ffffff;
+      }
+
+      .nm-answer-label {
+        font-size: 12px;
+        font-weight: 850;
+        line-height: 1.2;
         overflow-wrap: anywhere;
       }
 
@@ -432,6 +568,18 @@
         color: #344054;
         font-weight: 800;
         overflow-wrap: anywhere;
+      }
+
+      .nm-subdomain-label {
+        display: block;
+      }
+
+      .nm-subdomain-meta {
+        color: #6b7f93;
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        margin-top: 2px;
       }
 
       .nm-subdomain-row strong {
@@ -600,8 +748,8 @@
           grid-template-columns: 38px minmax(0, 1fr);
         }
 
-        .nm-answer-select {
-          grid-column: 1 / -1;
+        .nm-answer-scale {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
         }
 
         .nm-step-title-card,
@@ -649,6 +797,14 @@
         .nm-summary-card,
         .nm-q-card {
           border-radius: 16px;
+        }
+
+        .nm-progress-steps {
+          grid-template-columns: 1fr;
+        }
+
+        .nm-answer-btn {
+          min-height: 54px;
         }
       }
 
@@ -2178,6 +2334,69 @@
       .slice(0, limit);
   }
 
+  const SUBDOMAIN_LABELS = {
+    executive: { hu: "V\u00e9grehajt\u00f3 m\u0171k\u00f6d\u00e9s", en: "Executive functioning" },
+    inattention: { hu: "Figyelmi szab\u00e1lyoz\u00e1s", en: "Attention regulation" },
+    impulsivity: { hu: "Impulzuskontroll", en: "Impulse control" },
+    hyperactivity: { hu: "Aktivit\u00e1sszab\u00e1lyoz\u00e1s", en: "Activity regulation" },
+    emotional: { hu: "\u00c9rzelmi szab\u00e1lyoz\u00e1s", en: "Emotional regulation" },
+    attention_regulation: { hu: "Figyelmi szab\u00e1lyoz\u00e1s", en: "Attention regulation" },
+    impulse_control: { hu: "Impulzuskontroll", en: "Impulse control" },
+    task_completion: { hu: "Feladatbefejez\u00e9s", en: "Task completion" },
+    social_communication: { hu: "T\u00e1rsas kommunik\u00e1ci\u00f3", en: "Social communication" },
+    social_reciprocity: { hu: "T\u00e1rsas k\u00f6lcs\u00f6n\u00f6ss\u00e9g", en: "Social reciprocity" },
+    nonverbal_communication: { hu: "Nonverb\u00e1lis kommunik\u00e1ci\u00f3", en: "Nonverbal communication" },
+    restricted_patterns: { hu: "Rugalmatlan mint\u00e1zatok", en: "Restricted or rigid patterns" },
+    sensory_processing: { hu: "Szenzoros feldolgoz\u00e1s", en: "Sensory processing" },
+    flexibility: { hu: "Rugalmass\u00e1g", en: "Flexibility" },
+    pragmatic_language: { hu: "Pragmatikus nyelvhaszn\u00e1lat", en: "Pragmatic language" },
+    general_worry: { hu: "\u00c1ltal\u00e1nos aggodalom", en: "General worry" },
+    uncertainty_stress: { hu: "Bizonytalans\u00e1g miatti fesz\u00fclts\u00e9g", en: "Uncertainty stress" },
+    physical_arousal: { hu: "Testi fesz\u00fclts\u00e9gjelek", en: "Physical arousal" },
+    restlessness_tension: { hu: "Nyugtalans\u00e1g \u00e9s fesz\u00fclts\u00e9g", en: "Restlessness and tension" },
+    avoidance: { hu: "Elker\u00fcl\u00e9s", en: "Avoidance" },
+    avoidance_safety: { hu: "Elker\u00fcl\u00e9s \u00e9s biztons\u00e1gkeres\u00e9s", en: "Avoidance and safety seeking" },
+    reassurance_control: { hu: "Megnyugtat\u00e1s ig\u00e9nye", en: "Reassurance seeking" },
+    social_evaluative_anxiety: { hu: "T\u00e1rsas meg\u00edt\u00e9l\u00e9st\u0151l val\u00f3 szorong\u00e1s", en: "Social evaluative anxiety" },
+    concentration_sleep: { hu: "Koncentr\u00e1ci\u00f3 \u00e9s alv\u00e1s", en: "Concentration and sleep" },
+    low_mood: { hu: "Lehangolts\u00e1g", en: "Low mood" },
+    interest_loss: { hu: "\u00c9rdekl\u0151d\u00e9s cs\u00f6kken\u00e9se", en: "Loss of interest" },
+    anhedonia_interest_loss: { hu: "\u00d6r\u00f6m \u00e9s \u00e9rdekl\u0151d\u00e9s cs\u00f6kken\u00e9se", en: "Reduced enjoyment and interest" },
+    energy_motivation: { hu: "Energia \u00e9s motiv\u00e1ci\u00f3", en: "Energy and motivation" },
+    self_worth: { hu: "\u00d6n\u00e9rt\u00e9kel\u00e9s", en: "Self-worth" },
+    self_worth_guilt: { hu: "\u00d6n\u00e9rt\u00e9kel\u00e9s \u00e9s b\u0171ntudat", en: "Self-worth and guilt" },
+    hopelessness_future: { hu: "Rem\u00e9nytelens\u00e9g \u00e9s j\u00f6v\u0151k\u00e9p", en: "Hopelessness and future view" },
+    withdrawal_isolation: { hu: "Visszah\u00faz\u00f3d\u00e1s", en: "Withdrawal" },
+    sleep_change: { hu: "Alv\u00e1sv\u00e1ltoz\u00e1s", en: "Sleep changes" },
+    appetite_body_change: { hu: "\u00c9tv\u00e1gy \u00e9s testi v\u00e1ltoz\u00e1sok", en: "Appetite and body changes" },
+    academic_performance: { hu: "Tanul\u00e1si teljes\u00edtm\u00e9ny", en: "Academic performance" },
+    instruction_understanding: { hu: "Utas\u00edt\u00e1sok meg\u00e9rt\u00e9se", en: "Instruction understanding" },
+    reading: { hu: "Olvas\u00e1s", en: "Reading" },
+    writing: { hu: "\u00cdr\u00e1s", en: "Writing" },
+    math: { hu: "Matematika", en: "Math" },
+    working_memory: { hu: "Munkamem\u00f3ria", en: "Working memory" },
+    processing_speed: { hu: "Feldolgoz\u00e1si temp\u00f3", en: "Processing speed" },
+    organization_time_management: { hu: "Szervez\u00e9s \u00e9s id\u0151kezel\u00e9s", en: "Organization and time management" },
+    comprehension_language: { hu: "Meg\u00e9rt\u00e9s \u00e9s nyelv", en: "Comprehension and language" },
+    learning_strategy: { hu: "Tanul\u00e1si strat\u00e9gia", en: "Learning strategy" },
+    self_monitoring_error_awareness: { hu: "\u00d6nellen\u0151rz\u00e9s \u00e9s hibatudat", en: "Self-monitoring and error awareness" },
+    general: { hu: "\u00c1ltal\u00e1nos mint\u00e1zat", en: "General pattern" }
+  };
+
+  function prettifySubdomainKey(key) {
+    return String(key || "general")
+      .replace(/[_-]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim()
+      .replace(/^./, (char) => char.toUpperCase());
+  }
+
+  function getSubdomainLabel(key, _kind = state.detectedRisk) {
+    const labels = SUBDOMAIN_LABELS[key] || null;
+    if (labels) return labels[state.lang] || labels.en || prettifySubdomainKey(key);
+    return prettifySubdomainKey(key);
+  }
+
   function buildResultSummary(kind, scoring, triageScores, secondaryRisk) {
     const avg = Number(scoring && scoring.normalizedAverage ? scoring.normalizedAverage : 0);
     const signal = getSignalLevel(avg);
@@ -2531,6 +2750,78 @@
     `;
   }
 
+  function escapeHtml(value) {
+    return String(value == null ? "" : value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  function renderAnswerScale(index, selectedValue = "") {
+    const labels = getUI().responseLabels || ["0", "1", "2", "3"];
+    const safeValue =
+      selectedValue === "" || selectedValue === null || selectedValue === undefined
+        ? ""
+        : String(selectedValue);
+
+    const ariaLabel = state.lang === "hu" ? "V\u00e1lasz er\u0151ss\u00e9ge" : "Answer strength";
+
+    return `
+      <div class="nm-answer-scale" role="radiogroup" aria-label="${ariaLabel}">
+        ${labels
+          .map((label, value) => {
+            const stringValue = String(value);
+            const selected = safeValue === stringValue;
+            return `
+              <button
+                type="button"
+                class="nm-answer-btn ${selected ? "is-selected" : ""}"
+                data-question-index="${index}"
+                data-answer-value="${stringValue}"
+                aria-pressed="${selected ? "true" : "false"}"
+              >
+                <span class="nm-answer-value">${stringValue}</span>
+                <span class="nm-answer-label">${escapeHtml(label)}</span>
+              </button>
+            `;
+          })
+          .join("")}
+      </div>
+    `;
+  }
+
+  function bindAnswerScaleButtons(root) {
+    const scope = root || document;
+
+    scope.querySelectorAll(".nm-answer-btn").forEach((button) => {
+      if (button.dataset.nmAnswerBound === "1") return;
+      button.dataset.nmAnswerBound = "1";
+
+      button.addEventListener("click", () => {
+        const card = button.closest(".nm-q-card");
+        const index = button.getAttribute("data-question-index");
+        const value = button.getAttribute("data-answer-value");
+        const select = card && card.querySelector(`.nm-answer-select[data-question-index="${index}"]`);
+
+        if (select) {
+          select.value = value;
+          select.dispatchEvent(new Event("change", { bubbles: true }));
+        }
+
+        if (card) {
+          card.classList.add("is-answered");
+          card.querySelectorAll(".nm-answer-btn").forEach((item) => {
+            const isSelected = item === button;
+            item.classList.toggle("is-selected", isSelected);
+            item.setAttribute("aria-pressed", isSelected ? "true" : "false");
+          });
+        }
+      });
+    });
+  }
+
   function getQuestionText(question) {
     if (!question || !question.text) return "";
     const raw = question.text[state.lang] || question.text.en || question.text.hu || "";
@@ -2596,18 +2887,25 @@
         ${questions
           .map(
             (q, index) => `
-          <div class="nm-q-card">
+          <div class="nm-q-card ${
+            answers[index] === "" || answers[index] === null || answers[index] === undefined ? "" : "is-answered"
+          }">
             <div class="nm-q-number">${index + 1}</div>
-            <div class="nm-q-text">${getQuestionText(q)}</div>
-            <select data-question-index="${index}" class="nm-answer-select">
-              ${responseOptionsHtml(answers[index])}
-            </select>
+            <div class="nm-q-body">
+              <div class="nm-q-text">${getQuestionText(q)}</div>
+              <select data-question-index="${index}" class="nm-answer-select" aria-hidden="true" tabindex="-1">
+                ${responseOptionsHtml(answers[index])}
+              </select>
+              ${renderAnswerScale(index, answers[index])}
+            </div>
           </div>
         `
           )
           .join("")}
       </div>
     `;
+
+    bindAnswerScaleButtons(container);
   }
 
   function syncAnswersFromDOM(scopeId = null) {
@@ -2625,6 +2923,20 @@
     }
 
     return { ok: true, values };
+  }
+
+  function getProgressStepLabels() {
+    if (state.lang === "hu") return ["Els\u0151 sz\u0171r\u00e9s", "Pontos\u00edt\u00e1s", "\u00d6sszegz\u00e9s"];
+    if (state.lang === "de") return ["Screening", "Vertiefung", "Zusammenfassung"];
+    if (state.lang === "it") return ["Screening", "Dettagli", "Riepilogo"];
+    if (state.lang === "es") return ["Cribado", "Detalle", "Resumen"];
+    if (state.lang === "fr") return ["D\u00e9pistage", "D\u00e9tails", "R\u00e9sum\u00e9"];
+    if (state.lang === "pt") return ["Triagem", "Detalhe", "Resumo"];
+    if (state.lang === "pl") return ["Przesiew", "Doprecyzowanie", "Podsumowanie"];
+    if (state.lang === "zh") return ["初筛", "细化", "总结"];
+    if (state.lang === "ja") return ["初期確認", "詳細", "要約"];
+    if (state.lang === "ar") return ["الفحص", "التفصيل", "الملخص"];
+    return ["Screening", "Details", "Summary"];
   }
 
   function updateProgress() {
@@ -2648,6 +2960,28 @@
     if (barEl) {
       barEl.style.width = `${current * 33.33}%`;
       barEl.style.transition = "width 0.35s ease";
+
+      let stepsEl = document.getElementById("nmProgressSteps");
+      if (!stepsEl && barEl.parentElement) {
+        stepsEl = document.createElement("div");
+        stepsEl.id = "nmProgressSteps";
+        stepsEl.className = "nm-progress-steps";
+        barEl.parentElement.insertAdjacentElement("afterend", stepsEl);
+      }
+
+      if (stepsEl) {
+        const labels = getProgressStepLabels();
+        stepsEl.innerHTML = labels
+          .map(
+            (label, index) => `
+              <div class="nm-progress-step ${index + 1 === current ? "is-active" : ""}">
+                <span class="nm-progress-step-index">${index + 1}</span>
+                <span>${escapeHtml(label)}</span>
+              </div>
+            `
+          )
+          .join("");
+      }
     }
 
     if (pageTitleEl) pageTitleEl.textContent = currentData.title;
@@ -2704,7 +3038,10 @@
               .map(
                 (item) => `
               <div class="nm-subdomain-row">
-                <span>${item.key}</span>
+                <span>
+                  <span class="nm-subdomain-label">${getSubdomainLabel(item.key, state.detectedRisk)}</span>
+                  <span class="nm-subdomain-meta">${escapeHtml(item.key)}</span>
+                </span>
                 <strong>${item.average.toFixed(2)}</strong>
               </div>
             `
@@ -2724,6 +3061,32 @@
         </div>
       </div>
     `;
+  }
+
+  function buildSpecificStepTitle(t) {
+    if (!state.needsExtra) return t.specificTitle || "Detailed questionnaire";
+
+    const extraTitle = t.extraTitle || (state.lang === "hu" ? "Kieg\u00e9sz\u00edt\u0151 k\u00e9rd\u00e9sek" : "Additional questions");
+    return `${t.specificTitle || "Detailed questionnaire"} + ${extraTitle}`;
+  }
+
+  function buildSpecificStepIntro(t) {
+    const primary = disorderLabel(state.detectedRisk);
+    const secondary = state.secondaryRisk ? disorderLabel(state.secondaryRisk) : "";
+
+    if (state.needsExtra && state.secondaryRisk) {
+      if (state.lang === "hu") {
+        return `Most a ${primary} ter\u00fcletet pontos\u00edtjuk. A kieg\u00e9sz\u00edt\u0151 k\u00e9rd\u00e9sek abban seg\u00edtenek, hogy elk\u00fcl\u00f6n\u00edts\u00fck a m\u00e1sodlagos ${secondary} jelz\u00e9st\u0151l.`;
+      }
+
+      return `We are now clarifying the ${primary} area. The additional questions help separate it from the secondary ${secondary} signal.`;
+    }
+
+    if (state.lang === "hu") {
+      return `A k\u00f6vetkez\u0151 k\u00e9rd\u00e9sek a val\u00f3sz\u00edn\u0171 ${primary} mint\u00e1zat pontosabb felt\u00e9rk\u00e9pez\u00e9s\u00e9t seg\u00edtik.`;
+    }
+
+    return `The next questions help clarify the likely ${primary} pattern in more detail.`;
   }
 
   function renderCurrentStep() {
@@ -2777,14 +3140,8 @@
         ? [...state.specificAnswers, ...state.extraAnswers]
         : [...state.specificAnswers];
 
-      const title = state.needsExtra
-        ? `${t.specificTitle || ""} + ${t.extraTitle || ""}`
-        : t.specificTitle;
-
-      const intro =
-        state.needsExtra && state.secondaryRisk
-          ? `${t.introSpecific || ""} ${t.possibleFocus || ""}: ${disorderLabel(state.detectedRisk)}. ${t.possibleSecondary || "Secondary signal"}: ${disorderLabel(state.secondaryRisk)}.`
-          : `${t.introSpecific || ""} ${t.possibleFocus || ""}: ${disorderLabel(state.detectedRisk)}.`;
+      const title = buildSpecificStepTitle(t);
+      const intro = buildSpecificStepIntro(t);
 
       renderQuestionList("specificSection", questions, answers, title, intro);
     }
