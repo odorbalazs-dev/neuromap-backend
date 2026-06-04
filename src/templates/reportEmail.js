@@ -67,6 +67,14 @@ function getCustomerExperienceCopy(lang) {
         "Use the recommendations as small experiments, not as a strict program.",
         "Revisit the report after a few days and mark what feels most useful."
       ],
+      includedTitle: "What is included now",
+      includedItems: [
+        "The full personalized PDF is attached to this email.",
+        "The report includes an age-aware overview and practical recommendations.",
+        "You can keep the PDF for your own notes or share it with a qualified professional."
+      ],
+      followUpTitle: "2-3 day follow-up idea",
+      followUpBody: "Choose one observation or suggestion from the report and watch how it appears over the next few days.",
       personalNote: "The report is most useful when you connect it to real moments at home, nursery, school, or daily routines.",
       reassurance: "You do not need to solve everything at once. One small, consistent change is often the best first step.",
       support: "Need help or did not receive the attachment? Reply to this email or contact info@neuromapkids.com."
@@ -86,6 +94,14 @@ function getCustomerExperienceCopy(lang) {
         "A javaslatokat kis kiprobalhato lepesekkent kezeld, ne merev programkent.",
         "Par nap mulva nezd at ujra, es jelold meg, mi tunt a leghasznosabbnak."
       ],
+      includedTitle: "Mit kapsz most?",
+      includedItems: [
+        "A teljes, szemelyre szabott PDF riport csatolva van ehhez az emailhez.",
+        "A riport tartalmaz korosztalyi attekintest es gyakorlati javaslatokat.",
+        "A PDF-et megtarthatod sajat jegyzeteleshez, vagy megoszthatod szakemberrel."
+      ],
+      followUpTitle: "2-3 napos utokovetesi otlet",
+      followUpBody: "Valassz ki egy megfigyelest vagy javaslatot a riportbol, es figyeld meg, hogyan jelenik meg a kovetkezo napokban.",
       personalNote: "A riport akkor adja a legtobbet, ha osszekotod a valos otthoni, ovodai, iskolai vagy mindennapi helyzetekkel.",
       reassurance: "Nem kell mindent egyszerre megoldani. Egy kicsi, kovetkezetes valtoztatas gyakran a legjobb elso lepes.",
       support: "Segitseg kell, vagy nem latszik a csatolmany? Valaszolj erre az emailre, vagy irj az info@neuromapkids.com cimre."
@@ -232,13 +248,30 @@ export function buildReportEmail({ lang, name, reportText, payload = null }) {
   const customerExperienceReadingHtml = customerExperience.readingTips
     .map((item) => `<li style="margin:0 0 8px 0;">${escapeHtml(item)}</li>`)
     .join("");
+  const includedTitle = customerExperience.includedTitle || "What is included now";
+  const includedItems = Array.isArray(customerExperience.includedItems)
+    ? customerExperience.includedItems
+    : [
+        "The full personalized PDF is attached to this email.",
+        "The report includes an age-aware overview and practical recommendations.",
+        "You can keep the PDF for your own notes or share it with a qualified professional."
+      ];
+  const followUpTitle = customerExperience.followUpTitle || "2-3 day follow-up idea";
+  const followUpBody = customerExperience.followUpBody || "Choose one observation or suggestion from the report and watch how it appears over the next few days.";
+  const customerExperienceIncludedHtml = includedItems
+    .map((item) => `<li style="margin:0 0 8px 0;">${escapeHtml(item)}</li>`)
+    .join("");
   const customerExperienceText = [
     customerExperience.title,
     customerExperience.body,
+    includedTitle,
+    ...includedItems.map((item) => `- ${item}`),
     customerExperience.nextTitle,
     ...customerExperience.nextSteps.map((item) => `- ${item}`),
     customerExperience.readingTitle,
     ...customerExperience.readingTips.map((item) => `- ${item}`),
+    followUpTitle,
+    followUpBody,
     customerExperience.personalNote,
     customerExperience.reassurance,
     customerExperience.support
@@ -471,10 +504,13 @@ export function buildReportEmail({ lang, name, reportText, payload = null }) {
                   </div>
                   <div style="padding:18px 20px;font-family:Arial,sans-serif;font-size:14px;line-height:1.7;color:#334155;">
                     <p style="margin:0 0 12px 0;">${escapeHtml(customerExperience.body)}</p>
+                    <div style="font-weight:700;margin:0 0 8px 0;color:#1f2937;">${escapeHtml(includedTitle)}</div>
+                    <ul style="margin:0 0 14px 0;padding-left:20px;">${customerExperienceIncludedHtml}</ul>
                     <div style="font-weight:700;margin:0 0 8px 0;color:#1f2937;">${escapeHtml(customerExperience.nextTitle)}</div>
                     <ul style="margin:0 0 14px 0;padding-left:20px;">${customerExperienceStepsHtml}</ul>
                     <div style="font-weight:700;margin:0 0 8px 0;color:#1f2937;">${escapeHtml(customerExperience.readingTitle)}</div>
                     <ul style="margin:0 0 14px 0;padding-left:20px;">${customerExperienceReadingHtml}</ul>
+                    <p style="margin:0 0 12px 0;padding:10px 12px;border-radius:12px;background:#f3fff8;color:#23443a;font-size:13px;"><strong>${escapeHtml(followUpTitle)}:</strong> ${escapeHtml(followUpBody)}</p>
                     ${customerExperience.personalNote ? `<p style="margin:0 0 12px 0;padding:10px 12px;border-radius:12px;background:#ffffff;color:#334155;font-size:13px;">${escapeHtml(customerExperience.personalNote)}</p>` : ""}
                     <p style="margin:0 0 12px 0;color:#0b6f9f;font-size:13px;font-weight:700;">${escapeHtml(customerExperience.reassurance)}</p>
                     <p style="margin:0;color:#506780;font-size:13px;">${escapeHtml(customerExperience.support)}</p>

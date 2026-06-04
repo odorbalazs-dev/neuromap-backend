@@ -33,7 +33,7 @@ const PAGE_LAYOUT = {
   blockGap: 18
 };
 
-const PDF_REPORT_VERSION = "pdf_report_v5_customer_experience";
+const PDF_REPORT_VERSION = "pdf_report_v6_customer_experience";
 const BODY_TEXT_COLOR = "#374151";
 const BULLET = "\u2022";
 
@@ -1101,6 +1101,140 @@ function addOverviewBlock(doc, payload, labels, lang, pageState = null) {
   }
 }
 
+function getParentQuickSummaryCopy(lang = "en") {
+  if (lang === "hu") {
+    return {
+      title: "Szulo gyors osszefoglalo",
+      lead: "A riport elejen ezt a blokkot erdemes eloszor atnezni: megmutatja a fo mintat, a korosztalyi kontextust es az elso gyakorlati lepest.",
+      focus: "Fo minta",
+      age: "Korosztaly",
+      firstStep: "Elso lepes",
+      note: "Ez nem diagnozis. A cel az, hogy a valaszokbol ertelmezheto, gyakorlatban hasznalhato szuloi kapaszkodok legyenek."
+    };
+  }
+
+  return {
+    title: "Parent quick summary",
+    lead: "Start here before reading the full report: this block highlights the primary pattern, age context, and one practical first step.",
+    focus: "Main pattern",
+    age: "Age context",
+    firstStep: "First step",
+    note: "This is not a diagnosis. The goal is to turn questionnaire answers into clear, practical parent guidance."
+  };
+}
+
+function addParentQuickSummaryBlock(doc, payload, labels, lang, pageState = null) {
+  const summary = extractSummary(payload || {});
+  const context = buildReportV2Context(payload || {}, lang);
+  const copy = getParentQuickSummaryCopy(lang);
+  const x = 56;
+  const w = doc.page.width - 112;
+  const align = getTextAlign(lang);
+  const innerX = x + 20;
+  const innerW = w - 40;
+  const gap = 10;
+  const cardW = (innerW - gap * 2) / 3;
+  const firstAction =
+    lang === "hu"
+      ? "A legerosebb helyzet celzott megfigyelese"
+      : "Observe the clearest everyday situation";
+
+  const leadHeight = measureText(doc, copy.lead, {
+    font: getFont(lang),
+    fontSize: 9.4,
+    width: innerW,
+    lineGap: 3,
+    align
+  });
+  const actionHeight = measureText(doc, firstAction, {
+    font: getFont(lang, true),
+    fontSize: 10.3,
+    width: cardW - 28,
+    lineGap: 2,
+    align
+  });
+  const h = Math.max(214, Math.ceil(142 + leadHeight + Math.max(0, actionHeight - 30)));
+
+  ensureSpace(doc, h + 18, labels, lang, pageState);
+
+  doc.moveDown(0.8);
+  const y = doc.y;
+
+  drawPanel(doc, {
+    x,
+    y,
+    w,
+    h,
+    fill: "#F8FBFE",
+    stroke: BRAND.softBorder,
+    accent: BRAND.orange,
+    radius: 18
+  });
+
+  doc.fillColor(BRAND.dark)
+    .font(getFont(lang, true))
+    .fontSize(14.2)
+    .text(copy.title, innerX, y + 18, {
+      width: innerW,
+      align
+    });
+
+  doc.fillColor(BODY_TEXT_COLOR)
+    .font(getFont(lang))
+    .fontSize(9.4)
+    .text(copy.lead, innerX, y + 43, {
+      width: innerW,
+      lineGap: 3,
+      align
+    });
+
+  const cardY = y + 78 + leadHeight;
+
+  addMiniCard(
+    doc,
+    innerX,
+    cardY,
+    cardW,
+    copy.focus,
+    getDomainLabel(lang, summary.detectedRisk, labels),
+    lang,
+    BRAND.blue
+  );
+
+  addMiniCard(
+    doc,
+    innerX + cardW + gap,
+    cardY,
+    cardW,
+    copy.age,
+    context.ageBandLabel || labels.notAvailable,
+    lang,
+    BRAND.green
+  );
+
+  addMiniCard(
+    doc,
+    innerX + (cardW + gap) * 2,
+    cardY,
+    cardW,
+    copy.firstStep,
+    firstAction,
+    lang,
+    BRAND.orange
+  );
+
+  doc.fillColor(BRAND.muted)
+    .font(getFont(lang))
+    .fontSize(8.8)
+    .text(copy.note, innerX, y + h - 42, {
+      width: innerW,
+      lineGap: 2.5,
+      align
+    });
+
+  doc.y = y + h + 14;
+}
+
 function getReportV2PdfLabels(lang = "en") {
   if (lang === "hu") {
     return {
@@ -1743,6 +1877,7 @@ export async function generatePdfBuffer({ name, reportText, lang = "en", payload
       doc.y = 246;
 
       addPremiumReadingGuide(doc, labels, safeLang, pageState);
+      addParentQuickSummaryBlock(doc, payload, labels, safeLang, pageState);
       addOverviewBlock(doc, payload, labels, safeLang, pageState);
       addReportV2AgeBlock(doc, payload, labels, safeLang, pageState);
       addSectionTitle(doc, labels.reportTitle, labels, safeLang, pageState);

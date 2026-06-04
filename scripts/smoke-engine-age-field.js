@@ -20,11 +20,11 @@ function main() {
     "Webflow Engine loader should load the public engine file."
   );
   assert(
-    loaderHtml.includes("20260604-cx-top10-v1"),
+    loaderHtml.includes("20260604-cx-top10-v2"),
     "Webflow Engine loader should include the landing polish and analytics v2 cache-busting version."
   );
   assert(script.includes("ENGINE_VERSION"), "Engine should expose an engine version.");
-  assert(script.includes("20260604-cx-top10-v1"), "Engine should expose the current customer experience top 10 version.");
+  assert(script.includes("20260604-cx-top10-v2"), "Engine should expose the current customer experience top 10 version.");
   assert(script.includes("ANALYTICS_SCHEMA_VERSION"), "Engine should define an analytics schema version.");
   assert(script.includes("analytics-event-schema-v2"), "Engine should use analytics event schema v2.");
   assert(script.includes("trackSchemaEvent"), "Engine should send normalized analytics events.");

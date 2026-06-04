@@ -5,7 +5,7 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260604-cx-top10-v1";
+  const ENGINE_VERSION = "20260604-cx-top10-v2";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
 
   const state = {
@@ -1550,6 +1550,77 @@
         line-height: 1.45 !important;
       }
 
+      .nm-landing-reason-panel,
+      .nm-mini-demo-card,
+      .nm-summary-next-card {
+        background: #ffffff !important;
+        border: 1px solid rgba(17, 151, 213, 0.16) !important;
+        border-radius: 18px !important;
+        box-shadow: 0 14px 34px rgba(16, 32, 51, 0.06) !important;
+        color: #102033 !important;
+        margin: 16px auto 0 !important;
+        max-width: 760px !important;
+        padding: 18px !important;
+        text-align: left !important;
+      }
+
+      .nm-landing-reason-panel h3,
+      .nm-mini-demo-card h3,
+      .nm-summary-next-card h4 {
+        color: #102033 !important;
+        font-size: 18px !important;
+        line-height: 1.25 !important;
+        margin: 0 0 8px !important;
+      }
+
+      .nm-landing-reason-panel p,
+      .nm-mini-demo-card p,
+      .nm-summary-next-card p {
+        color: #52677e !important;
+        font-size: 13px !important;
+        line-height: 1.55 !important;
+        margin: 0 0 12px !important;
+      }
+
+      .nm-landing-reason-actions,
+      .nm-mini-demo-grid,
+      .nm-summary-next-grid {
+        display: grid !important;
+        gap: 10px !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+      }
+
+      .nm-landing-reason-button,
+      .nm-mini-demo-item,
+      .nm-summary-next-item {
+        background: #f3fbff !important;
+        border: 1px solid rgba(17, 151, 213, 0.16) !important;
+        border-radius: 14px !important;
+        color: #102033 !important;
+        font-size: 13px !important;
+        font-weight: 850 !important;
+        line-height: 1.35 !important;
+        padding: 11px 12px !important;
+      }
+
+      .nm-mini-demo-item strong,
+      .nm-summary-next-item strong {
+        color: #1197d5 !important;
+        display: block !important;
+        font-size: 12px !important;
+        margin-bottom: 5px !important;
+        text-transform: uppercase !important;
+      }
+
+      .nm-landing-reason-note,
+      .nm-mini-demo-note {
+        color: #64748b !important;
+        display: block !important;
+        font-size: 12px !important;
+        line-height: 1.45 !important;
+        margin-top: 12px !important;
+      }
+
       @media (max-width: 720px) {
         .nm-landing-hero,
         .nm-social-landing,
@@ -1579,6 +1650,12 @@
         .nm-report-preview-shell {
           grid-template-columns: 1fr !important;
         }
+
+        .nm-landing-reason-actions,
+        .nm-mini-demo-grid,
+        .nm-summary-next-grid {
+          grid-template-columns: 1fr !important;
+        }
       }
     `;
 
@@ -1606,6 +1683,18 @@
       step3: "3. Fizetes utan elkeszul es emailben megerkezik a riport",
       previewTitle: "Igy nez ki a riport",
       previewCaption: "Minta elonezet: a teljes riport szemelyre szabottan, PDF-ben erkezik.",
+      reasonTitle: "Miert eri meg most kitolteni?",
+      reasonBody: "A rovid kerdoiv utan nem csak egy cimket kapsz, hanem egy ertelmezheto iranyt: mire figyelj otthon, mikor erdemes szakemberhez fordulni, es milyen kovetkezo lepes lehet hasznos.",
+      reasonParent: "Kevesebb bizonytalansag",
+      reasonSchool: "Jobb beszelgetes ovodaval vagy iskolaval",
+      reasonCalm: "Nyugodtabb, rendszerezett kep",
+      reasonNote: "A cel nem a megijesztes, hanem a mintazatok ertheto osszerendezese.",
+      demoTitle: "Mit mutat meg a teljes riport?",
+      demoLead: "A teljes PDF a valaszokbol kirajzolodo fo es masodlagos jelzest, a korosztalyi kontextust es a gyakorlati javaslatokat egyutt magyarazza el.",
+      demoMetric1: "Fo mintazat",
+      demoMetric2: "Korosztalyi nezopont",
+      demoMetric3: "Kovetkezo lepesek",
+      demoNote: "A riport szulobarat, strukturalt es nem diagnosztikus nyelven keszul.",
       trustTitle: "Fontos tudni",
       trustText: "A NeuroMap Kids nem diagnozis, hanem strukturalt eloszures.",
       priceTitle: "Egyszeri dij",
@@ -1634,6 +1723,18 @@
       step3: "3. After payment, the report is generated and sent by email",
       previewTitle: "What the report looks like",
       previewCaption: "Sample preview: the full report is personalized and delivered as a PDF.",
+      reasonTitle: "Why complete it now?",
+      reasonBody: "After the short questionnaire, you receive more than a label: a clearer direction for what to observe, when to seek professional guidance, and what next step may be useful.",
+      reasonParent: "Less uncertainty",
+      reasonSchool: "Better conversations with preschool or school",
+      reasonCalm: "A calmer structured picture",
+      reasonNote: "The goal is not to alarm you, but to organize the patterns in a parent-friendly way.",
+      demoTitle: "What does the full report clarify?",
+      demoLead: "The full PDF explains the primary and secondary signals, age context, and practical suggestions together.",
+      demoMetric1: "Primary pattern",
+      demoMetric2: "Age-aware context",
+      demoMetric3: "Next steps",
+      demoNote: "The report is parent-friendly, structured, and non-diagnostic.",
       trustTitle: "Important to know",
       trustText: "NeuroMap Kids is not a diagnosis.",
       priceTitle: "One-time payment",
@@ -2027,6 +2128,89 @@
     }
   }
 
+  function ensureLandingReasonPanel(lang = state.lang) {
+    const hero =
+      document.querySelector("#nmSocialLanding .nm-hero") ||
+      document.querySelector(".nm-social-landing .nm-hero") ||
+      document.querySelector(".nm-landing .nm-hero") ||
+      document.querySelector("[data-nm-section='hero']");
+
+    if (!hero) return;
+
+    const copy = getLandingFallbackText(lang) || getLandingFallbackText("en");
+    if (!copy) return;
+
+    let panel = hero.querySelector(".nm-landing-reason-panel");
+
+    if (!panel) {
+      panel = document.createElement("div");
+      panel.className = "nm-landing-reason-panel";
+
+      const insertAfter =
+        hero.querySelector(".nm-landing-proof-strip") ||
+        hero.querySelector("[data-nm-i18n='microcopy']") ||
+        hero.querySelector(".nm-hero-microcopy") ||
+        hero.lastElementChild;
+
+      if (insertAfter) {
+        insertAfter.insertAdjacentElement("afterend", panel);
+      } else {
+        hero.appendChild(panel);
+      }
+    }
+
+    panel.innerHTML = `
+      <h3>${escapeHtml(copy.reasonTitle || LANDING_FALLBACK_TEXT.en.reasonTitle)}</h3>
+      <p>${escapeHtml(copy.reasonBody || LANDING_FALLBACK_TEXT.en.reasonBody)}</p>
+      <div class="nm-landing-reason-actions">
+        <div class="nm-landing-reason-button">${escapeHtml(copy.reasonParent || LANDING_FALLBACK_TEXT.en.reasonParent)}</div>
+        <div class="nm-landing-reason-button">${escapeHtml(copy.reasonSchool || LANDING_FALLBACK_TEXT.en.reasonSchool)}</div>
+        <div class="nm-landing-reason-button">${escapeHtml(copy.reasonCalm || LANDING_FALLBACK_TEXT.en.reasonCalm)}</div>
+      </div>
+      <span class="nm-landing-reason-note">${escapeHtml(copy.reasonNote || LANDING_FALLBACK_TEXT.en.reasonNote)}</span>
+    `;
+  }
+
+  function ensureLandingMiniDemo(lang = state.lang) {
+    const title = document.querySelector('[data-nm-i18n="previewTitle"]');
+    const copy = getLandingFallbackText(lang) || getLandingFallbackText("en");
+
+    if (!title || !copy) return;
+
+    const section =
+      title.closest(".nm-section") ||
+      title.closest("section") ||
+      title.closest("[data-nm-section]") ||
+      title.parentElement;
+
+    if (!section) return;
+
+    let card = section.querySelector(".nm-mini-demo-card");
+
+    if (!card) {
+      card = document.createElement("div");
+      card.className = "nm-mini-demo-card";
+
+      const previewShell = section.querySelector(".nm-report-preview-shell");
+      if (previewShell) {
+        previewShell.insertAdjacentElement("afterend", card);
+      } else {
+        section.appendChild(card);
+      }
+    }
+
+    card.innerHTML = `
+      <h3>${escapeHtml(copy.demoTitle || LANDING_FALLBACK_TEXT.en.demoTitle)}</h3>
+      <p>${escapeHtml(copy.demoLead || LANDING_FALLBACK_TEXT.en.demoLead)}</p>
+      <div class="nm-mini-demo-grid">
+        <div class="nm-mini-demo-item"><strong>01</strong>${escapeHtml(copy.demoMetric1 || LANDING_FALLBACK_TEXT.en.demoMetric1)}</div>
+        <div class="nm-mini-demo-item"><strong>02</strong>${escapeHtml(copy.demoMetric2 || LANDING_FALLBACK_TEXT.en.demoMetric2)}</div>
+        <div class="nm-mini-demo-item"><strong>03</strong>${escapeHtml(copy.demoMetric3 || LANDING_FALLBACK_TEXT.en.demoMetric3)}</div>
+      </div>
+      <span class="nm-mini-demo-note">${escapeHtml(copy.demoNote || LANDING_FALLBACK_TEXT.en.demoNote)}</span>
+    `;
+  }
+
   function ensureReportPreviewMockup(lang = state.lang) {
     const title = document.querySelector('[data-nm-i18n="previewTitle"]');
     if (!title) return;
@@ -2149,9 +2333,13 @@
       setImportantStyle(cta, "padding-bottom", "9px");
     });
 
+    const activeLang = getLang() || state.lang || "hu";
+
     ensureStickyBrandHeader();
-    ensureReportPreviewMockup(getLang() || state.lang || "hu");
-    ensureLandingTrustStrip(getLang() || state.lang || "hu");
+    ensureReportPreviewMockup(activeLang);
+    ensureLandingTrustStrip(activeLang);
+    ensureLandingReasonPanel(activeLang);
+    ensureLandingMiniDemo(activeLang);
   }
 
   function applyLandingFallbackLanguage(lang = state.lang) {
@@ -4262,6 +4450,73 @@
     `;
   }
 
+  function getSummaryNextStepCopy() {
+    const copies = {
+      hu: {
+        title: "Mit tisztaz a teljes riport?",
+        lead: "Az eloszures mar mutat egy iranyt. A teljes riport abban segit, hogy a jelzes ne csak egy szam vagy cimke legyen, hanem ertheto, korosztalyhoz illesztett mintazat.",
+        items: [
+          {
+            title: "Mi allhat a valaszok mogott?",
+            text: "A fo es masodlagos jelzeseket egyutt ertelmezi, hogy kevesebb legyen a felreertes."
+          },
+          {
+            title: "Mennyire kovetkezetes a minta?",
+            text: "A valaszok erosseget, atfedeset es bizonytalansagat is figyelembe veszi."
+          },
+          {
+            title: "Mit erdemes kiprobalni eloszor?",
+            text: "A javaslatok szulokent is hasznalhato, kicsi lepesekre vannak bontva."
+          }
+        ]
+      },
+      en: {
+        title: "What does the full report clarify?",
+        lead: "The screening already shows a direction. The full report turns it into an understandable, age-aware pattern instead of just a score or label.",
+        items: [
+          {
+            title: "What may be behind the answers?",
+            text: "It interprets primary and secondary signals together to reduce misunderstandings."
+          },
+          {
+            title: "How consistent is the pattern?",
+            text: "It considers signal strength, overlap, and uncertainty in the response profile."
+          },
+          {
+            title: "What is worth trying first?",
+            text: "Suggestions are translated into small parent-friendly next steps."
+          }
+        ]
+      }
+    };
+
+    return copies[state.lang] || copies.en;
+  }
+
+  function buildSummaryNextStepHtml() {
+    const copy = getSummaryNextStepCopy();
+
+    return `
+      <div class="nm-summary-next-card">
+        <h4>${escapeHtml(copy.title)}</h4>
+        <p>${escapeHtml(copy.lead)}</p>
+        <div class="nm-summary-next-grid">
+          ${copy.items
+            .map(
+              (item, index) => `
+                <div class="nm-summary-next-item">
+                  <strong>${String(index + 1).padStart(2, "0")}</strong>
+                  ${escapeHtml(item.title)}
+                  <span style="display:block;margin-top:6px;color:#52677e;font-size:12px;font-weight:650;line-height:1.45;">${escapeHtml(item.text)}</span>
+                </div>
+              `
+            )
+            .join("")}
+        </div>
+      </div>
+    `;
+  }
+
   function renderSummary() {
     const t = getUI();
     const container = document.getElementById("summarySection");
@@ -4302,6 +4557,8 @@
         </div>
 
         ${buildSummaryConversionHtml()}
+
+        ${buildSummaryNextStepHtml()}
 
         ${
           topSubdomains.length

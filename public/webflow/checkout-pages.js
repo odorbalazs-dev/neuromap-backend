@@ -5,7 +5,7 @@
 (function () {
   if (typeof window === "undefined" || typeof document === "undefined") return;
 
-  const CHECKOUT_PAGES_VERSION = "20260604-cx-top10-v1";
+  const CHECKOUT_PAGES_VERSION = "20260604-cx-top10-v2";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
   const DEFAULT_API_BASE_URL = "https://neuromap-backend-production-969d.up.railway.app";
   const SUPPORTED_LANGS = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];
@@ -82,6 +82,13 @@
       "The analysis worker prepares the personalized interpretation.",
       "The PDF report is generated and attached to the email.",
       "Please also check Spam or Promotions if the email is delayed."
+    ],
+    followUpTitle: "A gentle follow-up for the next few days",
+    followUpBody: "When the report arrives, keep it nearby and choose one observation or suggestion to try first. Small, calm next steps are usually more useful than changing everything at once.",
+    followUpItems: [
+      "Read the first summary before the detailed sections.",
+      "Mark one pattern that feels most recognizable.",
+      "Try one practical suggestion for 2-3 days and notice what changes."
     ],
     cancelRecoveryTitle: "Your answers are safe",
     cancelRecoveryItems: [
@@ -170,6 +177,13 @@
         "Az elemz\u0151 worker elk\u00e9sz\u00edti a szem\u00e9lyre szabott \u00e9rtelmez\u00e9st.",
         "A PDF riport gener\u00e1l\u00f3dik \u00e9s csatolm\u00e1nyk\u00e9nt ker\u00fcl az emailbe.",
         "Ha p\u00e1r percen bel\u00fcl nem l\u00e1tod, ellen\u0151rizd a Spam vagy Prom\u00f3ci\u00f3k mapp\u00e1t is."
+      ],
+      followUpTitle: "K\u00edm\u00e9letes ut\u00f3k\u00f6vet\u00e9s a k\u00f6vetkez\u0151 napokra",
+      followUpBody: "Amikor meg\u00e9rkezik a riport, tartsd k\u00e9zn\u00e9l, \u00e9s el\u0151sz\u00f6r csak egy megfigyel\u00e9st vagy javaslatot v\u00e1lassz ki. A kis, nyugodt l\u00e9p\u00e9sek \u00e1ltal\u00e1ban hasznosabbak, mint ha mindent egyszerre pr\u00f3b\u00e1ln\u00e1l megv\u00e1ltoztatni.",
+      followUpItems: [
+        "El\u0151sz\u00f6r a gyors \u00f6sszefoglal\u00f3t olvasd el, csak ut\u00e1na a r\u00e9szleteket.",
+        "Jel\u00f6ld meg azt az egy mint\u00e1t, ami a legink\u00e1bb ismer\u0151snek t\u0171nik.",
+        "Pr\u00f3b\u00e1lj ki egy gyakorlati javaslatot 2-3 napig, \u00e9s figyeld, mi v\u00e1ltozik."
       ],
       cancelRecoveryTitle: "A v\u00e1laszaid biztons\u00e1gban vannak",
       cancelRecoveryItems: [
@@ -540,6 +554,7 @@
       .nm-status-shortcut,
       .nm-inbox-checklist,
       .nm-delayed-help,
+      .nm-follow-up-panel,
       .nm-feedback-panel {
         margin: 0 auto 24px;
         max-width: 620px;
@@ -558,6 +573,7 @@
       [dir="rtl"] .nm-status-shortcut,
       [dir="rtl"] .nm-inbox-checklist,
       [dir="rtl"] .nm-delayed-help,
+      [dir="rtl"] .nm-follow-up-panel,
       [dir="rtl"] .nm-feedback-panel {
         text-align: right;
       }
@@ -570,6 +586,7 @@
       .nm-status-shortcut h2,
       .nm-inbox-checklist h2,
       .nm-delayed-help h2,
+      .nm-follow-up-panel h2,
       .nm-feedback-panel h2 {
         margin: 0 0 8px;
         font-size: 16px;
@@ -584,12 +601,24 @@
         background: #f3fbff;
       }
 
+      .nm-follow-up-panel {
+        border-color: #bcebd5;
+        background: #f3fff8;
+      }
+
       .nm-customer-tip p,
       .nm-delivery-estimate p,
       .nm-status-shortcut p,
       .nm-inbox-checklist p,
       .nm-delayed-help p {
         margin: 0;
+        color: #506780;
+        font-size: 13px;
+        line-height: 1.6;
+      }
+
+      .nm-follow-up-panel p {
+        margin: 0 0 10px;
         color: #506780;
         font-size: 13px;
         line-height: 1.6;
@@ -1086,6 +1115,22 @@
     `;
   }
 
+  function renderFollowUpPanel(copy) {
+    const items = Array.isArray(copy.followUpItems)
+      ? copy.followUpItems
+      : BASE_COPY.followUpItems;
+
+    return `
+      <div class="nm-follow-up-panel">
+        <h2>${escapeHtml(copy.followUpTitle || BASE_COPY.followUpTitle)}</h2>
+        <p>${escapeHtml(copy.followUpBody || BASE_COPY.followUpBody)}</p>
+        <ul>
+          ${items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
+        </ul>
+      </div>
+    `;
+  }
+
   function updateDelayedHelp(status) {
     const panel = document.getElementById("nmDelayedHelp");
     if (!panel) return;
@@ -1124,6 +1169,7 @@
       ${renderDeliveryEstimate(copy, getSessionId("success"), null)}
       ${renderStatusShortcut(copy)}
       ${renderInboxChecklist(copy)}
+      ${renderFollowUpPanel(copy)}
       <div class="nm-report-status-panel" id="nmReportStatusPanel">
         <h2>${escapeHtml(copy.reportStatusTitle)}</h2>
         <p class="nm-report-status-lead" id="nmReportStatusLead">${escapeHtml(copy.statusLoading)}</p>
