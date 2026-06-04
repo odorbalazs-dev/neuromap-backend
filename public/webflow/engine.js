@@ -5,7 +5,7 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260604-customer-experience-v4";
+  const ENGINE_VERSION = "20260604-cx-top10-v1";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
 
   const state = {
@@ -603,10 +603,193 @@
       }
 
       .nm-summary-text {
-        color: #344054;
+        background: #f7fbff;
+        border: 1px solid #dbeef8;
+        border-left: 5px solid #1197d5;
+        border-radius: 16px;
+        color: #132235;
         font-size: 16px;
-        line-height: 1.7;
+        font-weight: 650;
+        line-height: 1.72;
         margin-top: 4px;
+        padding: 16px;
+      }
+
+      [dir="rtl"] .nm-summary-text {
+        border-left-width: 1px;
+        border-right: 5px solid #1197d5;
+      }
+
+      .nm-report-teaser-card {
+        background:
+          linear-gradient(135deg, rgba(17, 151, 213, 0.08), rgba(114, 190, 0, 0.08)),
+          #ffffff;
+        border: 1px solid #cfeefa;
+        border-radius: 22px;
+        box-shadow: 0 16px 36px rgba(20, 32, 51, 0.07);
+        margin: 16px 0;
+        overflow: hidden;
+        padding: 22px;
+      }
+
+      .nm-report-teaser-eyebrow {
+        color: #0b86bf;
+        display: block;
+        font-size: 12px;
+        font-weight: 950;
+        letter-spacing: 0.06em;
+        margin-bottom: 7px;
+        text-transform: uppercase;
+      }
+
+      .nm-report-teaser-card h4 {
+        color: #102033;
+        font-size: 20px;
+        font-weight: 950;
+        line-height: 1.2;
+        margin: 0 0 8px;
+        text-wrap: balance;
+      }
+
+      .nm-report-teaser-lead {
+        color: #344054;
+        font-size: 15px;
+        font-weight: 650;
+        line-height: 1.65;
+        margin: 0 0 16px;
+      }
+
+      .nm-report-teaser-grid {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .nm-report-teaser-item {
+        background: rgba(255, 255, 255, 0.94);
+        border: 1px solid #dbeef8;
+        border-radius: 16px;
+        padding: 14px;
+      }
+
+      .nm-report-teaser-item strong {
+        color: #102033;
+        display: block;
+        font-size: 14px;
+        font-weight: 950;
+        line-height: 1.3;
+        margin-bottom: 6px;
+      }
+
+      .nm-report-teaser-item span {
+        color: #506578;
+        display: block;
+        font-size: 13px;
+        font-weight: 650;
+        line-height: 1.55;
+      }
+
+      .nm-summary-cta-strip {
+        align-items: center;
+        background: #102033;
+        border-radius: 16px;
+        color: #ffffff;
+        display: flex;
+        gap: 14px;
+        justify-content: space-between;
+        line-height: 1.45;
+        margin-top: 16px;
+        padding: 14px 16px;
+      }
+
+      .nm-summary-cta-strip strong {
+        display: block;
+        font-size: 14px;
+        font-weight: 950;
+      }
+
+      .nm-summary-cta-strip span {
+        color: rgba(255, 255, 255, 0.82);
+        display: block;
+        font-size: 13px;
+        font-weight: 650;
+        margin-top: 2px;
+      }
+
+      .nm-prepayment-trust-card {
+        background:
+          linear-gradient(135deg, rgba(255, 122, 0, 0.08), rgba(17, 151, 213, 0.08)),
+          #ffffff;
+        border: 1px solid #dbeef8;
+        border-radius: 20px;
+        box-shadow: 0 14px 30px rgba(20, 32, 51, 0.06);
+        margin: 16px 0;
+        padding: 18px;
+      }
+
+      .nm-prepayment-trust-card h4 {
+        color: #102033;
+        font-size: 18px;
+        font-weight: 950;
+        line-height: 1.25;
+        margin: 0 0 12px;
+      }
+
+      .nm-trust-grid {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .nm-trust-item {
+        background: rgba(255, 255, 255, 0.92);
+        border: 1px solid #e1edf6;
+        border-radius: 15px;
+        padding: 12px;
+      }
+
+      .nm-trust-item strong {
+        color: #102033;
+        display: block;
+        font-size: 13px;
+        font-weight: 950;
+        line-height: 1.3;
+        margin-bottom: 5px;
+      }
+
+      .nm-trust-item span,
+      .nm-prepayment-trust-note {
+        color: #506578;
+        display: block;
+        font-size: 12.5px;
+        font-weight: 650;
+        line-height: 1.5;
+      }
+
+      .nm-prepayment-trust-note {
+        margin-top: 12px;
+      }
+
+      .nm-landing-proof-strip {
+        display: grid;
+        gap: 8px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        margin: 12px auto 0;
+        max-width: 720px;
+        padding: 0 16px;
+      }
+
+      .nm-landing-proof-item {
+        background: rgba(255, 255, 255, 0.92);
+        border: 1px solid #dbeef8;
+        border-radius: 999px;
+        color: #344054;
+        font-size: 12.5px;
+        font-weight: 800;
+        line-height: 1.25;
+        min-height: 34px;
+        padding: 8px 12px;
+        text-align: center;
       }
 
       .nm-subdomain-row {
@@ -881,9 +1064,25 @@
 
         .nm-step-title-card,
         .nm-summary-hero,
-        .nm-summary-card {
+        .nm-summary-card,
+        .nm-prepayment-trust-card,
+        .nm-report-teaser-card {
           border-radius: 18px;
           padding: 18px;
+        }
+
+        .nm-report-teaser-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .nm-trust-grid,
+        .nm-landing-proof-strip {
+          grid-template-columns: 1fr;
+        }
+
+        .nm-summary-cta-strip {
+          align-items: flex-start;
+          flex-direction: column;
         }
 
         .nm-summary-pill {
@@ -922,6 +1121,8 @@
         .nm-step-title-card,
         .nm-summary-hero,
         .nm-summary-card,
+        .nm-prepayment-trust-card,
+        .nm-report-teaser-card,
         .nm-q-card {
           border-radius: 16px;
         }
@@ -1442,6 +1643,118 @@
       stickyCta: "Start ->"
     }
   };
+
+  Object.assign(LANDING_FALLBACK_TEXT, {
+    de: {
+      ...LANDING_FALLBACK_TEXT.en,
+      modalTitle: "Sprache wahlen",
+      heroTitle: "Verstehe, was hinter dem Verhalten deines Kindes stehen kann",
+      heroSub: "Nach einem 10-Minuten-Fragebogen erhaltst du einen personalisierten, elternfreundlichen Bericht als PDF.",
+      primaryCta: "Starten ->",
+      microcopy: "Nur $5 - Kein Abo - PDF per E-Mail",
+      trust1: "ca. 10 Minuten",
+      trust2: "PDF per E-Mail",
+      trust3: "strukturierte Analyse",
+      valueTitle: "Was du bekommst",
+      priceTitle: "Einmalige Zahlung",
+      priceCta: "Bericht erhalten ->",
+      stickyCta: "Starten ->"
+    },
+    it: {
+      ...LANDING_FALLBACK_TEXT.en,
+      modalTitle: "Scegli la lingua",
+      heroTitle: "Capisci cosa puo esserci dietro il comportamento di tuo figlio",
+      heroSub: "Dopo un questionario di 10 minuti ricevi un report personalizzato e chiaro per genitori.",
+      primaryCta: "Inizia ->",
+      microcopy: "Solo $5 - Nessun abbonamento - PDF via email",
+      trust1: "circa 10 minuti",
+      trust2: "PDF via email",
+      trust3: "analisi strutturata",
+      valueTitle: "Cosa ricevi",
+      priceTitle: "Pagamento unico",
+      priceCta: "Ricevi il report ->",
+      stickyCta: "Inizia ->"
+    },
+    es: {
+      ...LANDING_FALLBACK_TEXT.en,
+      modalTitle: "Elige idioma",
+      heroTitle: "Comprende que puede haber detras del comportamiento de tu hijo",
+      heroSub: "Tras un cuestionario de 10 minutos recibes un informe personalizado y claro para familias.",
+      primaryCta: "Empezar ->",
+      microcopy: "Solo $5 - Sin suscripcion - PDF por email",
+      trust1: "unos 10 minutos",
+      trust2: "PDF por email",
+      trust3: "analisis estructurado",
+      valueTitle: "Que recibes",
+      priceTitle: "Pago unico",
+      priceCta: "Recibir informe ->",
+      stickyCta: "Empezar ->"
+    },
+    zh: {
+      ...LANDING_FALLBACK_TEXT.en,
+      modalTitle: "Choose language",
+      heroTitle: "Understand what may be behind your child's behavior",
+      primaryCta: "Start ->"
+    },
+    ja: {
+      ...LANDING_FALLBACK_TEXT.en,
+      modalTitle: "Choose language",
+      heroTitle: "Understand what may be behind your child's behavior",
+      primaryCta: "Start ->"
+    },
+    ar: {
+      ...LANDING_FALLBACK_TEXT.en,
+      modalTitle: "Choose language",
+      heroTitle: "Understand what may be behind your child's behavior",
+      primaryCta: "Start ->"
+    },
+    pl: {
+      ...LANDING_FALLBACK_TEXT.en,
+      modalTitle: "Wybierz jezyk",
+      heroTitle: "Zrozum, co moze stac za zachowaniem Twojego dziecka",
+      heroSub: "Po 10-minutowym kwestionariuszu otrzymasz spersonalizowany raport PDF dla rodzicow.",
+      primaryCta: "Zacznij ->",
+      microcopy: "Tylko $5 - Bez abonamentu - PDF emailem",
+      trust1: "ok. 10 minut",
+      trust2: "PDF emailem",
+      trust3: "analiza strukturalna",
+      valueTitle: "Co otrzymasz",
+      priceTitle: "Platnosc jednorazowa",
+      priceCta: "Otrzymaj raport ->",
+      stickyCta: "Zacznij ->"
+    },
+    pt: {
+      ...LANDING_FALLBACK_TEXT.en,
+      modalTitle: "Escolher idioma",
+      heroTitle: "Entenda o que pode estar por tras do comportamento do seu filho",
+      heroSub: "Depois de um questionario de 10 minutos, voce recebe um relatorio PDF personalizado.",
+      primaryCta: "Comecar ->",
+      microcopy: "Apenas $5 - Sem assinatura - PDF por email",
+      trust1: "cerca de 10 minutos",
+      trust2: "PDF por email",
+      trust3: "analise estruturada",
+      valueTitle: "O que voce recebe",
+      priceTitle: "Pagamento unico",
+      priceCta: "Receber relatorio ->",
+      stickyCta: "Comecar ->"
+    },
+    fr: {
+      ...LANDING_FALLBACK_TEXT.en,
+      modalTitle: "Choisir la langue",
+      heroTitle: "Comprendre ce qui peut se cacher derriere le comportement de votre enfant",
+      heroSub: "Apres un questionnaire de 10 minutes, vous recevez un rapport PDF personnalise.",
+      primaryCta: "Commencer ->",
+      microcopy: "Seulement $5 - Sans abonnement - PDF par email",
+      trust1: "environ 10 minutes",
+      trust2: "PDF par email",
+      trust3: "analyse structuree",
+      valueTitle: "Ce que vous recevez",
+      priceTitle: "Paiement unique",
+      priceCta: "Recevoir le rapport ->",
+      stickyCta: "Commencer ->"
+    }
+  });
+
   function getLandingFallbackText(lang = state.lang) {
     return LANDING_FALLBACK_TEXT[lang] || LANDING_FALLBACK_TEXT.en || null;
   }
@@ -1533,8 +1846,8 @@
   }
 
   function getReportPreviewLabels(lang = state.lang) {
-    if (lang === "hu") {
-      return {
+    const labels = {
+      hu: {
         title: "NeuroMap Kids riport",
         subtitle: "szemelyre szabott elonezet",
         focus: "Fokusz",
@@ -1544,20 +1857,174 @@
         parent: "szulobarat magyarazat",
         action: "gyakorlati otletek",
         pdf: "brandelt PDF emailben"
-      };
+      },
+      en: {
+        title: "NeuroMap Kids report",
+        subtitle: "personalized preview",
+        focus: "Focus",
+        pattern: "Pattern",
+        suggestions: "Suggestions",
+        next: "Next steps",
+        parent: "parent-friendly explanation",
+        action: "practical ideas",
+        pdf: "branded PDF by email"
+      },
+      de: {
+        title: "NeuroMap Kids Bericht",
+        subtitle: "personalisierte Vorschau",
+        focus: "Fokus",
+        pattern: "Muster",
+        suggestions: "Empfehlungen",
+        next: "Nachste Schritte",
+        parent: "elternfreundliche Erklarung",
+        action: "praktische Ideen",
+        pdf: "PDF per E-Mail"
+      },
+      it: {
+        title: "Report NeuroMap Kids",
+        subtitle: "anteprima personalizzata",
+        focus: "Focus",
+        pattern: "Schema",
+        suggestions: "Suggerimenti",
+        next: "Prossimi passi",
+        parent: "spiegazione per genitori",
+        action: "idee pratiche",
+        pdf: "PDF via email"
+      },
+      es: {
+        title: "Informe NeuroMap Kids",
+        subtitle: "vista previa personalizada",
+        focus: "Foco",
+        pattern: "Patron",
+        suggestions: "Sugerencias",
+        next: "Siguientes pasos",
+        parent: "explicacion para familias",
+        action: "ideas practicas",
+        pdf: "PDF por email"
+      },
+      pl: {
+        title: "Raport NeuroMap Kids",
+        subtitle: "spersonalizowany podglad",
+        focus: "Obszar",
+        pattern: "Wzorzec",
+        suggestions: "Wskazowki",
+        next: "Kolejne kroki",
+        parent: "wyjasnienie dla rodzicow",
+        action: "praktyczne pomysly",
+        pdf: "PDF emailem"
+      },
+      pt: {
+        title: "Relatorio NeuroMap Kids",
+        subtitle: "pre-visualizacao personalizada",
+        focus: "Foco",
+        pattern: "Padrao",
+        suggestions: "Sugestoes",
+        next: "Proximos passos",
+        parent: "explicacao para pais",
+        action: "ideias praticas",
+        pdf: "PDF por email"
+      },
+      fr: {
+        title: "Rapport NeuroMap Kids",
+        subtitle: "apercu personnalise",
+        focus: "Focus",
+        pattern: "Schema",
+        suggestions: "Pistes",
+        next: "Prochaines etapes",
+        parent: "explication pour parents",
+        action: "idees pratiques",
+        pdf: "PDF par email"
+      },
+      zh: null,
+      ja: null,
+      ar: null
+    };
+
+    return labels[lang] || labels.en;
+  }
+
+  function getLandingProofCopy(lang = state.lang) {
+    const copies = {
+      hu: [
+        "szulobarat, nem ijesztgeto nyelvezet",
+        "korosztalyi szempontokkal finomitva",
+        "nem diagnozis, hanem ertelmezheto eloszures"
+      ],
+      en: [
+        "parent-friendly, non-alarming language",
+        "refined with age-aware context",
+        "not a diagnosis, but a structured screening"
+      ],
+      de: [
+        "elternfreundliche Sprache",
+        "mit Alterskontext verfeinert",
+        "strukturierter Screening-Bericht"
+      ],
+      it: [
+        "linguaggio chiaro per genitori",
+        "contesto legato all'eta",
+        "screening strutturato, non diagnosi"
+      ],
+      es: [
+        "lenguaje claro para familias",
+        "con contexto por edad",
+        "cribado estructurado, no diagnostico"
+      ],
+      pl: [
+        "jezyk przyjazny rodzicom",
+        "z kontekstem wieku",
+        "screening, nie diagnoza"
+      ],
+      pt: [
+        "linguagem clara para pais",
+        "com contexto por idade",
+        "triagem estruturada, nao diagnostico"
+      ],
+      fr: [
+        "langage clair pour les parents",
+        "contexte adapte a l'age",
+        "depistage structure, pas diagnostic"
+      ]
+    };
+
+    return copies[lang] || copies.en;
+  }
+
+  function ensureLandingTrustStrip(lang = state.lang) {
+    const hero =
+      document.querySelector("#nmSocialLanding .nm-hero") ||
+      document.querySelector(".nm-social-landing .nm-hero") ||
+      document.querySelector(".nm-landing .nm-hero") ||
+      document.querySelector("[data-nm-section='hero']");
+
+    const copy = getLandingProofCopy(lang);
+    if (!hero) return;
+
+    const existing = hero.querySelector(".nm-landing-proof-strip");
+    if (existing) {
+      existing.innerHTML = copy
+        .map((item) => `<div class="nm-landing-proof-item">${escapeHtml(item)}</div>`)
+        .join("");
+      return;
     }
 
-    return {
-      title: "NeuroMap Kids report",
-      subtitle: "personalized preview",
-      focus: "Focus",
-      pattern: "Pattern",
-      suggestions: "Suggestions",
-      next: "Next steps",
-      parent: "parent-friendly explanation",
-      action: "practical ideas",
-      pdf: "branded PDF by email"
-    };
+    const strip = document.createElement("div");
+    strip.className = "nm-landing-proof-strip";
+    strip.innerHTML = copy
+      .map((item) => `<div class="nm-landing-proof-item">${escapeHtml(item)}</div>`)
+      .join("");
+
+    const insertAfter =
+      hero.querySelector("[data-nm-i18n='microcopy']") ||
+      hero.querySelector(".nm-hero-microcopy") ||
+      hero.querySelector(".nm-hero-trust") ||
+      hero.lastElementChild;
+
+    if (insertAfter) {
+      insertAfter.insertAdjacentElement("afterend", strip);
+    } else {
+      hero.appendChild(strip);
+    }
   }
 
   function ensureReportPreviewMockup(lang = state.lang) {
@@ -1684,6 +2151,7 @@
 
     ensureStickyBrandHeader();
     ensureReportPreviewMockup(getLang() || state.lang || "hu");
+    ensureLandingTrustStrip(getLang() || state.lang || "hu");
   }
 
   function applyLandingFallbackLanguage(lang = state.lang) {
@@ -3193,31 +3661,108 @@
     if (pageTitleEl) pageTitleEl.textContent = currentData.title;
   }
 
+  function getCheckoutReviewLabels() {
+    const labels = {
+      hu: {
+        title: "Fizetés előtti gyors ellenőrzés",
+        nameEmail: "Név / email",
+        childAge: "Gyermek életkora",
+        focus: "Fő terület",
+        questions: "Kitöltött kérdések",
+        note: "A részletes riport ezekből az adatokból készül. Ha valamit javítanál, lépj vissza a fizetés előtt."
+      },
+      en: {
+        title: "Quick review before payment",
+        nameEmail: "Name / email",
+        childAge: "Child age",
+        focus: "Primary focus",
+        questions: "Completed questions",
+        note: "The detailed report will be generated from these answers. If something needs changing, go back before payment."
+      },
+      de: {
+        title: "Kurzer Check vor der Zahlung",
+        nameEmail: "Name / E-Mail",
+        childAge: "Alter des Kindes",
+        focus: "Hauptbereich",
+        questions: "Beantwortete Fragen",
+        note: "Der detaillierte Bericht wird aus diesen Angaben erstellt. Wenn du etwas ändern möchtest, gehe vor der Zahlung zurück."
+      },
+      it: {
+        title: "Controllo rapido prima del pagamento",
+        nameEmail: "Nome / email",
+        childAge: "Età del bambino",
+        focus: "Area principale",
+        questions: "Domande completate",
+        note: "Il report dettagliato sarà generato da queste risposte. Se vuoi correggere qualcosa, torna indietro prima del pagamento."
+      },
+      es: {
+        title: "Revisión rápida antes del pago",
+        nameEmail: "Nombre / email",
+        childAge: "Edad del niño",
+        focus: "Área principal",
+        questions: "Preguntas completadas",
+        note: "El informe detallado se generará a partir de estas respuestas. Si necesitas cambiar algo, vuelve atrás antes del pago."
+      },
+      zh: {
+        title: "付款前快速确认",
+        nameEmail: "姓名 / 邮箱",
+        childAge: "儿童年龄",
+        focus: "主要关注领域",
+        questions: "已完成问题",
+        note: "详细报告将根据这些回答生成。如需修改，请在付款前返回。"
+      },
+      ja: {
+        title: "支払い前の簡単確認",
+        nameEmail: "名前 / メール",
+        childAge: "子どもの年齢",
+        focus: "主な領域",
+        questions: "回答済みの質問",
+        note: "詳細レポートはこれらの回答をもとに作成されます。修正したい場合は、支払い前に戻ってください。"
+      },
+      ar: {
+        title: "مراجعة سريعة قبل الدفع",
+        nameEmail: "الاسم / البريد الإلكتروني",
+        childAge: "عمر الطفل",
+        focus: "المجال الرئيسي",
+        questions: "الأسئلة المكتملة",
+        note: "سيتم إنشاء التقرير التفصيلي من هذه الإجابات. إذا أردت تعديل شيء، فارجع قبل الدفع."
+      },
+      pl: {
+        title: "Szybka kontrola przed płatnością",
+        nameEmail: "Imię / email",
+        childAge: "Wiek dziecka",
+        focus: "Główny obszar",
+        questions: "Ukończone pytania",
+        note: "Szczegółowy raport zostanie wygenerowany na podstawie tych odpowiedzi. Jeśli chcesz coś zmienić, wróć przed płatnością."
+      },
+      pt: {
+        title: "Revisão rápida antes do pagamento",
+        nameEmail: "Nome / email",
+        childAge: "Idade da criança",
+        focus: "Área principal",
+        questions: "Perguntas concluídas",
+        note: "O relatório detalhado será gerado a partir destas respostas. Se precisar alterar algo, volte antes do pagamento."
+      },
+      fr: {
+        title: "Vérification rapide avant paiement",
+        nameEmail: "Nom / email",
+        childAge: "Âge de l'enfant",
+        focus: "Domaine principal",
+        questions: "Questions complétées",
+        note: "Le rapport détaillé sera généré à partir de ces réponses. Si quelque chose doit être modifié, revenez en arrière avant le paiement."
+      }
+    };
+
+    return labels[state.lang] || labels.en;
+  }
+
   function buildCheckoutReviewHtml(t) {
     const name = (document.getElementById("name")?.value || "").trim();
     const email = (document.getElementById("email")?.value || "").trim();
     const childAge = getChildAgeValue();
     const totalQuestions =
       state.triageQuestions.length + state.specificQuestions.length + state.extraQuestions.length;
-    const isHu = state.lang === "hu";
-
-    const labels = isHu
-      ? {
-          title: "Fizet\u00e9s el\u0151tti gyors ellen\u0151rz\u00e9s",
-          nameEmail: "N\u00e9v / email",
-          childAge: "Gyermek \u00e9letkora",
-          focus: "F\u0151 ter\u00fclet",
-          questions: "Kit\u00f6lt\u00f6tt k\u00e9rd\u00e9sek",
-          note: "A r\u00e9szletes riport ezekb\u0151l az adatokb\u00f3l k\u00e9sz\u00fcl. Ha valamit jav\u00edtan\u00e1l, l\u00e9pj vissza a fizet\u00e9s el\u0151tt."
-        }
-      : {
-          title: "Quick review before payment",
-          nameEmail: "Name / email",
-          childAge: "Child age",
-          focus: "Primary focus",
-          questions: "Completed questions",
-          note: "The detailed report will be generated from these answers. If something needs changing, go back before payment."
-        };
+    const labels = getCheckoutReviewLabels();
 
     return `
       <div class="nm-checkout-review" aria-label="${escapeHtml(labels.title)}">
@@ -3241,6 +3786,478 @@
           </div>
         </div>
         <p class="nm-review-note">${escapeHtml(labels.note)}</p>
+      </div>
+    `;
+  }
+
+  function getSummaryConversionCopy() {
+    const copies = {
+      hu: {
+        eyebrow: "A teljes riportban",
+        title: "Nem csak pontszámokat kapsz, hanem értelmezhető mintázatot",
+        lead:
+          "A NeuroMap Kids a válaszaidat több terület mentén veti össze. A fizetés után készülő riport azt mutatja meg, hogy a mostani jelzések hogyan kapcsolódhatnak a gyermek mindennapi viselkedéséhez, tanulásához és érzelmi terheléséhez.",
+        items: [
+          {
+            title: "Mintázatalapú értelmezés",
+            text: "A riport a fő és másodlagos jelzéseket együtt kezeli, nem egyetlen kérdés vagy pontszám alapján következtet."
+          },
+          {
+            title: "Életkorhoz igazodóbb nézőpont",
+            text: "Segít elkülöníteni, mi lehet életkori sajátosság, és mi az, amit érdemes tudatosabban figyelni."
+          },
+          {
+            title: "Szülőbarát következő lépések",
+            text: "Otthon, óvodában vagy iskolában is használható, gyakorlatias irányokat kapsz."
+          },
+          {
+            title: "PDF riport emailben",
+            text: "A személyre szabott riport a fizetés után készül el, és emailben érkezik meg."
+          }
+        ],
+        ctaTitle: "A részletes riport célja: tisztább képet adni, merre érdemes tovább figyelni.",
+        ctaText: "Ez strukturált előszűrés, nem diagnózis. A hangsúly az érthető magyarázaton és a következő lépéseken van."
+      },
+      en: {
+        eyebrow: "Inside the full report",
+        title: "You get more than scores: you get an interpretable pattern",
+        lead:
+          "NeuroMap Kids compares the answers across several developmental and emotional domains. After payment, the report explains how the current signals may relate to everyday behavior, learning, and emotional load.",
+        items: [
+          {
+            title: "Pattern-based interpretation",
+            text: "The report considers primary and secondary signals together instead of relying on a single score."
+          },
+          {
+            title: "Age-aware perspective",
+            text: "It helps separate age-typical variation from patterns that may deserve closer attention."
+          },
+          {
+            title: "Parent-friendly next steps",
+            text: "You receive practical directions that can be used at home, preschool, or school."
+          },
+          {
+            title: "PDF report by email",
+            text: "The personalized report is generated after payment and delivered by email."
+          }
+        ],
+        ctaTitle: "The detailed report is designed to make the next step clearer.",
+        ctaText: "This is structured screening, not a diagnosis. The focus is clear explanation and practical guidance."
+      },
+      de: {
+        eyebrow: "Im vollständigen Bericht",
+        title: "Du erhältst mehr als Werte: ein verständliches Muster",
+        lead:
+          "NeuroMap Kids vergleicht die Antworten über mehrere entwicklungsbezogene und emotionale Bereiche hinweg. Nach der Zahlung erklärt der Bericht, wie die aktuellen Signale mit Verhalten, Lernen und emotionaler Belastung im Alltag zusammenhängen können.",
+        items: [
+          {
+            title: "Musterbasierte Einordnung",
+            text: "Der Bericht betrachtet Haupt- und Nebensignale gemeinsam, statt sich auf einen einzelnen Wert zu stützen."
+          },
+          {
+            title: "Altersbewusste Perspektive",
+            text: "Er hilft zu unterscheiden, was altersnah sein kann und welche Muster bewusster beobachtet werden sollten."
+          },
+          {
+            title: "Elternfreundliche nächste Schritte",
+            text: "Du erhältst praktische Hinweise für Zuhause, Kindergarten oder Schule."
+          },
+          {
+            title: "PDF-Bericht per E-Mail",
+            text: "Der personalisierte Bericht wird nach der Zahlung erstellt und per E-Mail zugestellt."
+          }
+        ],
+        ctaTitle: "Der detaillierte Bericht soll den nächsten Schritt klarer machen.",
+        ctaText: "Dies ist ein strukturiertes Screening, keine Diagnose. Im Fokus stehen klare Erklärung und praktische Orientierung."
+      },
+      it: {
+        eyebrow: "Nel report completo",
+        title: "Non ricevi solo punteggi, ma un modello interpretabile",
+        lead:
+          "NeuroMap Kids confronta le risposte in più aree dello sviluppo e del benessere emotivo. Dopo il pagamento, il report spiega come i segnali attuali possano collegarsi al comportamento quotidiano, all'apprendimento e al carico emotivo.",
+        items: [
+          {
+            title: "Interpretazione basata sui pattern",
+            text: "Il report considera insieme segnali principali e secondari, senza basarsi su un singolo punteggio."
+          },
+          {
+            title: "Prospettiva legata all'età",
+            text: "Aiuta a distinguere ciò che può essere tipico dell'età da ciò che merita maggiore attenzione."
+          },
+          {
+            title: "Passi successivi per i genitori",
+            text: "Ricevi indicazioni pratiche utilizzabili a casa, alla scuola dell'infanzia o a scuola."
+          },
+          {
+            title: "Report PDF via email",
+            text: "Il report personalizzato viene generato dopo il pagamento e inviato via email."
+          }
+        ],
+        ctaTitle: "Il report dettagliato è pensato per rendere più chiaro il passo successivo.",
+        ctaText: "È uno screening strutturato, non una diagnosi. Il focus è spiegazione chiara e orientamento pratico."
+      },
+      es: {
+        eyebrow: "Dentro del informe completo",
+        title: "No recibes solo puntuaciones: recibes un patrón interpretable",
+        lead:
+          "NeuroMap Kids compara las respuestas en varios dominios del desarrollo y emocionales. Después del pago, el informe explica cómo las señales actuales pueden relacionarse con la conducta diaria, el aprendizaje y la carga emocional.",
+        items: [
+          {
+            title: "Interpretación basada en patrones",
+            text: "El informe considera señales principales y secundarias juntas, no una sola pregunta o puntuación."
+          },
+          {
+            title: "Perspectiva ajustada a la edad",
+            text: "Ayuda a separar variaciones esperables por edad de patrones que conviene observar con más atención."
+          },
+          {
+            title: "Próximos pasos para familias",
+            text: "Recibes orientaciones prácticas para casa, preescolar o escuela."
+          },
+          {
+            title: "Informe PDF por email",
+            text: "El informe personalizado se genera después del pago y llega por email."
+          }
+        ],
+        ctaTitle: "El informe detallado está diseñado para aclarar el siguiente paso.",
+        ctaText: "Es un cribado estructurado, no un diagnóstico. El foco está en la explicación clara y la guía práctica."
+      },
+      zh: {
+        eyebrow: "完整报告包含",
+        title: "你获得的不只是分数，而是可理解的模式",
+        lead:
+          "NeuroMap Kids 会从多个发展和情绪领域比较回答。付款后生成的报告会解释这些信号可能如何关联孩子的日常行为、学习和情绪负荷。",
+        items: [
+          {
+            title: "基于模式的解释",
+            text: "报告会同时考虑主要和次要信号，而不是只依赖单一问题或分数。"
+          },
+          {
+            title: "结合年龄的视角",
+            text: "帮助区分哪些可能是年龄相关变化，哪些模式值得进一步关注。"
+          },
+          {
+            title: "适合家长的下一步",
+            text: "你会获得可在家庭、幼儿园或学校中使用的实用方向。"
+          },
+          {
+            title: "PDF 报告通过邮件发送",
+            text: "个性化报告会在付款后生成，并通过电子邮件发送。"
+          }
+        ],
+        ctaTitle: "详细报告的目标是让下一步更清晰。",
+        ctaText: "这是结构化筛查，不是诊断。重点是清楚解释和实用建议。"
+      },
+      ja: {
+        eyebrow: "完全版レポートの内容",
+        title: "スコアだけでなく、理解しやすいパターンを受け取れます",
+        lead:
+          "NeuroMap Kids は、複数の発達・情緒領域にわたって回答を比較します。支払い後に作成されるレポートでは、現在のサインが日常行動、学習、情緒的負荷とどのように関係しうるかを説明します。",
+        items: [
+          {
+            title: "パターンに基づく解釈",
+            text: "単一の質問や点数ではなく、主なサインと二次的なサインを合わせて見ます。"
+          },
+          {
+            title: "年齢を踏まえた視点",
+            text: "年齢相応の変化と、より注意深く見守るべきパターンを分けて考える助けになります。"
+          },
+          {
+            title: "保護者向けの次のステップ",
+            text: "家庭、園、学校で使いやすい実践的な方向性を受け取れます。"
+          },
+          {
+            title: "PDFレポートをメールで送付",
+            text: "個別化されたレポートは支払い後に作成され、メールで届きます。"
+          }
+        ],
+        ctaTitle: "詳細レポートは、次に何を見るべきかを明確にするためのものです。",
+        ctaText: "これは構造化スクリーニングであり、診断ではありません。明確な説明と実践的な案内に重点を置いています。"
+      },
+      ar: {
+        eyebrow: "داخل التقرير الكامل",
+        title: "لا تحصل على درجات فقط، بل على نمط يمكن فهمه",
+        lead:
+          "يقارن NeuroMap Kids الإجابات عبر عدة مجالات نمائية وعاطفية. بعد الدفع، يوضح التقرير كيف قد ترتبط الإشارات الحالية بالسلوك اليومي والتعلم والضغط العاطفي لدى الطفل.",
+        items: [
+          {
+            title: "تفسير قائم على الأنماط",
+            text: "ينظر التقرير إلى الإشارات الرئيسية والثانوية معًا، ولا يعتمد على سؤال أو درجة واحدة فقط."
+          },
+          {
+            title: "منظور يراعي العمر",
+            text: "يساعد على التمييز بين ما قد يكون مناسبًا للعمر وما يستحق متابعة أكثر وعيًا."
+          },
+          {
+            title: "خطوات تالية مناسبة للوالدين",
+            text: "تحصل على اتجاهات عملية يمكن استخدامها في المنزل أو الروضة أو المدرسة."
+          },
+          {
+            title: "تقرير PDF عبر البريد الإلكتروني",
+            text: "يتم إنشاء التقرير الشخصي بعد الدفع وإرساله عبر البريد الإلكتروني."
+          }
+        ],
+        ctaTitle: "هدف التقرير التفصيلي هو جعل الخطوة التالية أوضح.",
+        ctaText: "هذا فحص منظم وليس تشخيصًا. التركيز على الشرح الواضح والإرشاد العملي."
+      },
+      pl: {
+        eyebrow: "W pełnym raporcie",
+        title: "Otrzymujesz nie tylko wyniki, ale zrozumiały wzorzec",
+        lead:
+          "NeuroMap Kids porównuje odpowiedzi w kilku obszarach rozwojowych i emocjonalnych. Po płatności raport wyjaśnia, jak obecne sygnały mogą wiązać się z codziennym zachowaniem, uczeniem się i obciążeniem emocjonalnym dziecka.",
+        items: [
+          {
+            title: "Interpretacja oparta na wzorcach",
+            text: "Raport analizuje sygnały główne i wtórne razem, zamiast opierać się na jednym pytaniu lub wyniku."
+          },
+          {
+            title: "Perspektywa uwzględniająca wiek",
+            text: "Pomaga odróżnić zmienność typową dla wieku od wzorców, które warto uważniej obserwować."
+          },
+          {
+            title: "Kolejne kroki dla rodziców",
+            text: "Otrzymujesz praktyczne wskazówki do wykorzystania w domu, przedszkolu lub szkole."
+          },
+          {
+            title: "Raport PDF emailem",
+            text: "Spersonalizowany raport powstaje po płatności i zostaje wysłany emailem."
+          }
+        ],
+        ctaTitle: "Szczegółowy raport ma pomóc jaśniej zobaczyć następny krok.",
+        ctaText: "To uporządkowany screening, nie diagnoza. Najważniejsze są jasne wyjaśnienie i praktyczne wskazówki."
+      },
+      pt: {
+        eyebrow: "No relatório completo",
+        title: "Você recebe mais do que pontuações: recebe um padrão interpretável",
+        lead:
+          "O NeuroMap Kids compara as respostas em vários domínios do desenvolvimento e emocionais. Após o pagamento, o relatório explica como os sinais atuais podem se relacionar ao comportamento diário, à aprendizagem e à carga emocional.",
+        items: [
+          {
+            title: "Interpretação baseada em padrões",
+            text: "O relatório considera sinais principais e secundários juntos, em vez de depender de uma única pontuação."
+          },
+          {
+            title: "Perspectiva atenta à idade",
+            text: "Ajuda a separar variações típicas da idade de padrões que merecem observação mais cuidadosa."
+          },
+          {
+            title: "Próximos passos para pais",
+            text: "Você recebe orientações práticas para casa, pré-escola ou escola."
+          },
+          {
+            title: "Relatório PDF por email",
+            text: "O relatório personalizado é gerado após o pagamento e enviado por email."
+          }
+        ],
+        ctaTitle: "O relatório detalhado foi pensado para tornar o próximo passo mais claro.",
+        ctaText: "É uma triagem estruturada, não um diagnóstico. O foco é explicação clara e orientação prática."
+      },
+      fr: {
+        eyebrow: "Dans le rapport complet",
+        title: "Vous recevez plus que des scores : un schéma interprétable",
+        lead:
+          "NeuroMap Kids compare les réponses dans plusieurs domaines développementaux et émotionnels. Après le paiement, le rapport explique comment les signaux actuels peuvent être liés au comportement quotidien, aux apprentissages et à la charge émotionnelle.",
+        items: [
+          {
+            title: "Interprétation fondée sur les schémas",
+            text: "Le rapport considère les signaux principaux et secondaires ensemble, sans s'appuyer sur un seul score."
+          },
+          {
+            title: "Perspective adaptée à l'âge",
+            text: "Il aide à distinguer les variations liées à l'âge des schémas qui méritent une attention plus consciente."
+          },
+          {
+            title: "Prochaines étapes pour les parents",
+            text: "Vous recevez des pistes pratiques utilisables à la maison, en maternelle ou à l'école."
+          },
+          {
+            title: "Rapport PDF par email",
+            text: "Le rapport personnalisé est généré après le paiement et envoyé par email."
+          }
+        ],
+        ctaTitle: "Le rapport détaillé vise à rendre la prochaine étape plus claire.",
+        ctaText: "Il s'agit d'un dépistage structuré, pas d'un diagnostic. L'objectif est une explication claire et des repères pratiques."
+      }
+    };
+
+    return copies[state.lang] || copies.en;
+  }
+
+  function getSummaryWarningText() {
+    const warnings = {
+      hu:
+        "Ez nem diagnózis, hanem strukturált előszűrési összegzés. A részletes, szülőbarát riport és PDF a fizetés után készül el.",
+      en:
+        "This is not a diagnosis. It is a structured screening summary. The detailed parent-friendly report and PDF are generated after payment.",
+      de:
+        "Dies ist keine Diagnose, sondern eine strukturierte Screening-Zusammenfassung. Der detaillierte elternfreundliche Bericht und das PDF werden nach der Zahlung erstellt.",
+      it:
+        "Questa non è una diagnosi, ma una sintesi di screening strutturata. Il report dettagliato e il PDF per i genitori vengono generati dopo il pagamento.",
+      es:
+        "Esto no es un diagnóstico, sino un resumen de cribado estructurado. El informe detallado y el PDF para familias se generan después del pago.",
+      zh:
+        "这不是诊断，而是结构化筛查总结。详细的家长友好报告和 PDF 会在付款后生成。",
+      ja:
+        "これは診断ではなく、構造化されたスクリーニング要約です。保護者向けの詳細レポートとPDFは支払い後に作成されます。",
+      ar:
+        "هذا ليس تشخيصًا، بل ملخص فحص منظم. يتم إنشاء التقرير التفصيلي المناسب للوالدين وملف PDF بعد الدفع.",
+      pl:
+        "To nie jest diagnoza, lecz uporządkowane podsumowanie przesiewowe. Szczegółowy raport przyjazny rodzicom i PDF są generowane po płatności.",
+      pt:
+        "Isto não é um diagnóstico, mas um resumo de triagem estruturado. O relatório detalhado para pais e o PDF são gerados após o pagamento.",
+      fr:
+        "Ce n'est pas un diagnostic, mais un résumé de dépistage structuré. Le rapport détaillé adapté aux parents et le PDF sont générés après le paiement."
+    };
+
+    return warnings[state.lang] || warnings.en;
+  }
+
+  function buildSummaryConversionHtml() {
+    const copy = getSummaryConversionCopy();
+
+    return `
+      <div class="nm-report-teaser-card">
+        <span class="nm-report-teaser-eyebrow">${escapeHtml(copy.eyebrow)}</span>
+        <h4>${escapeHtml(copy.title)}</h4>
+        <p class="nm-report-teaser-lead">${escapeHtml(copy.lead)}</p>
+        <div class="nm-report-teaser-grid">
+          ${copy.items
+            .map(
+              (item) => `
+                <div class="nm-report-teaser-item">
+                  <strong>${escapeHtml(item.title)}</strong>
+                  <span>${escapeHtml(item.text)}</span>
+                </div>
+              `
+            )
+            .join("")}
+        </div>
+        <div class="nm-summary-cta-strip">
+          <div>
+            <strong>${escapeHtml(copy.ctaTitle)}</strong>
+            <span>${escapeHtml(copy.ctaText)}</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function getPrePaymentTrustCopy() {
+    const copies = {
+      hu: {
+        title: "Miért érdemes most elkészíteni a teljes riportot?",
+        items: [
+          {
+            title: "A válaszaidból már látszik egy minta",
+            text: "A teljes riport ezt bontja ki érthető, szülőként is használható magyarázattá."
+          },
+          {
+            title: "Nem csak címkét kapsz",
+            text: "A rendszer fő és másodlagos jelzéseket, korosztályt és válaszmintázatokat együtt néz."
+          },
+          {
+            title: "Kis lépésekre fordítva",
+            text: "A cél az, hogy tudd, mit figyelj meg otthon, óvodában vagy iskolai helyzetekben."
+          }
+        ],
+        note: "A fizetés egyszeri, nincs előfizetés. A PDF riport emailben érkezik."
+      },
+      en: {
+        title: "Why generate the full report now?",
+        items: [
+          {
+            title: "A pattern is already visible",
+            text: "The full report turns it into a clear, parent-friendly explanation."
+          },
+          {
+            title: "More than a label",
+            text: "It considers primary and secondary signals, age context, and response patterns together."
+          },
+          {
+            title: "Translated into next steps",
+            text: "The goal is to help you know what to observe at home, preschool, or school."
+          }
+        ],
+        note: "One-time payment, no subscription. The PDF report arrives by email."
+      },
+      de: {
+        title: "Warum den vollstandigen Bericht jetzt erstellen?",
+        items: [
+          { title: "Ein Muster ist sichtbar", text: "Der Bericht macht daraus eine klare Erklarung fur Eltern." },
+          { title: "Mehr als ein Etikett", text: "Er betrachtet Haupt- und Nebensignale zusammen mit dem Alterskontext." },
+          { title: "Konkretere nachste Schritte", text: "Du siehst, worauf du im Alltag bewusster achten kannst." }
+        ],
+        note: "Einmalige Zahlung, kein Abo. Der PDF-Bericht kommt per E-Mail."
+      },
+      it: {
+        title: "Perche generare ora il report completo?",
+        items: [
+          { title: "Un pattern e gia visibile", text: "Il report lo trasforma in una spiegazione chiara per genitori." },
+          { title: "Piu di un'etichetta", text: "Considera segnali principali, secondari, eta e risposte insieme." },
+          { title: "Passi pratici", text: "Aiuta a capire cosa osservare a casa o a scuola." }
+        ],
+        note: "Pagamento unico, nessun abbonamento. Il PDF arriva via email."
+      },
+      es: {
+        title: "Por que generar ahora el informe completo?",
+        items: [
+          { title: "Ya se ve un patron", text: "El informe lo convierte en una explicacion clara para familias." },
+          { title: "Mas que una etiqueta", text: "Considera senales principales, secundarias, edad y respuestas juntas." },
+          { title: "Pasos concretos", text: "Ayuda a saber que observar en casa o en la escuela." }
+        ],
+        note: "Pago unico, sin suscripcion. El PDF llega por email."
+      },
+      pl: {
+        title: "Dlaczego warto wygenerowac pelny raport teraz?",
+        items: [
+          { title: "Wzorzec jest juz widoczny", text: "Raport zamienia go w jasne wyjasnienie dla rodzicow." },
+          { title: "Wiecej niz etykieta", text: "Laczy sygnaly glowne, poboczne, wiek i odpowiedzi." },
+          { title: "Praktyczne kolejne kroki", text: "Pomaga wiedziec, co obserwowac w domu lub szkole." }
+        ],
+        note: "Platnosc jednorazowa, bez abonamentu. PDF przychodzi emailem."
+      },
+      pt: {
+        title: "Por que gerar o relatorio completo agora?",
+        items: [
+          { title: "Um padrao ja aparece", text: "O relatorio transforma isso em uma explicacao clara para pais." },
+          { title: "Mais que um rotulo", text: "Considera sinais principais, secundarios, idade e respostas juntos." },
+          { title: "Proximos passos praticos", text: "Ajuda a saber o que observar em casa ou na escola." }
+        ],
+        note: "Pagamento unico, sem assinatura. O PDF chega por email."
+      },
+      fr: {
+        title: "Pourquoi generer le rapport complet maintenant ?",
+        items: [
+          { title: "Un schema est deja visible", text: "Le rapport le transforme en explication claire pour les parents." },
+          { title: "Plus qu'une etiquette", text: "Il relie signaux principaux, secondaires, age et reponses." },
+          { title: "Des prochaines etapes", text: "Il aide a savoir quoi observer a la maison ou a l'ecole." }
+        ],
+        note: "Paiement unique, sans abonnement. Le PDF arrive par email."
+      }
+    };
+
+    return copies[state.lang] || copies.en;
+  }
+
+  function buildPrePaymentTrustHtml() {
+    const copy = getPrePaymentTrustCopy();
+
+    return `
+      <div class="nm-prepayment-trust-card">
+        <h4>${escapeHtml(copy.title)}</h4>
+        <div class="nm-trust-grid">
+          ${copy.items
+            .map(
+              (item) => `
+                <div class="nm-trust-item">
+                  <strong>${escapeHtml(item.title)}</strong>
+                  <span>${escapeHtml(item.text)}</span>
+                </div>
+              `
+            )
+            .join("")}
+        </div>
+        <span class="nm-prepayment-trust-note">${escapeHtml(copy.note)}</span>
       </div>
     `;
   }
@@ -3280,9 +4297,11 @@
           </div>
 
           <div class="nm-summary-text">
-            ${summaryText}
+            ${escapeHtml(summaryText)}
           </div>
         </div>
+
+        ${buildSummaryConversionHtml()}
 
         ${
           topSubdomains.length
@@ -3312,12 +4331,10 @@
 
         ${buildCheckoutReviewHtml(t)}
 
+        ${buildPrePaymentTrustHtml()}
+
         <div class="nm-summary-warning">
-          ${
-            state.lang === "hu"
-              ? "Ez nem diagn\u00f3zis, hanem struktur\u00e1lt el\u0151sz\u0171r\u00e9si \u00f6sszegz\u00e9s. A r\u00e9szletes, sz\u00fcl\u0151bar\u00e1t riport \u00e9s PDF a fizet\u00e9s ut\u00e1n k\u00e9sz\u00fcl el."
-              : "This is not a diagnosis. It is a structured screening summary. The detailed parent-friendly report and PDF are generated after payment."
-          }
+          ${escapeHtml(getSummaryWarningText())}
         </div>
       </div>
     `;

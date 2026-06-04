@@ -33,7 +33,7 @@ const PAGE_LAYOUT = {
   blockGap: 18
 };
 
-const PDF_REPORT_VERSION = "pdf_report_v4_customer_experience";
+const PDF_REPORT_VERSION = "pdf_report_v5_customer_experience";
 const BODY_TEXT_COLOR = "#374151";
 const BULLET = "\u2022";
 
@@ -518,6 +518,7 @@ function addFooter(doc, labels, lang, pageNumber = null) {
 function addCoverPage(doc, { name, payload, labels, lang }) {
   const safeName = clean(name) || labels.parentFallback;
   const summary = extractSummary(payload || {});
+  const coverPromise = getCoverPromiseCopy(lang);
   const x = 56;
   const w = doc.page.width - 112;
 
@@ -632,6 +633,72 @@ function addCoverPage(doc, { name, payload, labels, lang }) {
       lineGap: 3,
       align: getTextAlign(lang)
     });
+
+  const promiseY = 666;
+  const promiseH = 82;
+  doc.roundedRect(x, promiseY, w, promiseH, 16).fill("#F8FBFE");
+  doc.roundedRect(x, promiseY, w, promiseH, 16).strokeColor(BRAND.softBorder).lineWidth(1).stroke();
+  doc.rect(x, promiseY, 7, promiseH).fill(BRAND.blue);
+
+  doc.fillColor(BRAND.dark)
+    .font(getFont(lang, true))
+    .fontSize(11.5)
+    .text(coverPromise.title, x + 22, promiseY + 14, {
+      width: w - 44,
+      align: getTextAlign(lang)
+    });
+
+  const pillY = promiseY + 43;
+  const pillGap = 8;
+  const pillW = (w - 44 - pillGap * 2) / 3;
+  coverPromise.items.slice(0, 3).forEach((item, index) => {
+    const pillX = x + 22 + index * (pillW + pillGap);
+    doc.roundedRect(pillX, pillY, pillW, 24, 12).fill("#FFFFFF");
+    doc.roundedRect(pillX, pillY, pillW, 24, 12).strokeColor("#DCECF6").lineWidth(1).stroke();
+    doc.fillColor(BRAND.dark)
+      .font(getFont(lang, true))
+      .fontSize(7.6)
+      .text(item, pillX + 8, pillY + 7, {
+        width: pillW - 16,
+        align: "center",
+        ellipsis: true
+      });
+  });
+}
+
+function getCoverPromiseCopy(lang = "en") {
+  if (lang === "hu") {
+    return {
+      title: "Gyors olvasasi utvonal",
+      items: ["fo mintazat", "korosztalyi javaslat", "kovetkezo lepes"]
+    };
+  }
+
+  if (lang === "de") {
+    return {
+      title: "Schneller Leseweg",
+      items: ["main pattern", "age guidance", "next step"]
+    };
+  }
+
+  if (lang === "es") {
+    return {
+      title: "Ruta rapida de lectura",
+      items: ["main pattern", "age guidance", "next step"]
+    };
+  }
+
+  if (lang === "fr") {
+    return {
+      title: "Parcours de lecture rapide",
+      items: ["main pattern", "age guidance", "next step"]
+    };
+  }
+
+  return {
+    title: "Quick reading path",
+    items: ["main pattern", "age guidance", "next step"]
+  };
 }
 
 function getSafeContentBottom(doc) {

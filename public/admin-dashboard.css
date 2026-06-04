@@ -781,6 +781,96 @@ input:focus {
   font-size: 12px;
 }
 
+.customer-metrics-panel {
+  margin-bottom: 18px;
+}
+
+.metrics-kpi-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  padding: 18px;
+}
+
+.metric-kpi.ok strong,
+.metric-kpi.healthy strong,
+.metric-kpi.clean strong {
+  color: var(--green);
+}
+
+.metric-kpi.watch strong,
+.metric-kpi.info strong,
+.metric-kpi.waiting strong {
+  color: var(--blue);
+}
+
+.metric-kpi.warning strong,
+.metric-kpi.warn strong {
+  color: var(--orange);
+}
+
+.metric-kpi.critical strong,
+.metric-kpi.fail strong {
+  color: var(--red);
+}
+
+.dashboard-metrics-grid {
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 1.2fr 0.8fr 1fr;
+  padding: 18px;
+}
+
+.metrics-trend-list {
+  display: grid;
+  gap: 10px;
+}
+
+.metric-trend-row {
+  display: grid;
+  gap: 7px;
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.metric-trend-row span {
+  color: #26384d;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.metric-trend-row strong {
+  color: var(--blue);
+  font-size: 12px;
+}
+
+.metric-trend-bars {
+  background: #edf2f7;
+  border-radius: 999px;
+  display: flex;
+  gap: 2px;
+  grid-column: 1 / -1;
+  height: 8px;
+  overflow: hidden;
+}
+
+.metric-trend-bars span {
+  display: block;
+  min-width: 4px;
+}
+
+.metric-trend-bars .checkout {
+  background: #b8dff2;
+}
+
+.metric-trend-bars .paid {
+  background: linear-gradient(90deg, var(--blue), var(--orange));
+}
+
+.metrics-recommendations-card .engine-list-row strong {
+  text-transform: none;
+}
+
 .health-recommendations {
   border-top: 1px solid var(--line);
   padding: 18px;
@@ -1811,6 +1901,8 @@ pre {
   .launch-summary,
   .launch-checks,
   .health-grid,
+  .metrics-kpi-grid,
+  .dashboard-metrics-grid,
   .engine-summary-grid,
   .engine-split,
   .engine-decision-audit-grid,

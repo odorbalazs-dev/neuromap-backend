@@ -1,4 +1,4 @@
-const ADMIN_DASHBOARD_ASSET_VERSION = "20260603-token-storage-v3";
+const ADMIN_DASHBOARD_ASSET_VERSION = "20260604-dashboard-metrics-v1";
 
 export function getAdminDashboard(_req, res) {
   res.setHeader(
@@ -53,6 +53,7 @@ export function getAdminDashboard(_req, res) {
 
       <nav class="quick-nav" aria-label="Dashboard gyors navigáció">
         <button type="button" data-scroll-target="controlPulsePanel">Pulzus</button>
+        <button type="button" data-scroll-target="customerMetricsPanel">Metrikak</button>
         <button type="button" data-scroll-target="operatorFocusPanel">Teendők</button>
         <button type="button" data-scroll-target="pipelinePanel">Folyamat</button>
         <button type="button" data-scroll-target="postPaymentPanel">Post-payment</button>
@@ -130,6 +131,62 @@ export function getAdminDashboard(_req, res) {
             <span>Riasztas</span>
             <strong>-</strong>
             <p>Utolso proaktiv jelzes</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="customerMetricsPanel" class="panel customer-metrics-panel" aria-label="Vasarloi ut metrikak">
+        <div class="panel-head">
+          <div>
+            <h2>Vasarloi ut metrikak</h2>
+            <p>Konverzio, riportkeszites, email kezbesites, queue es webhook allapot egy osszefoglalo panelen.</p>
+          </div>
+          <span id="dashboardMetricsUpdatedAt" class="snapshot-time">Meg nincs metrika</span>
+        </div>
+        <div class="metrics-kpi-grid">
+          <article class="health-card metric-kpi">
+            <span>Allapot</span>
+            <strong id="dashboardMetricsLevel">-</strong>
+            <p id="dashboardMetricsLevelMeta">Admin tokenre var.</p>
+          </article>
+          <article class="health-card metric-kpi">
+            <span>24h fizetett</span>
+            <strong id="dashboardMetricsPaid24h">0</strong>
+            <p id="dashboardMetricsRevenue24h">Becsult bevetel: $0</p>
+          </article>
+          <article class="health-card metric-kpi">
+            <span>7d checkout -> paid</span>
+            <strong id="dashboardMetricsConversion7d">-</strong>
+            <p id="dashboardMetricsCheckout7d">Checkout inditas: 0</p>
+          </article>
+          <article class="health-card metric-kpi">
+            <span>Email teljesules</span>
+            <strong id="dashboardMetricsEmailRate7d">-</strong>
+            <p id="dashboardMetricsEmailMeta7d">Kesz riport -> sent email</p>
+          </article>
+          <article class="health-card metric-kpi">
+            <span>Queue kockazat</span>
+            <strong id="dashboardMetricsQueueRisk">0</strong>
+            <p id="dashboardMetricsQueueMeta">Beragadt / regi job</p>
+          </article>
+          <article class="health-card metric-kpi">
+            <span>Webhook 24h</span>
+            <strong id="dashboardMetricsWebhookRisk">0</strong>
+            <p id="dashboardMetricsWebhookMeta">Failed webhook</p>
+          </article>
+        </div>
+        <div class="dashboard-metrics-grid">
+          <article class="engine-card">
+            <h3>14 napos trend</h3>
+            <div id="dashboardMetricsTrendRows" class="metrics-trend-list"></div>
+          </article>
+          <article class="engine-card">
+            <h3>Engine fokuszok</h3>
+            <div id="dashboardMetricsDomainRows" class="engine-bars"></div>
+          </article>
+          <article class="engine-card metrics-recommendations-card">
+            <h3>Metrika javaslatok</h3>
+            <div id="dashboardMetricsRecommendationRows" class="engine-list"></div>
           </article>
         </div>
       </section>

@@ -20,11 +20,11 @@ function main() {
     "Webflow Engine loader should load the public engine file."
   );
   assert(
-    loaderHtml.includes("20260604-customer-experience-v4"),
+    loaderHtml.includes("20260604-cx-top10-v1"),
     "Webflow Engine loader should include the landing polish and analytics v2 cache-busting version."
   );
   assert(script.includes("ENGINE_VERSION"), "Engine should expose an engine version.");
-  assert(script.includes("20260604-customer-experience-v4"), "Engine should expose the current customer experience version.");
+  assert(script.includes("20260604-cx-top10-v1"), "Engine should expose the current customer experience top 10 version.");
   assert(script.includes("ANALYTICS_SCHEMA_VERSION"), "Engine should define an analytics schema version.");
   assert(script.includes("analytics-event-schema-v2"), "Engine should use analytics event schema v2.");
   assert(script.includes("trackSchemaEvent"), "Engine should send normalized analytics events.");
@@ -58,6 +58,12 @@ function main() {
   assert(script.includes("buildSpecificStepIntro"), "Engine should include clearer specific/extra step context.");
   assert(script.includes("getSubdomainLabel"), "Engine should show human subdomain labels in the summary.");
   assert(script.includes(".nm-summary-pills"), "Engine design should style summary pills.");
+  assert(script.includes("buildSummaryConversionHtml"), "Engine should render the summary conversion trust block.");
+  assert(script.includes("getSummaryWarningText"), "Engine should localize the summary warning text.");
+  assert(script.includes("Im vollst"), "Engine should include German summary conversion copy.");
+  assert(script.includes("Dentro del informe completo"), "Engine should include Spanish summary conversion copy.");
+  assert(script.includes("Dans le rapport complet"), "Engine should include French summary conversion copy.");
+  assert(script.includes(".nm-report-teaser-card"), "Engine design should style the report teaser card.");
   assert(script.includes("#childAgeField"), "Engine design should style the child age field.");
   assert(script.includes("@media (max-width: 480px)"), "Engine design should include a compact mobile breakpoint.");
   assert(script.includes("prefers-reduced-motion"), "Engine design should respect reduced motion preferences.");

@@ -25,6 +25,7 @@ import { buildEmailDeliverabilityMonitor } from "../../services/email-deliverabi
 import { buildPostPaymentMonitor } from "../../services/post-payment-monitoring.service.js";
 import { runPostPaymentRecoveryV2 } from "../../services/post-payment-recovery.service.js";
 import { buildWebflowEmbedManager } from "../../services/webflow-embed-manager.service.js";
+import { buildDashboardMetrics } from "../../services/dashboard-metrics.service.js";
 import { env } from "../../config/env.js";
 
 function shortText(value = "", max = 600) {
@@ -1415,6 +1416,19 @@ export async function getProductionHealth(_req, res) {
     return res.status(500).json({
       ok: false,
       error: error.message || "Failed to get production health"
+    });
+  }
+}
+
+export async function getDashboardMetrics(_req, res) {
+  try {
+    const metrics = await buildDashboardMetrics();
+    res.json(metrics);
+  } catch (error) {
+    console.error("[admin] dashboard metrics failed:", error);
+    res.status(500).json({
+      ok: false,
+      error: error.message || "Dashboard metrics failed"
     });
   }
 }

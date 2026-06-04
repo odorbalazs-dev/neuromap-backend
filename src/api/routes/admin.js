@@ -7,6 +7,7 @@ import {
   getAdminStatus,
   getLaunchReadiness,
   getProductionHealth,
+  getDashboardMetrics,
   getEmailDeliverability,
   getEmailDeliveryCenter,
   getPostPaymentMonitoring,
@@ -49,6 +50,7 @@ router.use(adminAuth);
 router.get("/status", getAdminStatus);
 router.get("/launch-readiness", getLaunchReadiness);
 router.get("/production-health", getProductionHealth);
+router.get("/dashboard-metrics", getDashboardMetrics);
 router.get("/email-deliverability", getEmailDeliverability);
 router.get("/email-delivery-center", getEmailDeliveryCenter);
 router.get("/post-payment-monitoring", getPostPaymentMonitoring);

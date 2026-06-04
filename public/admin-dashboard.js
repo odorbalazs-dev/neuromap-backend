@@ -32,6 +32,22 @@
     pulseEmail: document.getElementById("pulseEmail"),
     pulseEngine: document.getElementById("pulseEngine"),
     pulseAlerts: document.getElementById("pulseAlerts"),
+    dashboardMetricsUpdatedAt: document.getElementById("dashboardMetricsUpdatedAt"),
+    dashboardMetricsLevel: document.getElementById("dashboardMetricsLevel"),
+    dashboardMetricsLevelMeta: document.getElementById("dashboardMetricsLevelMeta"),
+    dashboardMetricsPaid24h: document.getElementById("dashboardMetricsPaid24h"),
+    dashboardMetricsRevenue24h: document.getElementById("dashboardMetricsRevenue24h"),
+    dashboardMetricsConversion7d: document.getElementById("dashboardMetricsConversion7d"),
+    dashboardMetricsCheckout7d: document.getElementById("dashboardMetricsCheckout7d"),
+    dashboardMetricsEmailRate7d: document.getElementById("dashboardMetricsEmailRate7d"),
+    dashboardMetricsEmailMeta7d: document.getElementById("dashboardMetricsEmailMeta7d"),
+    dashboardMetricsQueueRisk: document.getElementById("dashboardMetricsQueueRisk"),
+    dashboardMetricsQueueMeta: document.getElementById("dashboardMetricsQueueMeta"),
+    dashboardMetricsWebhookRisk: document.getElementById("dashboardMetricsWebhookRisk"),
+    dashboardMetricsWebhookMeta: document.getElementById("dashboardMetricsWebhookMeta"),
+    dashboardMetricsTrendRows: document.getElementById("dashboardMetricsTrendRows"),
+    dashboardMetricsDomainRows: document.getElementById("dashboardMetricsDomainRows"),
+    dashboardMetricsRecommendationRows: document.getElementById("dashboardMetricsRecommendationRows"),
     operatorSummary: document.getElementById("operatorSummary"),
     operatorTaskRows: document.getElementById("operatorTaskRows"),
     latestSessionCard: document.getElementById("latestSessionCard"),
@@ -2152,6 +2168,142 @@
       : "Pulzus frissitve";
   }
 
+  function metricLevelLabel(level) {
+    const labels = {
+      healthy: "Rendben",
+      watch: "Figyeles",
+      warning: "Teendo",
+      critical: "Kritikus",
+      ok: "Rendben",
+      info: "Info",
+      waiting: "Varakozik",
+      unknown: "Ismeretlen"
+    };
+
+    return labels[level] || level || "-";
+  }
+
+  function setMetricText(element, value) {
+    if (element) element.textContent = value;
+  }
+
+  function renderDashboardTrendRows(items = []) {
+    if (!els.dashboardMetricsTrendRows) return;
+
+    els.dashboardMetricsTrendRows.replaceChildren();
+
+    if (!items.length) {
+      const empty = document.createElement("div");
+      empty.className = "engine-empty";
+      empty.textContent = "Nincs megjelenitheto trend adat.";
+      els.dashboardMetricsTrendRows.appendChild(empty);
+      return;
+    }
+
+    const max = Math.max(...items.map((item) => countValue(item.checkoutStarted) + countValue(item.paid)), 1);
+
+    items.slice(-14).forEach((item) => {
+      const row = document.createElement("div");
+      row.className = "metric-trend-row";
+
+      const label = document.createElement("span");
+      label.textContent = item.day || "-";
+
+      const value = document.createElement("strong");
+      value.textContent = `${countValue(item.paid)} paid / ${countValue(item.checkoutStarted)} checkout`;
+
+      const bars = document.createElement("div");
+      bars.className = "metric-trend-bars";
+
+      const checkoutBar = document.createElement("span");
+      checkoutBar.className = "checkout";
+      checkoutBar.style.width = `${Math.max(4, (countValue(item.checkoutStarted) / max) * 100)}%`;
+
+      const paidBar = document.createElement("span");
+      paidBar.className = "paid";
+      paidBar.style.width = `${Math.max(4, (countValue(item.paid) / max) * 100)}%`;
+
+      bars.append(checkoutBar, paidBar);
+      row.append(label, value, bars);
+      els.dashboardMetricsTrendRows.appendChild(row);
+    });
+  }
+
+  function renderDashboardMetrics(data = null) {
+    if (!els.dashboardMetricsUpdatedAt) return;
+
+    if (!data?.ok) {
+      setMetricText(els.dashboardMetricsUpdatedAt, "Admin tokenre var");
+      setMetricText(els.dashboardMetricsLevel, "-");
+      setMetricText(els.dashboardMetricsLevelMeta, "Add meg az admin tokent, majd frissits.");
+      setMetricText(els.dashboardMetricsPaid24h, "0");
+      setMetricText(els.dashboardMetricsRevenue24h, "Becsult bevetel: $0");
+      setMetricText(els.dashboardMetricsConversion7d, "-");
+      setMetricText(els.dashboardMetricsCheckout7d, "Checkout inditas: 0");
+      setMetricText(els.dashboardMetricsEmailRate7d, "-");
+      setMetricText(els.dashboardMetricsEmailMeta7d, "Kesz riport -> sent email");
+      setMetricText(els.dashboardMetricsQueueRisk, "0");
+      setMetricText(els.dashboardMetricsQueueMeta, "Beragadt / regi job");
+      setMetricText(els.dashboardMetricsWebhookRisk, "0");
+      setMetricText(els.dashboardMetricsWebhookMeta, "Failed webhook");
+      renderDashboardTrendRows([]);
+      renderEngineBars(els.dashboardMetricsDomainRows, []);
+      renderEngineList(els.dashboardMetricsRecommendationRows, [], () => ({ title: "-", meta: "-" }));
+      return;
+    }
+
+    const summary = data.summary || {};
+    const last24h = data.windows?.last24h || {};
+    const last7d = data.windows?.last7d || {};
+    const queue = data.operations?.queue || {};
+    const webhook = data.operations?.webhook || {};
+    const engine = data.engine || {};
+    const level = summary.level || "unknown";
+
+    setMetricText(
+      els.dashboardMetricsUpdatedAt,
+      summary.generatedAt ? `Metrika: ${formatDate(summary.generatedAt)}` : "Metrika frissitve"
+    );
+    setMetricText(els.dashboardMetricsLevel, metricLevelLabel(level));
+    if (els.dashboardMetricsLevel) {
+      els.dashboardMetricsLevel.parentElement.className = `health-card metric-kpi ${statusClass(level)}`;
+    }
+    setMetricText(
+      els.dashboardMetricsLevelMeta,
+      `${countValue(last7d.sessions)} session / ${countValue(last7d.paid)} fizetes az utolso 7 napban.`
+    );
+    setMetricText(els.dashboardMetricsPaid24h, String(countValue(last24h.paid)));
+    setMetricText(els.dashboardMetricsRevenue24h, `Becsult bevetel: $${countValue(last24h.estimatedRevenueUsd)}`);
+    setMetricText(els.dashboardMetricsConversion7d, formatPercent(last7d.checkoutToPaidRate));
+    setMetricText(els.dashboardMetricsCheckout7d, `Checkout inditas: ${countValue(last7d.checkoutStarted)}`);
+    setMetricText(els.dashboardMetricsEmailRate7d, formatPercent(last7d.analysisDoneToEmailSentRate));
+    setMetricText(
+      els.dashboardMetricsEmailMeta7d,
+      `${countValue(last7d.reportEmailSent)} elkuldve, ${countValue(last7d.reportEmailUnsent)} varakozik, ${countValue(last7d.reportEmailFailed)} hibas.`
+    );
+    setMetricText(els.dashboardMetricsQueueRisk, String(countValue(queue.staleProcessing) + countValue(queue.oldQueued)));
+    setMetricText(
+      els.dashboardMetricsQueueMeta,
+      `${countValue(queue.queued)} queued, ${countValue(queue.processing)} processing, ${countValue(queue.failed)} failed.`
+    );
+    setMetricText(els.dashboardMetricsWebhookRisk, String(countValue(webhook.failed24h)));
+    setMetricText(
+      els.dashboardMetricsWebhookMeta,
+      `${countValue(webhook.events24h)} event 24h, ${countValue(webhook.checkoutCompleted24h)} checkout completed.`
+    );
+
+    renderDashboardTrendRows(data.trend || []);
+    renderEngineBars(els.dashboardMetricsDomainRows, engine.domainDistribution || []);
+    renderEngineList(
+      els.dashboardMetricsRecommendationRows,
+      data.recommendations || [],
+      (item) => ({
+        title: `${metricLevelLabel(item.level)}: ${item.title || "-"}`,
+        meta: item.detail || "-"
+      })
+    );
+  }
+
   function renderEngineBars(target, items = []) {
     if (!target) return;
 
@@ -3091,9 +3243,16 @@
     setStatus("Frissítés...");
 
     try {
+      const optionalApi = (path) =>
+        api(path).catch((error) => ({
+          ok: false,
+          error: error.message
+        }));
+
       const [
         status,
         health,
+        dashboardMetrics,
         queue,
         recent,
         failed,
@@ -3110,6 +3269,7 @@
       ] = await Promise.all([
         api("/admin/status"),
         api("/admin/production-health"),
+        optionalApi("/admin/dashboard-metrics"),
         api("/admin/queue-status"),
         api("/admin/recent-sessions?limit=30"),
         api("/admin/failed-analyses?limit=30"),
@@ -3127,6 +3287,7 @@
 
       els.apiStatus.textContent = status.ok ? "Elérhető" : "Hiba";
       renderHealth(health);
+      renderDashboardMetrics(dashboardMetrics);
       renderCounts(queue.counts || {});
       renderSessionRows(els.queueRows, queue.items || [], "queue");
       renderSessionRows(els.recentRows, recent.items || [], "recent");

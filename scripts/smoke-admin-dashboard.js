@@ -332,6 +332,18 @@ assert(
   res.body.includes("pulseCheckout"),
   "Dashboard HTML should include the checkout pulse card."
 );
+assert(
+  res.body.includes("customerMetricsPanel"),
+  "Dashboard HTML should include the customer metrics panel."
+);
+assert(
+  res.body.includes("dashboardMetricsTrendRows"),
+  "Dashboard HTML should include dashboard metrics trend rows."
+);
+assert(
+  res.body.includes('data-scroll-target="customerMetricsPanel"'),
+  "Dashboard HTML should include dashboard metrics quick navigation."
+);
 
 [
   "public/admin-dashboard.css",
@@ -371,6 +383,18 @@ assert(
 assert(
   dashboardJs.includes("/admin/engine-decision-audit"),
   "Dashboard JS should call the live engine decision audit endpoint."
+);
+assert(
+  dashboardJs.includes("/admin/dashboard-metrics"),
+  "Dashboard JS should call the dashboard metrics endpoint."
+);
+assert(
+  dashboardJs.includes("renderDashboardMetrics"),
+  "Dashboard JS should render dashboard metrics."
+);
+assert(
+  dashboardJs.includes("renderDashboardTrendRows"),
+  "Dashboard JS should render dashboard metrics trend rows."
 );
 assert(
   dashboardJs.includes("/admin/bank-quality-audit"),
@@ -695,6 +719,18 @@ assert(
 assert(
   dashboardCss.includes(".pulse-card"),
   "Dashboard CSS should style the control pulse cards."
+);
+assert(
+  dashboardCss.includes(".customer-metrics-panel"),
+  "Dashboard CSS should style the customer metrics panel."
+);
+assert(
+  dashboardCss.includes(".metrics-kpi-grid"),
+  "Dashboard CSS should style dashboard metrics KPIs."
+);
+assert(
+  dashboardCss.includes(".metric-trend-row"),
+  "Dashboard CSS should style dashboard metric trend rows."
 );
 assert(
   dashboardCss.includes(".bank-quality-card"),

@@ -67,6 +67,7 @@ function getCustomerExperienceCopy(lang) {
         "Use the recommendations as small experiments, not as a strict program.",
         "Revisit the report after a few days and mark what feels most useful."
       ],
+      personalNote: "The report is most useful when you connect it to real moments at home, nursery, school, or daily routines.",
       reassurance: "You do not need to solve everything at once. One small, consistent change is often the best first step.",
       support: "Need help or did not receive the attachment? Reply to this email or contact info@neuromapkids.com."
     },
@@ -85,10 +86,128 @@ function getCustomerExperienceCopy(lang) {
         "A javaslatokat kis kiprobalhato lepesekkent kezeld, ne merev programkent.",
         "Par nap mulva nezd at ujra, es jelold meg, mi tunt a leghasznosabbnak."
       ],
+      personalNote: "A riport akkor adja a legtobbet, ha osszekotod a valos otthoni, ovodai, iskolai vagy mindennapi helyzetekkel.",
       reassurance: "Nem kell mindent egyszerre megoldani. Egy kicsi, kovetkezetes valtoztatas gyakran a legjobb elso lepes.",
       support: "Segitseg kell, vagy nem latszik a csatolmany? Valaszolj erre az emailre, vagy irj az info@neuromapkids.com cimre."
     }
   };
+
+  Object.assign(copy, {
+    de: {
+      title: "Dein PDF-Bericht ist angehaengt",
+      body: "Das PDF ist die klare, elternfreundliche Version des Berichts. Du kannst es speichern, ausdrucken oder bei Bedarf mit einer Fachperson teilen.",
+      nextTitle: "Empfohlene naechste Schritte",
+      nextSteps: [
+        "Lies zuerst den kurzen Ueberblick und dann die altersbezogenen Empfehlungen.",
+        "Notiere 2-3 Alltagssituationen, in denen das Muster besonders sichtbar ist.",
+        "Wenn die Signale stark oder anhaltend wirken, besprich den Bericht mit einer qualifizierten Fachperson."
+      ],
+      readingTitle: "So liest du den Bericht",
+      readingTips: [
+        "Beginne mit dem Hauptmuster und den staerksten Alltagsbeispielen.",
+        "Nutze Empfehlungen als kleine Experimente, nicht als starres Programm.",
+        "Schau nach einigen Tagen erneut hinein und markiere, was am hilfreichsten war."
+      ],
+      personalNote: "Der Bericht ist am nuetzlichsten, wenn du ihn mit echten Situationen zu Hause, in Kita, Schule oder Routinen verbindest.",
+      reassurance: "Du musst nicht alles auf einmal loesen. Ein kleiner, konsequenter Schritt ist oft der beste Anfang.",
+      support: "Brauchst du Hilfe oder fehlt der Anhang? Antworte auf diese E-Mail oder schreibe an info@neuromapkids.com."
+    },
+    it: {
+      title: "Il report PDF e allegato",
+      body: "Il PDF e la versione chiara e adatta ai genitori del report. Puoi salvarlo, stamparlo o condividerlo con un professionista.",
+      nextTitle: "Prossimi passi suggeriti",
+      nextSteps: [
+        "Leggi prima la panoramica, poi le raccomandazioni per eta.",
+        "Annota 2-3 situazioni quotidiane in cui il modello e piu evidente.",
+        "Se i segnali sono forti o persistenti, parlane con un professionista qualificato."
+      ],
+      readingTitle: "Come leggere il report",
+      readingTips: [
+        "Inizia dal modello principale e dagli esempi quotidiani piu forti.",
+        "Usa i suggerimenti come piccoli esperimenti, non come programma rigido.",
+        "Rileggi il report dopo alcuni giorni e segna cio che sembra piu utile."
+      ],
+      personalNote: "Il report funziona meglio quando lo colleghi a momenti reali a casa, a scuola o nelle routine quotidiane.",
+      reassurance: "Non devi risolvere tutto subito. Un piccolo cambiamento costante e spesso il miglior primo passo.",
+      support: "Hai bisogno di aiuto o non vedi l'allegato? Rispondi a questa email o scrivi a info@neuromapkids.com."
+    },
+    es: {
+      title: "Tu informe PDF esta adjunto",
+      body: "El PDF es la version clara y facil de usar para familias. Puedes guardarlo, imprimirlo o compartirlo con un profesional.",
+      nextTitle: "Siguientes pasos sugeridos",
+      nextSteps: [
+        "Lee primero el resumen rapido y luego las recomendaciones por edad.",
+        "Anota 2-3 situaciones diarias donde el patron aparece con mas claridad.",
+        "Si las senales parecen fuertes o persistentes, comenta el informe con un profesional cualificado."
+      ],
+      readingTitle: "Como leer el informe",
+      readingTips: [
+        "Empieza por el patron principal y los ejemplos cotidianos mas claros.",
+        "Usa las recomendaciones como pequenos experimentos, no como un programa rigido.",
+        "Vuelve al informe despues de unos dias y marca lo que resulte mas util."
+      ],
+      personalNote: "El informe aporta mas cuando lo conectas con momentos reales en casa, escuela o rutinas diarias.",
+      reassurance: "No necesitas resolverlo todo de una vez. Un pequeno cambio constante suele ser el mejor primer paso.",
+      support: "Necesitas ayuda o no ves el adjunto? Responde a este email o escribe a info@neuromapkids.com."
+    },
+    pl: {
+      title: "Raport PDF jest zalaczony",
+      body: "PDF to przejrzysta, przyjazna dla rodzica wersja raportu. Mozesz go zapisac, wydrukowac lub pokazac specjalisce.",
+      nextTitle: "Sugerowane kolejne kroki",
+      nextSteps: [
+        "Najpierw przeczytaj szybki przeglad, potem zalecenia dla wieku dziecka.",
+        "Zapisz 2-3 codzienne sytuacje, w ktorych wzorzec jest najbardziej widoczny.",
+        "Jesli sygnaly sa silne lub stale, omow raport z wykwalifikowanym specjalista."
+      ],
+      readingTitle: "Jak czytac raport",
+      readingTips: [
+        "Zacznij od glownego wzorca i najsilniejszych przykladow z codziennosci.",
+        "Traktuj wskazowki jak male eksperymenty, nie sztywny program.",
+        "Wroc do raportu po kilku dniach i zaznacz, co bylo najbardziej pomocne."
+      ],
+      personalNote: "Raport jest najbardziej uzyteczny, gdy laczysz go z realnymi sytuacjami w domu, szkole lub codziennych rutynach.",
+      reassurance: "Nie trzeba rozwiazac wszystkiego od razu. Jeden maly, konsekwentny krok czesto jest najlepszym poczatkiem.",
+      support: "Potrzebujesz pomocy albo nie widzisz zalacznika? Odpowiedz na ten email lub napisz na info@neuromapkids.com."
+    },
+    pt: {
+      title: "O relatorio PDF esta anexado",
+      body: "O PDF e a versao clara e amigavel para pais do relatorio. Pode guardar, imprimir ou partilhar com um profissional.",
+      nextTitle: "Proximos passos sugeridos",
+      nextSteps: [
+        "Leia primeiro a visao rapida e depois as recomendacoes por idade.",
+        "Anote 2-3 situacoes do dia a dia em que o padrao aparece com mais clareza.",
+        "Se os sinais forem fortes ou persistentes, fale sobre o relatorio com um profissional qualificado."
+      ],
+      readingTitle: "Como ler o relatorio",
+      readingTips: [
+        "Comece pelo padrao principal e pelos exemplos diarios mais claros.",
+        "Use as recomendacoes como pequenos testes, nao como um programa rigido.",
+        "Volte ao relatorio depois de alguns dias e marque o que pareceu mais util."
+      ],
+      personalNote: "O relatorio e mais util quando ligado a momentos reais em casa, escola ou rotinas diarias.",
+      reassurance: "Nao precisa resolver tudo de uma vez. Uma pequena mudanca consistente costuma ser o melhor primeiro passo.",
+      support: "Precisa de ajuda ou nao recebeu o anexo? Responda a este email ou escreva para info@neuromapkids.com."
+    },
+    fr: {
+      title: "Votre rapport PDF est joint",
+      body: "Le PDF est la version claire et adaptee aux parents du rapport. Vous pouvez l'enregistrer, l'imprimer ou le partager avec un professionnel.",
+      nextTitle: "Prochaines etapes suggerees",
+      nextSteps: [
+        "Lisez d'abord l'aperçu rapide, puis les recommandations par age.",
+        "Notez 2-3 situations quotidiennes ou le schema apparait le plus clairement.",
+        "Si les signaux semblent forts ou persistants, discutez du rapport avec un professionnel qualifie."
+      ],
+      readingTitle: "Comment lire le rapport",
+      readingTips: [
+        "Commencez par le schema principal et les exemples quotidiens les plus forts.",
+        "Utilisez les recommandations comme de petites experiences, pas comme un programme rigide.",
+        "Relisez le rapport apres quelques jours et marquez ce qui semble le plus utile."
+      ],
+      personalNote: "Le rapport est plus utile quand vous le reliez a des moments reels a la maison, a l'ecole ou dans les routines.",
+      reassurance: "Vous n'avez pas besoin de tout resoudre en une fois. Un petit changement regulier est souvent le meilleur debut.",
+      support: "Besoin d'aide ou piece jointe manquante? Repondez a cet email ou contactez info@neuromapkids.com."
+    }
+  });
 
   return copy[safeLang] || copy.en;
 }
@@ -120,9 +239,10 @@ export function buildReportEmail({ lang, name, reportText, payload = null }) {
     ...customerExperience.nextSteps.map((item) => `- ${item}`),
     customerExperience.readingTitle,
     ...customerExperience.readingTips.map((item) => `- ${item}`),
+    customerExperience.personalNote,
     customerExperience.reassurance,
     customerExperience.support
-  ].join("\n");
+  ].filter(Boolean).join("\n");
 
   const content = {
     hu: {
@@ -355,6 +475,7 @@ export function buildReportEmail({ lang, name, reportText, payload = null }) {
                     <ul style="margin:0 0 14px 0;padding-left:20px;">${customerExperienceStepsHtml}</ul>
                     <div style="font-weight:700;margin:0 0 8px 0;color:#1f2937;">${escapeHtml(customerExperience.readingTitle)}</div>
                     <ul style="margin:0 0 14px 0;padding-left:20px;">${customerExperienceReadingHtml}</ul>
+                    ${customerExperience.personalNote ? `<p style="margin:0 0 12px 0;padding:10px 12px;border-radius:12px;background:#ffffff;color:#334155;font-size:13px;">${escapeHtml(customerExperience.personalNote)}</p>` : ""}
                     <p style="margin:0 0 12px 0;color:#0b6f9f;font-size:13px;font-weight:700;">${escapeHtml(customerExperience.reassurance)}</p>
                     <p style="margin:0;color:#506780;font-size:13px;">${escapeHtml(customerExperience.support)}</p>
                   </div>

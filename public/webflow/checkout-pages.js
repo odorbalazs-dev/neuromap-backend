@@ -5,7 +5,7 @@
 (function () {
   if (typeof window === "undefined" || typeof document === "undefined") return;
 
-  const CHECKOUT_PAGES_VERSION = "20260604-customer-experience-v4";
+  const CHECKOUT_PAGES_VERSION = "20260604-cx-top10-v1";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
   const DEFAULT_API_BASE_URL = "https://neuromap-backend-production-969d.up.railway.app";
   const SUPPORTED_LANGS = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];
@@ -45,6 +45,9 @@
     ],
     reportNoDoublePay: "You do not need to pay again while the report is processing.",
     liveStatusNote: "The status panel can be refreshed without repeating checkout.",
+    statusShortcutTitle: "Want to watch progress?",
+    statusShortcutBody: "The live status panel shows payment, analysis, PDF and email progress. It refreshes without repeating checkout.",
+    statusShortcutButton: "Jump to report status",
     delayedHelpTitle: "If the email is delayed",
     delayedHelpItems: [
       "Wait a few minutes while the analysis and PDF generation finish.",
@@ -130,6 +133,9 @@
       ],
       reportNoDoublePay: "Nem kell \u00fajra fizetned, am\u00edg a riport feldolgoz\u00e1sa folyamatban van.",
       liveStatusNote: "Az \u00e1llapotpanel a checkout ism\u00e9tl\u00e9se n\u00e9lk\u00fcl friss\u00edthet\u0151.",
+      statusShortcutTitle: "Szeretn\u00e9d k\u00f6vetni a folyamatot?",
+      statusShortcutBody: "Az \u00e9l\u0151 \u00e1llapotpanel mutatja a fizet\u00e9s, elemz\u00e9s, PDF \u00e9s email l\u00e9p\u00e9seit. Friss\u00edthet\u0151 an\u00e9lk\u00fcl, hogy \u00fajra fizetn\u00e9l.",
+      statusShortcutButton: "Ugr\u00e1s a riport \u00e1llapot\u00e1hoz",
       delayedHelpTitle: "Ha k\u00e9sik az email",
       delayedHelpItems: [
         "V\u00e1rj n\u00e9h\u00e1ny percet, am\u00edg az elemz\u00e9s \u00e9s a PDF gener\u00e1l\u00e1s befejez\u0151dik.",
@@ -531,6 +537,7 @@
       .nm-cancel-recovery,
       .nm-customer-tip,
       .nm-delivery-estimate,
+      .nm-status-shortcut,
       .nm-inbox-checklist,
       .nm-delayed-help,
       .nm-feedback-panel {
@@ -548,6 +555,7 @@
       [dir="rtl"] .nm-cancel-recovery,
       [dir="rtl"] .nm-customer-tip,
       [dir="rtl"] .nm-delivery-estimate,
+      [dir="rtl"] .nm-status-shortcut,
       [dir="rtl"] .nm-inbox-checklist,
       [dir="rtl"] .nm-delayed-help,
       [dir="rtl"] .nm-feedback-panel {
@@ -559,6 +567,7 @@
       .nm-cancel-recovery h2,
       .nm-customer-tip h2,
       .nm-delivery-estimate h2,
+      .nm-status-shortcut h2,
       .nm-inbox-checklist h2,
       .nm-delayed-help h2,
       .nm-feedback-panel h2 {
@@ -577,6 +586,7 @@
 
       .nm-customer-tip p,
       .nm-delivery-estimate p,
+      .nm-status-shortcut p,
       .nm-inbox-checklist p,
       .nm-delayed-help p {
         margin: 0;
@@ -656,6 +666,36 @@
 
       .nm-delayed-help[hidden] {
         display: none !important;
+      }
+
+      .nm-status-shortcut {
+        border-color: #bfe7f8;
+        background: linear-gradient(135deg, #f3fbff 0%, #ffffff 68%);
+      }
+
+      .nm-status-shortcut-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+      }
+
+      .nm-status-shortcut-text {
+        min-width: 0;
+      }
+
+      .nm-status-shortcut-button {
+        flex: 0 0 auto;
+        border: 0;
+        border-radius: 999px;
+        background: #102033;
+        color: #fff;
+        cursor: pointer;
+        font-weight: 900;
+        font-size: 12px;
+        line-height: 1;
+        padding: 11px 14px;
+        white-space: nowrap;
       }
 
       .nm-delayed-help ul {
@@ -832,6 +872,15 @@
         .nm-checkout-button {
           width: 100%;
         }
+
+        .nm-status-shortcut-row {
+          align-items: stretch;
+          flex-direction: column;
+        }
+
+        .nm-status-shortcut-button {
+          width: 100%;
+        }
       }
     `;
 
@@ -978,6 +1027,22 @@
     `;
   }
 
+  function renderStatusShortcut(copy) {
+    return `
+      <div class="nm-status-shortcut">
+        <div class="nm-status-shortcut-row">
+          <div class="nm-status-shortcut-text">
+            <h2>${escapeHtml(copy.statusShortcutTitle || BASE_COPY.statusShortcutTitle)}</h2>
+            <p>${escapeHtml(copy.statusShortcutBody || BASE_COPY.statusShortcutBody)}</p>
+          </div>
+          <button class="nm-status-shortcut-button" type="button" id="nmJumpToStatus">
+            ${escapeHtml(copy.statusShortcutButton || BASE_COPY.statusShortcutButton)}
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
   function updateDeliveryEstimate(copy, sessionId, status) {
     const panel = document.getElementById("nmDeliveryEstimate");
     const text = document.getElementById("nmDeliveryEstimateText");
@@ -1057,6 +1122,7 @@
         </ol>
       </div>
       ${renderDeliveryEstimate(copy, getSessionId("success"), null)}
+      ${renderStatusShortcut(copy)}
       ${renderInboxChecklist(copy)}
       <div class="nm-report-status-panel" id="nmReportStatusPanel">
         <h2>${escapeHtml(copy.reportStatusTitle)}</h2>
@@ -1164,6 +1230,16 @@
         handleFeedback(button.getAttribute("data-nm-feedback"), copy, sessionId, kind);
       });
     });
+
+    const jumpToStatus = document.getElementById("nmJumpToStatus");
+    if (jumpToStatus) {
+      jumpToStatus.addEventListener("click", function () {
+        const panel = document.getElementById("nmReportStatusPanel");
+        if (panel) {
+          panel.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+    }
   }
 
   async function loadReportStatus(sessionId, copy, attempt) {
