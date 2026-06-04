@@ -5,7 +5,7 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260604-landing-compact-v5";
+  const ENGINE_VERSION = "20260604-landing-compact-v6";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
 
   const state = {
@@ -1105,6 +1105,56 @@
     }
   }
 
+  function setImportantStyle(element, property, value) {
+    if (!element) return;
+    element.style.setProperty(property, value, "important");
+  }
+
+  function applyLandingCompactLayout() {
+    const landing =
+      document.getElementById("nmSocialLanding") ||
+      document.querySelector(".nm-social-landing") ||
+      document.querySelector(".nm-landing") ||
+      document.querySelector("[data-nm-landing]");
+
+    if (!landing) return;
+
+    const hero =
+      landing.querySelector(".nm-hero") ||
+      landing.querySelector("[data-nm-section='hero']") ||
+      landing;
+
+    setImportantStyle(landing, "min-height", "auto");
+    setImportantStyle(landing, "padding-top", "0");
+    setImportantStyle(landing, "padding-bottom", "18px");
+
+    setImportantStyle(hero, "min-height", "auto");
+    setImportantStyle(hero, "padding-top", "24px");
+    setImportantStyle(hero, "padding-bottom", "22px");
+
+    landing.querySelectorAll("h1").forEach((heading) => {
+      setImportantStyle(heading, "font-size", "clamp(28px, 3vw, 40px)");
+      setImportantStyle(heading, "line-height", "1.08");
+      setImportantStyle(heading, "margin-top", "0");
+      setImportantStyle(heading, "margin-bottom", "10px");
+      setImportantStyle(heading, "max-width", "660px");
+    });
+
+    landing.querySelectorAll("p").forEach((paragraph) => {
+      setImportantStyle(paragraph, "font-size", "clamp(14px, 1.15vw, 16px)");
+      setImportantStyle(paragraph, "line-height", "1.45");
+      setImportantStyle(paragraph, "margin-bottom", "12px");
+      setImportantStyle(paragraph, "max-width", "620px");
+    });
+
+    landing.querySelectorAll("[data-nm-cta], a[href='#questionnaireStart'], a[href*='questionnaireStart']").forEach((cta) => {
+      setImportantStyle(cta, "max-width", "600px");
+      setImportantStyle(cta, "min-height", "40px");
+      setImportantStyle(cta, "padding-top", "9px");
+      setImportantStyle(cta, "padding-bottom", "9px");
+    });
+  }
+
   function applyLandingFallbackLanguage(lang = state.lang) {
     const copy = getLandingFallbackText(lang);
     let applied = 0;
@@ -1135,6 +1185,8 @@
       }
     }
 
+    applyLandingCompactLayout();
+
     return applied;
   }
 
@@ -1148,8 +1200,10 @@
 
       const applied = applyLandingFallbackLanguage(lang);
       ensureLandingStartHandlers();
+      applyLandingCompactLayout();
 
       restoreLandingSections();
+      applyLandingCompactLayout();
 
       if (applied > 0) {
         document.documentElement.dataset.nmLandingRescued = "1";
@@ -1164,7 +1218,7 @@
   function scheduleLandingTextRescue(lang = state.lang) {
     rescueLandingText(lang);
 
-    [50, 250, 800, 1600].forEach((delay) => {
+    [50, 250, 800, 1600, 2600, 4000].forEach((delay) => {
       window.setTimeout(() => rescueLandingText(lang), delay);
     });
 

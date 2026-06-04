@@ -13,7 +13,7 @@ const EMBEDS = [
     sourcePath: "public/webflow/engine.js",
     snippetPath: "web/engine-embed.full.html",
     publicPath: "/public/webflow/engine.js",
-    version: "20260604-landing-compact-v5",
+    version: "20260604-landing-compact-v6",
     note: "External script loader. This avoids the Webflow 50k code embed limit."
   },
   {
