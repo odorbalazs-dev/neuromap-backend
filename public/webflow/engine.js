@@ -5,7 +5,7 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260604-questionnaire-ux-v2";
+  const ENGINE_VERSION = "20260604-customer-experience-v4";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
 
   const state = {
@@ -305,6 +305,47 @@
         color: #ffffff;
       }
 
+      .nm-step-assist {
+        align-items: center;
+        background: #f7fbff;
+        border: 1px solid #dbeef8;
+        border-radius: 16px;
+        display: flex;
+        gap: 14px;
+        justify-content: space-between;
+        margin: -6px 0 18px;
+        padding: 12px 14px;
+      }
+
+      .nm-question-progress {
+        align-items: center;
+        color: #506578;
+        display: inline-flex;
+        flex-wrap: wrap;
+        font-size: 13px;
+        font-weight: 800;
+        gap: 8px;
+      }
+
+      .nm-question-progress strong {
+        background: #e8f7fd;
+        border-radius: 999px;
+        color: #0b86bf;
+        padding: 5px 9px;
+      }
+
+      .nm-live-hint {
+        color: #667085;
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 1.4;
+        text-align: right;
+      }
+
+      [dir="rtl"] .nm-live-hint {
+        text-align: left;
+      }
+
       #triageSection,
       #specificSection,
       #summarySection {
@@ -381,6 +422,17 @@
         background:
           linear-gradient(135deg, rgba(114, 190, 0, 0.06), rgba(17, 151, 213, 0.04)),
           #ffffff;
+      }
+
+      .nm-q-card.is-next {
+        border-color: #ffd09b;
+        box-shadow: 0 12px 28px rgba(255, 122, 0, 0.1);
+      }
+
+      .nm-q-card.is-next .nm-q-number {
+        background: #fff4e8;
+        border-color: #ffd09b;
+        color: #c75f00;
       }
 
       .nm-q-number {
@@ -484,6 +536,12 @@
         font-weight: 850;
         line-height: 1.2;
         overflow-wrap: anywhere;
+      }
+
+      #langButtons button.is-active {
+        background: #1197d5 !important;
+        border-color: #1197d5 !important;
+        color: #ffffff !important;
       }
 
       .nm-summary-card {
@@ -596,6 +654,62 @@
         line-height: 1.6;
         margin-top: 16px;
         padding: 14px 16px;
+      }
+
+      .nm-checkout-review {
+        background: #f7fbff;
+        border: 1px solid #dbeef8;
+        border-radius: 18px;
+        box-shadow: 0 12px 28px rgba(20, 32, 51, 0.05);
+        margin: 18px 0;
+        padding: 18px;
+      }
+
+      .nm-checkout-review h4 {
+        color: #102033;
+        font-size: 18px;
+        font-weight: 900;
+        line-height: 1.25;
+        margin: 0 0 12px;
+      }
+
+      .nm-review-grid {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .nm-review-item {
+        background: #ffffff;
+        border: 1px solid #dbeef8;
+        border-radius: 14px;
+        padding: 12px;
+      }
+
+      .nm-review-label {
+        color: #667085;
+        display: block;
+        font-size: 11px;
+        font-weight: 900;
+        letter-spacing: 0.04em;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+      }
+
+      .nm-review-value {
+        color: #102033;
+        display: block;
+        font-size: 14px;
+        font-weight: 850;
+        line-height: 1.35;
+        overflow-wrap: anywhere;
+      }
+
+      .nm-review-note {
+        color: #506578;
+        font-size: 13px;
+        line-height: 1.55;
+        margin: 12px 0 0;
       }
 
       #backBtn,
@@ -750,6 +864,19 @@
 
         .nm-answer-scale {
           grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .nm-step-assist {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .nm-live-hint {
+          text-align: left;
+        }
+
+        .nm-review-grid {
+          grid-template-columns: 1fr;
         }
 
         .nm-step-title-card,
@@ -955,7 +1082,7 @@
       .nm-social-landing h1,
       [data-nm-section="hero"] h1 {
         color: #102033;
-        font-size: clamp(34px, 4vw, 52px);
+        font-size: clamp(30px, 2.6vw, 42px);
         font-weight: 950;
         letter-spacing: 0;
         line-height: 1.08;
@@ -1041,7 +1168,7 @@
       .nm-landing h1,
       .nm-social-landing h1,
       [data-nm-section="hero"] h1 {
-        font-size: clamp(28px, 3.2vw, 42px) !important;
+        font-size: clamp(30px, 2.4vw, 40px) !important;
         line-height: 1.08 !important;
         margin-bottom: 10px !important;
         max-width: 680px !important;
@@ -1234,7 +1361,7 @@
         .nm-landing h1,
         .nm-social-landing h1,
         [data-nm-section="hero"] h1 {
-          font-size: clamp(28px, 8vw, 38px) !important;
+          font-size: clamp(27px, 7vw, 36px) !important;
         }
 
         .nm-landing [data-nm-cta],
@@ -1316,7 +1443,7 @@
     }
   };
   function getLandingFallbackText(lang = state.lang) {
-    return LANDING_FALLBACK_TEXT[lang] || null;
+    return LANDING_FALLBACK_TEXT[lang] || LANDING_FALLBACK_TEXT.en || null;
   }
 
   let landingRescueInProgress = false;
@@ -1534,7 +1661,7 @@
     setImportantStyle(hero, "padding-bottom", "22px");
 
     landing.querySelectorAll("h1").forEach((heading) => {
-      setImportantStyle(heading, "font-size", "clamp(28px, 3vw, 40px)");
+      setImportantStyle(heading, "font-size", "clamp(30px, 2.4vw, 40px)");
       setImportantStyle(heading, "line-height", "1.08");
       setImportantStyle(heading, "margin-top", "0");
       setImportantStyle(heading, "margin-bottom", "10px");
@@ -1549,7 +1676,7 @@
     });
 
     landing.querySelectorAll("[data-nm-cta], a[href='#questionnaireStart'], a[href*='questionnaireStart']").forEach((cta) => {
-      setImportantStyle(cta, "max-width", "600px");
+      setImportantStyle(cta, "max-width", "560px");
       setImportantStyle(cta, "min-height", "40px");
       setImportantStyle(cta, "padding-top", "9px");
       setImportantStyle(cta, "padding-bottom", "9px");
@@ -1679,6 +1806,14 @@
       app.style.display = "block";
     }
 
+    document.documentElement.classList.add("nm-questionnaire-open");
+
+    trackSchemaEvent("nm_questionnaire_started", {
+      funnel_step: "questionnaire_started"
+    }, {
+      dedupeKey: `questionnaire-started:${state.lang}`
+    });
+
     if (target) {
       setTimeout(() => {
         target.scrollIntoView({
@@ -1687,6 +1822,13 @@
         });
       }, 20);
     }
+
+    setTimeout(() => {
+      const firstField = document.getElementById("name");
+      if (firstField && typeof firstField.focus === "function") {
+        firstField.focus({ preventScroll: true });
+      }
+    }, 450);
   }
 
   function ensureLandingStartHandlers() {
@@ -2653,7 +2795,10 @@
 
     const container = document.getElementById("langButtons");
     if (!container) return;
-    if (container.children.length > 0) return;
+    if (container.children.length > 0) {
+      syncLanguageButtonState();
+      return;
+    }
 
     const labels = {
       hu: "Magyar",
@@ -2680,6 +2825,18 @@
     `
       )
       .join("");
+
+    syncLanguageButtonState();
+  }
+
+  function syncLanguageButtonState() {
+    const activeLang = getLang() || state.lang || "hu";
+
+    document.querySelectorAll("#langButtons [data-nm-lang-option]").forEach((button) => {
+      const isActive = button.getAttribute("data-nm-lang-option") === activeLang;
+      button.classList.toggle("is-active", isActive);
+      button.setAttribute("aria-pressed", isActive ? "true" : "false");
+    });
   }
 
   function bindLanguageSwitchers() {
@@ -2817,6 +2974,9 @@
             item.classList.toggle("is-selected", isSelected);
             item.setAttribute("aria-pressed", isSelected ? "true" : "false");
           });
+
+          const section = card.closest("#triageSection, #specificSection");
+          if (section && section.id) updateQuestionProgress(section.id);
         }
       });
     });
@@ -2867,10 +3027,47 @@
     const langSwitch = document.getElementById("langSwitch");
     if (langSwitch) langSwitch.textContent = lang.toUpperCase();
 
+    buildLangButtons();
+    syncLanguageButtonState();
+
     ensureChildAgeField();
     updateChildAgeFieldLanguage();
 
     renderCurrentStep();
+  }
+
+  function updateQuestionProgress(targetId) {
+    const root = document.getElementById(targetId);
+    if (!root) return;
+
+    const selects = Array.from(root.querySelectorAll(".nm-answer-select"));
+    const total = selects.length;
+    const answered = selects.filter((select) => select.value !== "").length;
+    const remaining = Math.max(0, total - answered);
+    const isHu = state.lang === "hu";
+
+    const countEl = root.querySelector("[data-nm-progress-count]");
+    const labelEl = root.querySelector("[data-nm-progress-label]");
+    const hintEl = root.querySelector("[data-nm-live-hint]");
+
+    if (countEl) countEl.textContent = `${answered} / ${total}`;
+    if (labelEl) labelEl.textContent = isHu ? "megv\u00e1laszolva" : "answered";
+
+    if (hintEl) {
+      hintEl.textContent = remaining
+        ? isHu
+          ? `${remaining} k\u00e9rd\u00e9s van h\u00e1tra. A k\u00f6vetkez\u0151 \u00fcres k\u00e9rd\u00e9st kiemelt\u00fck.`
+          : `${remaining} questions left. The next unanswered question is highlighted.`
+        : isHu
+          ? "Minden k\u00e9rd\u00e9s megv\u00e1laszolva, mehetsz tov\u00e1bb."
+          : "All questions are answered. You can continue.";
+    }
+
+    root.querySelectorAll(".nm-q-card.is-next").forEach((card) => card.classList.remove("is-next"));
+
+    const nextSelect = selects.find((select) => select.value === "");
+    const nextCard = nextSelect && nextSelect.closest(".nm-q-card");
+    if (nextCard) nextCard.classList.add("is-next");
   }
 
   function renderQuestionList(targetId, questions, answers, title, intro) {
@@ -2882,6 +3079,14 @@
         <div class="nm-step-title-card">
           <h3>${title || ""}</h3>
           <p>${intro || ""}</p>
+        </div>
+
+        <div class="nm-step-assist" data-nm-step-assist="${targetId}">
+          <div class="nm-question-progress">
+            <strong data-nm-progress-count>0 / ${questions.length}</strong>
+            <span data-nm-progress-label>${state.lang === "hu" ? "megv\u00e1laszolva" : "answered"}</span>
+          </div>
+          <div class="nm-live-hint" data-nm-live-hint></div>
         </div>
 
         ${questions
@@ -2906,6 +3111,7 @@
     `;
 
     bindAnswerScaleButtons(container);
+    updateQuestionProgress(targetId);
   }
 
   function syncAnswersFromDOM(scopeId = null) {
@@ -2987,6 +3193,58 @@
     if (pageTitleEl) pageTitleEl.textContent = currentData.title;
   }
 
+  function buildCheckoutReviewHtml(t) {
+    const name = (document.getElementById("name")?.value || "").trim();
+    const email = (document.getElementById("email")?.value || "").trim();
+    const childAge = getChildAgeValue();
+    const totalQuestions =
+      state.triageQuestions.length + state.specificQuestions.length + state.extraQuestions.length;
+    const isHu = state.lang === "hu";
+
+    const labels = isHu
+      ? {
+          title: "Fizet\u00e9s el\u0151tti gyors ellen\u0151rz\u00e9s",
+          nameEmail: "N\u00e9v / email",
+          childAge: "Gyermek \u00e9letkora",
+          focus: "F\u0151 ter\u00fclet",
+          questions: "Kit\u00f6lt\u00f6tt k\u00e9rd\u00e9sek",
+          note: "A r\u00e9szletes riport ezekb\u0151l az adatokb\u00f3l k\u00e9sz\u00fcl. Ha valamit jav\u00edtan\u00e1l, l\u00e9pj vissza a fizet\u00e9s el\u0151tt."
+        }
+      : {
+          title: "Quick review before payment",
+          nameEmail: "Name / email",
+          childAge: "Child age",
+          focus: "Primary focus",
+          questions: "Completed questions",
+          note: "The detailed report will be generated from these answers. If something needs changing, go back before payment."
+        };
+
+    return `
+      <div class="nm-checkout-review" aria-label="${escapeHtml(labels.title)}">
+        <h4>${escapeHtml(labels.title)}</h4>
+        <div class="nm-review-grid">
+          <div class="nm-review-item">
+            <span class="nm-review-label">${escapeHtml(labels.nameEmail)}</span>
+            <span class="nm-review-value">${escapeHtml(name || "-")}<br>${escapeHtml(email || "-")}</span>
+          </div>
+          <div class="nm-review-item">
+            <span class="nm-review-label">${escapeHtml(labels.childAge)}</span>
+            <span class="nm-review-value">${childAge == null ? "-" : escapeHtml(String(childAge))}</span>
+          </div>
+          <div class="nm-review-item">
+            <span class="nm-review-label">${escapeHtml(labels.focus)}</span>
+            <span class="nm-review-value">${escapeHtml(disorderLabel(state.detectedRisk))}</span>
+          </div>
+          <div class="nm-review-item">
+            <span class="nm-review-label">${escapeHtml(labels.questions)}</span>
+            <span class="nm-review-value">${totalQuestions}</span>
+          </div>
+        </div>
+        <p class="nm-review-note">${escapeHtml(labels.note)}</p>
+      </div>
+    `;
+  }
+
   function renderSummary() {
     const t = getUI();
     const container = document.getElementById("summarySection");
@@ -3051,6 +3309,8 @@
         `
             : ""
         }
+
+        ${buildCheckoutReviewHtml(t)}
 
         <div class="nm-summary-warning">
           ${
@@ -3366,6 +3626,31 @@
     };
   }
 
+  function getCheckoutErrorMessage(error, t) {
+    const message = String((error && error.message) || "");
+    const isHu = state.lang === "hu";
+
+    if (/not a valid url/i.test(message)) {
+      return isHu
+        ? "A fizetesi link nem erkezett meg megfeleloen. Kerlek probald ujra, vagy jelezd nekunk, ha megismetlodik."
+        : "The payment link was not returned correctly. Please try again, or contact us if this repeats.";
+    }
+
+    if (/failed to fetch|network|load failed/i.test(message)) {
+      return isHu
+        ? "Nem sikerult kapcsolodni a fizetesi kiszolgalohoz. Ellenorizd a kapcsolatot, majd probald ujra."
+        : "Could not connect to the checkout service. Please check your connection and try again.";
+    }
+
+    if (/too many requests/i.test(message)) {
+      return isHu
+        ? "Tul sok probalkozas tortent rovid idon belul. Kerlek varj egy kicsit, majd probald ujra."
+        : "Too many attempts were made in a short time. Please wait a moment and try again.";
+    }
+
+    return message || t.checkoutError || (isHu ? "Nem sikerult elinditani a fizetest." : "Could not start checkout.");
+  }
+
   async function startCheckout() {
     const t = getUI();
     const config = getConfig();
@@ -3449,7 +3734,7 @@
       window.location.href = data.checkoutUrl;
     } catch (error) {
       console.error("Checkout error:", error);
-      setStatus(error.message || t.checkoutError || "Checkout error");
+      setStatus(getCheckoutErrorMessage(error, t));
       if (button) button.disabled = false;
     }
   }

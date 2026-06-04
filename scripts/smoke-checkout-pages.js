@@ -9,7 +9,7 @@ function assert(condition, message) {
 function main() {
   console.log("\n=== CHECKOUT PAGES SMOKE ===");
 
-  const currentVersion = "20260603-customer-experience-v3";
+  const currentVersion = "20260604-customer-experience-v4";
   const script = fs.readFileSync("public/webflow/checkout-pages.js", "utf8");
   const sharedEmbed = fs.readFileSync("web/checkout-pages-embed.html", "utf8").trim();
   const successEmbed = fs.readFileSync("web/checkout-success-embed.html", "utf8").trim();

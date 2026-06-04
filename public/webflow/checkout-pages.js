@@ -5,7 +5,7 @@
 (function () {
   if (typeof window === "undefined" || typeof document === "undefined") return;
 
-  const CHECKOUT_PAGES_VERSION = "20260603-customer-experience-v3";
+  const CHECKOUT_PAGES_VERSION = "20260604-customer-experience-v4";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
   const DEFAULT_API_BASE_URL = "https://neuromap-backend-production-969d.up.railway.app";
   const SUPPORTED_LANGS = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];
@@ -37,6 +37,14 @@
     deliveryEstimateSent: "The report has been sent. Please check your inbox and Spam or Promotions folders.",
     deliveryEstimateAttention: "The report needs attention from the system. Support can use your session ID to check it quickly.",
     deliveryEstimateNoSession: "Without a session ID we cannot show live progress, but your payment confirmation email remains valid.",
+    inboxChecklistTitle: "Before you refresh",
+    inboxChecklistItems: [
+      "Check the inbox connected to the email address you entered.",
+      "Also check Spam, Promotions, Updates, or similar filtered folders.",
+      "Keep this page open if you want to refresh the live report status."
+    ],
+    reportNoDoublePay: "You do not need to pay again while the report is processing.",
+    liveStatusNote: "The status panel can be refreshed without repeating checkout.",
     delayedHelpTitle: "If the email is delayed",
     delayedHelpItems: [
       "Wait a few minutes while the analysis and PDF generation finish.",
@@ -114,6 +122,14 @@
       deliveryEstimateSent: "A riport elk\u00fcldve. Ellen\u0151rizd a be\u00e9rkez\u0151, Spam \u00e9s Prom\u00f3ci\u00f3k mapp\u00e1t is.",
       deliveryEstimateAttention: "A riport figyelmet ig\u00e9nyel a rendszert\u0151l. A support az azonos\u00edt\u00f3 alapj\u00e1n gyorsabban r\u00e1 tud n\u00e9zni.",
       deliveryEstimateNoSession: "\u00c9l\u0151 \u00e1llapotot azonos\u00edt\u00f3 n\u00e9lk\u00fcl nem tudunk mutatni, de a fizet\u00e9si visszaigazol\u00e1s \u00e9rv\u00e9nyes.",
+      inboxChecklistTitle: "Miel\u0151tt friss\u00edten\u00e9l",
+      inboxChecklistItems: [
+        "Ellen\u0151rizd azt a be\u00e9rkez\u0151 mapp\u00e1t, amelyik email c\u00edmet a k\u00e9rd\u0151\u00edvben megadtad.",
+        "N\u00e9zd meg a Spam, Prom\u00f3ci\u00f3k, Friss\u00edt\u00e9sek vagy hasonl\u00f3 sz\u0171rt mapp\u00e1kat is.",
+        "Hagyd nyitva ezt az oldalt, ha szeretn\u00e9d friss\u00edteni az \u00e9l\u0151 riport\u00e1llapotot."
+      ],
+      reportNoDoublePay: "Nem kell \u00fajra fizetned, am\u00edg a riport feldolgoz\u00e1sa folyamatban van.",
+      liveStatusNote: "Az \u00e1llapotpanel a checkout ism\u00e9tl\u00e9se n\u00e9lk\u00fcl friss\u00edthet\u0151.",
       delayedHelpTitle: "Ha k\u00e9sik az email",
       delayedHelpItems: [
         "V\u00e1rj n\u00e9h\u00e1ny percet, am\u00edg az elemz\u00e9s \u00e9s a PDF gener\u00e1l\u00e1s befejez\u0151dik.",
@@ -515,6 +531,7 @@
       .nm-cancel-recovery,
       .nm-customer-tip,
       .nm-delivery-estimate,
+      .nm-inbox-checklist,
       .nm-delayed-help,
       .nm-feedback-panel {
         margin: 0 auto 24px;
@@ -531,6 +548,7 @@
       [dir="rtl"] .nm-cancel-recovery,
       [dir="rtl"] .nm-customer-tip,
       [dir="rtl"] .nm-delivery-estimate,
+      [dir="rtl"] .nm-inbox-checklist,
       [dir="rtl"] .nm-delayed-help,
       [dir="rtl"] .nm-feedback-panel {
         text-align: right;
@@ -541,6 +559,7 @@
       .nm-cancel-recovery h2,
       .nm-customer-tip h2,
       .nm-delivery-estimate h2,
+      .nm-inbox-checklist h2,
       .nm-delayed-help h2,
       .nm-feedback-panel h2 {
         margin: 0 0 8px;
@@ -550,13 +569,15 @@
       }
 
       .nm-customer-tip,
-      .nm-delivery-estimate {
+      .nm-delivery-estimate,
+      .nm-inbox-checklist {
         border-color: #cfe8f7;
         background: #f3fbff;
       }
 
       .nm-customer-tip p,
       .nm-delivery-estimate p,
+      .nm-inbox-checklist p,
       .nm-delayed-help p {
         margin: 0;
         color: #506780;
@@ -586,6 +607,31 @@
         color: #506780;
         font-size: 14px;
         line-height: 1.6;
+      }
+
+      .nm-inbox-checklist ul {
+        margin: 10px 0 0;
+        padding-left: 20px;
+        color: #506780;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      [dir="rtl"] .nm-inbox-checklist ul {
+        padding-left: 0;
+        padding-right: 20px;
+      }
+
+      .nm-inbox-note {
+        display: block;
+        margin-top: 12px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        background: #ffffff;
+        color: #0b86bf;
+        font-size: 13px;
+        font-weight: 800;
+        line-height: 1.45;
       }
 
       .nm-cancel-recovery ul {
@@ -958,6 +1004,23 @@
     `;
   }
 
+  function renderInboxChecklist(copy) {
+    const items = Array.isArray(copy.inboxChecklistItems)
+      ? copy.inboxChecklistItems
+      : BASE_COPY.inboxChecklistItems;
+
+    return `
+      <div class="nm-inbox-checklist">
+        <h2>${escapeHtml(copy.inboxChecklistTitle || BASE_COPY.inboxChecklistTitle)}</h2>
+        <ul>
+          ${items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
+        </ul>
+        <span class="nm-inbox-note">${escapeHtml(copy.reportNoDoublePay || BASE_COPY.reportNoDoublePay)}</span>
+        <p style="margin-top:10px;">${escapeHtml(copy.liveStatusNote || BASE_COPY.liveStatusNote)}</p>
+      </div>
+    `;
+  }
+
   function updateDelayedHelp(status) {
     const panel = document.getElementById("nmDelayedHelp");
     if (!panel) return;
@@ -994,6 +1057,7 @@
         </ol>
       </div>
       ${renderDeliveryEstimate(copy, getSessionId("success"), null)}
+      ${renderInboxChecklist(copy)}
       <div class="nm-report-status-panel" id="nmReportStatusPanel">
         <h2>${escapeHtml(copy.reportStatusTitle)}</h2>
         <p class="nm-report-status-lead" id="nmReportStatusLead">${escapeHtml(copy.statusLoading)}</p>

@@ -61,6 +61,13 @@ function getCustomerExperienceCopy(lang) {
         "Write down 2-3 everyday situations where the pattern appears most clearly.",
         "If the signals feel strong or persistent, discuss the report with a qualified professional."
       ],
+      readingTitle: "How to read the report",
+      readingTips: [
+        "Start with the main pattern and the strongest everyday examples.",
+        "Use the recommendations as small experiments, not as a strict program.",
+        "Revisit the report after a few days and mark what feels most useful."
+      ],
+      reassurance: "You do not need to solve everything at once. One small, consistent change is often the best first step.",
       support: "Need help or did not receive the attachment? Reply to this email or contact info@neuromapkids.com."
     },
     hu: {
@@ -72,6 +79,13 @@ function getCustomerExperienceCopy(lang) {
         "Ird fel azt a 2-3 hetkoznapi helyzetet, ahol a minta a legerosebben latszik.",
         "Ha a jelzesek erosek vagy tartosak, erdemes szakemberrel is atbeszelni a riportot."
       ],
+      readingTitle: "Hogyan olvasd a riportot?",
+      readingTips: [
+        "Kezdd a fo mintazattal es a legerosebb hetkoznapi peldakkal.",
+        "A javaslatokat kis kiprobalhato lepesekkent kezeld, ne merev programkent.",
+        "Par nap mulva nezd at ujra, es jelold meg, mi tunt a leghasznosabbnak."
+      ],
+      reassurance: "Nem kell mindent egyszerre megoldani. Egy kicsi, kovetkezetes valtoztatas gyakran a legjobb elso lepes.",
       support: "Segitseg kell, vagy nem latszik a csatolmany? Valaszolj erre az emailre, vagy irj az info@neuromapkids.com cimre."
     }
   };
@@ -96,11 +110,17 @@ export function buildReportEmail({ lang, name, reportText, payload = null }) {
   const customerExperienceStepsHtml = customerExperience.nextSteps
     .map((item) => `<li style="margin:0 0 8px 0;">${escapeHtml(item)}</li>`)
     .join("");
+  const customerExperienceReadingHtml = customerExperience.readingTips
+    .map((item) => `<li style="margin:0 0 8px 0;">${escapeHtml(item)}</li>`)
+    .join("");
   const customerExperienceText = [
     customerExperience.title,
     customerExperience.body,
     customerExperience.nextTitle,
     ...customerExperience.nextSteps.map((item) => `- ${item}`),
+    customerExperience.readingTitle,
+    ...customerExperience.readingTips.map((item) => `- ${item}`),
+    customerExperience.reassurance,
     customerExperience.support
   ].join("\n");
 
@@ -333,6 +353,9 @@ export function buildReportEmail({ lang, name, reportText, payload = null }) {
                     <p style="margin:0 0 12px 0;">${escapeHtml(customerExperience.body)}</p>
                     <div style="font-weight:700;margin:0 0 8px 0;color:#1f2937;">${escapeHtml(customerExperience.nextTitle)}</div>
                     <ul style="margin:0 0 14px 0;padding-left:20px;">${customerExperienceStepsHtml}</ul>
+                    <div style="font-weight:700;margin:0 0 8px 0;color:#1f2937;">${escapeHtml(customerExperience.readingTitle)}</div>
+                    <ul style="margin:0 0 14px 0;padding-left:20px;">${customerExperienceReadingHtml}</ul>
+                    <p style="margin:0 0 12px 0;color:#0b6f9f;font-size:13px;font-weight:700;">${escapeHtml(customerExperience.reassurance)}</p>
                     <p style="margin:0;color:#506780;font-size:13px;">${escapeHtml(customerExperience.support)}</p>
                   </div>
                 </div>
