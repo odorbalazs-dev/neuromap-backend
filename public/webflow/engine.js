@@ -5,7 +5,7 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260604-language-switch-v7";
+  const ENGINE_VERSION = "20260604-language-sync-v8";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
 
   const state = {
@@ -1077,7 +1077,7 @@
   });
 
   function getLandingFallbackText(lang = state.lang) {
-    return LANDING_FALLBACK_TEXT[lang] || LANDING_FALLBACK_TEXT.en;
+    return LANDING_FALLBACK_TEXT[lang] || null;
   }
 
   let landingRescueInProgress = false;
@@ -1159,6 +1159,11 @@
     const copy = getLandingFallbackText(lang);
     let applied = 0;
 
+    if (!copy) {
+      applyLandingCompactLayout();
+      return applied;
+    }
+
     document.querySelectorAll("[data-nm-i18n]").forEach((element) => {
       const key = element.getAttribute("data-nm-i18n");
       const value = copy[key];
@@ -1196,9 +1201,12 @@
     landingRescueInProgress = true;
 
     try {
+      const activeLang = getLang() || lang || state.lang || "hu";
+      state.lang = activeLang;
+
       restoreLandingSections();
 
-      const applied = applyLandingFallbackLanguage(lang);
+      const applied = applyLandingFallbackLanguage(activeLang);
       ensureLandingStartHandlers();
       bindLanguageSwitchers();
       applyLandingCompactLayout();
@@ -1217,17 +1225,19 @@
   }
 
   function scheduleLandingTextRescue(lang = state.lang) {
-    rescueLandingText(lang);
+    const resolveLang = () => getLang() || lang || state.lang || "hu";
+
+    rescueLandingText(resolveLang());
 
     [50, 250, 800, 1600, 2600, 4000].forEach((delay) => {
-      window.setTimeout(() => rescueLandingText(lang), delay);
+      window.setTimeout(() => rescueLandingText(resolveLang()), delay);
     });
 
     if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", () => rescueLandingText(lang), { once: true });
+      document.addEventListener("DOMContentLoaded", () => rescueLandingText(resolveLang()), { once: true });
     }
 
-    window.addEventListener("load", () => rescueLandingText(lang), { once: true });
+    window.addEventListener("load", () => rescueLandingText(resolveLang()), { once: true });
 
     if (!window.__nmLandingRescueObserverInstalled && "MutationObserver" in window) {
       window.__nmLandingRescueObserverInstalled = true;
@@ -1235,7 +1245,7 @@
       let rescueTimer = null;
       const queueRescue = () => {
         window.clearTimeout(rescueTimer);
-        rescueTimer = window.setTimeout(() => rescueLandingText(state.lang || lang), 40);
+        rescueTimer = window.setTimeout(() => rescueLandingText(resolveLang()), 40);
       };
 
       const target =
@@ -2207,7 +2217,7 @@
     container.innerHTML = supported
       .map(
         (lang) => `
-      <button onclick="selectLang('${lang}')" style="display:block;width:100%;margin:8px 0;padding:10px;">
+      <button data-nm-lang-option="${lang}" onclick="selectLang('${lang}')" style="display:block;width:100%;margin:8px 0;padding:10px;">
         ${fixedLabels[lang] || labels[lang] || lang.toUpperCase()}
       </button>
     `
@@ -2244,6 +2254,25 @@
         if (!trigger) return;
         event.preventDefault();
         showModal();
+      });
+    }
+
+    if (document.documentElement.dataset.nmLanguageOptionSyncBound !== "1") {
+      document.documentElement.dataset.nmLanguageOptionSyncBound = "1";
+      document.addEventListener("click", (event) => {
+        const option = event.target.closest("#languageModal button");
+        if (!option) return;
+
+        const explicitLang = option.getAttribute("data-nm-lang-option");
+        const syncSelectedLanguage = () => {
+          const activeLang = explicitLang || getLang() || state.lang || "hu";
+          state.lang = activeLang;
+          scheduleLandingTextRescue(activeLang);
+        };
+
+        window.setTimeout(syncSelectedLanguage, 0);
+        window.setTimeout(syncSelectedLanguage, 120);
+        window.setTimeout(syncSelectedLanguage, 500);
       });
     }
   }
@@ -2834,9 +2863,11 @@
     const previousLang = state.lang || getLang();
 
     localStorage.setItem("nm_lang", lang);
+    if (window.NM_APP && typeof window.NM_APP === "object") {
+      window.NM_APP.lang = lang;
+    }
 
     applyLang(lang);
-    scheduleLandingTextRescue(lang);
 
     trackSchemaEvent("nm_language_selected", {
       funnel_step: state.step || "landing",
@@ -2848,8 +2879,13 @@
       window.NM_APPLY_LANDING_LANGUAGE(lang);
     }
 
+    rescueLandingText(lang);
+    scheduleLandingTextRescue(lang);
+
     hideModal();
   };
+
+  window.NM_SET_LANGUAGE = window.selectLang;
 
   function init() {
     try {
