@@ -5,7 +5,7 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260604-cleanup-v1";
+  const ENGINE_VERSION = "20260604-landing-preview-header-v1";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
 
   const state = {
@@ -696,10 +696,18 @@
       .nm-social-landing .nm-topbar,
       .nm-landing .nm-topbar {
         align-items: center !important;
+        background: rgba(255, 255, 255, 0.94) !important;
+        border-bottom: 1px solid rgba(17, 24, 39, 0.08) !important;
+        backdrop-filter: blur(14px);
+        box-shadow: 0 10px 26px rgba(17, 24, 39, 0.04) !important;
         display: flex !important;
         gap: 16px !important;
         justify-content: space-between !important;
-        padding: 10px clamp(16px, 3vw, 34px) !important;
+        min-height: 66px !important;
+        padding: 9px clamp(16px, 3vw, 34px) !important;
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 999 !important;
       }
 
       .nm-social-landing .nm-topbar-logo,
@@ -709,6 +717,47 @@
         max-width: min(190px, 42vw) !important;
         object-fit: contain !important;
         width: auto !important;
+      }
+
+      .nm-topbar.nm-topbar-fixed-brand {
+        align-items: center !important;
+        background: rgba(255, 255, 255, 0.94) !important;
+        border-bottom: 1px solid rgba(17, 24, 39, 0.08) !important;
+        box-shadow: 0 10px 26px rgba(17, 24, 39, 0.04) !important;
+        display: flex !important;
+        gap: 10px !important;
+        min-height: 66px !important;
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 999 !important;
+      }
+
+      .nm-brand-lockup {
+        align-items: baseline !important;
+        color: #102033 !important;
+        display: inline-flex !important;
+        flex: 0 0 auto !important;
+        font-size: clamp(17px, 1.6vw, 22px) !important;
+        font-weight: 950 !important;
+        gap: 2px !important;
+        letter-spacing: 0 !important;
+        line-height: 1 !important;
+        margin-right: auto !important;
+        text-decoration: none !important;
+        white-space: nowrap !important;
+      }
+
+      .nm-brand-neuro {
+        color: #1197d5 !important;
+      }
+
+      .nm-brand-map {
+        color: #ff7a00 !important;
+      }
+
+      .nm-brand-kids {
+        color: #72b900 !important;
+        margin-left: 5px !important;
       }
 
       .nm-social-landing .nm-section,
@@ -872,6 +921,151 @@
         padding: 7px 12px !important;
       }
 
+      .nm-report-preview-section {
+        margin-left: auto !important;
+        margin-right: auto !important;
+        max-width: 880px !important;
+        padding-left: clamp(18px, 4vw, 32px) !important;
+        padding-right: clamp(18px, 4vw, 32px) !important;
+        text-align: center !important;
+      }
+
+      .nm-report-preview-section [data-nm-i18n="previewTitle"] {
+        color: #102033 !important;
+        font-size: clamp(24px, 2.4vw, 34px) !important;
+        font-weight: 950 !important;
+        letter-spacing: 0 !important;
+        margin-bottom: 8px !important;
+      }
+
+      .nm-report-preview-section [data-nm-i18n="previewCaption"] {
+        color: #52677e !important;
+        margin-bottom: 18px !important;
+      }
+
+      .nm-report-preview-shell {
+        align-items: stretch !important;
+        background: linear-gradient(135deg, rgba(17, 151, 213, 0.10), rgba(255, 122, 0, 0.10)) !important;
+        border: 1px solid rgba(17, 151, 213, 0.18) !important;
+        border-radius: 22px !important;
+        box-shadow: 0 22px 48px rgba(17, 24, 39, 0.08) !important;
+        display: grid !important;
+        gap: 16px !important;
+        grid-template-columns: minmax(0, 1.2fr) minmax(220px, 0.8fr) !important;
+        margin: 20px auto 0 !important;
+        max-width: 820px !important;
+        padding: clamp(14px, 2vw, 20px) !important;
+        text-align: left !important;
+      }
+
+      .nm-report-preview-page,
+      .nm-report-preview-aside {
+        background: rgba(255, 255, 255, 0.96) !important;
+        border: 1px solid rgba(17, 24, 39, 0.08) !important;
+        border-radius: 18px !important;
+        box-shadow: 0 12px 26px rgba(17, 24, 39, 0.06) !important;
+      }
+
+      .nm-report-preview-page {
+        border-left: 6px solid #ff7a00 !important;
+        padding: 18px !important;
+      }
+
+      .nm-report-preview-head {
+        align-items: center !important;
+        display: flex !important;
+        gap: 10px !important;
+        margin-bottom: 14px !important;
+      }
+
+      .nm-report-preview-logo {
+        align-items: center !important;
+        background: linear-gradient(135deg, #1197d5, #ff7a00) !important;
+        border-radius: 12px !important;
+        color: #ffffff !important;
+        display: inline-flex !important;
+        font-size: 13px !important;
+        font-weight: 950 !important;
+        height: 38px !important;
+        justify-content: center !important;
+        width: 38px !important;
+      }
+
+      .nm-report-preview-kicker {
+        color: #52677e !important;
+        display: block !important;
+        font-size: 12px !important;
+        font-weight: 750 !important;
+        margin-top: 2px !important;
+      }
+
+      .nm-report-preview-band {
+        background: linear-gradient(135deg, #1197d5, #ff7a00) !important;
+        border-radius: 14px !important;
+        height: 58px !important;
+        margin-bottom: 14px !important;
+      }
+
+      .nm-report-preview-line {
+        background: #eef5f9 !important;
+        border-radius: 999px !important;
+        height: 10px !important;
+        margin: 10px 0 !important;
+      }
+
+      .nm-report-preview-line.short {
+        width: 62% !important;
+      }
+
+      .nm-report-preview-row {
+        align-items: center !important;
+        display: grid !important;
+        gap: 8px !important;
+        grid-template-columns: 82px 1fr !important;
+        margin-top: 14px !important;
+      }
+
+      .nm-report-preview-pill {
+        background: #e9f6fc !important;
+        border: 1px solid rgba(17, 151, 213, 0.18) !important;
+        border-radius: 999px !important;
+        color: #102033 !important;
+        display: inline-flex !important;
+        font-size: 12px !important;
+        font-weight: 850 !important;
+        justify-content: center !important;
+        padding: 7px 10px !important;
+      }
+
+      .nm-report-preview-aside {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+        justify-content: center !important;
+        padding: 16px !important;
+      }
+
+      .nm-report-preview-stat {
+        background: #f6fbfd !important;
+        border: 1px solid rgba(17, 24, 39, 0.07) !important;
+        border-radius: 14px !important;
+        padding: 12px !important;
+      }
+
+      .nm-report-preview-stat strong {
+        color: #102033 !important;
+        display: block !important;
+        font-size: 14px !important;
+        margin-bottom: 7px !important;
+      }
+
+      .nm-report-preview-stat span {
+        color: #52677e !important;
+        display: block !important;
+        font-size: 12px !important;
+        line-height: 1.45 !important;
+      }
+
       @media (max-width: 720px) {
         .nm-landing-hero,
         .nm-social-landing,
@@ -892,6 +1086,14 @@
         a[href="#questionnaireStart"],
         a[href*="questionnaireStart"] {
           width: 100%;
+        }
+
+        .nm-brand-lockup {
+          font-size: 17px !important;
+        }
+
+        .nm-report-preview-shell {
+          grid-template-columns: 1fr !important;
         }
       }
     `;
@@ -991,6 +1193,168 @@
     element.style.setProperty(property, value, "important");
   }
 
+  function ensureStickyBrandHeader() {
+    const topbar =
+      document.querySelector("#nmSocialLanding .nm-topbar") ||
+      document.querySelector(".nm-social-landing .nm-topbar") ||
+      document.querySelector(".nm-landing .nm-topbar") ||
+      document.querySelector(".nm-topbar");
+
+    if (!topbar) return;
+
+    topbar.classList.add("nm-topbar-fixed-brand");
+
+    setImportantStyle(topbar, "align-items", "center");
+    setImportantStyle(topbar, "background", "rgba(255, 255, 255, 0.94)");
+    setImportantStyle(topbar, "border-bottom", "1px solid rgba(17, 24, 39, 0.08)");
+    setImportantStyle(topbar, "box-shadow", "0 10px 26px rgba(17, 24, 39, 0.04)");
+    setImportantStyle(topbar, "display", "flex");
+    setImportantStyle(topbar, "min-height", "66px");
+    setImportantStyle(topbar, "position", "sticky");
+    setImportantStyle(topbar, "top", "0");
+    setImportantStyle(topbar, "z-index", "999");
+
+    const logo = topbar.querySelector(".nm-topbar-logo, img");
+    if (logo) {
+      logo.classList.add("nm-topbar-logo");
+    }
+
+    let brand = topbar.querySelector(".nm-brand-lockup");
+
+    if (!brand) {
+      brand = document.createElement("a");
+      brand.className = "nm-brand-lockup";
+      brand.href = "/";
+      brand.setAttribute("aria-label", "NeuroMap Kids");
+      brand.innerHTML =
+        '<span class="nm-brand-neuro">Neuro</span><span class="nm-brand-map">Map</span><span class="nm-brand-kids">Kids</span>';
+
+      const logoWrapper =
+        logo &&
+        logo.parentElement &&
+        logo.parentElement !== topbar &&
+        logo.parentElement.parentElement === topbar
+          ? logo.parentElement
+          : logo;
+
+      if (logoWrapper && logoWrapper.parentElement === topbar) {
+        topbar.insertBefore(brand, logoWrapper.nextSibling);
+      } else {
+        topbar.insertBefore(brand, topbar.firstChild);
+      }
+    }
+
+    setImportantStyle(brand, "display", "inline-flex");
+    setImportantStyle(brand, "margin-right", "auto");
+    setImportantStyle(brand, "text-decoration", "none");
+  }
+
+  function getReportPreviewLabels(lang = state.lang) {
+    if (lang === "hu") {
+      return {
+        title: "NeuroMap Kids riport",
+        subtitle: "szemelyre szabott elonezet",
+        focus: "Fokusz",
+        pattern: "Mintazat",
+        suggestions: "Javaslatok",
+        next: "Kovetkezo lepesek",
+        parent: "szulobarat magyarazat",
+        action: "gyakorlati otletek",
+        pdf: "brandelt PDF emailben"
+      };
+    }
+
+    return {
+      title: "NeuroMap Kids report",
+      subtitle: "personalized preview",
+      focus: "Focus",
+      pattern: "Pattern",
+      suggestions: "Suggestions",
+      next: "Next steps",
+      parent: "parent-friendly explanation",
+      action: "practical ideas",
+      pdf: "branded PDF by email"
+    };
+  }
+
+  function ensureReportPreviewMockup(lang = state.lang) {
+    const title = document.querySelector('[data-nm-i18n="previewTitle"]');
+    if (!title) return;
+
+    const section =
+      title.closest(".nm-section") ||
+      title.closest("section") ||
+      title.closest("[data-nm-section]") ||
+      title.parentElement;
+
+    if (!section) return;
+
+    section.classList.add("nm-report-preview-section");
+
+    const caption =
+      section.querySelector('[data-nm-i18n="previewCaption"]') ||
+      title.nextElementSibling ||
+      title;
+
+    let shell = section.querySelector(".nm-report-preview-shell");
+
+    if (!shell) {
+      shell = document.createElement("div");
+      shell.className = "nm-report-preview-shell";
+      shell.innerHTML = `
+        <div class="nm-report-preview-page" aria-hidden="true">
+          <div class="nm-report-preview-head">
+            <div class="nm-report-preview-logo">NM</div>
+            <div>
+              <strong data-nm-preview-label="title"></strong>
+              <span class="nm-report-preview-kicker" data-nm-preview-label="subtitle"></span>
+            </div>
+          </div>
+          <div class="nm-report-preview-band"></div>
+          <div class="nm-report-preview-line"></div>
+          <div class="nm-report-preview-line"></div>
+          <div class="nm-report-preview-line short"></div>
+          <div class="nm-report-preview-row">
+            <span class="nm-report-preview-pill" data-nm-preview-label="focus"></span>
+            <div class="nm-report-preview-line"></div>
+          </div>
+          <div class="nm-report-preview-row">
+            <span class="nm-report-preview-pill" data-nm-preview-label="pattern"></span>
+            <div class="nm-report-preview-line"></div>
+          </div>
+          <div class="nm-report-preview-row">
+            <span class="nm-report-preview-pill" data-nm-preview-label="suggestions"></span>
+            <div class="nm-report-preview-line"></div>
+          </div>
+        </div>
+        <div class="nm-report-preview-aside" aria-hidden="true">
+          <div class="nm-report-preview-stat">
+            <strong data-nm-preview-label="next"></strong>
+            <span data-nm-preview-label="parent"></span>
+          </div>
+          <div class="nm-report-preview-stat">
+            <strong data-nm-preview-label="suggestions"></strong>
+            <span data-nm-preview-label="action"></span>
+          </div>
+          <div class="nm-report-preview-stat">
+            <strong>PDF</strong>
+            <span data-nm-preview-label="pdf"></span>
+          </div>
+        </div>
+      `;
+      caption.insertAdjacentElement("afterend", shell);
+    }
+
+    const labels = getReportPreviewLabels(lang);
+
+    shell.querySelectorAll("[data-nm-preview-label]").forEach((element) => {
+      const key = element.getAttribute("data-nm-preview-label");
+      if (labels[key]) {
+        element.textContent = labels[key];
+      }
+    });
+  }
+
   function applyLandingCompactLayout() {
     const landing =
       document.getElementById("nmSocialLanding") ||
@@ -1034,6 +1398,9 @@
       setImportantStyle(cta, "padding-top", "9px");
       setImportantStyle(cta, "padding-bottom", "9px");
     });
+
+    ensureStickyBrandHeader();
+    ensureReportPreviewMockup(getLang() || state.lang || "hu");
   }
 
   function applyLandingFallbackLanguage(lang = state.lang) {
