@@ -20,11 +20,11 @@ function main() {
     "Webflow Engine loader should load the public engine file."
   );
   assert(
-    loaderHtml.includes("20260604-language-sync-v8"),
+    loaderHtml.includes("20260604-cleanup-v1"),
     "Webflow Engine loader should include the landing polish and analytics v2 cache-busting version."
   );
   assert(script.includes("ENGINE_VERSION"), "Engine should expose an engine version.");
-  assert(script.includes("20260604-language-sync-v8"), "Engine should expose the current language sync version.");
+  assert(script.includes("20260604-cleanup-v1"), "Engine should expose the current cleanup version.");
   assert(script.includes("ANALYTICS_SCHEMA_VERSION"), "Engine should define an analytics schema version.");
   assert(script.includes("analytics-event-schema-v2"), "Engine should use analytics event schema v2.");
   assert(script.includes("trackSchemaEvent"), "Engine should send normalized analytics events.");
@@ -58,19 +58,18 @@ function main() {
   assert(script.includes("ageYears: childAge"), "Engine should include ageYears in checkout payload.");
 
   const expectedAgeLabels = [
-    "Gyermek életkora",
+    "Gyermek \\u00e9letkora",
     "Child age",
     "Alter des Kindes",
-    "Eta del bambino",
-    "Edad del niño",
-    "孩子年龄",
-    "子どもの年齢",
-    "عمر الطفل",
+    "Et\\u00e0 del bambino",
+    "Edad del ni\\u00f1o",
+    "\\u513f\\u7ae5\\u5e74\\u9f84",
+    "\\u5b50\\u3069\\u3082\\u306e\\u5e74\\u9f62",
+    "\\u0639\\u0645\\u0631 \\u0627\\u0644\\u0637\\u0641\\u0644",
     "Wiek dziecka",
-    "Idade da criança",
-    "Âge de l'enfant"
+    "Idade da crian\\u00e7a",
+    "\\u00c2ge de l'enfant"
   ];
-
   expectedAgeLabels.forEach((label) => {
     assert(script.includes(label), `Engine should include localized age label: ${label}`);
   });
@@ -84,3 +83,4 @@ try {
   console.error("Engine age field smoke failed:", error.message);
   process.exit(1);
 }
+

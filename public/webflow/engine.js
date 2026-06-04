@@ -5,7 +5,7 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260604-language-sync-v8";
+  const ENGINE_VERSION = "20260604-cleanup-v1";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
 
   const state = {
@@ -901,124 +901,6 @@
 
   const LANDING_FALLBACK_TEXT = {
     hu: {
-      modalTitle: "Válassz nyelvet",
-      heroTitle: "Értsd meg, mi állhat gyermeked viselkedése mögött",
-      heroSub: "10 perces kérdőív után személyre szabott, szülőbarát riportot és PDF-et kapsz.",
-      primaryCta: "Kezdjük →",
-      microcopy: "Csak $5 • Nincs előfizetés • PDF riport emailben",
-      trust1: "kb. 10 perc",
-      trust2: "PDF riport emailben",
-      trust3: "strukturált elemzés",
-      valueTitle: "Mit kapsz pontosan?",
-      value1: "személyre szabott értelmezés a válaszok alapján",
-      value2: "viselkedési, érzelmi és tanulási mintázatok kiemelve",
-      value3: "gyakorlati, szülőként is azonnal használható javaslatok",
-      value4: "brandelt PDF riport emailben",
-      stepsTitle: "Így működik",
-      step1: "1. Kitöltöd a rövid előszűrő kérdőívet",
-      step2: "2. A rendszer kiválasztja a releváns specifikus kérdéssort",
-      step3: "3. Fizetés után elkészül és emailben megérkezik a riport",
-      previewTitle: "Így néz ki a riport",
-      previewCaption: "Minta előnézet: a teljes riport személyre szabottan, PDF-ben érkezik.",
-      trustTitle: "Fontos tudni",
-      trustText: "A NeuroMap Kids nem diagnózis, hanem strukturált előszűrés.",
-      priceTitle: "Egyszeri díj",
-      priceValue: "Csak $5",
-      priceCta: "Riport elkészítése →",
-      priceMicrocopy: "Nincs előfizetés • Biztonságos fizetés • PDF emailben",
-      stickyCta: "Kezdjük →"
-    },
-    en: {
-      modalTitle: "Choose language",
-      heroTitle: "Understand what may be behind your child's behavior",
-      heroSub: "After a 10-minute questionnaire, you receive a personalized, parent-friendly report and PDF.",
-      primaryCta: "Start →",
-      microcopy: "Only $5 • No subscription • PDF report by email",
-      trust1: "about 10 minutes",
-      trust2: "PDF report by email",
-      trust3: "structured analysis",
-      valueTitle: "What you get",
-      value1: "personalized interpretation based on your answers",
-      value2: "behavioral, emotional, and learning patterns highlighted",
-      value3: "practical parent-friendly suggestions",
-      value4: "branded PDF report by email",
-      stepsTitle: "How it works",
-      step1: "1. Complete the short screening questionnaire",
-      step2: "2. The system selects the relevant specific question set",
-      step3: "3. After payment, the report is generated and sent by email",
-      previewTitle: "What the report looks like",
-      previewCaption: "Sample preview: the full report is personalized and delivered as a PDF.",
-      trustTitle: "Important to know",
-      trustText: "NeuroMap Kids is not a diagnosis.",
-      priceTitle: "One-time payment",
-      priceValue: "Only $5",
-      priceCta: "Get report →",
-      priceMicrocopy: "No subscription • Secure payment • PDF by email",
-      stickyCta: "Start →"
-    }
-  };
-
-  Object.assign(LANDING_FALLBACK_TEXT, {
-    hu: {
-      modalTitle: "Válassz nyelvet",
-      heroTitle: "Értsd meg, mi állhat gyermeked viselkedése mögött",
-      heroSub: "10 perces kérdőív után személyre szabott, szülőbarát riportot és PDF-et kapsz.",
-      primaryCta: "Kezdjük →",
-      microcopy: "Csak $5 • Nincs előfizetés • PDF riport emailben",
-      trust1: "kb. 10 perc",
-      trust2: "PDF riport emailben",
-      trust3: "strukturált elemzés",
-      valueTitle: "Mit kapsz pontosan?",
-      value1: "személyre szabott értelmezés a válaszok alapján",
-      value2: "viselkedési, érzelmi és tanulási mintázatok kiemelve",
-      value3: "gyakorlati, szülőként is azonnal használható javaslatok",
-      value4: "brandelt PDF riport emailben",
-      stepsTitle: "Így működik",
-      step1: "1. Kitöltöd a rövid előszűrő kérdőívet",
-      step2: "2. A rendszer kiválasztja a releváns specifikus kérdéssort",
-      step3: "3. Fizetés után elkészül és emailben megérkezik a riport",
-      previewTitle: "Így néz ki a riport",
-      previewCaption: "Minta előnézet: a teljes riport személyre szabottan, PDF-ben érkezik.",
-      trustTitle: "Fontos tudni",
-      trustText: "A NeuroMap Kids nem diagnózis, hanem strukturált előszűrés.",
-      priceTitle: "Egyszeri díj",
-      priceValue: "Csak $5",
-      priceCta: "Riport elkészítése →",
-      priceMicrocopy: "Nincs előfizetés • Biztonságos fizetés • PDF emailben",
-      stickyCta: "Kezdjük →"
-    },
-    en: {
-      modalTitle: "Choose language",
-      heroTitle: "Understand what may be behind your child's behavior",
-      heroSub: "After a 10-minute questionnaire, you receive a personalized, parent-friendly report and PDF.",
-      primaryCta: "Start →",
-      microcopy: "Only $5 • No subscription • PDF report by email",
-      trust1: "about 10 minutes",
-      trust2: "PDF report by email",
-      trust3: "structured analysis",
-      valueTitle: "What you get",
-      value1: "personalized interpretation based on your answers",
-      value2: "behavioral, emotional, and learning patterns highlighted",
-      value3: "practical parent-friendly suggestions",
-      value4: "branded PDF report by email",
-      stepsTitle: "How it works",
-      step1: "1. Complete the short screening questionnaire",
-      step2: "2. The system selects the relevant specific question set",
-      step3: "3. After payment, the report is generated and sent by email",
-      previewTitle: "What the report looks like",
-      previewCaption: "Sample preview: the full report is personalized and delivered as a PDF.",
-      trustTitle: "Important to know",
-      trustText: "NeuroMap Kids is not a diagnosis.",
-      priceTitle: "One-time payment",
-      priceValue: "Only $5",
-      priceCta: "Get report →",
-      priceMicrocopy: "No subscription • Secure payment • PDF by email",
-      stickyCta: "Start →"
-    }
-  });
-
-  Object.assign(LANDING_FALLBACK_TEXT, {
-    hu: {
       modalTitle: "Valassz nyelvet",
       heroTitle: "Ertsd meg, mi allhat gyermeked viselkedese mogott",
       heroSub: "10 perces kerdoiv utan szemelyre szabott, szulobarat riportot es PDF-et kapsz.",
@@ -1074,8 +956,7 @@
       priceMicrocopy: "No subscription - Secure payment - PDF by email",
       stickyCta: "Start ->"
     }
-  });
-
+  };
   function getLandingFallbackText(lang = state.lang) {
     return LANDING_FALLBACK_TEXT[lang] || null;
   }
@@ -1305,8 +1186,8 @@
   }
 
   function getQuestionMark(lang) {
-    if (lang === "ar") return "Řź";
-    if (lang === "zh" || lang === "ja") return "ďĽź";
+    if (lang === "ar") return "\u061f";
+    if (lang === "zh" || lang === "ja") return "\uff1f";
     return "?";
   }
 
@@ -1327,16 +1208,16 @@
         value.slice(index + 1);
     }
 
-    value = value.replace(/[.!ă€‚ďĽŽ]+$/u, "").trim();
+    value = value.replace(/[.!\u3002\u061f\uff1f]+$/u, "").trim();
 
     const questionMark = getQuestionMark(lang);
 
-    if (!/[?ŘźďĽź]$/u.test(value)) {
+    if (!/[?\u061f\uff1f]$/u.test(value)) {
       value += questionMark;
     }
 
-    if (lang === "es" && !value.startsWith("Âż")) {
-      value = "Âż" + value;
+    if (lang === "es" && !value.startsWith("\u00bf")) {
+      value = "\u00bf" + value;
     }
 
     return value;
@@ -1419,7 +1300,7 @@
 
     if (errors.length) {
       console.error("NeuroMap runtime bank validation failed:", errors);
-      setStatus("A kĂ©rdĹ‘Ă­v betĂ¶ltĂ©se nem sikerĂĽlt. KĂ©rjĂĽk, frissĂ­tsd az oldalt, vagy prĂłbĂˇld Ăşjra kĂ©sĹ‘bb.");
+      setStatus("A kerdoiv betoltese nem sikerult. Kerjuk, frissitsd az oldalt, vagy probald ujra kesobb.");
       return false;
     }
 
@@ -1903,18 +1784,18 @@
     const value = Number(score || 0);
 
     if (value >= 2.2) {
-      return { key: "high", hu: "magas jelzĂ©sszint", en: "high signal level" };
+      return { key: "high", hu: "magas jelz\u00e9sszint", en: "high signal level" };
     }
 
     if (value >= 1.4) {
-      return { key: "moderate", hu: "kĂ¶zepes jelzĂ©sszint", en: "moderate signal level" };
+      return { key: "moderate", hu: "k\u00f6zepes jelz\u00e9sszint", en: "moderate signal level" };
     }
 
     if (value >= 0.8) {
-      return { key: "mild", hu: "enyhe jelzĂ©sszint", en: "mild signal level" };
+      return { key: "mild", hu: "enyhe jelz\u00e9sszint", en: "mild signal level" };
     }
 
-    return { key: "low", hu: "alacsony jelzĂ©sszint", en: "low signal level" };
+    return { key: "low", hu: "alacsony jelz\u00e9sszint", en: "low signal level" };
   }
 
   function getTopSubdomains(scoring, limit = 3) {
@@ -1937,23 +1818,23 @@
 
     const domainCopy = {
       ADHD: {
-        hu: "A vĂˇlaszok alapjĂˇn a legerĹ‘sebb mintĂˇzat a figyelem, impulzivitĂˇs, aktivitĂˇsszabĂˇlyozĂˇs vagy vĂ©grehajtĂł mĹ±kĂ¶dĂ©s terĂĽletĂ©hez kapcsolĂłdik.",
+        hu: "A v\u00e1laszok alapj\u00e1n a leger\u0151sebb mint\u00e1zat a figyelem, impulzivit\u00e1s, aktivit\u00e1sszab\u00e1lyoz\u00e1s vagy v\u00e9grehajt\u00f3 m\u0171k\u00f6d\u00e9s ter\u00fclet\u00e9hez kapcsol\u00f3dik.",
         en: "The strongest pattern appears to relate to attention, impulsivity, activity regulation, or executive functioning."
       },
       ASD: {
-        hu: "A vĂˇlaszok alapjĂˇn a legerĹ‘sebb mintĂˇzat a tĂˇrsas kommunikĂˇciĂł, rugalmassĂˇg, rutinok vagy szenzoros feldolgozĂˇs terĂĽletĂ©hez kapcsolĂłdik.",
+        hu: "A v\u00e1laszok alapj\u00e1n a leger\u0151sebb mint\u00e1zat a t\u00e1rsas kommunik\u00e1ci\u00f3, rugalmass\u00e1g, rutinok vagy szenzoros feldolgoz\u00e1s ter\u00fclet\u00e9hez kapcsol\u00f3dik.",
         en: "The strongest pattern appears to relate to social communication, flexibility, routines, or sensory processing."
       },
       ANXIETY: {
-        hu: "A vĂˇlaszok alapjĂˇn a legerĹ‘sebb mintĂˇzat az aggodalom, feszĂĽltsĂ©g, bizonytalansĂˇg vagy elkerĂĽlĂ©s terĂĽletĂ©hez kapcsolĂłdik.",
+        hu: "A v\u00e1laszok alapj\u00e1n a leger\u0151sebb mint\u00e1zat az aggodalom, fesz\u00fclts\u00e9g, bizonytalans\u00e1g vagy elker\u00fcl\u00e9s ter\u00fclet\u00e9hez kapcsol\u00f3dik.",
         en: "The strongest pattern appears to relate to worry, tension, uncertainty, or avoidance."
       },
       DEPRESSION: {
-        hu: "A vĂˇlaszok alapjĂˇn a legerĹ‘sebb mintĂˇzat a hangulat, motivĂˇciĂł, Ă©rdeklĹ‘dĂ©s vagy Ă¶nĂ©rtĂ©kelĂ©s terĂĽletĂ©hez kapcsolĂłdik.",
+        hu: "A v\u00e1laszok alapj\u00e1n a leger\u0151sebb mint\u00e1zat a hangulat, motiv\u00e1ci\u00f3, \u00e9rdekl\u0151d\u00e9s vagy \u00f6n\u00e9rt\u00e9kel\u00e9s ter\u00fclet\u00e9hez kapcsol\u00f3dik.",
         en: "The strongest pattern appears to relate to mood, motivation, interest, or self-view."
       },
       LEARNING: {
-        hu: "A vĂˇlaszok alapjĂˇn a legerĹ‘sebb mintĂˇzat tanulĂˇsi, teljesĂ­tmĂ©nybeli, olvasĂˇsi, Ă­rĂˇsi, matematikai vagy feladatmegĂ©rtĂ©si nehĂ©zsĂ©gekhez kapcsolĂłdik.",
+        hu: "A v\u00e1laszok alapj\u00e1n a leger\u0151sebb mint\u00e1zat tanul\u00e1si, teljes\u00edtm\u00e9nybeli, olvas\u00e1si, \u00edr\u00e1si, matematikai vagy feladatmeg\u00e9rt\u00e9si neh\u00e9zs\u00e9gekhez kapcsol\u00f3dik.",
         en: "The strongest pattern appears to relate to learning, performance, reading, writing, math, or task-understanding difficulties."
       }
     };
@@ -1966,7 +1847,7 @@
       secondaryRisk: secondaryRisk || null,
       triageScores: triageScores || {},
       summaryText: domainCopy[kind] || {
-        hu: "A vĂˇlaszok alapjĂˇn kirajzolĂłdik egy Ă©rtelmezhetĹ‘ mintĂˇzat.",
+        hu: "A v\u00e1laszok alapj\u00e1n kirajzol\u00f3dik egy \u00e9rtelmezhet\u0151 mint\u00e1zat.",
         en: "The answers suggest a meaningful pattern."
       }
     };
@@ -1981,10 +1862,10 @@
 
     const fallback = {
       hu: {
-        label: "Gyermek életkora",
+        label: "Gyermek \u00e9letkora",
         placeholder: "pl. 7",
-        missing: "Kérlek add meg a gyermek életkorát.",
-        invalid: "A gyermek életkora 1 és 24 év között legyen."
+        missing: "K\u00e9rlek add meg a gyermek \u00e9letkor\u00e1t.",
+        invalid: "A gyermek \u00e9letkora 1 \u00e9s 24 \u00e9v k\u00f6z\u00f6tt legyen."
       },
       en: {
         label: "Child age",
@@ -1999,55 +1880,54 @@
         invalid: "Das Alter des Kindes sollte zwischen 1 und 24 Jahren liegen."
       },
       it: {
-        label: "Eta del bambino",
+        label: "Et\u00e0 del bambino",
         placeholder: "es. 7",
-        missing: "Inserisci l'eta del bambino.",
-        invalid: "L'eta del bambino deve essere compresa tra 1 e 24 anni."
+        missing: "Inserisci l'et\u00e0 del bambino.",
+        invalid: "L'et\u00e0 del bambino deve essere compresa tra 1 e 24 anni."
       },
       es: {
-        label: "Edad del niño",
+        label: "Edad del ni\u00f1o",
         placeholder: "p. ej. 7",
-        missing: "Por favor, introduce la edad del niño.",
-        invalid: "La edad del niño debe estar entre 1 y 24 años."
+        missing: "Por favor, introduce la edad del ni\u00f1o.",
+        invalid: "La edad del ni\u00f1o debe estar entre 1 y 24 a\u00f1os."
       },
       zh: {
-        label: "孩子年龄",
-        placeholder: "例如 7",
-        missing: "请输入孩子的年龄。",
-        invalid: "孩子年龄应在 1 到 24 岁之间。"
+        label: "\u513f\u7ae5\u5e74\u9f84",
+        placeholder: "\u4f8b\u5982 7",
+        missing: "\u8bf7\u8f93\u5165\u513f\u7ae5\u5e74\u9f84\u3002",
+        invalid: "\u513f\u7ae5\u5e74\u9f84\u5e94\u5728 1 \u5230 24 \u5c81\u4e4b\u95f4\u3002"
       },
       ja: {
-        label: "子どもの年齢",
-        placeholder: "例: 7",
-        missing: "子どもの年齢を入力してください。",
-        invalid: "子どもの年齢は1歳から24歳の間で入力してください。"
+        label: "\u5b50\u3069\u3082\u306e\u5e74\u9f62",
+        placeholder: "\u4f8b: 7",
+        missing: "\u5b50\u3069\u3082\u306e\u5e74\u9f62\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+        invalid: "\u5b50\u3069\u3082\u306e\u5e74\u9f62\u306f1\u6b73\u304b\u308924\u6b73\u306e\u9593\u3067\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044\u3002"
       },
       ar: {
-        label: "عمر الطفل",
-        placeholder: "مثال: 7",
-        missing: "يرجى إدخال عمر الطفل.",
-        invalid: "يجب أن يكون عمر الطفل بين 1 و24 سنة."
+        label: "\u0639\u0645\u0631 \u0627\u0644\u0637\u0641\u0644",
+        placeholder: "\u0645\u062b\u0627\u0644: 7",
+        missing: "\u064a\u0631\u062c\u0649 \u0625\u062f\u062e\u0627\u0644 \u0639\u0645\u0631 \u0627\u0644\u0637\u0641\u0644.",
+        invalid: "\u064a\u062c\u0628 \u0623\u0646 \u064a\u0643\u0648\u0646 \u0639\u0645\u0631 \u0627\u0644\u0637\u0641\u0644 \u0628\u064a\u0646 1 \u064824 \u0633\u0646\u0629."
       },
       pl: {
         label: "Wiek dziecka",
         placeholder: "np. 7",
         missing: "Podaj wiek dziecka.",
-        invalid: "Wiek dziecka powinien mieścić się w zakresie od 1 do 24 lat."
+        invalid: "Wiek dziecka powinien mie\u015bci\u0107 si\u0119 w zakresie od 1 do 24 lat."
       },
       pt: {
-        label: "Idade da criança",
+        label: "Idade da crian\u00e7a",
         placeholder: "ex. 7",
-        missing: "Por favor, informe a idade da criança.",
-        invalid: "A idade da criança deve estar entre 1 e 24 anos."
+        missing: "Por favor, informe a idade da crian\u00e7a.",
+        invalid: "A idade da crian\u00e7a deve estar entre 1 e 24 anos."
       },
       fr: {
-        label: "Âge de l'enfant",
+        label: "\u00c2ge de l'enfant",
         placeholder: "ex. 7",
-        missing: "Veuillez indiquer l'âge de l'enfant.",
-        invalid: "L'âge de l'enfant doit être compris entre 1 et 24 ans."
+        missing: "Veuillez indiquer l'\u00e2ge de l'enfant.",
+        invalid: "L'\u00e2ge de l'enfant doit \u00eatre compris entre 1 et 24 ans."
       }
     };
-
     const local = fallback[state.lang] || fallback.en;
 
     return {
@@ -2194,20 +2074,11 @@
       en: "English",
       de: "Deutsch",
       it: "Italiano",
-      es: "EspaĂ±ol",
-      zh: "ä¸­ć–‡",
-      ja: "ć—Ąćś¬čŞž",
-      ar: "Ř§Ů„ŘąŘ±Ř¨ŮŠŘ©",
-      pl: "Polski",
-      pt: "PortuguĂŞs",
-      fr: "FranĂ§ais"
-    };
-
-    const fixedLabels = {
       es: "Espa\u00f1ol",
       zh: "\u4e2d\u6587",
       ja: "\u65e5\u672c\u8a9e",
       ar: "\u0627\u0644\u0639\u0631\u0628\u064a\u0629",
+      pl: "Polski",
       pt: "Portugu\u00eas",
       fr: "Fran\u00e7ais"
     };
@@ -2218,7 +2089,7 @@
       .map(
         (lang) => `
       <button data-nm-lang-option="${lang}" onclick="selectLang('${lang}')" style="display:block;width:100%;margin:8px 0;padding:10px;">
-        ${fixedLabels[lang] || labels[lang] || lang.toUpperCase()}
+        ${labels[lang] || lang.toUpperCase()}
       </button>
     `
       )
@@ -2405,7 +2276,7 @@
     const barEl = document.getElementById("progressBar");
     const pageTitleEl = document.getElementById("pageTitle");
 
-    if (textEl) textEl.textContent = `${current} / 3 Â· ${currentData.title}`;
+    if (textEl) textEl.textContent = `${current} / 3 - ${currentData.title}`;
 
     if (barEl) {
       barEl.style.width = `${current * 33.33}%`;
@@ -2421,7 +2292,7 @@
     if (!container) return;
 
     const focus = disorderLabel(state.detectedRisk);
-    const secondary = state.secondaryRisk ? disorderLabel(state.secondaryRisk) : "â€”";
+    const secondary = state.secondaryRisk ? disorderLabel(state.secondaryRisk) : "-";
     const signal =
       (state.resultSummary && state.resultSummary.signal && state.resultSummary.signal[state.lang]) ||
       (state.resultSummary && state.resultSummary.signal && state.resultSummary.signal.en) ||
@@ -2480,7 +2351,7 @@
         <div class="nm-summary-warning">
           ${
             state.lang === "hu"
-              ? "Ez nem diagnĂłzis, hanem strukturĂˇlt elĹ‘szĹ±rĂ©si Ă¶sszegzĂ©s. A rĂ©szletes, szĂĽlĹ‘barĂˇt riport Ă©s PDF a fizetĂ©s utĂˇn kĂ©szĂĽl el."
+              ? "Ez nem diagn\u00f3zis, hanem struktur\u00e1lt el\u0151sz\u0171r\u00e9si \u00f6sszegz\u00e9s. A r\u00e9szletes, sz\u00fcl\u0151bar\u00e1t riport \u00e9s PDF a fizet\u00e9s ut\u00e1n k\u00e9sz\u00fcl el."
               : "This is not a diagnosis. It is a structured screening summary. The detailed parent-friendly report and PDF are generated after payment."
           }
         </div>
@@ -2669,23 +2540,23 @@
     const errors = [];
 
     if (!state.triageQuestions.length || state.triageAnswers.length !== state.triageQuestions.length) {
-      errors.push("Triage kĂ©rdĂ©sek nincsenek teljesen kitĂ¶ltve.");
+      errors.push("A triage kerdesek nincsenek teljesen kitoltve.");
     }
 
     if (!state.detectedRisk) {
-      errors.push("Nem sikerĂĽlt meghatĂˇrozni a fĹ‘ terĂĽletet.");
+      errors.push("Nem sikerult meghatarozni a fo teruletet.");
     }
 
     if (!state.specificQuestions.length || state.specificAnswers.length !== state.specificQuestions.length) {
-      errors.push("Specifikus kĂ©rdĂ©sek nincsenek teljesen kitĂ¶ltve.");
+      errors.push("A specifikus kerdesek nincsenek teljesen kitoltve.");
     }
 
     if (!state.specificScoring || typeof state.specificScoring.normalizedAverage !== "number") {
-      errors.push("HiĂˇnyzik a scoring.");
+      errors.push("Hianyzik a scoring.");
     }
 
     if (!state.specificProfile || !state.specificProfile.kind) {
-      errors.push("HiĂˇnyzik a profil.");
+      errors.push("Hianyzik a profil.");
     }
 
     if (state.needsExtra) {
@@ -2702,7 +2573,7 @@
           extraAnswers: state.extraAnswers.length
         });
 
-        errors.push("Extra kĂ©rdĂ©sek nincsenek kitĂ¶ltve.");
+        errors.push("Az extra kerdesek nincsenek kitoltve.");
       }
     }
 
@@ -2950,3 +2821,5 @@
 
   init();
 })();
+
+

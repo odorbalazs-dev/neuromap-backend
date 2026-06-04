@@ -1,6 +1,6 @@
 # NeuroMap Kids Project State
 
-Last consolidated: 2026-05-21, Europe/Budapest
+Last consolidated: 2026-06-04, Europe/Budapest
 
 This file is the handoff memory for the NeuroMap Kids Webflow + Railway project. It summarizes the old ChatGPT threads, screenshots, Railway logs, current repo state, and the security hardening work already prepared in this repo.
 
@@ -45,43 +45,19 @@ Current strategic recommendation from the old chat:
 
 ## Current Repo State
 
-As of this consolidation, both the Codex clone and `C:\Users\odorb\neuromap-backend` contain the same uncommitted security and queue hardening changes.
+The active repo is `C:\Users\odorb\neuromap-backend`.
 
-Expected `git status --short` includes:
+Production entrypoints:
+- Web server: `npm start` -> `node src/app/server.js`
+- Analysis worker: `npm run worker` -> `node src/jobs/analysis.worker.js`
+- Webflow engine loader: `web/engine-embed.full.html`
+- Checkout success/cancel loader: `web/checkout-success-embed.html` and `web/checkout-cancel-embed.html`
 
-```text
- M package-lock.json
- M src/api/controllers/admin.controller.js
- M src/api/controllers/checkout.controller.js
- M src/api/controllers/cron.controller.js
- M src/api/controllers/jobs.controller.js
- M src/api/routes/health.js
- M src/app/server.js
- M src/middleware/adminAuth.js
- M src/services/analysis-job.service.js
- M src/services/analysis-queue.service.js
- M src/services/stripe.service.js
- M src/services/webhook.service.js
- M src/utils/normalizeCheckoutPayload.js
- M src/utils/validateCheckoutPayload.js
-?? src/db/migrations/005_analysis_jobs_idempotency.sql
-?? src/middleware/security.js
-?? src/utils/secureCompare.js
-```
-
-Verification already run in `C:\Users\odorb\neuromap-backend`:
-- `node --check` over all `src/**/*.js`: passed.
-- `npm audit --omit=dev --json` with `NODE_OPTIONS=--use-system-ca`: passed, 0 vulnerabilities.
-- Migration `005_analysis_jobs_idempotency.sql` exists.
-
-Suggested commit after review:
-
-```powershell
-cd C:\Users\odorb\neuromap-backend
-git add package-lock.json src PROJECT_STATE.md
-git commit -m "harden checkout and analysis queue security"
-git push origin main
-```
+Cleanup audit note, 2026-06-04:
+- Removed unused legacy placeholder files from `src/domain`, `src/infrastructure`, `src/repositories`, and old `web` snippets.
+- Removed the tracked empty root file `-H`.
+- Kept the Webflow loader templates because the admin Embed Manager uses them.
+- Simplified duplicate landing fallback text in `public/webflow/engine.js`.
 
 ## Security Hardening Prepared
 
@@ -360,15 +336,9 @@ Historical PDF issues:
 
 ## Known Weird Repo Artifacts
 
-GitHub screenshot showed:
-- `.tmp.driveupload` was committed or visible in GitHub.
-- A strange root file named `-H` existed.
-
-Recommendation:
-- Do not delete blindly during unrelated work.
-- Audit these separately:
-  - if `.tmp.driveupload` contains only upload scratch files, remove it from git and add it to `.gitignore`.
-  - inspect `-H`; if it is accidental command output, remove it in a cleanup commit.
+Cleanup status, 2026-06-04:
+- `.tmp.driveupload/` is ignored by `.gitignore`; leave local scratch contents untracked.
+- The tracked empty root file `-H` was removed during cleanup.
 
 ## Immediate Next Checklist
 
@@ -428,4 +398,3 @@ Do a focused engine/bank audit, not a broad rewrite:
 - Add a validator script that checks every bank count, required fields, language keys, duplicate IDs, duplicate `stemKey` concentration, and invalid dimensions.
 - Run the validator against triage, ADHD, ASD, ANXIETY, DEPRESSION, and LEARNING.
 - Then implement the ANXIETY premium bank or upgrade it on top of the validated schema.
-
