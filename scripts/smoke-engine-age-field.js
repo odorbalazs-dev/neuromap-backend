@@ -20,11 +20,11 @@ function main() {
     "Webflow Engine loader should load the public engine file."
   );
   assert(
-    loaderHtml.includes("20260604-landing-compact-v6"),
+    loaderHtml.includes("20260604-language-switch-v7"),
     "Webflow Engine loader should include the landing polish and analytics v2 cache-busting version."
   );
   assert(script.includes("ENGINE_VERSION"), "Engine should expose an engine version.");
-  assert(script.includes("20260604-landing-compact-v6"), "Engine should expose the current landing compact version.");
+  assert(script.includes("20260604-language-switch-v7"), "Engine should expose the current language switch version.");
   assert(script.includes("ANALYTICS_SCHEMA_VERSION"), "Engine should define an analytics schema version.");
   assert(script.includes("analytics-event-schema-v2"), "Engine should use analytics event schema v2.");
   assert(script.includes("trackSchemaEvent"), "Engine should send normalized analytics events.");
@@ -36,6 +36,9 @@ function main() {
   assert(script.includes("max-width: 620px !important"), "Engine should include compact CTA/content width.");
   assert(script.includes("applyLandingCompactLayout"), "Engine should re-apply compact landing layout after Webflow changes.");
   assert(script.includes('style.setProperty(property, value, "important")'), "Engine should use inline important styles for late landing overrides.");
+  assert(script.includes("ensureLanguageModal"), "Engine should create a fallback language modal.");
+  assert(script.includes("bindLanguageSwitchers"), "Engine should bind all language switch buttons.");
+  assert(script.includes("#nmOpenLangBtn"), "Engine should bind the current Webflow language button.");
   assert(script.includes("applyLandingFallbackLanguage"), "Engine should include the landing text rescue fallback.");
   assert(script.includes("ensureLandingStartHandlers"), "Engine should bind landing start buttons.");
   assert(script.includes("nm_landing_view"), "Engine should send a landing view event.");

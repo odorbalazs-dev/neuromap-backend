@@ -5,7 +5,7 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260604-landing-compact-v6";
+  const ENGINE_VERSION = "20260604-language-switch-v7";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
 
   const state = {
@@ -1200,6 +1200,7 @@
 
       const applied = applyLandingFallbackLanguage(lang);
       ensureLandingStartHandlers();
+      bindLanguageSwitchers();
       applyLandingCompactLayout();
 
       restoreLandingSections();
@@ -2119,8 +2120,50 @@
     return { ok: true, age };
   }
 
+  function ensureLanguageModal() {
+    let modal = document.getElementById("languageModal");
+    let buttons = document.getElementById("langButtons");
+
+    if (modal && buttons) return modal;
+
+    if (!modal) {
+      modal = document.createElement("div");
+      modal.id = "languageModal";
+      modal.style.display = "none";
+      modal.innerHTML = `
+        <div class="nm-language-card">
+          <button type="button" class="nm-modal-close" aria-label="Close language selector">x</button>
+          <h2 id="modalTitle">Choose language</h2>
+          <p>Select your preferred language</p>
+          <div id="langButtons"></div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    } else if (!buttons) {
+      const card = modal.querySelector(".nm-language-card") || modal.firstElementChild || modal;
+      buttons = document.createElement("div");
+      buttons.id = "langButtons";
+      card.appendChild(buttons);
+    }
+
+    modal.querySelectorAll(".nm-modal-close, [data-nm-close-language]").forEach((button) => {
+      if (button.dataset.nmCloseBound === "1") return;
+      button.dataset.nmCloseBound = "1";
+      button.addEventListener("click", hideModal);
+    });
+
+    if (modal.dataset.nmBackdropBound !== "1") {
+      modal.dataset.nmBackdropBound = "1";
+      modal.addEventListener("click", (event) => {
+        if (event.target === modal) hideModal();
+      });
+    }
+
+    return modal;
+  }
+
   function showModal() {
-    const el = document.getElementById("languageModal");
+    const el = ensureLanguageModal();
     if (el) el.style.display = "flex";
   }
 
@@ -2130,6 +2173,8 @@
   }
 
   function buildLangButtons() {
+    ensureLanguageModal();
+
     const container = document.getElementById("langButtons");
     if (!container) return;
     if (container.children.length > 0) return;
@@ -2148,17 +2193,59 @@
       fr: "FranĂ§ais"
     };
 
+    const fixedLabels = {
+      es: "Espa\u00f1ol",
+      zh: "\u4e2d\u6587",
+      ja: "\u65e5\u672c\u8a9e",
+      ar: "\u0627\u0644\u0639\u0631\u0628\u064a\u0629",
+      pt: "Portugu\u00eas",
+      fr: "Fran\u00e7ais"
+    };
+
     const supported = getConfig().SUPPORTED_LANGS || ["hu"];
 
     container.innerHTML = supported
       .map(
         (lang) => `
       <button onclick="selectLang('${lang}')" style="display:block;width:100%;margin:8px 0;padding:10px;">
-        ${labels[lang] || lang.toUpperCase()}
+        ${fixedLabels[lang] || labels[lang] || lang.toUpperCase()}
       </button>
     `
       )
       .join("");
+  }
+
+  function bindLanguageSwitchers() {
+    const selectors = [
+      "#langSwitch",
+      "#nmOpenLangBtn",
+      "[data-nm-language-switch]",
+      "[data-nm-open-language]",
+      ".nm-language-switch",
+      ".nm-lang-switch",
+      ".nm-language-button",
+      ".nm-lang-button"
+    ];
+
+    document.querySelectorAll(selectors.join(",")).forEach((element) => {
+      if (element.dataset.nmLanguageSwitchBound === "1") return;
+      element.dataset.nmLanguageSwitchBound = "1";
+      element.setAttribute("role", element.getAttribute("role") || "button");
+      element.addEventListener("click", (event) => {
+        event.preventDefault();
+        showModal();
+      });
+    });
+
+    if (document.documentElement.dataset.nmLanguageDelegationBound !== "1") {
+      document.documentElement.dataset.nmLanguageDelegationBound = "1";
+      document.addEventListener("click", (event) => {
+        const trigger = event.target.closest(selectors.join(","));
+        if (!trigger) return;
+        event.preventDefault();
+        showModal();
+      });
+    }
   }
 
   function responseOptionsHtml(selectedValue = "") {
@@ -2769,6 +2856,7 @@
       installFrontendDesign();
       installLandingPolishV2();
       buildLangButtons();
+      bindLanguageSwitchers();
       ensureChildAgeField();
       state.lang = getLang();
       scheduleLandingTextRescue(state.lang);
@@ -2779,12 +2867,11 @@
 
       state.triageQuestions = buildTriageQuestions();
 
-      const langSwitch = document.getElementById("langSwitch");
       const nextBtn = document.getElementById("nextBtn");
       const backBtn = document.getElementById("backBtn");
       const paymentBtn = document.getElementById("paymentBtn");
 
-      if (langSwitch) langSwitch.addEventListener("click", showModal);
+      bindLanguageSwitchers();
       if (nextBtn) nextBtn.addEventListener("click", nextStep);
       if (backBtn) backBtn.addEventListener("click", prevStep);
       if (paymentBtn) paymentBtn.addEventListener("click", startCheckout);
