@@ -71,6 +71,12 @@ export function getAdminDashboard(_req, res) {
         <button type="button" data-scroll-target="sessionDetailPanel">Részletek</button>
       </nav>
 
+      <nav class="quick-nav quick-filter-nav" aria-label="Dashboard gyors szurok">
+        <button type="button" data-dashboard-filter="low-confidence">Alacsony confidence</button>
+        <button type="button" data-dashboard-filter="email-risk">Email teendo</button>
+        <button type="button" data-dashboard-filter="checkout-dropoff">Checkout dropoff</button>
+      </nav>
+
       <section id="controlCenterPanel" class="control-center" aria-label="Vezérlőközpont áttekintés">
         <article class="control-hero">
           <div>

@@ -5,7 +5,7 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260605-landing-hu-cta-v1";
+  const ENGINE_VERSION = "20260605-cx-top10-v1";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
   const DRAFT_STORAGE_KEY = "nm_questionnaire_draft_v1";
   const DRAFT_TTL_MS = 1000 * 60 * 60 * 24 * 14;
@@ -709,6 +709,84 @@
         line-height: 1.55;
       }
 
+      .nm-report-preview-v2-card,
+      .nm-decision-explain-card {
+        background: #ffffff;
+        border: 1px solid #d9ecf7;
+        border-radius: 22px;
+        box-shadow: 0 14px 30px rgba(20, 32, 51, 0.06);
+        margin: 16px 0;
+        padding: 20px;
+      }
+
+      .nm-report-preview-v2-card h4,
+      .nm-decision-explain-card h4 {
+        color: #102033;
+        font-size: 18px;
+        font-weight: 950;
+        line-height: 1.24;
+        margin: 0 0 8px;
+      }
+
+      .nm-report-preview-v2-card p,
+      .nm-decision-explain-card p {
+        color: #506578;
+        font-size: 14px;
+        font-weight: 650;
+        line-height: 1.62;
+        margin: 0 0 14px;
+      }
+
+      .nm-report-preview-v2-grid,
+      .nm-decision-explain-grid {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .nm-report-preview-v2-item,
+      .nm-decision-explain-item {
+        background: #f7fbff;
+        border: 1px solid #dbeef8;
+        border-radius: 16px;
+        min-height: 94px;
+        padding: 13px;
+      }
+
+      .nm-report-preview-v2-label,
+      .nm-decision-explain-label {
+        color: #6b7f93;
+        display: block;
+        font-size: 11px;
+        font-weight: 950;
+        letter-spacing: 0.03em;
+        margin-bottom: 7px;
+        text-transform: uppercase;
+      }
+
+      .nm-report-preview-v2-value,
+      .nm-decision-explain-value {
+        color: #102033;
+        display: block;
+        font-size: 13px;
+        font-weight: 900;
+        line-height: 1.35;
+      }
+
+      .nm-decision-explain-card {
+        background:
+          linear-gradient(135deg, rgba(17, 151, 213, 0.06), rgba(255, 122, 0, 0.05)),
+          #ffffff;
+      }
+
+      .nm-draft-progress {
+        color: #0b86bf;
+        display: block;
+        font-size: 12px;
+        font-weight: 850;
+        margin-top: 4px;
+      }
+
       .nm-summary-cta-strip {
         align-items: center;
         background: #102033;
@@ -1202,12 +1280,16 @@
         .nm-summary-card,
         .nm-prepayment-trust-card,
         .nm-summary-science-card,
+        .nm-report-preview-v2-card,
+        .nm-decision-explain-card,
         .nm-report-teaser-card {
           border-radius: 18px;
           padding: 18px;
         }
 
-        .nm-report-teaser-grid {
+        .nm-report-teaser-grid,
+        .nm-report-preview-v2-grid,
+        .nm-decision-explain-grid {
           grid-template-columns: 1fr;
         }
 
@@ -2984,12 +3066,38 @@
     const restartButton = banner.querySelector("[data-nm-resume-restart]");
 
     if (title) title.textContent = copy.title;
-    if (body) body.textContent = copy.body;
+    if (body) {
+      const progress = getDraftProgressText();
+      body.innerHTML = `${escapeHtml(copy.body)}${progress ? `<span class="nm-draft-progress">${escapeHtml(progress)}</span>` : ""}`;
+    }
     if (continueButton) continueButton.textContent = copy.continueLabel;
     if (restartButton) restartButton.textContent = copy.restartLabel;
 
     const visible = shouldShow === null ? state.draftRestored : shouldShow;
     banner.classList.toggle("is-visible", Boolean(visible && readDraft()));
+  }
+
+  function getDraftProgressText() {
+    const draft = readDraft();
+    if (!draft) return "";
+
+    const answered = (values) =>
+      (Array.isArray(values) ? values : []).filter(
+        (value) => value !== null && value !== undefined && value !== "" && !Number.isNaN(Number(value))
+      ).length;
+
+    const triageDone = answered(draft.triageAnswers);
+    const triageTotal = Array.isArray(draft.triageQuestions) ? draft.triageQuestions.length : 0;
+    const specificDone = answered(draft.specificAnswers) + answered(draft.extraAnswers);
+    const specificTotal =
+      (Array.isArray(draft.specificQuestions) ? draft.specificQuestions.length : 0) +
+      (draft.needsExtra && Array.isArray(draft.extraQuestions) ? draft.extraQuestions.length : 0);
+
+    if (state.lang === "hu" || draft.lang === "hu") {
+      return `Mentett allapot: ${triageDone}/${triageTotal || 25} elso szures, ${specificDone}/${specificTotal || 0} pontositas.`;
+    }
+
+    return `Saved progress: ${triageDone}/${triageTotal || 25} screening answers, ${specificDone}/${specificTotal || 0} detail answers.`;
   }
 
   function bindDraftAutosave() {
@@ -4769,6 +4877,139 @@
     `;
   }
 
+  function getAgeContextLabel() {
+    const age = getChildAgeValue();
+
+    if (age === null || Number.isNaN(age)) {
+      return state.lang === "hu" ? "korosztaly megadas utan pontosabb" : "refined after age is provided";
+    }
+
+    if (state.lang === "hu") {
+      if (age < 3) return "kisgyermekkori kontextus";
+      if (age < 6) return "ovoda elotti / ovodas korosztaly";
+      if (age < 12) return "kisiskolas korosztaly";
+      if (age < 18) return "serdulokori kontextus";
+      return "fiatal felnott korosztaly";
+    }
+
+    if (age < 3) return "early childhood context";
+    if (age < 6) return "preschool age context";
+    if (age < 12) return "primary school age context";
+    if (age < 18) return "adolescent context";
+    return "young adult context";
+  }
+
+  function formatDecisionScore(value) {
+    const numeric = Number(value);
+    if (!Number.isFinite(numeric)) return "-";
+    return numeric.toFixed(2);
+  }
+
+  function getDecisionRankingTop() {
+    if (!Array.isArray(state.triageRanking)) return [];
+    return state.triageRanking.slice(0, 2);
+  }
+
+  function buildReportPreviewV2Html() {
+    const isHu = state.lang === "hu";
+    const focus = disorderLabel(state.detectedRisk);
+    const secondary = state.secondaryRisk ? disorderLabel(state.secondaryRisk) : (isHu ? "nincs eros masodlagos jelzes" : "no strong secondary signal");
+    const signal =
+      state.resultSummary?.signal?.[state.lang] ||
+      state.resultSummary?.signal?.en ||
+      state.resultSummary?.signal?.key ||
+      "-";
+
+    const copy = isHu
+      ? {
+          title: "Mit mutat majd pontosabban a teljes riport?",
+          lead:
+            "A fizetes utani riport nem ujabb cimket ad, hanem erthetoen osszerendezi a valaszokat, a korosztalyt es az atfedeseket.",
+          labels: ["Fo minta", "Masodlagos jelzes", "Korosztaly", "Jelzesszint"]
+        }
+      : {
+          title: "What will the full report clarify?",
+          lead:
+            "The paid report does not add another label. It organizes the answers, age context, and overlaps into a clear parent-friendly picture.",
+          labels: ["Primary pattern", "Secondary signal", "Age context", "Signal level"]
+        };
+
+    const values = [focus, secondary, getAgeContextLabel(), signal];
+
+    return `
+      <div class="nm-report-preview-v2-card">
+        <h4>${escapeHtml(copy.title)}</h4>
+        <p>${escapeHtml(copy.lead)}</p>
+        <div class="nm-report-preview-v2-grid">
+          ${copy.labels
+            .map(
+              (label, index) => `
+                <div class="nm-report-preview-v2-item">
+                  <span class="nm-report-preview-v2-label">${escapeHtml(label)}</span>
+                  <span class="nm-report-preview-v2-value">${escapeHtml(values[index])}</span>
+                </div>
+              `
+            )
+            .join("")}
+        </div>
+      </div>
+    `;
+  }
+
+  function buildDecisionExplanationHtml() {
+    const isHu = state.lang === "hu";
+    const ranking = getDecisionRankingTop();
+    const primary = ranking[0] || {};
+    const secondary = ranking[1] || {};
+    const gap = Number(primary.weightedSignal || 0) - Number(secondary.weightedSignal || 0);
+    const confidence =
+      gap >= 0.35
+        ? isHu ? "magasabb biztonsag" : "stronger confidence"
+        : gap >= 0.16
+          ? isHu ? "kozepes biztonsag" : "moderate confidence"
+          : isHu ? "szoros eredmeny" : "close result";
+
+    const copy = isHu
+      ? {
+          title: "Hogyan dontott az engine?",
+          lead:
+            "A rendszer nem egyetlen valaszbol kovetkeztet. A fo es masodlagos teruleteket a jelerosseg, a kovetkezetesseg es az atfedes alapjan rendezi.",
+          labels: ["Fo jelzes", "Masodlagos jelzes", "Biztonsag", "Extra pontositas"]
+        }
+      : {
+          title: "How did the engine decide?",
+          lead:
+            "The engine does not infer from one answer. It ranks primary and secondary areas using signal strength, consistency, and overlap.",
+          labels: ["Primary signal", "Secondary signal", "Confidence", "Extra clarification"]
+        };
+
+    const values = [
+      `${disorderLabel(primary.domain || state.detectedRisk)} (${formatDecisionScore(primary.weightedSignal)})`,
+      secondary.domain ? `${disorderLabel(secondary.domain)} (${formatDecisionScore(secondary.weightedSignal)})` : "-",
+      confidence,
+      state.needsExtra ? (isHu ? "igen" : "yes") : (isHu ? "nem" : "no")
+    ];
+
+    return `
+      <div class="nm-decision-explain-card">
+        <h4>${escapeHtml(copy.title)}</h4>
+        <p>${escapeHtml(copy.lead)}</p>
+        <div class="nm-decision-explain-grid">
+          ${copy.labels
+            .map(
+              (label, index) => `
+                <div class="nm-decision-explain-item">
+                  <span class="nm-decision-explain-label">${escapeHtml(label)}</span>
+                  <span class="nm-decision-explain-value">${escapeHtml(values[index])}</span>
+                </div>
+              `
+            )
+            .join("")}
+        </div>
+      </div>
+    `;
+  }
+
   function getPrePaymentTrustCopy() {
     const copies = {
       hu: {
@@ -5229,6 +5470,10 @@
             ${escapeHtml(summaryText)}
           </div>
         </div>
+
+        ${buildReportPreviewV2Html()}
+
+        ${buildDecisionExplanationHtml()}
 
         ${buildSummaryConversionHtml()}
 

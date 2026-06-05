@@ -165,6 +165,15 @@ input:focus {
   z-index: 20;
 }
 
+.quick-filter-nav {
+  background: #fff;
+  margin-top: -8px;
+}
+
+.quick-filter-nav button {
+  background: #f8fbfe;
+}
+
 .quick-nav button {
   background: #fff;
   border: 1px solid var(--line);

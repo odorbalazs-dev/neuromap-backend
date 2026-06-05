@@ -726,6 +726,29 @@
     });
   }
 
+  function applyDashboardQuickFilter(filter) {
+    const filters = {
+      "low-confidence": {
+        target: "engineAnalyticsPanel",
+        status: "Alacsony confidence nezete: engine dontesi audit megnyitva."
+      },
+      "email-risk": {
+        target: "emailDeliveryPanel",
+        status: "Email kockazati nezet: kezbesitesi es retry sorok eloterben."
+      },
+      "checkout-dropoff": {
+        target: "customerMetricsPanel",
+        status: "Checkout dropoff nezet: vasarloi ut metrikak eloterben."
+      }
+    };
+
+    const next = filters[filter];
+    if (!next) return;
+
+    setStatus(next.status);
+    scrollToPanel(next.target);
+  }
+
   function detailMetric(label, value, options = {}) {
     const card = document.createElement("article");
     card.className = "detail-metric";
@@ -2279,6 +2302,7 @@
     const summary = data.summary || {};
     const last24h = data.windows?.last24h || {};
     const last7d = data.windows?.last7d || {};
+    const funnel = data.funnel || {};
     const queue = data.operations?.queue || {};
     const webhook = data.operations?.webhook || {};
     const engine = data.engine || {};
@@ -2294,12 +2318,15 @@
     }
     setMetricText(
       els.dashboardMetricsLevelMeta,
-      `${countValue(last7d.sessions)} session / ${countValue(last7d.paid)} fizetes az utolso 7 napban.`
+      `${countValue(last7d.sessions)} session / ${countValue(last7d.checkoutStarted)} checkout / ${countValue(last7d.paid)} fizetes. Session -> paid: ${formatPercent(last7d.sessionToPaidRate)}.`
     );
     setMetricText(els.dashboardMetricsPaid24h, String(countValue(last24h.paid)));
     setMetricText(els.dashboardMetricsRevenue24h, `Becsult bevetel: $${countValue(last24h.estimatedRevenueUsd)}`);
     setMetricText(els.dashboardMetricsConversion7d, formatPercent(last7d.checkoutToPaidRate));
-    setMetricText(els.dashboardMetricsCheckout7d, `Checkout inditas: ${countValue(last7d.checkoutStarted)}`);
+    setMetricText(
+      els.dashboardMetricsCheckout7d,
+      `Checkout inditas: ${countValue(last7d.checkoutStarted)} / dropoff: ${countValue(funnel.dropoffs?.checkoutToPaid ?? last7d.checkoutDropoffCount)}`
+    );
     setMetricText(els.dashboardMetricsEmailRate7d, formatPercent(last7d.analysisDoneToEmailSentRate));
     setMetricText(
       els.dashboardMetricsEmailMeta7d,
@@ -3975,6 +4002,13 @@
 
       event.preventDefault();
       scrollToPanel(button.dataset.scrollTarget);
+    });
+    document.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-dashboard-filter]");
+      if (!button) return;
+
+      event.preventDefault();
+      applyDashboardQuickFilter(button.dataset.dashboardFilter);
     });
     emptyRow(els.sessionSearchRows, 5, "Még nem indult keresés.");
 

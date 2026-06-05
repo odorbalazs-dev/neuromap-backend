@@ -33,7 +33,7 @@ const PAGE_LAYOUT = {
   blockGap: 20
 };
 
-const PDF_REPORT_VERSION = "pdf_report_v9_layout_breaks";
+const PDF_REPORT_VERSION = "pdf_report_v10_visual_quality_v4";
 const BODY_TEXT_COLOR = "#374151";
 const BULLET = "\u2022";
 
@@ -78,10 +78,14 @@ function polishHungarianReportWording(value = "") {
     .replace(/gyermek\s+mindennapi\s+mukodeset/giu, "gyermek mindennapi viselkedeset")
     .replace(/gyermek\s+működése/giu, "gyermek viselkedése")
     .replace(/gyermek\s+mukodese/giu, "gyermek viselkedese")
+    .replace(/gyermek\s+működéséről/giu, "gyermek viselkedéséről")
+    .replace(/gyermek\s+mukodeserol/giu, "gyermek viselkedeserol")
     .replace(/gyermek\s+működését/giu, "gyermek viselkedését")
     .replace(/gyermek\s+mukodeset/giu, "gyermek viselkedeset")
     .replace(/gyermek\s+működésében/giu, "gyermek viselkedésében")
-    .replace(/gyermek\s+mukodeseben/giu, "gyermek viselkedeseben");
+    .replace(/gyermek\s+mukodeseben/giu, "gyermek viselkedeseben")
+    .replace(/gyermek\s+működéséhez/giu, "gyermek viselkedéséhez")
+    .replace(/gyermek\s+mukodesehez/giu, "gyermek viselkedesehez");
 }
 
 function ensureFontFile(filePath, label) {
@@ -1174,10 +1178,10 @@ function addParentQuickSummaryBlock(doc, payload, labels, lang, pageState = null
     lineGap: 2.5,
     align
   });
-  const miniCardH = Math.max(82, Math.ceil(64 + Math.max(0, actionHeight - 24)));
-  const h = Math.max(232, Math.ceil(110 + leadHeight + miniCardH + noteHeight + 30));
+  const miniCardH = Math.max(104, Math.ceil(72 + Math.max(0, actionHeight - 18)));
+  const h = Math.max(272, Math.ceil(126 + leadHeight + miniCardH + noteHeight + 42));
 
-  ensureSpace(doc, h + 18, labels, lang, pageState);
+  ensureSpace(doc, h + 24, labels, lang, pageState);
 
   doc.moveDown(0.8);
   const y = doc.y;
@@ -1210,7 +1214,7 @@ function addParentQuickSummaryBlock(doc, payload, labels, lang, pageState = null
       align
     });
 
-  const cardY = y + 78 + leadHeight;
+  const cardY = y + 90 + leadHeight;
 
   addMiniCard(
     doc,
@@ -1257,7 +1261,7 @@ function addParentQuickSummaryBlock(doc, payload, labels, lang, pageState = null
       align
     });
 
-  doc.y = y + h + 14;
+  doc.y = y + h + 18;
 }
 
 function getReportV2PdfLabels(lang = "en") {
@@ -1753,7 +1757,8 @@ function addReportHeading(doc, heading, labels, lang, pageState = null, keepWith
     h
   } = getReportHeadingMetrics(doc, heading, lang);
 
-  ensureSpace(doc, h + 28 + Math.max(0, Math.min(keepWithHeight, 140)), labels, lang, pageState);
+  const keepTogetherHeight = Math.min(Math.max(Number(keepWithHeight || 0), 0), 160);
+  ensureSpace(doc, h + 28 + keepTogetherHeight, labels, lang, pageState);
 
   const y = doc.y + 6;
 

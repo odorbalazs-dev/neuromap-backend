@@ -3,7 +3,7 @@ import path from "path";
 import vm from "vm";
 import { TRIAGE_BANK, SPECIFIC_BANKS } from "../data/banks/index.js";
 
-const AUDIT_VERSION = "bank-quality-v3";
+const AUDIT_VERSION = "bank-quality-v4-ux";
 const SUPPORTED_LANGS = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];
 const REQUIRED_CORE_LANGS = ["hu", "en"];
 const REQUIRED_DOMAINS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
@@ -64,6 +64,27 @@ const ABSOLUTE_WORDS = [
   /\bmindig\b/i,
   /\bsoha\b/i,
   /\blehetetlen\b/i
+];
+
+const PARENT_FRIENDLY_TERMS = [
+  /\bbehavior\b/i,
+  /\beveryday\b/i,
+  /\bsituation\b/i,
+  /\bviselkedes/i,
+  /\bhetkoznap/i,
+  /\bhelyzet/i,
+  /\bmegfigyel/i
+];
+
+const STIGMATIZING_TERMS = [
+  /\bwrong\b/i,
+  /\bbad\b/i,
+  /\bproblem child\b/i,
+  /\bdefective\b/i,
+  /\brossz\b/i,
+  /\bhibas\b/i,
+  /\bbeteg\b/i,
+  /\bmegbelyeg/i
 ];
 
 const CONNECTOR_PATTERNS = [
@@ -224,6 +245,56 @@ function getItemIssueSummary(name, items) {
   return { counts, examples };
 }
 
+function getUxSignals(name, items) {
+  const total = Math.max(1, items.length);
+  let parentFriendly = 0;
+  let nonStigmatizing = 0;
+  let conciseBehavior = 0;
+  let diagnosticNeutral = 0;
+
+  for (const item of items) {
+    const text = `${getText(item, "en")} ${getText(item, "hu")}`;
+    const normalized = normalizeText(text);
+    const words = wordCount(text);
+    const hasFriendlyCue = PARENT_FRIENDLY_TERMS.some((pattern) => pattern.test(text));
+    const hasStigmatizingCue = STIGMATIZING_TERMS.some((pattern) => pattern.test(normalized));
+    const hasDiagnosticCue = hasDiagnosticLabel(name, item);
+    const connectorLoad = getConnectorLoad(text);
+
+    if (hasFriendlyCue || item.subdomain || item.stemKey) parentFriendly += 1;
+    if (!hasStigmatizingCue) nonStigmatizing += 1;
+    if (words >= 6 && words <= 24 && connectorLoad < 5) conciseBehavior += 1;
+    if (!hasDiagnosticCue) diagnosticNeutral += 1;
+  }
+
+  const parentFriendlyRatio = ratio(parentFriendly, total);
+  const nonStigmatizingRatio = ratio(nonStigmatizing, total);
+  const conciseBehaviorRatio = ratio(conciseBehavior, total);
+  const diagnosticNeutralRatio = ratio(diagnosticNeutral, total);
+  const completionComfortScore = Number(((
+    parentFriendlyRatio * 0.25 +
+    nonStigmatizingRatio * 0.3 +
+    conciseBehaviorRatio * 0.25 +
+    diagnosticNeutralRatio * 0.2
+  ) * 100).toFixed(1));
+
+  const weakestUxSignal = [
+    ["parent_friendly", parentFriendlyRatio],
+    ["non_stigmatizing", nonStigmatizingRatio],
+    ["concise_behavioral", conciseBehaviorRatio],
+    ["diagnostic_neutral", diagnosticNeutralRatio]
+  ].sort((a, b) => a[1] - b[1])[0];
+
+  return {
+    parentFriendlyRatio,
+    nonStigmatizingRatio,
+    conciseBehaviorRatio,
+    diagnosticNeutralRatio,
+    completionComfortScore,
+    weakestUxSignal: weakestUxSignal ? weakestUxSignal[0] : "unknown"
+  };
+}
+
 function getTranslationSignals(items) {
   const sameAsEnglish = {};
   const missing = {};
@@ -318,6 +389,14 @@ function buildIssues(name, items, metrics) {
     issues.push(buildIssue("warning", "long_item_text", "Some items may be too long for smooth parent completion."));
   }
 
+  if (metrics.ux?.completionComfortScore < 82) {
+    issues.push(buildIssue("review", "parent_completion_ux", "Parent-facing completion comfort score is below the preferred threshold."));
+  }
+
+  if (metrics.ux?.nonStigmatizingRatio < 0.98) {
+    issues.push(buildIssue("warning", "stigmatizing_language_risk", "Some items may contain wording that feels stigmatizing or alarming to parents."));
+  }
+
   const itemIssueCounts = metrics.itemIssueCounts;
 
   if ((itemIssueCounts.double_barreled_risk || 0) > 0) {
@@ -368,6 +447,8 @@ function scoreBank(metrics, issues) {
   if (metrics.maxSubdomainRatio > 0.3) score -= 6;
   if (metrics.maxStemRepeat > 10) score -= 6;
   if (metrics.reverseRatio && (metrics.reverseRatio < 0.1 || metrics.reverseRatio > 0.3)) score -= 5;
+  if (metrics.ux?.completionComfortScore < 82) score -= 4;
+  if (metrics.ux?.nonStigmatizingRatio < 0.98) score -= 6;
 
   score -= Math.min(18, Object.values(metrics.itemIssueCounts).reduce((sum, value) => sum + value, 0) * 0.35);
   score -= Math.min(12, issues.filter((issue) => issue.severity === "warning").length * 2);
@@ -423,6 +504,7 @@ function auditBank(name, items, publicItems) {
   const topSubdomain = topEntries(subdomains, 1)[0] || ["none", 0];
   const missingRequiredFields = getMissingRequiredFields(safeItems);
   const itemIssues = getItemIssueSummary(name, safeItems);
+  const uxSignals = getUxSignals(name, safeItems);
 
   const publicTranslationCoverage = publicItems ? getCoverage(publicItems, SUPPORTED_LANGS) : null;
   const publicTranslationSignals = publicItems ? getTranslationSignals(publicItems) : null;
@@ -454,6 +536,7 @@ function auditBank(name, items, publicItems) {
     duplicateTexts: duplicateTexts.map((ids) => ids.join(", ")),
     itemIssueCounts: itemIssues.counts,
     itemIssueExamples: itemIssues.examples,
+    ux: uxSignals,
     smallestSubdomains: topEntries(subdomains, 5, "asc"),
     largestSubdomains: topEntries(subdomains, 5)
   };
@@ -489,6 +572,12 @@ function buildRecommendations(report) {
       issue.code === "diagnostic_label_bias" ||
       issue.code === "absolute_wording" ||
       issue.code === "short_behavioral_specificity"
+    )
+  );
+  const uxIssues = report.filter((bank) =>
+    bank.issues.some((issue) =>
+      issue.code === "parent_completion_ux" ||
+      issue.code === "stigmatizing_language_risk"
     )
   );
 
@@ -529,6 +618,14 @@ function buildRecommendations(report) {
       level: "review",
       title: "Tighten behavioral wording",
       detail: `${wordingIssues.map((bank) => bank.name).join(", ")} has wording candidates for short, absolute, diagnostic, or double-barreled review.`
+    });
+  }
+
+  if (uxIssues.length) {
+    recommendations.push({
+      level: "review",
+      title: "Improve parent completion experience",
+      detail: `${uxIssues.map((bank) => bank.name).join(", ")} should be reviewed for calmer, more behavior-focused, parent-friendly question wording.`
     });
   }
 
@@ -643,6 +740,7 @@ export function printBankQualityAuditReport(payload) {
     console.log(`Smallest subdomains: ${JSON.stringify(bank.smallestSubdomains)}`);
     console.log(`Largest subdomains: ${JSON.stringify(bank.largestSubdomains)}`);
     console.log(`Item issue counts: ${JSON.stringify(bank.itemIssueCounts)}`);
+    console.log(`Parent UX signals: ${JSON.stringify(bank.ux || {})}`);
 
     if (bank.issues.length) {
       console.log("Issues:");

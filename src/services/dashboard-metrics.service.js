@@ -38,13 +38,45 @@ function withRates(row) {
     reportEmailUnsent: number(row.report_email_unsent),
     estimatedRevenueUsd: number(row.paid) * REPORT_PRICE_USD
   };
+  const checkoutDropoffCount = Math.max(0, metrics.checkoutStarted - metrics.paid);
 
   return {
     ...metrics,
+    checkoutDropoffCount,
+    sessionToCheckoutRate: rate(metrics.checkoutStarted, metrics.sessions),
+    sessionToPaidRate: rate(metrics.paid, metrics.sessions),
     checkoutToPaidRate: rate(metrics.paid, metrics.checkoutStarted),
+    checkoutDropoffRate: rate(checkoutDropoffCount, metrics.checkoutStarted),
     paidToAnalysisDoneRate: rate(metrics.analysisDone, metrics.paid),
     analysisDoneToEmailSentRate: rate(metrics.reportEmailSent, metrics.analysisDone),
     checkoutCancelRate: rate(metrics.checkoutCancelled, metrics.checkoutStarted)
+  };
+}
+
+function buildFunnel(metrics = {}) {
+  const sessions = number(metrics.sessions);
+  const checkoutStarted = number(metrics.checkoutStarted);
+  const paid = number(metrics.paid);
+  const reportEmailSent = number(metrics.reportEmailSent);
+
+  return {
+    window: "last7d",
+    steps: [
+      { key: "sessions", label: "Session", count: sessions },
+      { key: "checkout_started", label: "Checkout start", count: checkoutStarted },
+      { key: "paid", label: "Paid", count: paid },
+      { key: "email_sent", label: "Email sent", count: reportEmailSent }
+    ],
+    rates: {
+      sessionToCheckout: rate(checkoutStarted, sessions),
+      checkoutToPaid: rate(paid, checkoutStarted),
+      paidToEmail: rate(reportEmailSent, paid)
+    },
+    dropoffs: {
+      landingToCheckout: Math.max(0, sessions - checkoutStarted),
+      checkoutToPaid: Math.max(0, checkoutStarted - paid),
+      paidToEmail: Math.max(0, paid - reportEmailSent)
+    }
   };
 }
 
@@ -298,6 +330,22 @@ function buildRecommendations({ windows, queue, webhook, alerts, engine }) {
     });
   }
 
+  if (last7d.sessions >= 5 && last7d.sessionToCheckoutRate < 0.25) {
+    recommendations.push({
+      level: "info",
+      title: "Landing -> checkout dropoff magas",
+      detail: `Az utolso 7 nap session -> checkout start aranya ${Math.round(last7d.sessionToCheckoutRate * 100)}%.`
+    });
+  }
+
+  if (last7d.checkoutStarted >= 3 && last7d.checkoutDropoffRate > 0.5) {
+    recommendations.push({
+      level: "warning",
+      title: "Checkout utan sok lemorzsolodas",
+      detail: `${last7d.checkoutDropoffCount} checkout inditas nem jutott el fizetesig az utolso 7 napban.`
+    });
+  }
+
   if (engine.sessionsWithEngineInput > 0 && engine.extraQuestionRate > 0.35) {
     recommendations.push({
       level: "info",
@@ -328,6 +376,7 @@ function buildRecommendations({ windows, queue, webhook, alerts, engine }) {
 function buildLevel({ windows, queue, webhook }) {
   if (queue.staleProcessing > 0 || webhook.failed24h > 0) return "critical";
   if (windows.last7d.reportEmailFailed > 0 || windows.last7d.reportEmailUnsent > 0) return "warning";
+  if (windows.last7d.checkoutStarted >= 3 && windows.last7d.checkoutDropoffRate > 0.65) return "warning";
   if (windows.last7d.checkoutStarted > 0 && windows.last7d.checkoutToPaidRate < 0.35) return "watch";
   return "healthy";
 }
@@ -349,6 +398,8 @@ export async function buildDashboardMetrics() {
     getEngineMetrics()
   ]);
 
+  const funnel = buildFunnel(windows.last7d || {});
+
   const summary = {
     level: buildLevel({ windows, queue, webhook }),
     generatedAt: new Date().toISOString(),
@@ -366,6 +417,7 @@ export async function buildDashboardMetrics() {
       alerts
     },
     engine,
+    funnel,
     recommendations: buildRecommendations({
       windows,
       queue,

@@ -71,6 +71,49 @@ async function enqueuePaidSessionsWithoutActiveJobs({ limit = 20 } = {}) {
   };
 }
 
+async function findCheckoutRecoveryCandidates({
+  limit = 20,
+  staleMinutes = 30
+} = {}) {
+  const result = await db.query(
+    `
+    SELECT
+      id,
+      name,
+      email,
+      lang,
+      payment_status,
+      checkout_started_at,
+      checkout_cancelled_at,
+      created_at,
+      updated_at
+    FROM sessions
+    WHERE checkout_started_at IS NOT NULL
+      AND COALESCE(payment_status, '') <> 'paid'
+      AND checkout_started_at < NOW() - ($1::int * INTERVAL '1 minute')
+      AND checkout_started_at > NOW() - INTERVAL '14 days'
+    ORDER BY checkout_started_at DESC NULLS LAST
+    LIMIT $2::int
+    `,
+    [staleMinutes, limit]
+  );
+
+  return {
+    checked: result.rows.length,
+    candidates: result.rows.map((row) => ({
+      sessionId: row.id,
+      name: row.name || "",
+      email: row.email || "",
+      lang: row.lang || "hu",
+      paymentStatus: row.payment_status || "unknown",
+      checkoutStartedAt: row.checkout_started_at,
+      checkoutCancelledAt: row.checkout_cancelled_at,
+      createdAt: row.created_at,
+      updatedAt: row.updated_at
+    }))
+  };
+}
+
 export async function runPostPaymentRecoveryV2(options = {}) {
   const staleJobMinutes = normalizeNumber(
     options.staleJobMinutes,
@@ -132,6 +175,11 @@ export async function runPostPaymentRecoveryV2(options = {}) {
     { source: "post-payment-recovery-v2" }
   );
 
+  const checkoutRecovery = await findCheckoutRecoveryCandidates({
+    limit: jobLimit,
+    staleMinutes: retryAfterMinutes
+  });
+
   return {
     ok: true,
     version: "post-payment-recovery-v2",
@@ -147,6 +195,7 @@ export async function runPostPaymentRecoveryV2(options = {}) {
     summary: {
       staleJobsRequeued: requeuedStaleJobs.length,
       paidSessionsQueued: missingJobRecovery.queued,
+      checkoutRecoveryCandidates: checkoutRecovery.checked,
       reportEmailsChecked: emailRetry.checked,
       reportEmailsSent: emailRetry.sent,
       reportEmailsFailed: emailRetry.failed
@@ -163,6 +212,12 @@ export async function runPostPaymentRecoveryV2(options = {}) {
         label: "Paid sessions queued for analysis",
         count: missingJobRecovery.queued,
         items: missingJobRecovery.results
+      },
+      {
+        key: "checkout_recovery_candidates",
+        label: "Started checkout but not paid",
+        count: checkoutRecovery.checked,
+        items: checkoutRecovery.candidates
       },
       {
         key: "report_email_retry",
