@@ -29,11 +29,11 @@ const SECTION_COLORS = [
 
 const PAGE_LAYOUT = {
   contentTop: 138,
-  contentBottomPadding: 146,
-  blockGap: 18
+  contentBottomPadding: 166,
+  blockGap: 20
 };
 
-const PDF_REPORT_VERSION = "pdf_report_v6_customer_experience";
+const PDF_REPORT_VERSION = "pdf_report_v7_customer_experience";
 const BODY_TEXT_COLOR = "#374151";
 const BULLET = "\u2022";
 
@@ -1766,7 +1766,7 @@ function addReportBulletList(doc, items, labels, lang, pageState = null) {
 
       const height = doc.heightOfString(chunk, textOptions);
 
-      ensureSpace(doc, height + 20, labels, lang, pageState);
+      ensureSpace(doc, height + 26, labels, lang, pageState);
 
       const y = doc.y + 4;
 
@@ -1779,7 +1779,7 @@ function addReportBulletList(doc, items, labels, lang, pageState = null) {
         .fontSize(fontSize)
         .text(chunk, x, doc.y, textOptions);
 
-      doc.moveDown(0.35);
+      doc.moveDown(0.42);
     });
   });
 }
@@ -1805,14 +1805,14 @@ function addReportParagraph(doc, paragraph, labels, lang, pageState = null) {
     doc.font(getFont(lang)).fontSize(fontSize);
 
     const height = doc.heightOfString(chunk, options);
-    ensureSpace(doc, height + 20, labels, lang, pageState);
+    ensureSpace(doc, height + 28, labels, lang, pageState);
 
     doc.fillColor("#374151")
       .font(getFont(lang))
       .fontSize(fontSize)
       .text(chunk, 56, doc.y, options);
 
-    doc.moveDown(0.62);
+    doc.moveDown(0.74);
   });
 }
 

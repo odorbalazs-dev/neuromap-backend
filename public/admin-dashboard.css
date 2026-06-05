@@ -1822,6 +1822,45 @@ td {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.timeline-list {
+  display: grid;
+  gap: 12px;
+}
+
+.timeline-card {
+  align-items: stretch;
+  display: grid;
+  gap: 12px;
+}
+
+.timeline-steps {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.timeline-step {
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  padding: 7px 9px;
+  text-align: center;
+}
+
+.timeline-step.done {
+  background: #ecfdf3;
+  border-color: #bbf7d0;
+  color: #067647;
+}
+
+.timeline-step.waiting {
+  background: #f8fafc;
+  color: #64748b;
+}
+
 .timeline-item {
   align-items: flex-start;
   display: grid;
@@ -1919,7 +1958,8 @@ pre {
   .diagnostic-grid,
   .summary-field-grid,
   .embed-meta,
-  .timeline-grid {
+  .timeline-grid,
+  .timeline-steps {
     grid-template-columns: 1fr;
   }
 

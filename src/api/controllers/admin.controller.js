@@ -26,6 +26,8 @@ import { buildPostPaymentMonitor } from "../../services/post-payment-monitoring.
 import { runPostPaymentRecoveryV2 } from "../../services/post-payment-recovery.service.js";
 import { buildWebflowEmbedManager } from "../../services/webflow-embed-manager.service.js";
 import { buildDashboardMetrics } from "../../services/dashboard-metrics.service.js";
+import { getFollowUpEmailStatus, processDueFollowUpEmails } from "../../services/follow-up-email.service.js";
+import { buildI18nQualityAudit } from "../../services/i18n-quality-audit.service.js";
 import { env } from "../../config/env.js";
 
 function shortText(value = "", max = 600) {
@@ -1624,6 +1626,44 @@ export async function triggerPostPaymentRecovery(req, res) {
   }
 }
 
+export async function getFollowUpEmails(req, res) {
+  try {
+    const limit = Math.floor(clampNumber(req.query.limit, 20, 1, 100));
+    const status = await getFollowUpEmailStatus({ limit });
+
+    return res.status(200).json({
+      ok: true,
+      ...status
+    });
+  } catch (error) {
+    console.error("Admin follow-up email status error:", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: error.message || "Failed to get follow-up email status"
+    });
+  }
+}
+
+export async function runFollowUpEmails(req, res) {
+  try {
+    const limit = Math.floor(clampNumber(req.query.limit || req.body?.limit, 10, 1, 50));
+    const result = await processDueFollowUpEmails({ limit });
+
+    return res.status(200).json({
+      ok: true,
+      ...result
+    });
+  } catch (error) {
+    console.error("Admin follow-up email run error:", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: error.message || "Failed to run follow-up emails"
+    });
+  }
+}
+
 export async function getWebflowEmbedManager(_req, res) {
   try {
     const manager = await buildWebflowEmbedManager();
@@ -1635,6 +1675,19 @@ export async function getWebflowEmbedManager(_req, res) {
     return res.status(500).json({
       ok: false,
       error: error.message || "Failed to get Webflow embed manager"
+    });
+  }
+}
+
+export async function getI18nQualityAudit(_req, res) {
+  try {
+    return res.status(200).json(buildI18nQualityAudit());
+  } catch (error) {
+    console.error("Admin i18n quality audit error:", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: error.message || "Failed to get i18n quality audit"
     });
   }
 }

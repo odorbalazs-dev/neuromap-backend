@@ -12,7 +12,10 @@ import {
   getEmailDeliveryCenter,
   getPostPaymentMonitoring,
   triggerPostPaymentRecovery,
+  getFollowUpEmails,
+  runFollowUpEmails,
   getWebflowEmbedManager,
+  getI18nQualityAudit,
   getOperationsLog,
   getAdminAlerts,
   triggerAdminAlertCheck,
@@ -55,7 +58,10 @@ router.get("/email-deliverability", getEmailDeliverability);
 router.get("/email-delivery-center", getEmailDeliveryCenter);
 router.get("/post-payment-monitoring", getPostPaymentMonitoring);
 router.post("/post-payment-recovery", triggerPostPaymentRecovery);
+router.get("/follow-up-emails", getFollowUpEmails);
+router.post("/run-follow-up-emails", runFollowUpEmails);
 router.get("/webflow-embed-manager", getWebflowEmbedManager);
+router.get("/i18n-quality-audit", getI18nQualityAudit);
 router.get("/operations-log", getOperationsLog);
 router.get("/alerts", getAdminAlerts);
 router.post("/trigger-alert-check", triggerAdminAlertCheck);

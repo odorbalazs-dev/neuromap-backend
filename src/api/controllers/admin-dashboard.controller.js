@@ -1,4 +1,4 @@
-const ADMIN_DASHBOARD_ASSET_VERSION = "20260604-dashboard-metrics-v1";
+const ADMIN_DASHBOARD_ASSET_VERSION = "20260604-customer-experience-v3";
 
 export function getAdminDashboard(_req, res) {
   res.setHeader(
@@ -46,6 +46,7 @@ export function getAdminDashboard(_req, res) {
         <button id="postPaymentRecoveryBtn" type="button" class="warn">Post-payment recovery v2</button>
         <button id="alertCheckBtn" type="button" class="secondary">Riasztásellenőrzés</button>
         <button id="operationalAlertBtn" type="button" class="secondary">Operational alert</button>
+        <button id="runFollowUpEmailsBtn" type="button" class="secondary">Follow-up email</button>
         <button id="clearTokenBtn" type="button" class="secondary">Token törlése</button>
         <button id="bankQualityAlertBtn" type="button" class="secondary">Bank audit riasztas</button>
         <span id="statusText" class="status-text" role="status"></span>
@@ -54,10 +55,14 @@ export function getAdminDashboard(_req, res) {
       <nav class="quick-nav" aria-label="Dashboard gyors navigáció">
         <button type="button" data-scroll-target="controlPulsePanel">Pulzus</button>
         <button type="button" data-scroll-target="customerMetricsPanel">Metrikak</button>
+        <button type="button" data-scroll-target="customerExperiencePanel">UX KPI</button>
         <button type="button" data-scroll-target="operatorFocusPanel">Teendők</button>
+        <button type="button" data-scroll-target="sessionTimelinePanel">Timeline</button>
         <button type="button" data-scroll-target="pipelinePanel">Folyamat</button>
         <button type="button" data-scroll-target="postPaymentPanel">Post-payment</button>
+        <button type="button" data-scroll-target="followUpPanel">Follow-up</button>
         <button type="button" data-scroll-target="webflowEmbedPanel">Webflow embedek</button>
+        <button type="button" data-scroll-target="i18nAuditPanel">I18n audit</button>
         <button type="button" data-scroll-target="queuePanel">Queue</button>
         <button type="button" data-scroll-target="emailDeliveryPanel">Email</button>
         <button type="button" data-scroll-target="engineAnalyticsPanel">Engine</button>
@@ -191,6 +196,49 @@ export function getAdminDashboard(_req, res) {
         </div>
       </section>
 
+      <section id="customerExperiencePanel" class="panel" aria-label="Vasarloi elmeny KPI">
+        <div class="panel-head">
+          <div>
+            <h2>Vasarloi elmeny KPI</h2>
+            <p>Bizalom, kivancsisag, fizetes utani biztonsag es nyelvi stabilitas egy operativ nezetben.</p>
+          </div>
+          <span id="customerExperienceUpdatedAt" class="snapshot-time">Meg nincs UX allapotkep</span>
+        </div>
+        <div class="health-grid">
+          <article class="health-card">
+            <span>Bizalmi score</span>
+            <strong id="customerExperienceTrust">-</strong>
+            <p id="customerExperienceTrustMeta">Admin tokenre var.</p>
+          </article>
+          <article class="health-card">
+            <span>Konverzios lendulet</span>
+            <strong id="customerExperienceConversion">-</strong>
+            <p id="customerExperienceConversionMeta">Checkout -> paid jelzes.</p>
+          </article>
+          <article class="health-card">
+            <span>Riport eleres</span>
+            <strong id="customerExperienceDelivery">-</strong>
+            <p id="customerExperienceDeliveryMeta">PDF es email teljesules.</p>
+          </article>
+          <article class="health-card">
+            <span>Nyelvi lefedettseg</span>
+            <strong id="customerExperienceLanguage">-</strong>
+            <p id="customerExperienceLanguageMeta">Engine, checkout es bank bundle.</p>
+          </article>
+        </div>
+        <div id="customerExperienceRecommendationRows" class="engine-list"></div>
+      </section>
+
+      <section id="sessionTimelinePanel" class="panel" aria-label="Session timeline">
+        <div class="panel-head">
+          <div>
+            <h2>Session timeline</h2>
+            <p>Legutobbi sessionok allapotutja: checkout, fizetes, elemzes, PDF es email.</p>
+          </div>
+        </div>
+        <div id="sessionTimelineRows" class="timeline-list"></div>
+      </section>
+
       <section id="operatorFocusPanel" class="panel operator-panel" aria-label="Operátori fókusz">
         <div class="panel-head">
           <div>
@@ -302,6 +350,35 @@ export function getAdminDashboard(_req, res) {
         </div>
       </section>
 
+      <section id="followUpPanel" class="panel" aria-label="Email follow-up">
+        <div class="panel-head">
+          <div>
+            <h2>Email follow-up</h2>
+            <p>Riport utani bizalomepito es visszateresi email folyamat.</p>
+          </div>
+          <button id="runFollowUpEmailsPanelBtn" type="button" class="secondary">Follow-up futtatasa</button>
+        </div>
+        <div class="health-grid">
+          <article class="health-card">
+            <span>Esedekes</span>
+            <strong id="followUpDue">-</strong>
+            <p>Most futtathato follow-up emailek.</p>
+          </article>
+          <article class="health-card">
+            <span>Elkuldve</span>
+            <strong id="followUpSent">-</strong>
+            <p>Sikeres follow-upok.</p>
+          </article>
+          <article class="health-card">
+            <span>Hibas</span>
+            <strong id="followUpFailed">-</strong>
+            <p>Kezi ellenorzest igenyel.</p>
+          </article>
+        </div>
+        <span id="followUpGeneratedAt" class="snapshot-time">Meg nincs follow-up allapotkep</span>
+        <div id="followUpRows" class="engine-list"></div>
+      </section>
+
       <section id="webflowEmbedPanel" class="panel webflow-embed-panel" aria-label="Webflow embed manager">
         <div class="panel-head">
           <div>
@@ -328,6 +405,24 @@ export function getAdminDashboard(_req, res) {
           </article>
         </div>
         <div id="webflowEmbedRows" class="embed-manager-list"></div>
+      </section>
+
+      <section id="i18nAuditPanel" class="panel" aria-label="Tobbnyelvu minoseg audit">
+        <div class="panel-head">
+          <div>
+            <h2>Tobbnyelvu minoseg audit</h2>
+            <p>Engine, checkout es bank bundle nyelvi lefedettseg a Webflow kockazatok kiszuresere.</p>
+          </div>
+          <span id="i18nAuditGeneratedAt" class="snapshot-time">Meg nincs nyelvi audit</span>
+        </div>
+        <div class="health-grid">
+          <article class="health-card">
+            <span>Audit szint</span>
+            <strong id="i18nAuditLevel">-</strong>
+            <p id="i18nAuditSummary">Admin tokenre var.</p>
+          </article>
+        </div>
+        <div id="i18nAuditRows" class="engine-list"></div>
       </section>
 
       <section id="launchPanel" class="panel launch-panel" aria-label="Élesítési ellenőrzés">

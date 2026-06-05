@@ -19,6 +19,8 @@
     alertCheckBtn: document.getElementById("alertCheckBtn"),
     operationalAlertBtn: document.getElementById("operationalAlertBtn"),
     bankQualityAlertBtn: document.getElementById("bankQualityAlertBtn"),
+    runFollowUpEmailsBtn: document.getElementById("runFollowUpEmailsBtn"),
+    runFollowUpEmailsPanelBtn: document.getElementById("runFollowUpEmailsPanelBtn"),
     postPaymentRecoveryBtn: document.getElementById("postPaymentRecoveryBtn"),
     postPaymentRecoveryPanelBtn: document.getElementById("postPaymentRecoveryPanelBtn"),
     refreshLaunchReadinessBtn: document.getElementById("refreshLaunchReadinessBtn"),
@@ -48,6 +50,17 @@
     dashboardMetricsTrendRows: document.getElementById("dashboardMetricsTrendRows"),
     dashboardMetricsDomainRows: document.getElementById("dashboardMetricsDomainRows"),
     dashboardMetricsRecommendationRows: document.getElementById("dashboardMetricsRecommendationRows"),
+    customerExperienceUpdatedAt: document.getElementById("customerExperienceUpdatedAt"),
+    customerExperienceTrust: document.getElementById("customerExperienceTrust"),
+    customerExperienceTrustMeta: document.getElementById("customerExperienceTrustMeta"),
+    customerExperienceConversion: document.getElementById("customerExperienceConversion"),
+    customerExperienceConversionMeta: document.getElementById("customerExperienceConversionMeta"),
+    customerExperienceDelivery: document.getElementById("customerExperienceDelivery"),
+    customerExperienceDeliveryMeta: document.getElementById("customerExperienceDeliveryMeta"),
+    customerExperienceLanguage: document.getElementById("customerExperienceLanguage"),
+    customerExperienceLanguageMeta: document.getElementById("customerExperienceLanguageMeta"),
+    customerExperienceRecommendationRows: document.getElementById("customerExperienceRecommendationRows"),
+    sessionTimelineRows: document.getElementById("sessionTimelineRows"),
     operatorSummary: document.getElementById("operatorSummary"),
     operatorTaskRows: document.getElementById("operatorTaskRows"),
     latestSessionCard: document.getElementById("latestSessionCard"),
@@ -69,12 +82,21 @@
     postPaymentStageRows: document.getElementById("postPaymentStageRows"),
     postPaymentRecommendationRows: document.getElementById("postPaymentRecommendationRows"),
     postPaymentIssueRows: document.getElementById("postPaymentIssueRows"),
+    followUpGeneratedAt: document.getElementById("followUpGeneratedAt"),
+    followUpDue: document.getElementById("followUpDue"),
+    followUpSent: document.getElementById("followUpSent"),
+    followUpFailed: document.getElementById("followUpFailed"),
+    followUpRows: document.getElementById("followUpRows"),
     webflowEmbedGeneratedAt: document.getElementById("webflowEmbedGeneratedAt"),
     webflowEmbedTotal: document.getElementById("webflowEmbedTotal"),
     webflowEmbedReadyMeta: document.getElementById("webflowEmbedReadyMeta"),
     webflowEmbedLoaders: document.getElementById("webflowEmbedLoaders"),
     webflowEmbedLimit: document.getElementById("webflowEmbedLimit"),
     webflowEmbedRows: document.getElementById("webflowEmbedRows"),
+    i18nAuditGeneratedAt: document.getElementById("i18nAuditGeneratedAt"),
+    i18nAuditLevel: document.getElementById("i18nAuditLevel"),
+    i18nAuditSummary: document.getElementById("i18nAuditSummary"),
+    i18nAuditRows: document.getElementById("i18nAuditRows"),
     launchReadinessLevel: document.getElementById("launchReadinessLevel"),
     launchReadinessSummary: document.getElementById("launchReadinessSummary"),
     launchReadinessGeneratedAt: document.getElementById("launchReadinessGeneratedAt"),
@@ -240,6 +262,8 @@
       els.alertCheckBtn,
       els.operationalAlertBtn,
       els.bankQualityAlertBtn,
+      els.runFollowUpEmailsBtn,
+      els.runFollowUpEmailsPanelBtn,
       els.postPaymentRecoveryBtn,
       els.postPaymentRecoveryPanelBtn,
       els.refreshLaunchReadinessBtn,
@@ -3238,6 +3262,193 @@
     renderLatestSessionCard(recent?.items?.[0] || null);
   }
 
+  function renderCustomerExperience(context = null) {
+    if (!els.customerExperienceUpdatedAt) return;
+
+    if (!context) {
+      els.customerExperienceUpdatedAt.textContent = "Meg nincs UX allapotkep";
+      els.customerExperienceTrust.textContent = "-";
+      els.customerExperienceTrustMeta.textContent = "Admin tokenre var.";
+      els.customerExperienceConversion.textContent = "-";
+      els.customerExperienceConversionMeta.textContent = "Checkout -> paid jelzes.";
+      els.customerExperienceDelivery.textContent = "-";
+      els.customerExperienceDeliveryMeta.textContent = "PDF es email teljesules.";
+      els.customerExperienceLanguage.textContent = "-";
+      els.customerExperienceLanguageMeta.textContent = "Engine, checkout es bank bundle.";
+      renderDeliverabilityList(els.customerExperienceRecommendationRows, [], "A frissiteshez add meg az admin tokent.", () => {});
+      return;
+    }
+
+    const metrics = context.dashboardMetrics?.windows?.last7d || context.dashboardMetrics?.windows?.last30d || {};
+    const emailMetrics = context.emailDeliverability?.metrics || {};
+    const postSummary = context.postPaymentMonitoring?.summary || {};
+    const followSummary = context.followUpEmails?.summary || {};
+    const i18nSummary = context.i18nQualityAudit?.summary || {};
+    const i18nLevel = context.i18nQualityAudit?.level || "unknown";
+
+    const conversionRate = Number(metrics.checkoutToPaidRate || 0);
+    const deliveryRate = Number(metrics.analysisDoneToEmailSentRate || emailMetrics.successRate || 0);
+    const failedFollowUps = countValue(followSummary.failed);
+    const i18nCritical = countValue(i18nSummary.critical);
+    const postPaymentIssues = countValue(postSummary.failed || postSummary.stuck || postSummary.actionable);
+    const trustScore = Math.max(0, Math.min(100, 100 - failedFollowUps * 6 - i18nCritical * 5 - postPaymentIssues * 6));
+
+    els.customerExperienceUpdatedAt.textContent = `Frissitve: ${formatDate(new Date().toISOString())}`;
+    els.customerExperienceTrust.textContent = `${trustScore}`;
+    els.customerExperienceTrustMeta.textContent =
+      trustScore >= 85 ? "Stabil vasarloi bizalmi jelzes." : "Van javitando pont a fizetes utani elmenyben.";
+    els.customerExperienceConversion.textContent = formatPercent(conversionRate);
+    els.customerExperienceConversionMeta.textContent = `7 napos checkout -> paid arany, checkout: ${countValue(metrics.checkoutStarted)}`;
+    els.customerExperienceDelivery.textContent = formatPercent(deliveryRate);
+    els.customerExperienceDeliveryMeta.textContent = `Email hibak: ${countValue(emailMetrics.failed || emailMetrics.failures)}, follow-up hibak: ${failedFollowUps}`;
+    els.customerExperienceLanguage.textContent = i18nLevel;
+    els.customerExperienceLanguageMeta.textContent =
+      i18nCritical ? `${i18nCritical} kritikus nyelvi jelzes.` : "Nincs kritikus nyelvi jelzes.";
+
+    const recommendations = [];
+
+    if (conversionRate && conversionRate < 0.45) {
+      recommendations.push({
+        title: "Osszegzes oldali CTA tovabbi erosites",
+        meta: "A checkout -> paid arany alacsonyabb, ezert a tudomanyos es riport-elony copy kulcsfontossagu."
+      });
+    }
+
+    if (deliveryRate && deliveryRate < 0.9) {
+      recommendations.push({
+        title: "Email/PDF kezbesitesi folyamat figyelese",
+        meta: "A vasarloi bizalom legerosebb pontja, hogy a riport gyorsan es biztosan megerkezzen."
+      });
+    }
+
+    if (failedFollowUps > 0) {
+      recommendations.push({
+        title: "Follow-up email hibak ujraprobalasa",
+        meta: `${failedFollowUps} follow-up email kezi ellenorzest vagy ujrafuttatast igenyel.`
+      });
+    }
+
+    if (i18nLevel !== "healthy") {
+      recommendations.push({
+        title: "Tobbnyelvu Webflow allapot ellenorzese",
+        meta: "A nyelvi audit szerint lehet olyan nyelv vagy loader, ami nem teljesen stabil."
+      });
+    }
+
+    if (!recommendations.length) {
+      recommendations.push({
+        title: "UX folyamat stabil",
+        meta: "A kovetkezo nyereseg a riport-elonezet es a post-payment bizalmi kommunikacio finomitasa."
+      });
+    }
+
+    renderDeliverabilityList(
+      els.customerExperienceRecommendationRows,
+      recommendations,
+      "Nincs UX javaslat.",
+      (row, item) => {
+        row.innerHTML = `<strong>${compact(item.title, 80)}</strong><span>${compact(item.meta, 180)}</span>`;
+      }
+    );
+  }
+
+  function renderSessionTimeline(context = null) {
+    if (!els.sessionTimelineRows) return;
+
+    const items = (context?.recent?.items || []).slice(0, 8);
+
+    renderDeliverabilityList(
+      els.sessionTimelineRows,
+      items,
+      "Nincs session timeline adat.",
+      (row, item) => {
+        row.className = "engine-list-row timeline-card";
+
+        const paid = Boolean(item.paidAt || item.stripeSessionId || item.paymentStatus === "paid");
+        const analyzed = Boolean(item.analysisCompletedAt || item.analysisStatus === "completed" || item.status === "completed");
+        const pdf = Boolean(item.pdfGeneratedAt || item.pdfPath || item.reportPdfPath);
+        const email = item.reportEmailStatus === "sent" || Boolean(item.reportEmailSentAt);
+
+        row.innerHTML = `
+          <div>
+            <strong>${compact(item.name || item.email || item.id, 80)}</strong>
+            <span>${compact(item.email || item.id, 120)} · ${formatDate(item.createdAt)}</span>
+          </div>
+          <div class="timeline-steps">
+            <span class="timeline-step done">Session</span>
+            <span class="timeline-step ${paid ? "done" : "waiting"}">Fizetes</span>
+            <span class="timeline-step ${analyzed ? "done" : "waiting"}">Elemzes</span>
+            <span class="timeline-step ${pdf ? "done" : "waiting"}">PDF</span>
+            <span class="timeline-step ${email ? "done" : "waiting"}">Email</span>
+          </div>
+        `;
+      }
+    );
+  }
+
+  function renderFollowUpEmails(data = null) {
+    if (!els.followUpGeneratedAt) return;
+
+    const summary = data?.summary || {};
+    const items = data?.items || [];
+
+    els.followUpGeneratedAt.textContent = data?.generatedAt
+      ? `Frissitve: ${formatDate(data.generatedAt)}`
+      : "Meg nincs follow-up allapotkep";
+    els.followUpDue.textContent = countValue(summary.due);
+    els.followUpSent.textContent = countValue(summary.sent);
+    els.followUpFailed.textContent = countValue(summary.failed);
+
+    renderDeliverabilityList(
+      els.followUpRows,
+      items,
+      "Nincs follow-up email jelzes.",
+      (row, item) => {
+        row.innerHTML = `
+          <div>
+            <strong>${compact(item.name || item.email || item.id, 90)}</strong>
+            <span>${compact(item.email || item.id, 130)}</span>
+          </div>
+          <div>
+            <strong>${compact(item.followUpEmailStatus || "not_due", 40)}</strong>
+            <span>due: ${formatDate(item.followUpEmailDueAt)} · sent: ${formatDate(item.followUpEmailSentAt)}</span>
+          </div>
+        `;
+      }
+    );
+  }
+
+  function renderI18nQualityAudit(data = null) {
+    if (!els.i18nAuditGeneratedAt) return;
+
+    const checks = data?.checks || [];
+    const summary = data?.summary || {};
+
+    els.i18nAuditGeneratedAt.textContent = data?.generatedAt
+      ? `Frissitve: ${formatDate(data.generatedAt)}`
+      : "Meg nincs nyelvi audit";
+    els.i18nAuditLevel.textContent = data?.level || "-";
+    els.i18nAuditSummary.textContent =
+      data?.ok === false
+        ? `Kritikus: ${countValue(summary.critical)}, warning: ${countValue(summary.warning)}`
+        : `OK: ${countValue(summary.ok)}, warning: ${countValue(summary.warning)}`;
+
+    renderDeliverabilityList(
+      els.i18nAuditRows,
+      checks.slice(0, 40),
+      "Nincs nyelvi audit sor.",
+      (row, item) => {
+        row.innerHTML = `
+          <div>
+            <strong>${compact(item.label || item.key || "i18n check", 100)}</strong>
+            <span>${compact(item.message || item.detail || "-", 180)}</span>
+          </div>
+          <span class="pill ${statusClass(item.level || item.status || "ok")}">${compact(item.level || item.status || "ok", 32)}</span>
+        `;
+      }
+    );
+  }
+
   async function refreshDashboard() {
     setBusy(true);
     setStatus("Frissítés...");
@@ -3265,7 +3476,9 @@
         emailDeliveryCenter,
         emailDeliverability,
         postPaymentMonitoring,
-        webflowEmbedManager
+        webflowEmbedManager,
+        followUpEmails,
+        i18nQualityAudit
       ] = await Promise.all([
         api("/admin/status"),
         api("/admin/production-health"),
@@ -3282,7 +3495,9 @@
         api(`/admin/email-delivery-center?status=${encodeURIComponent(currentEmailDeliveryStatusFilter())}&limit=60`),
         api("/admin/email-deliverability?hours=168&limit=30"),
         api("/admin/post-payment-monitoring?hours=168&limit=30"),
-        api("/admin/webflow-embed-manager")
+        api("/admin/webflow-embed-manager"),
+        optionalApi("/admin/follow-up-emails?limit=20"),
+        optionalApi("/admin/i18n-quality-audit")
       ]);
 
       els.apiStatus.textContent = status.ok ? "Elérhető" : "Hiba";
@@ -3304,6 +3519,16 @@
       renderEmailDeliverability(emailDeliverability);
       renderPostPaymentMonitoring(postPaymentMonitoring);
       renderWebflowEmbedManager(webflowEmbedManager);
+      renderFollowUpEmails(followUpEmails);
+      renderI18nQualityAudit(i18nQualityAudit);
+      renderCustomerExperience({
+        dashboardMetrics,
+        emailDeliverability,
+        postPaymentMonitoring,
+        followUpEmails,
+        i18nQualityAudit
+      });
+      renderSessionTimeline({ recent, queue, failed });
       renderControlPulse({
         health,
         queue,
@@ -3312,7 +3537,9 @@
         engineDecisionAudit,
         bankQualityAudit,
         emailDeliverability,
-        postPaymentMonitoring
+        postPaymentMonitoring,
+        followUpEmails,
+        i18nQualityAudit
       });
       renderOperatorFocus({
         status,
@@ -3327,7 +3554,9 @@
         engineDecisionAudit,
         bankQualityAudit,
         emailDeliverability,
-        postPaymentMonitoring
+        postPaymentMonitoring,
+        followUpEmails,
+        i18nQualityAudit
       });
       setStatus("Frissítve.");
     } catch (error) {
@@ -3604,6 +3833,10 @@
       renderEmailDeliverability(null);
       renderPostPaymentMonitoring(null);
       renderWebflowEmbedManager(null);
+      renderFollowUpEmails(null);
+      renderI18nQualityAudit(null);
+      renderCustomerExperience(null);
+      renderSessionTimeline(null);
       renderOperatorFocus(null);
       if (els.apiStatus) els.apiStatus.textContent = "-";
       setStatus("Token törölve.");
@@ -3612,6 +3845,12 @@
     bindClick(els.refreshBtn, refreshDashboard);
     bindClick(els.refreshLaunchReadinessBtn, refreshLaunchReadiness);
     bindClick(els.refreshEmailDeliveryCenterBtn, refreshEmailDeliveryCenter);
+    bindClick(els.runFollowUpEmailsBtn, () => {
+      postAction("/admin/run-follow-up-emails", "Follow-up email feldolgozas lefutott.");
+    });
+    bindClick(els.runFollowUpEmailsPanelBtn, () => {
+      postAction("/admin/run-follow-up-emails", "Follow-up email feldolgozas lefutott.");
+    });
     bindClick(els.sessionSearchBtn, searchSessions);
     bindClick(els.toggleOperationsLogBtn, (event) => {
       event.preventDefault();
@@ -3755,6 +3994,10 @@
       renderEngineDecisionAudit(null);
       renderEmailDeliverability(null);
       renderPostPaymentMonitoring(null);
+      renderFollowUpEmails(null);
+      renderI18nQualityAudit(null);
+      renderCustomerExperience(null);
+      renderSessionTimeline(null);
       renderControlPulse(null);
       setStatus("Add meg az ADMIN_TOKEN értékét.");
     }

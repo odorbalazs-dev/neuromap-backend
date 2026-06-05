@@ -3,6 +3,7 @@ import { env } from "../config/env.js";
 
 import { buildReportEmail } from "../templates/reportEmail.js";
 import { buildRecoveryEmail } from "../templates/recoveryEmail.js";
+import { buildFollowUpEmail } from "../templates/followUpEmail.js";
 
 import { generatePdfBuffer } from "./pdf.service.js";
 
@@ -297,6 +298,73 @@ export async function sendAdminAlertEmail({
       message: error?.message || "Unknown admin alert email error",
       stack: error?.stack || null,
       recipients
+    });
+
+    throw error;
+  }
+}
+
+export async function sendFollowUpEmail({
+  to,
+  lang,
+  name,
+  detectedRisk
+}) {
+  const recipients = normalizeRecipients(to);
+  const safeLang = getSafeLang(lang);
+
+  try {
+    console.log("[follow-up-email] start", {
+      recipients,
+      lang: safeLang,
+      name,
+      detectedRisk,
+      from: env.EMAIL_FROM
+    });
+
+    if (!env.RESEND_API_KEY) {
+      throw new Error("Missing RESEND_API_KEY.");
+    }
+
+    if (!env.EMAIL_FROM) {
+      throw new Error("Missing EMAIL_FROM.");
+    }
+
+    if (recipients.length === 0) {
+      throw new Error("Missing follow-up recipient email address.");
+    }
+
+    const { subject, html, text } = buildFollowUpEmail({
+      lang: safeLang,
+      name,
+      detectedRisk,
+      appUrl: env.APP_URL
+    });
+
+    const response = await resend.emails.send({
+      from: env.EMAIL_FROM,
+      to: recipients,
+      subject,
+      html,
+      text
+    });
+
+    if (response?.error) {
+      throw new Error(
+        response.error.message ||
+        "Resend returned a follow-up email sending error."
+      );
+    }
+
+    console.log("[follow-up-email] send success", response);
+
+    return response;
+  } catch (error) {
+    console.error("[follow-up-email] send failed", {
+      message: error?.message || "Unknown follow-up email error",
+      stack: error?.stack || null,
+      recipients,
+      lang: safeLang
     });
 
     throw error;
