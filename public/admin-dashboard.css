@@ -1161,6 +1161,17 @@ input:focus {
   overflow-wrap: anywhere;
 }
 
+.embed-human-instruction {
+  background: #f8fbfe;
+  border-top: 1px solid var(--line);
+  color: #43566c;
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.55;
+  margin: 0;
+  padding: 13px 16px;
+}
+
 .embed-code {
   background: #0f172a;
   border: 0;

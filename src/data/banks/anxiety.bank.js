@@ -19,8 +19,8 @@ export const ANXIETY_BANK = [
     reverse: false,
     stemKey: "future_concern",
     text: {
-      hu: "Sokat foglalkoztatja, mi mehet rosszul a jövőben.",
-      en: "Spends a lot of time thinking about what might go wrong in the future."
+      hu: "Sokat foglalkoztatja, milyen nehézség merülhet fel a jövőben.",
+      en: "Spends a lot of time thinking about what difficulty might come up in the future."
     }
   },
   {
@@ -305,10 +305,10 @@ export const ANXIETY_BANK = [
     subdomain: "physical_arousal",
     weight: 1.4,
     reverse: false,
-    stemKey: "physical_alarm_response",
+    stemKey: "physical_body_signal_response",
     text: {
-      hu: "Néha a teste úgy reagál, mintha veszély lenne, még akkor is, ha mások ezt nem érzik így.",
-      en: "Body sometimes reacts as if there is danger even when others do not see it that way."
+      hu: "Néha a teste stresszjelzéseket mutat, még akkor is, ha mások a helyzetet nem érzik ennyire megterhelőnek.",
+      en: "The body sometimes shows a stress response even when others do not read the situation as highly stressful."
     }
   },
   {
@@ -1507,8 +1507,8 @@ export const ANXIETY_BANK = [
     reverse: false,
     stemKey: "future_concern",
     text: {
-      hu: "Sokat foglalkoztatja, mi történhet rosszul otthoni helyzetekben.",
-      en: "Spends a lot of time thinking about what might go wrong at home."
+      hu: "Sokat foglalkoztatja, milyen nehézség merülhet fel otthoni helyzetekben.",
+      en: "Spends a lot of time thinking about what difficulty might come up at home."
     }
   },
   {
@@ -1519,8 +1519,8 @@ export const ANXIETY_BANK = [
     reverse: false,
     stemKey: "future_concern",
     text: {
-      hu: "Sokat foglalkoztatja, mi történhet rosszul iskolai vagy munkahelyi helyzetekben.",
-      en: "Spends a lot of time thinking about what might go wrong in school or work situations."
+      hu: "Sokat foglalkoztatja, milyen nehézség merülhet fel iskolai vagy munkahelyi helyzetekben.",
+      en: "Spends a lot of time thinking about what difficulty might come up in school or work situations."
     }
   },
   {
@@ -1531,8 +1531,8 @@ export const ANXIETY_BANK = [
     reverse: false,
     stemKey: "future_concern",
     text: {
-      hu: "Sokat foglalkoztatja, mi történhet rosszul társas helyzetekben.",
-      en: "Spends a lot of time thinking about what might go wrong in social situations."
+      hu: "Sokat foglalkoztatja, milyen nehézség merülhet fel társas helyzetekben.",
+      en: "Spends a lot of time thinking about what difficulty might come up in social situations."
     }
   },
   {
@@ -1543,8 +1543,8 @@ export const ANXIETY_BANK = [
     reverse: false,
     stemKey: "future_concern",
     text: {
-      hu: "Sokat foglalkoztatja, mi történhet rosszul váratlan vagy bizonytalan helyzetekben.",
-      en: "Spends a lot of time thinking about what might go wrong in unexpected or uncertain situations."
+      hu: "Sokat foglalkoztatja, milyen nehézség merülhet fel váratlan vagy bizonytalan helyzetekben.",
+      en: "Spends a lot of time thinking about what difficulty might come up in unexpected or uncertain situations."
     }
   },
   {
@@ -1555,8 +1555,8 @@ export const ANXIETY_BANK = [
     reverse: false,
     stemKey: "future_concern",
     text: {
-      hu: "Sokat foglalkoztatja, mi történhet rosszul teljesítményhelyzetekben.",
-      en: "Spends a lot of time thinking about what might go wrong in performance situations."
+      hu: "Sokat foglalkoztatja, milyen nehézség merülhet fel teljesítményhelyzetekben.",
+      en: "Spends a lot of time thinking about what difficulty might come up in performance situations."
     }
   },
   {
@@ -2105,10 +2105,10 @@ export const ANXIETY_BANK = [
     subdomain: "physical_arousal",
     weight: 1.4,
     reverse: false,
-    stemKey: "physical_alarm_response",
+    stemKey: "physical_body_signal_response",
     text: {
-      hu: "A teste néha úgy reagál, mintha fokozott veszély lenne jelen otthoni helyzetekben.",
-      en: "The body sometimes reacts as if there were increased danger at home."
+      hu: "A teste néha erősebb stresszjelzéseket mutat otthoni helyzetekben.",
+      en: "The body sometimes shows stronger stress signals at home."
     }
   },
   {
@@ -2117,10 +2117,10 @@ export const ANXIETY_BANK = [
     subdomain: "physical_arousal",
     weight: 1.4,
     reverse: false,
-    stemKey: "physical_alarm_response",
+    stemKey: "physical_body_signal_response",
     text: {
-      hu: "A teste néha úgy reagál, mintha fokozott veszély lenne jelen iskolai vagy munkahelyi helyzetekben.",
-      en: "The body sometimes reacts as if there were increased danger in school or work situations."
+      hu: "A teste néha erősebb stresszjelzéseket mutat iskolai vagy munkahelyi helyzetekben.",
+      en: "The body sometimes shows stronger stress signals in school or work situations."
     }
   },
   {
@@ -2129,10 +2129,10 @@ export const ANXIETY_BANK = [
     subdomain: "physical_arousal",
     weight: 1.4,
     reverse: false,
-    stemKey: "physical_alarm_response",
+    stemKey: "physical_body_signal_response",
     text: {
-      hu: "A teste néha úgy reagál, mintha fokozott veszély lenne jelen társas helyzetekben.",
-      en: "The body sometimes reacts as if there were increased danger in social situations."
+      hu: "A teste néha erősebb stresszjelzéseket mutat társas helyzetekben.",
+      en: "The body sometimes shows stronger stress signals in social situations."
     }
   },
   {
@@ -2141,10 +2141,10 @@ export const ANXIETY_BANK = [
     subdomain: "physical_arousal",
     weight: 1.4,
     reverse: false,
-    stemKey: "physical_alarm_response",
+    stemKey: "physical_body_signal_response",
     text: {
-      hu: "A teste néha úgy reagál, mintha fokozott veszély lenne jelen váratlan vagy bizonytalan helyzetekben.",
-      en: "The body sometimes reacts as if there were increased danger in unexpected or uncertain situations."
+      hu: "A teste néha erősebb stresszjelzéseket mutat váratlan vagy bizonytalan helyzetekben.",
+      en: "The body sometimes shows stronger stress signals in unexpected or uncertain situations."
     }
   },
   {
@@ -2153,10 +2153,10 @@ export const ANXIETY_BANK = [
     subdomain: "physical_arousal",
     weight: 1.4,
     reverse: false,
-    stemKey: "physical_alarm_response",
+    stemKey: "physical_body_signal_response",
     text: {
-      hu: "A teste néha úgy reagál, mintha fokozott veszély lenne jelen teljesítményhelyzetekben.",
-      en: "The body sometimes reacts as if there were increased danger in performance situations."
+      hu: "A teste néha erősebb stresszjelzéseket mutat teljesítményhelyzetekben.",
+      en: "The body sometimes shows stronger stress signals in performance situations."
     }
   },
   {

@@ -5,7 +5,7 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260605-cx-top10-v1";
+  const ENGINE_VERSION = "20260605-cx-top10-v2";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
   const DRAFT_STORAGE_KEY = "nm_questionnaire_draft_v1";
   const DRAFT_TTL_MS = 1000 * 60 * 60 * 24 * 14;
@@ -1948,7 +1948,7 @@
       reasonParent: "Kevesebb bizonytalanság",
       reasonSchool: "Jobb beszélgetés óvodával vagy iskolával",
       reasonCalm: "Nyugodtabb, rendszerezett kép",
-      reasonNote: "A cél nem az ijesztgetés, hanem egy megnyugtató, érthető kép a mintázatokról.",
+      reasonNote: "A cél egy megnyugtató, érthető kép a mintázatokról.",
       demoTitle: "Mit mutat meg a teljes riport?",
       demoLead: "A teljes PDF a válaszokból kirajzolódó fő és másodlagos jelzést, a korosztályi kontextust és a gyakorlati javaslatokat együtt magyarázza el.",
       demoMetric1: "Fő mintázat",
@@ -1988,7 +1988,7 @@
       reasonParent: "Less uncertainty",
       reasonSchool: "Better conversations with preschool or school",
       reasonCalm: "A calmer structured picture",
-      reasonNote: "The goal is not to alarm you, but to organize the patterns in a parent-friendly way.",
+      reasonNote: "The goal is to organize the patterns in a calm, parent-friendly way.",
       demoTitle: "What does the full report clarify?",
       demoLead: "The full PDF explains the primary and secondary signals, age context, and practical suggestions together.",
       demoMetric1: "Primary pattern",
@@ -2312,7 +2312,7 @@
         "nem diagnózis, hanem érthető előszűrés"
       ],
       en: [
-        "parent-friendly, non-alarming language",
+        "parent-friendly, calm language",
         "refined with age-aware context",
         "not a diagnosis, but a structured screening"
       ],
@@ -3094,7 +3094,7 @@
       (draft.needsExtra && Array.isArray(draft.extraQuestions) ? draft.extraQuestions.length : 0);
 
     if (state.lang === "hu" || draft.lang === "hu") {
-      return `Mentett allapot: ${triageDone}/${triageTotal || 25} elso szures, ${specificDone}/${specificTotal || 0} pontositas.`;
+      return `Mentett állapot: ${triageDone}/${triageTotal || 25} első szűrés, ${specificDone}/${specificTotal || 0} pontosítás.`;
     }
 
     return `Saved progress: ${triageDone}/${triageTotal || 25} screening answers, ${specificDone}/${specificTotal || 0} detail answers.`;
@@ -4881,15 +4881,15 @@
     const age = getChildAgeValue();
 
     if (age === null || Number.isNaN(age)) {
-      return state.lang === "hu" ? "korosztaly megadas utan pontosabb" : "refined after age is provided";
+      return state.lang === "hu" ? "korosztály megadása után pontosabb" : "refined after age is provided";
     }
 
     if (state.lang === "hu") {
       if (age < 3) return "kisgyermekkori kontextus";
-      if (age < 6) return "ovoda elotti / ovodas korosztaly";
-      if (age < 12) return "kisiskolas korosztaly";
-      if (age < 18) return "serdulokori kontextus";
-      return "fiatal felnott korosztaly";
+      if (age < 6) return "óvoda előtti / óvodás korosztály";
+      if (age < 12) return "kisiskolás korosztály";
+      if (age < 18) return "serdülőkori kontextus";
+      return "fiatal felnőtt korosztály";
     }
 
     if (age < 3) return "early childhood context";
@@ -4913,7 +4913,7 @@
   function buildReportPreviewV2Html() {
     const isHu = state.lang === "hu";
     const focus = disorderLabel(state.detectedRisk);
-    const secondary = state.secondaryRisk ? disorderLabel(state.secondaryRisk) : (isHu ? "nincs eros masodlagos jelzes" : "no strong secondary signal");
+    const secondary = state.secondaryRisk ? disorderLabel(state.secondaryRisk) : (isHu ? "nincs erős másodlagos jelzés" : "no strong secondary signal");
     const signal =
       state.resultSummary?.signal?.[state.lang] ||
       state.resultSummary?.signal?.en ||
@@ -4924,8 +4924,8 @@
       ? {
           title: "Mit mutat majd pontosabban a teljes riport?",
           lead:
-            "A fizetes utani riport nem ujabb cimket ad, hanem erthetoen osszerendezi a valaszokat, a korosztalyt es az atfedeseket.",
-          labels: ["Fo minta", "Masodlagos jelzes", "Korosztaly", "Jelzesszint"]
+            "A fizetés utáni riport nem újabb címkét ad, hanem érthetően összerendezi a válaszokat, a korosztályt és az átfedéseket.",
+          labels: ["Fő minta", "Másodlagos jelzés", "Korosztály", "Jelzésszint"]
         }
       : {
           title: "What will the full report clarify?",
@@ -4964,17 +4964,17 @@
     const gap = Number(primary.weightedSignal || 0) - Number(secondary.weightedSignal || 0);
     const confidence =
       gap >= 0.35
-        ? isHu ? "magasabb biztonsag" : "stronger confidence"
+        ? isHu ? "magasabb biztonság" : "stronger confidence"
         : gap >= 0.16
-          ? isHu ? "kozepes biztonsag" : "moderate confidence"
-          : isHu ? "szoros eredmeny" : "close result";
+          ? isHu ? "közepes biztonság" : "moderate confidence"
+          : isHu ? "szoros eredmény" : "close result";
 
     const copy = isHu
       ? {
-          title: "Hogyan dontott az engine?",
+          title: "Hogyan döntött az engine?",
           lead:
-            "A rendszer nem egyetlen valaszbol kovetkeztet. A fo es masodlagos teruleteket a jelerosseg, a kovetkezetesseg es az atfedes alapjan rendezi.",
-          labels: ["Fo jelzes", "Masodlagos jelzes", "Biztonsag", "Extra pontositas"]
+            "A rendszer nem egyetlen válaszból következtet. A fő és másodlagos területeket a jelzés erőssége, következetessége és átfedése alapján rendezi.",
+          labels: ["Fő jelzés", "Másodlagos jelzés", "Biztonság", "Extra pontosítás"]
         }
       : {
           title: "How did the engine decide?",
@@ -5133,7 +5133,7 @@
   function getSummaryNextStepCopy() {
     const copies = {
       hu: {
-        title: "Mit tisztaz a teljes riport?",
+        title: "Mit tisztáz a teljes riport?",
         lead: "Az előszűrés már mutat egy irányt. A teljes riport abban segít, hogy a jelzés ne csak egy szám vagy címke legyen, hanem érthető, korosztályhoz illesztett mintázat.",
         items: [
           {
@@ -5728,15 +5728,15 @@
     const errors = [];
 
     if (!state.triageQuestions.length || state.triageAnswers.length !== state.triageQuestions.length) {
-      errors.push("A triage kerdesek nincsenek teljesen kitoltve.");
+      errors.push("A triage kérdések nincsenek teljesen kitöltve.");
     }
 
     if (!state.detectedRisk) {
-      errors.push("Nem sikerult meghatarozni a fo teruletet.");
+      errors.push("Nem sikerült meghatározni a fő területet.");
     }
 
     if (!state.specificQuestions.length || state.specificAnswers.length !== state.specificQuestions.length) {
-      errors.push("A specifikus kerdesek nincsenek teljesen kitoltve.");
+      errors.push("A specifikus kérdések nincsenek teljesen kitöltve.");
     }
 
     if (!state.specificScoring || typeof state.specificScoring.normalizedAverage !== "number") {

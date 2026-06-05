@@ -4,7 +4,7 @@ const checks = [
   {
     file: "public/webflow/engine.js",
     required: [
-      "20260605-cx-top10-v1",
+      "20260605-cx-top10-v2",
       "analytics-event-schema-v2",
       "DRAFT_STORAGE_KEY",
       "buildSummaryConversionHtml",
@@ -31,7 +31,7 @@ const checks = [
     file: "web/engine-embed.full.html",
     required: [
       "/public/webflow/engine.js",
-      "20260605-cx-top10-v1"
+      "20260605-cx-top10-v2"
     ],
     forbidden: [
       "20260527-age-i18n",

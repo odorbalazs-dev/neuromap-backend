@@ -81,30 +81,30 @@ function getCustomerExperienceCopy(lang) {
     },
     hu: {
       title: "A PDF riport csatolva van",
-      body: "A csatolt PDF a letisztult, szulobarat riportverzio. Elmentheted, kinyomtathatod, vagy szukseg eseten szakemberrel is megoszthatod.",
-      nextTitle: "Javasolt kovetkezo lepesek",
+      body: "A csatolt PDF a letisztult, szülőbarát riportverzió. Elmentheted, kinyomtathatod, vagy szükség esetén szakemberrel is megoszthatod.",
+      nextTitle: "Javasolt következő lépések",
       nextSteps: [
-        "Eloszor a gyors attekintest es a korosztalyi javaslatokat olvasd el.",
-        "Ird fel azt a 2-3 hetkoznapi helyzetet, ahol a minta a legerosebben latszik.",
-        "Ha a jelzesek erosek vagy tartosak, erdemes szakemberrel is atbeszelni a riportot."
+        "Először a gyors áttekintést és a korosztályi javaslatokat olvasd el.",
+        "Írd fel azt a 2-3 hétköznapi helyzetet, ahol a minta a legerősebben látszik.",
+        "Ha a jelzések erősek vagy tartósak, érdemes szakemberrel is átbeszélni a riportot."
       ],
       readingTitle: "Hogyan olvasd a riportot?",
       readingTips: [
-        "Kezdd a fo mintazattal es a legerosebb hetkoznapi peldakkal.",
-        "A javaslatokat kis kiprobalhato lepesekkent kezeld, ne merev programkent.",
-        "Par nap mulva nezd at ujra, es jelold meg, mi tunt a leghasznosabbnak."
+        "Kezdd a fő mintázattal és a legerősebb hétköznapi példákkal.",
+        "A javaslatokat kis kipróbálható lépésekként kezeld, ne merev programként.",
+        "Pár nap múlva nézd át újra, és jelöld meg, mi tűnt a leghasznosabbnak."
       ],
       includedTitle: "Mit kapsz most?",
       includedItems: [
-        "A teljes, szemelyre szabott PDF riport csatolva van ehhez az emailhez.",
-        "A riport tartalmaz korosztalyi attekintest es gyakorlati javaslatokat.",
-        "A PDF-et megtarthatod sajat jegyzeteleshez, vagy megoszthatod szakemberrel."
+        "A teljes, személyre szabott PDF riport csatolva van ehhez az emailhez.",
+        "A riport tartalmaz korosztályi áttekintést és gyakorlati javaslatokat.",
+        "A PDF-et megtarthatod saját jegyzeteléshez, vagy megoszthatod szakemberrel."
       ],
-      followUpTitle: "2-3 napos utokovetesi otlet",
-      followUpBody: "Valassz ki egy megfigyelest vagy javaslatot a riportbol, es figyeld meg, hogyan jelenik meg a kovetkezo napokban.",
-      personalNote: "A riport akkor adja a legtobbet, ha osszekotod a valos otthoni, ovodai, iskolai vagy mindennapi helyzetekkel.",
-      reassurance: "Nem kell mindent egyszerre megoldani. Egy kicsi, kovetkezetes valtoztatas gyakran a legjobb elso lepes.",
-      support: "Segitseg kell, vagy nem latszik a csatolmany? Valaszolj erre az emailre, vagy irj az info@neuromapkids.com cimre."
+      followUpTitle: "2-3 napos utánkövetési ötlet",
+      followUpBody: "Válassz ki egy megfigyelést vagy javaslatot a riportból, és figyeld meg, hogyan jelenik meg a következő napokban.",
+      personalNote: "A riport akkor adja a legtöbbet, ha összekötöd a valós otthoni, óvodai, iskolai vagy mindennapi helyzetekkel.",
+      reassurance: "Nem kell mindent egyszerre megoldani. Egy kicsi, következetes változtatás gyakran a legjobb első lépés.",
+      support: "Segítség kell, vagy nem látszik a csatolmány? Válaszolj erre az emailre, vagy írj az info@neuromapkids.com címre."
     }
   };
 

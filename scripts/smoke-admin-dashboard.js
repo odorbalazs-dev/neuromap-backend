@@ -465,8 +465,8 @@ assert(
   "Dashboard JS should keep Webflow embed snippets behind a collapsible technical details section."
 );
 assert(
-  dashboardJs.includes("Technikai snippet megnyitasa"),
-  "Dashboard JS should label the collapsible Webflow snippet section."
+  dashboardJs.includes("Kód megjelenítése csak másoláshoz"),
+  "Dashboard JS should label the collapsible Webflow code section."
 );
 assert(
   dashboardJs.includes("postPaymentMonitoring"),

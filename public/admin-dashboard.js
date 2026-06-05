@@ -1848,8 +1848,8 @@
     if (els.webflowEmbedGeneratedAt) {
       els.webflowEmbedGeneratedAt.textContent =
         data.generatedAt
-          ? `Frissitve: ${formatDate(data.generatedAt)}`
-          : "Meg nincs embed allapotkep";
+          ? `Frissítve: ${formatDate(data.generatedAt)}`
+          : "Még nincs embed állapotkép";
     }
 
     if (els.webflowEmbedTotal) {
@@ -1858,7 +1858,7 @@
 
     if (els.webflowEmbedReadyMeta) {
       els.webflowEmbedReadyMeta.textContent =
-        `Ready: ${Number(summary.ready || 0)}, limit feletti snippet: ${Number(summary.overLimitSnippets || 0)}`;
+        `Kész: ${Number(summary.ready || 0)}, limit feletti snippet: ${Number(summary.overLimitSnippets || 0)}`;
     }
 
     if (els.webflowEmbedLoaders) {
@@ -1876,7 +1876,7 @@
     if (!embeds.length) {
       const empty = document.createElement("div");
       empty.className = "empty-detail";
-      empty.textContent = "Add meg az admin tokent, majd frissits a Webflow embed allapotkephez.";
+      empty.textContent = "Add meg az admin tokent, majd frissíts a Webflow embed állapotképhez.";
       els.webflowEmbedRows.appendChild(empty);
       return;
     }
@@ -1902,11 +1902,17 @@
       const details = document.createElement("div");
       details.className = "embed-meta";
       details.append(
-        summaryChip("Hova tedd", item.placement || "-"),
-        summaryChip("Verzio", item.version || "-"),
-        summaryChip("Tipus", item.type || "-"),
-        summaryChip("Forras", item.source?.path || "-")
+        summaryChip("Hová tedd", item.placement || "-"),
+        summaryChip("Verzió", item.version || "-"),
+        summaryChip("Típus", item.type || "-"),
+        summaryChip("Forrás", item.source?.path || "-")
       );
+
+      const instruction = document.createElement("p");
+      instruction.className = "embed-human-instruction";
+      instruction.textContent = item.type === "loader"
+        ? "Ezt a rövid loadert másold a megadott Webflow embedbe. A hosszú kód a backendről töltődik be, így nem ütközik a Webflow 50k limitbe."
+        : "Ellenőrizd, hogy ez az embed a jelzett oldalon vagy blokkban aktív-e. A technikai kódot csak másoláshoz nyisd le.";
 
       const code = document.createElement("textarea");
       code.className = "embed-code";
@@ -1917,7 +1923,7 @@
       codeDetails.className = "embed-code-details";
 
       const codeSummary = document.createElement("summary");
-      codeSummary.textContent = "Technikai snippet megnyitasa";
+      codeSummary.textContent = "Kód megjelenítése csak másoláshoz";
 
       codeDetails.append(codeSummary, code);
 
@@ -1928,7 +1934,7 @@
       copyButton.type = "button";
       copyButton.className = "secondary";
       copyButton.dataset.copyCode = item.copyCode || "";
-      copyButton.textContent = "Kod masolasa";
+      copyButton.textContent = "Kód másolása";
 
       const publicLink = document.createElement("span");
       publicLink.className = "snapshot-time";
@@ -1937,7 +1943,7 @@
         : "Nincs publikus URL";
 
       actionRow.append(copyButton, publicLink);
-      card.append(head, details, actionRow, codeDetails);
+      card.append(head, details, instruction, actionRow, codeDetails);
       els.webflowEmbedRows.appendChild(card);
     });
   }
@@ -2469,8 +2475,8 @@
 
     if (els.engineAnalyticsGeneratedAt) {
       els.engineAnalyticsGeneratedAt.textContent = data?.generatedAt
-        ? `Engine allapotkep: ${formatDate(data.generatedAt)}`
-        : "Meg nincs engine allapotkep";
+        ? `Engine állapotkép: ${formatDate(data.generatedAt)}`
+        : "Még nincs engine állapotkép";
     }
 
     if (els.engineAnalyticsTotal) {
@@ -2479,7 +2485,7 @@
 
     if (els.engineAnalyticsWindow) {
       els.engineAnalyticsWindow.textContent =
-        `${Number(data?.window?.loadedSessions || 0)} betoltott sessionbol`;
+        `${Number(data?.window?.loadedSessions || 0)} betöltött sessionből`;
     }
 
     if (els.engineAnalyticsConfidence) {
@@ -3094,7 +3100,7 @@
         tasks,
         "critical",
         "Post-payment folyamat kritikus",
-        `${countValue(postPaymentMetrics.issueCount)} fizetes utani teendo, ${countValue(postPaymentMetrics.paidWithoutActiveJob)} fizetett session aktiv job nelkul, ${countValue(postPaymentMetrics.retryLimitEmails)} email retry limit.`,
+        `${countValue(postPaymentMetrics.issueCount)} fizetés utáni teendő, ${countValue(postPaymentMetrics.paidWithoutActiveJob)} fizetett session aktív job nélkül, ${countValue(postPaymentMetrics.retryLimitEmails)} email retry limit.`,
         "postPaymentPanel",
         "Post-payment"
       );
@@ -3102,8 +3108,8 @@
       addOperatorTask(
         tasks,
         "warning",
-        "Post-payment folyamat figyelendo",
-        `${countValue(postPaymentMetrics.issueCount)} fizetes utani jelzes, ${countValue(postPaymentMetrics.unsentDoneReports)} kesz riport email nelkul.`,
+        "Post-payment folyamat figyelendő",
+        `${countValue(postPaymentMetrics.issueCount)} fizetés utáni jelzés, ${countValue(postPaymentMetrics.unsentDoneReports)} kész riport email nélkül.`,
         "postPaymentPanel",
         "Post-payment"
       );
@@ -3293,16 +3299,16 @@
     if (!els.customerExperienceUpdatedAt) return;
 
     if (!context) {
-      els.customerExperienceUpdatedAt.textContent = "Meg nincs UX allapotkep";
+      els.customerExperienceUpdatedAt.textContent = "Még nincs UX állapotkép";
       els.customerExperienceTrust.textContent = "-";
-      els.customerExperienceTrustMeta.textContent = "Admin tokenre var.";
+      els.customerExperienceTrustMeta.textContent = "Admin tokenre vár.";
       els.customerExperienceConversion.textContent = "-";
-      els.customerExperienceConversionMeta.textContent = "Checkout -> paid jelzes.";
+      els.customerExperienceConversionMeta.textContent = "Checkout -> paid jelzés.";
       els.customerExperienceDelivery.textContent = "-";
-      els.customerExperienceDeliveryMeta.textContent = "PDF es email teljesules.";
+      els.customerExperienceDeliveryMeta.textContent = "PDF és email teljesülés.";
       els.customerExperienceLanguage.textContent = "-";
-      els.customerExperienceLanguageMeta.textContent = "Engine, checkout es bank bundle.";
-      renderDeliverabilityList(els.customerExperienceRecommendationRows, [], "A frissiteshez add meg az admin tokent.", () => {});
+      els.customerExperienceLanguageMeta.textContent = "Engine, checkout és bank bundle.";
+      renderDeliverabilityList(els.customerExperienceRecommendationRows, [], "A frissítéshez add meg az admin tokent.", () => {});
       return;
     }
 
@@ -3320,44 +3326,44 @@
     const postPaymentIssues = countValue(postSummary.failed || postSummary.stuck || postSummary.actionable);
     const trustScore = Math.max(0, Math.min(100, 100 - failedFollowUps * 6 - i18nCritical * 5 - postPaymentIssues * 6));
 
-    els.customerExperienceUpdatedAt.textContent = `Frissitve: ${formatDate(new Date().toISOString())}`;
+    els.customerExperienceUpdatedAt.textContent = `Frissítve: ${formatDate(new Date().toISOString())}`;
     els.customerExperienceTrust.textContent = `${trustScore}`;
     els.customerExperienceTrustMeta.textContent =
-      trustScore >= 85 ? "Stabil vasarloi bizalmi jelzes." : "Van javitando pont a fizetes utani elmenyben.";
+      trustScore >= 85 ? "Stabil vásárlói bizalmi jelzés." : "Van javítandó pont a fizetés utáni élményben.";
     els.customerExperienceConversion.textContent = formatPercent(conversionRate);
     els.customerExperienceConversionMeta.textContent = `7 napos checkout -> paid arany, checkout: ${countValue(metrics.checkoutStarted)}`;
     els.customerExperienceDelivery.textContent = formatPercent(deliveryRate);
-    els.customerExperienceDeliveryMeta.textContent = `Email hibak: ${countValue(emailMetrics.failed || emailMetrics.failures)}, follow-up hibak: ${failedFollowUps}`;
+    els.customerExperienceDeliveryMeta.textContent = `Email hibák: ${countValue(emailMetrics.failed || emailMetrics.failures)}, follow-up hibák: ${failedFollowUps}`;
     els.customerExperienceLanguage.textContent = i18nLevel;
     els.customerExperienceLanguageMeta.textContent =
-      i18nCritical ? `${i18nCritical} kritikus nyelvi jelzes.` : "Nincs kritikus nyelvi jelzes.";
+      i18nCritical ? `${i18nCritical} kritikus nyelvi jelzés.` : "Nincs kritikus nyelvi jelzés.";
 
     const recommendations = [];
 
     if (conversionRate && conversionRate < 0.45) {
       recommendations.push({
-        title: "Osszegzes oldali CTA tovabbi erosites",
-        meta: "A checkout -> paid arany alacsonyabb, ezert a tudomanyos es riport-elony copy kulcsfontossagu."
+        title: "Összegzés oldali CTA további erősítés",
+        meta: "A checkout -> paid arány alacsonyabb, ezért a tudományos és riport-előny copy kulcsfontosságú."
       });
     }
 
     if (deliveryRate && deliveryRate < 0.9) {
       recommendations.push({
-        title: "Email/PDF kezbesitesi folyamat figyelese",
-        meta: "A vasarloi bizalom legerosebb pontja, hogy a riport gyorsan es biztosan megerkezzen."
+        title: "Email/PDF kézbesítési folyamat figyelése",
+        meta: "A vásárlói bizalom legerősebb pontja, hogy a riport gyorsan és biztosan megérkezzen."
       });
     }
 
     if (failedFollowUps > 0) {
       recommendations.push({
-        title: "Follow-up email hibak ujraprobalasa",
-        meta: `${failedFollowUps} follow-up email kezi ellenorzest vagy ujrafuttatast igenyel.`
+        title: "Follow-up email hibák újrapróbálása",
+        meta: `${failedFollowUps} follow-up email kézi ellenőrzést vagy újrafuttatást igényel.`
       });
     }
 
     if (i18nLevel !== "healthy") {
       recommendations.push({
-        title: "Tobbnyelvu Webflow allapot ellenorzese",
+        title: "Többnyelvű Webflow állapot ellenőrzése",
         meta: "A nyelvi audit szerint lehet olyan nyelv vagy loader, ami nem teljesen stabil."
       });
     }
@@ -3365,7 +3371,7 @@
     if (!recommendations.length) {
       recommendations.push({
         title: "UX folyamat stabil",
-        meta: "A kovetkezo nyereseg a riport-elonezet es a post-payment bizalmi kommunikacio finomitasa."
+        meta: "A következő nyereség a riport-előnézet és a post-payment bizalmi kommunikáció finomítása."
       });
     }
 
@@ -3421,7 +3427,7 @@
 
     els.followUpGeneratedAt.textContent = data?.generatedAt
       ? `Frissitve: ${formatDate(data.generatedAt)}`
-      : "Meg nincs follow-up allapotkep";
+      : "Még nincs follow-up állapotkép";
     els.followUpDue.textContent = countValue(summary.due);
     els.followUpSent.textContent = countValue(summary.sent);
     els.followUpFailed.textContent = countValue(summary.failed);
