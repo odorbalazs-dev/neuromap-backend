@@ -5,7 +5,7 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260605-pdf-summary-fix-v1";
+  const ENGINE_VERSION = "20260605-landing-hu-cta-v1";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
   const DRAFT_STORAGE_KEY = "nm_questionnaire_draft_v1";
   const DRAFT_TTL_MS = 1000 * 60 * 60 * 24 * 14;
@@ -736,6 +736,47 @@
         margin-top: 2px;
       }
 
+      .nm-summary-top-cta {
+        align-items: center;
+        background: #ffffff;
+        border: 1px solid #d9ecf7;
+        border-radius: 18px;
+        box-shadow: 0 14px 30px rgba(20, 32, 51, 0.06);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: space-between;
+        margin: 0 0 16px;
+        padding: 14px 16px;
+      }
+
+      .nm-summary-top-cta span {
+        color: #506578;
+        font-size: 13px;
+        font-weight: 750;
+        line-height: 1.45;
+      }
+
+      .nm-summary-pay-button {
+        background: linear-gradient(135deg, #1197d5, #0b86bf);
+        border: 0;
+        border-radius: 14px;
+        box-shadow: 0 14px 28px rgba(17, 151, 213, 0.22);
+        color: #ffffff;
+        cursor: pointer;
+        font: inherit;
+        font-weight: 950;
+        min-height: 46px;
+        padding: 13px 22px;
+        text-decoration: none;
+        transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+      }
+
+      .nm-summary-pay-button:hover {
+        box-shadow: 0 16px 32px rgba(17, 151, 213, 0.26);
+        transform: translateY(-1px);
+      }
+
       .nm-prepayment-trust-card {
         background:
           linear-gradient(135deg, rgba(255, 122, 0, 0.08), rgba(17, 151, 213, 0.08)),
@@ -1182,6 +1223,15 @@
         .nm-summary-cta-strip {
           align-items: flex-start;
           flex-direction: column;
+        }
+
+        .nm-summary-top-cta {
+          align-items: stretch;
+          flex-direction: column;
+        }
+
+        .nm-summary-pay-button {
+          width: 100%;
         }
 
         .nm-summary-pill {
@@ -1792,44 +1842,44 @@
 
   const LANDING_FALLBACK_TEXT = {
     hu: {
-      modalTitle: "Valassz nyelvet",
-      heroTitle: "Ertsd meg, mi allhat gyermeked viselkedese mogott",
-      heroSub: "10 perces kerdoiv utan szemelyre szabott, szulobarat riportot es PDF-et kapsz.",
-      primaryCta: "Kezdjuk ->",
-      microcopy: "Csak $5 - Nincs elofizetes - PDF riport emailben",
+      modalTitle: "Válassz nyelvet",
+      heroTitle: "Értsd meg, mi állhat gyermeked viselkedése mögött",
+      heroSub: "10 perces kérdőív után személyre szabott, szülőbarát riportot és PDF-et kapsz.",
+      primaryCta: "Kezdjük ->",
+      microcopy: "Csak $5 - Nincs előfizetés - PDF riport emailben",
       trust1: "kb. 10 perc",
       trust2: "PDF riport emailben",
-      trust3: "strukturalt elemzes",
+      trust3: "strukturált elemzés",
       valueTitle: "Mit kapsz pontosan?",
-      value1: "szemelyre szabott ertelmezes a valaszok alapjan",
-      value2: "viselkedesi, erzelmi es tanulasi mintazatok kiemelve",
-      value3: "gyakorlati, szulokent is azonnal hasznalhato javaslatok",
+      value1: "személyre szabott értelmezés a válaszok alapján",
+      value2: "viselkedési, érzelmi és tanulási mintázatok kiemelve",
+      value3: "gyakorlati, szülőként is azonnal használható javaslatok",
       value4: "brandelt PDF riport emailben",
-      stepsTitle: "Igy mukodik",
-      step1: "1. Kitoltod a rovid eloszuro kerdoivet",
-      step2: "2. A rendszer kivalasztja a relevans specifikus kerdessort",
-      step3: "3. Fizetes utan elkeszul es emailben megerkezik a riport",
-      previewTitle: "Igy nez ki a riport",
-      previewCaption: "Minta elonezet: a teljes riport szemelyre szabottan, PDF-ben erkezik.",
-      reasonTitle: "Miert eri meg most kitolteni?",
-      reasonBody: "A rovid kerdoiv utan nem csak egy cimket kapsz, hanem egy ertelmezheto iranyt: mire figyelj otthon, mikor erdemes szakemberhez fordulni, es milyen kovetkezo lepes lehet hasznos.",
-      reasonParent: "Kevesebb bizonytalansag",
-      reasonSchool: "Jobb beszelgetes ovodaval vagy iskolaval",
-      reasonCalm: "Nyugodtabb, rendszerezett kep",
-      reasonNote: "A cel nem a megijesztes, hanem a mintazatok ertheto osszerendezese.",
+      stepsTitle: "Így működik",
+      step1: "1. Kitöltöd a rövid előszűrő kérdőívet",
+      step2: "2. A rendszer kiválasztja a releváns specifikus kérdéssort",
+      step3: "3. Fizetés után elkészül és emailben megérkezik a riport",
+      previewTitle: "Így néz ki a riport",
+      previewCaption: "Minta előnézet: a teljes riport személyre szabottan, PDF-ben érkezik.",
+      reasonTitle: "Miért éri meg most kitölteni?",
+      reasonBody: "A rövid kérdőív után nem csak egy címkét kapsz, hanem egy érthető irányt: mire figyelj otthon, mikor érdemes szakemberhez fordulni, és milyen következő lépés lehet hasznos.",
+      reasonParent: "Kevesebb bizonytalanság",
+      reasonSchool: "Jobb beszélgetés óvodával vagy iskolával",
+      reasonCalm: "Nyugodtabb, rendszerezett kép",
+      reasonNote: "A cél nem az ijesztgetés, hanem egy megnyugtató, érthető kép a mintázatokról.",
       demoTitle: "Mit mutat meg a teljes riport?",
-      demoLead: "A teljes PDF a valaszokbol kirajzolodo fo es masodlagos jelzest, a korosztalyi kontextust es a gyakorlati javaslatokat egyutt magyarazza el.",
-      demoMetric1: "Fo mintazat",
-      demoMetric2: "Korosztalyi nezopont",
-      demoMetric3: "Kovetkezo lepesek",
-      demoNote: "A riport szulobarat, strukturalt es nem diagnosztikus nyelven keszul.",
+      demoLead: "A teljes PDF a válaszokból kirajzolódó fő és másodlagos jelzést, a korosztályi kontextust és a gyakorlati javaslatokat együtt magyarázza el.",
+      demoMetric1: "Fő mintázat",
+      demoMetric2: "Korosztályi nézőpont",
+      demoMetric3: "Következő lépések",
+      demoNote: "A riport szülőbarát, strukturált és nem diagnosztikus nyelven készül.",
       trustTitle: "Fontos tudni",
-      trustText: "A NeuroMap Kids nem diagnozis, hanem strukturalt eloszures.",
-      priceTitle: "Egyszeri dij",
+      trustText: "A NeuroMap Kids nem diagnózis, hanem strukturált előszűrés.",
+      priceTitle: "Egyszeri díj",
       priceValue: "Csak $5",
-      priceCta: "Riport elkeszitese ->",
-      priceMicrocopy: "Nincs elofizetes - Biztonsagos fizetes - PDF emailben",
-      stickyCta: "Kezdjuk ->"
+      priceCta: "Riport elkészítése ->",
+      priceMicrocopy: "Nincs előfizetés - Biztonságos fizetés - PDF emailben",
+      stickyCta: "Kezdjük ->"
     },
     en: {
       modalTitle: "Choose language",
@@ -2078,13 +2128,13 @@
     const labels = {
       hu: {
         title: "NeuroMap Kids riport",
-        subtitle: "szemelyre szabott elonezet",
-        focus: "Fokusz",
-        pattern: "Mintazat",
+        subtitle: "személyre szabott előnézet",
+        focus: "Fókusz",
+        pattern: "Mintázat",
         suggestions: "Javaslatok",
-        next: "Kovetkezo lepesek",
-        parent: "szulobarat magyarazat",
-        action: "gyakorlati otletek",
+        next: "Következő lépések",
+        parent: "szülőbarát magyarázat",
+        action: "gyakorlati ötletek",
         pdf: "brandelt PDF emailben"
       },
       en: {
@@ -2175,9 +2225,9 @@
   function getLandingProofCopy(lang = state.lang) {
     const copies = {
       hu: [
-        "szulobarat, nem ijesztgeto nyelvezet",
-        "korosztalyi szempontokkal finomitva",
-        "nem diagnozis, hanem ertelmezheto eloszures"
+        "szülőbarát, megnyugtató nyelvezet",
+        "korosztályi szempontokkal finomítva",
+        "nem diagnózis, hanem érthető előszűrés"
       ],
       en: [
         "parent-friendly, non-alarming language",
@@ -3010,7 +3060,7 @@
 
     if (errors.length) {
       console.error("NeuroMap runtime bank validation failed:", errors);
-      setStatus("A kerdoiv betoltese nem sikerult. Kerjuk, frissitsd az oldalt, vagy probald ujra kesobb.");
+      setStatus("A kérdőív betöltése nem sikerült. Kérjük, frissítsd az oldalt, vagy próbáld újra később.");
       return false;
     }
 
@@ -4843,19 +4893,19 @@
     const copies = {
       hu: {
         title: "Mit tisztaz a teljes riport?",
-        lead: "Az eloszures mar mutat egy iranyt. A teljes riport abban segit, hogy a jelzes ne csak egy szam vagy cimke legyen, hanem ertheto, korosztalyhoz illesztett mintazat.",
+        lead: "Az előszűrés már mutat egy irányt. A teljes riport abban segít, hogy a jelzés ne csak egy szám vagy címke legyen, hanem érthető, korosztályhoz illesztett mintázat.",
         items: [
           {
-            title: "Mi allhat a valaszok mogott?",
-            text: "A fo es masodlagos jelzeseket egyutt ertelmezi, hogy kevesebb legyen a felreertes."
+            title: "Mi állhat a válaszok mögött?",
+            text: "A fő és másodlagos jelzéseket együtt értelmezi, hogy kevesebb legyen a félreértés."
           },
           {
-            title: "Mennyire kovetkezetes a minta?",
-            text: "A valaszok erosseget, atfedeset es bizonytalansagat is figyelembe veszi."
+            title: "Mennyire következetes a minta?",
+            text: "A válaszok erősségét, átfedését és bizonytalanságát is figyelembe veszi."
           },
           {
-            title: "Mit erdemes kiprobalni eloszor?",
-            text: "A javaslatok szulokent is hasznalhato, kicsi lepesekre vannak bontva."
+            title: "Mit érdemes kipróbálni először?",
+            text: "A javaslatok szülőként is használható, kicsi lépésekre vannak bontva."
           }
         ]
       },
@@ -5144,6 +5194,13 @@
       (state.resultSummary && state.resultSummary.summaryText && state.resultSummary.summaryText.en) ||
       "";
     const topSubdomains = (state.resultSummary && state.resultSummary.topSubdomains) || [];
+    const topPayText =
+      state.lang === "hu"
+        ? "A részletes, szülőbarát PDF riport a fizetés után készül el."
+        : "The detailed parent-friendly PDF report is generated after payment.";
+    const topPayLabel =
+      t.summaryPayCta ||
+      (state.lang === "hu" ? "Fizetés és riport kérése" : t.pay || "Pay");
 
     container.innerHTML = `
       <div>
@@ -5152,6 +5209,13 @@
           <div>
             ${t.summaryNote || ""}
           </div>
+        </div>
+
+        <div class="nm-summary-top-cta">
+          <span>${escapeHtml(topPayText)}</span>
+          <button type="button" class="nm-summary-pay-button" data-nm-summary-pay="top">
+            ${escapeHtml(topPayLabel)}
+          </button>
         </div>
 
         <div class="nm-summary-card">
@@ -5207,6 +5271,11 @@
         </div>
       </div>
     `;
+
+    const topPayButton = container.querySelector("[data-nm-summary-pay]");
+    if (topPayButton) {
+      topPayButton.addEventListener("click", startCheckout);
+    }
   }
 
   function buildSpecificStepTitle(t) {
