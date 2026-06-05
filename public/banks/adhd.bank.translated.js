@@ -1206,7 +1206,7 @@ window.NM_ADHD_BANK = [
     weight: 1.9,
     reverse: false,
     text: {
-      hu: `Folyamatos mozgásigénye van, mintha mindig 'menne benne a motor' otthon a napi rutin során.`,
+      hu: `Gyakran erős mozgásigénye van, mintha nehezen tudná leállítani magát otthon a napi rutin során.`,
       en: `Seems to have a constant need to move, as if driven by a motor at home during daily routines.`,
       de: `Scheint ständig das Bedürfnis zu haben, sich zu bewegen, als wäre er von einem Motor angetrieben, zu Hause während täglicher Abläufe.`,
       it: `Sembra avere un bisogno costante di muoversi, come se fosse spinto da un motore a casa durante le routine quotidiane.`,
@@ -1226,7 +1226,7 @@ window.NM_ADHD_BANK = [
     weight: 1.9,
     reverse: false,
     text: {
-      hu: `Folyamatos mozgásigénye van, mintha mindig 'menne benne a motor' iskolai feladatok közben.`,
+      hu: `Gyakran erős mozgásigénye van, mintha nehezen tudná leállítani magát iskolai feladatok közben.`,
       en: `Seems to have a constant need to move, as if driven by a motor during school tasks.`,
       de: `Scheint ständig das Bedürfnis zu haben, sich zu bewegen, als wäre er von einem Motor angetrieben, während schulischer Aufgaben.`,
       it: `Sembra avere un bisogno costante di muoversi, come se fosse spinto da un motore durante i compiti scolastici.`,
@@ -1246,7 +1246,7 @@ window.NM_ADHD_BANK = [
     weight: 1.9,
     reverse: false,
     text: {
-      hu: `Folyamatos mozgásigénye van, mintha mindig 'menne benne a motor' társas helyzetekben.`,
+      hu: `Gyakran erős mozgásigénye van, mintha nehezen tudná leállítani magát társas helyzetekben.`,
       en: `Seems to have a constant need to move, as if driven by a motor in social situations.`,
       de: `Scheint ständig das Bedürfnis zu haben, sich zu bewegen, als wäre er von einem Motor angetrieben, in sozialen Situationen.`,
       it: `Sembra avere un bisogno costante di muoversi, come se fosse spinto da un motore in situazioni sociali.`,
@@ -1266,7 +1266,7 @@ window.NM_ADHD_BANK = [
     weight: 1.9,
     reverse: false,
     text: {
-      hu: `Folyamatos mozgásigénye van, mintha mindig 'menne benne a motor' strukturált feladatvégzés során.`,
+      hu: `Gyakran erős mozgásigénye van, mintha nehezen tudná leállítani magát strukturált feladatvégzés során.`,
       en: `Seems to have a constant need to move, as if driven by a motor during structured activities.`,
       de: `Scheint ständig das Bedürfnis zu haben, sich zu bewegen, als wäre er von einem Motor angetrieben, während strukturierter Aktivitäten.`,
       it: `Sembra avere un bisogno costante di muoversi, come se fosse spinto da un motore durante attività strutturate.`,
@@ -1286,7 +1286,7 @@ window.NM_ADHD_BANK = [
     weight: 1.9,
     reverse: false,
     text: {
-      hu: `Folyamatos mozgásigénye van, mintha mindig 'menne benne a motor' amikor egyszerre több inger éri.`,
+      hu: `Gyakran erős mozgásigénye van, mintha nehezen tudná leállítani magát amikor egyszerre több inger éri.`,
       en: `Seems to have a constant need to move, as if driven by a motor when several stimuli are present at once.`,
       de: `Scheint ständig das Bedürfnis zu haben, sich zu bewegen, als wäre er von einem Motor angetrieben, wenn mehrere Reize gleichzeitig vorhanden sind.`,
       it: `Sembra avere un bisogno costante di muoversi, come se fosse spinto da un motore quando sono presenti più stimoli contemporaneamente.`,
@@ -1306,7 +1306,7 @@ window.NM_ADHD_BANK = [
     weight: 1.9,
     reverse: false,
     text: {
-      hu: `Folyamatos mozgásigénye van, mintha mindig 'menne benne a motor' stresszes helyzetekben.`,
+      hu: `Gyakran erős mozgásigénye van, mintha nehezen tudná leállítani magát stresszes helyzetekben.`,
       en: `Seems to have a constant need to move, as if driven by a motor in stressful situations.`,
       de: `Scheint ständig das Bedürfnis zu haben, sich zu bewegen, als wäre er von einem Motor angetrieben, in stressigen Situationen.`,
       it: `Sembra avere un bisogno costante di muoversi, come se fosse spinto da un motore in situazioni stressanti.`,
@@ -1326,7 +1326,7 @@ window.NM_ADHD_BANK = [
     weight: 1.9,
     reverse: false,
     text: {
-      hu: `Folyamatos mozgásigénye van, mintha mindig 'menne benne a motor' amikor várnia kell.`,
+      hu: `Gyakran erős mozgásigénye van, mintha nehezen tudná leállítani magát amikor várnia kell.`,
       en: `Seems to have a constant need to move, as if driven by a motor when waiting is required.`,
       de: `Scheint ständig das Bedürfnis zu haben, sich zu bewegen, als wäre er von einem Motor angetrieben, wenn Warten erforderlich ist.`,
       it: `Sembra avere un bisogno costante di muoversi, come se fosse spinto da un motore quando è necessario aspettare.`,
@@ -1346,7 +1346,7 @@ window.NM_ADHD_BANK = [
     weight: 1.9,
     reverse: false,
     text: {
-      hu: `Folyamatos mozgásigénye van, mintha mindig 'menne benne a motor' önálló feladatmegoldás közben.`,
+      hu: `Gyakran erős mozgásigénye van, mintha nehezen tudná leállítani magát önálló feladatmegoldás közben.`,
       en: `Seems to have a constant need to move, as if driven by a motor during independent task completion.`,
       de: `Scheint ständig das Bedürfnis zu haben, sich zu bewegen, als wäre er von einem Motor angetrieben, während eigenständiger Aufgabenbewältigung.`,
       it: `Sembra avere un bisogno costante di muoversi, come se fosse spinto da un motore durante il completamento indipendente di compiti.`,
@@ -1366,7 +1366,7 @@ window.NM_ADHD_BANK = [
     weight: 1.9,
     reverse: false,
     text: {
-      hu: `Folyamatos mozgásigénye van, mintha mindig 'menne benne a motor' ha szabályokat kell követnie.`,
+      hu: `Gyakran erős mozgásigénye van, mintha nehezen tudná leállítani magát ha szabályokat kell követnie.`,
       en: `Seems to have a constant need to move, as if driven by a motor when rules need to be followed.`,
       de: `Scheint ständig das Bedürfnis zu haben, sich zu bewegen, als wäre er von einem Motor angetrieben, wenn Regeln befolgt werden müssen.`,
       it: `Sembra avere un bisogno costante di muoversi, come se fosse spinto da un motore quando devono essere seguite delle regole.`,
@@ -1386,7 +1386,7 @@ window.NM_ADHD_BANK = [
     weight: 1.9,
     reverse: false,
     text: {
-      hu: `Folyamatos mozgásigénye van, mintha mindig 'menne benne a motor' felnőtti irányítás nélkül.`,
+      hu: `Gyakran erős mozgásigénye van, mintha nehezen tudná leállítani magát felnőtti irányítás nélkül.`,
       en: `Seems to have a constant need to move, as if driven by a motor without direct adult guidance.`,
       de: `Scheint ständig das Bedürfnis zu haben, sich zu bewegen, als wäre er von einem Motor angetrieben, ohne direkte Anleitung durch Erwachsene.`,
       it: `Sembra avere un bisogno costante di muoversi, come se fosse spinto da un motore senza una guida diretta degli adulti.`,

@@ -121,8 +121,8 @@ const STEMS = {
       weight: 1.9,
       reverse: false,
       text: {
-        hu: "Folyamatos mozgásigénye van, mintha mindig 'menne benne a motor'",
-        en: "Seems to have a constant need to move, as if driven by a motor"
+        hu: "Gyakran erős mozgásigénye van, mintha nehezen tudná leállítani magát",
+        en: "Often seems to have a strong need to move, as if it is hard to slow down"
       }
     },
     {
