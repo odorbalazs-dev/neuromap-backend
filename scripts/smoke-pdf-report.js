@@ -15,7 +15,7 @@ function buildSampleReportText() {
   const sections = [
     [
       "### 1. Rovid nyito osszefoglalo",
-      "A valaszok alapjan a legerosebb jelzes a figyelmi onszabalyozas, a feladattartas es a vegrehajto mukodes teruleten jelenik meg. Ez nem diagnosztikus megallapitas, hanem egy strukturalt eloszuresi kep, amely segit abban, hogy a szulo lassa, mely helyzetekben erdemes tovabb figyelni a gyermek mindennapi mukodeset."
+      "A valaszok alapjan a legerosebb jelzes a figyelmi onszabalyozas, a feladattartas es a vegrehajto viselkedes teruleten jelenik meg. Ez nem diagnosztikus megallapitas, hanem egy strukturalt eloszuresi kep, amely segit abban, hogy a szulo lassa, mely helyzetekben erdemes tovabb figyelni a gyermek mindennapi viselkedeset."
     ],
     [
       "2. Fo megfigyelt mintazatok",
@@ -27,7 +27,7 @@ function buildSampleReportText() {
     ],
     [
       "4. Erossegek es vedo tenyezok",
-      "A kerdoiv mintazata alapjan kulon figyelmet erdemelnek azok a helyzetek, ahol a gyermek erdeklodese, mozgasigenye vagy vizualis tamogatasa segiti a jobb teljesitmenyt. Ha a feladat rovidebb lepesekre bonthato, ha elore lathato a kovetkezo lepes, es ha a gyermek kap eleg idot a valtasra, a mukodes gyakran rendezettebb lehet."
+      "A kerdoiv mintazata alapjan kulon figyelmet erdemelnek azok a helyzetek, ahol a gyermek erdeklodese, mozgasigenye vagy vizualis tamogatasa segiti a jobb teljesitmenyt. Ha a feladat rovidebb lepesekre bonthato, ha elore lathato a kovetkezo lepes, es ha a gyermek kap eleg idot a valtasra, a viselkedes gyakran rendezettebb lehet."
     ],
     [
       "5. Szuloi tamogatasi iranyok",
@@ -43,7 +43,7 @@ function buildSampleReportText() {
     ],
     [
       "8. Mikor erdemes szakemberhez fordulni",
-      "Ha a nehezsegek tobb kornyezetben, tartosan es a mindennapi mukodest erdemben befolyasolva jelennek meg, erdemes gyermekpszichologus, gyermekpszichiater, gyogypedagogus vagy fejleszto szakember bevonasat megfontolni. Kulonosen fontos ez akkor, ha a gyermek onbizalma csokken, gyakori a konfliktus, vagy a csaladi elet jelentos terheles ala kerul."
+      "Ha a nehezsegek tobb kornyezetben, tartosan es a mindennapi viselkedest erdemben befolyasolva jelennek meg, erdemes gyermekpszichologus, gyermekpszichiater, gyogypedagogus vagy fejleszto szakember bevonasat megfontolni. Kulonosen fontos ez akkor, ha a gyermek onbizalma csokken, gyakori a konfliktus, vagy a csaladi elet jelentos terheles ala kerul."
     ],
     [
       "9. Kovetkezo harminc nap javasolt fokusza",
@@ -174,7 +174,7 @@ function buildSamplePayload() {
         LEARNING: 6
       },
       summaryText: {
-        hu: "A legerosebb minta a figyelmi es vegrehajto mukodeshez kapcsolodik.",
+        hu: "A legerosebb minta a figyelmi es vegrehajto viselkedeshez kapcsolodik.",
         en: "The strongest pattern relates to attention and executive functioning."
       }
     },

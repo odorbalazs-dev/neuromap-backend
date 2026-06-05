@@ -33,7 +33,7 @@ const PAGE_LAYOUT = {
   blockGap: 20
 };
 
-const PDF_REPORT_VERSION = "pdf_report_v8_customer_experience";
+const PDF_REPORT_VERSION = "pdf_report_v9_layout_breaks";
 const BODY_TEXT_COLOR = "#374151";
 const BULLET = "\u2022";
 
@@ -70,6 +70,18 @@ function stripMarkdown(value = "") {
     .replace(/[ \t]{2,}/g, " ")
     .replace(/\n{3,}/g, "\n\n")
     .trim();
+}
+
+function polishHungarianReportWording(value = "") {
+  return clean(value)
+    .replace(/gyermek\s+mindennapi\s+működését/giu, "gyermek mindennapi viselkedését")
+    .replace(/gyermek\s+mindennapi\s+mukodeset/giu, "gyermek mindennapi viselkedeset")
+    .replace(/gyermek\s+működése/giu, "gyermek viselkedése")
+    .replace(/gyermek\s+mukodese/giu, "gyermek viselkedese")
+    .replace(/gyermek\s+működését/giu, "gyermek viselkedését")
+    .replace(/gyermek\s+mukodeset/giu, "gyermek viselkedeset")
+    .replace(/gyermek\s+működésében/giu, "gyermek viselkedésében")
+    .replace(/gyermek\s+mukodeseben/giu, "gyermek viselkedeseben");
 }
 
 function ensureFontFile(filePath, label) {
@@ -979,8 +991,8 @@ function addInfoCard(doc, { name, lang }) {
     });
 }
 
-function addMiniCard(doc, x, y, w, title, value, lang, color = BRAND.blue) {
-  const h = 72;
+function addMiniCard(doc, x, y, w, title, value, lang, color = BRAND.blue, height = 72) {
+  const h = height;
 
   doc.roundedRect(x, y, w, h, 14).fill("#FFFFFF");
   doc.roundedRect(x, y, w, h, 14).strokeColor(BRAND.border).lineWidth(1).stroke();
@@ -1155,7 +1167,15 @@ function addParentQuickSummaryBlock(doc, payload, labels, lang, pageState = null
     lineGap: 2,
     align
   });
-  const h = Math.max(214, Math.ceil(142 + leadHeight + Math.max(0, actionHeight - 30)));
+  const noteHeight = measureText(doc, copy.note, {
+    font: getFont(lang),
+    fontSize: 8.8,
+    width: innerW,
+    lineGap: 2.5,
+    align
+  });
+  const miniCardH = Math.max(82, Math.ceil(64 + Math.max(0, actionHeight - 24)));
+  const h = Math.max(232, Math.ceil(110 + leadHeight + miniCardH + noteHeight + 30));
 
   ensureSpace(doc, h + 18, labels, lang, pageState);
 
@@ -1200,7 +1220,8 @@ function addParentQuickSummaryBlock(doc, payload, labels, lang, pageState = null
     copy.focus,
     getDomainLabel(lang, summary.detectedRisk, labels),
     lang,
-    BRAND.blue
+    BRAND.blue,
+    miniCardH
   );
 
   addMiniCard(
@@ -1211,7 +1232,8 @@ function addParentQuickSummaryBlock(doc, payload, labels, lang, pageState = null
     copy.age,
     context.ageBandLabel || labels.notAvailable,
     lang,
-    BRAND.green
+    BRAND.green,
+    miniCardH
   );
 
   addMiniCard(
@@ -1222,13 +1244,14 @@ function addParentQuickSummaryBlock(doc, payload, labels, lang, pageState = null
     copy.firstStep,
     firstAction,
     lang,
-    BRAND.orange
+    BRAND.orange,
+    miniCardH
   );
 
   doc.fillColor(BRAND.muted)
     .font(getFont(lang))
     .fontSize(8.8)
-    .text(copy.note, innerX, y + h - 42, {
+    .text(copy.note, innerX, cardY + miniCardH + 16, {
       width: innerW,
       lineGap: 2.5,
       align
@@ -1688,7 +1711,7 @@ function splitLongParagraph(paragraph, lang) {
   return chunks;
 }
 
-function addReportHeading(doc, heading, labels, lang, pageState = null) {
+function getReportHeadingMetrics(doc, heading, lang) {
   const x = 56;
   const w = doc.page.width - 112;
   const numbered = clean(heading).match(/^(\d+)\.\s*(.+)$/);
@@ -1706,7 +1729,31 @@ function addReportHeading(doc, heading, labels, lang, pageState = null) {
   });
   const h = Math.max(52, Math.ceil(titleHeight + 30));
 
-  ensureSpace(doc, h + 28, labels, lang, pageState);
+  return {
+    x,
+    w,
+    sectionNumber,
+    sectionTitle,
+    accent,
+    titleX,
+    titleWidth,
+    h
+  };
+}
+
+function addReportHeading(doc, heading, labels, lang, pageState = null, keepWithHeight = 0) {
+  const {
+    x,
+    w,
+    sectionNumber,
+    sectionTitle,
+    accent,
+    titleX,
+    titleWidth,
+    h
+  } = getReportHeadingMetrics(doc, heading, lang);
+
+  ensureSpace(doc, h + 28 + Math.max(0, Math.min(keepWithHeight, 140)), labels, lang, pageState);
 
   const y = doc.y + 6;
 
@@ -1735,6 +1782,44 @@ function addReportHeading(doc, heading, labels, lang, pageState = null) {
     });
 
   doc.y = y + h + 12;
+}
+
+function estimateReportPartIntroHeight(doc, part, lang) {
+  if (!part) return 0;
+
+  if (part.type === "bullets") {
+    const firstItem = (part.items || []).map((item) => clean(item)).find(Boolean);
+    if (!firstItem) return 0;
+
+    return Math.min(
+      110,
+      measureText(doc, firstItem, {
+        font: getFont(lang),
+        fontSize: lang === "zh" || lang === "ja" ? 9.8 : 10.1,
+        width: doc.page.width - 148,
+        align: getTextAlign(lang),
+        lineGap: 3
+      }) + 26
+    );
+  }
+
+  if (part.type === "paragraph") {
+    const firstParagraph = splitLongParagraph(part.text, lang)[0] || "";
+    if (!firstParagraph) return 0;
+
+    return Math.min(
+      120,
+      measureText(doc, firstParagraph, {
+        font: getFont(lang),
+        fontSize: lang === "zh" || lang === "ja" ? 10 : 10.4,
+        width: doc.page.width - 112,
+        align: getTextAlign(lang),
+        lineGap: 4
+      }) + 28
+    );
+  }
+
+  return 0;
 }
 
 function addReportBulletList(doc, items, labels, lang, pageState = null) {
@@ -1819,17 +1904,22 @@ function addReportParagraph(doc, paragraph, labels, lang, pageState = null) {
 }
 
 function addReportText(doc, reportText, labels, lang, pageState = null) {
-  const parts = splitReportText(reportText);
+  const parts = splitReportText(polishHungarianReportWording(reportText));
 
   let sectionCounter = 1;
 
-  parts.forEach((part) => {
+  parts.forEach((part, index) => {
     if (part.type === "heading") {
       const heading = normalizeHeading(part.text, sectionCounter);
       const match = heading.match(/^(\d+)\./);
       if (match) sectionCounter = Number(match[1]) + 1;
 
-      addReportHeading(doc, heading, labels, lang, pageState);
+      const nextContentPart = parts
+        .slice(index + 1)
+        .find((candidate) => candidate.type !== "heading");
+      const keepWithHeight = estimateReportPartIntroHeight(doc, nextContentPart, lang);
+
+      addReportHeading(doc, heading, labels, lang, pageState, keepWithHeight);
       return;
     }
 

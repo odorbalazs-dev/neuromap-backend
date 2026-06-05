@@ -5,7 +5,7 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260605-cx-complete-v3";
+  const ENGINE_VERSION = "20260605-pdf-summary-fix-v1";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
   const DRAFT_STORAGE_KEY = "nm_questionnaire_draft_v1";
   const DRAFT_TTL_MS = 1000 * 60 * 60 * 24 * 14;
@@ -357,10 +357,19 @@
 
       .nm-step-title-card,
       .nm-summary-hero {
+        background: linear-gradient(135deg, #1197d5 0%, #ff7a00 100%);
+        border-color: transparent;
+      }
+
+      .nm-step-title-card {
         background:
           linear-gradient(135deg, rgba(17, 151, 213, 0.12), rgba(255, 122, 0, 0.12)),
           #ffffff;
         border: 1px solid #d7ecf8;
+      }
+
+      .nm-step-title-card,
+      .nm-summary-hero {
         border-radius: 22px;
         box-shadow: 0 18px 42px rgba(20, 32, 51, 0.08);
         margin-bottom: 18px;
@@ -400,6 +409,14 @@
         font-size: 15px;
         line-height: 1.65;
         margin: 0;
+      }
+
+      .nm-summary-hero h3,
+      .nm-summary-hero p,
+      .nm-summary-hero div {
+        color: #ffffff;
+        opacity: 1;
+        text-shadow: 0 1px 2px rgba(16, 32, 51, 0.22);
       }
 
       .nm-q-card {
