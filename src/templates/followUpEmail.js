@@ -172,8 +172,30 @@ export function buildFollowUpEmail({ name, lang = "en", detectedRisk = "", appUr
   const safeName = String(name || "").trim() || "there";
   const focus = String(detectedRisk || "personalized report").trim();
   const targetUrl = String(appUrl || "https://neuromap-kids.webflow.io").replace(/\/+$/, "");
+  const isHu = lang === "hu";
+  const planTitle = copy.planTitle || (isHu ? "3 napos mini terv" : "3-day mini plan");
+  const planItems = Array.isArray(copy.plan)
+    ? copy.plan
+    : isHu
+      ? [
+          "Valassz ki egyetlen visszatero helyzetet, es figyeld meg nyomas nelkul.",
+          "Probald ki a riport egyik legkisebb javaslatat, ne egyszerre tobbet.",
+          "Ird fel roviden, mi mukodott, mi nem, es mikor volt konnyebb."
+        ]
+      : [
+          "Choose one recurring situation and observe it without pressure.",
+          "Try the smallest relevant recommendation from the report, not several at once.",
+          "Write down briefly what helped, what did not, and when things felt easier."
+        ];
+  const whenTitle = copy.whenTitle || (isHu ? "Mikor kerj tovabbi segitseget?" : "When to seek more support");
+  const whenBody = copy.whenBody || (isHu
+    ? "Ha a jelzesek erosek, tartosak, vagy a mindennapi mukodest jelentosen nehezitik, erdemes szakemberrel is atbeszelni a riportot."
+    : "If the signals are strong, persistent, or make daily functioning notably harder, it is worth discussing the report with a qualified professional.");
 
   const actionItems = copy.actions
+    .map((item) => `<li style="margin:0 0 8px 0;">${escapeHtml(item)}</li>`)
+    .join("");
+  const planItemsHtml = planItems
     .map((item) => `<li style="margin:0 0 8px 0;">${escapeHtml(item)}</li>`)
     .join("");
 
@@ -189,6 +211,11 @@ export function buildFollowUpEmail({ name, lang = "en", detectedRisk = "", appUr
         </div>
         <h2 style="font-size:18px;margin:20px 0 10px 0;color:#102033;">${escapeHtml(copy.actionTitle)}</h2>
         <ul style="padding-left:20px;margin:0 0 18px 0;">${actionItems}</ul>
+        <div style="background:#fff7ed;border:1px solid rgba(255,122,0,0.20);border-radius:14px;padding:14px 16px;margin:18px 0;">
+          <h2 style="font-size:17px;margin:0 0 10px 0;color:#7a3b00;">${escapeHtml(planTitle)}</h2>
+          <ol style="padding-left:20px;margin:0 0 12px 0;">${planItemsHtml}</ol>
+          <p style="margin:0;color:#4b5563;"><strong>${escapeHtml(whenTitle)}:</strong> ${escapeHtml(whenBody)}</p>
+        </div>
         <p style="margin:0 0 20px 0;color:#52677e;">${escapeHtml(copy.note)}</p>
         <a href="${escapeHtml(targetUrl)}" style="display:inline-block;background:#1197d5;color:#fff;text-decoration:none;font-weight:800;border-radius:10px;padding:12px 18px;">${escapeHtml(copy.cta)}</a>
       </div>
@@ -205,6 +232,11 @@ export function buildFollowUpEmail({ name, lang = "en", detectedRisk = "", appUr
     "",
     copy.actionTitle,
     ...copy.actions.map((item) => `- ${item}`),
+    "",
+    planTitle,
+    ...planItems.map((item) => `- ${item}`),
+    "",
+    `${whenTitle}: ${whenBody}`,
     "",
     copy.note,
     targetUrl

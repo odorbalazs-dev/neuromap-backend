@@ -5,8 +5,10 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260604-cx-top10-v2";
+  const ENGINE_VERSION = "20260605-cx-complete-v3";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
+  const DRAFT_STORAGE_KEY = "nm_questionnaire_draft_v1";
+  const DRAFT_TTL_MS = 1000 * 60 * 60 * 24 * 14;
 
   const state = {
     lang: "hu",
@@ -30,7 +32,8 @@
     extraAnswers: [],
     extraDebug: null,
 
-    needsExtra: false
+    needsExtra: false,
+    draftRestored: false
   };
 
   function randomIdPart() {
@@ -964,6 +967,65 @@
         min-height: 20px;
       }
 
+      .nm-resume-banner {
+        align-items: center;
+        background: linear-gradient(135deg, rgba(17, 151, 213, 0.12), rgba(114, 190, 0, 0.10)), #ffffff;
+        border: 1px solid #cfe8f6;
+        border-radius: 18px;
+        box-shadow: 0 18px 38px rgba(20, 32, 51, 0.08);
+        display: none;
+        gap: 16px;
+        justify-content: space-between;
+        margin: 0 auto 16px;
+        max-width: 980px;
+        padding: 14px 16px;
+      }
+
+      .nm-resume-banner.is-visible {
+        display: flex;
+      }
+
+      .nm-resume-copy {
+        color: #526579;
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 1.45;
+      }
+
+      .nm-resume-copy strong {
+        color: #102033;
+        display: block;
+        font-size: 15px;
+        font-weight: 900;
+        margin-bottom: 2px;
+      }
+
+      .nm-resume-actions {
+        display: flex;
+        flex: 0 0 auto;
+        gap: 8px;
+      }
+
+      .nm-resume-actions button {
+        border: 0;
+        border-radius: 12px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 900;
+        min-height: 38px;
+        padding: 9px 12px;
+      }
+
+      .nm-resume-continue {
+        background: #1197d5;
+        color: #ffffff;
+      }
+
+      .nm-resume-restart {
+        background: #eaf3f8;
+        color: #173047;
+      }
+
       #langSwitch {
         background: #ffffff;
         border: 1px solid #cfe3ef;
@@ -1034,6 +1096,21 @@
       @media (max-width: 760px) {
         #nmApp {
           padding: 20px 12px 36px;
+        }
+
+        .nm-resume-banner {
+          align-items: stretch;
+          flex-direction: column;
+          margin-left: 12px;
+          margin-right: 12px;
+        }
+
+        .nm-resume-actions {
+          width: 100%;
+        }
+
+        .nm-resume-actions button {
+          flex: 1 1 0;
         }
 
         #pageTitle {
@@ -2608,6 +2685,267 @@
   function setStatus(message) {
     const el = document.getElementById("checkoutStatus");
     if (el) el.textContent = message || "";
+  }
+
+  function getDraftCopy() {
+    if (state.lang === "hu") {
+      return {
+        title: "Folytathatod, ahol abbahagytad",
+        body: "A kitoltesedet ezen az eszkozon automatikusan elmentettuk.",
+        continueLabel: "Folytatas",
+        restartLabel: "Ujrakezdes"
+      };
+    }
+
+    return {
+      title: "Continue where you left off",
+      body: "Your questionnaire progress was saved automatically on this device.",
+      continueLabel: "Continue",
+      restartLabel: "Restart"
+    };
+  }
+
+  function getInputValue(id) {
+    const el = document.getElementById(id);
+    return el && typeof el.value === "string" ? el.value : "";
+  }
+
+  function setInputValue(id, value) {
+    const el = document.getElementById(id);
+    if (el && typeof el.value === "string") el.value = value || "";
+  }
+
+  function collectPartialAnswers(scopeId) {
+    const root = scopeId ? document.getElementById(scopeId) : document;
+    if (!root) return [];
+
+    return Array.from(root.querySelectorAll(".nm-answer-select")).map((el) => {
+      if (el.value === "") return null;
+      const value = Number(el.value);
+      return Number.isNaN(value) ? null : value;
+    });
+  }
+
+  function syncPartialAnswersForDraft() {
+    if (state.step === "triage") {
+      state.triageAnswers = collectPartialAnswers("triageSection");
+      return;
+    }
+
+    if (state.step === "specific") {
+      const values = collectPartialAnswers("specificSection");
+      state.specificAnswers = values.slice(0, state.specificQuestions.length);
+      state.extraAnswers = state.needsExtra
+        ? values.slice(state.specificQuestions.length)
+        : [];
+    }
+  }
+
+  function readDraft() {
+    try {
+      const raw = localStorage.getItem(DRAFT_STORAGE_KEY);
+      if (!raw) return null;
+
+      const draft = JSON.parse(raw);
+      const savedAt = Number(draft && draft.savedAt ? draft.savedAt : 0);
+
+      if (!draft || !savedAt || Date.now() - savedAt > DRAFT_TTL_MS) {
+        localStorage.removeItem(DRAFT_STORAGE_KEY);
+        return null;
+      }
+
+      return draft;
+    } catch (_error) {
+      return null;
+    }
+  }
+
+  function clearDraft() {
+    try {
+      localStorage.removeItem(DRAFT_STORAGE_KEY);
+    } catch (_error) {
+      // localStorage can be blocked in strict browser privacy modes.
+    }
+  }
+
+  function saveDraft(reason = "auto") {
+    try {
+      if (!state.triageQuestions.length) return;
+
+      syncPartialAnswersForDraft();
+
+      const draft = {
+        version: 1,
+        reason,
+        savedAt: Date.now(),
+        lang: state.lang,
+        step: state.step,
+        name: getInputValue("name"),
+        email: getInputValue("email"),
+        childAge: getInputValue("childAge"),
+        triageQuestions: state.triageQuestions,
+        triageAnswers: state.triageAnswers,
+        triageScores: state.triageScores,
+        triageRanking: state.triageRanking,
+        detectedRisk: state.detectedRisk,
+        secondaryRisk: state.secondaryRisk,
+        needsExtra: state.needsExtra,
+        specificQuestions: state.specificQuestions,
+        specificAnswers: state.specificAnswers,
+        specificScoring: state.specificScoring,
+        specificProfile: state.specificProfile,
+        resultSummary: state.resultSummary,
+        extraQuestions: state.extraQuestions,
+        extraAnswers: state.extraAnswers,
+        extraDebug: state.extraDebug
+      };
+
+      localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(draft));
+      updateResumeBanner(false);
+    } catch (error) {
+      console.warn("NeuroMap draft save failed:", error);
+    }
+  }
+
+  function restoreDraft(draft) {
+    if (!draft || draft.version !== 1) return false;
+
+    state.lang = draft.lang || state.lang;
+    state.step = draft.step || "triage";
+    state.triageQuestions =
+      Array.isArray(draft.triageQuestions) && draft.triageQuestions.length
+        ? draft.triageQuestions
+        : state.triageQuestions;
+    state.triageAnswers = Array.isArray(draft.triageAnswers) ? draft.triageAnswers : [];
+    state.triageScores = draft.triageScores || null;
+    state.triageRanking = draft.triageRanking || null;
+    state.detectedRisk = draft.detectedRisk || null;
+    state.secondaryRisk = draft.secondaryRisk || null;
+    state.needsExtra = !!draft.needsExtra;
+    state.specificQuestions = Array.isArray(draft.specificQuestions) ? draft.specificQuestions : [];
+    state.specificAnswers = Array.isArray(draft.specificAnswers) ? draft.specificAnswers : [];
+    state.specificScoring = draft.specificScoring || null;
+    state.specificProfile = draft.specificProfile || null;
+    state.resultSummary = draft.resultSummary || null;
+    state.extraQuestions = Array.isArray(draft.extraQuestions) ? draft.extraQuestions : [];
+    state.extraAnswers = Array.isArray(draft.extraAnswers) ? draft.extraAnswers : [];
+    state.extraDebug = draft.extraDebug || null;
+    state.draftRestored = true;
+
+    setTimeout(() => {
+      setInputValue("name", draft.name);
+      setInputValue("email", draft.email);
+      setInputValue("childAge", draft.childAge);
+      if (typeof updateChildAgeFieldLanguage === "function") updateChildAgeFieldLanguage();
+    }, 0);
+
+    return true;
+  }
+
+  function resetQuestionnaireDraft() {
+    clearDraft();
+    state.step = "triage";
+    state.triageQuestions = buildTriageQuestions();
+    state.triageAnswers = [];
+    state.triageScores = null;
+    state.triageRanking = null;
+    state.detectedRisk = null;
+    state.secondaryRisk = null;
+    state.specificQuestions = [];
+    state.specificAnswers = [];
+    state.specificScoring = null;
+    state.specificProfile = null;
+    state.resultSummary = null;
+    state.extraQuestions = [];
+    state.extraAnswers = [];
+    state.extraDebug = null;
+    state.needsExtra = false;
+    state.draftRestored = false;
+    setStatus("");
+    renderCurrentStep();
+    updateResumeBanner(false);
+  }
+
+  function ensureResumeBanner() {
+    let banner = document.getElementById("nmResumeBanner");
+    if (banner) return banner;
+
+    const app = document.getElementById("nmApp") || document.getElementById("questionnaireStart");
+    if (!app || !app.parentNode) return null;
+
+    banner = document.createElement("div");
+    banner.id = "nmResumeBanner";
+    banner.className = "nm-resume-banner";
+    banner.innerHTML = `
+      <div class="nm-resume-copy">
+        <strong data-nm-resume-title></strong>
+        <span data-nm-resume-body></span>
+      </div>
+      <div class="nm-resume-actions">
+        <button type="button" class="nm-resume-continue" data-nm-resume-continue></button>
+        <button type="button" class="nm-resume-restart" data-nm-resume-restart></button>
+      </div>
+    `;
+
+    app.parentNode.insertBefore(banner, app);
+
+    const continueButton = banner.querySelector("[data-nm-resume-continue]");
+    const restartButton = banner.querySelector("[data-nm-resume-restart]");
+
+    if (continueButton) {
+      continueButton.addEventListener("click", () => {
+        state.draftRestored = false;
+        updateResumeBanner(false);
+        renderCurrentStep();
+        if (typeof showQuestionnaireFromLanding === "function") showQuestionnaireFromLanding();
+      });
+    }
+
+    if (restartButton) restartButton.addEventListener("click", resetQuestionnaireDraft);
+
+    return banner;
+  }
+
+  function updateResumeBanner(shouldShow = null) {
+    const banner = ensureResumeBanner();
+    if (!banner) return;
+
+    const copy = getDraftCopy();
+    const title = banner.querySelector("[data-nm-resume-title]");
+    const body = banner.querySelector("[data-nm-resume-body]");
+    const continueButton = banner.querySelector("[data-nm-resume-continue]");
+    const restartButton = banner.querySelector("[data-nm-resume-restart]");
+
+    if (title) title.textContent = copy.title;
+    if (body) body.textContent = copy.body;
+    if (continueButton) continueButton.textContent = copy.continueLabel;
+    if (restartButton) restartButton.textContent = copy.restartLabel;
+
+    const visible = shouldShow === null ? state.draftRestored : shouldShow;
+    banner.classList.toggle("is-visible", Boolean(visible && readDraft()));
+  }
+
+  function bindDraftAutosave() {
+    if (document.documentElement.dataset.nmDraftAutosaveBound === "1") return;
+    document.documentElement.dataset.nmDraftAutosaveBound = "1";
+
+    document.addEventListener("change", (event) => {
+      const target = event.target;
+      if (!target || !target.matches(".nm-answer-select,#name,#email,#childAge")) return;
+      saveDraft("change");
+    });
+
+    document.addEventListener(
+      "blur",
+      (event) => {
+        const target = event.target;
+        if (!target || !target.matches("#name,#email,#childAge")) return;
+        saveDraft("blur");
+      },
+      true
+    );
+
+    window.addEventListener("beforeunload", () => saveDraft("beforeunload"));
   }
 
   function scrollToQuestionnaireTop() {
@@ -4940,6 +5278,7 @@
     if (state.step === "summary") renderSummary();
 
     updateProgress();
+    updateResumeBanner();
   }
 
   function nextStep() {
@@ -4995,6 +5334,7 @@
 
       state.step = "specific";
       renderCurrentStep();
+      saveDraft("triage_completed");
       return;
     }
 
@@ -5038,6 +5378,7 @@
 
       state.step = "summary";
       renderCurrentStep();
+      saveDraft("specific_completed");
     }
   }
 
@@ -5049,6 +5390,7 @@
     }
 
     renderCurrentStep();
+    saveDraft("back");
   }
 
   function validateBeforeCheckout() {
@@ -5220,6 +5562,7 @@
     }
 
     const payload = buildCheckoutPayload();
+    saveDraft("checkout_started");
 
     trackSchemaEvent("nm_checkout_started", {
       funnel_step: "checkout_started",
@@ -5313,6 +5656,7 @@
       }
 
       state.triageQuestions = buildTriageQuestions();
+      restoreDraft(readDraft());
 
       const nextBtn = document.getElementById("nextBtn");
       const backBtn = document.getElementById("backBtn");
@@ -5324,6 +5668,8 @@
       if (paymentBtn) paymentBtn.addEventListener("click", startCheckout);
 
       applyLang(state.lang);
+      bindDraftAutosave();
+      updateResumeBanner(Boolean(state.draftRestored));
       scheduleLandingTextRescue(state.lang);
 
       const specificBankCounts = DISORDERS.reduce((counts, domain) => {

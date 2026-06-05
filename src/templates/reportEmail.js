@@ -258,7 +258,24 @@ export function buildReportEmail({ lang, name, reportText, payload = null }) {
       ];
   const followUpTitle = customerExperience.followUpTitle || "2-3 day follow-up idea";
   const followUpBody = customerExperience.followUpBody || "Choose one observation or suggestion from the report and watch how it appears over the next few days.";
+  const microPlanTitle = customerExperience.microPlanTitle || (safeLang === "hu" ? "Mini 3 napos terv" : "Mini 3-day plan");
+  const microPlanItems = Array.isArray(customerExperience.microPlanItems)
+    ? customerExperience.microPlanItems
+    : safeLang === "hu"
+      ? [
+          "1. nap: olvasd el a fo mintazatot, es valassz ki egyetlen helyzetet, amit megfigyelsz.",
+          "2. nap: probalj ki egy kis, konnyen tarthato javaslatot a riportbol.",
+          "3. nap: jegyezd fel, mi enyhitette vagy erositette a jelzest."
+        ]
+      : [
+          "Day 1: read the main pattern and choose one everyday situation to observe.",
+          "Day 2: try one small, easy recommendation from the report.",
+          "Day 3: note what seemed to ease or intensify the signal."
+        ];
   const customerExperienceIncludedHtml = includedItems
+    .map((item) => `<li style="margin:0 0 8px 0;">${escapeHtml(item)}</li>`)
+    .join("");
+  const microPlanHtml = microPlanItems
     .map((item) => `<li style="margin:0 0 8px 0;">${escapeHtml(item)}</li>`)
     .join("");
   const customerExperienceText = [
@@ -270,6 +287,8 @@ export function buildReportEmail({ lang, name, reportText, payload = null }) {
     ...customerExperience.nextSteps.map((item) => `- ${item}`),
     customerExperience.readingTitle,
     ...customerExperience.readingTips.map((item) => `- ${item}`),
+    microPlanTitle,
+    ...microPlanItems.map((item) => `- ${item}`),
     followUpTitle,
     followUpBody,
     customerExperience.personalNote,
@@ -510,6 +529,10 @@ export function buildReportEmail({ lang, name, reportText, payload = null }) {
                     <ul style="margin:0 0 14px 0;padding-left:20px;">${customerExperienceStepsHtml}</ul>
                     <div style="font-weight:700;margin:0 0 8px 0;color:#1f2937;">${escapeHtml(customerExperience.readingTitle)}</div>
                     <ul style="margin:0 0 14px 0;padding-left:20px;">${customerExperienceReadingHtml}</ul>
+                    <div style="margin:0 0 14px 0;padding:12px 14px;border-radius:14px;background:#fff7ed;border:1px solid rgba(255,122,0,0.20);">
+                      <div style="font-weight:700;margin:0 0 8px 0;color:#7a3b00;">${escapeHtml(microPlanTitle)}</div>
+                      <ol style="margin:0;padding-left:20px;">${microPlanHtml}</ol>
+                    </div>
                     <p style="margin:0 0 12px 0;padding:10px 12px;border-radius:12px;background:#f3fff8;color:#23443a;font-size:13px;"><strong>${escapeHtml(followUpTitle)}:</strong> ${escapeHtml(followUpBody)}</p>
                     ${customerExperience.personalNote ? `<p style="margin:0 0 12px 0;padding:10px 12px;border-radius:12px;background:#ffffff;color:#334155;font-size:13px;">${escapeHtml(customerExperience.personalNote)}</p>` : ""}
                     <p style="margin:0 0 12px 0;color:#0b6f9f;font-size:13px;font-weight:700;">${escapeHtml(customerExperience.reassurance)}</p>

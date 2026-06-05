@@ -33,7 +33,7 @@ const PAGE_LAYOUT = {
   blockGap: 20
 };
 
-const PDF_REPORT_VERSION = "pdf_report_v7_customer_experience";
+const PDF_REPORT_VERSION = "pdf_report_v8_customer_experience";
 const BODY_TEXT_COLOR = "#374151";
 const BULLET = "\u2022";
 
@@ -846,7 +846,8 @@ function getPremiumPdfCopy(lang = "en") {
       points: [
         "Emeld ki azt a 2-3 helyzetet, ahol a jelzes a legerosebb.",
         "Ne egyetlen valaszt nezz, hanem a visszatero mintazatot.",
-        "Ha a jelzes eros vagy tartos, erdemes szakemberrel is atbeszelni."
+        "Ha a jelzes eros vagy tartos, erdemes szakemberrel is atbeszelni.",
+        "Tedd melle a kovetkezo 7 nap megfigyeleseit: mikor erosodik, mikor enyhul, es mi segit."
       ]
     };
   }
@@ -857,7 +858,8 @@ function getPremiumPdfCopy(lang = "en") {
     points: [
       "Mark the 2-3 everyday situations where the signal is clearest.",
       "Look for recurring patterns rather than one isolated answer.",
-      "If the signal feels strong or persistent, discuss it with a qualified professional."
+      "If the signal feels strong or persistent, discuss it with a qualified professional.",
+      "Add observations from the next 7 days: when it intensifies, when it eases, and what seems to help."
     ]
   };
 }
