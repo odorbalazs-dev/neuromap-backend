@@ -13,7 +13,7 @@ const EMBEDS = [
     sourcePath: "public/webflow/engine.js",
     snippetPath: "web/engine-embed.full.html",
     publicPath: "/public/webflow/engine.js",
-    version: "20260605-cx-top10-v2",
+    version: "20260605-loading-gate-v2",
     note: "External script loader. This avoids the Webflow 50k code embed limit."
   },
   {
@@ -90,11 +90,6 @@ function publicUrl(publicPath, version) {
   return `${base}${suffix}`;
 }
 
-function scriptTag(publicPath, version) {
-  const url = publicUrl(publicPath, version);
-  return url ? `<script src="${url}"></script>` : null;
-}
-
 function fileStats(relativePath) {
   if (!relativePath) {
     return {
@@ -127,9 +122,10 @@ function fileStats(relativePath) {
 function buildEmbed(definition) {
   const source = fileStats(definition.sourcePath);
   const snippetContent = readTextFile(definition.snippetPath);
+  const versionedPublicUrl = publicUrl(definition.publicPath, definition.version);
   const loaderCode =
     definition.publicPath
-      ? scriptTag(definition.publicPath, definition.version)
+      ? `<script src="${versionedPublicUrl}"></script>`
       : null;
 
   const copyCode = loaderCode || snippetContent || "";
@@ -154,7 +150,15 @@ function buildEmbed(definition) {
     placement: definition.placement,
     note: definition.note,
     version: definition.version || null,
-    publicUrl: publicUrl(definition.publicPath, definition.version),
+    publicUrl: versionedPublicUrl,
+    cacheBust: definition.publicPath
+      ? {
+          parameter: "v",
+          version: definition.version || null,
+          url: versionedPublicUrl,
+          instruction: "When this version changes, replace only the v= value in Webflow and publish."
+        }
+      : null,
     copyCode,
     copyCodeCharacters: copyCode.length,
     source: {

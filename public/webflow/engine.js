@@ -5,7 +5,7 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260605-cx-top10-v2";
+  const ENGINE_VERSION = "20260605-loading-gate-v2";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
   const DRAFT_STORAGE_KEY = "nm_questionnaire_draft_v1";
   const DRAFT_TTL_MS = 1000 * 60 * 60 * 24 * 14;
@@ -35,6 +35,212 @@
     needsExtra: false,
     draftRestored: false
   };
+
+  const engineStatus = {
+    version: ENGINE_VERSION,
+    phase: "boot",
+    level: "loading",
+    message: "NeuroMap Kids betoltese...",
+    ready: false,
+    error: null,
+    updatedAt: new Date().toISOString()
+  };
+
+  window.NM_ENGINE_STATUS = engineStatus;
+
+  function installEngineBootGate() {
+    if (typeof document === "undefined") return;
+
+    document.documentElement.classList.add("nm-engine-loading");
+    document.documentElement.classList.remove("nm-engine-ready", "nm-engine-failed");
+
+    if (!document.getElementById("nm-engine-boot-style")) {
+      const style = document.createElement("style");
+      style.id = "nm-engine-boot-style";
+      style.textContent = `
+        html.nm-engine-loading {
+          scroll-behavior: auto;
+        }
+
+        #nmEngineBootGate {
+          align-items: center;
+          background:
+            radial-gradient(circle at 50% 42%, rgba(17, 151, 213, 0.10), transparent 34%),
+            linear-gradient(180deg, #ffffff 0%, #f3f9fd 100%);
+          color: #102033;
+          display: flex;
+          inset: 0;
+          justify-content: center;
+          opacity: 1;
+          padding: 24px;
+          pointer-events: auto;
+          position: fixed;
+          transition: opacity 0.26s ease, visibility 0.26s ease;
+          visibility: visible;
+          z-index: 2147483000;
+        }
+
+        html.nm-engine-ready #nmEngineBootGate {
+          opacity: 0;
+          pointer-events: none;
+          visibility: hidden;
+        }
+
+        html.nm-engine-failed #nmEngineBootGate {
+          background: linear-gradient(180deg, #fff8f4 0%, #fff 100%);
+        }
+
+        .nm-engine-boot-card {
+          align-items: center;
+          background: rgba(255, 255, 255, 0.96);
+          border: 1px solid rgba(17, 151, 213, 0.16);
+          border-radius: 22px;
+          box-shadow: 0 20px 54px rgba(16, 32, 51, 0.10);
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          max-width: 360px;
+          padding: 24px;
+          text-align: center;
+          width: min(100%, 360px);
+        }
+
+        .nm-engine-boot-mark {
+          align-items: center;
+          display: grid;
+          grid-template-columns: repeat(2, 18px);
+          grid-template-rows: repeat(2, 18px);
+          height: 44px;
+          justify-content: center;
+          position: relative;
+          width: 52px;
+        }
+
+        .nm-engine-boot-mark span {
+          border-radius: 999px;
+          display: block;
+          height: 18px;
+          width: 18px;
+        }
+
+        .nm-engine-boot-mark span:nth-child(1) { background: #1197d5; }
+        .nm-engine-boot-mark span:nth-child(2) { background: #ff7a00; }
+        .nm-engine-boot-mark span:nth-child(3) {
+          background: #72be00;
+          grid-column: 1 / 3;
+          justify-self: center;
+        }
+
+        .nm-engine-boot-card strong {
+          color: #102033;
+          font: 950 20px/1.15 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        .nm-engine-boot-card p {
+          color: #52677e;
+          font: 700 13px/1.5 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+          margin: 0;
+        }
+
+        .nm-engine-boot-bar {
+          background: #e7f3fa;
+          border-radius: 999px;
+          height: 7px;
+          overflow: hidden;
+          width: 100%;
+        }
+
+        .nm-engine-boot-bar::before {
+          animation: nmEngineBootPulse 1.2s ease-in-out infinite;
+          background: linear-gradient(90deg, #1197d5, #ff7a00, #72be00);
+          border-radius: inherit;
+          content: "";
+          display: block;
+          height: 100%;
+          width: 42%;
+        }
+
+        html.nm-engine-failed .nm-engine-boot-bar::before {
+          animation: none;
+          background: #ff7a00;
+          width: 100%;
+        }
+
+        @keyframes nmEngineBootPulse {
+          0% { transform: translateX(-105%); }
+          100% { transform: translateX(245%); }
+        }
+      `;
+
+      (document.head || document.documentElement).appendChild(style);
+    }
+
+    if (!document.getElementById("nmEngineBootGate")) {
+      const gate = document.createElement("div");
+      gate.id = "nmEngineBootGate";
+      gate.setAttribute("role", "status");
+      gate.setAttribute("aria-live", "polite");
+      gate.innerHTML = `
+        <div class="nm-engine-boot-card">
+          <div class="nm-engine-boot-mark" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </div>
+          <strong>NeuroMap Kids</strong>
+          <p data-nm-engine-status-message>Kerdoiv betoltese...</p>
+          <div class="nm-engine-boot-bar" aria-hidden="true"></div>
+        </div>
+      `;
+
+      const attach = () => {
+        if (!document.body) return;
+        if (!document.getElementById("nmEngineBootGate")) {
+          document.body.prepend(gate);
+        }
+      };
+
+      if (document.body) {
+        attach();
+      } else {
+        document.addEventListener("DOMContentLoaded", attach, { once: true });
+      }
+    }
+  }
+
+  function setEngineBootStatus(phase, message, level = "loading") {
+    engineStatus.phase = phase || engineStatus.phase;
+    engineStatus.level = level || engineStatus.level;
+    engineStatus.message = message || engineStatus.message;
+    engineStatus.updatedAt = new Date().toISOString();
+
+    const messageEl = document.querySelector("[data-nm-engine-status-message]");
+    if (messageEl) messageEl.textContent = engineStatus.message;
+  }
+
+  function finishEngineBootGate(delayMs = 850) {
+    engineStatus.ready = true;
+    engineStatus.error = null;
+    setEngineBootStatus("ready", "Kesz.");
+
+    window.setTimeout(() => {
+      document.documentElement.classList.remove("nm-engine-loading", "nm-engine-failed");
+      document.documentElement.classList.add("nm-engine-ready");
+
+      window.setTimeout(() => {
+        const gate = document.getElementById("nmEngineBootGate");
+        if (gate) gate.remove();
+      }, 360);
+    }, Math.max(0, Number(delayMs || 0)));
+  }
+
+  function failEngineBootGate(message) {
+    engineStatus.ready = false;
+    engineStatus.error = message || "Engine init failed";
+    setEngineBootStatus("failed", message || "A kerdoiv betoltese nem sikerult.", "error");
+    document.documentElement.classList.remove("nm-engine-ready");
+    document.documentElement.classList.add("nm-engine-loading", "nm-engine-failed");
+  }
+
+  installEngineBootGate();
 
   function randomIdPart() {
     return Math.random().toString(36).slice(2, 10);
@@ -833,6 +1039,24 @@
         font-size: 13px;
         font-weight: 750;
         line-height: 1.45;
+      }
+
+      .nm-summary-top-cta-copy {
+        display: grid;
+        gap: 4px;
+        max-width: 620px;
+      }
+
+      .nm-summary-top-cta-copy strong {
+        color: #102033;
+        display: block;
+        font-size: 15px;
+        font-weight: 950;
+        line-height: 1.25;
+      }
+
+      .nm-summary-top-cta-copy span {
+        display: block;
       }
 
       .nm-summary-pay-button {
@@ -3169,6 +3393,7 @@
     if (errors.length) {
       console.error("NeuroMap runtime bank validation failed:", errors);
       setStatus("A kérdőív betöltése nem sikerült. Kérjük, frissítsd az oldalt, vagy próbáld újra később.");
+      failEngineBootGate("A kérdésbankok betöltése nem sikerült. Frissítsd az oldalt, vagy próbáld újra később.");
       return false;
     }
 
@@ -3177,6 +3402,7 @@
     }
 
     console.log("NeuroMap runtime bank validation passed.");
+    setEngineBootStatus("banks", "Kérdésbankok ellenőrizve.", "loading");
     return true;
   }
 
@@ -5435,13 +5661,18 @@
       (state.resultSummary && state.resultSummary.summaryText && state.resultSummary.summaryText.en) ||
       "";
     const topSubdomains = (state.resultSummary && state.resultSummary.topSubdomains) || [];
-    const topPayText =
+    const topPayCopy =
       state.lang === "hu"
-        ? "A részletes, szülőbarát PDF riport a fizetés után készül el."
-        : "The detailed parent-friendly PDF report is generated after payment.";
-    const topPayLabel =
-      t.summaryPayCta ||
-      (state.lang === "hu" ? "Fizetés és riport kérése" : t.pay || "Pay");
+        ? {
+            title: "A teljes riport seg\u00edt \u00e9rthet\u0151en l\u00e1tni a mint\u00e1zatot.",
+            text: "Koroszt\u00e1lyi kontextust, r\u00e9szletes ter\u00fcleti bont\u00e1st \u00e9s gyakorlati k\u00f6vetkez\u0151 l\u00e9p\u00e9seket kapsz PDF-ben.",
+            label: t.summaryPayCta || "Fizet\u00e9s \u00e9s teljes riport"
+          }
+        : {
+            title: "The full report helps make the pattern easier to understand.",
+            text: "You get age-aware context, detailed area breakdowns, and practical next steps in a PDF report.",
+            label: t.summaryPayCta || t.pay || "Pay and get full report"
+          };
 
     container.innerHTML = `
       <div>
@@ -5453,9 +5684,12 @@
         </div>
 
         <div class="nm-summary-top-cta">
-          <span>${escapeHtml(topPayText)}</span>
+          <div class="nm-summary-top-cta-copy">
+            <strong>${escapeHtml(topPayCopy.title)}</strong>
+            <span>${escapeHtml(topPayCopy.text)}</span>
+          </div>
           <button type="button" class="nm-summary-pay-button" data-nm-summary-pay="top">
-            ${escapeHtml(topPayLabel)}
+            ${escapeHtml(topPayCopy.label)}
           </button>
         </div>
 
@@ -5974,6 +6208,8 @@
 
   function init() {
     try {
+      installEngineBootGate();
+      setEngineBootStatus("design", "Felület előkészítése...", "loading");
       installFrontendDesign();
       installLandingPolishV2();
       buildLangButtons();
@@ -5982,10 +6218,12 @@
       state.lang = getLang();
       scheduleLandingTextRescue(state.lang);
 
+      setEngineBootStatus("banks", "Kérdésbankok ellenőrzése...", "loading");
       if (!validateRuntimeBanks()) {
         return;
       }
 
+      setEngineBootStatus("questions", "Kérdéssor előkészítése...", "loading");
       state.triageQuestions = buildTriageQuestions();
       restoreDraft(readDraft());
 
@@ -5998,6 +6236,7 @@
       if (backBtn) backBtn.addEventListener("click", prevStep);
       if (paymentBtn) paymentBtn.addEventListener("click", startCheckout);
 
+      setEngineBootStatus("render", "Nyitóoldal frissítése...", "loading");
       applyLang(state.lang);
       bindDraftAutosave();
       updateResumeBanner(Boolean(state.draftRestored));
@@ -6027,10 +6266,13 @@
       }, {
         dedupeKey: `questionnaire_loaded:${window.location.pathname || "/"}:${state.lang}`
       });
+
+      finishEngineBootGate(650);
     } catch (error) {
       console.error("NeuroMap engine init failed:", error);
       state.lang = state.lang || "hu";
       scheduleLandingTextRescue(state.lang);
+      failEngineBootGate("A NeuroMap felület betöltése nem sikerült. Frissítsd az oldalt.");
     }
   }
 

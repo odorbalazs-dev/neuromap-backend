@@ -29,11 +29,13 @@ const SECTION_COLORS = [
 
 const PAGE_LAYOUT = {
   contentTop: 138,
-  contentBottomPadding: 166,
+  contentBottomPadding: 122,
   blockGap: 20
 };
 
-const PDF_REPORT_VERSION = "pdf_report_v10_visual_quality_v4";
+const PDF_VISUAL_KEEP_WITH_BODY_HEIGHT = 76;
+const PDF_SECTION_TITLE_KEEP_HEIGHT = 78;
+const PDF_REPORT_VERSION = "pdf_report_v11_visual_qa_v4";
 const BODY_TEXT_COLOR = "#374151";
 const BULLET = "\u2022";
 
@@ -74,6 +76,12 @@ function stripMarkdown(value = "") {
 
 function polishHungarianReportWording(value = "") {
   return clean(value)
+    .replace(/gyermek\s+mindennapi\s+m\u0171k\u00f6d\u00e9s\u00e9t/giu, "gyermek mindennapi viselked\u00e9s\u00e9t")
+    .replace(/gyermek\s+m\u0171k\u00f6d\u00e9se/giu, "gyermek viselked\u00e9se")
+    .replace(/gyermek\s+m\u0171k\u00f6d\u00e9s\u00e9r\u0151l/giu, "gyermek viselked\u00e9s\u00e9r\u0151l")
+    .replace(/gyermek\s+m\u0171k\u00f6d\u00e9s\u00e9t/giu, "gyermek viselked\u00e9s\u00e9t")
+    .replace(/gyermek\s+m\u0171k\u00f6d\u00e9s\u00e9ben/giu, "gyermek viselked\u00e9s\u00e9ben")
+    .replace(/gyermek\s+m\u0171k\u00f6d\u00e9s\u00e9hez/giu, "gyermek viselked\u00e9s\u00e9hez")
     .replace(/gyermek\s+mindennapi\s+működését/giu, "gyermek mindennapi viselkedését")
     .replace(/gyermek\s+mindennapi\s+mukodeset/giu, "gyermek mindennapi viselkedeset")
     .replace(/gyermek\s+működése/giu, "gyermek viselkedése")
@@ -1503,7 +1511,7 @@ function addReportV2AgeBlock(doc, payload, labels, lang, pageState = null) {
 }
 
 function addSectionTitle(doc, title, labels, lang, pageState = null) {
-  ensureSpace(doc, 54, labels, lang, pageState);
+  ensureSpace(doc, PDF_SECTION_TITLE_KEEP_HEIGHT, labels, lang, pageState);
 
   doc.moveDown(1);
 
@@ -1757,7 +1765,11 @@ function addReportHeading(doc, heading, labels, lang, pageState = null, keepWith
     h
   } = getReportHeadingMetrics(doc, heading, lang);
 
-  const keepTogetherHeight = Math.min(Math.max(Number(keepWithHeight || 0), 0), 160);
+  const requestedKeepHeight = Math.max(
+    Number(keepWithHeight || 0),
+    PDF_VISUAL_KEEP_WITH_BODY_HEIGHT
+  );
+  const keepTogetherHeight = Math.min(requestedKeepHeight, 132);
   ensureSpace(doc, h + 28 + keepTogetherHeight, labels, lang, pageState);
 
   const y = doc.y + 6;

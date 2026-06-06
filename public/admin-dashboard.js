@@ -1904,6 +1904,7 @@
       details.append(
         summaryChip("Hová tedd", item.placement || "-"),
         summaryChip("Verzió", item.version || "-"),
+        summaryChip("Cache bust", item.cacheBust?.version || item.version || "-"),
         summaryChip("Típus", item.type || "-"),
         summaryChip("Forrás", item.source?.path || "-")
       );
@@ -1937,12 +1938,23 @@
       copyButton.textContent = "Kód másolása";
 
       const publicLink = document.createElement("span");
-      publicLink.className = "snapshot-time";
+      publicLink.className = "snapshot-time embed-url-meta";
       publicLink.textContent = item.publicUrl
-        ? `Publikus URL: ${item.publicUrl}`
+        ? "Verziózott publikus URL készen áll."
         : "Nincs publikus URL";
 
-      actionRow.append(copyButton, publicLink);
+      actionRow.append(copyButton);
+
+      if (item.publicUrl) {
+        const urlButton = document.createElement("button");
+        urlButton.type = "button";
+        urlButton.className = "secondary embed-url-copy";
+        urlButton.dataset.copyCode = item.publicUrl;
+        urlButton.textContent = "URL másolása";
+        actionRow.append(urlButton);
+      }
+
+      actionRow.append(publicLink);
       card.append(head, details, instruction, actionRow, codeDetails);
       els.webflowEmbedRows.appendChild(card);
     });
