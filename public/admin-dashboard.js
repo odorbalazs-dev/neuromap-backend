@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
   const TOKEN_KEY = "nm_admin_token";
   const TOKEN_STORAGE_KEYS = [TOKEN_KEY, "adminToken", "ADMIN_TOKEN"];
   const OPERATIONS_LOG_KEY = "nm_operations_log_open";
@@ -329,7 +329,7 @@
     if (minutes < 60) return `${minutes} perce`;
     const hours = Math.floor(minutes / 60);
     const rest = minutes % 60;
-    return rest ? `${hours} óra ${rest} perce` : `${hours} órája`;
+    return rest ? `${hours} Ăłra ${rest} perce` : `${hours} ĂłrĂˇja`;
   }
 
   function statusClass(value) {
@@ -380,44 +380,44 @@
 
   function statusLabel(value) {
     const labels = {
-      queued: "várakozik",
-      processing: "feldolgozás alatt",
+      queued: "vĂˇrakozik",
+      processing: "feldolgozĂˇs alatt",
       processed: "feldolgozva",
-      received: "beérkezett",
-      failed: "hibás",
-      done: "kész",
-      completed: "kész",
+      received: "beĂ©rkezett",
+      failed: "hibĂˇs",
+      done: "kĂ©sz",
+      completed: "kĂ©sz",
       paid: "fizetve",
       unpaid: "nincs fizetve",
-      not_sent: "nincs elküldve",
-      sending: "küldés alatt",
-      sent: "elküldve",
+      not_sent: "nincs elkĂĽldve",
+      sending: "kĂĽldĂ©s alatt",
+      sent: "elkĂĽldve",
       skipped: "kihagyva",
       healthy: "rendben",
       critical: "kritikus",
-      warning: "figyelendő",
+      warning: "figyelendĹ‘",
       ok: "rendben",
       problem: "hiba",
-      waiting: "várakozik",
+      waiting: "vĂˇrakozik",
       unknown: "ismeretlen",
-      active: "aktív",
+      active: "aktĂ­v",
       clean: "rendben",
-      info: "információ",
+      info: "informĂˇciĂł",
       email: "email",
-      analysis: "elemzés",
+      analysis: "elemzĂ©s",
       webhook: "webhook",
       checkout: "checkout",
-      ready: "indításra kész",
+      ready: "indĂ­tĂˇsra kĂ©sz",
       blocked: "blokkolt",
       pass: "rendben",
-      warn: "figyelendő",
+      warn: "figyelendĹ‘",
       fail: "hiba",
       high: "magas",
       medium: "kozepes",
       low: "alacsony",
       open: "nyitott",
-      resolved: "lezárva",
-      pending: "függőben"
+      resolved: "lezĂˇrva",
+      pending: "fĂĽggĹ‘ben"
     };
 
     return labels[String(value || "").toLowerCase()] || text(value);
@@ -427,7 +427,7 @@
     const token = getToken();
 
     if (!token) {
-      throw new Error("Add meg az ADMIN_TOKEN értékét.");
+      throw new Error("Add meg az ADMIN_TOKEN Ă©rtĂ©kĂ©t.");
     }
 
     const response = await fetch(path, {
@@ -445,12 +445,12 @@
     if (!response.ok || data.ok === false) {
       if (response.status === 401) {
         throw new Error(
-          "Az admin token nem egyezik az éles backend ADMIN_TOKEN változójával. Töröld a mentett tokent, másold be újra a neuromap-backend service ADMIN_TOKEN értékét, majd szükség esetén indíts új deployt."
+          "Az admin token nem egyezik az Ă©les backend ADMIN_TOKEN vĂˇltozĂłjĂˇval. TĂ¶rĂ¶ld a mentett tokent, mĂˇsold be Ăşjra a neuromap-backend service ADMIN_TOKEN Ă©rtĂ©kĂ©t, majd szĂĽksĂ©g esetĂ©n indĂ­ts Ăşj deployt."
         );
       }
 
       if (response.status === 429) {
-        throw new Error("Túl sok admin kérés futott rövid időn belül. Várj 1-2 percet, majd frissíts újra.");
+        throw new Error("TĂşl sok admin kĂ©rĂ©s futott rĂ¶vid idĹ‘n belĂĽl. VĂˇrj 1-2 percet, majd frissĂ­ts Ăşjra.");
       }
 
       throw new Error(data.error || `Admin API hiba (${response.status})`);
@@ -463,7 +463,7 @@
     const token = getToken();
 
     if (!token) {
-      throw new Error("Add meg az ADMIN_TOKEN értékét.");
+      throw new Error("Add meg az ADMIN_TOKEN Ă©rtĂ©kĂ©t.");
     }
 
     return fetch(path, {
@@ -527,11 +527,11 @@
     const wrapper = document.createElement("div");
 
     const primary = document.createElement("div");
-    primary.textContent = `Fő: ${text(row.detectedRisk)}`;
+    primary.textContent = `FĹ‘: ${text(row.detectedRisk)}`;
 
     const secondary = document.createElement("div");
     secondary.className = "subtle";
-    secondary.textContent = `Másodlagos: ${text(row.secondaryRisk)}`;
+    secondary.textContent = `MĂˇsodlagos: ${text(row.secondaryRisk)}`;
 
     const lang = document.createElement("div");
     lang.className = "subtle";
@@ -571,13 +571,13 @@
     const wrapper = document.createElement("div");
     const sessionId = getRowSessionId(row);
     wrapper.className = "actions";
-    wrapper.appendChild(actionButton("Részletek", "detail", sessionId, "secondary"));
+    wrapper.appendChild(actionButton("RĂ©szletek", "detail", sessionId, "secondary"));
     wrapper.appendChild(actionButton("PDF", "download-pdf", sessionId, "secondary"));
-    wrapper.appendChild(actionButton("PDF újragenerálás", "regenerate-pdf", sessionId, "secondary"));
-    wrapper.appendChild(actionButton("Elemzés újraindítása", "retry", sessionId, "warn"));
+    wrapper.appendChild(actionButton("PDF ĂşjragenerĂˇlĂˇs", "regenerate-pdf", sessionId, "secondary"));
+    wrapper.appendChild(actionButton("ElemzĂ©s ĂşjraindĂ­tĂˇsa", "retry", sessionId, "warn"));
 
     if (includeResend) {
-      wrapper.appendChild(actionButton("Email újraküldés", "resend", sessionId, "secondary"));
+      wrapper.appendChild(actionButton("Email ĂşjrakĂĽldĂ©s", "resend", sessionId, "secondary"));
     }
 
     if (includeEmailReset) {
@@ -599,7 +599,7 @@
     target.appendChild(tr);
   }
 
-  function showEmptyDetail(message = "Nincs kiválasztott session.") {
+  function showEmptyDetail(message = "Nincs kivĂˇlasztott session.") {
     if (!els.sessionDetail) return;
     els.sessionDetail.className = "session-detail empty-detail";
     els.sessionDetail.textContent = message;
@@ -626,8 +626,8 @@
     if (els.toggleOperationsLogBtn) {
       els.toggleOperationsLogBtn.setAttribute("aria-expanded", String(!collapsed));
       els.toggleOperationsLogBtn.textContent = collapsed
-        ? "Napló megnyitása"
-        : "Napló összecsukása";
+        ? "NaplĂł megnyitĂˇsa"
+        : "NaplĂł Ă¶sszecsukĂˇsa";
     }
   }
 
@@ -661,8 +661,8 @@
     if (button) {
       button.setAttribute("aria-expanded", String(!collapsed));
       button.textContent = collapsed
-        ? button.dataset.openLabel || "Megnyitás"
-        : button.dataset.closedLabel || "Összecsukás";
+        ? button.dataset.openLabel || "MegnyitĂˇs"
+        : button.dataset.closedLabel || "Ă–sszecsukĂˇs";
     }
   }
 
@@ -797,16 +797,16 @@
 
   function retryActionLabel(value) {
     const labels = {
-      no_action: "nincs teendő",
-      inspect_then_reset_retry: "ellenőrzés, majd retry alaphelyzet",
-      resend_report_email: "riport email újraküldése",
-      wait_for_report: "riport elkészülésére vár",
-      ready: "készen áll",
+      no_action: "nincs teendĹ‘",
+      inspect_then_reset_retry: "ellenĹ‘rzĂ©s, majd retry alaphelyzet",
+      resend_report_email: "riport email ĂşjrakĂĽldĂ©se",
+      wait_for_report: "riport elkĂ©szĂĽlĂ©sĂ©re vĂˇr",
+      ready: "kĂ©szen Ăˇll",
       payment_not_paid: "nincs kifizetve",
-      missing_payload: "hiányzó payload",
-      analysis_done: "elemzés kész",
-      analysis_already_running: "elemzés már fut",
-      analysis_failed: "elemzés hibára futott"
+      missing_payload: "hiĂˇnyzĂł payload",
+      analysis_done: "elemzĂ©s kĂ©sz",
+      analysis_already_running: "elemzĂ©s mĂˇr fut",
+      analysis_failed: "elemzĂ©s hibĂˇra futott"
     };
 
     return labels[value] || text(value);
@@ -886,9 +886,9 @@
     if (payment && payment !== "paid") {
       return {
         level: "warning",
-        title: "Fizetés még nincs lezárva",
-        detail: "A session nem tekinthető teljes riportfolyamatnak, amíg a Stripe fizetés nincs fizetett állapotban.",
-        meta: "Elsőként a checkout vagy webhook oldalt érdemes ellenőrizni.",
+        title: "FizetĂ©s mĂ©g nincs lezĂˇrva",
+        detail: "A session nem tekinthetĹ‘ teljes riportfolyamatnak, amĂ­g a Stripe fizetĂ©s nincs fizetett Ăˇllapotban.",
+        meta: "ElsĹ‘kĂ©nt a checkout vagy webhook oldalt Ă©rdemes ellenĹ‘rizni.",
         actions: []
       };
     }
@@ -896,19 +896,19 @@
     if (analysis === "failed") {
       return {
         level: "critical",
-        title: "Elemzés retry javasolt",
-        detail: compact(session.error_message || "Az elemzés hibára futott. A worker újrapróbálása vagy a payload ellenőrzése szükséges.", 170),
-        meta: "Tipikus ok: OpenAI/PDF/email előfeltétel, sérült payload vagy worker hiba.",
-        actions: [actionButton("Elemzés újraindítása", "retry", session.id, "warn")]
+        title: "ElemzĂ©s retry javasolt",
+        detail: compact(session.error_message || "Az elemzĂ©s hibĂˇra futott. A worker ĂşjraprĂłbĂˇlĂˇsa vagy a payload ellenĹ‘rzĂ©se szĂĽksĂ©ges.", 170),
+        meta: "Tipikus ok: OpenAI/PDF/email elĹ‘feltĂ©tel, sĂ©rĂĽlt payload vagy worker hiba.",
+        actions: [actionButton("ElemzĂ©s ĂşjraindĂ­tĂˇsa", "retry", session.id, "warn")]
       };
     }
 
     if (["queued", "processing"].includes(analysis)) {
       return {
         level: "active",
-        title: "Worker feldolgozás figyelése",
-        detail: "A fizetés megvan, a session elemzésre vár vagy feldolgozás alatt van.",
-        meta: "Ha hosszabb ideje nem mozdul, a queue panelen érdemes folytatni.",
+        title: "Worker feldolgozĂˇs figyelĂ©se",
+        detail: "A fizetĂ©s megvan, a session elemzĂ©sre vĂˇr vagy feldolgozĂˇs alatt van.",
+        meta: "Ha hosszabb ideje nem mozdul, a queue panelen Ă©rdemes folytatni.",
         actions: []
       };
     }
@@ -916,21 +916,21 @@
     if (["done", "completed"].includes(analysis) && !hasReportMaterial(session)) {
       return {
         level: "warning",
-        title: "Riport/PDF alapanyag ellenőrzés",
-        detail: "Az elemzés státusza kész, de a dashboard nem lát riportanyag-előnézetet.",
-        meta: "PDF újragenerálás vagy session payload ellenőrzés javasolt.",
-        actions: [actionButton("PDF újragenerálás", "regenerate-pdf", session.id, "secondary")]
+        title: "Riport/PDF alapanyag ellenĹ‘rzĂ©s",
+        detail: "Az elemzĂ©s stĂˇtusza kĂ©sz, de a dashboard nem lĂˇt riportanyag-elĹ‘nĂ©zetet.",
+        meta: "PDF ĂşjragenerĂˇlĂˇs vagy session payload ellenĹ‘rzĂ©s javasolt.",
+        actions: [actionButton("PDF ĂşjragenerĂˇlĂˇs", "regenerate-pdf", session.id, "secondary")]
       };
     }
 
     if (["failed", "not_sent"].includes(email)) {
       return {
         level: attempts >= 3 ? "critical" : "warning",
-        title: "Email kézbesítés beavatkozást kér",
-        detail: compact(session.report_email_error || "A riport elkészült, de az email nincs sikeresen elküldve.", 170),
-        meta: `Email próbálkozások: ${Number.isFinite(attempts) ? attempts : 0}`,
+        title: "Email kĂ©zbesĂ­tĂ©s beavatkozĂˇst kĂ©r",
+        detail: compact(session.report_email_error || "A riport elkĂ©szĂĽlt, de az email nincs sikeresen elkĂĽldve.", 170),
+        meta: `Email prĂłbĂˇlkozĂˇsok: ${Number.isFinite(attempts) ? attempts : 0}`,
         actions: [
-          actionButton("Email újraküldés", "resend", session.id, "secondary"),
+          actionButton("Email ĂşjrakĂĽldĂ©s", "resend", session.id, "secondary"),
           actionButton("Email retry alaphelyzet", "reset-email", session.id, "secondary")
         ]
       };
@@ -939,18 +939,18 @@
     if (email === "sent") {
       return {
         level: "ok",
-        title: "Riportfolyamat lezárva",
-        detail: "A fizetés, elemzés, PDF alapanyag és email kézbesítés alapján ez a session rendben van.",
-        meta: "Ellenőrzéshez a PDF letölthető.",
-        actions: [actionButton("PDF letöltése", "download-pdf", session.id, "secondary")]
+        title: "Riportfolyamat lezĂˇrva",
+        detail: "A fizetĂ©s, elemzĂ©s, PDF alapanyag Ă©s email kĂ©zbesĂ­tĂ©s alapjĂˇn ez a session rendben van.",
+        meta: "EllenĹ‘rzĂ©shez a PDF letĂ¶lthetĹ‘.",
+        actions: [actionButton("PDF letĂ¶ltĂ©se", "download-pdf", session.id, "secondary")]
       };
     }
 
     return {
       level: "info",
-      title: "Részletek áttekintése",
-      detail: "Nincs egyértelmű kritikus teendő, de a session státuszai még nem adnak teljesen lezárt képet.",
-      meta: "A folyamatlépések és az idővonal segítenek a következő pont megtalálásában.",
+      title: "RĂ©szletek ĂˇttekintĂ©se",
+      detail: "Nincs egyĂ©rtelmĹ± kritikus teendĹ‘, de a session stĂˇtuszai mĂ©g nem adnak teljesen lezĂˇrt kĂ©pet.",
+      meta: "A folyamatlĂ©pĂ©sek Ă©s az idĹ‘vonal segĂ­tenek a kĂ¶vetkezĹ‘ pont megtalĂˇlĂˇsĂˇban.",
       actions: []
     };
   }
@@ -992,7 +992,7 @@
     card.className = "detail-card session-stage-rail";
 
     const title = document.createElement("h4");
-    title.textContent = "Folyamatlépések";
+    title.textContent = "FolyamatlĂ©pĂ©sek";
 
     const grid = document.createElement("div");
     grid.className = "session-stage-grid";
@@ -1007,11 +1007,11 @@
     const emailLevel = deriveStageLevel(session.report_email_status, ["sent"]);
 
     grid.append(
-      stageTile("Fizetés", paymentLevel, statusLabel(session.payment_status), `Stripe session: ${text(session.stripe_session_id)}`),
-      stageTile("Webhook", webhookLevel, hasRelatedWebhook(session) ? "van kapcsolódó esemény" : "nincs közvetlen esemény", "A webhook események a lentebbi táblában is látszanak."),
-      stageTile("Elemzés", deriveStageLevel(session.analysis_status, ["done", "completed"]), statusLabel(session.analysis_status), `Worker job: ${Array.isArray(session.analysisJobs) ? session.analysisJobs.length : 0} db`),
-      stageTile("Riport/PDF", reportLevel, hasReportMaterial(session) ? "riportalapanyag elérhető" : "riportalapanyag nem látszik", `Kérdőív: ${text(session.questionnaireVersion)}`),
-      stageTile("Email", emailLevel, statusLabel(session.report_email_status), `Próbálkozás: ${text(session.report_email_attempts)}`)
+      stageTile("FizetĂ©s", paymentLevel, statusLabel(session.payment_status), `Stripe session: ${text(session.stripe_session_id)}`),
+      stageTile("Webhook", webhookLevel, hasRelatedWebhook(session) ? "van kapcsolĂłdĂł esemĂ©ny" : "nincs kĂ¶zvetlen esemĂ©ny", "A webhook esemĂ©nyek a lentebbi tĂˇblĂˇban is lĂˇtszanak."),
+      stageTile("ElemzĂ©s", deriveStageLevel(session.analysis_status, ["done", "completed"]), statusLabel(session.analysis_status), `Worker job: ${Array.isArray(session.analysisJobs) ? session.analysisJobs.length : 0} db`),
+      stageTile("Riport/PDF", reportLevel, hasReportMaterial(session) ? "riportalapanyag elĂ©rhetĹ‘" : "riportalapanyag nem lĂˇtszik", `KĂ©rdĹ‘Ă­v: ${text(session.questionnaireVersion)}`),
+      stageTile("Email", emailLevel, statusLabel(session.report_email_status), `PrĂłbĂˇlkozĂˇs: ${text(session.report_email_attempts)}`)
     );
 
     card.append(title, grid);
@@ -1023,7 +1023,7 @@
     card.className = "detail-card priority-facts-card";
 
     const title = document.createElement("h4");
-    title.textContent = "Prioritás adatok";
+    title.textContent = "PrioritĂˇs adatok";
 
     const grid = document.createElement("div");
     grid.className = "priority-facts-grid";
@@ -1033,11 +1033,11 @@
       summaryField("Session ID", session.id),
       summaryField("Stripe session", session.stripe_session_id),
       summaryField("Nyelv", session.lang),
-      summaryField("Gyermek életkora", summary.hasAge ? `${formatNumber(summary.childAge, 1)} év` : "nincs megadva"),
-      summaryField("Fő fókusz", session.detectedRisk || summary.detectedRisk),
-      summaryField("Másodlagos fókusz", session.secondaryRisk || summary.secondaryRisk),
-      summaryField("Email próbálkozás", session.report_email_attempts),
-      summaryField("Utolsó email hiba", compact(session.report_email_error, 90))
+      summaryField("Gyermek Ă©letkora", summary.hasAge ? `${formatNumber(summary.childAge, 1)} Ă©v` : "nincs megadva"),
+      summaryField("FĹ‘ fĂłkusz", session.detectedRisk || summary.detectedRisk),
+      summaryField("MĂˇsodlagos fĂłkusz", session.secondaryRisk || summary.secondaryRisk),
+      summaryField("Email prĂłbĂˇlkozĂˇs", session.report_email_attempts),
+      summaryField("UtolsĂł email hiba", compact(session.report_email_error, 90))
     );
 
     card.append(title, grid);
@@ -1057,7 +1057,7 @@
 
     const eyebrow = document.createElement("span");
     eyebrow.className = "session-cockpit-eyebrow";
-    eyebrow.textContent = "Részlet fókusz";
+    eyebrow.textContent = "RĂ©szlet fĂłkusz";
 
     const title = document.createElement("h4");
     title.textContent = nextAction.title;
@@ -1078,10 +1078,10 @@
     const strip = document.createElement("div");
     strip.className = "session-status-strip";
     strip.append(
-      summaryField("Fizetés", session.payment_status, { pill: true }),
-      summaryField("Elemzés", session.analysis_status, { pill: true }),
+      summaryField("FizetĂ©s", session.payment_status, { pill: true }),
+      summaryField("ElemzĂ©s", session.analysis_status, { pill: true }),
       summaryField("Email", session.report_email_status, { pill: true }),
-      summaryField("Frissítve", formatDate(session.updated_at))
+      summaryField("FrissĂ­tve", formatDate(session.updated_at))
     );
 
     layout.append(focus, strip);
@@ -1101,34 +1101,34 @@
     card.className = "detail-card report-summary-card";
 
     const title = document.createElement("h4");
-    title.textContent = "Riport áttekintés";
+    title.textContent = "Riport ĂˇttekintĂ©s";
 
     const grid = document.createElement("div");
     grid.className = "summary-field-grid";
     grid.append(
-      summaryField("Gyermek életkora", summary.hasAge ? `${formatNumber(summary.childAge, 1)} év` : "nincs megadva"),
-      summaryField("Korosztály", summary.ageBandLabel || summary.ageBand),
-      summaryField("Fő jelzés", summary.detectedRisk),
-      summaryField("Másodlagos jelzés", summary.secondaryRisk),
-      summaryField("Erősség", summary.severity, { pill: true }),
-      summaryField("Jelzésszint", summary.signalLabel),
-      summaryField("Specifikus átlag", formatNumber(summary.normalizedAverage)),
-      summaryField("Engine döntés", enginePatternLabel(engine.patternType)),
-      summaryField("Döntési minőség", decisionQualityLabel(engine.decisionQuality)),
+      summaryField("Gyermek Ă©letkora", summary.hasAge ? `${formatNumber(summary.childAge, 1)} Ă©v` : "nincs megadva"),
+      summaryField("KorosztĂˇly", summary.ageBandLabel || summary.ageBand),
+      summaryField("FĹ‘ jelzĂ©s", summary.detectedRisk),
+      summaryField("MĂˇsodlagos jelzĂ©s", summary.secondaryRisk),
+      summaryField("ErĹ‘ssĂ©g", summary.severity, { pill: true }),
+      summaryField("JelzĂ©sszint", summary.signalLabel),
+      summaryField("Specifikus Ăˇtlag", formatNumber(summary.normalizedAverage)),
+      summaryField("Engine dĂ¶ntĂ©s", enginePatternLabel(engine.patternType)),
+      summaryField("DĂ¶ntĂ©si minĹ‘sĂ©g", decisionQualityLabel(engine.decisionQuality)),
       summaryField("Confidence", engine.confidenceLabel ? `${decisionQualityLabel(engine.confidenceLabel)} (${formatNumber(engine.confidence)})` : "-"),
-      summaryField("Pontkülönbség", formatNumber(engine.scoreGap)),
-      summaryField("Átfedés", formatNumber(engine.overlapScore)),
-      summaryField("Extra kérdés kell", yesNo(engine.shouldAskExtra)),
-      summaryField("Pontforrás", scoreSourceLabel(engine.scoreSource)),
+      summaryField("PontkĂĽlĂ¶nbsĂ©g", formatNumber(engine.scoreGap)),
+      summaryField("ĂtfedĂ©s", formatNumber(engine.overlapScore)),
+      summaryField("Extra kĂ©rdĂ©s kell", yesNo(engine.shouldAskExtra)),
+      summaryField("PontforrĂˇs", scoreSourceLabel(engine.scoreSource)),
       summaryField("Specifikus koherencia", coherence.label ? `${text(coherence.label)} (${formatNumber(coherence.score)})` : "-"),
-      summaryField("Kérdőív verzió", summary.questionnaireVersion),
-      summaryField("Email retry teendő", retryActionLabel(email.nextAction)),
-      summaryField("Email retry elérhető", yesNo(email.retryAvailable)),
+      summaryField("KĂ©rdĹ‘Ă­v verziĂł", summary.questionnaireVersion),
+      summaryField("Email retry teendĹ‘", retryActionLabel(email.nextAction)),
+      summaryField("Email retry elĂ©rhetĹ‘", yesNo(email.retryAvailable)),
       summaryField("Email retry limit", yesNo(email.retryLimitReached)),
-      summaryField("Elemzés retry állapot", retryActionLabel(analysisRetry.reason)),
-      summaryField("Elemzés retry javasolt", yesNo(analysisRetry.retryRecommended)),
-      summaryField("Worker job", job.status || "nincs aktív job"),
-      summaryField("Worker próbálkozás", job.attempts ?? "-")
+      summaryField("ElemzĂ©s retry Ăˇllapot", retryActionLabel(analysisRetry.reason)),
+      summaryField("ElemzĂ©s retry javasolt", yesNo(analysisRetry.retryRecommended)),
+      summaryField("Worker job", job.status || "nincs aktĂ­v job"),
+      summaryField("Worker prĂłbĂˇlkozĂˇs", job.attempts ?? "-")
     );
 
     const topAreas = document.createElement("p");
@@ -1139,8 +1139,8 @@
           .join(", ")
       : "";
     topAreas.textContent = areas
-      ? `Legerősebb alterületek: ${areas}`
-      : "Legerősebb alterületek: nincs elérhető alterületi profil.";
+      ? `LegerĹ‘sebb alterĂĽletek: ${areas}`
+      : "LegerĹ‘sebb alterĂĽletek: nincs elĂ©rhetĹ‘ alterĂĽleti profil.";
 
     const engineAreas = document.createElement("p");
     engineAreas.className = "summary-top-areas";
@@ -1148,8 +1148,8 @@
       ? engine.recommendedFocusAreas.join(", ")
       : "";
     engineAreas.textContent = focusAreas
-      ? `Engine fókuszterületek: ${focusAreas}`
-      : "Engine fókuszterületek: nincs elérhető engine v2 összegzés.";
+      ? `Engine fĂłkuszterĂĽletek: ${focusAreas}`
+      : "Engine fĂłkuszterĂĽletek: nincs elĂ©rhetĹ‘ engine v2 Ă¶sszegzĂ©s.";
 
     const rankedDomains = document.createElement("p");
     rankedDomains.className = "summary-top-areas";
@@ -1159,8 +1159,8 @@
           .join(", ")
       : "";
     rankedDomains.textContent = domainText
-      ? `Rangsorolt területek: ${domainText}`
-      : "Rangsorolt területek: nincs elérhető ranking.";
+      ? `Rangsorolt terĂĽletek: ${domainText}`
+      : "Rangsorolt terĂĽletek: nincs elĂ©rhetĹ‘ ranking.";
 
     card.append(title, grid, topAreas, engineAreas, rankedDomains);
     return card;
@@ -1181,9 +1181,9 @@
 
     const titleWrap = document.createElement("div");
     const title = document.createElement("h4");
-    title.textContent = "Hibakeresési térkép";
+    title.textContent = "HibakeresĂ©si tĂ©rkĂ©p";
     const copy = document.createElement("p");
-    copy.textContent = "Session szintű folyamatkép: fizetés, webhook, worker, PDF alapanyag és email kézbesítés.";
+    copy.textContent = "Session szintĹ± folyamatkĂ©p: fizetĂ©s, webhook, worker, PDF alapanyag Ă©s email kĂ©zbesĂ­tĂ©s.";
     titleWrap.append(title, copy);
 
     const score = document.createElement("span");
@@ -1225,7 +1225,7 @@
     const actionBox = document.createElement("div");
     actionBox.className = "recommended-actions";
     const actionTitle = document.createElement("strong");
-    actionTitle.textContent = "Javasolt következő lépések";
+    actionTitle.textContent = "Javasolt kĂ¶vetkezĹ‘ lĂ©pĂ©sek";
     const list = document.createElement("ul");
     actions.forEach((action) => {
       const li = document.createElement("li");
@@ -1296,16 +1296,16 @@
     const rows = Array.isArray(session.analysisJobs) ? session.analysisJobs : [];
 
     return renderMiniTable(
-      "Worker job előzmények",
+      "Worker job elĹ‘zmĂ©nyek",
       rows,
       [
-        { label: "Státusz", value: (row) => statusPill(row.status) },
-        { label: "Próbálkozás", value: (row) => row.attempts },
+        { label: "StĂˇtusz", value: (row) => statusPill(row.status) },
+        { label: "PrĂłbĂˇlkozĂˇs", value: (row) => row.attempts },
         { label: "Worker", value: (row) => row.locked_by },
-        { label: "Utolsó hiba", value: (row) => compact(row.last_error, 120) },
-        { label: "Frissítve", value: (row) => formatDate(row.updated_at || row.created_at) }
+        { label: "UtolsĂł hiba", value: (row) => compact(row.last_error, 120) },
+        { label: "FrissĂ­tve", value: (row) => formatDate(row.updated_at || row.created_at) }
       ],
-      "Ehhez a sessionhöz nem találtam worker job előzményt."
+      "Ehhez a sessionhĂ¶z nem talĂˇltam worker job elĹ‘zmĂ©nyt."
     );
   }
 
@@ -1313,16 +1313,16 @@
     const rows = Array.isArray(session.webhookEvents) ? session.webhookEvents : [];
 
     return renderMiniTable(
-      "Webhook események",
+      "Webhook esemĂ©nyek",
       rows,
       [
-        { label: "Esemény", value: (row) => row.event_type },
-        { label: "Státusz", value: (row) => statusPill(row.status) },
+        { label: "EsemĂ©ny", value: (row) => row.event_type },
+        { label: "StĂˇtusz", value: (row) => statusPill(row.status) },
         { label: "Stripe session", value: (row) => row.stripe_session_id },
         { label: "Hiba", value: (row) => compact(row.error_message, 120) },
-        { label: "Érkezett", value: (row) => formatDate(row.created_at) }
+        { label: "Ă‰rkezett", value: (row) => formatDate(row.created_at) }
       ],
-      "Ehhez a sessionhöz nem találtam közvetlenül kapcsolódó webhook eseményt."
+      "Ehhez a sessionhĂ¶z nem talĂˇltam kĂ¶zvetlenĂĽl kapcsolĂłdĂł webhook esemĂ©nyt."
     );
   }
 
@@ -1338,17 +1338,17 @@
     title.textContent = text(session.name);
 
     const subtitle = document.createElement("p");
-    subtitle.textContent = `${text(session.email)} · ${text(session.id)}`;
+    subtitle.textContent = `${text(session.email)} Â· ${text(session.id)}`;
 
     titleWrap.append(title, subtitle);
 
     const actionWrap = document.createElement("div");
     actionWrap.className = "actions detail-actions";
     actionWrap.append(
-      actionButton("Elemzés újraindítása", "retry", session.id, "warn"),
+      actionButton("ElemzĂ©s ĂşjraindĂ­tĂˇsa", "retry", session.id, "warn"),
       actionButton("PDF", "download-pdf", session.id, "secondary"),
-      actionButton("PDF újragenerálás", "regenerate-pdf", session.id, "secondary"),
-      actionButton("Email újraküldés", "resend", session.id, "secondary"),
+      actionButton("PDF ĂşjragenerĂˇlĂˇs", "regenerate-pdf", session.id, "secondary"),
+      actionButton("Email ĂşjrakĂĽldĂ©s", "resend", session.id, "secondary"),
       actionButton("Email retry alaphelyzet", "reset-email", session.id, "secondary")
     );
 
@@ -1357,25 +1357,25 @@
     const grid = document.createElement("div");
     grid.className = "detail-grid";
     grid.append(
-      detailMetric("Fizetés", session.payment_status, { pill: true }),
-      detailMetric("Elemzés", session.analysis_status, { pill: true }),
+      detailMetric("FizetĂ©s", session.payment_status, { pill: true }),
+      detailMetric("ElemzĂ©s", session.analysis_status, { pill: true }),
       detailMetric("Email", session.report_email_status, { pill: true }),
-      detailMetric("Email próbálkozások", session.report_email_attempts),
+      detailMetric("Email prĂłbĂˇlkozĂˇsok", session.report_email_attempts),
       detailMetric("Nyelv", session.lang),
-      detailMetric("Fő fókusz", session.detectedRisk),
-      detailMetric("Másodlagos fókusz", session.secondaryRisk),
-      detailMetric("Kérdőív", session.questionnaireVersion),
-      detailMetric("Riport szöveg", session.hasAnalysisResult ? `${session.analysisResultLength} karakter` : "hiányzik"),
-      detailMetric("Payload", session.hasPayload ? "elérhető" : "hiányzik"),
+      detailMetric("FĹ‘ fĂłkusz", session.detectedRisk),
+      detailMetric("MĂˇsodlagos fĂłkusz", session.secondaryRisk),
+      detailMetric("KĂ©rdĹ‘Ă­v", session.questionnaireVersion),
+      detailMetric("Riport szĂ¶veg", session.hasAnalysisResult ? `${session.analysisResultLength} karakter` : "hiĂˇnyzik"),
+      detailMetric("Payload", session.hasPayload ? "elĂ©rhetĹ‘" : "hiĂˇnyzik"),
       detailMetric("Stripe session", session.stripe_session_id),
-      detailMetric("Email szolgáltatói ID", session.report_email_provider_id)
+      detailMetric("Email szolgĂˇltatĂłi ID", session.report_email_provider_id)
     );
 
     const counts = session.counts || {};
     const countsPanel = document.createElement("section");
     countsPanel.className = "detail-card";
     const countsTitle = document.createElement("h4");
-    countsTitle.textContent = "Kérdésszámok";
+    countsTitle.textContent = "KĂ©rdĂ©sszĂˇmok";
     const countCopy = document.createElement("p");
     countCopy.textContent =
       `Triage ${Number(counts.triageAnswers || 0)}/${Number(counts.triageQuestions || 0)}, ` +
@@ -1386,38 +1386,38 @@
     const timeline = document.createElement("section");
     timeline.className = "detail-card";
     const timelineTitle = document.createElement("h4");
-    timelineTitle.textContent = "Idővonal";
+    timelineTitle.textContent = "IdĹ‘vonal";
     const timelineGrid = document.createElement("div");
     timelineGrid.className = "timeline-grid";
     timelineGrid.append(
-      timelineItem("Létrehozva", session.created_at),
+      timelineItem("LĂ©trehozva", session.created_at),
       timelineItem("Fizetve", session.paid_at),
-      timelineItem("Elemzés indult", session.analysis_started_at),
-      timelineItem("Elemzés kész", session.analysis_completed_at),
-      timelineItem("Email próbálkozás", session.report_email_last_attempt_at),
-      timelineItem("Email elküldve", session.report_email_sent_at),
-      timelineItem("Frissítve", session.updated_at)
+      timelineItem("ElemzĂ©s indult", session.analysis_started_at),
+      timelineItem("ElemzĂ©s kĂ©sz", session.analysis_completed_at),
+      timelineItem("Email prĂłbĂˇlkozĂˇs", session.report_email_last_attempt_at),
+      timelineItem("Email elkĂĽldve", session.report_email_sent_at),
+      timelineItem("FrissĂ­tve", session.updated_at)
     );
     timeline.append(timelineTitle, timelineGrid);
 
     const errors = document.createElement("section");
     errors.className = "detail-card";
     const errorsTitle = document.createElement("h4");
-    errorsTitle.textContent = "Hibák";
+    errorsTitle.textContent = "HibĂˇk";
     const errorText = document.createElement("p");
     errorText.textContent =
       session.report_email_error ||
       session.error_message ||
-      "Nincs aktuális rögzített hiba.";
+      "Nincs aktuĂˇlis rĂ¶gzĂ­tett hiba.";
     errors.append(errorsTitle, errorText);
 
     const preview = document.createElement("section");
     preview.className = "detail-card";
     const previewTitle = document.createElement("h4");
-    previewTitle.textContent = "Elemzés előnézet";
+    previewTitle.textContent = "ElemzĂ©s elĹ‘nĂ©zet";
     const previewText = document.createElement("p");
     previewText.className = "analysis-preview";
-    previewText.textContent = session.analysisPreview || "Nincs elérhető elemzés előnézet.";
+    previewText.textContent = session.analysisPreview || "Nincs elĂ©rhetĹ‘ elemzĂ©s elĹ‘nĂ©zet.";
     preview.append(previewTitle, previewText);
 
     const raw = document.createElement("details");
@@ -1452,7 +1452,7 @@
     target.replaceChildren();
 
     if (!items.length) {
-      emptyRow(target, mode === "failed" ? 4 : 5, "Nincs megjeleníthető adat.");
+      emptyRow(target, mode === "failed" ? 4 : 5, "Nincs megjelenĂ­thetĹ‘ adat.");
       return;
     }
 
@@ -1487,7 +1487,7 @@
     els.emailIssueRows.replaceChildren();
 
     if (!items.length) {
-      emptyRow(els.emailIssueRows, 5, "Nincs email delivery teendő.");
+      emptyRow(els.emailIssueRows, 5, "Nincs email delivery teendĹ‘.");
       return;
     }
 
@@ -1496,12 +1496,12 @@
       const attemptInfo = document.createElement("div");
 
       const attempts = document.createElement("div");
-      attempts.textContent = `${Number(row.report_email_attempts || 0)} próbálkozás`;
+      attempts.textContent = `${Number(row.report_email_attempts || 0)} prĂłbĂˇlkozĂˇs`;
 
       const lastAttempt = document.createElement("div");
       lastAttempt.className = "subtle";
       lastAttempt.textContent =
-        `Utolsó: ${formatDate(row.report_email_last_attempt_at || row.updated_at)}`;
+        `UtolsĂł: ${formatDate(row.report_email_last_attempt_at || row.updated_at)}`;
 
       attemptInfo.append(attempts, lastAttempt);
 
@@ -1742,7 +1742,7 @@
 
     if (els.postPaymentPaidMeta) {
       els.postPaymentPaidMeta.textContent =
-        `Utolsó fizetes: ${relativeMinutes(timestamps.lastPaidMinutesAgo)}`;
+        `UtolsĂł fizetes: ${relativeMinutes(timestamps.lastPaidMinutesAgo)}`;
     }
 
     if (els.postPaymentWebhookIssues) {
@@ -1848,8 +1848,8 @@
     if (els.webflowEmbedGeneratedAt) {
       els.webflowEmbedGeneratedAt.textContent =
         data.generatedAt
-          ? `Frissítve: ${formatDate(data.generatedAt)}`
-          : "Még nincs embed állapotkép";
+          ? `Friss\u00edtve: ${formatDate(data.generatedAt)}`
+          : "M\u00e9g nincs embed \u00e1llapotk\u00e9p";
     }
 
     if (els.webflowEmbedTotal) {
@@ -1858,7 +1858,7 @@
 
     if (els.webflowEmbedReadyMeta) {
       els.webflowEmbedReadyMeta.textContent =
-        `Kész: ${Number(summary.ready || 0)}, limit feletti snippet: ${Number(summary.overLimitSnippets || 0)}`;
+        `K\u00e9sz: ${Number(summary.ready || 0)}, limit feletti snippet: ${Number(summary.overLimitSnippets || 0)}`;
     }
 
     if (els.webflowEmbedLoaders) {
@@ -1876,7 +1876,7 @@
     if (!embeds.length) {
       const empty = document.createElement("div");
       empty.className = "empty-detail";
-      empty.textContent = "Add meg az admin tokent, majd frissíts a Webflow embed állapotképhez.";
+      empty.textContent = "Add meg az admin tokent, majd friss\u00edts a Webflow embed \u00e1llapotk\u00e9phez.";
       els.webflowEmbedRows.appendChild(empty);
       return;
     }
@@ -1902,18 +1902,18 @@
       const details = document.createElement("div");
       details.className = "embed-meta";
       details.append(
-        summaryChip("Hová tedd", item.placement || "-"),
-        summaryChip("Verzió", item.version || "-"),
+        summaryChip("Hov\u00e1 tedd", item.placement || "-"),
+        summaryChip("Verzi\u00f3", item.version || "-"),
         summaryChip("Cache bust", item.cacheBust?.version || item.version || "-"),
-        summaryChip("Típus", item.type || "-"),
-        summaryChip("Forrás", item.source?.path || "-")
+        summaryChip("T\u00edpus", item.type || "-"),
+        summaryChip("Forr\u00e1s", item.source?.path || "-")
       );
 
       const instruction = document.createElement("p");
       instruction.className = "embed-human-instruction";
       instruction.textContent = item.type === "loader"
-        ? "Ezt a rövid loadert másold a megadott Webflow embedbe. A hosszú kód a backendről töltődik be, így nem ütközik a Webflow 50k limitbe."
-        : "Ellenőrizd, hogy ez az embed a jelzett oldalon vagy blokkban aktív-e. A technikai kódot csak másoláshoz nyisd le.";
+        ? "Ezt a r\u00f6vid loadert m\u00e1sold a megadott Webflow embedbe. A hossz\u00fa k\u00f3d a backendr\u0151l t\u00f6lt\u0151dik be, ez\u00e9rt nem \u00fctk\u00f6zik a Webflow 50k limitbe."
+        : "Ez az embed csak ellen\u0151rz\u00e9shez jelenik meg. A technikai k\u00f3dot csak akkor nyisd le, ha m\u00e1solni vagy cser\u00e9lni szeretn\u00e9d.";
 
       const code = document.createElement("textarea");
       code.className = "embed-code";
@@ -1924,7 +1924,7 @@
       codeDetails.className = "embed-code-details";
 
       const codeSummary = document.createElement("summary");
-      codeSummary.textContent = "Kód megjelenítése csak másoláshoz";
+      codeSummary.textContent = "K\u00f3d megjelen\u00edt\u00e9se csak m\u00e1sol\u00e1shoz";
 
       codeDetails.append(codeSummary, code);
 
@@ -1935,12 +1935,12 @@
       copyButton.type = "button";
       copyButton.className = "secondary";
       copyButton.dataset.copyCode = item.copyCode || "";
-      copyButton.textContent = "Kód másolása";
+      copyButton.textContent = item.type === "loader" ? "Loader m\u00e1sol\u00e1sa" : "K\u00f3d m\u00e1sol\u00e1sa";
 
       const publicLink = document.createElement("span");
       publicLink.className = "snapshot-time embed-url-meta";
       publicLink.textContent = item.publicUrl
-        ? "Verziózott publikus URL készen áll."
+        ? "A verzi\u00f3zott publikus URL k\u00e9szen \u00e1ll."
         : "Nincs publikus URL";
 
       actionRow.append(copyButton);
@@ -1950,7 +1950,7 @@
         urlButton.type = "button";
         urlButton.className = "secondary embed-url-copy";
         urlButton.dataset.copyCode = item.publicUrl;
-        urlButton.textContent = "URL másolása";
+        urlButton.textContent = "Publikus URL m\u00e1sol\u00e1sa";
         actionRow.append(urlButton);
       }
 
@@ -2017,7 +2017,7 @@
     els.alertRows.replaceChildren();
 
     if (!items.length) {
-      emptyRow(els.alertRows, 5, "Még nincs proaktív riasztás.");
+      emptyRow(els.alertRows, 5, "MĂ©g nincs proaktĂ­v riasztĂˇs.");
       return;
     }
 
@@ -2052,7 +2052,7 @@
 
     if (!snapshot) {
       els.operationalAlertLevel.textContent = "-";
-      els.operationalAlertSummary.textContent = "Még nincs operational snapshot.";
+      els.operationalAlertSummary.textContent = "MĂ©g nincs operational snapshot.";
       els.operationalAlertWindow.textContent = "-";
       els.operationalAlertMetrics.textContent = "Post-payment / email / health egyben.";
       return;
@@ -2066,7 +2066,7 @@
     els.operationalAlertSummary.textContent = firstIssue
       ? `${firstIssue.label}: ${firstIssue.count} (${firstIssue.level})`
       : "Nincs threshold feletti operational gond.";
-    els.operationalAlertWindow.textContent = `${Number(snapshot.window?.hours || 0)} óra`;
+    els.operationalAlertWindow.textContent = `${Number(snapshot.window?.hours || 0)} Ăłra`;
     els.operationalAlertMetrics.textContent =
       `post-payment: ${Number(metrics.postPaymentIssueCount || 0)}, ` +
       `email hiba: ${Number(metrics.emailFailedCount || 0)}, ` +
@@ -2487,8 +2487,8 @@
 
     if (els.engineAnalyticsGeneratedAt) {
       els.engineAnalyticsGeneratedAt.textContent = data?.generatedAt
-        ? `Engine állapotkép: ${formatDate(data.generatedAt)}`
-        : "Még nincs engine állapotkép";
+        ? `Engine ĂˇllapotkĂ©p: ${formatDate(data.generatedAt)}`
+        : "MĂ©g nincs engine ĂˇllapotkĂ©p";
     }
 
     if (els.engineAnalyticsTotal) {
@@ -2497,7 +2497,7 @@
 
     if (els.engineAnalyticsWindow) {
       els.engineAnalyticsWindow.textContent =
-        `${Number(data?.window?.loadedSessions || 0)} betöltött sessionből`;
+        `${Number(data?.window?.loadedSessions || 0)} betĂ¶ltĂ¶tt sessionbĹ‘l`;
     }
 
     if (els.engineAnalyticsConfidence) {
@@ -2594,7 +2594,7 @@
 
     if (els.engineAuditReviewMeta) {
       els.engineAuditReviewMeta.textContent =
-        `${Number(summary.criticalSessions || 0)} kritikus, ${Number(summary.warningSessions || 0)} figyelendő`;
+        `${Number(summary.criticalSessions || 0)} kritikus, ${Number(summary.warningSessions || 0)} figyelendĹ‘`;
     }
 
     if (els.engineAuditReviewMeta) {
@@ -2623,7 +2623,7 @@
     const rows = data?.reviewQueue || [];
 
     if (!rows.length) {
-      emptyRow(els.engineDecisionAuditRows, 6, "Nincs atnezesre varo engine dontesi audit eltérés.");
+      emptyRow(els.engineDecisionAuditRows, 6, "Nincs \u00e1tn\u00e9z\u00e9sre v\u00e1r\u00f3 engine d\u00f6nt\u00e9si audit elt\u00e9r\u00e9s.");
       return;
     }
 
@@ -2635,29 +2635,33 @@
       id.textContent = row.shortId || row.id || "-";
       const meta = document.createElement("div");
       meta.className = "subtle";
-      meta.textContent = `${text(row.lang)} · ${formatDate(row.createdAt)}`;
+      meta.textContent = `${text(row.lang)} Â· ${formatDate(row.createdAt)}`;
       session.append(id, meta);
 
       const stored = document.createElement("div");
       const storedPrimary = document.createElement("div");
-      storedPrimary.textContent = `Fő: ${text(row.stored?.primaryDomain)}`;
+      storedPrimary.textContent = `FĹ‘: ${text(row.stored?.primaryDomain)}`;
       const storedExtra = document.createElement("div");
       storedExtra.className = "subtle";
-      storedExtra.textContent = `extra: ${yesNo(row.stored?.askedExtra)} · ${Number(row.stored?.specificQuestionCount || 0)} specifikus`;
+      storedExtra.textContent = `extra: ${yesNo(row.stored?.askedExtra)} Â· ${Number(row.stored?.specificQuestionCount || 0)} specifikus`;
       stored.append(storedPrimary, storedExtra);
 
       const engine = document.createElement("div");
       const enginePrimary = document.createElement("div");
-      enginePrimary.textContent = `Fő: ${text(row.engine?.primaryDomain)}`;
+      enginePrimary.textContent = `FĹ‘: ${text(row.engine?.primaryDomain)}`;
       const engineMeta = document.createElement("div");
       engineMeta.className = "subtle";
       engineMeta.textContent =
-        `extra: ${yesNo(row.engine?.shouldAskExtra)} · conf: ${formatNumber(row.engine?.confidence)} · gap: ${formatNumber(row.engine?.scoreGap)}`;
-      engine.append(enginePrimary, engineMeta);
+        `extra: ${yesNo(row.engine?.shouldAskExtra)} Â· conf: ${formatNumber(row.engine?.confidence)} Â· gap: ${formatNumber(row.engine?.scoreGap)}`;
+      const engineReason = document.createElement("div");
+      engineReason.className = "subtle";
+      engineReason.textContent =
+        `D\u00f6nt\u00e9si ok: ${text(row.engine?.primaryDomain)} jelz\u00e9s, confidence ${formatNumber(row.engine?.confidence)}, gap ${formatNumber(row.engine?.scoreGap)}; extra pontos\u00edt\u00e1s: ${yesNo(row.engine?.shouldAskExtra)}.`;
+      engine.append(enginePrimary, engineMeta, engineReason);
 
       const issue = document.createElement("div");
       const firstIssue = row.issues?.[0];
-      issue.textContent = firstIssue?.label || "Audit eltérés";
+      issue.textContent = firstIssue?.label || "Audit eltĂ©rĂ©s";
       const issueDetail = document.createElement("div");
       issueDetail.className = "subtle";
       issueDetail.textContent = firstIssue?.detail || (row.issueCodes || []).join(", ");
@@ -2684,8 +2688,8 @@
   }
 
   function stageLabel(level) {
-    if (level === "critical") return "Beavatkozás kell";
-    if (level === "warning") return "Figyelendő";
+    if (level === "critical") return "BeavatkozĂˇs kell";
+    if (level === "warning") return "FigyelendĹ‘";
     if (level === "active") return "Fut";
     return "Rendben";
   }
@@ -2700,12 +2704,12 @@
 
     return [
       {
-        name: "Fizetés indítása",
+        name: "FizetĂ©s indĂ­tĂˇsa",
         level: stageLevel({
           active: countValue(queueCounts.queued) + countValue(queueCounts.processing),
           warning: countValue(queueCounts.failed)
         }),
-        detail: `${countValue(queueCounts.queued)} várakozik, ${countValue(queueCounts.processing)} feldolgozás alatt, ${countValue(queueCounts.failed)} hibás`
+        detail: `${countValue(queueCounts.queued)} vĂˇrakozik, ${countValue(queueCounts.processing)} feldolgozĂˇs alatt, ${countValue(queueCounts.failed)} hibĂˇs`
       },
       {
         name: "Stripe webhook",
@@ -2713,32 +2717,32 @@
           critical: countValue(webhooks.failedLast24h),
           active: countValue(webhooks.pendingOrProcessing)
         }),
-        detail: `${countValue(webhooks.failedLast24h)} hiba 24 órában, ${countValue(webhooks.pendingOrProcessing)} függőben`
+        detail: `${countValue(webhooks.failedLast24h)} hiba 24 ĂłrĂˇban, ${countValue(webhooks.pendingOrProcessing)} fĂĽggĹ‘ben`
       },
       {
-        name: "Worker elemzés",
+        name: "Worker elemzĂ©s",
         level: stageLevel({
           critical: countValue(metrics.staleProcessingJobs),
           warning: countValue(jobs.counts?.failed) + countValue(metrics.paidFailedSessions),
           active: countValue(jobs.counts?.queued) + countValue(jobs.counts?.processing)
         }),
-        detail: `${countValue(jobs.counts?.queued)} várakozó job, ${countValue(metrics.staleProcessingJobs)} beragadt lock`
+        detail: `${countValue(jobs.counts?.queued)} vĂˇrakozĂł job, ${countValue(metrics.staleProcessingJobs)} beragadt lock`
       },
       {
         name: "PDF/riport",
         level: stageLevel({
           warning: countValue(sessions.doneWithoutAnalysisResult?.length)
         }),
-        detail: `${countValue(sessions.doneWithoutAnalysisResult?.length)} kész session riportszöveg nélkül`
+        detail: `${countValue(sessions.doneWithoutAnalysisResult?.length)} kĂ©sz session riportszĂ¶veg nĂ©lkĂĽl`
       },
       {
-        name: "Email kézbesítés",
+        name: "Email kĂ©zbesĂ­tĂ©s",
         level: stageLevel({
           critical: countValue(email.failedCount) + countValue(email.retryLimitCount),
           warning: countValue(email.unsentDoneCount),
           active: countValue(email.retryableCount)
         }),
-        detail: `${countValue(email.failedCount)} hibás, ${countValue(email.retryableCount)} újrapróbálható, ${countValue(email.retryLimitCount)} limitnél`
+        detail: `${countValue(email.failedCount)} hibĂˇs, ${countValue(email.retryableCount)} ĂşjraprĂłbĂˇlhatĂł, ${countValue(email.retryLimitCount)} limitnĂ©l`
       }
     ];
   }
@@ -2793,13 +2797,13 @@
 
     if (readiness?.ok) {
       els.launchReadinessSummary.textContent =
-        `${Number(summary.passed || 0)}/${Number(summary.total || 0)} ellenőrzés rendben, ` +
-        `${Number(summary.warnings || 0)} figyelmeztetés, ${Number(summary.failed || 0)} blokkoló hiba.`;
+        `${Number(summary.passed || 0)}/${Number(summary.total || 0)} ellenĹ‘rzĂ©s rendben, ` +
+        `${Number(summary.warnings || 0)} figyelmeztetĂ©s, ${Number(summary.failed || 0)} blokkolĂł hiba.`;
       els.launchReadinessGeneratedAt.textContent =
-        readiness.generatedAt ? `Ellenőrizve: ${formatDate(readiness.generatedAt)}` : "-";
+        readiness.generatedAt ? `EllenĹ‘rizve: ${formatDate(readiness.generatedAt)}` : "-";
     } else {
-      els.launchReadinessSummary.textContent = "Add meg az admin tokent, majd frissíts.";
-      els.launchReadinessGeneratedAt.textContent = "Még nincs ellenőrzés.";
+      els.launchReadinessSummary.textContent = "Add meg az admin tokent, majd frissĂ­ts.";
+      els.launchReadinessGeneratedAt.textContent = "MĂ©g nincs ellenĹ‘rzĂ©s.";
     }
 
     els.launchReadinessChecks.replaceChildren();
@@ -2808,7 +2812,7 @@
     if (!checks.length) {
       const empty = document.createElement("div");
       empty.className = "launch-empty";
-      empty.textContent = "A launch checklist betöltéséhez frissíts admin tokennel.";
+      empty.textContent = "A launch checklist betĂ¶ltĂ©sĂ©hez frissĂ­ts admin tokennel.";
       els.launchReadinessChecks.appendChild(empty);
     }
 
@@ -2822,7 +2826,7 @@
       const titleWrap = document.createElement("div");
       const group = document.createElement("span");
       group.className = "launch-group";
-      group.textContent = check.group || "Ellenőrzés";
+      group.textContent = check.group || "EllenĹ‘rzĂ©s";
 
       const title = document.createElement("h3");
       title.textContent = check.label || check.id || "Launch check";
@@ -2850,7 +2854,7 @@
 
     if (!manualChecks.length) {
       const li = document.createElement("li");
-      li.textContent = "A kézi élesítési kontrollok az ellenőrzés után jelennek meg.";
+      li.textContent = "A kĂ©zi Ă©lesĂ­tĂ©si kontrollok az ellenĹ‘rzĂ©s utĂˇn jelennek meg.";
       els.launchManualChecks.appendChild(li);
       return;
     }
@@ -2858,7 +2862,7 @@
     manualChecks.forEach((check) => {
       const li = document.createElement("li");
       const strong = document.createElement("strong");
-      strong.textContent = check.label || "Kézi kontroll";
+      strong.textContent = check.label || "KĂ©zi kontroll";
       const span = document.createElement("span");
       span.textContent = check.detail || "";
       li.append(strong, span);
@@ -2878,32 +2882,32 @@
     ].reduce((sum, value) => sum + value, 0);
 
     const levelText = level === "healthy"
-      ? "A fő rendszerek rendben vannak"
+      ? "A fĹ‘ rendszerek rendben vannak"
       : level === "active"
-        ? "A folyamat aktív"
+        ? "A folyamat aktĂ­v"
         : level === "warning"
-          ? "Operátori ellenőrzés javasolt"
+          ? "OperĂˇtori ellenĹ‘rzĂ©s javasolt"
           : level === "critical"
-            ? "Beavatkozás szükséges"
-            : "Éles adatokra vár";
+            ? "BeavatkozĂˇs szĂĽksĂ©ges"
+            : "Ă‰les adatokra vĂˇr";
 
     els.controlCenterHeadline.textContent = levelText;
     els.controlCenterSummary.textContent = status?.ok
-      ? `${issues} kritikus jelzés. ${countValue(queue?.counts?.queued)} várakozó, ${countValue(queue?.counts?.processing)} feldolgozás alatti, ${countValue(queue?.counts?.failed)} hibás session.`
-      : "Az Admin API nem érhető el a jelenlegi tokennel.";
+      ? `${issues} kritikus jelzĂ©s. ${countValue(queue?.counts?.queued)} vĂˇrakozĂł, ${countValue(queue?.counts?.processing)} feldolgozĂˇs alatti, ${countValue(queue?.counts?.failed)} hibĂˇs session.`
+      : "Az Admin API nem Ă©rhetĹ‘ el a jelenlegi tokennel.";
 
     els.controlScore.className = `control-score ${statusClass(level)}`;
     els.controlScore.querySelector("strong").textContent = statusLabel(level).toUpperCase();
 
     els.lastSnapshotAt.textContent = health?.generatedAt
-      ? `Állapotkép: ${formatDate(health.generatedAt)}`
-      : "Még nincs állapotkép";
+      ? `ĂllapotkĂ©p: ${formatDate(health.generatedAt)}`
+      : "MĂ©g nincs ĂˇllapotkĂ©p";
 
     els.riskFocus.textContent = alerts?.items?.length
       ? compact(alerts.items[0].summary, 100)
-      : recommendations[0] || "Nincs aktuális éles rendszerkockázat.";
+      : recommendations[0] || "Nincs aktuĂˇlis Ă©les rendszerkockĂˇzat.";
 
-    els.nextAction.textContent = recommendations[0] || "Figyeld tovább a rendszert. Jelenleg nincs javasolt kézi teendő.";
+    els.nextAction.textContent = recommendations[0] || "Figyeld tovĂˇbb a rendszert. Jelenleg nincs javasolt kĂ©zi teendĹ‘.";
 
     renderPipelineStages(health, queue);
   }
@@ -2920,30 +2924,30 @@
 
     els.lastJobProcessed.textContent = formatDate(health?.jobs?.lastProcessedAt);
     els.lastJobProcessedMeta.textContent =
-      `Utolsó kész job: ${relativeMinutes(health?.jobs?.lastProcessedMinutesAgo)}`;
+      `UtolsĂł kĂ©sz job: ${relativeMinutes(health?.jobs?.lastProcessedMinutesAgo)}`;
 
     els.oldestQueuedJob.textContent = formatDate(health?.jobs?.oldestQueuedAt);
     els.oldestQueuedJobMeta.textContent =
-      `Feldolgozási sor életkor: ${relativeMinutes(health?.jobs?.oldestQueuedMinutes)}`;
+      `FeldolgozĂˇsi sor Ă©letkor: ${relativeMinutes(health?.jobs?.oldestQueuedMinutes)}`;
 
     els.staleProcessingJobs.textContent =
       Number(health?.metrics?.staleProcessingJobs || 0);
 
     els.lastWebhook.textContent = formatDate(health?.webhooks?.lastReceivedAt);
     els.lastWebhookMeta.textContent =
-      `Utolsó beérkezés: ${relativeMinutes(health?.webhooks?.lastReceivedMinutesAgo)}`;
+      `UtolsĂł beĂ©rkezĂ©s: ${relativeMinutes(health?.webhooks?.lastReceivedMinutesAgo)}`;
 
     els.failedWebhooks24h.textContent =
       Number(health?.webhooks?.failedLast24h || 0);
     els.webhookPendingMeta.textContent =
-      `Beérkezett/feldolgozás alatt: ${Number(health?.webhooks?.pendingOrProcessing || 0)}`;
+      `BeĂ©rkezett/feldolgozĂˇs alatt: ${Number(health?.webhooks?.pendingOrProcessing || 0)}`;
 
     els.paidWithoutJob.textContent =
       Number(health?.sessions?.paidWithoutActiveJob?.length || 0);
 
     els.lastReportEmailSent.textContent = formatDate(health?.email?.lastSentAt);
     els.lastReportEmailSentMeta.textContent =
-      `Utolsó küldés: ${relativeMinutes(health?.email?.lastSentMinutesAgo)}`;
+      `UtolsĂł kĂĽldĂ©s: ${relativeMinutes(health?.email?.lastSentMinutesAgo)}`;
 
     els.failedReportEmails.textContent =
       Number(health?.email?.failedCount || 0);
@@ -2961,7 +2965,7 @@
 
     els.healthRecommendations.replaceChildren();
     const recommendations = health?.recommendations || [
-      "A frissítéshez add meg az admin tokent."
+      "A frissĂ­tĂ©shez add meg az admin tokent."
     ];
 
     recommendations.forEach((item) => {
@@ -3000,7 +3004,7 @@
     if (task.targetId) {
       const actionsWrap = document.createElement("div");
       actionsWrap.className = "operator-task-actions";
-      actionsWrap.appendChild(operatorScrollButton(task.actionLabel || "Megnézem", task.targetId));
+      actionsWrap.appendChild(operatorScrollButton(task.actionLabel || "MegnĂ©zem", task.targetId));
       row.appendChild(actionsWrap);
     }
 
@@ -3015,7 +3019,7 @@
 
     if (!row) {
       els.latestSessionCard.classList.add("empty-detail");
-      els.latestSessionCard.textContent = "Nincs legutóbbi session a jelenlegi szűrésben.";
+      els.latestSessionCard.textContent = "Nincs legutĂłbbi session a jelenlegi szĹ±rĂ©sben.";
       return;
     }
 
@@ -3040,15 +3044,15 @@
     const focus = document.createElement("div");
     focus.className = "latest-session-meta";
     focus.textContent =
-      `Fókusz: ${text(row.detectedRisk)} · Másodlagos: ${text(row.secondaryRisk)} · Nyelv: ${text(row.lang)}`;
+      `FĂłkusz: ${text(row.detectedRisk)} Â· MĂˇsodlagos: ${text(row.secondaryRisk)} Â· Nyelv: ${text(row.lang)}`;
 
     const updated = document.createElement("div");
     updated.className = "latest-session-meta";
-    updated.textContent = `Frissítve: ${formatDate(row.updated_at || row.created_at)}`;
+    updated.textContent = `FrissĂ­tve: ${formatDate(row.updated_at || row.created_at)}`;
 
     const actionWrap = document.createElement("div");
     actionWrap.className = "actions";
-    actionWrap.appendChild(actionButton("Részletek", "detail", sessionId, "secondary"));
+    actionWrap.appendChild(actionButton("RĂ©szletek", "detail", sessionId, "secondary"));
     actionWrap.appendChild(actionButton("PDF", "download-pdf", sessionId, "secondary"));
 
     els.latestSessionCard.append(title, email, statuses, focus, updated, actionWrap);
@@ -3075,10 +3079,10 @@
     els.operatorTaskRows.replaceChildren();
 
     if (!context) {
-      els.operatorSummary.textContent = "Admin tokenre vár";
+      els.operatorSummary.textContent = "Admin tokenre vĂˇr";
       const empty = document.createElement("div");
       empty.className = "operator-empty";
-      empty.textContent = "Add meg az admin tokent, majd frissíts az operátori fókusz betöltéséhez.";
+      empty.textContent = "Add meg az admin tokent, majd frissĂ­ts az operĂˇtori fĂłkusz betĂ¶ltĂ©sĂ©hez.";
       els.operatorTaskRows.appendChild(empty);
       renderLatestSessionCard(null);
       return;
@@ -3112,7 +3116,7 @@
         tasks,
         "critical",
         "Post-payment folyamat kritikus",
-        `${countValue(postPaymentMetrics.issueCount)} fizetés utáni teendő, ${countValue(postPaymentMetrics.paidWithoutActiveJob)} fizetett session aktív job nélkül, ${countValue(postPaymentMetrics.retryLimitEmails)} email retry limit.`,
+        `${countValue(postPaymentMetrics.issueCount)} fizetĂ©s utĂˇni teendĹ‘, ${countValue(postPaymentMetrics.paidWithoutActiveJob)} fizetett session aktĂ­v job nĂ©lkĂĽl, ${countValue(postPaymentMetrics.retryLimitEmails)} email retry limit.`,
         "postPaymentPanel",
         "Post-payment"
       );
@@ -3120,8 +3124,8 @@
       addOperatorTask(
         tasks,
         "warning",
-        "Post-payment folyamat figyelendő",
-        `${countValue(postPaymentMetrics.issueCount)} fizetés utáni jelzés, ${countValue(postPaymentMetrics.unsentDoneReports)} kész riport email nélkül.`,
+        "Post-payment folyamat figyelendĹ‘",
+        `${countValue(postPaymentMetrics.issueCount)} fizetĂ©s utĂˇni jelzĂ©s, ${countValue(postPaymentMetrics.unsentDoneReports)} kĂ©sz riport email nĂ©lkĂĽl.`,
         "postPaymentPanel",
         "Post-payment"
       );
@@ -3131,10 +3135,10 @@
       addOperatorTask(
         tasks,
         latestAlert.level || "warning",
-        "Legutóbbi proaktív riasztás",
+        "LegutĂłbbi proaktĂ­v riasztĂˇs",
         compact(latestAlert.summary || latestAlert.alert_key, 180),
         "alertsPanel",
-        "Riasztások"
+        "RiasztĂˇsok"
       );
     }
 
@@ -3162,10 +3166,10 @@
       addOperatorTask(
         tasks,
         "critical",
-        "Beragadt feldolgozás",
-        `${countValue(metrics.staleProcessingJobs)} processing lock 15 percnél régebbi. Ellenőrizd a worker állapotát és a queue sort.`,
+        "Beragadt feldolgozĂˇs",
+        `${countValue(metrics.staleProcessingJobs)} processing lock 15 percnĂ©l rĂ©gebbi. EllenĹ‘rizd a worker ĂˇllapotĂˇt Ă©s a queue sort.`,
         "queuePanel",
-        "Queue megnyitása"
+        "Queue megnyitĂˇsa"
       );
     }
 
@@ -3173,10 +3177,10 @@
       addOperatorTask(
         tasks,
         "warning",
-        "Hibás vagy retry-ra váró elemzés",
-        `${countValue(queueCounts.failed || metrics.failedJobs)} hibás queue/job jelzés. Nézd meg a hibás sessionöket és indíts célzott retry-t.`,
+        "HibĂˇs vagy retry-ra vĂˇrĂł elemzĂ©s",
+        `${countValue(queueCounts.failed || metrics.failedJobs)} hibĂˇs queue/job jelzĂ©s. NĂ©zd meg a hibĂˇs sessionĂ¶ket Ă©s indĂ­ts cĂ©lzott retry-t.`,
         "failedAnalysesPanel",
-        "Hibák"
+        "HibĂˇk"
       );
     }
 
@@ -3184,8 +3188,8 @@
       addOperatorTask(
         tasks,
         "critical",
-        "Email próbálkozási limit elérve",
-        `${countValue(email.retryLimitCount)} riport email elérte a próbálkozási limitet. Kézi ellenőrzés javasolt.`,
+        "Email prĂłbĂˇlkozĂˇsi limit elĂ©rve",
+        `${countValue(email.retryLimitCount)} riport email elĂ©rte a prĂłbĂˇlkozĂˇsi limitet. KĂ©zi ellenĹ‘rzĂ©s javasolt.`,
         "emailDeliveryPanel",
         "Email panel"
       );
@@ -3195,8 +3199,8 @@
       addOperatorTask(
         tasks,
         "warning",
-        "Email kézbesítési teendő",
-        `${countValue(email.failedCount)} hibás és ${countValue(email.retryableCount)} újrapróbálható riport email.`,
+        "Email kĂ©zbesĂ­tĂ©si teendĹ‘",
+        `${countValue(email.failedCount)} hibĂˇs Ă©s ${countValue(email.retryableCount)} ĂşjraprĂłbĂˇlhatĂł riport email.`,
         "emailDeliveryPanel",
         "Email panel"
       );
@@ -3206,8 +3210,8 @@
       addOperatorTask(
         tasks,
         "critical",
-        "Fizetett session aktív job nélkül",
-        `${countValue(sessions.paidWithoutActiveJob?.length)} fizetett session nincs aktív feldolgozási sorhoz kötve.`,
+        "Fizetett session aktĂ­v job nĂ©lkĂĽl",
+        `${countValue(sessions.paidWithoutActiveJob?.length)} fizetett session nincs aktĂ­v feldolgozĂˇsi sorhoz kĂ¶tve.`,
         "healthPanel",
         "Health panel"
       );
@@ -3217,8 +3221,8 @@
       addOperatorTask(
         tasks,
         "info",
-        "Engine döntés ellenőrzendő",
-        `${countValue(engineAnalytics.reviewQueue.length)} alacsony confidence vagy átfedő mintázat vár kézi átnézésre.`,
+        "Engine dĂ¶ntĂ©s ellenĹ‘rzendĹ‘",
+        `${countValue(engineAnalytics.reviewQueue.length)} alacsony confidence vagy ĂˇtfedĹ‘ mintĂˇzat vĂˇr kĂ©zi ĂˇtnĂ©zĂ©sre.`,
         "engineAnalyticsPanel",
         "Engine panel"
       );
@@ -3230,8 +3234,8 @@
       addOperatorTask(
         tasks,
         "critical",
-        "Engine live audit kritikus eltérés",
-        `${countValue(engineAuditSummary.criticalSessions)} sessionnel nem egyezik a mentett fő döntés vagy hiányzik a döntési input.`,
+        "Engine live audit kritikus eltĂ©rĂ©s",
+        `${countValue(engineAuditSummary.criticalSessions)} sessionnel nem egyezik a mentett fĹ‘ dĂ¶ntĂ©s vagy hiĂˇnyzik a dĂ¶ntĂ©si input.`,
         "engineAnalyticsPanel",
         "Engine audit"
       );
@@ -3239,8 +3243,8 @@
       addOperatorTask(
         tasks,
         "warning",
-        "Engine live audit átnézendő",
-        `${countValue(engineAuditSummary.reviewSessions)} éles sessionnél van döntési, extra kérdés vagy confidence jelzés.`,
+        "Engine live audit ĂˇtnĂ©zendĹ‘",
+        `${countValue(engineAuditSummary.reviewSessions)} Ă©les sessionnĂ©l van dĂ¶ntĂ©si, extra kĂ©rdĂ©s vagy confidence jelzĂ©s.`,
         "engineAnalyticsPanel",
         "Engine audit"
       );
@@ -3270,8 +3274,8 @@
       addOperatorTask(
         tasks,
         "critical",
-        "Launch checklist blokkoló hiba",
-        `${countValue(launchReadiness.summary.failed)} blokkoló élesítési ellenőrzés hibát jelez.`,
+        "Launch checklist blokkolĂł hiba",
+        `${countValue(launchReadiness.summary.failed)} blokkolĂł Ă©lesĂ­tĂ©si ellenĹ‘rzĂ©s hibĂˇt jelez.`,
         "launchPanel",
         "Launch panel"
       );
@@ -3279,8 +3283,8 @@
       addOperatorTask(
         tasks,
         "warning",
-        "Launch checklist figyelmeztetés",
-        `${countValue(launchReadiness.summary.warnings)} élesítési figyelmeztetés maradt.`,
+        "Launch checklist figyelmeztetĂ©s",
+        `${countValue(launchReadiness.summary.warnings)} Ă©lesĂ­tĂ©si figyelmeztetĂ©s maradt.`,
         "launchPanel",
         "Launch panel"
       );
@@ -3289,7 +3293,7 @@
     if (!tasks.length) {
       const empty = document.createElement("div");
       empty.className = "operator-empty";
-      empty.textContent = "Nincs azonnali operátori teendő. A fő rendszerfolyamatok jelenleg rendben állnak.";
+      empty.textContent = "Nincs azonnali operĂˇtori teendĹ‘. A fĹ‘ rendszerfolyamatok jelenleg rendben Ăˇllnak.";
       els.operatorTaskRows.appendChild(empty);
     } else {
       tasks.slice(0, 6).forEach((task) => {
@@ -3301,8 +3305,8 @@
     const warningCount = tasks.filter((task) => statusClass(task.level) === "warning").length;
     els.operatorSummary.textContent =
       tasks.length
-        ? `${criticalCount} kritikus, ${warningCount} figyelendő, ${tasks.length} összes teendő`
-        : "Nincs azonnali teendő";
+        ? `${criticalCount} kritikus, ${warningCount} figyelendĹ‘, ${tasks.length} Ă¶sszes teendĹ‘`
+        : "Nincs azonnali teendĹ‘";
 
     renderLatestSessionCard(recent?.items?.[0] || null);
   }
@@ -3311,16 +3315,16 @@
     if (!els.customerExperienceUpdatedAt) return;
 
     if (!context) {
-      els.customerExperienceUpdatedAt.textContent = "Még nincs UX állapotkép";
+      els.customerExperienceUpdatedAt.textContent = "MĂ©g nincs UX ĂˇllapotkĂ©p";
       els.customerExperienceTrust.textContent = "-";
-      els.customerExperienceTrustMeta.textContent = "Admin tokenre vár.";
+      els.customerExperienceTrustMeta.textContent = "Admin tokenre vĂˇr.";
       els.customerExperienceConversion.textContent = "-";
-      els.customerExperienceConversionMeta.textContent = "Checkout -> paid jelzés.";
+      els.customerExperienceConversionMeta.textContent = "Checkout -> paid jelzĂ©s.";
       els.customerExperienceDelivery.textContent = "-";
-      els.customerExperienceDeliveryMeta.textContent = "PDF és email teljesülés.";
+      els.customerExperienceDeliveryMeta.textContent = "PDF Ă©s email teljesĂĽlĂ©s.";
       els.customerExperienceLanguage.textContent = "-";
-      els.customerExperienceLanguageMeta.textContent = "Engine, checkout és bank bundle.";
-      renderDeliverabilityList(els.customerExperienceRecommendationRows, [], "A frissítéshez add meg az admin tokent.", () => {});
+      els.customerExperienceLanguageMeta.textContent = "Engine, checkout Ă©s bank bundle.";
+      renderDeliverabilityList(els.customerExperienceRecommendationRows, [], "A frissĂ­tĂ©shez add meg az admin tokent.", () => {});
       return;
     }
 
@@ -3338,44 +3342,44 @@
     const postPaymentIssues = countValue(postSummary.failed || postSummary.stuck || postSummary.actionable);
     const trustScore = Math.max(0, Math.min(100, 100 - failedFollowUps * 6 - i18nCritical * 5 - postPaymentIssues * 6));
 
-    els.customerExperienceUpdatedAt.textContent = `Frissítve: ${formatDate(new Date().toISOString())}`;
+    els.customerExperienceUpdatedAt.textContent = `FrissĂ­tve: ${formatDate(new Date().toISOString())}`;
     els.customerExperienceTrust.textContent = `${trustScore}`;
     els.customerExperienceTrustMeta.textContent =
-      trustScore >= 85 ? "Stabil vásárlói bizalmi jelzés." : "Van javítandó pont a fizetés utáni élményben.";
+      trustScore >= 85 ? "Stabil vĂˇsĂˇrlĂłi bizalmi jelzĂ©s." : "Van javĂ­tandĂł pont a fizetĂ©s utĂˇni Ă©lmĂ©nyben.";
     els.customerExperienceConversion.textContent = formatPercent(conversionRate);
     els.customerExperienceConversionMeta.textContent = `7 napos checkout -> paid arany, checkout: ${countValue(metrics.checkoutStarted)}`;
     els.customerExperienceDelivery.textContent = formatPercent(deliveryRate);
-    els.customerExperienceDeliveryMeta.textContent = `Email hibák: ${countValue(emailMetrics.failed || emailMetrics.failures)}, follow-up hibák: ${failedFollowUps}`;
+    els.customerExperienceDeliveryMeta.textContent = `Email hibĂˇk: ${countValue(emailMetrics.failed || emailMetrics.failures)}, follow-up hibĂˇk: ${failedFollowUps}`;
     els.customerExperienceLanguage.textContent = i18nLevel;
     els.customerExperienceLanguageMeta.textContent =
-      i18nCritical ? `${i18nCritical} kritikus nyelvi jelzés.` : "Nincs kritikus nyelvi jelzés.";
+      i18nCritical ? `${i18nCritical} kritikus nyelvi jelzĂ©s.` : "Nincs kritikus nyelvi jelzĂ©s.";
 
     const recommendations = [];
 
     if (conversionRate && conversionRate < 0.45) {
       recommendations.push({
-        title: "Összegzés oldali CTA további erősítés",
-        meta: "A checkout -> paid arány alacsonyabb, ezért a tudományos és riport-előny copy kulcsfontosságú."
+        title: "Ă–sszegzĂ©s oldali CTA tovĂˇbbi erĹ‘sĂ­tĂ©s",
+        meta: "A checkout -> paid arĂˇny alacsonyabb, ezĂ©rt a tudomĂˇnyos Ă©s riport-elĹ‘ny copy kulcsfontossĂˇgĂş."
       });
     }
 
     if (deliveryRate && deliveryRate < 0.9) {
       recommendations.push({
-        title: "Email/PDF kézbesítési folyamat figyelése",
-        meta: "A vásárlói bizalom legerősebb pontja, hogy a riport gyorsan és biztosan megérkezzen."
+        title: "Email/PDF kĂ©zbesĂ­tĂ©si folyamat figyelĂ©se",
+        meta: "A vĂˇsĂˇrlĂłi bizalom legerĹ‘sebb pontja, hogy a riport gyorsan Ă©s biztosan megĂ©rkezzen."
       });
     }
 
     if (failedFollowUps > 0) {
       recommendations.push({
-        title: "Follow-up email hibák újrapróbálása",
-        meta: `${failedFollowUps} follow-up email kézi ellenőrzést vagy újrafuttatást igényel.`
+        title: "Follow-up email hibĂˇk ĂşjraprĂłbĂˇlĂˇsa",
+        meta: `${failedFollowUps} follow-up email kĂ©zi ellenĹ‘rzĂ©st vagy ĂşjrafuttatĂˇst igĂ©nyel.`
       });
     }
 
     if (i18nLevel !== "healthy") {
       recommendations.push({
-        title: "Többnyelvű Webflow állapot ellenőrzése",
+        title: "TĂ¶bbnyelvĹ± Webflow Ăˇllapot ellenĹ‘rzĂ©se",
         meta: "A nyelvi audit szerint lehet olyan nyelv vagy loader, ami nem teljesen stabil."
       });
     }
@@ -3383,7 +3387,7 @@
     if (!recommendations.length) {
       recommendations.push({
         title: "UX folyamat stabil",
-        meta: "A következő nyereség a riport-előnézet és a post-payment bizalmi kommunikáció finomítása."
+        meta: "A kĂ¶vetkezĹ‘ nyeresĂ©g a riport-elĹ‘nĂ©zet Ă©s a post-payment bizalmi kommunikĂˇciĂł finomĂ­tĂˇsa."
       });
     }
 
@@ -3417,7 +3421,7 @@
         row.innerHTML = `
           <div>
             <strong>${compact(item.name || item.email || item.id, 80)}</strong>
-            <span>${compact(item.email || item.id, 120)} · ${formatDate(item.createdAt)}</span>
+            <span>${compact(item.email || item.id, 120)} Â· ${formatDate(item.createdAt)}</span>
           </div>
           <div class="timeline-steps">
             <span class="timeline-step done">Session</span>
@@ -3439,7 +3443,7 @@
 
     els.followUpGeneratedAt.textContent = data?.generatedAt
       ? `Frissitve: ${formatDate(data.generatedAt)}`
-      : "Még nincs follow-up állapotkép";
+      : "MĂ©g nincs follow-up ĂˇllapotkĂ©p";
     els.followUpDue.textContent = countValue(summary.due);
     els.followUpSent.textContent = countValue(summary.sent);
     els.followUpFailed.textContent = countValue(summary.failed);
@@ -3456,7 +3460,7 @@
           </div>
           <div>
             <strong>${compact(item.followUpEmailStatus || "not_due", 40)}</strong>
-            <span>due: ${formatDate(item.followUpEmailDueAt)} · sent: ${formatDate(item.followUpEmailSentAt)}</span>
+            <span>due: ${formatDate(item.followUpEmailDueAt)} Â· sent: ${formatDate(item.followUpEmailSentAt)}</span>
           </div>
         `;
       }
@@ -3496,7 +3500,7 @@
 
   async function refreshDashboard() {
     setBusy(true);
-    setStatus("Frissítés...");
+    setStatus("FrissĂ­tĂ©s...");
 
     try {
       const optionalApi = (path) =>
@@ -3545,7 +3549,7 @@
         optionalApi("/admin/i18n-quality-audit")
       ]);
 
-      els.apiStatus.textContent = status.ok ? "Elérhető" : "Hiba";
+      els.apiStatus.textContent = status.ok ? "ElĂ©rhetĹ‘" : "Hiba";
       renderHealth(health);
       renderDashboardMetrics(dashboardMetrics);
       renderCounts(queue.counts || {});
@@ -3603,7 +3607,7 @@
         followUpEmails,
         i18nQualityAudit
       });
-      setStatus("Frissítve.");
+      setStatus("FrissĂ­tve.");
     } catch (error) {
       els.apiStatus.textContent = "Hiba";
       setStatus(error.message, true);
@@ -3614,12 +3618,12 @@
 
   async function refreshLaunchReadiness() {
     setBusy(true);
-    setStatus("Élesítési ellenőrzés...");
+    setStatus("Ă‰lesĂ­tĂ©si ellenĹ‘rzĂ©s...");
 
     try {
       const launchReadiness = await api("/admin/launch-readiness");
       renderLaunchReadiness(launchReadiness);
-      setStatus("Élesítési ellenőrzés frissítve.");
+      setStatus("Ă‰lesĂ­tĂ©si ellenĹ‘rzĂ©s frissĂ­tve.");
     } catch (error) {
       setStatus(error.message, true);
     } finally {
@@ -3658,12 +3662,12 @@
       if (els.sessionSearchHint) {
         els.sessionSearchHint.textContent = "Adj meg emailt, nevet, session ID-t vagy Stripe ID-t.";
       }
-      emptyRow(els.sessionSearchRows, 5, "Adj meg keresési kifejezést.");
+      emptyRow(els.sessionSearchRows, 5, "Adj meg keresĂ©si kifejezĂ©st.");
       return;
     }
 
     setBusy(true);
-      setStatus("Session keresése...");
+      setStatus("Session keresĂ©se...");
 
     try {
       const data = await api(
@@ -3674,10 +3678,10 @@
 
       if (els.sessionSearchHint) {
         els.sessionSearchHint.textContent =
-          `${Number(data.count || data.items?.length || 0)} találat: "${query}"`;
+          `${Number(data.count || data.items?.length || 0)} talĂˇlat: "${query}"`;
       }
 
-      setStatus("Session keresés kész.");
+      setStatus("Session keresĂ©s kĂ©sz.");
     } catch (error) {
       setStatus(error.message, true);
     } finally {
@@ -3697,7 +3701,7 @@
     }
 
     setBusy(true);
-    setStatus("Session betöltése...");
+    setStatus("Session betĂ¶ltĂ©se...");
 
     try {
       const data = await api(`/admin/session/${encodeURIComponent(sessionId)}`);
@@ -3708,7 +3712,7 @@
       if (options.scroll) {
         window.requestAnimationFrame(scrollSessionDetailIntoView);
       }
-      setStatus("Session betöltve.");
+      setStatus("Session betĂ¶ltve.");
     } catch (error) {
       setStatus(error.message, true);
     } finally {
@@ -3718,11 +3722,11 @@
 
   async function postAction(path, successMessage) {
     setBusy(true);
-    setStatus("Művelet fut...");
+    setStatus("MĹ±velet fut...");
 
     try {
       const data = await api(path, { method: "POST" });
-      setStatus(successMessage || "Művelet kész.");
+      setStatus(successMessage || "MĹ±velet kĂ©sz.");
       showJsonDetail(data);
       scrollSessionDetailIntoView();
       await refreshDashboard();
@@ -3735,7 +3739,7 @@
 
   async function downloadReportPdf(sessionId) {
     setBusy(true);
-    setStatus("PDF letöltése...");
+    setStatus("PDF letĂ¶ltĂ©se...");
 
     try {
       const response = await fetchAdmin(
@@ -3744,7 +3748,7 @@
 
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
-        throw new Error(data.error || `PDF letöltési hiba (${response.status})`);
+        throw new Error(data.error || `PDF letĂ¶ltĂ©si hiba (${response.status})`);
       }
 
       const blob = await response.blob();
@@ -3763,7 +3767,7 @@
       anchor.remove();
       URL.revokeObjectURL(url);
 
-      setStatus("PDF letöltve.");
+      setStatus("PDF letĂ¶ltve.");
     } catch (error) {
       setStatus(error.message, true);
     } finally {
@@ -3787,7 +3791,7 @@
     if (action === "retry") {
       postAction(
         `/admin/retry-analysis/${encodeURIComponent(safeSessionId)}`,
-        "Elemzés újra queue-ba téve."
+        "ElemzĂ©s Ăşjra queue-ba tĂ©ve."
       );
       return;
     }
@@ -3800,7 +3804,7 @@
     if (action === "regenerate-pdf") {
       postAction(
         `/admin/session/${encodeURIComponent(safeSessionId)}/regenerate-pdf`,
-        "PDF újragenerálás ellenőrizve."
+        "PDF ĂşjragenerĂˇlĂˇs ellenĹ‘rizve."
       );
       return;
     }
@@ -3808,7 +3812,7 @@
     if (action === "resend") {
       postAction(
         `/admin/resend-email/${encodeURIComponent(safeSessionId)}`,
-        "Riport email újraküldve."
+        "Riport email ĂşjrakĂĽldve."
       );
       return;
     }
@@ -3816,7 +3820,7 @@
     if (action === "reset-email") {
       postAction(
         `/admin/reset-email-retry/${encodeURIComponent(safeSessionId)}`,
-        "Email retry állapot alaphelyzetbe téve."
+        "Email retry Ăˇllapot alaphelyzetbe tĂ©ve."
       );
     }
   }
@@ -3840,7 +3844,7 @@
     bindClick(els.saveTokenBtn, () => {
       const token = getToken();
       if (!token) {
-        setStatus("Add meg az ADMIN_TOKEN értékét.", true);
+        setStatus("Add meg az ADMIN_TOKEN Ă©rtĂ©kĂ©t.", true);
         return;
       }
 
@@ -3856,16 +3860,16 @@
       showEmptyDetail();
       if (els.sessionSearchInput) els.sessionSearchInput.value = "";
       if (els.sessionSearchHint) {
-        els.sessionSearchHint.textContent = "Még nem indult keresés.";
+        els.sessionSearchHint.textContent = "MĂ©g nem indult keresĂ©s.";
       }
-      emptyRow(els.sessionSearchRows, 5, "A frissítéshez add meg az admin tokent.");
-      emptyRow(els.queueRows, 5, "A frissítéshez add meg az admin tokent.");
-      emptyRow(els.recentRows, 5, "A frissítéshez add meg az admin tokent.");
-      emptyRow(els.failedRows, 4, "A frissítéshez add meg az admin tokent.");
-      emptyRow(els.emailIssueRows, 5, "A frissítéshez add meg az admin tokent.");
+      emptyRow(els.sessionSearchRows, 5, "A frissĂ­tĂ©shez add meg az admin tokent.");
+      emptyRow(els.queueRows, 5, "A frissĂ­tĂ©shez add meg az admin tokent.");
+      emptyRow(els.recentRows, 5, "A frissĂ­tĂ©shez add meg az admin tokent.");
+      emptyRow(els.failedRows, 4, "A frissĂ­tĂ©shez add meg az admin tokent.");
+      emptyRow(els.emailIssueRows, 5, "A frissĂ­tĂ©shez add meg az admin tokent.");
       emptyRow(els.emailDeliveryCenterRows, 5, "A frissiteshez add meg az admin tokent.");
       emptyRow(els.alertRows, 5, "Add meg az admin tokent.");
-      emptyRow(els.operationsLogRows, 5, "A frissítéshez add meg az admin tokent.");
+      emptyRow(els.operationsLogRows, 5, "A frissĂ­tĂ©shez add meg az admin tokent.");
       renderCounts({});
       renderHealth(null);
       renderControlCenter(null, null, { counts: {} }, { items: [] });
@@ -3884,7 +3888,7 @@
       renderSessionTimeline(null);
       renderOperatorFocus(null);
       if (els.apiStatus) els.apiStatus.textContent = "-";
-      setStatus("Token törölve.");
+      setStatus("Token tĂ¶rĂ¶lve.");
     });
 
     bindClick(els.refreshBtn, refreshDashboard);
@@ -3915,24 +3919,24 @@
     });
 
     bindClick(els.processOneBtn, () => {
-      postAction("/admin/process-one-job", "Egy queued job feldolgozása lefutott.");
+      postAction("/admin/process-one-job", "Egy queued job feldolgozĂˇsa lefutott.");
     });
 
     bindClick(els.retryEmailBatchBtn, () => {
-      postAction("/admin/retry-report-emails", "Riport email újrapróbálás lefutott.");
+      postAction("/admin/retry-report-emails", "Riport email ĂşjraprĂłbĂˇlĂˇs lefutott.");
     });
 
     bindClick(els.postPaymentRecoveryBtn, runPostPaymentRecovery);
     bindClick(els.postPaymentRecoveryPanelBtn, runPostPaymentRecovery);
 
     bindClick(els.alertCheckBtn, () => {
-      postAction("/admin/trigger-alert-check", "Riasztásellenőrzés lefutott.");
+      postAction("/admin/trigger-alert-check", "RiasztĂˇsellenĹ‘rzĂ©s lefutott.");
     });
 
     bindClick(els.operationalAlertBtn, () => {
       postAction(
         "/admin/trigger-operational-alert-check?minLevel=warning",
-        "Operational alert ellenőrzés lefutott."
+        "Operational alert ellenĹ‘rzĂ©s lefutott."
       );
     });
 
@@ -3952,11 +3956,11 @@
         }
 
         if (action === "process-job") {
-          postAction("/admin/process-one-job", "Egy várakozó job feldolgozva.");
+          postAction("/admin/process-one-job", "Egy vĂˇrakozĂł job feldolgozva.");
         }
 
         if (action === "retry-email") {
-          postAction("/admin/retry-report-emails", "Riport email újrapróbálás lefutott.");
+          postAction("/admin/retry-report-emails", "Riport email ĂşjraprĂłbĂˇlĂˇs lefutott.");
         }
 
         if (action === "post-payment-recovery") {
@@ -3964,13 +3968,13 @@
         }
 
         if (action === "alert-check") {
-          postAction("/admin/trigger-alert-check", "Riasztásellenőrzés lefutott.");
+          postAction("/admin/trigger-alert-check", "RiasztĂˇsellenĹ‘rzĂ©s lefutott.");
         }
 
         if (action === "operational-alert") {
           postAction(
             "/admin/trigger-operational-alert-check?minLevel=warning",
-            "Operational alert ellenőrzés lefutott."
+            "Operational alert ellenĹ‘rzĂ©s lefutott."
           );
         }
 
@@ -4028,18 +4032,18 @@
       event.preventDefault();
       applyDashboardQuickFilter(button.dataset.dashboardFilter);
     });
-    emptyRow(els.sessionSearchRows, 5, "Még nem indult keresés.");
+    emptyRow(els.sessionSearchRows, 5, "MĂ©g nem indult keresĂ©s.");
 
     if (savedToken) {
       refreshDashboard();
     } else {
-      emptyRow(els.queueRows, 5, "A frissítéshez add meg az admin tokent.");
-      emptyRow(els.recentRows, 5, "A frissítéshez add meg az admin tokent.");
-      emptyRow(els.failedRows, 4, "A frissítéshez add meg az admin tokent.");
-      emptyRow(els.sessionSearchRows, 5, "A frissítéshez add meg az admin tokent.");
-      emptyRow(els.emailIssueRows, 5, "A frissítéshez add meg az admin tokent.");
+      emptyRow(els.queueRows, 5, "A frissĂ­tĂ©shez add meg az admin tokent.");
+      emptyRow(els.recentRows, 5, "A frissĂ­tĂ©shez add meg az admin tokent.");
+      emptyRow(els.failedRows, 4, "A frissĂ­tĂ©shez add meg az admin tokent.");
+      emptyRow(els.sessionSearchRows, 5, "A frissĂ­tĂ©shez add meg az admin tokent.");
+      emptyRow(els.emailIssueRows, 5, "A frissĂ­tĂ©shez add meg az admin tokent.");
       emptyRow(els.alertRows, 5, "Add meg az admin tokent.");
-      emptyRow(els.operationsLogRows, 5, "A frissítéshez add meg az admin tokent.");
+      emptyRow(els.operationsLogRows, 5, "A frissĂ­tĂ©shez add meg az admin tokent.");
       renderOperatorFocus(null);
       renderLaunchReadiness(null);
       renderEngineAnalytics(null);
@@ -4051,9 +4055,10 @@
       renderCustomerExperience(null);
       renderSessionTimeline(null);
       renderControlPulse(null);
-      setStatus("Add meg az ADMIN_TOKEN értékét.");
+      setStatus("Add meg az ADMIN_TOKEN Ă©rtĂ©kĂ©t.");
     }
   }
 
   init();
 })();
+

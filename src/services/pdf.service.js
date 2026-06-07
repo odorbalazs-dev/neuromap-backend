@@ -1,4 +1,4 @@
-import fs from "fs";
+﻿import fs from "fs";
 import path from "path";
 import PDFDocument from "pdfkit";
 import { buildReportV2Context } from "./report-v2.service.js";
@@ -35,7 +35,7 @@ const PAGE_LAYOUT = {
 
 const PDF_VISUAL_KEEP_WITH_BODY_HEIGHT = 76;
 const PDF_SECTION_TITLE_KEEP_HEIGHT = 78;
-const PDF_REPORT_VERSION = "pdf_report_v11_visual_qa_v4";
+const PDF_REPORT_VERSION = "pdf_report_v12_visual_qa_v4_1";
 const BODY_TEXT_COLOR = "#374151";
 const BULLET = "\u2022";
 
@@ -82,17 +82,17 @@ function polishHungarianReportWording(value = "") {
     .replace(/gyermek\s+m\u0171k\u00f6d\u00e9s\u00e9t/giu, "gyermek viselked\u00e9s\u00e9t")
     .replace(/gyermek\s+m\u0171k\u00f6d\u00e9s\u00e9ben/giu, "gyermek viselked\u00e9s\u00e9ben")
     .replace(/gyermek\s+m\u0171k\u00f6d\u00e9s\u00e9hez/giu, "gyermek viselked\u00e9s\u00e9hez")
-    .replace(/gyermek\s+mindennapi\s+működését/giu, "gyermek mindennapi viselkedését")
+    .replace(/gyermek\s+mindennapi\s+mĹ±kĂ¶dĂ©sĂ©t/giu, "gyermek mindennapi viselkedĂ©sĂ©t")
     .replace(/gyermek\s+mindennapi\s+mukodeset/giu, "gyermek mindennapi viselkedeset")
-    .replace(/gyermek\s+működése/giu, "gyermek viselkedése")
+    .replace(/gyermek\s+mĹ±kĂ¶dĂ©se/giu, "gyermek viselkedĂ©se")
     .replace(/gyermek\s+mukodese/giu, "gyermek viselkedese")
-    .replace(/gyermek\s+működéséről/giu, "gyermek viselkedéséről")
+    .replace(/gyermek\s+mĹ±kĂ¶dĂ©sĂ©rĹ‘l/giu, "gyermek viselkedĂ©sĂ©rĹ‘l")
     .replace(/gyermek\s+mukodeserol/giu, "gyermek viselkedeserol")
-    .replace(/gyermek\s+működését/giu, "gyermek viselkedését")
+    .replace(/gyermek\s+mĹ±kĂ¶dĂ©sĂ©t/giu, "gyermek viselkedĂ©sĂ©t")
     .replace(/gyermek\s+mukodeset/giu, "gyermek viselkedeset")
-    .replace(/gyermek\s+működésében/giu, "gyermek viselkedésében")
+    .replace(/gyermek\s+mĹ±kĂ¶dĂ©sĂ©ben/giu, "gyermek viselkedĂ©sĂ©ben")
     .replace(/gyermek\s+mukodeseben/giu, "gyermek viselkedeseben")
-    .replace(/gyermek\s+működéséhez/giu, "gyermek viselkedéséhez")
+    .replace(/gyermek\s+mĹ±kĂ¶dĂ©sĂ©hez/giu, "gyermek viselkedĂ©sĂ©hez")
     .replace(/gyermek\s+mukodesehez/giu, "gyermek viselkedesehez");
 }
 
@@ -136,21 +136,21 @@ function getLabels(lang = "en") {
   const labels = {
     hu: {
       title: "NeuroMap Kids riport",
-      subtitle: "Strukturált, szülőbarát előszűrési összefoglaló",
+      subtitle: "StrukturĂˇlt, szĂĽlĹ‘barĂˇt elĹ‘szĹ±rĂ©si Ă¶sszefoglalĂł",
       greeting: "Kedves",
-      parentFallback: "Szülő",
-      reportTitle: "Részletes értelmezés",
-      summaryLabel: "Előzetes kérdőíves riport",
-      overviewTitle: "Gyors áttekintés",
-      focusArea: "Fő fókuszterület",
-      secondarySignal: "Másodlagos jelzés",
-      signalLevel: "Jelzésszint",
-      topAreas: "Legerősebb területek",
-      notAvailable: "Nem elérhető",
-      disclaimerTitle: "Fontos megjegyzés",
+      parentFallback: "SzĂĽlĹ‘",
+      reportTitle: "RĂ©szletes Ă©rtelmezĂ©s",
+      summaryLabel: "ElĹ‘zetes kĂ©rdĹ‘Ă­ves riport",
+      overviewTitle: "Gyors ĂˇttekintĂ©s",
+      focusArea: "FĹ‘ fĂłkuszterĂĽlet",
+      secondarySignal: "MĂˇsodlagos jelzĂ©s",
+      signalLevel: "JelzĂ©sszint",
+      topAreas: "LegerĹ‘sebb terĂĽletek",
+      notAvailable: "Nem elĂ©rhetĹ‘",
+      disclaimerTitle: "Fontos megjegyzĂ©s",
       disclaimer:
-        "Ez az anyag nem minősül diagnózisnak, és nem helyettesíti a személyes szakértői vizsgálatot. A teljes értékeléshez szakemberrel történő konzultáció, fejlődéstörténet és tágabb kontextus szükséges.",
-      footer: "NeuroMap Kids · Screening report"
+        "Ez az anyag nem minĹ‘sĂĽl diagnĂłzisnak, Ă©s nem helyettesĂ­ti a szemĂ©lyes szakĂ©rtĹ‘i vizsgĂˇlatot. A teljes Ă©rtĂ©kelĂ©shez szakemberrel tĂ¶rtĂ©nĹ‘ konzultĂˇciĂł, fejlĹ‘dĂ©stĂ¶rtĂ©net Ă©s tĂˇgabb kontextus szĂĽksĂ©ges.",
+      footer: "NeuroMap Kids Â· Screening report"
     },
     en: {
       title: "NeuroMap Kids Report",
@@ -168,7 +168,7 @@ function getLabels(lang = "en") {
       disclaimerTitle: "Important note",
       disclaimer:
         "This material is not a diagnosis and does not replace an in-person specialist assessment. A full evaluation requires a qualified professional, developmental history, and broader context.",
-      footer: "NeuroMap Kids · Screening report"
+      footer: "NeuroMap Kids Â· Screening report"
     },
     de: {
       title: "NeuroMap Kids Bericht",
@@ -176,17 +176,17 @@ function getLabels(lang = "en") {
       greeting: "Hallo",
       parentFallback: "Elternteil",
       reportTitle: "Detaillierte Interpretation",
-      summaryLabel: "Vorläufiger Fragebogenbericht",
-      overviewTitle: "Kurzer Überblick",
+      summaryLabel: "VorlĂ¤ufiger Fragebogenbericht",
+      overviewTitle: "Kurzer Ăśberblick",
       focusArea: "Hauptfokus",
-      secondarySignal: "Sekundäres Signal",
-      signalLevel: "Signalstärke",
-      topAreas: "Stärkste Bereiche",
-      notAvailable: "Nicht verfügbar",
+      secondarySignal: "SekundĂ¤res Signal",
+      signalLevel: "SignalstĂ¤rke",
+      topAreas: "StĂ¤rkste Bereiche",
+      notAvailable: "Nicht verfĂĽgbar",
       disclaimerTitle: "Wichtiger Hinweis",
       disclaimer:
-        "Dieses Material ist keine Diagnose und ersetzt keine persönliche fachliche Untersuchung. Für eine vollständige Bewertung sind eine qualifizierte Fachperson, die Entwicklungsgeschichte und ein breiterer Kontext erforderlich.",
-      footer: "NeuroMap Kids · Screening report"
+        "Dieses Material ist keine Diagnose und ersetzt keine persĂ¶nliche fachliche Untersuchung. FĂĽr eine vollstĂ¤ndige Bewertung sind eine qualifizierte Fachperson, die Entwicklungsgeschichte und ein breiterer Kontext erforderlich.",
+      footer: "NeuroMap Kids Â· Screening report"
     },
     it: {
       title: "Report NeuroMap Kids",
@@ -199,138 +199,138 @@ function getLabels(lang = "en") {
       focusArea: "Area principale",
       secondarySignal: "Segnale secondario",
       signalLevel: "Livello del segnale",
-      topAreas: "Aree più rilevanti",
+      topAreas: "Aree piĂą rilevanti",
       notAvailable: "Non disponibile",
       disclaimerTitle: "Nota importante",
       disclaimer:
-        "Questo materiale non è una diagnosi e non sostituisce una valutazione di persona da parte di un professionista qualificato. Una valutazione completa richiede una consulenza specialistica, la storia dello sviluppo e un contesto più ampio.",
-      footer: "NeuroMap Kids · Screening report"
+        "Questo materiale non Ă¨ una diagnosi e non sostituisce una valutazione di persona da parte di un professionista qualificato. Una valutazione completa richiede una consulenza specialistica, la storia dello sviluppo e un contesto piĂą ampio.",
+      footer: "NeuroMap Kids Â· Screening report"
     },
     es: {
       title: "Informe NeuroMap Kids",
-      subtitle: "Resumen de cribado estructurado y fácil de entender para padres",
+      subtitle: "Resumen de cribado estructurado y fĂˇcil de entender para padres",
       greeting: "Estimado/a",
       parentFallback: "Padre/madre",
-      reportTitle: "Interpretación detallada",
+      reportTitle: "InterpretaciĂłn detallada",
       summaryLabel: "Informe preliminar del cuestionario",
-      overviewTitle: "Resumen rápido",
-      focusArea: "Área principal",
-      secondarySignal: "Señal secundaria",
-      signalLevel: "Nivel de señal",
-      topAreas: "Áreas más destacadas",
+      overviewTitle: "Resumen rĂˇpido",
+      focusArea: "Ărea principal",
+      secondarySignal: "SeĂ±al secundaria",
+      signalLevel: "Nivel de seĂ±al",
+      topAreas: "Ăreas mĂˇs destacadas",
       notAvailable: "No disponible",
       disclaimerTitle: "Nota importante",
       disclaimer:
-        "Este material no es un diagnóstico y no sustituye una evaluación presencial por parte de un profesional cualificado. Una evaluación completa requiere consulta profesional, historia del desarrollo y un contexto más amplio.",
-      footer: "NeuroMap Kids · Screening report"
+        "Este material no es un diagnĂłstico y no sustituye una evaluaciĂłn presencial por parte de un profesional cualificado. Una evaluaciĂłn completa requiere consulta profesional, historia del desarrollo y un contexto mĂˇs amplio.",
+      footer: "NeuroMap Kids Â· Screening report"
     },
     fr: {
       title: "Rapport NeuroMap Kids",
-      subtitle: "Résumé de dépistage structuré et accessible aux parents",
+      subtitle: "RĂ©sumĂ© de dĂ©pistage structurĂ© et accessible aux parents",
       greeting: "Bonjour",
       parentFallback: "Parent",
-      reportTitle: "Interprétation détaillée",
-      summaryLabel: "Rapport préliminaire du questionnaire",
-      overviewTitle: "Aperçu rapide",
+      reportTitle: "InterprĂ©tation dĂ©taillĂ©e",
+      summaryLabel: "Rapport prĂ©liminaire du questionnaire",
+      overviewTitle: "AperĂ§u rapide",
       focusArea: "Domaine principal",
       secondarySignal: "Signal secondaire",
       signalLevel: "Niveau du signal",
-      topAreas: "Domaines les plus marqués",
+      topAreas: "Domaines les plus marquĂ©s",
       notAvailable: "Non disponible",
       disclaimerTitle: "Note importante",
       disclaimer:
-        "Ce document n’est pas un diagnostic et ne remplace pas une évaluation en personne par un professionnel qualifié. Une évaluation complète nécessite une consultation spécialisée, l’histoire du développement et un contexte plus large.",
-      footer: "NeuroMap Kids · Screening report"
+        "Ce document nâ€™est pas un diagnostic et ne remplace pas une Ă©valuation en personne par un professionnel qualifiĂ©. Une Ă©valuation complĂ¨te nĂ©cessite une consultation spĂ©cialisĂ©e, lâ€™histoire du dĂ©veloppement et un contexte plus large.",
+      footer: "NeuroMap Kids Â· Screening report"
     },
     pt: {
-      title: "Relatório NeuroMap Kids",
-      subtitle: "Resumo de triagem estruturado e amigável para pais",
-      greeting: "Olá",
-      parentFallback: "Responsável",
-      reportTitle: "Interpretação detalhada",
-      summaryLabel: "Relatório preliminar do questionário",
-      overviewTitle: "Visão rápida",
-      focusArea: "Área principal",
-      secondarySignal: "Sinal secundário",
-      signalLevel: "Nível do sinal",
-      topAreas: "Áreas mais fortes",
-      notAvailable: "Não disponível",
+      title: "RelatĂłrio NeuroMap Kids",
+      subtitle: "Resumo de triagem estruturado e amigĂˇvel para pais",
+      greeting: "OlĂˇ",
+      parentFallback: "ResponsĂˇvel",
+      reportTitle: "InterpretaĂ§ĂŁo detalhada",
+      summaryLabel: "RelatĂłrio preliminar do questionĂˇrio",
+      overviewTitle: "VisĂŁo rĂˇpida",
+      focusArea: "Ărea principal",
+      secondarySignal: "Sinal secundĂˇrio",
+      signalLevel: "NĂ­vel do sinal",
+      topAreas: "Ăreas mais fortes",
+      notAvailable: "NĂŁo disponĂ­vel",
       disclaimerTitle: "Nota importante",
       disclaimer:
-        "Este material não é um diagnóstico e não substitui uma avaliação presencial por um profissional qualificado. Uma avaliação completa requer consulta profissional, histórico de desenvolvimento e contexto mais amplo.",
-      footer: "NeuroMap Kids · Screening report"
+        "Este material nĂŁo Ă© um diagnĂłstico e nĂŁo substitui uma avaliaĂ§ĂŁo presencial por um profissional qualificado. Uma avaliaĂ§ĂŁo completa requer consulta profissional, histĂłrico de desenvolvimento e contexto mais amplo.",
+      footer: "NeuroMap Kids Â· Screening report"
     },
     pl: {
       title: "Raport NeuroMap Kids",
-      subtitle: "Ustrukturyzowane, przyjazne dla rodziców podsumowanie przesiewowe",
-      greeting: "Dzień dobry",
+      subtitle: "Ustrukturyzowane, przyjazne dla rodzicĂłw podsumowanie przesiewowe",
+      greeting: "DzieĹ„ dobry",
       parentFallback: "Rodzic",
-      reportTitle: "Szczegółowa interpretacja",
-      summaryLabel: "Wstępny raport z kwestionariusza",
-      overviewTitle: "Krótki przegląd",
-      focusArea: "Główny obszar",
-      secondarySignal: "Sygnał dodatkowy",
-      signalLevel: "Poziom sygnału",
+      reportTitle: "SzczegĂłĹ‚owa interpretacja",
+      summaryLabel: "WstÄ™pny raport z kwestionariusza",
+      overviewTitle: "KrĂłtki przeglÄ…d",
+      focusArea: "GĹ‚Ăłwny obszar",
+      secondarySignal: "SygnaĹ‚ dodatkowy",
+      signalLevel: "Poziom sygnaĹ‚u",
       topAreas: "Najsilniejsze obszary",
       notAvailable: "Brak danych",
-      disclaimerTitle: "Ważna informacja",
+      disclaimerTitle: "WaĹĽna informacja",
       disclaimer:
-        "Ten materiał nie jest diagnozą i nie zastępuje osobistej oceny przez wykwalifikowanego specjalistę. Pełna ocena wymaga konsultacji specjalistycznej, historii rozwoju i szerszego kontekstu.",
-      footer: "NeuroMap Kids · Screening report"
+        "Ten materiaĹ‚ nie jest diagnozÄ… i nie zastÄ™puje osobistej oceny przez wykwalifikowanego specjalistÄ™. PeĹ‚na ocena wymaga konsultacji specjalistycznej, historii rozwoju i szerszego kontekstu.",
+      footer: "NeuroMap Kids Â· Screening report"
     },
     zh: {
-      title: "NeuroMap Kids 报告",
-      subtitle: "结构化、家长友好的筛查摘要",
-      greeting: "您好",
-      parentFallback: "家长",
-      reportTitle: "详细解读",
-      summaryLabel: "初步问卷报告",
-      overviewTitle: "快速概览",
-      focusArea: "主要关注领域",
-      secondarySignal: "次要信号",
-      signalLevel: "信号水平",
-      topAreas: "最突出的领域",
-      notAvailable: "暂无数据",
-      disclaimerTitle: "重要说明",
+      title: "NeuroMap Kids ćŠĄĺ‘Š",
+      subtitle: "ç»“ćž„ĺŚ–ă€ĺ®¶é•żĺŹ‹ĺĄ˝çš„ç­›ćźĄć‘č¦",
+      greeting: "ć‚¨ĺĄ˝",
+      parentFallback: "ĺ®¶é•ż",
+      reportTitle: "čŻ¦ç»†č§ŁčŻ»",
+      summaryLabel: "ĺťć­Ąé—®ĺŤ·ćŠĄĺ‘Š",
+      overviewTitle: "ĺż«é€źć¦‚č§",
+      focusArea: "ä¸»č¦ĺ…łćł¨é˘†ĺźź",
+      secondarySignal: "ć¬ˇč¦äżˇĺŹ·",
+      signalLevel: "äżˇĺŹ·ć°´ĺął",
+      topAreas: "ćś€çŞĺ‡şçš„é˘†ĺźź",
+      notAvailable: "ćš‚ć— ć•°ćŤ®",
+      disclaimerTitle: "é‡Ťč¦čŻ´ćŽ",
       disclaimer:
-        "本材料不是诊断，也不能替代合格专业人员的面对面评估。完整评估需要专业咨询、发展史以及更广泛的背景信息。",
-      footer: "NeuroMap Kids · Screening report"
+        "ćś¬ćťć–™ä¸ŤćŻčŻŠć–­ďĽŚäąźä¸Ťč˝ć›żä»Łĺć Ľä¸“ä¸šäşşĺ‘çš„éť˘ĺŻąéť˘čŻ„äĽ°ă€‚ĺ®Ść•´čŻ„äĽ°éś€č¦ä¸“ä¸šĺ’¨čŻ˘ă€ĺŹ‘ĺ±•ĺŹ˛ä»ĄĺŹŠć›´ĺążćł›çš„čŚć™ŻäżˇćŻă€‚",
+      footer: "NeuroMap Kids Â· Screening report"
     },
     ja: {
-      title: "NeuroMap Kids レポート",
-      subtitle: "保護者向けの構造化されたスクリーニング概要",
-      greeting: "こんにちは",
-      parentFallback: "保護者",
-      reportTitle: "詳細な解釈",
-      summaryLabel: "予備的な質問票レポート",
-      overviewTitle: "概要",
-      focusArea: "主な注目領域",
-      secondarySignal: "二次的なサイン",
-      signalLevel: "サインの強さ",
-      topAreas: "最も強く示された領域",
-      notAvailable: "利用不可",
-      disclaimerTitle: "重要なお知らせ",
+      title: "NeuroMap Kids ă¬ăťăĽă",
+      subtitle: "äżťč­·č€…ĺ‘ă‘ă®ć§‹é€ ĺŚ–ă•ă‚Śăźă‚ąă‚ŻăŞăĽă‹ăłă‚°ć¦‚č¦",
+      greeting: "ă“ă‚“ă«ăˇăŻ",
+      parentFallback: "äżťč­·č€…",
+      reportTitle: "č©łç´°ăŞč§Łé‡",
+      summaryLabel: "äşĺ‚™çš„ăŞčłŞĺ•ŹçĄ¨ă¬ăťăĽă",
+      overviewTitle: "ć¦‚č¦",
+      focusArea: "ä¸»ăŞćł¨ç›®é ĺźź",
+      secondarySignal: "äşŚć¬ˇçš„ăŞă‚µă‚¤ăł",
+      signalLevel: "ă‚µă‚¤ăłă®ĺĽ·ă•",
+      topAreas: "ćś€ă‚‚ĺĽ·ăŹç¤şă•ă‚Śăźé ĺźź",
+      notAvailable: "ĺ©ç”¨ä¸ŤĺŹŻ",
+      disclaimerTitle: "é‡Ťč¦ăŞăŠçźĄă‚‰ă›",
       disclaimer:
-        "この資料は診断ではなく、資格を持つ専門家による対面評価の代わりにはなりません。完全な評価には、専門家による相談、発達歴、より広い背景情報が必要です。",
-      footer: "NeuroMap Kids · Screening report"
+        "ă“ă®čł‡ć–™ăŻč¨şć–­ă§ăŻăŞăŹă€čł‡ć Ľă‚’ćŚă¤ĺ°‚é–€ĺ®¶ă«ă‚ă‚‹ĺŻľéť˘č©•äľˇă®ä»Łă‚Źă‚Šă«ăŻăŞă‚Šăľă›ă‚“ă€‚ĺ®Śĺ…¨ăŞč©•äľˇă«ăŻă€ĺ°‚é–€ĺ®¶ă«ă‚ă‚‹ç›¸č«‡ă€ç™şé”ć­´ă€ă‚ă‚Šĺşă„čŚć™Żć…ĺ ±ăŚĺż…č¦ă§ă™ă€‚",
+      footer: "NeuroMap Kids Â· Screening report"
     },
     ar: {
-      title: "تقرير NeuroMap Kids",
-      subtitle: "ملخص فحص أولي منظم ومناسب للوالدين",
-      greeting: "مرحبًا",
-      parentFallback: "ولي الأمر",
-      reportTitle: "تفسير تفصيلي",
-      summaryLabel: "تقرير أولي للاستبيان",
-      overviewTitle: "نظرة سريعة",
-      focusArea: "المجال الرئيسي",
-      secondarySignal: "إشارة ثانوية",
-      signalLevel: "مستوى الإشارة",
-      topAreas: "أبرز المجالات",
-      notAvailable: "غير متاح",
-      disclaimerTitle: "ملاحظة مهمة",
+      title: "ŘŞŮ‚Ř±ŮŠŘ± NeuroMap Kids",
+      subtitle: "Ů…Ů„Ř®Řµ ŮŘ­Řµ ŘŁŮŮ„ŮŠ Ů…Ů†Ř¸Ů… ŮŮ…Ů†Ř§ŘłŘ¨ Ů„Ů„ŮŘ§Ů„ŘŻŮŠŮ†",
+      greeting: "Ů…Ř±Ř­Ř¨Ů‹Ř§",
+      parentFallback: "ŮŮ„ŮŠ Ř§Ů„ŘŁŮ…Ř±",
+      reportTitle: "ŘŞŮŘłŮŠŘ± ŘŞŮŘµŮŠŮ„ŮŠ",
+      summaryLabel: "ŘŞŮ‚Ř±ŮŠŘ± ŘŁŮŮ„ŮŠ Ů„Ů„Ř§ŘłŘŞŘ¨ŮŠŘ§Ů†",
+      overviewTitle: "Ů†Ř¸Ř±Ř© ŘłŘ±ŮŠŘąŘ©",
+      focusArea: "Ř§Ů„Ů…Ř¬Ř§Ů„ Ř§Ů„Ř±Ř¦ŮŠŘłŮŠ",
+      secondarySignal: "ŘĄŘ´Ř§Ř±Ř© Ř«Ř§Ů†ŮŮŠŘ©",
+      signalLevel: "Ů…ŘłŘŞŮŮ‰ Ř§Ů„ŘĄŘ´Ř§Ř±Ř©",
+      topAreas: "ŘŁŘ¨Ř±Ř˛ Ř§Ů„Ů…Ř¬Ř§Ů„Ř§ŘŞ",
+      notAvailable: "ŘşŮŠŘ± Ů…ŘŞŘ§Ř­",
+      disclaimerTitle: "Ů…Ů„Ř§Ř­Ř¸Ř© Ů…Ů‡Ů…Ř©",
       disclaimer:
-        "هذه المادة ليست تشخيصًا ولا تحل محل التقييم الشخصي من قبل مختص مؤهل. يتطلب التقييم الكامل استشارة مختص، وتاريخًا نمائيًا، وسياقًا أوسع.",
-      footer: "NeuroMap Kids · Screening report"
+        "Ů‡Ř°Ů‡ Ř§Ů„Ů…Ř§ŘŻŘ© Ů„ŮŠŘłŘŞ ŘŞŘ´Ř®ŮŠŘµŮ‹Ř§ ŮŮ„Ř§ ŘŞŘ­Ů„ Ů…Ř­Ů„ Ř§Ů„ŘŞŮ‚ŮŠŮŠŮ… Ř§Ů„Ř´Ř®ŘµŮŠ Ů…Ů† Ů‚Ř¨Ů„ Ů…Ř®ŘŞŘµ Ů…Ř¤Ů‡Ů„. ŮŠŘŞŘ·Ů„Ř¨ Ř§Ů„ŘŞŮ‚ŮŠŮŠŮ… Ř§Ů„ŮŘ§Ů…Ů„ Ř§ŘłŘŞŘ´Ř§Ř±Ř© Ů…Ř®ŘŞŘµŘŚ ŮŘŞŘ§Ř±ŮŠŘ®Ů‹Ř§ Ů†Ů…Ř§Ř¦ŮŠŮ‹Ř§ŘŚ ŮŘłŮŠŘ§Ů‚Ů‹Ř§ ŘŁŮŘłŘą.",
+      footer: "NeuroMap Kids Â· Screening report"
     }
   };
 
@@ -402,9 +402,9 @@ function getDomainLabel(lang, domain, labels) {
     hu: {
       ADHD: "ADHD",
       ASD: "Autizmus spektrum",
-      ANXIETY: "Szorongás",
-      DEPRESSION: "Hangulati terület",
-      LEARNING: "Tanulási terület"
+      ANXIETY: "SzorongĂˇs",
+      DEPRESSION: "Hangulati terĂĽlet",
+      LEARNING: "TanulĂˇsi terĂĽlet"
     },
     en: {
       ADHD: "ADHD",
@@ -424,10 +424,10 @@ function getSeverityLabel(lang, severity, labels) {
 
   const names = {
     hu: {
-      low: "Alacsony jelzésszint",
-      mild: "Enyhe jelzésszint",
-      moderate: "Közepes jelzésszint",
-      high: "Magas jelzésszint"
+      low: "Alacsony jelzĂ©sszint",
+      mild: "Enyhe jelzĂ©sszint",
+      moderate: "KĂ¶zepes jelzĂ©sszint",
+      high: "Magas jelzĂ©sszint"
     },
     en: {
       low: "Low signal level",
@@ -865,13 +865,13 @@ function drawPanel(doc, { x, y, w, h, fill = "#FFFFFF", stroke = BRAND.softBorde
 function getPremiumPdfCopy(lang = "en") {
   if (lang === "hu") {
     return {
-      title: "Hogyan hasznald ezt a riportot?",
-      body: "Kezdd a gyors attekintessel, utana olvasd el a korosztalyi javaslatokat. A riport celja, hogy ertelmezheto mintazatokat adjon a kovetkezo szuloi lepesekhez.",
+      title: "Hogyan haszn\u00e1ld ezt a riportot?",
+      body: "Kezdd a gyors \u00e1ttekint\u00e9ssel, ut\u00e1na olvasd el a koroszt\u00e1lyi javaslatokat. A riport c\u00e9lja, hogy \u00e9rthet\u0151 mint\u00e1zatokat adjon a k\u00f6vetkez\u0151 sz\u00fcl\u0151i l\u00e9p\u00e9sekhez.",
       points: [
-        "Emeld ki azt a 2-3 helyzetet, ahol a jelzes a legerosebb.",
-        "Ne egyetlen valaszt nezz, hanem a visszatero mintazatot.",
-        "Ha a jelzes eros vagy tartos, erdemes szakemberrel is atbeszelni.",
-        "Tedd melle a kovetkezo 7 nap megfigyeleseit: mikor erosodik, mikor enyhul, es mi segit."
+        "Emeld ki azt a 2-3 helyzetet, ahol a jelz\u00e9s a leger\u0151sebb.",
+        "Ne egyetlen v\u00e1laszt n\u00e9zz, hanem a visszat\u00e9r\u0151 mint\u00e1zatot.",
+        "Ha a jelz\u00e9s er\u0151s vagy tart\u00f3s, \u00e9rdemes szakemberrel is \u00e1tbesz\u00e9lni.",
+        "Tedd mell\u00e9 a k\u00f6vetkez\u0151 7 nap megfigyel\u00e9seit: mikor er\u0151s\u00f6dik, mikor enyh\u00fcl, \u00e9s mi seg\u00edt."
       ]
     };
   }
@@ -1021,7 +1021,7 @@ function addMiniCard(doc, x, y, w, title, value, lang, color = BRAND.blue, heigh
   doc.fillColor(BRAND.dark)
     .font(getFont(lang, true))
     .fontSize(12)
-    .text(value || "—", x + 16, y + 36, {
+    .text(value || "â€”", x + 16, y + 36, {
       width: w - 28,
       align: getTextAlign(lang)
     });
@@ -1130,12 +1130,12 @@ function addOverviewBlock(doc, payload, labels, lang, pageState = null) {
 function getParentQuickSummaryCopy(lang = "en") {
   if (lang === "hu") {
     return {
-      title: "Szulo gyors osszefoglalo",
-      lead: "A riport elejen ezt a blokkot erdemes eloszor atnezni: megmutatja a fo mintat, a korosztalyi kontextust es az elso gyakorlati lepest.",
-      focus: "Fo minta",
-      age: "Korosztaly",
-      firstStep: "Elso lepes",
-      note: "Ez nem diagnozis. A cel az, hogy a valaszokbol ertelmezheto, gyakorlatban hasznalhato szuloi kapaszkodok legyenek."
+      title: "Sz\u00fcl\u0151i gyors \u00f6sszefoglal\u00f3",
+      lead: "A riport elej\u00e9n ezt a blokkot \u00e9rdemes el\u0151sz\u00f6r \u00e1tn\u00e9zni: megmutatja a f\u0151 mint\u00e1t, a koroszt\u00e1lyi kontextust \u00e9s az els\u0151 gyakorlati l\u00e9p\u00e9st.",
+      focus: "F\u0151 minta",
+      age: "Koroszt\u00e1ly",
+      firstStep: "Els\u0151 l\u00e9p\u00e9s",
+      note: "Ez nem diagn\u00f3zis. A c\u00e9l az, hogy a v\u00e1laszokb\u00f3l \u00e9rthet\u0151, gyakorlatban haszn\u00e1lhat\u00f3 sz\u00fcl\u0151i kapaszkod\u00f3k legyenek."
     };
   }
 
@@ -1162,7 +1162,7 @@ function addParentQuickSummaryBlock(doc, payload, labels, lang, pageState = null
   const cardW = (innerW - gap * 2) / 3;
   const firstAction =
     lang === "hu"
-      ? "A legerosebb helyzet celzott megfigyelese"
+      ? "A leger\u0151sebb helyzet c\u00e9lzott megfigyel\u00e9se"
       : "Observe the clearest everyday situation";
 
   const leadHeight = measureText(doc, copy.lead, {
@@ -1186,8 +1186,8 @@ function addParentQuickSummaryBlock(doc, payload, labels, lang, pageState = null
     lineGap: 2.5,
     align
   });
-  const miniCardH = Math.max(104, Math.ceil(72 + Math.max(0, actionHeight - 18)));
-  const h = Math.max(272, Math.ceil(126 + leadHeight + miniCardH + noteHeight + 42));
+  const miniCardH = Math.max(124, Math.ceil(90 + Math.max(0, actionHeight - 10)));
+  const h = Math.max(320, Math.ceil(154 + leadHeight + miniCardH + noteHeight + 52));
 
   ensureSpace(doc, h + 24, labels, lang, pageState);
 
@@ -1222,7 +1222,7 @@ function addParentQuickSummaryBlock(doc, payload, labels, lang, pageState = null
       align
     });
 
-  const cardY = y + 90 + leadHeight;
+  const cardY = y + 100 + leadHeight;
 
   addMiniCard(
     doc,
@@ -1263,24 +1263,24 @@ function addParentQuickSummaryBlock(doc, payload, labels, lang, pageState = null
   doc.fillColor(BRAND.muted)
     .font(getFont(lang))
     .fontSize(8.8)
-    .text(copy.note, innerX, cardY + miniCardH + 16, {
+    .text(copy.note, innerX, cardY + miniCardH + 24, {
       width: innerW,
       lineGap: 2.5,
       align
     });
 
-  doc.y = y + h + 18;
+  doc.y = y + h + 20;
 }
 
 function getReportV2PdfLabels(lang = "en") {
   if (lang === "hu") {
     return {
-      title: "Korosztályi értelmezés",
-      ageBand: "Korosztály",
-      recommendations: "Korosztályi javaslatok",
-      actionPlan: "Következő 7 nap akcióterve",
-      observationFocus: "Mit figyelj meg célzottan?",
-      escalationNote: "Mikor ne várj tovább?"
+      title: "Koroszt\u00e1lyi \u00e9rtelmez\u00e9s",
+      ageBand: "Koroszt\u00e1ly",
+      recommendations: "Koroszt\u00e1lyi javaslatok",
+      actionPlan: "K\u00f6vetkez\u0151 7 nap akci\u00f3terve",
+      observationFocus: "Mit figyelj meg c\u00e9lzottan?",
+      escalationNote: "Mikor ne v\u00e1rj tov\u00e1bb?"
     };
   }
 
@@ -1597,7 +1597,7 @@ function isHeading(paragraph) {
   if (!text) return false;
 
   if (/^\d{1,2}\.\s+/.test(text) && text.length < 150) return true;
-  if (text.length < 90 && /[:：]$/u.test(text)) return true;
+  if (text.length < 90 && /[:ďĽš]$/u.test(text)) return true;
   if (text === text.toUpperCase() && text.length < 120) return true;
 
   return false;
@@ -1607,12 +1607,12 @@ function isBulletLine(line) {
   const text = clean(line);
   if (!text) return false;
   if (/^\d{1,2}\.\s+\S/.test(text)) return false;
-  return /^([*•‣-]\s+|[–—]\s+|\d{1,2}[)]\s+)/u.test(text);
+  return /^([*â€˘â€Ł-]\s+|[â€“â€”]\s+|\d{1,2}[)]\s+)/u.test(text);
 }
 
 function cleanBulletLine(line) {
   return clean(line)
-    .replace(/^([*•‣-]\s+|[–—]\s+|\d{1,2}[)]\s+)/u, "")
+    .replace(/^([*â€˘â€Ł-]\s+|[â€“â€”]\s+|\d{1,2}[)]\s+)/u, "")
     .replace(/\*\*/g, "")
     .replace(/\*/g, "")
     .trim();
@@ -1694,7 +1694,7 @@ function splitLongParagraph(paragraph, lang) {
   }
 
   const sentences = text
-    .split(/(?<=[.!?。！？])\s+/u)
+    .split(/(?<=[.!?ă€‚ďĽďĽź])\s+/u)
     .map((item) => clean(item))
     .filter(Boolean);
 
@@ -2000,3 +2000,4 @@ export async function generatePdfBuffer({ name, reportText, lang = "en", payload
     }
   });
 }
+

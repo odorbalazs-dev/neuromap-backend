@@ -1,4 +1,4 @@
-import fs from "fs";
+﻿import fs from "fs";
 import path from "path";
 import { env } from "../config/env.js";
 
@@ -13,7 +13,7 @@ const EMBEDS = [
     sourcePath: "public/webflow/engine.js",
     snippetPath: "web/engine-embed.full.html",
     publicPath: "/public/webflow/engine.js",
-    version: "20260605-loading-gate-v2",
+    version: "20260606-cx-roadmap-v4",
     note: "External script loader. This avoids the Webflow 50k code embed limit."
   },
   {
@@ -192,3 +192,4 @@ export async function buildWebflowEmbedManager() {
     embeds
   };
 }
+

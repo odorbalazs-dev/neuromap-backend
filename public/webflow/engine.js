@@ -5,7 +5,7 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260605-loading-gate-v2";
+  const ENGINE_VERSION = "20260606-cx-roadmap-v4";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
   const DRAFT_STORAGE_KEY = "nm_questionnaire_draft_v1";
   const DRAFT_TTL_MS = 1000 * 60 * 60 * 24 * 14;
@@ -2148,44 +2148,44 @@
 
   const LANDING_FALLBACK_TEXT = {
     hu: {
-      modalTitle: "Válassz nyelvet",
-      heroTitle: "Értsd meg, mi állhat gyermeked viselkedése mögött",
-      heroSub: "10 perces kérdőív után személyre szabott, szülőbarát riportot és PDF-et kapsz.",
-      primaryCta: "Kezdjük ->",
-      microcopy: "Csak $5 - Nincs előfizetés - PDF riport emailben",
+      modalTitle: "V\u00e1lassz nyelvet",
+      heroTitle: "\u00c9rtsd meg, mi \u00e1llhat gyermeked viselked\u00e9se m\u00f6g\u00f6tt",
+      heroSub: "10 perces k\u00e9rd\u0151\u00edv ut\u00e1n szem\u00e9lyre szabott, sz\u00fcl\u0151bar\u00e1t riportot \u00e9s PDF-et kapsz.",
+      primaryCta: "Kezdj\u00fck ->",
+      microcopy: "Csak $5 - nincs el\u0151fizet\u00e9s - PDF riport emailben",
       trust1: "kb. 10 perc",
       trust2: "PDF riport emailben",
-      trust3: "strukturált elemzés",
+      trust3: "struktur\u00e1lt elemz\u00e9s",
       valueTitle: "Mit kapsz pontosan?",
-      value1: "személyre szabott értelmezés a válaszok alapján",
-      value2: "viselkedési, érzelmi és tanulási mintázatok kiemelve",
-      value3: "gyakorlati, szülőként is azonnal használható javaslatok",
+      value1: "szem\u00e9lyre szabott \u00e9rtelmez\u00e9s a v\u00e1laszok alapj\u00e1n",
+      value2: "viselked\u00e9si, \u00e9rzelmi \u00e9s tanul\u00e1si mint\u00e1zatok kiemelve",
+      value3: "gyakorlati, sz\u00fcl\u0151k\u00e9nt is azonnal haszn\u00e1lhat\u00f3 javaslatok",
       value4: "brandelt PDF riport emailben",
-      stepsTitle: "Így működik",
-      step1: "1. Kitöltöd a rövid előszűrő kérdőívet",
-      step2: "2. A rendszer kiválasztja a releváns specifikus kérdéssort",
-      step3: "3. Fizetés után elkészül és emailben megérkezik a riport",
-      previewTitle: "Így néz ki a riport",
-      previewCaption: "Minta előnézet: a teljes riport személyre szabottan, PDF-ben érkezik.",
-      reasonTitle: "Miért éri meg most kitölteni?",
-      reasonBody: "A rövid kérdőív után nem csak egy címkét kapsz, hanem egy érthető irányt: mire figyelj otthon, mikor érdemes szakemberhez fordulni, és milyen következő lépés lehet hasznos.",
-      reasonParent: "Kevesebb bizonytalanság",
-      reasonSchool: "Jobb beszélgetés óvodával vagy iskolával",
-      reasonCalm: "Nyugodtabb, rendszerezett kép",
-      reasonNote: "A cél egy megnyugtató, érthető kép a mintázatokról.",
+      stepsTitle: "\u00cdgy m\u0171k\u00f6dik",
+      step1: "1. Kit\u00f6lt\u00f6d a r\u00f6vid el\u0151sz\u0171r\u0151 k\u00e9rd\u0151\u00edvet",
+      step2: "2. A rendszer kiv\u00e1lasztja a relev\u00e1ns specifikus k\u00e9rd\u00e9ssort",
+      step3: "3. Fizet\u00e9s ut\u00e1n elk\u00e9sz\u00fcl \u00e9s emailben meg\u00e9rkezik a riport",
+      previewTitle: "\u00cdgy n\u00e9z ki a riport",
+      previewCaption: "Minta el\u0151n\u00e9zet: a teljes riport szem\u00e9lyre szabottan, PDF-ben \u00e9rkezik.",
+      reasonTitle: "Mi\u00e9rt \u00e9ri meg most kit\u00f6lteni?",
+      reasonBody: "A r\u00f6vid k\u00e9rd\u0151\u00edv ut\u00e1n nem csak egy c\u00edmk\u00e9t kapsz, hanem \u00e9rthet\u0151 ir\u00e1nyt: mire figyelj otthon, mikor \u00e9rdemes szakemberhez fordulni, \u00e9s milyen k\u00f6vetkez\u0151 l\u00e9p\u00e9s lehet hasznos.",
+      reasonParent: "Kevesebb bizonytalans\u00e1g",
+      reasonSchool: "Jobb besz\u00e9lget\u00e9s \u00f3vod\u00e1val vagy iskol\u00e1val",
+      reasonCalm: "Nyugodtabb, rendezettebb k\u00e9p",
+      reasonNote: "A c\u00e9l nem a megijeszt\u00e9s, hanem a mint\u00e1zatok \u00e9rthet\u0151 \u00f6sszerendez\u00e9se.",
       demoTitle: "Mit mutat meg a teljes riport?",
-      demoLead: "A teljes PDF a válaszokból kirajzolódó fő és másodlagos jelzést, a korosztályi kontextust és a gyakorlati javaslatokat együtt magyarázza el.",
-      demoMetric1: "Fő mintázat",
-      demoMetric2: "Korosztályi nézőpont",
-      demoMetric3: "Következő lépések",
-      demoNote: "A riport szülőbarát, strukturált és nem diagnosztikus nyelven készül.",
+      demoLead: "A teljes PDF a v\u00e1laszokb\u00f3l kirajzol\u00f3d\u00f3 f\u0151 \u00e9s m\u00e1sodlagos jelz\u00e9st, a koroszt\u00e1lyi kontextust \u00e9s a gyakorlati javaslatokat egy\u00fctt magyar\u00e1zza el.",
+      demoMetric1: "F\u0151 mint\u00e1zat",
+      demoMetric2: "Koroszt\u00e1lyi n\u00e9z\u0151pont",
+      demoMetric3: "K\u00f6vetkez\u0151 l\u00e9p\u00e9sek",
+      demoNote: "A riport sz\u00fcl\u0151bar\u00e1t, struktur\u00e1lt \u00e9s nem diagnosztikus nyelven k\u00e9sz\u00fcl.",
       trustTitle: "Fontos tudni",
-      trustText: "A NeuroMap Kids nem diagnózis, hanem strukturált előszűrés.",
-      priceTitle: "Egyszeri díj",
+      trustText: "A NeuroMap Kids nem diagn\u00f3zis, hanem struktur\u00e1lt el\u0151sz\u0171r\u00e9s.",
+      priceTitle: "Egyszeri d\u00edj",
       priceValue: "Csak $5",
-      priceCta: "Riport elkészítése ->",
-      priceMicrocopy: "Nincs előfizetés - Biztonságos fizetés - PDF emailben",
-      stickyCta: "Kezdjük ->"
+      priceCta: "Riport elk\u00e9sz\u00edt\u00e9se ->",
+      priceMicrocopy: "Nincs el\u0151fizet\u00e9s - biztons\u00e1gos fizet\u00e9s - PDF emailben",
+      stickyCta: "Kezdj\u00fck ->"
     },
     en: {
       modalTitle: "Choose language",
@@ -4755,29 +4755,17 @@
     const copies = {
       hu: {
         eyebrow: "A teljes riportban",
-        title: "Nem csak pontszámokat kapsz, hanem értelmezhető mintázatot",
+        title: "Nem csak pontsz\u00e1mokat kapsz, hanem \u00e9rtelmezhet\u0151 mint\u00e1zatot",
         lead:
-          "A NeuroMap Kids a válaszaidat több terület mentén veti össze. A fizetés után készülő riport azt mutatja meg, hogy a mostani jelzések hogyan kapcsolódhatnak a gyermek mindennapi viselkedéséhez, tanulásához és érzelmi terheléséhez.",
+          "A NeuroMap Kids a v\u00e1laszaidat t\u00f6bb ter\u00fclet ment\u00e9n veti \u00f6ssze. A fizet\u00e9s ut\u00e1n k\u00e9sz\u00fcl\u0151 riport azt mutatja meg, hogy a mostani jelz\u00e9sek hogyan kapcsol\u00f3dhatnak a gyermek mindennapi viselked\u00e9s\u00e9hez, tanul\u00e1s\u00e1hoz \u00e9s \u00e9rzelmi terhel\u00e9s\u00e9hez.",
         items: [
-          {
-            title: "Mintázatalapú értelmezés",
-            text: "A riport a fő és másodlagos jelzéseket együtt kezeli, nem egyetlen kérdés vagy pontszám alapján következtet."
-          },
-          {
-            title: "Életkorhoz igazodóbb nézőpont",
-            text: "Segít elkülöníteni, mi lehet életkori sajátosság, és mi az, amit érdemes tudatosabban figyelni."
-          },
-          {
-            title: "Szülőbarát következő lépések",
-            text: "Otthon, óvodában vagy iskolában is használható, gyakorlatias irányokat kapsz."
-          },
-          {
-            title: "PDF riport emailben",
-            text: "A személyre szabott riport a fizetés után készül el, és emailben érkezik meg."
-          }
+          { title: "Mint\u00e1zatalap\u00fa \u00e9rtelmez\u00e9s", text: "A riport a f\u0151 \u00e9s m\u00e1sodlagos jelz\u00e9seket egy\u00fctt kezeli, nem egyetlen k\u00e9rd\u00e9s vagy pontsz\u00e1m alapj\u00e1n k\u00f6vetkeztet." },
+          { title: "\u00c9letkorhoz igazod\u00f3 n\u00e9z\u0151pont", text: "Seg\u00edt elk\u00fcl\u00f6n\u00edteni, mi lehet \u00e9letkori saj\u00e1toss\u00e1g, \u00e9s mi az, amit \u00e9rdemes tudatosabban figyelni." },
+          { title: "Sz\u00fcl\u0151bar\u00e1t k\u00f6vetkez\u0151 l\u00e9p\u00e9sek", text: "Otthon, \u00f3vod\u00e1ban vagy iskol\u00e1ban is haszn\u00e1lhat\u00f3, gyakorlatias ir\u00e1nyokat kapsz." },
+          { title: "PDF riport emailben", text: "A szem\u00e9lyre szabott riport a fizet\u00e9s ut\u00e1n k\u00e9sz\u00fcl el, \u00e9s emailben \u00e9rkezik meg." }
         ],
-        ctaTitle: "A részletes riport célja: tisztább képet adni, merre érdemes tovább figyelni.",
-        ctaText: "Ez strukturált előszűrés, nem diagnózis. A hangsúly az érthető magyarázaton és a következő lépéseken van."
+        ctaTitle: "A r\u00e9szletes riport c\u00e9lja: tiszt\u00e1bb k\u00e9pet adni, merre \u00e9rdemes tov\u00e1bb figyelni.",
+        ctaText: "Ez struktur\u00e1lt el\u0151sz\u0171r\u00e9s, nem diagn\u00f3zis. A hangs\u00faly az \u00e9rthet\u0151 magyar\u00e1zaton \u00e9s a k\u00f6vetkez\u0151 l\u00e9p\u00e9seken van."
       },
       en: {
         eyebrow: "Inside the full report",
@@ -5047,7 +5035,7 @@
   function getSummaryWarningText() {
     const warnings = {
       hu:
-        "Ez nem diagnózis, hanem strukturált előszűrési összegzés. A részletes, szülőbarát riport és PDF a fizetés után készül el.",
+        "Ez nem diagn\u00f3zis, hanem struktur\u00e1lt el\u0151sz\u0171r\u00e9si \u00f6sszegz\u00e9s. A r\u00e9szletes, sz\u00fcl\u0151bar\u00e1t riport \u00e9s PDF a fizet\u00e9s ut\u00e1n k\u00e9sz\u00fcl el.",
       en:
         "This is not a diagnosis. It is a structured screening summary. The detailed parent-friendly report and PDF are generated after payment.",
       de:
@@ -5139,7 +5127,7 @@
   function buildReportPreviewV2Html() {
     const isHu = state.lang === "hu";
     const focus = disorderLabel(state.detectedRisk);
-    const secondary = state.secondaryRisk ? disorderLabel(state.secondaryRisk) : (isHu ? "nincs erős másodlagos jelzés" : "no strong secondary signal");
+    const secondary = state.secondaryRisk ? disorderLabel(state.secondaryRisk) : (isHu ? "nincs er\u0151s m\u00e1sodlagos jelz\u00e9s" : "no strong secondary signal");
     const signal =
       state.resultSummary?.signal?.[state.lang] ||
       state.resultSummary?.signal?.en ||
@@ -5150,8 +5138,8 @@
       ? {
           title: "Mit mutat majd pontosabban a teljes riport?",
           lead:
-            "A fizetés utáni riport nem újabb címkét ad, hanem érthetően összerendezi a válaszokat, a korosztályt és az átfedéseket.",
-          labels: ["Fő minta", "Másodlagos jelzés", "Korosztály", "Jelzésszint"]
+            "A fizet\u00e9s ut\u00e1ni riport nem \u00fajabb c\u00edmk\u00e9t ad, hanem \u00e9rthet\u0151en \u00f6sszerendezi a v\u00e1laszokat, a koroszt\u00e1lyt \u00e9s az \u00e1tfed\u00e9seket.",
+          labels: ["F\u0151 minta", "M\u00e1sodlagos jelz\u00e9s", "Koroszt\u00e1ly", "Jelz\u00e9sszint"]
         }
       : {
           title: "What will the full report clarify?",
@@ -5238,23 +5226,14 @@
 
   function getPrePaymentTrustCopy() {
     const copies = {
-      hu: {
-        title: "Miért érdemes most elkészíteni a teljes riportot?",
+            hu: {
+        title: "Mi\u00e9rt \u00e9rdemes most elk\u00e9sz\u00edteni a teljes riportot?",
         items: [
-          {
-            title: "A válaszaidból már látszik egy minta",
-            text: "A teljes riport ezt bontja ki érthető, szülőként is használható magyarázattá."
-          },
-          {
-            title: "Nem csak címkét kapsz",
-            text: "A rendszer fő és másodlagos jelzéseket, korosztályt és válaszmintázatokat együtt néz."
-          },
-          {
-            title: "Kis lépésekre fordítva",
-            text: "A cél az, hogy tudd, mit figyelj meg otthon, óvodában vagy iskolai helyzetekben."
-          }
+          { title: "Szem\u00e9lyre szabott \u00e9rtelmez\u00e9s", text: "A v\u00e1laszaid alapj\u00e1n m\u00e1r l\u00e1tszik egy minta. A teljes riport ezt ford\u00edtja le sz\u00fcl\u0151k\u00e9nt is haszn\u00e1lhat\u00f3 magyar\u00e1zatt\u00e1." },
+          { title: "T\u00f6bb, mint egy c\u00edmke", text: "A f\u0151 \u00e9s m\u00e1sodlagos jelz\u00e9seket, koroszt\u00e1lyt \u00e9s v\u00e1laszmint\u00e1zatokat egy\u00fctt \u00e9rtelmezi." },
+          { title: "Konkr\u00e9t k\u00f6vetkez\u0151 l\u00e9p\u00e9sek", text: "Seg\u00edt eld\u00f6nteni, mit figyelj meg otthon, \u00f3vod\u00e1ban vagy iskolai helyzetekben." }
         ],
-        note: "A fizetés egyszeri, nincs előfizetés. A PDF riport emailben érkezik."
+        note: "Egyszeri fizet\u00e9s, nincs el\u0151fizet\u00e9s. A PDF riport emailben \u00e9rkezik."
       },
       en: {
         title: "Why generate the full report now?",
@@ -5358,22 +5337,13 @@
 
   function getSummaryNextStepCopy() {
     const copies = {
-      hu: {
-        title: "Mit tisztáz a teljes riport?",
-        lead: "Az előszűrés már mutat egy irányt. A teljes riport abban segít, hogy a jelzés ne csak egy szám vagy címke legyen, hanem érthető, korosztályhoz illesztett mintázat.",
+            hu: {
+        title: "Mit tiszt\u00e1z a teljes riport?",
+        lead: "Az el\u0151sz\u0171r\u00e9s m\u00e1r mutat egy ir\u00e1nyt. A teljes riport abban seg\u00edt, hogy a jelz\u00e9s ne csak egy sz\u00e1m vagy c\u00edmke legyen, hanem \u00e9rthet\u0151, koroszt\u00e1lyhoz illesztett mint\u00e1zat.",
         items: [
-          {
-            title: "Mi állhat a válaszok mögött?",
-            text: "A fő és másodlagos jelzéseket együtt értelmezi, hogy kevesebb legyen a félreértés."
-          },
-          {
-            title: "Mennyire következetes a minta?",
-            text: "A válaszok erősségét, átfedését és bizonytalanságát is figyelembe veszi."
-          },
-          {
-            title: "Mit érdemes kipróbálni először?",
-            text: "A javaslatok szülőként is használható, kicsi lépésekre vannak bontva."
-          }
+          { title: "Mi \u00e1llhat a v\u00e1laszok m\u00f6g\u00f6tt?", text: "A f\u0151 \u00e9s m\u00e1sodlagos jelz\u00e9seket egy\u00fctt \u00e9rtelmezi, hogy kevesebb legyen a f\u00e9lre\u00e9rt\u00e9s." },
+          { title: "Mennyire k\u00f6vetkezetes a minta?", text: "A v\u00e1laszok er\u0151ss\u00e9g\u00e9t, \u00e1tfed\u00e9s\u00e9t \u00e9s bizonytalans\u00e1g\u00e1t is figyelembe veszi." },
+          { title: "Mit \u00e9rdemes kipr\u00f3b\u00e1lni el\u0151sz\u00f6r?", text: "A javaslatok sz\u00fcl\u0151k\u00e9nt is haszn\u00e1lhat\u00f3, kicsi l\u00e9p\u00e9sekre vannak bontva." }
         ]
       },
       en: {
@@ -5506,14 +5476,13 @@
 
   function getSummaryScienceCopy() {
     const copies = {
-      hu: {
-        title: "Miért ad többet a teljes elemzés?",
-        lead: "A rövid összegzés csak a legerősebb mintát mutatja. A teljes riport több válaszréteget néz együtt, ezért árnyaltabb és gyakorlatibb képet ad.",
+            hu: {
+        title: "Mi\u00e9rt ad t\u00f6bbet a teljes ki\u00e9rt\u00e9kel\u00e9s?",
+        lead: "A v\u00e1laszokb\u00f3l nem egyetlen pontsz\u00e1mot \u00e9rdemes n\u00e9zni. A teljes riport a jelz\u00e9sek er\u0151ss\u00e9g\u00e9t, k\u00f6vetkezetess\u00e9g\u00e9t, \u00e1tfed\u00e9s\u00e9t \u00e9s a gyermek koroszt\u00e1ly\u00e1t egy\u00fctt \u00e9rtelmezi.",
         items: [
-          { title: "Mintázat, nem címke", text: "A rendszer nem diagnózist ad, hanem viselkedési és érzelmi jelzéseket rendez." },
-          { title: "Életkori kontextus", text: "Más számít óvodás, kisiskolás vagy idősebb gyermek esetén." },
-          { title: "Átfedések kezelése", text: "A hasonló tünetkörök közötti bizonytalanságot is jelzi." },
-          { title: "Szülőbarát következő lépés", text: "A riport megfigyelési és támogatási irányokat ad." }
+          "\u00d6sszeveti a f\u0151 \u00e9s m\u00e1sodlagos jelz\u00e9seket.",
+          "Figyelembe veszi, ha t\u00f6bb ter\u00fclet k\u00f6zel van egym\u00e1shoz.",
+          "A k\u00f6vetkeztet\u00e9st sz\u00fcl\u0151bar\u00e1t, gyakorlatias nyelvre ford\u00edtja."
         ]
       },
       en: {
