@@ -5,7 +5,7 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260606-cx-roadmap-v4";
+  const ENGINE_VERSION = "20260607-questionnaire-open-v2";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
   const DRAFT_STORAGE_KEY = "nm_questionnaire_draft_v1";
   const DRAFT_TTL_MS = 1000 * 60 * 60 * 24 * 14;
@@ -1644,7 +1644,9 @@
         justify-content: space-between !important;
         min-height: 66px !important;
         padding: 9px clamp(16px, 3vw, 34px) !important;
-        position: sticky !important;
+        left: 0 !important;
+        position: fixed !important;
+        right: 0 !important;
         top: 0 !important;
         z-index: 999 !important;
       }
@@ -1666,9 +1668,29 @@
         display: flex !important;
         gap: 10px !important;
         min-height: 66px !important;
-        position: sticky !important;
+        left: 0 !important;
+        position: fixed !important;
+        right: 0 !important;
         top: 0 !important;
         z-index: 999 !important;
+      }
+
+      html.nm-questionnaire-open .nm-social-landing .nm-hero,
+      html.nm-questionnaire-open .nm-landing .nm-hero,
+      html.nm-questionnaire-open .nm-social-landing .nm-section:not(.nm-topbar),
+      html.nm-questionnaire-open .nm-landing .nm-section:not(.nm-topbar),
+      html.nm-questionnaire-open #nmSocialLanding > :not(.nm-topbar):not(#questionnaireStart):not(#nmApp):not(#languageModal),
+      html.nm-questionnaire-open .nm-social-landing > :not(.nm-topbar):not(#questionnaireStart):not(#nmApp):not(#languageModal),
+      html.nm-questionnaire-open .nm-landing > :not(.nm-topbar):not(#questionnaireStart):not(#nmApp):not(#languageModal),
+      html.nm-questionnaire-open [data-nm-section="hero"] {
+        display: none !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+      }
+
+      html.nm-questionnaire-open #questionnaireStart,
+      html.nm-questionnaire-open #nmApp {
+        margin-top: 86px !important;
       }
 
       .nm-brand-lockup {
@@ -2106,6 +2128,11 @@
       }
 
       @media (max-width: 720px) {
+        html.nm-questionnaire-open #questionnaireStart,
+        html.nm-questionnaire-open #nmApp {
+          margin-top: 76px !important;
+        }
+
         .nm-landing-hero,
         .nm-social-landing,
         [data-nm-section="hero"] {
@@ -2170,7 +2197,7 @@
       reasonTitle: "Mi\u00e9rt \u00e9ri meg most kit\u00f6lteni?",
       reasonBody: "A r\u00f6vid k\u00e9rd\u0151\u00edv ut\u00e1n nem csak egy c\u00edmk\u00e9t kapsz, hanem \u00e9rthet\u0151 ir\u00e1nyt: mire figyelj otthon, mikor \u00e9rdemes szakemberhez fordulni, \u00e9s milyen k\u00f6vetkez\u0151 l\u00e9p\u00e9s lehet hasznos.",
       reasonParent: "Kevesebb bizonytalans\u00e1g",
-      reasonSchool: "Jobb besz\u00e9lget\u00e9s \u00f3vod\u00e1val vagy iskol\u00e1val",
+      reasonSchool: "K\u00f6nnyebb egyeztet\u00e9s \u00f3vod\u00e1val vagy iskol\u00e1val",
       reasonCalm: "Nyugodtabb, rendezettebb k\u00e9p",
       reasonNote: "A c\u00e9l nem a megijeszt\u00e9s, hanem a mint\u00e1zatok \u00e9rthet\u0151 \u00f6sszerendez\u00e9se.",
       demoTitle: "Mit mutat meg a teljes riport?",
@@ -2391,7 +2418,9 @@
     setImportantStyle(topbar, "box-shadow", "0 10px 26px rgba(17, 24, 39, 0.04)");
     setImportantStyle(topbar, "display", "flex");
     setImportantStyle(topbar, "min-height", "66px");
-    setImportantStyle(topbar, "position", "sticky");
+    setImportantStyle(topbar, "left", "0");
+    setImportantStyle(topbar, "position", "fixed");
+    setImportantStyle(topbar, "right", "0");
     setImportantStyle(topbar, "top", "0");
     setImportantStyle(topbar, "z-index", "999");
 
@@ -2788,7 +2817,7 @@
       landing;
 
     setImportantStyle(landing, "min-height", "auto");
-    setImportantStyle(landing, "padding-top", "0");
+    setImportantStyle(landing, "padding-top", "66px");
     setImportantStyle(landing, "padding-bottom", "18px");
 
     setImportantStyle(hero, "min-height", "auto");
@@ -2854,10 +2883,12 @@
       document.querySelector("[data-nm-landing]");
 
     if (landing) {
-      landing.style.visibility = "visible";
-      landing.style.opacity = "1";
-      if (landing.style.display === "none") {
-        landing.style.display = "block";
+      if (!document.documentElement.classList.contains("nm-questionnaire-open")) {
+        landing.style.visibility = "visible";
+        landing.style.opacity = "1";
+        if (landing.style.display === "none") {
+          landing.style.display = "block";
+        }
       }
     }
 
@@ -2867,6 +2898,7 @@
   }
 
   function rescueLandingText(lang = state.lang) {
+    if (document.documentElement.classList.contains("nm-questionnaire-open")) return 0;
     if (landingRescueInProgress) return 0;
 
     landingRescueInProgress = true;
@@ -2915,6 +2947,7 @@
 
       let rescueTimer = null;
       const queueRescue = () => {
+        if (document.documentElement.classList.contains("nm-questionnaire-open")) return;
         window.clearTimeout(rescueTimer);
         rescueTimer = window.setTimeout(() => rescueLandingText(resolveLang()), 40);
       };
@@ -2935,6 +2968,65 @@
     }
   }
 
+  function hideLandingForQuestionnaire() {
+    const landingContainers = Array.from(document.querySelectorAll([
+      "#nmSocialLanding",
+      ".nm-social-landing",
+      ".nm-landing",
+      "[data-nm-landing]",
+      "[data-nm-section='landing']"
+    ].join(",")));
+
+    const landingNodes = Array.from(document.querySelectorAll([
+      "#nmSocialLanding .nm-hero",
+      ".nm-social-landing .nm-hero",
+      ".nm-landing .nm-hero",
+      "#nmSocialLanding .nm-section:not(.nm-topbar)",
+      ".nm-social-landing .nm-section:not(.nm-topbar)",
+      ".nm-landing .nm-section:not(.nm-topbar)",
+      "[data-nm-section='hero']"
+    ].join(",")));
+
+    landingContainers.forEach((container) => {
+      Array.from(container.children || []).forEach((child) => {
+        if (
+          child.matches(".nm-topbar") ||
+          child.id === "questionnaireStart" ||
+          child.id === "nmApp" ||
+          child.id === "languageModal" ||
+          child.contains(document.getElementById("nmApp"))
+        ) {
+          return;
+        }
+
+        landingNodes.push(child);
+      });
+    });
+
+    landingNodes.forEach((landing) => {
+      landing.setAttribute("aria-hidden", "true");
+      setImportantStyle(landing, "display", "none");
+      setImportantStyle(landing, "visibility", "hidden");
+      setImportantStyle(landing, "opacity", "0");
+    });
+  }
+
+  function lockQuestionnaireOpenLayout() {
+    ensureStickyBrandHeader();
+    hideLandingForQuestionnaire();
+
+    let attempts = 0;
+    const timer = window.setInterval(() => {
+      attempts += 1;
+      ensureStickyBrandHeader();
+      hideLandingForQuestionnaire();
+
+      if (attempts >= 24) {
+        window.clearInterval(timer);
+      }
+    }, 125);
+  }
+
   function showQuestionnaireFromLanding() {
     const app = document.getElementById("nmApp");
     const target =
@@ -2942,11 +3034,12 @@
       app ||
       document.getElementById("triageSection");
 
+    document.documentElement.classList.add("nm-questionnaire-open");
+    lockQuestionnaireOpenLayout();
+
     if (app) {
       app.style.display = "block";
     }
-
-    document.documentElement.classList.add("nm-questionnaire-open");
 
     trackSchemaEvent("nm_questionnaire_started", {
       funnel_step: "questionnaire_started"
