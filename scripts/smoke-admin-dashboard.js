@@ -589,15 +589,15 @@ assert(
   "Dashboard JS should render session priority facts."
 );
 assert(
-  dashboardJs.includes("RĂ©szlet fĂłkusz"),
+  dashboardJs.includes("Részlet fókusz"),
   "Dashboard JS should expose the session detail focus copy."
 );
 assert(
-  dashboardJs.includes("FolyamatlĂ©pĂ©sek"),
+  dashboardJs.includes("Folyamatlépések"),
   "Dashboard JS should expose the session process stages copy."
 );
 assert(
-  dashboardJs.includes("PrioritĂˇs adatok"),
+  dashboardJs.includes("Prioritás adatok"),
   "Dashboard JS should expose priority session facts."
 );
 assert(
@@ -605,11 +605,11 @@ assert(
   "Dashboard JS should render the report snapshot panel."
 );
 assert(
-  dashboardJs.includes("Engine dĂ¶ntĂ©s"),
+  dashboardJs.includes("Engine döntés"),
   "Dashboard JS should expose Engine Intelligence v2 decision fields."
 );
 assert(
-  dashboardJs.includes("Engine fĂłkuszterĂĽletek"),
+  dashboardJs.includes("Engine fókuszterületek"),
   "Dashboard JS should expose Engine Intelligence v2 focus areas."
 );
 assert(
@@ -617,15 +617,15 @@ assert(
   "Dashboard JS should use the admin report summary payload."
 );
 assert(
-  dashboardJs.includes("Email retry elĂ©rhetĹ‘"),
+  dashboardJs.includes("Email retry elérhető"),
   "Dashboard JS should expose email retry state in session details."
 );
 assert(
-  dashboardJs.includes("ElemzĂ©s retry javasolt"),
+  dashboardJs.includes("Elemzés retry javasolt"),
   "Dashboard JS should expose analysis retry state in session details."
 );
 assert(
-  dashboardJs.includes("Riport ĂˇttekintĂ©s"),
+  dashboardJs.includes("Riport áttekintés"),
   "Dashboard JS should render the session report snapshot in Hungarian."
 );
 assert(
@@ -633,31 +633,31 @@ assert(
   "Dashboard JS should render the session diagnostics panel."
 );
 assert(
-  dashboardJs.includes("HibakeresĂ©si tĂ©rkĂ©p"),
+  dashboardJs.includes("Hibakeresési térkép"),
   "Dashboard JS should render the troubleshooting map in Hungarian."
 );
 assert(
-  dashboardJs.includes("Javasolt kĂ¶vetkezĹ‘ lĂ©pĂ©sek"),
+  dashboardJs.includes("Javasolt következő lépések"),
   "Dashboard JS should render recommended next actions in session details."
 );
 assert(
-  dashboardJs.includes("Worker job elĹ‘zmĂ©nyek"),
+  dashboardJs.includes("Worker job előzmények"),
   "Dashboard JS should expose worker job history in session details."
 );
 assert(
-  dashboardJs.includes("Webhook esemĂ©nyek"),
+  dashboardJs.includes("Webhook események"),
   "Dashboard JS should expose related webhook events in session details."
 );
 assert(
-  dashboardJs.includes("Gyermek Ă©letkora"),
+  dashboardJs.includes("Gyermek életkora"),
   "Dashboard JS should expose child age in Hungarian."
 );
 assert(
-  dashboardJs.includes("A fĹ‘ rendszerek rendben vannak"),
+  dashboardJs.includes("A fő rendszerek rendben vannak"),
   "Dashboard JS should render the control center state in Hungarian."
 );
 assert(
-  dashboardJs.includes("Email kĂ©zbesĂ­tĂ©s"),
+  dashboardJs.includes("Email kézbesítés"),
   "Dashboard JS should render the pipeline stages in Hungarian."
 );
 assert(
@@ -764,7 +764,7 @@ const summary = buildAdminSessionReportSummary(
     analysis_status: "failed",
     report_email_status: "failed",
     report_email_attempts: 3,
-    analysis_result: "Riport szĂ¶veg",
+    analysis_result: "Riport szöveg",
     payload: {
       childAge: 7,
       detectedRisk: "ADHD",
@@ -810,7 +810,7 @@ const summary = buildAdminSessionReportSummary(
       resultSummary: {
         signal: {
           key: "moderate",
-          hu: "kĂ¶zepes jelzĂ©sszint",
+          hu: "közepes jelzésszint",
           en: "moderate signal level"
         },
         topSubdomains: [

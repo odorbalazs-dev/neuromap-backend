@@ -39,6 +39,7 @@ button {
   cursor: pointer;
   font-weight: 700;
   padding: 10px 14px;
+  white-space: nowrap;
 }
 
 button:hover {
@@ -74,11 +75,17 @@ button.warn:hover {
 }
 
 .topbar {
-  align-items: flex-end;
+  align-items: flex-start;
   display: flex;
+  flex-wrap: wrap;
   gap: 24px;
   justify-content: space-between;
   margin-bottom: 18px;
+}
+
+.topbar > div:first-child {
+  flex: 1 1 420px;
+  min-width: min(360px, 100%);
 }
 
 .eyebrow {
@@ -111,7 +118,9 @@ h2 {
 }
 
 .token-box {
-  min-width: min(520px, 100%);
+  flex: 1 1 420px;
+  max-width: 620px;
+  min-width: min(420px, 100%);
 }
 
 .token-box label {
@@ -156,9 +165,10 @@ input:focus {
   border: 1px solid var(--line);
   border-radius: 8px;
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   margin-bottom: 18px;
-  overflow-x: auto;
+  overflow-x: visible;
   padding: 10px;
   position: sticky;
   top: 0;
@@ -192,6 +202,7 @@ input:focus {
   color: var(--muted);
   font-weight: 700;
   min-height: 20px;
+  overflow-wrap: anywhere;
 }
 
 .status-text.error {
@@ -203,6 +214,24 @@ input:focus {
   gap: 18px;
   grid-template-columns: minmax(0, 1.5fr) minmax(320px, 0.7fr);
   margin-bottom: 18px;
+}
+
+@media (max-width: 900px) {
+  .shell {
+    padding: 18px;
+  }
+
+  .quick-nav {
+    position: static;
+  }
+
+  .token-row {
+    grid-template-columns: 1fr;
+  }
+
+  .control-center {
+    grid-template-columns: 1fr;
+  }
 }
 
 .control-hero,
