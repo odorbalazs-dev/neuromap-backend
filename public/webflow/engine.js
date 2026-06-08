@@ -5,7 +5,7 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260608-questionnaire-shell-v3";
+  const ENGINE_VERSION = "20260608-questionnaire-shell-v4";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
   const DRAFT_STORAGE_KEY = "nm_questionnaire_draft_v1";
   const DRAFT_TTL_MS = 1000 * 60 * 60 * 24 * 14;
@@ -2535,6 +2535,81 @@
     }
   }
 
+  function getQuestionnaireShellRoots() {
+    const app = document.getElementById("nmApp");
+    const start = document.getElementById("questionnaireStart");
+    const roots = [];
+
+    if (start && app && start.contains(app)) {
+      roots.push(start);
+    } else if (app && start && app.contains(start)) {
+      roots.push(app);
+    } else {
+      if (start) roots.push(start);
+      if (app) roots.push(app);
+    }
+
+    return roots.filter((root, index, all) => root && all.indexOf(root) === index);
+  }
+
+  function ensureQuestionnaireShellMounted() {
+    if (!document.body) return [];
+
+    ensureStickyBrandHeader();
+
+    const topbar = document.querySelector(".nm-topbar");
+    const roots = getQuestionnaireShellRoots();
+    let insertAfter = topbar && topbar.parentElement === document.body ? topbar : null;
+
+    roots.forEach((root) => {
+      if (root.parentElement !== document.body) {
+        if (insertAfter && insertAfter.nextSibling) {
+          document.body.insertBefore(root, insertAfter.nextSibling);
+        } else if (insertAfter) {
+          document.body.appendChild(root);
+        } else {
+          document.body.insertBefore(root, document.body.firstChild);
+        }
+      }
+
+      insertAfter = root;
+    });
+
+    const modal = document.getElementById("languageModal");
+    if (modal && modal.parentElement !== document.body) {
+      document.body.appendChild(modal);
+    }
+
+    return roots;
+  }
+
+  function isBodyShellChild(element, shellRoots) {
+    if (!element || element.nodeType !== 1) return false;
+
+    const topbar = document.querySelector(".nm-topbar");
+    const modal = document.getElementById("languageModal");
+    const bootGate = document.getElementById("nmEngineBootGate");
+
+    return (
+      element === topbar ||
+      element === modal ||
+      element === bootGate ||
+      shellRoots.includes(element) ||
+      element.matches("script, style, link, meta, noscript")
+    );
+  }
+
+  function hideNonQuestionnaireBodyChildren() {
+    if (!document.body) return;
+
+    const shellRoots = ensureQuestionnaireShellMounted();
+
+    Array.from(document.body.children || []).forEach((child) => {
+      if (isBodyShellChild(child, shellRoots)) return;
+      hideElementForQuestionnaire(child);
+    });
+  }
+
   function getReportPreviewLabels(lang = state.lang) {
     const labels = {
       hu: {
@@ -3046,6 +3121,7 @@
 
   function hideLandingForQuestionnaire() {
     ensureStickyBrandHeader();
+    const shellRoots = ensureQuestionnaireShellMounted();
 
     const landingContainers = Array.from(document.querySelectorAll([
       "#nmSocialLanding",
@@ -3072,7 +3148,8 @@
           child.id === "questionnaireStart" ||
           child.id === "nmApp" ||
           child.id === "languageModal" ||
-          child.contains(document.getElementById("nmApp"))
+          child.contains(document.getElementById("nmApp")) ||
+          shellRoots.includes(child)
         ) {
           return;
         }
@@ -3083,6 +3160,7 @@
 
     landingNodes.forEach((landing) => hideElementForQuestionnaire(landing));
     hidePreQuestionnaireSiblings();
+    hideNonQuestionnaireBodyChildren();
   }
 
   function lockQuestionnaireOpenLayout() {
@@ -3114,6 +3192,8 @@
     if (app) {
       app.style.display = "block";
     }
+
+    hideNonQuestionnaireBodyChildren();
 
     trackSchemaEvent("nm_questionnaire_started", {
       funnel_step: "questionnaire_started"
