@@ -5,7 +5,7 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260607-questionnaire-open-v2";
+  const ENGINE_VERSION = "20260608-questionnaire-shell-v3";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
   const DRAFT_STORAGE_KEY = "nm_questionnaire_draft_v1";
   const DRAFT_TTL_MS = 1000 * 60 * 60 * 24 * 14;
@@ -1682,15 +1682,21 @@
       html.nm-questionnaire-open #nmSocialLanding > :not(.nm-topbar):not(#questionnaireStart):not(#nmApp):not(#languageModal),
       html.nm-questionnaire-open .nm-social-landing > :not(.nm-topbar):not(#questionnaireStart):not(#nmApp):not(#languageModal),
       html.nm-questionnaire-open .nm-landing > :not(.nm-topbar):not(#questionnaireStart):not(#nmApp):not(#languageModal),
-      html.nm-questionnaire-open [data-nm-section="hero"] {
+      html.nm-questionnaire-open [data-nm-section="hero"],
+      html.nm-questionnaire-open [data-nm-hidden-for-questionnaire="1"] {
         display: none !important;
         opacity: 0 !important;
         visibility: hidden !important;
       }
 
+      html.nm-questionnaire-open body {
+        background: #f4f9fc !important;
+        padding-top: 66px !important;
+      }
+
       html.nm-questionnaire-open #questionnaireStart,
       html.nm-questionnaire-open #nmApp {
-        margin-top: 86px !important;
+        margin-top: 18px !important;
       }
 
       .nm-brand-lockup {
@@ -2410,6 +2416,10 @@
 
     if (!topbar) return;
 
+    if (topbar.parentElement !== document.body) {
+      document.body.insertBefore(topbar, document.body.firstChild);
+    }
+
     topbar.classList.add("nm-topbar-fixed-brand");
 
     setImportantStyle(topbar, "align-items", "center");
@@ -2457,6 +2467,72 @@
     setImportantStyle(brand, "display", "inline-flex");
     setImportantStyle(brand, "margin-right", "auto");
     setImportantStyle(brand, "text-decoration", "none");
+  }
+
+  function isQuestionnaireShellNode(element) {
+    if (!element || element.nodeType !== 1) return false;
+
+    const app = document.getElementById("nmApp");
+    const start = document.getElementById("questionnaireStart");
+    const modal = document.getElementById("languageModal");
+    const topbar = document.querySelector(".nm-topbar");
+
+    return (
+      element === app ||
+      element === start ||
+      element === modal ||
+      element === topbar ||
+      (app && element.contains(app)) ||
+      (start && element.contains(start)) ||
+      (modal && element.contains(modal)) ||
+      (topbar && element.contains(topbar)) ||
+      (topbar && topbar.contains(element)) ||
+      element.matches("script, style, link, meta, noscript")
+    );
+  }
+
+  function hideElementForQuestionnaire(element) {
+    if (!element || element.nodeType !== 1 || isQuestionnaireShellNode(element)) return;
+
+    element.setAttribute("aria-hidden", "true");
+    element.dataset.nmHiddenForQuestionnaire = "1";
+    setImportantStyle(element, "display", "none");
+    setImportantStyle(element, "visibility", "hidden");
+    setImportantStyle(element, "opacity", "0");
+    setImportantStyle(element, "pointer-events", "none");
+  }
+
+  function hidePreQuestionnaireSiblings() {
+    const anchor =
+      document.getElementById("questionnaireStart") ||
+      document.getElementById("nmApp") ||
+      document.getElementById("triageSection");
+
+    if (!anchor) return;
+
+    let current = anchor;
+
+    while (current && current.parentElement && current.parentElement !== document.body) {
+      let sibling = current.previousElementSibling;
+
+      while (sibling) {
+        const previous = sibling.previousElementSibling;
+        hideElementForQuestionnaire(sibling);
+        sibling = previous;
+      }
+
+      current = current.parentElement;
+    }
+
+    if (current && current.parentElement === document.body) {
+      let sibling = current.previousElementSibling;
+
+      while (sibling) {
+        const previous = sibling.previousElementSibling;
+        hideElementForQuestionnaire(sibling);
+        sibling = previous;
+      }
+    }
   }
 
   function getReportPreviewLabels(lang = state.lang) {
@@ -2969,6 +3045,8 @@
   }
 
   function hideLandingForQuestionnaire() {
+    ensureStickyBrandHeader();
+
     const landingContainers = Array.from(document.querySelectorAll([
       "#nmSocialLanding",
       ".nm-social-landing",
@@ -3003,12 +3081,8 @@
       });
     });
 
-    landingNodes.forEach((landing) => {
-      landing.setAttribute("aria-hidden", "true");
-      setImportantStyle(landing, "display", "none");
-      setImportantStyle(landing, "visibility", "hidden");
-      setImportantStyle(landing, "opacity", "0");
-    });
+    landingNodes.forEach((landing) => hideElementForQuestionnaire(landing));
+    hidePreQuestionnaireSiblings();
   }
 
   function lockQuestionnaireOpenLayout() {
