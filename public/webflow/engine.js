@@ -3486,34 +3486,49 @@
         "not a diagnosis, but a structured screening"
       ],
       de: [
-        "elternfreundliche Sprache",
-        "mit Alterskontext verfeinert",
-        "strukturierter Screening-Bericht"
+        "elternfreundliche, beruhigende Sprache",
+        "mit altersbezogenem Kontext verfeinert",
+        "keine Diagnose, sondern ein strukturiertes Screening"
       ],
       it: [
-        "linguaggio chiaro per genitori",
-        "contesto legato all'eta",
-        "screening strutturato, non diagnosi"
+        "linguaggio rassicurante per genitori",
+        "adattato al contesto dell'età",
+        "non una diagnosi, ma uno screening strutturato"
       ],
       es: [
-        "lenguaje claro para familias",
-        "con contexto por edad",
-        "cribado estructurado, no diagnostico"
+        "lenguaje claro y tranquilizador para familias",
+        "ajustado al contexto de la edad",
+        "no es un diagnóstico, sino un cribado estructurado"
+      ],
+      zh: [
+        "面向家长的安心表达",
+        "结合年龄背景进行理解",
+        "不是诊断，而是结构化筛查"
+      ],
+      ja: [
+        "保護者にわかりやすく安心できる表現",
+        "年齢に応じた文脈で整理",
+        "診断ではなく、構造化されたスクリーニング"
+      ],
+      ar: [
+        "لغة مطمئنة ومناسبة للوالدين",
+        "مراعاة السياق العمري للطفل",
+        "ليس تشخيصًا، بل فحص أولي منظم"
       ],
       pl: [
-        "jezyk przyjazny rodzicom",
-        "z kontekstem wieku",
-        "screening, nie diagnoza"
+        "spokojny język przyjazny rodzicom",
+        "uwzględnia kontekst wieku",
+        "nie diagnoza, lecz uporządkowane badanie przesiewowe"
       ],
       pt: [
-        "linguagem clara para pais",
-        "com contexto por idade",
-        "triagem estruturada, nao diagnostico"
+        "linguagem calma e clara para pais",
+        "ajustado ao contexto da idade",
+        "não é diagnóstico, é uma triagem estruturada"
       ],
       fr: [
-        "langage clair pour les parents",
-        "contexte adapte a l'age",
-        "depistage structure, pas diagnostic"
+        "langage clair et rassurant pour les parents",
+        "adapté au contexte de l'âge",
+        "pas un diagnostic, mais un dépistage structuré"
       ]
     };
 
