@@ -2321,10 +2321,44 @@
       primaryCta: "Start ->"
     },
     ar: {
-      ...LANDING_FALLBACK_TEXT.en,
-      modalTitle: "Choose language",
-      heroTitle: "Understand what may be behind your child's behavior",
-      primaryCta: "Start ->"
+      modalTitle: "اختر اللغة",
+      heroTitle: "افهم ما قد يكون وراء سلوك طفلك",
+      heroSub: "بعد استبيان مدته نحو 10 دقائق، تحصل على تقرير PDF مخصص وواضح للوالدين.",
+      primaryCta: "ابدأ الآن",
+      microcopy: "فقط 5 دولارات - بدون اشتراك - تقرير PDF عبر البريد الإلكتروني",
+      trust1: "حوالي 10 دقائق",
+      trust2: "تقرير PDF عبر البريد الإلكتروني",
+      trust3: "تحليل منظم",
+      valueTitle: "ماذا ستحصل عليه؟",
+      value1: "تفسير مخصص بناء على إجاباتك",
+      value2: "إبراز الأنماط السلوكية والعاطفية والتعليمية",
+      value3: "اقتراحات عملية ومطمئنة للوالدين",
+      value4: "تقرير PDF يحمل هوية NeuroMap Kids عبر البريد الإلكتروني",
+      stepsTitle: "كيف يعمل؟",
+      step1: "1. أكمل استبيان الفرز الأولي القصير",
+      step2: "2. يختار النظام مجموعة الأسئلة التفصيلية الأنسب",
+      step3: "3. بعد الدفع، يتم إعداد التقرير وإرساله عبر البريد الإلكتروني",
+      previewTitle: "كيف يبدو التقرير؟",
+      previewCaption: "معاينة نموذجية: يصل التقرير الكامل بصيغة PDF وبشكل مخصص.",
+      reasonTitle: "لماذا يستحق تعبئته الآن؟",
+      reasonBody: "بعد الاستبيان القصير لا تحصل على مجرد تسمية، بل على اتجاه أوضح: ما الذي تراقبه في المنزل، ومتى قد يكون من المفيد طلب إرشاد متخصص، وما الخطوة التالية المناسبة.",
+      reasonParent: "حيرة أقل",
+      reasonSchool: "تواصل أوضح مع الروضة أو المدرسة",
+      reasonCalm: "صورة أهدأ وأكثر تنظيما",
+      reasonNote: "الهدف ليس التخويف، بل ترتيب الأنماط بطريقة مفهومة ومطمئنة.",
+      demoTitle: "ماذا يوضح التقرير الكامل؟",
+      demoLead: "يشرح تقرير PDF الإشارات الأساسية والثانوية، والسياق العمري، والاقتراحات العملية معا.",
+      demoMetric1: "النمط الأساسي",
+      demoMetric2: "سياق مناسب للعمر",
+      demoMetric3: "خطوات تالية",
+      demoNote: "التقرير موجه للوالدين، منظم، ولا يقدم تشخيصا.",
+      trustTitle: "معلومة مهمة",
+      trustText: "NeuroMap Kids ليس تشخيصا، بل فرز أولي منظم يساعدك على فهم الأنماط.",
+      priceTitle: "دفعة واحدة",
+      priceValue: "فقط 5 دولارات",
+      priceCta: "احصل على التقرير ->",
+      priceMicrocopy: "بدون اشتراك - دفع آمن - PDF عبر البريد الإلكتروني",
+      stickyCta: "ابدأ الآن"
     },
     pl: {
       ...LANDING_FALLBACK_TEXT.en,
@@ -3009,10 +3043,17 @@
   function applyLandingFallbackLanguage(lang = state.lang) {
     const copy = getLandingFallbackText(lang);
     let applied = 0;
+    const isRtl = lang === "ar";
 
     if (!copy) {
       applyLandingCompactLayout();
       return applied;
+    }
+
+    document.documentElement.lang = lang || "en";
+    document.documentElement.dir = isRtl ? "rtl" : "ltr";
+    if (document.body) {
+      document.body.dir = isRtl ? "rtl" : "ltr";
     }
 
     document.querySelectorAll("[data-nm-i18n]").forEach((element) => {
@@ -3034,6 +3075,10 @@
       document.querySelector("[data-nm-landing]");
 
     if (landing) {
+      landing.lang = lang || "en";
+      landing.dir = isRtl ? "rtl" : "ltr";
+      landing.classList.toggle("nm-landing-rtl", isRtl);
+
       if (!document.documentElement.classList.contains("nm-questionnaire-open")) {
         landing.style.visibility = "visible";
         landing.style.opacity = "1";
@@ -6496,5 +6541,3 @@
 
   init();
 })();
-
-
