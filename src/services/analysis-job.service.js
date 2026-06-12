@@ -54,6 +54,8 @@ export async function processNextAnalysisJob() {
 
     await markAnalysisJobDone(job.id);
 
+    await markAnalysisJobDone(job.id);
+
     return {
       processed: true,
       jobId: job.id,

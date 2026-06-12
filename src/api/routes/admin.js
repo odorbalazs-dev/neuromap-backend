@@ -35,7 +35,9 @@ import {
   processOneAnalysisJob,
   resendReportEmail,
   retryReportEmailBatch,
-  resetReportEmailRetryForSession
+  resetReportEmailRetryForSession,
+  getInvoices,
+  retryInvoice
 } from "../controllers/admin.controller.js";
 
 const router = express.Router();
@@ -75,12 +77,14 @@ router.get("/queue-status", getQueueStatus);
 router.get("/recent-sessions", getRecentSessions);
 router.get("/search-sessions", searchAdminSessions);
 router.get("/failed-analyses", getFailedAnalyses);
+router.get("/invoices", getInvoices);
 
 router.get("/session/:sessionId", getAdminSession);
 router.get("/session/:sessionId/report-pdf", downloadReportPdf);
 router.post("/session/:sessionId/regenerate-pdf", regenerateReportPdf);
 
 router.post("/retry-analysis/:sessionId", retryAnalysis);
+router.post("/retry-invoice/:sessionId", retryInvoice);
 router.post("/process-one-job", processOneAnalysisJob);
 router.post("/resend-email/:sessionId", resendReportEmail);
 router.post("/retry-report-emails", retryReportEmailBatch);

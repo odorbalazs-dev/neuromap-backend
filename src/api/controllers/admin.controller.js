@@ -29,6 +29,14 @@ import { buildDashboardMetrics } from "../../services/dashboard-metrics.service.
 import { getFollowUpEmailStatus, processDueFollowUpEmails } from "../../services/follow-up-email.service.js";
 import { buildI18nQualityAudit } from "../../services/i18n-quality-audit.service.js";
 import { env } from "../../config/env.js";
+import {
+  createInvoiceForSessionId,
+  getRecentInvoices
+} from "../../services/invoice.service.js";
+import {
+  invoiceConfig,
+  isInvoiceAutomationConfigured
+} from "../../config/invoice.js";
 
 function shortText(value = "", max = 600) {
   const text = String(value || "");
@@ -2657,6 +2665,50 @@ export async function resetReportEmailRetryForSession(req, res) {
     return res.status(500).json({
       ok: false,
       error: error.message || "Failed to reset report email retry"
+    });
+  }
+}
+
+export async function getInvoices(req, res) {
+  try {
+    const limit = Math.min(Math.max(Number(req.query.limit || 25), 1), 100);
+    const items = await getRecentInvoices({ limit });
+
+    return res.status(200).json({
+      ok: true,
+      provider: invoiceConfig.provider,
+      configured: isInvoiceAutomationConfigured(),
+      items
+    });
+  } catch (error) {
+    console.error("Admin invoices error:", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: error.message || "Failed to get invoices"
+    });
+  }
+}
+
+export async function retryInvoice(req, res) {
+  try {
+    const { sessionId } = req.params;
+
+    const invoice = await createInvoiceForSessionId(sessionId, {
+      throwOnError: true
+    });
+
+    return res.status(200).json({
+      ok: true,
+      sessionId,
+      invoice
+    });
+  } catch (error) {
+    console.error("Admin retry invoice error:", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: error.message || "Failed to retry invoice"
     });
   }
 }

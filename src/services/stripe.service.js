@@ -122,6 +122,10 @@ export async function createCheckoutSession({
     mode: "payment",
     payment_method_types: ["card"],
     customer_email: email,
+    billing_address_collection: "required",
+    tax_id_collection: {
+      enabled: true
+    },
 
     line_items: [
       {

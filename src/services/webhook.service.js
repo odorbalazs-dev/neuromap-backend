@@ -9,6 +9,7 @@ import {
   markCheckoutRecoveredOrPaid
 } from "./session.service.js";
 import { sendMetaPurchaseEvent } from "./meta.service.js";
+import { createInvoiceForPaidSession } from "./invoice.service.js";
 
 async function registerWebhookEvent(event) {
   const result = await db.query(
@@ -135,6 +136,24 @@ export async function handleStripeWebhook(rawBody, signature) {
     }
 
     if (sessionRow.analysis_status === "done") {
+      if (sessionRow.payment_status === "paid" && sessionRow.invoice_status !== "issued") {
+        phase = "create_invoice_for_completed_session";
+
+        try {
+          await createInvoiceForPaidSession({
+            session: sessionRow,
+            checkoutSession,
+            throwOnError: false
+          });
+        } catch (invoiceError) {
+          console.error("[invoice] completed session invoice step failed, continuing:", {
+            message: invoiceError?.message || invoiceError,
+            internalSessionId,
+            stripeSessionId: checkoutSession.id
+          });
+        }
+      }
+
       await markWebhookProcessed(event.id);
 
       return {
@@ -148,7 +167,11 @@ export async function handleStripeWebhook(rawBody, signature) {
     await markSessionPaid(internalSessionId);
 
     phase = "clear_recovery_state";
-    await markCheckoutRecoveredOrPaid(internalSessionId);
+    const paidSession =
+      await markCheckoutRecoveredOrPaid(internalSessionId) || {
+        ...sessionRow,
+        payment_status: "paid"
+      };
 
     phase = "send_meta_purchase";
     try {
@@ -161,6 +184,21 @@ export async function handleStripeWebhook(rawBody, signature) {
     } catch (metaError) {
       console.error("[meta] purchase event failed, continuing webhook:", {
         message: metaError?.message || metaError,
+        internalSessionId,
+        stripeSessionId: checkoutSession.id
+      });
+    }
+
+    phase = "create_invoice";
+    try {
+      await createInvoiceForPaidSession({
+        session: paidSession,
+        checkoutSession,
+        throwOnError: false
+      });
+    } catch (invoiceError) {
+      console.error("[invoice] webhook invoice step failed, continuing:", {
+        message: invoiceError?.message || invoiceError,
         internalSessionId,
         stripeSessionId: checkoutSession.id
       });

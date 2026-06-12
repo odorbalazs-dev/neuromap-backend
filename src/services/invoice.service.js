@@ -1,0 +1,366 @@
+import { db } from "../db/db.js";
+import {
+  invoiceConfig,
+  isInvoiceAutomationConfigured
+} from "../config/invoice.js";
+import {
+  buildBillingInfo,
+  buildInvoiceAmounts,
+  createSzamlazzHuInvoice
+} from "../infrastructure/invoice/szamlazzhuClient.js";
+import { getSessionById } from "./session.service.js";
+
+function compactError(error) {
+  return String(error?.message || error || "Invoice error").slice(0, 1000);
+}
+
+const SZAMLAZZHU_SUPPORTED_INVOICE_LANGS = new Set(["hu", "en", "de"]);
+
+function resolveSzamlazzHuInvoiceLanguage(sessionLang) {
+  const configured = String(invoiceConfig.szamlazzhu.invoiceLanguage || "auto")
+    .trim()
+    .toLowerCase();
+
+  if (configured && configured !== "auto") {
+    return configured;
+  }
+
+  const normalized = String(sessionLang || "")
+    .trim()
+    .toLowerCase();
+
+  if (SZAMLAZZHU_SUPPORTED_INVOICE_LANGS.has(normalized)) {
+    return normalized;
+  }
+
+  return normalized === "hu" ? "hu" : "en";
+}
+
+function getSzamlazzHuConfigForSession(session) {
+  return {
+    ...invoiceConfig.szamlazzhu,
+    invoiceLanguage: resolveSzamlazzHuInvoiceLanguage(session?.lang)
+  };
+}
+
+async function upsertInvoiceProcessing({ session, checkoutSession }) {
+  const billing = buildBillingInfo({ session, checkoutSession });
+  const szamlazzhuConfig = getSzamlazzHuConfigForSession(session);
+  const amounts = buildInvoiceAmounts({
+    checkoutSession,
+    config: szamlazzhuConfig
+  });
+
+  const result = await db.query(
+    `
+    INSERT INTO invoices (
+      session_id,
+      provider,
+      status,
+      currency,
+      gross_amount,
+      vat_rate,
+      billing_name,
+      billing_email,
+      billing_country,
+      billing_zip,
+      billing_city,
+      billing_address_line1,
+      billing_address_line2,
+      tax_id,
+      attempts,
+      last_attempt_at,
+      error_message,
+      updated_at
+    )
+    VALUES (
+      $1, $2, 'processing', $3, $4, $5, $6, $7, $8, $9,
+      $10, $11, $12, $13, 1, NOW(), NULL, NOW()
+    )
+    ON CONFLICT (session_id, provider)
+    DO UPDATE SET
+      status = 'processing',
+      currency = EXCLUDED.currency,
+      gross_amount = EXCLUDED.gross_amount,
+      vat_rate = EXCLUDED.vat_rate,
+      billing_name = EXCLUDED.billing_name,
+      billing_email = EXCLUDED.billing_email,
+      billing_country = EXCLUDED.billing_country,
+      billing_zip = EXCLUDED.billing_zip,
+      billing_city = EXCLUDED.billing_city,
+      billing_address_line1 = EXCLUDED.billing_address_line1,
+      billing_address_line2 = EXCLUDED.billing_address_line2,
+      tax_id = EXCLUDED.tax_id,
+      attempts = invoices.attempts + 1,
+      last_attempt_at = NOW(),
+      error_message = NULL,
+      updated_at = NOW()
+    RETURNING *
+    `,
+    [
+      session.id,
+      invoiceConfig.provider,
+      amounts.currency,
+      amounts.grossAmount,
+      amounts.vatRate,
+      billing.name,
+      billing.email,
+      billing.country,
+      billing.zip,
+      billing.city,
+      billing.addressLine1,
+      billing.addressLine2,
+      billing.taxId
+    ]
+  );
+
+  await db.query(
+    `
+    UPDATE sessions
+    SET invoice_status = 'processing',
+        invoice_id = $2,
+        invoice_error = NULL
+    WHERE id = $1
+    `,
+    [session.id, result.rows[0]?.id || null]
+  );
+
+  return result.rows[0] || null;
+}
+
+async function markInvoiceSkipped(sessionId, reason) {
+  const result = await db.query(
+    `
+    INSERT INTO invoices (
+      session_id,
+      provider,
+      status,
+      error_message,
+      updated_at
+    )
+    VALUES ($1, $2, 'skipped', $3, NOW())
+    ON CONFLICT (session_id, provider)
+    DO UPDATE SET
+      status = 'skipped',
+      error_message = EXCLUDED.error_message,
+      updated_at = NOW()
+    RETURNING *
+    `,
+    [sessionId, invoiceConfig.provider, reason]
+  );
+
+  await db.query(
+    `
+    UPDATE sessions
+    SET invoice_status = 'skipped',
+        invoice_id = $2,
+        invoice_error = $3
+    WHERE id = $1
+    `,
+    [sessionId, result.rows[0]?.id || null, reason]
+  );
+
+  return result.rows[0] || null;
+}
+
+async function markInvoiceIssued(sessionId, invoiceResult) {
+  const result = await db.query(
+    `
+    UPDATE invoices
+    SET status = 'issued',
+        provider_invoice_id = $3,
+        invoice_number = $4,
+        error_message = NULL,
+        provider_response = $5,
+        issued_at = COALESCE(issued_at, NOW()),
+        sent_at = CASE
+          WHEN $6::boolean THEN COALESCE(sent_at, NOW())
+          ELSE sent_at
+        END,
+        updated_at = NOW()
+    WHERE session_id = $1
+      AND provider = $2
+    RETURNING *
+    `,
+    [
+      sessionId,
+      invoiceConfig.provider,
+      invoiceResult.providerInvoiceId || null,
+      invoiceResult.invoiceNumber || null,
+      invoiceResult.providerResponse || {},
+      Boolean(invoiceConfig.szamlazzhu.sendEmail)
+    ]
+  );
+
+  await db.query(
+    `
+    UPDATE sessions
+    SET invoice_status = 'issued',
+        invoice_id = $2,
+        invoice_number = $3,
+        invoice_error = NULL,
+        invoice_sent_at = CASE
+          WHEN $4::boolean THEN COALESCE(invoice_sent_at, NOW())
+          ELSE invoice_sent_at
+        END
+    WHERE id = $1
+    `,
+    [
+      sessionId,
+      result.rows[0]?.id || null,
+      invoiceResult.invoiceNumber || null,
+      Boolean(invoiceConfig.szamlazzhu.sendEmail)
+    ]
+  );
+
+  return result.rows[0] || null;
+}
+
+async function markInvoiceFailed(sessionId, error) {
+  const message = compactError(error);
+
+  const result = await db.query(
+    `
+    UPDATE invoices
+    SET status = 'failed',
+        error_message = $3,
+        updated_at = NOW()
+    WHERE session_id = $1
+      AND provider = $2
+    RETURNING *
+    `,
+    [sessionId, invoiceConfig.provider, message]
+  );
+
+  await db.query(
+    `
+    UPDATE sessions
+    SET invoice_status = 'failed',
+        invoice_id = COALESCE($2, invoice_id),
+        invoice_error = $3
+    WHERE id = $1
+    `,
+    [sessionId, result.rows[0]?.id || null, message]
+  );
+
+  return result.rows[0] || null;
+}
+
+export async function createInvoiceForPaidSession({
+  session,
+  checkoutSession = null,
+  throwOnError = false
+}) {
+  if (!session?.id) {
+    throw new Error("Missing session for invoice creation.");
+  }
+
+  if (session.payment_status !== "paid") {
+    return markInvoiceSkipped(session.id, "Session is not paid.");
+  }
+
+  if (!isInvoiceAutomationConfigured()) {
+    return markInvoiceSkipped(
+      session.id,
+      "Invoice automation is disabled or SZAMLAZZHU_AGENT_KEY is missing."
+    );
+  }
+
+  const existing = await db.query(
+    `
+    SELECT *
+    FROM invoices
+    WHERE session_id = $1
+      AND provider = $2
+      AND status = 'issued'
+    LIMIT 1
+    `,
+    [session.id, invoiceConfig.provider]
+  );
+
+  if (existing.rows[0]) {
+    return existing.rows[0];
+  }
+
+  await upsertInvoiceProcessing({ session, checkoutSession });
+
+  try {
+    const szamlazzhuConfig = getSzamlazzHuConfigForSession(session);
+
+    const invoiceResult = await createSzamlazzHuInvoice({
+      session,
+      checkoutSession,
+      config: szamlazzhuConfig,
+      productName: invoiceConfig.productName,
+      productComment: invoiceConfig.productComment
+    });
+
+    return await markInvoiceIssued(session.id, invoiceResult);
+  } catch (error) {
+    await markInvoiceFailed(session.id, error);
+
+    if (throwOnError) {
+      throw error;
+    }
+
+    console.error("[invoice] creation failed, continuing:", {
+      sessionId: session.id,
+      provider: invoiceConfig.provider,
+      message: compactError(error)
+    });
+
+    return null;
+  }
+}
+
+export async function createInvoiceForSessionId(sessionId, options = {}) {
+  const session = await getSessionById(sessionId);
+
+  if (!session) {
+    throw new Error("Session not found.");
+  }
+
+  return createInvoiceForPaidSession({
+    session,
+    checkoutSession: options.checkoutSession || null,
+    throwOnError: options.throwOnError || false
+  });
+}
+
+export async function getInvoiceForSession(sessionId) {
+  const result = await db.query(
+    `
+    SELECT *
+    FROM invoices
+    WHERE session_id = $1
+    ORDER BY created_at DESC
+    LIMIT 1
+    `,
+    [sessionId]
+  );
+
+  return result.rows[0] || null;
+}
+
+export async function getRecentInvoices({ limit = 25 } = {}) {
+  const safeLimit = Math.min(Number(limit || 25), 100);
+
+  const result = await db.query(
+    `
+    SELECT
+      invoices.*,
+      sessions.name,
+      sessions.email,
+      sessions.lang,
+      sessions.payment_status,
+      sessions.analysis_status
+    FROM invoices
+    JOIN sessions ON sessions.id = invoices.session_id
+    ORDER BY invoices.updated_at DESC NULLS LAST, invoices.created_at DESC
+    LIMIT $1
+    `,
+    [safeLimit]
+  );
+
+  return result.rows;
+}
