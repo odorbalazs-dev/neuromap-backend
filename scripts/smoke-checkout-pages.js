@@ -9,7 +9,7 @@ function assert(condition, message) {
 function main() {
   console.log("\n=== CHECKOUT PAGES SMOKE ===");
 
-  const currentVersion = "20260604-cx-top10-v2";
+  const currentVersion = "20260613-cx-i18n-polish-v1";
   const script = fs.readFileSync("public/webflow/checkout-pages.js", "utf8");
   const sharedEmbed = fs.readFileSync("web/checkout-pages-embed.html", "utf8").trim();
   const successEmbed = fs.readFileSync("web/checkout-success-embed.html", "utf8").trim();
@@ -36,7 +36,7 @@ function main() {
   assert(script.includes("event_schema_version"), "Checkout events should include the schema version.");
   assert(script.includes("client_session_id"), "Checkout events should include a client session id.");
   assert(script.includes("nm-checkout-pages-stable-v1"), "Checkout pages should install the stable design layer.");
-  assert(!/[\u0102\u00c2\u0103\u00e2\u0107\u0158\u0151\u0170\u0147]/.test(script), "Checkout pages should not contain mojibake characters.");
+  assert(!/(Ã|Â|Ă|Ĺ|Å|Ä|â€|�)/.test(script), "Checkout pages should not contain mojibake characters.");
   assert(script.includes("&#10003;"), "Success page should render a safe checkmark entity.");
   assert(script.includes("trackOnce(\"purchase\""), "Success page should send a purchase event.");
   assert(script.includes("neuromap_kids_report"), "Purchase event should include product item metadata.");

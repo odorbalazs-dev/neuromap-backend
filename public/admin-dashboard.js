@@ -217,7 +217,7 @@
 
   function readSavedToken() {
     for (const key of TOKEN_STORAGE_KEYS) {
-      const token = normalizeToken(localStorage.getItem(key) || "");
+      const token = normalizeToken(sessionStorage.getItem(key) || "");
       if (token) return token;
     }
 
@@ -227,17 +227,23 @@
   function saveToken(token) {
     const normalized = normalizeToken(token);
 
-    TOKEN_STORAGE_KEYS.forEach((key) => localStorage.removeItem(key));
+    TOKEN_STORAGE_KEYS.forEach((key) => {
+      sessionStorage.removeItem(key);
+      localStorage.removeItem(key);
+    });
 
     if (normalized) {
-      localStorage.setItem(TOKEN_KEY, normalized);
+      sessionStorage.setItem(TOKEN_KEY, normalized);
     }
 
     return normalized;
   }
 
   function clearSavedTokens() {
-    TOKEN_STORAGE_KEYS.forEach((key) => localStorage.removeItem(key));
+    TOKEN_STORAGE_KEYS.forEach((key) => {
+      sessionStorage.removeItem(key);
+      localStorage.removeItem(key);
+    });
   }
 
   function getToken() {

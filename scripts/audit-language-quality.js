@@ -4,7 +4,7 @@ const checks = [
   {
     file: "public/webflow/engine.js",
     required: [
-      "20260612-e2e-i18n-report-fix-v1",
+      "20260613-cx-i18n-polish-v1",
       "analytics-event-schema-v2",
       "DRAFT_STORAGE_KEY",
       "buildSummaryConversionHtml",
@@ -31,13 +31,59 @@ const checks = [
     file: "web/engine-embed.full.html",
     required: [
       "/public/webflow/engine.js",
-      "20260612-e2e-i18n-report-fix-v1"
+      "20260613-cx-i18n-polish-v1"
     ],
     forbidden: [
       "20260527-age-i18n",
       "20260605-landing-hu-cta-v1"
     ]
+  },
+  {
+    file: "src/services/analysis.service.js",
+    required: [
+      "A teljes riportot magyar nyelven írd",
+      "natürlichem, korrektem Deutsch",
+      "español natural",
+      "自然、准确、专业的中文",
+      "自然で正確な日本語",
+      "باللغة العربية الطبيعية",
+      "językiem polskim",
+      "português natural",
+      "français naturel"
+    ],
+    forbidden: []
+  },
+  {
+    file: "src/api/controllers/admin-dashboard.controller.js",
+    required: [
+      "<meta charset=\"utf-8\">",
+      "NeuroMap Vezérlőközpont",
+      "Éles működési felület",
+      "Műveleti panel"
+    ],
+    forbidden: []
+  },
+  {
+    file: "src/services/pdf.service.js",
+    required: [
+      "gyermek viselked\\u00e9se",
+      "PDF_REPORT_VERSION"
+    ],
+    forbidden: [
+      "gyermek működése",
+      "gyerek működése",
+      "â€”",
+      "â€"
+    ]
   }
+];
+
+const mojibakePatterns = [
+  /Ã[\u0080-\u00ff]/u,
+  /Ă[\u0080-\uffff]/u,
+  /Ĺ[\u0080-\uffff]/u,
+  /â€[\u0080-\uffff]?/u,
+  /\uFFFD/u
 ];
 
 function read(file) {
@@ -71,6 +117,18 @@ function main() {
         });
       }
     }
+
+    mojibakePatterns.forEach((pattern) => {
+      const match = source.match(pattern);
+      if (match) {
+        findings.push({
+          severity: "critical",
+          file: check.file,
+          token: match[0],
+          message: `Possible mojibake sequence found: ${match[0]}`
+        });
+      }
+    });
   }
 
   const payload = {

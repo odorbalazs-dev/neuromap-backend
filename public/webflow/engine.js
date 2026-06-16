@@ -5,7 +5,7 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260612-e2e-i18n-report-fix-v1";
+  const ENGINE_VERSION = "20260613-cx-i18n-polish-v1";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
   const DRAFT_STORAGE_KEY = "nm_questionnaire_draft_v1";
   const DRAFT_TTL_MS = 1000 * 60 * 60 * 24 * 14;
@@ -40,7 +40,7 @@
     version: ENGINE_VERSION,
     phase: "boot",
     level: "loading",
-    message: "NeuroMap Kids betoltese...",
+    message: "NeuroMap Kids betöltése...",
     ready: false,
     error: null,
     updatedAt: new Date().toISOString()
@@ -186,7 +186,7 @@
             <span></span><span></span><span></span>
           </div>
           <strong>NeuroMap Kids</strong>
-          <p data-nm-engine-status-message>Kerdoiv betoltese...</p>
+          <p data-nm-engine-status-message>Kérdőív betöltése...</p>
           <div class="nm-engine-boot-bar" aria-hidden="true"></div>
         </div>
       `;
@@ -219,7 +219,7 @@
   function finishEngineBootGate(delayMs = 850) {
     engineStatus.ready = true;
     engineStatus.error = null;
-    setEngineBootStatus("ready", "Kesz.");
+    setEngineBootStatus("ready", "Kész.");
 
     window.setTimeout(() => {
       document.documentElement.classList.remove("nm-engine-loading", "nm-engine-failed");
@@ -235,7 +235,7 @@
   function failEngineBootGate(message) {
     engineStatus.ready = false;
     engineStatus.error = message || "Engine init failed";
-    setEngineBootStatus("failed", message || "A kerdoiv betoltese nem sikerult.", "error");
+    setEngineBootStatus("failed", message || "A kérdőív betöltése nem sikerült.", "error");
     document.documentElement.classList.remove("nm-engine-ready");
     document.documentElement.classList.add("nm-engine-loading", "nm-engine-failed");
   }
@@ -6143,86 +6143,105 @@
     `;
   }
 
+
   function getPrePaymentTrustCopy() {
     const copies = {
-            hu: {
-        title: "Mi\u00e9rt \u00e9rdemes most elk\u00e9sz\u00edteni a teljes riportot?",
+      hu: {
+        title: "Miért érdemes most elkészíteni a teljes riportot?",
         items: [
-          { title: "Szem\u00e9lyre szabott \u00e9rtelmez\u00e9s", text: "A v\u00e1laszaid alapj\u00e1n m\u00e1r l\u00e1tszik egy minta. A teljes riport ezt ford\u00edtja le sz\u00fcl\u0151k\u00e9nt is haszn\u00e1lhat\u00f3 magyar\u00e1zatt\u00e1." },
-          { title: "T\u00f6bb, mint egy c\u00edmke", text: "A f\u0151 \u00e9s m\u00e1sodlagos jelz\u00e9seket, koroszt\u00e1lyt \u00e9s v\u00e1laszmint\u00e1zatokat egy\u00fctt \u00e9rtelmezi." },
-          { title: "Konkr\u00e9t k\u00f6vetkez\u0151 l\u00e9p\u00e9sek", text: "Seg\u00edt eld\u00f6nteni, mit figyelj meg otthon, \u00f3vod\u00e1ban vagy iskolai helyzetekben." }
+          { title: "Személyre szabott értelmezés", text: "A válaszaid alapján már látszik egy minta. A teljes riport ezt fordítja le szülőként is használható magyarázattá." },
+          { title: "Több, mint egy címke", text: "A fő és másodlagos jelzéseket, korosztályt és válaszmintázatokat együtt értelmezi." },
+          { title: "Konkrét következő lépések", text: "Segít eldönteni, mit figyelj meg otthon, óvodában vagy iskolai helyzetekben." }
         ],
-        note: "Egyszeri fizet\u00e9s, nincs el\u0151fizet\u00e9s. A PDF riport emailben \u00e9rkezik."
+        note: "Egyszeri fizetés, nincs előfizetés. A PDF riport emailben érkezik."
       },
       en: {
         title: "Why generate the full report now?",
         items: [
-          {
-            title: "A pattern is already visible",
-            text: "The full report turns it into a clear, parent-friendly explanation."
-          },
-          {
-            title: "More than a label",
-            text: "It considers primary and secondary signals, age context, and response patterns together."
-          },
-          {
-            title: "Translated into next steps",
-            text: "The goal is to help you know what to observe at home, preschool, or school."
-          }
+          { title: "A pattern is already visible", text: "The full report turns it into a clear, parent-friendly explanation." },
+          { title: "More than a label", text: "It considers primary and secondary signals, age context, and response patterns together." },
+          { title: "Translated into next steps", text: "The goal is to help you know what to observe at home, preschool, or school." }
         ],
         note: "One-time payment, no subscription. The PDF report arrives by email."
       },
       de: {
-        title: "Warum den vollstandigen Bericht jetzt erstellen?",
+        title: "Warum den vollständigen Bericht jetzt erstellen?",
         items: [
-          { title: "Ein Muster ist sichtbar", text: "Der Bericht macht daraus eine klare Erklarung fur Eltern." },
-          { title: "Mehr als ein Etikett", text: "Er betrachtet Haupt- und Nebensignale zusammen mit dem Alterskontext." },
-          { title: "Konkretere nachste Schritte", text: "Du siehst, worauf du im Alltag bewusster achten kannst." }
+          { title: "Ein Muster ist sichtbar", text: "Der Bericht macht daraus eine klare, elternfreundliche Erklärung." },
+          { title: "Mehr als ein Etikett", text: "Er betrachtet Haupt- und Nebensignale zusammen mit Alter und Antwortmuster." },
+          { title: "Konkretere nächste Schritte", text: "Du siehst, worauf du zu Hause, in der Kita oder Schule bewusster achten kannst." }
         ],
         note: "Einmalige Zahlung, kein Abo. Der PDF-Bericht kommt per E-Mail."
       },
       it: {
-        title: "Perche generare ora il report completo?",
+        title: "Perché generare ora il report completo?",
         items: [
-          { title: "Un pattern e gia visibile", text: "Il report lo trasforma in una spiegazione chiara per genitori." },
-          { title: "Piu di un'etichetta", text: "Considera segnali principali, secondari, eta e risposte insieme." },
-          { title: "Passi pratici", text: "Aiuta a capire cosa osservare a casa o a scuola." }
+          { title: "Un pattern è già visibile", text: "Il report lo trasforma in una spiegazione chiara e utile per i genitori." },
+          { title: "Più di un'etichetta", text: "Considera insieme segnali principali, secondari, età e risposte." },
+          { title: "Passi pratici", text: "Aiuta a capire cosa osservare a casa, alla scuola dell'infanzia o a scuola." }
         ],
         note: "Pagamento unico, nessun abbonamento. Il PDF arriva via email."
       },
       es: {
-        title: "Por que generar ahora el informe completo?",
+        title: "¿Por qué generar ahora el informe completo?",
         items: [
-          { title: "Ya se ve un patron", text: "El informe lo convierte en una explicacion clara para familias." },
-          { title: "Mas que una etiqueta", text: "Considera senales principales, secundarias, edad y respuestas juntas." },
-          { title: "Pasos concretos", text: "Ayuda a saber que observar en casa o en la escuela." }
+          { title: "Ya se ve un patrón", text: "El informe lo convierte en una explicación clara para familias." },
+          { title: "Más que una etiqueta", text: "Considera señales principales, secundarias, edad y respuestas juntas." },
+          { title: "Pasos concretos", text: "Ayuda a saber qué observar en casa, en infantil o en la escuela." }
         ],
-        note: "Pago unico, sin suscripcion. El PDF llega por email."
+        note: "Pago único, sin suscripción. El PDF llega por email."
+      },
+      zh: {
+        title: "为什么现在生成完整报告？",
+        items: [
+          { title: "模式已经开始显现", text: "完整报告会把它转化为家长容易理解的说明。" },
+          { title: "不只是一个标签", text: "它会结合主要信号、次要信号、年龄背景和回答模式。" },
+          { title: "可执行的下一步", text: "帮助你知道在家里、幼儿园或学校情境中可以观察什么。" }
+        ],
+        note: "一次性付款，无订阅。PDF 报告会通过电子邮件发送。"
+      },
+      ja: {
+        title: "なぜ今、完全版レポートを作成する価値があるのか",
+        items: [
+          { title: "すでに傾向が見えています", text: "完全版レポートでは、その傾向を保護者向けにわかりやすく整理します。" },
+          { title: "単なるラベルではありません", text: "主なサイン、二次的なサイン、年齢背景、回答パターンを合わせて見ます。" },
+          { title: "次の一歩につなげます", text: "家庭、園、学校で何を観察すればよいかを考える助けになります。" }
+        ],
+        note: "一回限りの支払いで、サブスクリプションはありません。PDFレポートはメールで届きます。"
+      },
+      ar: {
+        title: "لماذا إنشاء التقرير الكامل الآن؟",
+        items: [
+          { title: "النمط بدأ يظهر", text: "يحوّل التقرير الكامل هذا النمط إلى شرح واضح ومناسب للوالدين." },
+          { title: "أكثر من مجرد تسمية", text: "يربط بين الإشارات الأساسية والثانوية والعمر ونمط الإجابات." },
+          { title: "خطوات عملية تالية", text: "يساعدك على معرفة ما يمكن ملاحظته في البيت أو الروضة أو المدرسة." }
+        ],
+        note: "دفعة واحدة دون اشتراك. يصل تقرير PDF عبر البريد الإلكتروني."
       },
       pl: {
-        title: "Dlaczego warto wygenerowac pelny raport teraz?",
+        title: "Dlaczego warto wygenerować pełny raport teraz?",
         items: [
-          { title: "Wzorzec jest juz widoczny", text: "Raport zamienia go w jasne wyjasnienie dla rodzicow." },
-          { title: "Wiecej niz etykieta", text: "Laczy sygnaly glowne, poboczne, wiek i odpowiedzi." },
-          { title: "Praktyczne kolejne kroki", text: "Pomaga wiedziec, co obserwowac w domu lub szkole." }
+          { title: "Wzorzec jest już widoczny", text: "Raport zamienia go w jasne, przyjazne rodzicom wyjaśnienie." },
+          { title: "Więcej niż etykieta", text: "Łączy sygnały główne, poboczne, wiek i odpowiedzi." },
+          { title: "Praktyczne kolejne kroki", text: "Pomaga wiedzieć, co obserwować w domu, przedszkolu lub szkole." }
         ],
-        note: "Platnosc jednorazowa, bez abonamentu. PDF przychodzi emailem."
+        note: "Płatność jednorazowa, bez abonamentu. PDF przychodzi emailem."
       },
       pt: {
-        title: "Por que gerar o relatorio completo agora?",
+        title: "Por que gerar o relatório completo agora?",
         items: [
-          { title: "Um padrao ja aparece", text: "O relatorio transforma isso em uma explicacao clara para pais." },
-          { title: "Mais que um rotulo", text: "Considera sinais principais, secundarios, idade e respostas juntos." },
-          { title: "Proximos passos praticos", text: "Ajuda a saber o que observar em casa ou na escola." }
+          { title: "Um padrão já aparece", text: "O relatório transforma isso em uma explicação clara para pais." },
+          { title: "Mais que um rótulo", text: "Considera sinais principais, secundários, idade e respostas em conjunto." },
+          { title: "Próximos passos práticos", text: "Ajuda a saber o que observar em casa, na pré-escola ou na escola." }
         ],
-        note: "Pagamento unico, sem assinatura. O PDF chega por email."
+        note: "Pagamento único, sem assinatura. O PDF chega por email."
       },
       fr: {
-        title: "Pourquoi generer le rapport complet maintenant ?",
+        title: "Pourquoi générer le rapport complet maintenant ?",
         items: [
-          { title: "Un schema est deja visible", text: "Le rapport le transforme en explication claire pour les parents." },
-          { title: "Plus qu'une etiquette", text: "Il relie signaux principaux, secondaires, age et reponses." },
-          { title: "Des prochaines etapes", text: "Il aide a savoir quoi observer a la maison ou a l'ecole." }
+          { title: "Un schéma est déjà visible", text: "Le rapport le transforme en explication claire pour les parents." },
+          { title: "Plus qu'une étiquette", text: "Il relie signaux principaux, secondaires, âge et réponses." },
+          { title: "Des prochaines étapes", text: "Il aide à savoir quoi observer à la maison, en maternelle ou à l'école." }
         ],
         note: "Paiement unique, sans abonnement. Le PDF arrive par email."
       }
@@ -6254,33 +6273,25 @@
     `;
   }
 
+
   function getSummaryNextStepCopy() {
     const copies = {
-            hu: {
-        title: "Mit tiszt\u00e1z a teljes riport?",
-        lead: "Az el\u0151sz\u0171r\u00e9s m\u00e1r mutat egy ir\u00e1nyt. A teljes riport abban seg\u00edt, hogy a jelz\u00e9s ne csak egy sz\u00e1m vagy c\u00edmke legyen, hanem \u00e9rthet\u0151, koroszt\u00e1lyhoz illesztett mint\u00e1zat.",
+      hu: {
+        title: "Mit tisztáz a teljes riport?",
+        lead: "Az előszűrés már mutat egy irányt. A teljes riport abban segít, hogy a jelzés ne csak egy szám vagy címke legyen, hanem érthető, korosztályhoz illesztett mintázat.",
         items: [
-          { title: "Mi \u00e1llhat a v\u00e1laszok m\u00f6g\u00f6tt?", text: "A f\u0151 \u00e9s m\u00e1sodlagos jelz\u00e9seket egy\u00fctt \u00e9rtelmezi, hogy kevesebb legyen a f\u00e9lre\u00e9rt\u00e9s." },
-          { title: "Mennyire k\u00f6vetkezetes a minta?", text: "A v\u00e1laszok er\u0151ss\u00e9g\u00e9t, \u00e1tfed\u00e9s\u00e9t \u00e9s bizonytalans\u00e1g\u00e1t is figyelembe veszi." },
-          { title: "Mit \u00e9rdemes kipr\u00f3b\u00e1lni el\u0151sz\u00f6r?", text: "A javaslatok sz\u00fcl\u0151k\u00e9nt is haszn\u00e1lhat\u00f3, kicsi l\u00e9p\u00e9sekre vannak bontva." }
+          { title: "Mi állhat a válaszok mögött?", text: "A fő és másodlagos jelzéseket együtt értelmezi, hogy kevesebb legyen a félreértés." },
+          { title: "Mennyire következetes a minta?", text: "A válaszok erősségét, átfedését és bizonytalanságát is figyelembe veszi." },
+          { title: "Mit érdemes kipróbálni először?", text: "A javaslatok szülőként is használható, kicsi lépésekre vannak bontva." }
         ]
       },
       en: {
         title: "What does the full report clarify?",
         lead: "The screening already shows a direction. The full report turns it into an understandable, age-aware pattern instead of just a score or label.",
         items: [
-          {
-            title: "What may be behind the answers?",
-            text: "It interprets primary and secondary signals together to reduce misunderstandings."
-          },
-          {
-            title: "How consistent is the pattern?",
-            text: "It considers signal strength, overlap, and uncertainty in the response profile."
-          },
-          {
-            title: "What is worth trying first?",
-            text: "Suggestions are translated into small parent-friendly next steps."
-          }
+          { title: "What may be behind the answers?", text: "It interprets primary and secondary signals together to reduce misunderstandings." },
+          { title: "How consistent is the pattern?", text: "It considers signal strength, overlap, and uncertainty in the response profile." },
+          { title: "What is worth trying first?", text: "Suggestions are translated into small parent-friendly next steps." }
         ]
       },
       de: {
@@ -6310,45 +6321,18 @@
           { title: "¿Qué probar primero?", text: "Las sugerencias se traducen en pasos pequeños para familias." }
         ]
       },
-      fr: {
-        title: "Que clarifie le rapport complet ?",
-        lead: "Le dépistage montre déjà une direction. Le rapport complet la transforme en profil compréhensible et adapté à l'âge.",
-        items: [
-          { title: "Que peut-il y avoir derrière ?", text: "Il relie les signaux principaux et secondaires." },
-          { title: "Le profil est-il cohérent ?", text: "Il tient compte de l'intensité, du recoupement et de l'incertitude." },
-          { title: "Que tenter d'abord ?", text: "Les conseils sont formulés en petites étapes pour les parents." }
-        ]
-      },
-      pt: {
-        title: "O que o relatório completo esclarece?",
-        lead: "A triagem já mostra uma direção. O relatório transforma isso em um padrão compreensível e adequado à idade.",
-        items: [
-          { title: "O que pode estar por trás?", text: "Interpreta sinais principais e secundários em conjunto." },
-          { title: "O padrão é consistente?", text: "Considera força do sinal, sobreposição e incerteza." },
-          { title: "O que tentar primeiro?", text: "As sugestões viram pequenos passos para os pais." }
-        ]
-      },
-      pl: {
-        title: "Co wyjaśnia pełny raport?",
-        lead: "Badanie przesiewowe pokazuje już kierunek. Raport zamienia go w zrozumiały wzorzec dopasowany do wieku.",
-        items: [
-          { title: "Co może stać za odpowiedziami?", text: "Łączy sygnały główne i poboczne." },
-          { title: "Jak spójny jest wzorzec?", text: "Uwzględnia siłę sygnału, nakładanie się i niepewność." },
-          { title: "Co spróbować najpierw?", text: "Wskazówki są rozpisane na małe kroki dla rodziców." }
-        ]
-      },
       zh: {
         title: "完整报告会进一步说明什么？",
-        lead: "初筛已经显示方向。完整报告会把它转化为更清晰、符合年龄背景的模式。",
+        lead: "初筛已经显示方向。完整报告会把它整理成更清晰、符合年龄背景的模式，而不只是一个分数或标签。",
         items: [
-          { title: "答案背后可能是什么？", text: "同时解释主要信号和次要信号。" },
+          { title: "回答背后可能是什么？", text: "同时解释主要信号和次要信号，减少误解。" },
           { title: "这个模式有多稳定？", text: "考虑信号强度、重叠和不确定性。" },
           { title: "可以先尝试什么？", text: "建议会转化为家长容易执行的小步骤。" }
         ]
       },
       ja: {
-        title: "完全版レポートで何が分かりますか？",
-        lead: "スクリーニングは方向性を示します。完全版では年齢背景に合わせて分かりやすく整理します。",
+        title: "完全版レポートで何がわかりますか？",
+        lead: "スクリーニングは方向性を示します。完全版では年齢背景に合わせて、点数やラベルだけではない形でわかりやすく整理します。",
         items: [
           { title: "回答の背景", text: "主なサインと二次的なサインを合わせて解釈します。" },
           { title: "一貫性", text: "強さ、重なり、不確実性も確認します。" },
@@ -6357,11 +6341,38 @@
       },
       ar: {
         title: "ما الذي يوضحه التقرير الكامل؟",
-        lead: "يعطي الفحص الأولي اتجاها عاما. يحوله التقرير الكامل إلى نمط أوضح ومناسب لعمر الطفل.",
+        lead: "يعطي الفحص الأولي اتجاهاً عاماً. يحوّل التقرير الكامل هذا الاتجاه إلى نمط أوضح ومناسب لعمر الطفل، وليس مجرد رقم أو تسمية.",
         items: [
-          { title: "ما وراء الإجابات؟", text: "يفسر الإشارات الأساسية والثانوية معا." },
+          { title: "ما وراء الإجابات؟", text: "يفسر الإشارات الأساسية والثانوية معاً لتقليل سوء الفهم." },
           { title: "مدى ثبات النمط", text: "يراعي قوة الإشارة والتداخل ودرجة عدم اليقين." },
-          { title: "الخطوة الأولى", text: "يحول النتائج إلى خطوات صغيرة مفهومة للوالدين." }
+          { title: "الخطوة الأولى", text: "يحوّل النتائج إلى خطوات صغيرة مفهومة للوالدين." }
+        ]
+      },
+      pl: {
+        title: "Co wyjaśnia pełny raport?",
+        lead: "Badanie przesiewowe pokazuje już kierunek. Raport zamienia go w zrozumiały wzorzec dopasowany do wieku, a nie tylko wynik lub etykietę.",
+        items: [
+          { title: "Co może stać za odpowiedziami?", text: "Łączy sygnały główne i poboczne, aby ograniczyć nieporozumienia." },
+          { title: "Jak spójny jest wzorzec?", text: "Uwzględnia siłę sygnału, nakładanie się i niepewność." },
+          { title: "Co spróbować najpierw?", text: "Wskazówki są rozpisane na małe kroki dla rodziców." }
+        ]
+      },
+      pt: {
+        title: "O que o relatório completo esclarece?",
+        lead: "A triagem já mostra uma direção. O relatório transforma isso em um padrão compreensível e adequado à idade, não apenas em uma pontuação ou rótulo.",
+        items: [
+          { title: "O que pode estar por trás?", text: "Interpreta sinais principais e secundários em conjunto." },
+          { title: "O padrão é consistente?", text: "Considera força do sinal, sobreposição e incerteza." },
+          { title: "O que tentar primeiro?", text: "As sugestões viram pequenos passos para os pais." }
+        ]
+      },
+      fr: {
+        title: "Que clarifie le rapport complet ?",
+        lead: "Le dépistage montre déjà une direction. Le rapport complet la transforme en profil compréhensible et adapté à l'âge, pas seulement en score ou étiquette.",
+        items: [
+          { title: "Que peut-il y avoir derrière ?", text: "Il relie les signaux principaux et secondaires." },
+          { title: "Le profil est-il cohérent ?", text: "Il tient compte de l'intensité, du recoupement et de l'incertitude." },
+          { title: "Que tenter d'abord ?", text: "Les conseils sont formulés en petites étapes pour les parents." }
         ]
       }
     };
@@ -6393,15 +6404,17 @@
     `;
   }
 
+
   function getSummaryScienceCopy() {
     const copies = {
-            hu: {
-        title: "Mi\u00e9rt ad t\u00f6bbet a teljes ki\u00e9rt\u00e9kel\u00e9s?",
-        lead: "A v\u00e1laszokb\u00f3l nem egyetlen pontsz\u00e1mot \u00e9rdemes n\u00e9zni. A teljes riport a jelz\u00e9sek er\u0151ss\u00e9g\u00e9t, k\u00f6vetkezetess\u00e9g\u00e9t, \u00e1tfed\u00e9s\u00e9t \u00e9s a gyermek koroszt\u00e1ly\u00e1t egy\u00fctt \u00e9rtelmezi.",
+      hu: {
+        title: "Miért ad többet a teljes kiértékelés?",
+        lead: "A válaszokból nem egyetlen pontszámot érdemes nézni. A teljes riport a jelzések erősségét, következetességét, átfedését és a gyermek korosztályát együtt értelmezi.",
         items: [
-          "\u00d6sszeveti a f\u0151 \u00e9s m\u00e1sodlagos jelz\u00e9seket.",
-          "Figyelembe veszi, ha t\u00f6bb ter\u00fclet k\u00f6zel van egym\u00e1shoz.",
-          "A k\u00f6vetkeztet\u00e9st sz\u00fcl\u0151bar\u00e1t, gyakorlatias nyelvre ford\u00edtja."
+          { title: "Mintázat, nem címke", text: "Rendszerezi a viselkedési és érzelmi jelzéseket anélkül, hogy diagnózist mondana." },
+          { title: "Korosztályi kontextus", text: "Az óvodás, kisiskolás és nagyobb gyermekek jelzéseit másként kell értelmezni." },
+          { title: "Átfedések kezelése", text: "Láthatóvá teszi, ha több terület közel van egymáshoz." },
+          { title: "Szülőbarát következő lépés", text: "A következtetést gyakorlatias, nyugodt nyelvre fordítja." }
         ]
       },
       en: {
@@ -6415,63 +6428,33 @@
         ]
       },
       de: {
-        title: "Warum bringt die vollstaendige Analyse mehr?",
-        lead: "Die kurze Zusammenfassung zeigt nur das staerkste Muster. Der vollstaendige Bericht vergleicht mehrere Antwort-Ebenen und wird dadurch nuancierter und praktischer.",
+        title: "Warum bringt die vollständige Analyse mehr?",
+        lead: "Die kurze Zusammenfassung zeigt nur das stärkste Muster. Der vollständige Bericht vergleicht mehrere Antwort-Ebenen und wird dadurch nuancierter und praktischer.",
         items: [
           { title: "Muster statt Etikett", text: "Er ordnet Verhaltens- und emotionale Signale, ohne eine Diagnose zu stellen." },
-          { title: "Alterskontext", text: "Vorschulalter, fruehes Schulalter und aeltere Kinder brauchen unterschiedliche Einordnung." },
-          { title: "Ueberschneidungen", text: "Aehnliche Signalbereiche und Unsicherheiten werden sichtbar gemacht." },
-          { title: "Naechster Schritt", text: "Der Bericht gibt beobachtbare und alltagsnahe Unterstuetzungsrichtungen." }
+          { title: "Alterskontext", text: "Vorschulalter, frühes Schulalter und ältere Kinder brauchen unterschiedliche Einordnung." },
+          { title: "Überschneidungen", text: "Ähnliche Signalbereiche und Unsicherheiten werden sichtbar gemacht." },
+          { title: "Nächster Schritt", text: "Der Bericht gibt beobachtbare und alltagsnahe Unterstützungsrichtungen." }
         ]
       },
       it: {
-        title: "Perche l'analisi completa aggiunge valore?",
-        lead: "Il riepilogo breve mostra solo il pattern piu forte. Il report completo confronta piu livelli di risposta, rendendo il risultato piu sfumato e pratico.",
+        title: "Perché l'analisi completa aggiunge valore?",
+        lead: "Il riepilogo breve mostra solo il pattern più forte. Il report completo confronta più livelli di risposta, rendendo il risultato più sfumato e pratico.",
         items: [
           { title: "Pattern, non etichetta", text: "Organizza segnali comportamentali ed emotivi senza formulare una diagnosi." },
-          { title: "Contesto d'eta", text: "Eta prescolare, primi anni di scuola e bambini piu grandi richiedono letture diverse." },
+          { title: "Contesto d'età", text: "Età prescolare, primi anni di scuola e bambini più grandi richiedono letture diverse." },
           { title: "Gestione delle sovrapposizioni", text: "Evidenzia l'incertezza tra aree sintomatiche simili." },
           { title: "Passo successivo", text: "Il report offre direzioni di osservazione e supporto per i genitori." }
         ]
       },
       es: {
-        title: "Por que aporta mas valor el analisis completo?",
-        lead: "El resumen breve solo muestra el patron mas fuerte. El informe completo compara mas capas de respuestas, por eso ofrece un resultado mas matizado y practico.",
+        title: "¿Por qué aporta más valor el análisis completo?",
+        lead: "El resumen breve solo muestra el patrón más fuerte. El informe completo compara más capas de respuestas, por eso ofrece un resultado más matizado y práctico.",
         items: [
-          { title: "Patron, no etiqueta", text: "Organiza senales conductuales y emocionales sin emitir un diagnostico." },
-          { title: "Contexto de edad", text: "La edad preescolar, la etapa escolar inicial y los ninos mayores requieren interpretaciones distintas." },
-          { title: "Solapamientos", text: "Muestra la incertidumbre entre areas de senales parecidas." },
-          { title: "Siguiente paso", text: "El informe ofrece orientaciones de observacion y apoyo para familias." }
-        ]
-      },
-      fr: {
-        title: "Pourquoi l'analyse complete apporte-t-elle plus?",
-        lead: "Le resume court montre seulement le schema le plus fort. Le rapport complet compare davantage de couches de reponses, ce qui rend le resultat plus nuance et pratique.",
-        items: [
-          { title: "Schema, pas etiquette", text: "Il organise les signaux comportementaux et emotionnels sans poser de diagnostic." },
-          { title: "Contexte d'age", text: "L'interpretation differe entre prescolaire, debut de scolarite et enfants plus ages." },
-          { title: "Chevauchements", text: "Il met en evidence l'incertitude entre des domaines de signes similaires." },
-          { title: "Prochaine etape", text: "Le rapport propose des pistes d'observation et de soutien pour les parents." }
-        ]
-      },
-      pt: {
-        title: "Por que a analise completa acrescenta valor?",
-        lead: "O resumo curto mostra apenas o padrao mais forte. O relatorio completo compara mais camadas de respostas, tornando o resultado mais nuancado e pratico.",
-        items: [
-          { title: "Padrao, nao rotulo", text: "Organiza sinais comportamentais e emocionais sem fazer diagnostico." },
-          { title: "Contexto de idade", text: "Pre-escola, inicio da vida escolar e criancas mais velhas precisam de leituras diferentes." },
-          { title: "Sobreposicoes", text: "Mostra incertezas entre areas de sinais semelhantes." },
-          { title: "Proximo passo", text: "O relatorio oferece direcoes de observacao e apoio para os pais." }
-        ]
-      },
-      pl: {
-        title: "Dlaczego pelna analiza daje wiecej?",
-        lead: "Krotkie podsumowanie pokazuje tylko najsilniejszy wzorzec. Pelny raport porownuje wiecej warstw odpowiedzi, dlatego jest bardziej praktyczny i dokladniejszy.",
-        items: [
-          { title: "Wzorzec, nie etykieta", text: "Porzadkuje sygnaly zachowania i emocji bez stawiania diagnozy." },
-          { title: "Kontekst wieku", text: "Przedszkolak, mlodszy uczen i starsze dziecko wymagaja innej interpretacji." },
-          { title: "Nakladanie sie obszarow", text: "Pokazuje niepewnosc miedzy podobnymi obszarami sygnalow." },
-          { title: "Kolejny krok", text: "Raport daje rodzicom kierunki obserwacji i wsparcia." }
+          { title: "Patrón, no etiqueta", text: "Organiza señales conductuales y emocionales sin emitir un diagnóstico." },
+          { title: "Contexto de edad", text: "La edad preescolar, la etapa escolar inicial y los niños mayores requieren interpretaciones distintas." },
+          { title: "Solapamientos", text: "Muestra la incertidumbre entre áreas de señales parecidas." },
+          { title: "Siguiente paso", text: "El informe ofrece orientaciones de observación y apoyo para familias." }
         ]
       },
       zh: {
@@ -6499,9 +6482,39 @@
         lead: "يعرض الملخص القصير النمط الأقوى فقط. أما التقرير الكامل فيقارن طبقات أكثر من الإجابات، لذلك يكون أوضح وأكثر فائدة للوالدين.",
         items: [
           { title: "نمط وليس تسمية", text: "ينظم الإشارات السلوكية والعاطفية من دون تقديم تشخيص." },
-          { title: "سياق العمر", text: "تختلف القراءة بين مرحلة ما قبل المدرسة والسن المدرسي المبكر والأطفال الأكبر سنا." },
+          { title: "سياق العمر", text: "تختلف القراءة بين مرحلة ما قبل المدرسة والسن المدرسي المبكر والأطفال الأكبر سناً." },
           { title: "التداخل بين الإشارات", text: "يوضح مناطق عدم اليقين بين المجالات المتشابهة." },
           { title: "خطوة تالية للوالدين", text: "يعطي التقرير اتجاهات للملاحظة والدعم اليومي." }
+        ]
+      },
+      pl: {
+        title: "Dlaczego pełna analiza daje więcej?",
+        lead: "Krótkie podsumowanie pokazuje tylko najsilniejszy wzorzec. Pełny raport porównuje więcej warstw odpowiedzi, dlatego jest bardziej praktyczny i dokładniejszy.",
+        items: [
+          { title: "Wzorzec, nie etykieta", text: "Porządkuje sygnały zachowania i emocji bez stawiania diagnozy." },
+          { title: "Kontekst wieku", text: "Przedszkolak, młodszy uczeń i starsze dziecko wymagają innej interpretacji." },
+          { title: "Nakładanie się obszarów", text: "Pokazuje niepewność między podobnymi obszarami sygnałów." },
+          { title: "Kolejny krok dla rodzica", text: "Raport daje kierunki obserwacji i wsparcia." }
+        ]
+      },
+      pt: {
+        title: "Por que a análise completa acrescenta valor?",
+        lead: "O resumo curto mostra apenas o padrão mais forte. O relatório completo compara mais camadas de respostas, tornando o resultado mais nuançado e prático.",
+        items: [
+          { title: "Padrão, não rótulo", text: "Organiza sinais comportamentais e emocionais sem fazer diagnóstico." },
+          { title: "Contexto de idade", text: "Pré-escola, início da vida escolar e crianças mais velhas precisam de leituras diferentes." },
+          { title: "Sobreposições", text: "Mostra incertezas entre áreas de sinais semelhantes." },
+          { title: "Próximo passo para os pais", text: "O relatório oferece direções de observação e apoio." }
+        ]
+      },
+      fr: {
+        title: "Pourquoi l'analyse complète apporte-t-elle plus ?",
+        lead: "Le résumé court montre seulement le schéma le plus fort. Le rapport complet compare davantage de couches de réponses, ce qui rend le résultat plus nuancé et pratique.",
+        items: [
+          { title: "Schéma, pas étiquette", text: "Il organise les signaux comportementaux et émotionnels sans poser de diagnostic." },
+          { title: "Contexte d'âge", text: "L'interprétation diffère entre préscolaire, début de scolarité et enfants plus âgés." },
+          { title: "Chevauchements", text: "Il met en évidence l'incertitude entre des domaines de signes similaires." },
+          { title: "Prochaine étape", text: "Le rapport propose des pistes d'observation et de soutien pour les parents." }
         ]
       }
     };
@@ -6530,6 +6543,74 @@
         </div>
       </div>
     `;
+  }
+
+
+  function getSummaryPayCopy(t) {
+    const copies = {
+      hu: {
+        title: "A teljes riport segít érthetően látni a mintázatot.",
+        text: "Korosztályi kontextust, részletes területi bontást és gyakorlati következő lépéseket kapsz PDF-ben.",
+        label: "Fizetés és teljes riport"
+      },
+      en: {
+        title: "The full report helps make the pattern easier to understand.",
+        text: "You get age-aware context, detailed area breakdowns, and practical next steps in a PDF report.",
+        label: "Pay and get full report"
+      },
+      de: {
+        title: "Der vollständige Bericht macht das Muster verständlicher.",
+        text: "Du erhältst Alterskontext, detaillierte Bereiche und praktische nächste Schritte als PDF.",
+        label: "Bezahlen und Bericht erhalten"
+      },
+      it: {
+        title: "Il report completo rende il pattern più comprensibile.",
+        text: "Ricevi contesto per età, aree dettagliate e passi pratici in PDF.",
+        label: "Paga e ricevi il report"
+      },
+      es: {
+        title: "El informe completo ayuda a entender mejor el patrón.",
+        text: "Recibirás contexto por edad, desglose detallado y próximos pasos prácticos en PDF.",
+        label: "Pagar y recibir informe"
+      },
+      zh: {
+        title: "完整报告帮助你更容易理解这个模式。",
+        text: "你会获得年龄背景、详细领域拆解和实用下一步建议。",
+        label: "支付并获取完整报告"
+      },
+      ja: {
+        title: "完全版レポートで傾向をより理解しやすくします。",
+        text: "年齢背景、詳しい領域別整理、実用的な次の一歩をPDFで受け取れます。",
+        label: "支払い、完全版レポートを受け取る"
+      },
+      ar: {
+        title: "يساعدك التقرير الكامل على فهم النمط بوضوح أكبر.",
+        text: "ستحصل على سياق العمر وتفصيل المجالات وخطوات عملية تالية في ملف PDF.",
+        label: "الدفع والحصول على التقرير الكامل"
+      },
+      pl: {
+        title: "Pełny raport pomaga lepiej zrozumieć wzorzec.",
+        text: "Otrzymasz kontekst wieku, szczegółowy podział obszarów i praktyczne kolejne kroki w PDF.",
+        label: "Zapłać i odbierz raport"
+      },
+      pt: {
+        title: "O relatório completo ajuda a entender melhor o padrão.",
+        text: "Você recebe contexto de idade, áreas detalhadas e próximos passos práticos em PDF.",
+        label: "Pagar e receber relatório"
+      },
+      fr: {
+        title: "Le rapport complet aide à mieux comprendre le schéma.",
+        text: "Vous recevez le contexte d'âge, le détail des domaines et des prochaines étapes pratiques en PDF.",
+        label: "Payer et recevoir le rapport"
+      }
+    };
+
+    const copy = copies[state.lang] || copies.en;
+    return {
+      title: copy.title,
+      text: copy.text,
+      label: t.summaryPayCta || copy.label || t.pay || copies.en.label
+    };
   }
 
   function renderSummary() {
@@ -6958,13 +7039,13 @@
 
     if (/not a valid url/i.test(message)) {
       return isHu
-        ? "A fizetesi link nem erkezett meg megfeleloen. Kerlek probald ujra, vagy jelezd nekunk, ha megismetlodik."
+        ? "A fizetési link nem érkezett meg megfelelően. Kérlek, próbáld újra, vagy jelezd nekünk, ha megismétlődik."
         : "The payment link was not returned correctly. Please try again, or contact us if this repeats.";
     }
 
     if (/failed to fetch|network|load failed/i.test(message)) {
       return isHu
-        ? "Nem sikerult kapcsolodni a fizetesi kiszolgalohoz. Ellenorizd a kapcsolatot, majd probald ujra."
+        ? "Nem sikerült kapcsolódni a fizetési kiszolgálóhoz. Ellenőrizd a kapcsolatot, majd próbáld újra."
         : "Could not connect to the checkout service. Please check your connection and try again.";
     }
 
@@ -6974,7 +7055,7 @@
         : "Too many attempts were made in a short time. Please wait a moment and try again.";
     }
 
-    return message || t.checkoutError || (isHu ? "Nem sikerult elinditani a fizetest." : "Could not start checkout.");
+    return message || t.checkoutError || (isHu ? "Nem sikerült elindítani a fizetést." : "Could not start checkout.");
   }
 
   async function startCheckout() {

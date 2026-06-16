@@ -1015,7 +1015,7 @@ function addMiniCard(doc, x, y, w, title, value, lang, color = BRAND.blue, heigh
   doc.fillColor(BRAND.dark)
     .font(getFont(lang, true))
     .fontSize(12)
-    .text(value || "â€”", x + 16, y + 36, {
+    .text(value || "-", x + 16, y + 36, {
       width: w - 28,
       align: getTextAlign(lang)
     });
@@ -1601,12 +1601,12 @@ function isBulletLine(line) {
   const text = clean(line);
   if (!text) return false;
   if (/^\d{1,2}\.\s+\S/.test(text)) return false;
-  return /^([*â€˘â€Ł-]\s+|[â€“â€”]\s+|\d{1,2}[)]\s+)/u.test(text);
+  return /^([*•‣-]\s+|[–—]\s+|\d{1,2}[)]\s+)/u.test(text);
 }
 
 function cleanBulletLine(line) {
   return clean(line)
-    .replace(/^([*â€˘â€Ł-]\s+|[â€“â€”]\s+|\d{1,2}[)]\s+)/u, "")
+    .replace(/^([*•‣-]\s+|[–—]\s+|\d{1,2}[)]\s+)/u, "")
     .replace(/\*\*/g, "")
     .replace(/\*/g, "")
     .trim();

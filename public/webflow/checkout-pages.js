@@ -5,7 +5,7 @@
 (function () {
   if (typeof window === "undefined" || typeof document === "undefined") return;
 
-  const CHECKOUT_PAGES_VERSION = "20260604-cx-top10-v2";
+  const CHECKOUT_PAGES_VERSION = "20260613-cx-i18n-polish-v1";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
   const DEFAULT_API_BASE_URL = "https://neuromap-backend-production-969d.up.railway.app";
   const SUPPORTED_LANGS = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];
@@ -218,7 +218,7 @@
       successBody: "Der detaillierte Bericht und das PDF werden per E-Mail gesendet.",
       cancelTitle: "Zahlung nicht abgeschlossen",
       cancelLead: "Es wurde nichts berechnet.",
-      cancelBody: "Du kannst zurueckkehren oder die Zahlung erneut versuchen."
+      cancelBody: "Du kannst zurückkehren oder die Zahlung erneut versuchen."
     },
     it: {
       home: "Home",
@@ -227,10 +227,10 @@
       retryError: "Impossibile riavviare il pagamento.",
       support: "Contatta il supporto",
       successTitle: "Pagamento riuscito",
-      successLead: "Grazie. Il tuo acquisto e riuscito.",
+      successLead: "Grazie. Il tuo acquisto è riuscito.",
       successBody: "Il report dettagliato e il PDF saranno inviati via email.",
       cancelTitle: "Pagamento non completato",
-      cancelLead: "Non e stato effettuato alcun addebito.",
+      cancelLead: "Non è stato effettuato alcun addebito.",
       cancelBody: "Puoi tornare al questionario o riprovare il pagamento."
     },
     es: {
@@ -240,10 +240,10 @@
       retryError: "No se pudo reiniciar el pago.",
       support: "Contactar soporte",
       successTitle: "Pago realizado correctamente",
-      successLead: "Gracias. Tu compra se completo correctamente.",
-      successBody: "El informe detallado y el PDF se enviaran por email.",
+      successLead: "Gracias. Tu compra se completó correctamente.",
+      successBody: "El informe detallado y el PDF se enviarán por email.",
       cancelTitle: "Pago no completado",
-      cancelLead: "No se realizo ningun cargo.",
+      cancelLead: "No se realizó ningún cargo.",
       cancelBody: "Puedes volver al cuestionario o intentar el pago otra vez."
     },
     zh: {
@@ -286,43 +286,43 @@
       cancelBody: "\u064a\u0645\u0643\u0646\u0643 \u0627\u0644\u0639\u0648\u062f\u0629 \u0623\u0648 \u0625\u0639\u0627\u062f\u0629 \u0645\u062d\u0627\u0648\u0644\u0629 \u0627\u0644\u062f\u0641\u0639."
     },
     pl: {
-      home: "Strona glowna",
-      retry: "Sprobuj zaplacic ponownie",
-      retrying: "Otwieranie platnosci...",
-      retryError: "Nie udalo sie ponownie uruchomic platnosci.",
+      home: "Strona główna",
+      retry: "Spróbuj zapłacić ponownie",
+      retrying: "Otwieranie płatności...",
+      retryError: "Nie udało się ponownie uruchomić płatności.",
       support: "Kontakt z supportem",
-      successTitle: "Platnosc zakonczona sukcesem",
-      successLead: "Dziekujemy. Zakup zostal zakonczony pomyslnie.",
-      successBody: "Szczegolowy raport i PDF zostana wyslane emailem.",
-      cancelTitle: "Platnosc nie zostala ukonczona",
-      cancelLead: "Nie pobrano oplaty.",
-      cancelBody: "Mozesz wrocic do ankiety albo ponowic platnosc."
+      successTitle: "Płatność zakończona sukcesem",
+      successLead: "Dziękujemy. Zakup został zakończony pomyślnie.",
+      successBody: "Szczegółowy raport i PDF zostaną wysłane emailem.",
+      cancelTitle: "Płatność nie została ukończona",
+      cancelLead: "Nie pobrano opłaty.",
+      cancelBody: "Możesz wrócić do ankiety albo ponowić płatność."
     },
     pt: {
-      home: "Inicio",
+      home: "Início",
       retry: "Tentar pagamento novamente",
       retrying: "Abrindo checkout...",
-      retryError: "Nao foi possivel reiniciar o pagamento.",
+      retryError: "Não foi possível reiniciar o pagamento.",
       support: "Contactar suporte",
-      successTitle: "Pagamento concluido",
-      successLead: "Obrigado. A compra foi concluida com sucesso.",
-      successBody: "O relatorio detalhado e o PDF serao enviados por email.",
-      cancelTitle: "Pagamento nao concluido",
-      cancelLead: "Nenhuma cobranca foi feita.",
-      cancelBody: "Voce pode voltar ao questionario ou tentar o pagamento novamente."
+      successTitle: "Pagamento concluído",
+      successLead: "Obrigado. A compra foi concluída com sucesso.",
+      successBody: "O relatório detalhado e o PDF serão enviados por email.",
+      cancelTitle: "Pagamento não concluído",
+      cancelLead: "Nenhuma cobrança foi feita.",
+      cancelBody: "Você pode voltar ao questionário ou tentar o pagamento novamente."
     },
     fr: {
       home: "Accueil",
-      retry: "Reessayer le paiement",
+      retry: "Réessayer le paiement",
       retrying: "Ouverture du paiement...",
       retryError: "Impossible de relancer le paiement.",
       support: "Contacter le support",
-      successTitle: "Paiement reussi",
-      successLead: "Merci. Votre achat a reussi.",
-      successBody: "Le rapport detaille et le PDF seront envoyes par email.",
-      cancelTitle: "Paiement non termine",
-      cancelLead: "Aucun montant n'a ete debite.",
-      cancelBody: "Vous pouvez revenir au questionnaire ou reessayer le paiement."
+      successTitle: "Paiement réussi",
+      successLead: "Merci. Votre achat a réussi.",
+      successBody: "Le rapport détaillé et le PDF seront envoyés par email.",
+      cancelTitle: "Paiement non terminé",
+      cancelLead: "Aucun montant n'a été débité.",
+      cancelBody: "Vous pouvez revenir au questionnaire ou réessayer le paiement."
     }
   };
 
