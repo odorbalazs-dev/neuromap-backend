@@ -48,6 +48,15 @@ function optional(name, fallback = null) {
   return value;
 }
 
+function optionalInt(name, fallback, { min = 0, max = Number.MAX_SAFE_INTEGER } = {}) {
+  const raw = optional(name, String(fallback));
+  const parsed = Number.parseInt(raw, 10);
+
+  if (!Number.isFinite(parsed)) return fallback;
+
+  return Math.min(max, Math.max(min, parsed));
+}
+
 // ---------------------------------------------------------------------------
 // Database URL resolution
 // ---------------------------------------------------------------------------
@@ -180,6 +189,20 @@ export const env = {
   ADMIN_ALERT_COOLDOWN_MINUTES: optional("ADMIN_ALERT_COOLDOWN_MINUTES", "30"),
   ADMIN_OPERATIONAL_ALERT_MIN_LEVEL: optional("ADMIN_OPERATIONAL_ALERT_MIN_LEVEL", "warning"),
   ADMIN_OPERATIONAL_ALERT_WINDOW_HOURS: optional("ADMIN_OPERATIONAL_ALERT_WINDOW_HOURS", "24"),
+
+  WORKER_CONCURRENCY: optionalInt("WORKER_CONCURRENCY", 1, { min: 1, max: 8 }),
+  WORKER_IDLE_SLEEP_MS: optionalInt("WORKER_IDLE_SLEEP_MS", 4000, { min: 500, max: 60000 }),
+  WORKER_ERROR_SLEEP_MS: optionalInt("WORKER_ERROR_SLEEP_MS", 5000, { min: 1000, max: 120000 }),
+  WORKER_STALE_REQUEUE_INTERVAL_MS: optionalInt("WORKER_STALE_REQUEUE_INTERVAL_MS", 60000, {
+    min: 10000,
+    max: 600000
+  }),
+  WORKER_STALE_JOB_MINUTES: optionalInt("WORKER_STALE_JOB_MINUTES", 15, { min: 2, max: 180 }),
+  WORKER_EXPECTED_JOB_SECONDS: optionalInt("WORKER_EXPECTED_JOB_SECONDS", 90, { min: 20, max: 900 }),
+  CAMPAIGN_TARGET_REPORTS_PER_DAY: optionalInt("CAMPAIGN_TARGET_REPORTS_PER_DAY", 1000, {
+    min: 1,
+    max: 100000
+  }),
 
   INVOICE_PROVIDER: optional("INVOICE_PROVIDER", null),
   INVOICE_AUTO_CREATE: optional("INVOICE_AUTO_CREATE", null),

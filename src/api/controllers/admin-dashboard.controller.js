@@ -481,6 +481,14 @@ export function getAdminDashboard(_req, res) {
           <span>Kész</span>
           <strong id="doneCount">0</strong>
         </article>
+        <article class="metric">
+          <span>Kampány kapacitás</span>
+          <strong id="campaignCapacityLevel">-</strong>
+        </article>
+        <article class="metric">
+          <span>Becsült riport / óra</span>
+          <strong id="campaignCapacityThroughput">-</strong>
+        </article>
       </section>
 
       <section id="healthPanel" class="panel health-panel">
@@ -520,6 +528,11 @@ export function getAdminDashboard(_req, res) {
             <span>Fizetett session aktív job nélkül</span>
             <strong id="paidWithoutJob">0</strong>
             <p>Várakozó vagy feldolgozás alatti session aktív queue sor nélkül.</p>
+          </article>
+          <article class="health-card">
+            <span>Kampány sorürítés</span>
+            <strong id="campaignCapacityDrain">-</strong>
+            <p id="campaignCapacityAdvice">Nincs kapacitás adat.</p>
           </article>
           <article class="health-card">
             <span>Utolsó riport email</span>

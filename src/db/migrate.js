@@ -35,14 +35,14 @@ export async function runMigrations() {
 
     try {
       await db.query(sql);
-      console.log(`[migrate] ✓ ${file}`);
+      console.log(`[migrate] ok ${file}`);
     } catch (err) {
       // Ignore "already exists" errors so re-running migrations on an
-      // existing database is safe.  Any other error is fatal.
+      // existing database is safe. Any other error is fatal.
       if (isAlreadyExistsError(err)) {
-        console.log(`[migrate] ✓ ${file} (skipped — objects already exist)`);
+        console.log(`[migrate] ok ${file} (skipped - objects already exist)`);
       } else {
-        console.error(`[migrate] ✗ ${file} failed:`, err.message);
+        console.error(`[migrate] failed ${file}:`, err.message);
         throw err;
       }
     }
@@ -59,10 +59,11 @@ export async function runMigrations() {
 function isAlreadyExistsError(err) {
   const SAFE_CODES = new Set([
     "42P07", // duplicate_table
-    "42710", // duplicate_object  (constraint, index, …)
+    "42710", // duplicate_object (constraint, index, ...)
     "42701", // duplicate_column
     "42P06", // duplicate_schema
-    "23505", // unique_violation   (e.g. INSERT … ON CONFLICT not used)
+    "23505" // unique_violation (e.g. INSERT ... ON CONFLICT not used)
   ]);
+
   return SAFE_CODES.has(err.code);
 }

@@ -108,6 +108,10 @@
     processingCount: document.getElementById("processingCount"),
     failedCount: document.getElementById("failedCount"),
     doneCount: document.getElementById("doneCount"),
+    campaignCapacityLevel: document.getElementById("campaignCapacityLevel"),
+    campaignCapacityThroughput: document.getElementById("campaignCapacityThroughput"),
+    campaignCapacityDrain: document.getElementById("campaignCapacityDrain"),
+    campaignCapacityAdvice: document.getElementById("campaignCapacityAdvice"),
     lastJobProcessed: document.getElementById("lastJobProcessed"),
     lastJobProcessedMeta: document.getElementById("lastJobProcessedMeta"),
     oldestQueuedJob: document.getElementById("oldestQueuedJob"),
@@ -2087,6 +2091,31 @@
     els.doneCount.textContent = Number(counts.completed || counts.done || 0);
   }
 
+  function renderCampaignCapacity(capacity = null) {
+    if (!els.campaignCapacityLevel) return;
+
+    if (!capacity) {
+      els.campaignCapacityLevel.textContent = "-";
+      els.campaignCapacityThroughput.textContent = "-";
+      els.campaignCapacityDrain.textContent = "-";
+      els.campaignCapacityAdvice.textContent = "Add meg az admin tokent, majd frissíts.";
+      return;
+    }
+
+    const level = capacity.level || "healthy";
+    const targetPerHour = Number(capacity.targetReportsPerHour || 0);
+    const estimatedPerHour = Number(capacity.estimatedReportsPerHour || 0);
+    const drainMinutes = Number(capacity.estimatedDrainMinutes || 0);
+    const recommendations = Array.isArray(capacity.recommendations)
+      ? capacity.recommendations
+      : [];
+
+    els.campaignCapacityLevel.textContent = statusLabel(level);
+    els.campaignCapacityThroughput.textContent = `${estimatedPerHour} / ${targetPerHour}`;
+    els.campaignCapacityDrain.textContent = drainMinutes ? `${drainMinutes} perc` : "nincs sor";
+    els.campaignCapacityAdvice.textContent = recommendations[0] || "A kampány kapacitás jelenleg rendben van.";
+  }
+
   function countValue(value) {
     const number = Number(value || 0);
     return Number.isFinite(number) ? number : 0;
@@ -3559,6 +3588,7 @@
       renderHealth(health);
       renderDashboardMetrics(dashboardMetrics);
       renderCounts(queue.counts || {});
+      renderCampaignCapacity(queue.capacity || null);
       renderSessionRows(els.queueRows, queue.items || [], "queue");
       renderSessionRows(els.recentRows, recent.items || [], "recent");
       renderSessionRows(els.failedRows, failed.items || [], "failed");
@@ -3877,6 +3907,7 @@
       emptyRow(els.alertRows, 5, "Add meg az admin tokent.");
       emptyRow(els.operationsLogRows, 5, "A frissítéshez add meg az admin tokent.");
       renderCounts({});
+      renderCampaignCapacity(null);
       renderHealth(null);
       renderControlCenter(null, null, { counts: {} }, { items: [] });
       renderControlPulse(null);

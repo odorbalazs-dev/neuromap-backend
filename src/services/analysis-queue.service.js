@@ -116,3 +116,51 @@ export async function requeueStaleJobs({
 
   return result.rows;
 }
+
+export async function getAnalysisQueueSnapshot() {
+  const result = await db.query(`
+    WITH stats AS (
+      SELECT
+        COUNT(*) FILTER (WHERE status = 'queued')::int AS queued,
+        COUNT(*) FILTER (WHERE status = 'processing')::int AS processing,
+        COUNT(*) FILTER (WHERE status = 'done')::int AS done,
+        COUNT(*) FILTER (WHERE status = 'failed')::int AS failed,
+        COUNT(*) FILTER (
+          WHERE status = 'done'
+            AND processed_at >= NOW() - INTERVAL '24 hours'
+        )::int AS done_24h,
+        MIN(created_at) FILTER (WHERE status = 'queued') AS oldest_queued_at,
+        MIN(locked_at) FILTER (WHERE status = 'processing') AS oldest_processing_at
+      FROM analysis_jobs
+    )
+    SELECT
+      *,
+      CASE
+        WHEN oldest_queued_at IS NULL THEN NULL
+        ELSE EXTRACT(EPOCH FROM (NOW() - oldest_queued_at))::int
+      END AS oldest_queued_age_seconds,
+      CASE
+        WHEN oldest_processing_at IS NULL THEN NULL
+        ELSE EXTRACT(EPOCH FROM (NOW() - oldest_processing_at))::int
+      END AS oldest_processing_age_seconds
+    FROM stats
+  `);
+
+  const row = result.rows[0] || {};
+
+  return {
+    counts: {
+      queued: Number(row.queued || 0),
+      processing: Number(row.processing || 0),
+      done: Number(row.done || 0),
+      failed: Number(row.failed || 0),
+      done24h: Number(row.done_24h || 0)
+    },
+    timing: {
+      oldestQueuedAt: row.oldest_queued_at || null,
+      oldestQueuedAgeSeconds: Number(row.oldest_queued_age_seconds || 0),
+      oldestProcessingAt: row.oldest_processing_at || null,
+      oldestProcessingAgeSeconds: Number(row.oldest_processing_age_seconds || 0)
+    }
+  };
+}

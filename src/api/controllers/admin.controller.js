@@ -7,7 +7,10 @@ import {
   resetReportEmailRetry
 } from "../../services/session.service.js";
 import { processNextAnalysisJob } from "../../services/analysis-job.service.js";
-import { enqueueAnalysisJob } from "../../services/analysis-queue.service.js";
+import {
+  enqueueAnalysisJob,
+  getAnalysisQueueSnapshot
+} from "../../services/analysis-queue.service.js";
 import { deliverReportEmailForSession } from "../../services/report-email-delivery.service.js";
 import { retryReportEmailsBatch } from "../../services/report-email-retry.service.js";
 import { generatePdfBuffer } from "../../services/pdf.service.js";
@@ -26,6 +29,7 @@ import { buildPostPaymentMonitor } from "../../services/post-payment-monitoring.
 import { runPostPaymentRecoveryV2 } from "../../services/post-payment-recovery.service.js";
 import { buildWebflowEmbedManager } from "../../services/webflow-embed-manager.service.js";
 import { buildDashboardMetrics } from "../../services/dashboard-metrics.service.js";
+import { buildCampaignCapacitySnapshot } from "../../services/campaign-capacity.service.js";
 import { getFollowUpEmailStatus, processDueFollowUpEmails } from "../../services/follow-up-email.service.js";
 import { buildI18nQualityAudit } from "../../services/i18n-quality-audit.service.js";
 import { env } from "../../config/env.js";
@@ -575,32 +579,34 @@ export async function getAdminStatus(_req, res) {
 
 export async function getQueueStatus(_req, res) {
   try {
-    const result = await db.query(`
-      SELECT
-        analysis_status,
-        COUNT(*)::int AS count
-      FROM sessions
-      WHERE payment_status = 'paid'
-      GROUP BY analysis_status
-      ORDER BY analysis_status ASC
-    `);
-
-    const recentQueued = await db.query(`
-      SELECT *
-      FROM sessions
-      WHERE payment_status = 'paid'
-        AND analysis_status IN ('queued', 'processing', 'failed')
-      ORDER BY
-        CASE analysis_status
-          WHEN 'failed' THEN 1
-          WHEN 'processing' THEN 2
-          WHEN 'queued' THEN 3
-          ELSE 4
-        END,
-        paid_at ASC NULLS LAST,
-        created_at ASC
-      LIMIT 20
-    `);
+    const [result, recentQueued, queueSnapshot] = await Promise.all([
+      db.query(`
+        SELECT
+          analysis_status,
+          COUNT(*)::int AS count
+        FROM sessions
+        WHERE payment_status = 'paid'
+        GROUP BY analysis_status
+        ORDER BY analysis_status ASC
+      `),
+      db.query(`
+        SELECT *
+        FROM sessions
+        WHERE payment_status = 'paid'
+          AND analysis_status IN ('queued', 'processing', 'failed')
+        ORDER BY
+          CASE analysis_status
+            WHEN 'failed' THEN 1
+            WHEN 'processing' THEN 2
+            WHEN 'queued' THEN 3
+            ELSE 4
+          END,
+          paid_at ASC NULLS LAST,
+          created_at ASC
+        LIMIT 20
+      `),
+      getAnalysisQueueSnapshot()
+    ]);
 
     return res.status(200).json({
       ok: true,
@@ -608,6 +614,13 @@ export async function getQueueStatus(_req, res) {
         acc[row.analysis_status] = row.count;
         return acc;
       }, {}),
+      jobs: queueSnapshot,
+      capacity: buildCampaignCapacitySnapshot({
+        queueSnapshot,
+        workerConcurrency: env.WORKER_CONCURRENCY,
+        expectedJobSeconds: env.WORKER_EXPECTED_JOB_SECONDS,
+        targetReportsPerDay: env.CAMPAIGN_TARGET_REPORTS_PER_DAY
+      }),
       items: recentQueued.rows.map(buildCompactSessionView)
     });
   } catch (error) {
