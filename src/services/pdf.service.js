@@ -82,12 +82,12 @@ function polishHungarianReportWording(value = "") {
     .replace(/gyermek\s+m\u0171k\u00f6d\u00e9s\u00e9t/giu, "gyermek viselked\u00e9s\u00e9t")
     .replace(/gyermek\s+m\u0171k\u00f6d\u00e9s\u00e9ben/giu, "gyermek viselked\u00e9s\u00e9ben")
     .replace(/gyermek\s+m\u0171k\u00f6d\u00e9s\u00e9hez/giu, "gyermek viselked\u00e9s\u00e9hez")
-        .replace(/gyermek\s+mindennapi\s+mukodeset/giu, "gyermek mindennapi viselkedeset")
-        .replace(/gyermek\s+mukodese/giu, "gyermek viselkedese")
-        .replace(/gyermek\s+mukodeserol/giu, "gyermek viselkedeserol")
-        .replace(/gyermek\s+mukodeset/giu, "gyermek viselkedeset")
-        .replace(/gyermek\s+mukodeseben/giu, "gyermek viselkedeseben")
-        .replace(/gyermek\s+mukodesehez/giu, "gyermek viselkedesehez");
+    .replace(/gyermek\s+mindennapi\s+mukodeset/giu, "gyermek mindennapi viselkedését")
+    .replace(/gyermek\s+mukodese/giu, "gyermek viselkedése")
+    .replace(/gyermek\s+mukodeserol/giu, "gyermek viselkedéséről")
+    .replace(/gyermek\s+mukodeset/giu, "gyermek viselkedését")
+    .replace(/gyermek\s+mukodeseben/giu, "gyermek viselkedésében")
+    .replace(/gyermek\s+mukodesehez/giu, "gyermek viselkedéséhez");
 }
 
 function ensureFontFile(filePath, label) {
@@ -685,38 +685,54 @@ function addCoverPage(doc, { name, payload, labels, lang }) {
 }
 
 function getCoverPromiseCopy(lang = "en") {
-  if (lang === "hu") {
-    return {
-      title: "Gyors olvasasi utvonal",
-      items: ["fo mintazat", "korosztalyi javaslat", "kovetkezo lepes"]
-    };
-  }
-
-  if (lang === "de") {
-    return {
-      title: "Schneller Leseweg",
-      items: ["main pattern", "age guidance", "next step"]
-    };
-  }
-
-  if (lang === "es") {
-    return {
-      title: "Ruta rapida de lectura",
-      items: ["main pattern", "age guidance", "next step"]
-    };
-  }
-
-  if (lang === "fr") {
-    return {
-      title: "Parcours de lecture rapide",
-      items: ["main pattern", "age guidance", "next step"]
-    };
-  }
-
-  return {
+  const copy = {
+    hu: {
+      title: "Gyors olvasási útvonal",
+      items: ["fő mintázat", "korosztályi javaslat", "következő lépés"]
+    },
+    en: {
     title: "Quick reading path",
     items: ["main pattern", "age guidance", "next step"]
+    },
+    de: {
+      title: "Schneller Leseweg",
+      items: ["Hauptmuster", "Alterskontext", "nächster Schritt"]
+    },
+    it: {
+      title: "Percorso di lettura rapido",
+      items: ["schema principale", "contesto età", "prossimo passo"]
+    },
+    es: {
+      title: "Ruta rápida de lectura",
+      items: ["patrón principal", "guía por edad", "siguiente paso"]
+    },
+    zh: {
+      title: "快速阅读路径",
+      items: ["主要模式", "年龄建议", "下一步"]
+    },
+    ja: {
+      title: "読み方の早見ガイド",
+      items: ["主な傾向", "年齢別の視点", "次の一歩"]
+    },
+    ar: {
+      title: "مسار قراءة سريع",
+      items: ["النمط الرئيسي", "توجيه بحسب العمر", "الخطوة التالية"]
+    },
+    pl: {
+      title: "Szybka ścieżka czytania",
+      items: ["główny wzorzec", "kontekst wieku", "następny krok"]
+    },
+    pt: {
+      title: "Caminho rápido de leitura",
+      items: ["padrão principal", "orientação por idade", "próximo passo"]
+    },
+    fr: {
+      title: "Parcours de lecture rapide",
+      items: ["schéma principal", "repère d'âge", "prochaine étape"]
+    }
   };
+
+  return copy[lang] || copy.en;
 }
 
 function getSafeContentBottom(doc) {
@@ -857,20 +873,18 @@ function drawPanel(doc, { x, y, w, h, fill = "#FFFFFF", stroke = BRAND.softBorde
 }
 
 function getPremiumPdfCopy(lang = "en") {
-  if (lang === "hu") {
-    return {
-      title: "Hogyan haszn\u00e1ld ezt a riportot?",
-      body: "Kezdd a gyors \u00e1ttekint\u00e9ssel, ut\u00e1na olvasd el a koroszt\u00e1lyi javaslatokat. A riport c\u00e9lja, hogy \u00e9rthet\u0151 mint\u00e1zatokat adjon a k\u00f6vetkez\u0151 sz\u00fcl\u0151i l\u00e9p\u00e9sekhez.",
+  const copy = {
+    hu: {
+      title: "Hogyan használd ezt a riportot?",
+      body: "Kezdd a gyors áttekintéssel, utána olvasd el a korosztályi javaslatokat. A riport célja, hogy érthető mintázatokat adjon a következő szülői lépésekhez.",
       points: [
-        "Emeld ki azt a 2-3 helyzetet, ahol a jelz\u00e9s a leger\u0151sebb.",
-        "Ne egyetlen v\u00e1laszt n\u00e9zz, hanem a visszat\u00e9r\u0151 mint\u00e1zatot.",
-        "Ha a jelz\u00e9s er\u0151s vagy tart\u00f3s, \u00e9rdemes szakemberrel is \u00e1tbesz\u00e9lni.",
-        "Tedd mell\u00e9 a k\u00f6vetkez\u0151 7 nap megfigyel\u00e9seit: mikor er\u0151s\u00f6dik, mikor enyh\u00fcl, \u00e9s mi seg\u00edt."
+        "Emeld ki azt a 2-3 helyzetet, ahol a jelzés a legerősebb.",
+        "Ne egyetlen választ nézz, hanem a visszatérő mintázatot.",
+        "Ha a jelzés erős vagy tartós, érdemes szakemberrel is átbeszélni.",
+        "Tedd mellé a következő 7 nap megfigyeléseit: mikor erősödik, mikor enyhül, és mi segít."
       ]
-    };
-  }
-
-  return {
+    },
+    en: {
     title: "How to use this report",
     body: "Start with the quick overview, then read the age-aware recommendations. The report is designed to turn questionnaire answers into practical patterns for the next parent steps.",
     points: [
@@ -879,7 +893,100 @@ function getPremiumPdfCopy(lang = "en") {
       "If the signal feels strong or persistent, discuss it with a qualified professional.",
       "Add observations from the next 7 days: when it intensifies, when it eases, and what seems to help."
     ]
+    },
+    de: {
+      title: "So nutzt du diesen Bericht",
+      body: "Beginne mit der schnellen Übersicht und lies danach die altersbezogenen Empfehlungen. Der Bericht soll Antworten in verständliche Muster und konkrete nächste Schritte übersetzen.",
+      points: [
+        "Markiere 2-3 Alltagssituationen, in denen das Signal am klarsten ist.",
+        "Achte auf wiederkehrende Muster statt auf eine einzelne Antwort.",
+        "Wenn das Signal stark oder anhaltend wirkt, besprich den Bericht mit einer qualifizierten Fachperson.",
+        "Ergänze Beobachtungen der nächsten 7 Tage: wann es stärker wird, wann es leichter wird und was hilft."
+      ]
+    },
+    it: {
+      title: "Come usare questo report",
+      body: "Inizia dalla panoramica rapida, poi leggi le raccomandazioni legate all'età. Il report trasforma le risposte in pattern comprensibili e passi pratici.",
+      points: [
+        "Segna le 2-3 situazioni quotidiane in cui il segnale è più chiaro.",
+        "Cerca pattern ricorrenti, non una singola risposta isolata.",
+        "Se il segnale è forte o persistente, confrontati con un professionista qualificato.",
+        "Aggiungi osservazioni dei prossimi 7 giorni: quando aumenta, quando diminuisce e cosa aiuta."
+      ]
+    },
+    es: {
+      title: "Cómo usar este informe",
+      body: "Empieza por la visión rápida y después lee las recomendaciones según la edad. El informe convierte las respuestas en patrones comprensibles y próximos pasos prácticos.",
+      points: [
+        "Marca las 2-3 situaciones cotidianas donde la señal aparece con más claridad.",
+        "Busca patrones repetidos, no una respuesta aislada.",
+        "Si la señal es intensa o persistente, coméntala con un profesional cualificado.",
+        "Añade observaciones de los próximos 7 días: cuándo aumenta, cuándo se calma y qué ayuda."
+      ]
+    },
+    zh: {
+      title: "如何使用这份报告",
+      body: "先阅读快速概览，再看与年龄阶段相关的建议。报告的目标是把问卷回答转化为家长容易理解、可以行动的模式。",
+      points: [
+        "标出信号最清楚的 2-3 个日常情境。",
+        "关注反复出现的模式，而不是单一回答。",
+        "如果信号强烈或持续，建议与合格的专业人士讨论。",
+        "补充未来 7 天的观察：什么时候更明显、什么时候缓和、什么有帮助。"
+      ]
+    },
+    ja: {
+      title: "このレポートの使い方",
+      body: "まずクイック概要を読み、その後に年齢に応じた提案を確認してください。回答を、保護者が理解しやすい傾向と次の行動に整理するためのレポートです。",
+      points: [
+        "サインが最もはっきり見える日常場面を2〜3個選びます。",
+        "一つの回答ではなく、繰り返し現れるパターンを見ます。",
+        "サインが強い、または続く場合は、専門家に相談してください。",
+        "次の7日間の観察を加えます：強まる時、落ち着く時、助けになること。"
+      ]
+    },
+    ar: {
+      title: "كيفية استخدام هذا التقرير",
+      body: "ابدأ بالملخص السريع، ثم اقرأ التوصيات المناسبة للعمر. يهدف التقرير إلى تحويل إجابات الاستبيان إلى أنماط واضحة وخطوات عملية للوالدين.",
+      points: [
+        "حدّد موقفين أو ثلاثة تظهر فيها الإشارة بوضوح.",
+        "ابحث عن الأنماط المتكررة، لا عن إجابة واحدة منفصلة.",
+        "إذا كانت الإشارة قوية أو مستمرة، ناقش التقرير مع مختص مؤهل.",
+        "أضف ملاحظات الأيام السبعة القادمة: متى تزداد، متى تهدأ، وما الذي يساعد."
+      ]
+    },
+    pl: {
+      title: "Jak korzystać z tego raportu",
+      body: "Zacznij od szybkiego przeglądu, a potem przeczytaj zalecenia dopasowane do wieku. Raport pomaga przełożyć odpowiedzi na zrozumiałe wzorce i praktyczne kroki.",
+      points: [
+        "Zaznacz 2-3 codzienne sytuacje, w których sygnał jest najbardziej widoczny.",
+        "Szukaj powtarzających się wzorców, nie jednej odosobnionej odpowiedzi.",
+        "Jeśli sygnał jest silny lub trwały, omów raport ze specjalistą.",
+        "Dodaj obserwacje z kolejnych 7 dni: kiedy się nasila, kiedy słabnie i co pomaga."
+      ]
+    },
+    pt: {
+      title: "Como usar este relatório",
+      body: "Comece pela visão geral rápida e depois leia as recomendações por idade. O relatório transforma respostas em padrões compreensíveis e passos práticos para os pais.",
+      points: [
+        "Marque as 2-3 situações do dia a dia em que o sinal aparece com mais clareza.",
+        "Procure padrões recorrentes, não uma resposta isolada.",
+        "Se o sinal for forte ou persistente, converse com um profissional qualificado.",
+        "Acrescente observações dos próximos 7 dias: quando aumenta, quando melhora e o que ajuda."
+      ]
+    },
+    fr: {
+      title: "Comment utiliser ce rapport",
+      body: "Commencez par l'aperçu rapide, puis lisez les recommandations adaptées à l'âge. Le rapport transforme les réponses en schémas compréhensibles et en prochaines étapes pratiques.",
+      points: [
+        "Notez les 2-3 situations quotidiennes où le signal est le plus clair.",
+        "Cherchez des schémas récurrents plutôt qu'une réponse isolée.",
+        "Si le signal est fort ou persistant, parlez-en avec un professionnel qualifié.",
+        "Ajoutez les observations des 7 prochains jours : quand cela s'intensifie, quand cela s'apaise et ce qui aide."
+      ]
+    }
   };
+
+  return copy[lang] || copy.en;
 }
 
 function addPremiumReadingGuide(doc, labels, lang, pageState = null) {
@@ -1122,25 +1229,109 @@ function addOverviewBlock(doc, payload, labels, lang, pageState = null) {
 }
 
 function getParentQuickSummaryCopy(lang = "en") {
-  if (lang === "hu") {
-    return {
-      title: "Sz\u00fcl\u0151i gyors \u00f6sszefoglal\u00f3",
-      lead: "A riport elej\u00e9n ezt a blokkot \u00e9rdemes el\u0151sz\u00f6r \u00e1tn\u00e9zni: megmutatja a f\u0151 mint\u00e1t, a koroszt\u00e1lyi kontextust \u00e9s az els\u0151 gyakorlati l\u00e9p\u00e9st.",
-      focus: "F\u0151 minta",
-      age: "Koroszt\u00e1ly",
-      firstStep: "Els\u0151 l\u00e9p\u00e9s",
-      note: "Ez nem diagn\u00f3zis. A c\u00e9l az, hogy a v\u00e1laszokb\u00f3l \u00e9rthet\u0151, gyakorlatban haszn\u00e1lhat\u00f3 sz\u00fcl\u0151i kapaszkod\u00f3k legyenek."
-    };
-  }
-
-  return {
+  const copy = {
+    hu: {
+      title: "Szülői gyors összefoglaló",
+      lead: "A riport elején ezt a blokkot érdemes először átnézni: megmutatja a fő mintát, a korosztályi kontextust és az első gyakorlati lépést.",
+      focus: "Fő minta",
+      age: "Korosztály",
+      firstStep: "Első lépés",
+      firstAction: "A legerősebb helyzet célzott megfigyelése",
+      note: "Ez nem diagnózis. A cél az, hogy a válaszokból érthető, gyakorlatban használható szülői kapaszkodók legyenek."
+    },
+    en: {
     title: "Parent quick summary",
     lead: "Start here before reading the full report: this block highlights the primary pattern, age context, and one practical first step.",
     focus: "Main pattern",
     age: "Age context",
     firstStep: "First step",
+      firstAction: "Observe the clearest everyday situation",
     note: "This is not a diagnosis. The goal is to turn questionnaire answers into clear, practical parent guidance."
+    },
+    de: {
+      title: "Kurze Zusammenfassung für Eltern",
+      lead: "Beginne mit diesem Block: Er zeigt das Hauptmuster, den Alterskontext und einen ersten praktischen Schritt.",
+      focus: "Hauptmuster",
+      age: "Alterskontext",
+      firstStep: "Erster Schritt",
+      firstAction: "Die klarste Alltagssituation gezielt beobachten",
+      note: "Dies ist keine Diagnose. Ziel ist eine verständliche und praktisch nutzbare Orientierung für Eltern."
+    },
+    it: {
+      title: "Riepilogo rapido per genitori",
+      lead: "Inizia da questo blocco: mostra il pattern principale, il contesto d'età e un primo passo pratico.",
+      focus: "Pattern principale",
+      age: "Contesto d'età",
+      firstStep: "Primo passo",
+      firstAction: "Osservare la situazione quotidiana più chiara",
+      note: "Non è una diagnosi. L'obiettivo è offrire indicazioni comprensibili e utili nella pratica."
+    },
+    es: {
+      title: "Resumen rápido para familias",
+      lead: "Empieza por este bloque: muestra el patrón principal, el contexto de edad y un primer paso práctico.",
+      focus: "Patrón principal",
+      age: "Contexto de edad",
+      firstStep: "Primer paso",
+      firstAction: "Observar la situación cotidiana más clara",
+      note: "No es un diagnóstico. El objetivo es convertir las respuestas en orientación clara y práctica."
+    },
+    zh: {
+      title: "家长快速摘要",
+      lead: "建议先看这一页：它显示主要模式、年龄阶段背景，以及第一个可实践的步骤。",
+      focus: "主要模式",
+      age: "年龄背景",
+      firstStep: "第一步",
+      firstAction: "重点观察最清楚的日常情境",
+      note: "这不是诊断。目标是把回答整理成清晰、可实际使用的家长参考。"
+    },
+    ja: {
+      title: "保護者向けクイック要約",
+      lead: "まずこのブロックを確認してください。主な傾向、年齢に応じた背景、最初の実践ステップを示します。",
+      focus: "主な傾向",
+      age: "年齢の文脈",
+      firstStep: "最初の一歩",
+      firstAction: "最もはっきり見える日常場面を観察する",
+      note: "これは診断ではありません。回答を、保護者が実際に使える理解しやすい手がかりにすることが目的です。"
+    },
+    ar: {
+      title: "ملخص سريع للوالدين",
+      lead: "ابدأ بهذا الجزء: يوضح النمط الرئيسي، وسياق العمر، وأول خطوة عملية.",
+      focus: "النمط الرئيسي",
+      age: "سياق العمر",
+      firstStep: "الخطوة الأولى",
+      firstAction: "ملاحظة الموقف اليومي الأوضح بشكل محدد",
+      note: "هذا ليس تشخيصًا. الهدف هو تحويل الإجابات إلى إرشاد واضح وعملي للوالدين."
+    },
+    pl: {
+      title: "Szybkie podsumowanie dla rodzica",
+      lead: "Zacznij od tego bloku: pokazuje główny wzorzec, kontekst wieku i pierwszy praktyczny krok.",
+      focus: "Główny wzorzec",
+      age: "Kontekst wieku",
+      firstStep: "Pierwszy krok",
+      firstAction: "Celowo obserwować najbardziej wyraźną sytuację",
+      note: "To nie jest diagnoza. Celem jest jasna, praktyczna wskazówka dla rodzica."
+    },
+    pt: {
+      title: "Resumo rápido para pais",
+      lead: "Comece por este bloco: ele mostra o padrão principal, o contexto da idade e um primeiro passo prático.",
+      focus: "Padrão principal",
+      age: "Contexto da idade",
+      firstStep: "Primeiro passo",
+      firstAction: "Observar a situação diária mais clara",
+      note: "Isto não é um diagnóstico. O objetivo é transformar as respostas em orientação clara e prática para os pais."
+    },
+    fr: {
+      title: "Résumé rapide pour les parents",
+      lead: "Commencez par ce bloc : il montre le schéma principal, le contexte d'âge et une première étape pratique.",
+      focus: "Schéma principal",
+      age: "Contexte d'âge",
+      firstStep: "Première étape",
+      firstAction: "Observer la situation quotidienne la plus claire",
+      note: "Ce n'est pas un diagnostic. L'objectif est de transformer les réponses en repères clairs et utilisables."
+    }
   };
+
+  return copy[lang] || copy.en;
 }
 
 function addParentQuickSummaryBlock(doc, payload, labels, lang, pageState = null) {
@@ -1154,10 +1345,7 @@ function addParentQuickSummaryBlock(doc, payload, labels, lang, pageState = null
   const innerW = w - 40;
   const gap = 10;
   const cardW = (innerW - gap * 2) / 3;
-  const firstAction =
-    lang === "hu"
-      ? "A leger\u0151sebb helyzet c\u00e9lzott megfigyel\u00e9se"
-      : "Observe the clearest everyday situation";
+  const firstAction = copy.firstAction;
 
   const leadHeight = measureText(doc, copy.lead, {
     font: getFont(lang),
@@ -1267,25 +1455,98 @@ function addParentQuickSummaryBlock(doc, payload, labels, lang, pageState = null
 }
 
 function getReportV2PdfLabels(lang = "en") {
-  if (lang === "hu") {
-    return {
-      title: "Koroszt\u00e1lyi \u00e9rtelmez\u00e9s",
-      ageBand: "Koroszt\u00e1ly",
-      recommendations: "Koroszt\u00e1lyi javaslatok",
-      actionPlan: "K\u00f6vetkez\u0151 7 nap akci\u00f3terve",
-      observationFocus: "Mit figyelj meg c\u00e9lzottan?",
-      escalationNote: "Mikor ne v\u00e1rj tov\u00e1bb?"
-    };
-  }
-
-  return {
+  const labels = {
+    hu: {
+      title: "Korosztályi értelmezés",
+      ageBand: "Korosztály",
+      recommendations: "Korosztályi javaslatok",
+      actionPlan: "Következő 7 nap akcióterve",
+      observationFocus: "Mit figyelj meg célzottan?",
+      escalationNote: "Mikor ne várj tovább?"
+    },
+    en: {
     title: "Age-group interpretation",
     ageBand: "Age group",
     recommendations: "Age-aware recommendations",
     actionPlan: "Next 7-day action plan",
     observationFocus: "What to observe on purpose",
     escalationNote: "When not to wait"
+    },
+    de: {
+      title: "Altersbezogene Einordnung",
+      ageBand: "Altersgruppe",
+      recommendations: "Empfehlungen nach Alter",
+      actionPlan: "Aktionsplan für die nächsten 7 Tage",
+      observationFocus: "Was gezielt beobachten?",
+      escalationNote: "Wann nicht weiter abwarten?"
+    },
+    it: {
+      title: "Interpretazione per fascia d'età",
+      ageBand: "Fascia d'età",
+      recommendations: "Raccomandazioni per età",
+      actionPlan: "Piano d'azione per i prossimi 7 giorni",
+      observationFocus: "Cosa osservare con attenzione?",
+      escalationNote: "Quando non aspettare oltre?"
+    },
+    es: {
+      title: "Interpretación por edad",
+      ageBand: "Grupo de edad",
+      recommendations: "Recomendaciones según la edad",
+      actionPlan: "Plan de acción para los próximos 7 días",
+      observationFocus: "Qué observar con intención",
+      escalationNote: "Cuándo no conviene esperar"
+    },
+    zh: {
+      title: "年龄阶段解读",
+      ageBand: "年龄阶段",
+      recommendations: "按年龄调整的建议",
+      actionPlan: "接下来 7 天行动计划",
+      observationFocus: "需要重点观察什么",
+      escalationNote: "什么时候不应继续等待"
+    },
+    ja: {
+      title: "年齢段階に合わせた理解",
+      ageBand: "年齢段階",
+      recommendations: "年齢に応じた提案",
+      actionPlan: "次の7日間の行動プラン",
+      observationFocus: "何を意識して観察するか",
+      escalationNote: "待たずに相談すべき時"
+    },
+    ar: {
+      title: "تفسير بحسب المرحلة العمرية",
+      ageBand: "الفئة العمرية",
+      recommendations: "توصيات مناسبة للعمر",
+      actionPlan: "خطة عمل للأيام السبعة القادمة",
+      observationFocus: "ما الذي تلاحظه بشكل مقصود؟",
+      escalationNote: "متى لا تنتظر أكثر؟"
+    },
+    pl: {
+      title: "Interpretacja z uwzględnieniem wieku",
+      ageBand: "Grupa wiekowa",
+      recommendations: "Zalecenia dopasowane do wieku",
+      actionPlan: "Plan działania na kolejne 7 dni",
+      observationFocus: "Co obserwować celowo?",
+      escalationNote: "Kiedy nie warto czekać?"
+    },
+    pt: {
+      title: "Interpretação por faixa etária",
+      ageBand: "Faixa etária",
+      recommendations: "Recomendações por idade",
+      actionPlan: "Plano de ação para os próximos 7 dias",
+      observationFocus: "O que observar de propósito",
+      escalationNote: "Quando não esperar mais"
+    },
+    fr: {
+      title: "Interprétation selon l'âge",
+      ageBand: "Groupe d'âge",
+      recommendations: "Recommandations adaptées à l'âge",
+      actionPlan: "Plan d'action des 7 prochains jours",
+      observationFocus: "Ce qu'il faut observer volontairement",
+      escalationNote: "Quand ne pas attendre"
+    }
   };
+
+  return labels[lang] || labels.en;
 }
 
 function addReportV2AgeBlock(doc, payload, labels, lang, pageState = null) {

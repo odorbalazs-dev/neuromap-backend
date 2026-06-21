@@ -85,31 +85,31 @@ function buildRecommendations({ config, metrics, level }) {
   const recommendations = [];
 
   if (!config.resendConfigured) {
-    recommendations.push("RESEND_API_KEY nincs beallitva, riport email nem kuldheto.");
+    recommendations.push("RESEND_API_KEY nincs beállítva, riport email nem küldhető.");
   }
 
   if (!config.fromConfigured || !config.fromLooksValid) {
-    recommendations.push("EMAIL_FROM hianyzik vagy nem email-szeru. Ellenorizd a Railway valtozot es a kuldo domaint.");
+    recommendations.push("EMAIL_FROM hiányzik vagy nem email-szerű. Ellenőrizd a Railway változót és a küldő domaint.");
   }
 
   if (metrics.retryLimitCount > 0) {
-    recommendations.push("Van retry limitet elert riport email. Nyisd meg az email panelt, ellenorizd a hibat, majd allitsd alaphelyzetbe vagy kuldd ujra.");
+    recommendations.push("Van retry limitet elért riport email. Nyisd meg az email panelt, ellenőrizd a hibát, majd állítsd alaphelyzetbe vagy küldd újra.");
   }
 
   if (metrics.staleSendingCount > 0) {
-    recommendations.push("Van sending statuszban beragadt email. Futtasd az email retry batch-et vagy ellenorizd a worker logot.");
+    recommendations.push("Van sending státuszban beragadt email. Futtasd az email retry batch-et vagy ellenőrizd a worker logot.");
   }
 
   if (metrics.retryableCount > 0) {
-    recommendations.push("Van automatikusan ujraprobalhato email. Inditsd a riport email retry batch-et.");
+    recommendations.push("Van automatikusan újrapróbálható email. Indítsd a riport email retry batch-et.");
   }
 
   if (metrics.failureRate >= 0.1 && metrics.failedCount >= 3) {
-    recommendations.push("A hibaarany magas. Ellenorizd a Resend dashboardot, a domain verifikaciot es a bounce/spam jelzeseket.");
+    recommendations.push("A hibaarány magas. Ellenőrizd a Resend dashboardot, a domain verifikációt és a bounce/spam jelzéseket.");
   }
 
   if (level === "healthy") {
-    recommendations.push("Nincs azonnali email deliverability teendo. A riport email pipeline stabilnak tunik.");
+    recommendations.push("Nincs azonnali email deliverability teendő. A riport email pipeline stabilnak tűnik.");
   }
 
   return recommendations;

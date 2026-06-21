@@ -5,7 +5,7 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260621-launch-audit-fixes-v1";
+  const ENGINE_VERSION = "20260621-language-audit-v2";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
   const DRAFT_STORAGE_KEY = "nm_questionnaire_draft_v1";
   const DRAFT_TTL_MS = 1000 * 60 * 60 * 24 * 14;
@@ -7056,6 +7056,618 @@
     }
 
     return message || t.checkoutError || (isHu ? "Nem sikerült elindítani a fizetést." : "Could not start checkout.");
+  }
+
+  function getCustomerCopy(copies, lang = state.lang) {
+    return copies[lang] || copies.en || copies.hu || {};
+  }
+
+  function getLandingProofCopy(lang = state.lang) {
+    const copies = {
+      hu: ["szülőbarát, megnyugtató nyelvezet", "korosztályi szempontokkal finomítva", "nem diagnózis, hanem érthető előszűrés"],
+      en: ["parent-friendly, calm language", "refined with age-aware context", "not a diagnosis, but structured screening"],
+      de: ["elternfreundliche, beruhigende Sprache", "altersgerecht eingeordnet", "keine Diagnose, sondern strukturiertes Screening"],
+      it: ["linguaggio sereno per i genitori", "adattato all'età", "non una diagnosi, ma uno screening strutturato"],
+      es: ["lenguaje claro y tranquilizador", "ajustado a la edad", "no es un diagnóstico, sino un cribado estructurado"],
+      zh: ["面向家长的安心表达", "结合年龄背景理解", "不是诊断，而是结构化筛查"],
+      ja: ["保護者にわかりやすい安心できる表現", "年齢背景に合わせた整理", "診断ではなく構造化されたスクリーニング"],
+      ar: ["لغة مطمئنة ومناسبة للوالدين", "مصمم وفق عمر الطفل", "ليس تشخيصا بل فرز منظم"],
+      pl: ["spokojny język przyjazny rodzicom", "dopasowane do wieku dziecka", "nie diagnoza, lecz uporządkowany screening"],
+      pt: ["linguagem calma para os pais", "ajustado ao contexto da idade", "não é diagnóstico, é triagem estruturada"],
+      fr: ["langage clair et rassurant", "adapté à l'âge de l'enfant", "pas un diagnostic, mais un dépistage structuré"]
+    };
+
+    return copies[lang] || copies.en;
+  }
+
+  function buildReportPreviewV2Html() {
+    const copy = getCustomerCopy({
+      hu: {
+        title: "Mit mutat majd pontosabban a teljes riport?",
+        lead: "A fizetés utáni riport nem újabb címkét ad, hanem érthetően összerendezi a válaszokat, a korosztályt és az átfedéseket.",
+        labels: ["Fő minta", "Másodlagos jelzés", "Korosztály", "Jelzésszint"],
+        noSecondary: "nincs erős másodlagos jelzés"
+      },
+      en: {
+        title: "What will the full report clarify?",
+        lead: "The paid report does not add another label. It organizes the answers, age context, and overlaps into a clear parent-friendly picture.",
+        labels: ["Primary pattern", "Secondary signal", "Age context", "Signal level"],
+        noSecondary: "no strong secondary signal"
+      },
+      de: {
+        title: "Was klärt der vollständige Bericht?",
+        lead: "Der Bericht gibt kein weiteres Etikett, sondern ordnet Antworten, Alter und Überschneidungen verständlich ein.",
+        labels: ["Hauptmuster", "Sekundäres Signal", "Alterskontext", "Signalstärke"],
+        noSecondary: "kein starkes sekundäres Signal"
+      },
+      it: {
+        title: "Cosa chiarirà il report completo?",
+        lead: "Il report non aggiunge un'etichetta, ma organizza risposte, età e sovrapposizioni in modo chiaro per i genitori.",
+        labels: ["Pattern principale", "Segnale secondario", "Contesto d'età", "Livello del segnale"],
+        noSecondary: "nessun forte segnale secondario"
+      },
+      es: {
+        title: "¿Qué aclarará el informe completo?",
+        lead: "El informe no añade otra etiqueta: organiza respuestas, edad y solapamientos en una imagen clara para familias.",
+        labels: ["Patrón principal", "Señal secundaria", "Contexto de edad", "Nivel de señal"],
+        noSecondary: "sin señal secundaria fuerte"
+      },
+      zh: {
+        title: "完整报告会进一步说明什么？",
+        lead: "付费报告不是再给孩子贴标签，而是把回答、年龄背景和重叠信号整理成家长容易理解的图景。",
+        labels: ["主要模式", "次要信号", "年龄背景", "信号水平"],
+        noSecondary: "没有明显的次要信号"
+      },
+      ja: {
+        title: "完全版レポートで何がより明確になりますか？",
+        lead: "有料レポートは新しいラベルを付けるものではなく、回答、年齢背景、重なりを保護者にわかりやすく整理します。",
+        labels: ["主な傾向", "二次的なサイン", "年齢背景", "サインの強さ"],
+        noSecondary: "強い二次的サインはありません"
+      },
+      ar: {
+        title: "ماذا سيوضح التقرير الكامل؟",
+        lead: "التقرير لا يضيف تسمية جديدة، بل ينظم الإجابات وسياق العمر والتداخلات في صورة واضحة ومناسبة للوالدين.",
+        labels: ["النمط الرئيسي", "إشارة ثانوية", "سياق العمر", "مستوى الإشارة"],
+        noSecondary: "لا توجد إشارة ثانوية قوية"
+      },
+      pl: {
+        title: "Co wyjaśni pełny raport?",
+        lead: "Raport nie dodaje kolejnej etykiety, tylko porządkuje odpowiedzi, wiek i nakładanie się sygnałów w jasny obraz dla rodzica.",
+        labels: ["Główny wzorzec", "Sygnał wtórny", "Kontekst wieku", "Poziom sygnału"],
+        noSecondary: "brak silnego sygnału wtórnego"
+      },
+      pt: {
+        title: "O que o relatório completo esclarece?",
+        lead: "O relatório não adiciona outro rótulo. Ele organiza respostas, idade e sobreposições de forma clara para os pais.",
+        labels: ["Padrão principal", "Sinal secundário", "Contexto de idade", "Nível do sinal"],
+        noSecondary: "sem sinal secundário forte"
+      },
+      fr: {
+        title: "Que clarifie le rapport complet ?",
+        lead: "Le rapport n'ajoute pas une étiquette : il organise les réponses, l'âge et les recoupements dans une lecture claire pour les parents.",
+        labels: ["Schéma principal", "Signal secondaire", "Contexte d'âge", "Niveau du signal"],
+        noSecondary: "pas de signal secondaire fort"
+      }
+    });
+
+    const signal =
+      state.resultSummary?.signal?.[state.lang] ||
+      state.resultSummary?.signal?.en ||
+      state.resultSummary?.signal?.key ||
+      "-";
+    const values = [
+      disorderLabel(state.detectedRisk),
+      state.secondaryRisk ? disorderLabel(state.secondaryRisk) : copy.noSecondary,
+      getAgeContextLabel(),
+      signal
+    ];
+
+    return `
+      <div class="nm-report-preview-v2-card">
+        <h4>${escapeHtml(copy.title)}</h4>
+        <p>${escapeHtml(copy.lead)}</p>
+        <div class="nm-report-preview-v2-grid">
+          ${copy.labels.map((label, index) => `
+            <div class="nm-report-preview-v2-item">
+              <span class="nm-report-preview-v2-label">${escapeHtml(label)}</span>
+              <span class="nm-report-preview-v2-value">${escapeHtml(values[index])}</span>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    `;
+  }
+
+  function buildDecisionExplanationHtml() {
+    const ranking = getDecisionRankingTop();
+    const primary = ranking[0] || {};
+    const secondary = ranking[1] || {};
+    const gap = Number(primary.weightedSignal || 0) - Number(secondary.weightedSignal || 0);
+    const copy = getCustomerCopy({
+      hu: {
+        title: "Hogyan döntött az engine?",
+        lead: "A rendszer nem egyetlen válaszból következtet. A fő és másodlagos területeket a jelzés erőssége, következetessége és átfedése alapján rendezi.",
+        labels: ["Fő jelzés", "Másodlagos jelzés", "Biztonság", "Extra pontosítás"],
+        confidence: ["szoros eredmény", "közepes biztonság", "magasabb biztonság"],
+        yes: "igen",
+        no: "nem"
+      },
+      en: {
+        title: "How did the engine decide?",
+        lead: "The engine does not infer from one answer. It ranks primary and secondary areas using signal strength, consistency, and overlap.",
+        labels: ["Primary signal", "Secondary signal", "Confidence", "Extra clarification"],
+        confidence: ["close result", "moderate confidence", "stronger confidence"],
+        yes: "yes",
+        no: "no"
+      },
+      de: {
+        title: "Wie hat die Engine entschieden?",
+        lead: "Die Entscheidung basiert nicht auf einer einzelnen Antwort, sondern auf Signalstärke, Konsistenz und Überschneidung.",
+        labels: ["Hauptsignal", "Sekundäres Signal", "Sicherheit", "Zusatzklärung"],
+        confidence: ["knappes Ergebnis", "mittlere Sicherheit", "höhere Sicherheit"],
+        yes: "ja",
+        no: "nein"
+      },
+      it: {
+        title: "Come ha deciso il motore?",
+        lead: "Il motore non deduce da una sola risposta: ordina le aree secondo intensità, coerenza e sovrapposizione.",
+        labels: ["Segnale principale", "Segnale secondario", "Affidabilità", "Chiarimento extra"],
+        confidence: ["risultato vicino", "affidabilità moderata", "affidabilità più alta"],
+        yes: "sì",
+        no: "no"
+      },
+      es: {
+        title: "¿Cómo decidió el motor?",
+        lead: "El motor no concluye a partir de una sola respuesta: ordena las áreas según intensidad, consistencia y solapamiento.",
+        labels: ["Señal principal", "Señal secundaria", "Confianza", "Aclaración extra"],
+        confidence: ["resultado cercano", "confianza moderada", "confianza más alta"],
+        yes: "sí",
+        no: "no"
+      },
+      zh: {
+        title: "系统是如何判断的？",
+        lead: "系统不会根据单一回答判断，而是结合信号强度、一致性和重叠程度来排序。",
+        labels: ["主要信号", "次要信号", "可信度", "额外澄清"],
+        confidence: ["结果接近", "中等可信度", "较高可信度"],
+        yes: "是",
+        no: "否"
+      },
+      ja: {
+        title: "エンジンはどのように判断しましたか？",
+        lead: "ひとつの回答だけで判断せず、サインの強さ、一貫性、重なりをもとに主な領域と二次的領域を整理します。",
+        labels: ["主なサイン", "二次的サイン", "信頼度", "追加確認"],
+        confidence: ["近い結果", "中程度の信頼度", "より高い信頼度"],
+        yes: "はい",
+        no: "いいえ"
+      },
+      ar: {
+        title: "كيف اتخذ النظام قراره؟",
+        lead: "لا يعتمد النظام على إجابة واحدة، بل يرتب المجالات حسب قوة الإشارة واتساقها والتداخل بينها.",
+        labels: ["الإشارة الرئيسية", "إشارة ثانوية", "درجة الثقة", "توضيح إضافي"],
+        confidence: ["نتيجة متقاربة", "ثقة متوسطة", "ثقة أعلى"],
+        yes: "نعم",
+        no: "لا"
+      },
+      pl: {
+        title: "Jak silnik podjął decyzję?",
+        lead: "System nie wnioskuje z jednej odpowiedzi, tylko porządkuje obszary według siły sygnału, spójności i nakładania się.",
+        labels: ["Sygnał główny", "Sygnał wtórny", "Pewność", "Dodatkowe doprecyzowanie"],
+        confidence: ["bliski wynik", "umiarkowana pewność", "wyższa pewność"],
+        yes: "tak",
+        no: "nie"
+      },
+      pt: {
+        title: "Como o motor decidiu?",
+        lead: "O motor não conclui por uma única resposta. Ele ordena áreas por força do sinal, consistência e sobreposição.",
+        labels: ["Sinal principal", "Sinal secundário", "Confiança", "Esclarecimento extra"],
+        confidence: ["resultado próximo", "confiança moderada", "confiança maior"],
+        yes: "sim",
+        no: "não"
+      },
+      fr: {
+        title: "Comment le moteur a-t-il décidé ?",
+        lead: "Le moteur ne déduit pas à partir d'une seule réponse. Il classe les domaines selon l'intensité, la cohérence et les recoupements.",
+        labels: ["Signal principal", "Signal secondaire", "Confiance", "Clarification supplémentaire"],
+        confidence: ["résultat proche", "confiance modérée", "confiance plus élevée"],
+        yes: "oui",
+        no: "non"
+      }
+    });
+
+    const confidence =
+      gap >= 0.35 ? copy.confidence[2] : gap >= 0.16 ? copy.confidence[1] : copy.confidence[0];
+    const values = [
+      `${disorderLabel(primary.domain || state.detectedRisk)} (${formatDecisionScore(primary.weightedSignal)})`,
+      secondary.domain ? `${disorderLabel(secondary.domain)} (${formatDecisionScore(secondary.weightedSignal)})` : "-",
+      confidence,
+      state.needsExtra ? copy.yes : copy.no
+    ];
+
+    return `
+      <div class="nm-decision-explain-card">
+        <h4>${escapeHtml(copy.title)}</h4>
+        <p>${escapeHtml(copy.lead)}</p>
+        <div class="nm-decision-explain-grid">
+          ${copy.labels.map((label, index) => `
+            <div class="nm-decision-explain-item">
+              <span class="nm-decision-explain-label">${escapeHtml(label)}</span>
+              <span class="nm-decision-explain-value">${escapeHtml(values[index])}</span>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    `;
+  }
+
+  function getPrePaymentTrustCopy() {
+    return getCustomerCopy({
+      hu: {
+        title: "Miért érdemes most elkészíteni a teljes riportot?",
+        items: [
+          { title: "Személyre szabott értelmezés", text: "A válaszaid alapján már látszik egy minta. A teljes riport ezt szülőként is használható magyarázattá fordítja." },
+          { title: "Több, mint egy címke", text: "A fő és másodlagos jelzéseket, korosztályt és válaszmintázatokat együtt értelmezi." },
+          { title: "Konkrét következő lépések", text: "Segít eldönteni, mit figyelj meg otthon, óvodában vagy iskolai helyzetekben." }
+        ],
+        note: "Egyszeri fizetés, nincs előfizetés. A PDF riport emailben érkezik."
+      },
+      en: {
+        title: "Why generate the full report now?",
+        items: [
+          { title: "Personalized interpretation", text: "A pattern is already visible. The full report turns it into a clear parent-friendly explanation." },
+          { title: "More than a label", text: "It considers primary and secondary signals, age context, and response patterns together." },
+          { title: "Concrete next steps", text: "It helps you know what to observe at home, preschool, or school." }
+        ],
+        note: "One-time payment, no subscription. The PDF report arrives by email."
+      },
+      de: {
+        title: "Warum den vollständigen Bericht jetzt erstellen?",
+        items: [
+          { title: "Persönliche Einordnung", text: "Ein Muster ist sichtbar. Der Bericht macht daraus eine klare, elternfreundliche Erklärung." },
+          { title: "Mehr als ein Etikett", text: "Haupt- und Nebensignale, Alter und Antwortmuster werden gemeinsam betrachtet." },
+          { title: "Konkrete nächste Schritte", text: "Du siehst, worauf du zu Hause, in der Kita oder Schule achten kannst." }
+        ],
+        note: "Einmalige Zahlung, kein Abo. Der PDF-Bericht kommt per E-Mail."
+      },
+      it: {
+        title: "Perché generare ora il report completo?",
+        items: [
+          { title: "Interpretazione personalizzata", text: "Il pattern visibile diventa una spiegazione chiara e utile per i genitori." },
+          { title: "Più di un'etichetta", text: "Segnali principali, secondari, età e risposte vengono letti insieme." },
+          { title: "Passi concreti", text: "Aiuta a capire cosa osservare a casa, all'asilo o a scuola." }
+        ],
+        note: "Pagamento unico, nessun abbonamento. Il PDF arriva via email."
+      },
+      es: {
+        title: "¿Por qué generar ahora el informe completo?",
+        items: [
+          { title: "Interpretación personalizada", text: "El patrón visible se convierte en una explicación clara para familias." },
+          { title: "Más que una etiqueta", text: "Señales principales, secundarias, edad y respuestas se interpretan juntas." },
+          { title: "Pasos concretos", text: "Ayuda a saber qué observar en casa, infantil o la escuela." }
+        ],
+        note: "Pago único, sin suscripción. El PDF llega por email."
+      },
+      zh: {
+        title: "为什么现在生成完整报告？",
+        items: [
+          { title: "个性化解读", text: "回答中已经出现模式，完整报告会把它整理成家长容易理解的说明。" },
+          { title: "不只是标签", text: "同时考虑主要信号、次要信号、年龄背景和回答模式。" },
+          { title: "具体下一步", text: "帮助你知道在家、幼儿园或学校情境中可以观察什么。" }
+        ],
+        note: "一次性付款，无订阅。PDF报告将通过电子邮件发送。"
+      },
+      ja: {
+        title: "なぜ今、完全版レポートを作成する価値があるのか",
+        items: [
+          { title: "個別化された解釈", text: "回答から見える傾向を、保護者が使いやすい説明に整理します。" },
+          { title: "単なるラベルではありません", text: "主なサイン、二次的サイン、年齢背景、回答パターンを合わせて見ます。" },
+          { title: "具体的な次の一歩", text: "家庭、園、学校で何を観察すればよいかを考える助けになります。" }
+        ],
+        note: "一回限りの支払いで、サブスクリプションはありません。PDFレポートはメールで届きます。"
+      },
+      ar: {
+        title: "لماذا يستحق إنشاء التقرير الكامل الآن؟",
+        items: [
+          { title: "تفسير شخصي", text: "النمط بدأ يظهر من الإجابات، والتقرير يحوله إلى شرح واضح ومفيد للوالدين." },
+          { title: "أكثر من تسمية", text: "يربط بين الإشارات الرئيسية والثانوية وسياق العمر ونمط الإجابات." },
+          { title: "خطوات تالية ملموسة", text: "يساعدك على معرفة ما يمكن ملاحظته في البيت أو الروضة أو المدرسة." }
+        ],
+        note: "دفعة واحدة دون اشتراك. يصل تقرير PDF عبر البريد الإلكتروني."
+      },
+      pl: {
+        title: "Dlaczego warto wygenerować pełny raport teraz?",
+        items: [
+          { title: "Personalizowana interpretacja", text: "Widoczny wzorzec zostaje zamieniony w jasne wyjaśnienie dla rodzica." },
+          { title: "Więcej niż etykieta", text: "Sygnały główne, wtórne, wiek i odpowiedzi są interpretowane razem." },
+          { title: "Konkretne kolejne kroki", text: "Pomaga wiedzieć, co obserwować w domu, przedszkolu lub szkole." }
+        ],
+        note: "Płatność jednorazowa, bez abonamentu. PDF przychodzi emailem."
+      },
+      pt: {
+        title: "Por que gerar o relatório completo agora?",
+        items: [
+          { title: "Interpretação personalizada", text: "O padrão visível vira uma explicação clara e útil para os pais." },
+          { title: "Mais que um rótulo", text: "Sinais principais, secundários, idade e respostas são vistos juntos." },
+          { title: "Próximos passos concretos", text: "Ajuda a saber o que observar em casa, na pré-escola ou na escola." }
+        ],
+        note: "Pagamento único, sem assinatura. O PDF chega por email."
+      },
+      fr: {
+        title: "Pourquoi générer le rapport complet maintenant ?",
+        items: [
+          { title: "Interprétation personnalisée", text: "Le schéma visible devient une explication claire et utile pour les parents." },
+          { title: "Plus qu'une étiquette", text: "Signaux principaux, secondaires, âge et réponses sont interprétés ensemble." },
+          { title: "Prochaines étapes concrètes", text: "Aide à savoir quoi observer à la maison, en maternelle ou à l'école." }
+        ],
+        note: "Paiement unique, sans abonnement. Le PDF arrive par email."
+      }
+    });
+  }
+
+  function getSummaryNextStepCopy() {
+    return getCustomerCopy({
+      hu: {
+        title: "Mit tisztáz a teljes riport?",
+        lead: "Az előszűrés már mutat egy irányt. A teljes riport abban segít, hogy a jelzés ne csak egy szám vagy címke legyen, hanem érthető, korosztályhoz illesztett mintázat.",
+        items: [
+          { title: "Mi állhat a válaszok mögött?", text: "A fő és másodlagos jelzéseket együtt értelmezi, hogy kevesebb legyen a félreértés." },
+          { title: "Mennyire következetes a minta?", text: "A válaszok erősségét, átfedését és bizonytalanságát is figyelembe veszi." },
+          { title: "Mit érdemes kipróbálni először?", text: "A javaslatok szülőként is használható, kicsi lépésekre vannak bontva." }
+        ]
+      },
+      en: {
+        title: "What does the full report clarify?",
+        lead: "The screening already shows a direction. The full report turns it into an understandable, age-aware pattern instead of just a score or label.",
+        items: [
+          { title: "What may be behind the answers?", text: "It interprets primary and secondary signals together to reduce misunderstandings." },
+          { title: "How consistent is the pattern?", text: "It considers signal strength, overlap, and uncertainty in the response profile." },
+          { title: "What is worth trying first?", text: "Suggestions are translated into small parent-friendly next steps." }
+        ]
+      },
+      de: {
+        title: "Was klärt der vollständige Bericht?",
+        lead: "Das Screening zeigt eine Richtung. Der Bericht macht daraus ein verständliches, altersbezogenes Muster.",
+        items: [
+          { title: "Was kann hinter den Antworten stehen?", text: "Haupt- und Nebensignale werden gemeinsam betrachtet." },
+          { title: "Wie stabil ist das Muster?", text: "Signalstärke, Überschneidung und Unsicherheit werden berücksichtigt." },
+          { title: "Was zuerst ausprobieren?", text: "Empfehlungen werden in kleine, elternfreundliche Schritte übersetzt." }
+        ]
+      },
+      it: {
+        title: "Cosa chiarisce il report completo?",
+        lead: "Lo screening mostra una direzione. Il report la trasforma in un modello comprensibile e adatto all'età.",
+        items: [
+          { title: "Cosa può esserci dietro le risposte?", text: "Interpreta insieme segnali principali e secondari." },
+          { title: "Quanto è coerente il modello?", text: "Considera intensità, sovrapposizioni e incertezza." },
+          { title: "Cosa provare per primo?", text: "Le indicazioni diventano piccoli passi per i genitori." }
+        ]
+      },
+      es: {
+        title: "¿Qué aclara el informe completo?",
+        lead: "El cribado ya muestra una dirección. El informe la convierte en un patrón comprensible y ajustado a la edad.",
+        items: [
+          { title: "¿Qué puede haber detrás?", text: "Interpreta señales principales y secundarias juntas." },
+          { title: "¿Qué tan consistente es?", text: "Considera intensidad, solapamiento e incertidumbre." },
+          { title: "¿Qué probar primero?", text: "Las sugerencias se traducen en pasos pequeños para familias." }
+        ]
+      },
+      zh: {
+        title: "完整报告会进一步说明什么？",
+        lead: "筛查已经显示方向。完整报告会把它整理成年龄适配、可理解的模式，而不仅是分数或标签。",
+        items: [
+          { title: "回答背后可能是什么？", text: "一起解读主要和次要信号，减少误解。" },
+          { title: "模式有多一致？", text: "考虑信号强度、重叠和不确定性。" },
+          { title: "可以先尝试什么？", text: "建议会转化为家长容易执行的小步骤。" }
+        ]
+      },
+      ja: {
+        title: "完全版レポートで何がわかりますか？",
+        lead: "スクリーニングは方向性を示します。完全版では、点数やラベルだけでなく、年齢背景に合わせたわかりやすい傾向として整理します。",
+        items: [
+          { title: "回答の背景", text: "主なサインと二次的なサインを合わせて解釈します。" },
+          { title: "一貫性", text: "強さ、重なり、不確実性も確認します。" },
+          { title: "最初の一歩", text: "保護者が使いやすい小さな行動に落とし込みます。" }
+        ]
+      },
+      ar: {
+        title: "ماذا يوضح التقرير الكامل؟",
+        lead: "الفحص الأولي يعطي اتجاها عاما. التقرير الكامل يحوله إلى نمط واضح ومناسب لعمر الطفل، وليس مجرد رقم أو تسمية.",
+        items: [
+          { title: "ما وراء الإجابات؟", text: "يفسر الإشارات الرئيسية والثانوية معا لتقليل سوء الفهم." },
+          { title: "مدى ثبات النمط", text: "يراعي قوة الإشارة والتداخل ودرجة عدم اليقين." },
+          { title: "ما الخطوة الأولى؟", text: "يحول النتيجة إلى خطوات صغيرة يمكن للوالدين استخدامها." }
+        ]
+      },
+      pl: {
+        title: "Co wyjaśnia pełny raport?",
+        lead: "Screening pokazuje kierunek. Raport zamienia go w zrozumiały wzorzec dopasowany do wieku, nie tylko wynik lub etykietę.",
+        items: [
+          { title: "Co może stać za odpowiedziami?", text: "Łączy sygnały główne i wtórne, aby ograniczyć nieporozumienia." },
+          { title: "Jak spójny jest wzorzec?", text: "Uwzględnia siłę sygnału, nakładanie się i niepewność." },
+          { title: "Co spróbować najpierw?", text: "Wskazówki są rozpisane na małe kroki dla rodziców." }
+        ]
+      },
+      pt: {
+        title: "O que o relatório completo esclarece?",
+        lead: "A triagem já mostra uma direção. O relatório transforma isso em um padrão compreensível e adequado à idade.",
+        items: [
+          { title: "O que pode estar por trás?", text: "Interpreta sinais principais e secundários em conjunto." },
+          { title: "O padrão é consistente?", text: "Considera força do sinal, sobreposição e incerteza." },
+          { title: "O que tentar primeiro?", text: "As sugestões viram pequenos passos para os pais." }
+        ]
+      },
+      fr: {
+        title: "Que clarifie le rapport complet ?",
+        lead: "Le dépistage montre une direction. Le rapport la transforme en profil compréhensible et adapté à l'âge.",
+        items: [
+          { title: "Que peut-il y avoir derrière ?", text: "Il relie les signaux principaux et secondaires." },
+          { title: "Le profil est-il cohérent ?", text: "Il tient compte de l'intensité, du recoupement et de l'incertitude." },
+          { title: "Que tenter d'abord ?", text: "Les conseils sont formulés en petites étapes pour les parents." }
+        ]
+      }
+    });
+  }
+
+  function getSummaryScienceCopy() {
+    return getCustomerCopy({
+      hu: {
+        title: "Miért ad többet a teljes kiértékelés?",
+        lead: "A válaszokból nem egyetlen pontszámot érdemes nézni. A teljes riport a jelzések erősségét, következetességét, átfedését és a gyermek korosztályát együtt értelmezi.",
+        items: [
+          { title: "Mintázat, nem címke", text: "Rendszerezi a viselkedési és érzelmi jelzéseket anélkül, hogy diagnózist mondana." },
+          { title: "Korosztályi kontextus", text: "Az óvodás, kisiskolás és nagyobb gyermekek jelzéseit másként kell értelmezni." },
+          { title: "Átfedések kezelése", text: "Láthatóvá teszi, ha több terület közel van egymáshoz." },
+          { title: "Szülőbarát következő lépés", text: "A következtetést gyakorlatias, nyugodt nyelvre fordítja." }
+        ]
+      },
+      en: {
+        title: "Why does the full analysis add value?",
+        lead: "The short summary only shows the strongest pattern. The full report compares signal strength, consistency, overlap, and age context.",
+        items: [
+          { title: "Pattern, not label", text: "It organizes behavioral and emotional signals without making a diagnosis." },
+          { title: "Age context", text: "Preschool, early school age, and older children need different interpretation." },
+          { title: "Overlap handling", text: "It highlights uncertainty between similar symptom areas." },
+          { title: "Parent-friendly next step", text: "The report gives observation and support directions." }
+        ]
+      },
+      de: {
+        title: "Warum bringt die vollständige Analyse mehr?",
+        lead: "Der Bericht vergleicht Signalstärke, Konsistenz, Überschneidungen und Alterskontext.",
+        items: [
+          { title: "Muster statt Etikett", text: "Ordnet Verhaltens- und emotionale Signale ohne Diagnose." },
+          { title: "Alterskontext", text: "Verschiedene Altersgruppen brauchen unterschiedliche Einordnung." },
+          { title: "Überschneidungen", text: "Ähnliche Signalbereiche und Unsicherheiten werden sichtbar." },
+          { title: "Nächster Schritt", text: "Die Ergebnisse werden alltagsnah formuliert." }
+        ]
+      },
+      it: {
+        title: "Perché l'analisi completa aggiunge valore?",
+        lead: "Il report confronta intensità, coerenza, sovrapposizioni e contesto d'età.",
+        items: [
+          { title: "Pattern, non etichetta", text: "Organizza segnali senza formulare diagnosi." },
+          { title: "Contesto d'età", text: "Età diverse richiedono letture diverse." },
+          { title: "Sovrapposizioni", text: "Mostra incertezze tra aree simili." },
+          { title: "Passo successivo", text: "Traduce il risultato in indicazioni pratiche." }
+        ]
+      },
+      es: {
+        title: "¿Por qué aporta más valor el análisis completo?",
+        lead: "El informe compara intensidad, consistencia, solapamientos y contexto de edad.",
+        items: [
+          { title: "Patrón, no etiqueta", text: "Organiza señales sin emitir diagnóstico." },
+          { title: "Contexto de edad", text: "Las edades distintas requieren lecturas distintas." },
+          { title: "Solapamientos", text: "Muestra incertidumbre entre áreas similares." },
+          { title: "Siguiente paso", text: "Convierte el resultado en indicaciones prácticas." }
+        ]
+      },
+      zh: {
+        title: "完整分析为什么更有价值？",
+        lead: "完整报告会比较信号强度、一致性、重叠情况和年龄背景。",
+        items: [
+          { title: "模式，不是标签", text: "整理行为和情绪信号，但不作诊断。" },
+          { title: "年龄背景", text: "不同年龄阶段需要不同解释。" },
+          { title: "处理重叠", text: "显示相似领域之间的不确定性。" },
+          { title: "家长可用的下一步", text: "把结果转化为观察和支持方向。" }
+        ]
+      },
+      ja: {
+        title: "完全な分析にはどんな価値がありますか？",
+        lead: "完全版では、サインの強さ、一貫性、重なり、年齢背景を合わせて確認します。",
+        items: [
+          { title: "ラベルではなく傾向", text: "診断ではなく、行動面と感情面のサインを整理します。" },
+          { title: "年齢背景", text: "年齢段階によって解釈は変わります。" },
+          { title: "重なりの扱い", text: "似た領域の不確実性を示します。" },
+          { title: "保護者向けの次の一歩", text: "観察と支援の方向性をわかりやすく示します。" }
+        ]
+      },
+      ar: {
+        title: "لماذا يضيف التحليل الكامل قيمة أكبر؟",
+        lead: "يقارن التقرير قوة الإشارة واتساقها وتداخلها وسياق عمر الطفل.",
+        items: [
+          { title: "نمط لا تسمية", text: "ينظم الإشارات السلوكية والعاطفية دون تشخيص." },
+          { title: "سياق العمر", text: "تختلف القراءة حسب المرحلة العمرية." },
+          { title: "التداخلات", text: "يوضح عدم اليقين بين المجالات المتشابهة." },
+          { title: "خطوة تالية للوالدين", text: "يقدم اتجاهات للملاحظة والدعم." }
+        ]
+      },
+      pl: {
+        title: "Dlaczego pełna analiza daje więcej?",
+        lead: "Raport porównuje siłę sygnału, spójność, nakładanie się i kontekst wieku.",
+        items: [
+          { title: "Wzorzec, nie etykieta", text: "Porządkuje sygnały bez stawiania diagnozy." },
+          { title: "Kontekst wieku", text: "Różne etapy wieku wymagają różnej interpretacji." },
+          { title: "Nakładanie się", text: "Pokazuje niepewność między podobnymi obszarami." },
+          { title: "Kolejny krok", text: "Przekłada wynik na obserwację i wsparcie." }
+        ]
+      },
+      pt: {
+        title: "Por que a análise completa acrescenta valor?",
+        lead: "O relatório compara força do sinal, consistência, sobreposição e contexto de idade.",
+        items: [
+          { title: "Padrão, não rótulo", text: "Organiza sinais sem fazer diagnóstico." },
+          { title: "Contexto de idade", text: "Idades diferentes pedem leituras diferentes." },
+          { title: "Sobreposições", text: "Mostra incertezas entre áreas semelhantes." },
+          { title: "Próximo passo", text: "Transforma o resultado em observação e apoio." }
+        ]
+      },
+      fr: {
+        title: "Pourquoi l'analyse complète apporte-t-elle plus ?",
+        lead: "Le rapport compare l'intensité, la cohérence, les recoupements et le contexte d'âge.",
+        items: [
+          { title: "Schéma, pas étiquette", text: "Organise les signaux sans poser de diagnostic." },
+          { title: "Contexte d'âge", text: "Les âges différents demandent une lecture différente." },
+          { title: "Recoupements", text: "Montre l'incertitude entre domaines similaires." },
+          { title: "Prochaine étape", text: "Traduit le résultat en pistes d'observation." }
+        ]
+      }
+    });
+  }
+
+  function getSummaryPayCopy(t) {
+    return getCustomerCopy({
+      hu: { title: "A teljes riport segít érthetően látni a mintázatot.", text: "Korosztályi kontextust, részletes területi bontást és gyakorlati következő lépéseket kapsz PDF-ben.", label: "Fizetés és teljes riport" },
+      en: { title: "The full report helps make the pattern easier to understand.", text: "You get age-aware context, detailed area breakdowns, and practical next steps in a PDF report.", label: "Pay and get full report" },
+      de: { title: "Der vollständige Bericht macht das Muster verständlicher.", text: "Du erhältst Alterskontext, Bereiche und praktische nächste Schritte als PDF.", label: "Bezahlen und Bericht erhalten" },
+      it: { title: "Il report completo rende il pattern più comprensibile.", text: "Ricevi contesto per età, aree dettagliate e passi pratici in PDF.", label: "Paga e ricevi il report" },
+      es: { title: "El informe completo ayuda a entender mejor el patrón.", text: "Recibirás contexto por edad, desglose detallado y próximos pasos prácticos en PDF.", label: "Pagar y recibir informe" },
+      zh: { title: "完整报告帮助你更容易理解这个模式。", text: "你会获得年龄背景、详细领域拆解和实用下一步建议。", label: "支付并获取完整报告" },
+      ja: { title: "完全版レポートで傾向をより理解しやすくします。", text: "年齢背景、詳しい領域別整理、実用的な次の一歩をPDFで受け取れます。", label: "支払い、完全版レポートを受け取る" },
+      ar: { title: "يساعدك التقرير الكامل على فهم النمط بوضوح أكبر.", text: "ستحصل على سياق العمر وتفصيل المجالات وخطوات عملية تالية في ملف PDF.", label: "الدفع والحصول على التقرير الكامل" },
+      pl: { title: "Pełny raport pomaga lepiej zrozumieć wzorzec.", text: "Otrzymasz kontekst wieku, szczegółowy podział obszarów i praktyczne kroki w PDF.", label: "Zapłać i odbierz raport" },
+      pt: { title: "O relatório completo ajuda a entender melhor o padrão.", text: "Você recebe contexto de idade, áreas detalhadas e próximos passos práticos em PDF.", label: "Pagar e receber relatório" },
+      fr: { title: "Le rapport complet aide à mieux comprendre le schéma.", text: "Vous recevez le contexte d'âge, des domaines détaillés et des étapes pratiques en PDF.", label: "Payer et recevoir le rapport" }
+    }) || { title: "", text: "", label: t.pay };
+  }
+
+  function getCheckoutErrorMessage(error, t) {
+    const message = String((error && error.message) || "");
+    const copy = getCustomerCopy({
+      hu: {
+        invalidUrl: "A fizetési link nem érkezett meg megfelelően. Kérlek, próbáld újra, vagy jelezd nekünk, ha megismétlődik.",
+        network: "Nem sikerült kapcsolódni a fizetési kiszolgálóhoz. Ellenőrizd a kapcsolatot, majd próbáld újra.",
+        rate: "Túl sok próbálkozás történt rövid időn belül. Kérlek várj egy kicsit, majd próbáld újra.",
+        fallback: "Nem sikerült elindítani a fizetést."
+      },
+      en: {
+        invalidUrl: "The payment link was not returned correctly. Please try again, or contact us if this repeats.",
+        network: "Could not connect to the checkout service. Please check your connection and try again.",
+        rate: "Too many attempts were made in a short time. Please wait a moment and try again.",
+        fallback: "Could not start checkout."
+      },
+      de: { invalidUrl: "Der Zahlungslink wurde nicht korrekt zurückgegeben. Bitte versuche es erneut.", network: "Die Verbindung zum Zahlungsdienst ist fehlgeschlagen. Bitte prüfe deine Verbindung.", rate: "Zu viele Versuche in kurzer Zeit. Bitte warte kurz und versuche es erneut.", fallback: "Checkout konnte nicht gestartet werden." },
+      it: { invalidUrl: "Il link di pagamento non è stato restituito correttamente. Riprova.", network: "Impossibile connettersi al servizio di pagamento. Controlla la connessione.", rate: "Troppi tentativi in poco tempo. Attendi un momento e riprova.", fallback: "Impossibile avviare il pagamento." },
+      es: { invalidUrl: "El enlace de pago no se recibió correctamente. Inténtalo de nuevo.", network: "No se pudo conectar con el servicio de pago. Revisa la conexión.", rate: "Demasiados intentos en poco tiempo. Espera un momento y vuelve a intentarlo.", fallback: "No se pudo iniciar el pago." },
+      zh: { invalidUrl: "支付链接返回不正确。请重试。", network: "无法连接到支付服务。请检查网络后重试。", rate: "短时间内尝试次数过多。请稍等后重试。", fallback: "无法启动支付。" },
+      ja: { invalidUrl: "支払いリンクが正しく返されませんでした。もう一度お試しください。", network: "決済サービスに接続できませんでした。接続を確認してください。", rate: "短時間に試行回数が多すぎます。少し待ってから再試行してください。", fallback: "決済を開始できませんでした。" },
+      ar: { invalidUrl: "لم يتم إنشاء رابط الدفع بشكل صحيح. يرجى المحاولة مرة أخرى.", network: "تعذر الاتصال بخدمة الدفع. تحقق من الاتصال ثم حاول مرة أخرى.", rate: "تمت محاولات كثيرة خلال وقت قصير. يرجى الانتظار قليلا ثم المحاولة مرة أخرى.", fallback: "تعذر بدء الدفع." },
+      pl: { invalidUrl: "Link płatności nie został zwrócony poprawnie. Spróbuj ponownie.", network: "Nie udało się połączyć z usługą płatności. Sprawdź połączenie.", rate: "Zbyt wiele prób w krótkim czasie. Poczekaj chwilę i spróbuj ponownie.", fallback: "Nie udało się rozpocząć płatności." },
+      pt: { invalidUrl: "O link de pagamento não foi retornado corretamente. Tente novamente.", network: "Não foi possível conectar ao serviço de pagamento. Verifique a conexão.", rate: "Muitas tentativas em pouco tempo. Aguarde um momento e tente novamente.", fallback: "Não foi possível iniciar o pagamento." },
+      fr: { invalidUrl: "Le lien de paiement n'a pas été renvoyé correctement. Réessayez.", network: "Impossible de se connecter au service de paiement. Vérifiez la connexion.", rate: "Trop de tentatives en peu de temps. Attendez un moment puis réessayez.", fallback: "Impossible de démarrer le paiement." }
+    });
+
+    if (/not a valid url/i.test(message)) return copy.invalidUrl;
+    if (/failed to fetch|network|load failed/i.test(message)) return copy.network;
+    if (/too many requests/i.test(message)) return copy.rate;
+    return message || t.checkoutError || copy.fallback;
   }
 
   async function startCheckout() {

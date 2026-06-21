@@ -26,6 +26,225 @@ const BIRTH_DATE_PATHS = [
   ["metadata", "birthDate"]
 ];
 
+const LANG_COPY = {
+  hu: {
+    emailTitle: "Korosztályi értelmezés",
+    emailRecommendationTitle: "Korosztályi javaslatok",
+    promptWithAge:
+      "A korosztályi mezőt használd a 6. rész és a gyakorlati javaslatok finomítására. Ne állíts túlzott korosztályi pontosságot.",
+    promptWithoutAge:
+      "Az életkor hiányzik. Ne következtess pontos életkorra; röviden jelezd a korosztályi bizonytalanságot, és adaptálható tanácsokat adj.",
+    observationEmpty:
+      "A következő héten azt érdemes figyelni, hogy a nehézség mely helyzetekben erősödik, és mi segít a visszarendeződésben.",
+    observationWithAreas:
+      "A következő héten külön figyeld ezeket a területeket: {areas}. A cél nem címkézés, hanem annak tisztázása, milyen helyzetben és milyen támogatással változik a minta.",
+    escalationHigh:
+      "Ha a jelzés erős, több környezetben tartós, romló önértékelést, visszahúzódást, erős szorongást vagy biztonsági aggodalmat érint, ne csak megfigyelésben gondolkodj: érdemes szakemberrel egyeztetni.",
+    escalationDefault:
+      "Ha a nehézség több környezetben tartósan fennáll, a családi vagy iskolai működést érdemben terheli, vagy a gyermek önbizalma csökken, szakember bevonása segíthet pontosabb képet adni."
+  },
+  en: {
+    emailTitle: "Age-group interpretation",
+    emailRecommendationTitle: "Age-aware recommendations",
+    promptWithAge:
+      "Use this age band to make section 6 and the practical recommendations developmentally specific. Do not overstate age precision.",
+    promptWithoutAge:
+      "Age is missing. Do not infer exact age. Include a short age-missing caveat and keep developmental advice adaptable.",
+    observationEmpty:
+      "Over the next week, observe where the difficulty becomes stronger and what helps the child settle or re-engage.",
+    observationWithAreas:
+      "Over the next week, pay special attention to these areas: {areas}. The goal is not labeling, but understanding where the pattern changes and which supports help.",
+    escalationHigh:
+      "If the signal is strong, persistent across settings, or linked with declining confidence, withdrawal, intense anxiety, or safety concerns, do not rely on observation alone: consider qualified support.",
+    escalationDefault:
+      "If the difficulty persists across settings, meaningfully affects family or school functioning, or the child's confidence declines, qualified support can help clarify the picture."
+  },
+  de: {
+    emailTitle: "Altersbezogene Einordnung",
+    emailRecommendationTitle: "Altersgerechte Empfehlungen",
+    promptWithAge:
+      "Nutze die Altersgruppe, um Abschnitt 6 und die praktischen Empfehlungen entwicklungsbezogen zu formulieren.",
+    promptWithoutAge:
+      "Das Alter fehlt. Leite kein genaues Alter ab und formuliere die Empfehlungen flexibel.",
+    observationEmpty:
+      "Beobachte in der nächsten Woche, in welchen Situationen die Schwierigkeit stärker wird und was beim Beruhigen oder Wiedereinstieg hilft.",
+    observationWithAreas:
+      "Achte in der nächsten Woche besonders auf diese Bereiche: {areas}. Ziel ist nicht eine Etikettierung, sondern ein besseres Verständnis hilfreicher Unterstützung.",
+    escalationHigh:
+      "Wenn das Signal stark, anhaltend oder mit Rückzug, sinkendem Selbstwert, starker Angst oder Sicherheitsbedenken verbunden ist, sollte fachliche Unterstützung einbezogen werden.",
+    escalationDefault:
+      "Wenn die Schwierigkeit mehrere Lebensbereiche belastet oder das Selbstvertrauen sinkt, kann fachliche Beratung helfen."
+  },
+  it: {
+    emailTitle: "Interpretazione per fascia d'età",
+    emailRecommendationTitle: "Suggerimenti adatti all'età",
+    promptWithAge:
+      "Usa la fascia d'età per rendere più mirate la sezione 6 e le raccomandazioni pratiche.",
+    promptWithoutAge:
+      "L'età manca. Non dedurre un'età precisa e mantieni i consigli adattabili.",
+    observationEmpty:
+      "Nella prossima settimana osserva dove la difficoltà aumenta e cosa aiuta il bambino a calmarsi o riprendere.",
+    observationWithAreas:
+      "Nella prossima settimana presta attenzione a queste aree: {areas}. L'obiettivo non è etichettare, ma capire quali sostegni aiutano.",
+    escalationHigh:
+      "Se il segnale è forte, persistente o legato a ritiro, ansia intensa, calo dell'autostima o preoccupazioni di sicurezza, valuta un supporto qualificato.",
+    escalationDefault:
+      "Se la difficoltà persiste in più contesti o pesa sulla vita familiare o scolastica, un confronto professionale può chiarire il quadro."
+  },
+  es: {
+    emailTitle: "Interpretación por edad",
+    emailRecommendationTitle: "Recomendaciones ajustadas a la edad",
+    promptWithAge:
+      "Usa la franja de edad para hacer más específicas la sección 6 y las recomendaciones prácticas.",
+    promptWithoutAge:
+      "Falta la edad. No infieras una edad exacta y mantén las recomendaciones adaptables.",
+    observationEmpty:
+      "Durante la próxima semana observa en qué situaciones aumenta la dificultad y qué ayuda al niño a regularse.",
+    observationWithAreas:
+      "Durante la próxima semana presta atención a estas áreas: {areas}. El objetivo no es etiquetar, sino entender qué apoyos ayudan.",
+    escalationHigh:
+      "Si la señal es fuerte, persistente o se relaciona con retraimiento, baja autoestima, ansiedad intensa o dudas de seguridad, conviene consultar a un profesional.",
+    escalationDefault:
+      "Si la dificultad persiste en varios contextos o afecta la vida familiar o escolar, una consulta profesional puede aportar claridad."
+  },
+  zh: {
+    emailTitle: "按年龄阶段解读",
+    emailRecommendationTitle: "符合年龄特点的建议",
+    promptWithAge:
+      "请根据年龄阶段，让第 6 部分和实践建议更符合儿童的发展水平。",
+    promptWithoutAge:
+      "未提供年龄。不要推断具体年龄，建议应保持可调整。",
+    observationEmpty:
+      "接下来一周，观察哪些情境会让困难加重，以及什么能帮助孩子重新稳定下来。",
+    observationWithAreas:
+      "接下来一周，请特别留意这些方面：{areas}。目标不是贴标签，而是理解哪些支持真正有帮助。",
+    escalationHigh:
+      "如果信号强烈、持续存在，或伴随退缩、自信下降、明显焦虑或安全担忧，建议寻求专业支持。",
+    escalationDefault:
+      "如果困难在多个情境中持续影响家庭或学校生活，专业咨询可以帮助更清楚地理解情况。"
+  },
+  ja: {
+    emailTitle: "年齢段階に合わせた理解",
+    emailRecommendationTitle: "年齢に配慮した提案",
+    promptWithAge:
+      "年齢段階を使って、第6章と実践的な提案を発達段階に合わせて具体化してください。",
+    promptWithoutAge:
+      "年齢がありません。正確な年齢を推測せず、調整しやすい助言にしてください。",
+    observationEmpty:
+      "次の1週間は、どの場面で困りごとが強くなり、何が落ち着く助けになるかを観察してください。",
+    observationWithAreas:
+      "次の1週間は、特に次の領域を見てください：{areas}。目的はラベル付けではなく、どの支援が役立つかを理解することです。",
+    escalationHigh:
+      "サインが強い、長く続く、引きこもり、自信の低下、強い不安、安全面の心配がある場合は、専門家への相談を検討してください。",
+    escalationDefault:
+      "困りごとが複数の場面で続き、家庭や学校生活に影響する場合、専門家との相談が役立ちます。"
+  },
+  ar: {
+    emailTitle: "تفسير بحسب المرحلة العمرية",
+    emailRecommendationTitle: "توصيات مناسبة للعمر",
+    promptWithAge:
+      "استخدم المرحلة العمرية لجعل القسم السادس والتوصيات العملية أكثر ملاءمة للنمو.",
+    promptWithoutAge:
+      "العمر غير متوفر. لا تستنتج عمرًا دقيقًا، واجعل النصائح قابلة للتكييف.",
+    observationEmpty:
+      "خلال الأسبوع القادم، لاحظ المواقف التي تزداد فيها الصعوبة وما الذي يساعد الطفل على الهدوء أو العودة للنشاط.",
+    observationWithAreas:
+      "خلال الأسبوع القادم، انتبه خصوصًا إلى هذه المجالات: {areas}. الهدف ليس وضع تسمية، بل فهم الدعم المفيد.",
+    escalationHigh:
+      "إذا كانت الإشارة قوية أو مستمرة أو مرتبطة بالانسحاب أو انخفاض الثقة أو قلق شديد أو مخاوف تتعلق بالسلامة، فاستشارة مختص خطوة مهمة.",
+    escalationDefault:
+      "إذا استمرت الصعوبة في أكثر من بيئة وأثرت في الحياة الأسرية أو المدرسية، فقد تساعد الاستشارة المتخصصة على توضيح الصورة."
+  },
+  pl: {
+    emailTitle: "Interpretacja z uwzględnieniem wieku",
+    emailRecommendationTitle: "Zalecenia dopasowane do wieku",
+    promptWithAge:
+      "Wykorzystaj grupę wiekową, aby doprecyzować część 6 i praktyczne zalecenia.",
+    promptWithoutAge:
+      "Brakuje wieku. Nie zgaduj dokładnego wieku i zostaw zalecenia elastyczne.",
+    observationEmpty:
+      "W kolejnym tygodniu obserwuj, w jakich sytuacjach trudność narasta i co pomaga dziecku wrócić do równowagi.",
+    observationWithAreas:
+      "W kolejnym tygodniu zwróć uwagę na te obszary: {areas}. Celem nie jest etykietowanie, lecz zrozumienie pomocnych form wsparcia.",
+    escalationHigh:
+      "Jeśli sygnał jest silny, utrzymuje się lub wiąże się z wycofaniem, spadkiem samooceny, silnym lękiem albo obawami o bezpieczeństwo, warto skonsultować się ze specjalistą.",
+    escalationDefault:
+      "Jeśli trudność utrzymuje się w kilku środowiskach i obciąża życie rodzinne lub szkolne, konsultacja specjalistyczna może pomóc."
+  },
+  pt: {
+    emailTitle: "Interpretação por faixa etária",
+    emailRecommendationTitle: "Recomendações adequadas à idade",
+    promptWithAge:
+      "Use a faixa etária para tornar a seção 6 e as recomendações práticas mais específicas ao desenvolvimento.",
+    promptWithoutAge:
+      "A idade está ausente. Não deduza uma idade exata e mantenha os conselhos adaptáveis.",
+    observationEmpty:
+      "Na próxima semana, observe em quais situações a dificuldade aumenta e o que ajuda a criança a se reorganizar.",
+    observationWithAreas:
+      "Na próxima semana, observe especialmente estas áreas: {areas}. O objetivo não é rotular, mas entender quais apoios ajudam.",
+    escalationHigh:
+      "Se o sinal for forte, persistente ou ligado a retraimento, queda de autoestima, ansiedade intensa ou preocupação de segurança, procure apoio qualificado.",
+    escalationDefault:
+      "Se a dificuldade persistir em vários contextos e afetar a família ou a escola, uma consulta profissional pode ajudar."
+  },
+  fr: {
+    emailTitle: "Interprétation selon l'âge",
+    emailRecommendationTitle: "Recommandations adaptées à l'âge",
+    promptWithAge:
+      "Utilise la tranche d'âge pour rendre la section 6 et les recommandations pratiques plus adaptées au développement.",
+    promptWithoutAge:
+      "L'âge manque. N'infère pas un âge précis et garde des conseils adaptables.",
+    observationEmpty:
+      "La semaine prochaine, observe dans quelles situations la difficulté augmente et ce qui aide l'enfant à se réorganiser.",
+    observationWithAreas:
+      "La semaine prochaine, observe surtout ces domaines : {areas}. Le but n'est pas d'étiqueter, mais de comprendre quels soutiens aident.",
+    escalationHigh:
+      "Si le signal est fort, persistant ou lié à un retrait, une baisse de confiance, une anxiété intense ou une inquiétude de sécurité, un soutien qualifié est recommandé.",
+    escalationDefault:
+      "Si la difficulté persiste dans plusieurs contextes et pèse sur la vie familiale ou scolaire, une consultation professionnelle peut aider."
+  }
+};
+
+const AGE_COPY = {
+  hu: {
+    unknown: ["Korosztály nincs megadva", "Az életkor nincs külön megadva, ezért a mintázatot általános fejlődési és családi keretben érdemes értelmezni."],
+    under_three: ["3 év alatti korosztály", "Ebben az életkorban a figyelem, érzelemszabályozás, váltásokhoz való alkalmazkodás és kommunikáció gyorsan fejlődik."],
+    preschool: ["Óvodás korosztály", "Óvodás korban a figyelem, rugalmasság, társas jelzések és érzelmi szabályozás még erősen helyzetfüggő lehet."],
+    early_school: ["Kisiskolás korosztály", "Kisiskolás korban a feladattartás, szabálykövetés, tanulási terhelés és kortárs helyzetek jobban láthatóvá teszik a mintázatokat."],
+    middle_school: ["Felsős / korai serdülő korosztály", "Ebben a szakaszban a tervezés, terheléskezelés, önértékelés és teljesítménynyomás nagyobb szerepet kap."],
+    teen: ["Serdülő korosztály", "Serdülőknél a mintázatok gyakran belső feszültségben, kimerülésben, elkerülésben vagy teljesítményromlásban látszanak."],
+    older: ["Idősebb serdülő / fiatal felnőtt korosztály", "Ebben az életkorban a mindennapi önállóság, tanulási vagy munkaszervezés és mentális terhelés felől érdemes értelmezni a mintázatot."]
+  },
+  en: {
+    unknown: ["Age group not provided", "The child's age was not provided, so the pattern is interpreted within a general developmental and family-functioning frame."],
+    under_three: ["Under 3 years", "At this age, attention, regulation, transitions, and communication are still developing rapidly."],
+    preschool: ["Preschool age", "Around preschool age, attention, flexibility, social signals, and emotion regulation can still vary strongly by situation."],
+    early_school: ["Early school age", "At early school age, task persistence, rules, learning load, and peer situations can make patterns more visible."],
+    middle_school: ["Middle school / early adolescence", "Planning, load management, peer relationships, self-esteem, and performance pressure become more important."],
+    teen: ["Adolescence", "In adolescence, patterns may appear as internal tension, exhaustion, avoidance, or performance decline."],
+    older: ["Older teen / young adult", "At this age, the pattern is best interpreted through independence, study or work organization, relationships, and mental load."]
+  }
+};
+
+const DOMAIN_ACTIONS = {
+  hu: {
+    ADHD: ["Következő 7 nap: figyelmi és feladattartási támogatás", ["Bonts egy visszatérő rutint 3-5 látható lépésre.", "Adj rövid instrukciót, majd kérj visszamondást.", "Figyeld, hogy indításnál, fenntartásnál, váltásnál vagy befejezésnél erősebb-e a nehézség."]],
+    ASD: ["Következő 7 nap: kiszámíthatóság és társas-szenzoros terhelés", ["Jelezz előre egy nehéz átmenetet.", "Figyeld, hogy társas bizonytalanság, szenzoros terhelés vagy rutinváltozás kapcsolódik-e hozzá.", "Használj rövid, konkrét mondatokat és több feldolgozási időt."]],
+    ANXIETY: ["Következő 7 nap: aggodalom és elkerülés finom követése", ["Jegyezd fel, mikor nő a feszültség.", "A megnyugtatás mellett adj egy kicsi, biztonságos lépést az elkerült helyzet felé.", "Figyeld a testi jeleket is: alvás, hasfájás, fejfájás vagy visszahúzódás."]],
+    DEPRESSION: ["Következő 7 nap: hangulat, energia és kapcsolódás", ["Naponta egyszer figyeld az energiaszintet, érdeklődést és kedvet.", "Tervezz egy alacsony nyomású, kapcsolódó tevékenységet.", "Erősödő lehangoltság vagy visszahúzódás esetén kérj szakmai segítséget."]],
+    LEARNING: ["Következő 7 nap: tanulási helyzetek pontos szétválasztása", ["Válassz egy konkrét feladattípust: olvasás, írás, matek vagy instrukció.", "Nézd meg, hogy a gond megértésben, tempóban vagy kivitelezésben jelenik meg.", "Kérj pedagógustól konkrét példát arról, milyen támogatás segít."]],
+    UNKNOWN: ["Következő 7 nap: egy minta tisztázása", ["Válassz egy visszatérő helyzetet.", "Figyeld, mi történik előtte, mi tartja fenn és mi segít.", "A következő lépés legyen kicsi, mérhető és életkorhoz igazított."]]
+  },
+  en: {
+    ADHD: ["Next 7 days: support attention and task persistence", ["Break one recurring routine into 3-5 visible steps.", "Give a short instruction, then ask for the first next step.", "Observe whether the difficulty is strongest during starting, staying with, switching, or finishing."]],
+    ASD: ["Next 7 days: predictability and social-sensory load", ["Give a visible warning before one difficult transition.", "Observe whether social uncertainty, sensory load, or routine change is linked.", "Use short concrete sentences and allow more processing time."]],
+    ANXIETY: ["Next 7 days: track worry and avoidance gently", ["Note when tension increases.", "Alongside reassurance, offer one small safe step toward the avoided situation.", "Watch body signals too: sleep, stomachaches, headaches, or withdrawal."]],
+    DEPRESSION: ["Next 7 days: mood, energy, and connection", ["Once a day, briefly track energy, interest, and mood.", "Plan one low-pressure connecting activity.", "If low mood or withdrawal increases, seek qualified support."]],
+    LEARNING: ["Next 7 days: separate learning situations clearly", ["Choose one task type: reading, writing, math, or instructions.", "Check whether the difficulty is in understanding, pace, or output.", "Ask educators for concrete examples of what helps."]],
+    UNKNOWN: ["Next 7 days: clarify one recurring pattern", ["Choose one recurring situation.", "Watch what happens before it, what keeps it going, and what helps.", "Make the next step small, measurable, and age-appropriate."]]
+  }
+};
+
 function readPath(source, path) {
   return path.reduce((current, key) => {
     if (!current || typeof current !== "object") return undefined;
@@ -40,8 +259,7 @@ function normalizeAge(value) {
     return Number.isFinite(value) && value > 0 && value < 25 ? value : null;
   }
 
-  const text = String(value).trim().replace(",", ".");
-  const match = text.match(/\d+(?:\.\d+)?/);
+  const match = String(value).trim().replace(",", ".").match(/\d+(?:\.\d+)?/);
   if (!match) return null;
 
   const parsed = Number(match[0]);
@@ -87,177 +305,96 @@ export function getAgeBand(ageYears) {
   return "older";
 }
 
-function getCopy(lang = "en") {
-  const hu = {
-    unknown: {
-      label: "Korosztály nincs megadva",
-      interpretation:
-        "A gyermek életkora nincs külön megadva, ezért a riport a válaszok mintázatát általános fejlődési és családi működési keretben értelmezi.",
-      recommendations: [
-        "A javaslatokat az életkornak megfelelő elvárásokhoz érdemes igazítani.",
-        "Figyeld, hogy a nehézség több helyzetben is megjelenik-e, vagy inkább egy adott rutin, terhelés vagy környezet váltja ki.",
-        "Ha később bekerül a gyermek életkora, a riport pontosabb korosztályi hangsúlyokat tud adni."
-      ]
-    },
-    under_three: {
-      label: "3 év alatti korosztály",
-      interpretation:
-        "Ebben az életkorban a figyelem, érzelemszabályozás, váltásokhoz való alkalmazkodás és kommunikáció még gyorsan fejlődik, ezért a mintázatot különösen óvatosan kell értelmezni.",
-      recommendations: [
-        "Rövid, kiszámítható rutinokat és sok érzelmi megnyugtatást érdemes használni.",
-        "A nagyobb követelmények helyett a ritmust, alvást, átmeneteket és szenzoros terhelést figyeld.",
-        "Tartós, erős vagy több területet érintő aggodalom esetén gyermekorvosi vagy korai fejlesztési konzultáció lehet hasznos."
-      ]
-    },
-    preschool: {
-      label: "Óvoda előtti/óvodás korosztály",
-      interpretation:
-        "Óvoda körül a figyelem, impulzuskontroll, rugalmasság, társas jelzések és érzelmi szabályzás még erősen helyzetfüggő lehet. Fontos különbséget tenni az életkori éretlenség és a tartós, több helyzetben is visszatérő minta között.",
-      recommendations: [
-        "A legjobban a rövid instrukció, vizuális rutin, előre jelzett váltás és nyugodt felnőtt szabályzás segíthet.",
-        "Értékes megfigyelni, hogy a nehézség játékban, étkezésnél, öltözésnél, elválásnál vagy csoporthelyzetben erősebb-e.",
-        "Az óvodai visszajelzést konkrét helyzetekről érdemes kérni, nem általános címkékről."
-      ]
-    },
-    early_school: {
-      label: "Kisiskolás korosztály",
-      interpretation:
-        "Kisiskolás korban a feladattartás, szabálykövetés, kortárs helyzetek, tanulási terhelés és önállósodó rutinok jobban láthatóvá teszik a mintázatokat.",
-      recommendations: [
-        "A feladatokat rövid, látható lépésekre érdemes bontani, és ellenőrizni, hogy a gyermek tényleg értette-e a következő lépést.",
-        "Hasznos lehet külön figyelni a reggeli rutinra, házi feladatra, iskolai átmenetekre és kortárs helyzetekre.",
-        "A tanítóval konkrét támogatásról érdemes egyeztetni: instrukció rövidítése, vizuális lista, nyugodt hely, előre jelzett váltás."
-      ]
-    },
-    middle_school: {
-      label: "Felsős/korai serdülő korosztály",
-      interpretation:
-        "Ebben a szakaszban a tervezés, terheléskezelés, kortárs kapcsolatok, önértékelés és teljesítménynyomás nagyobb szerepet kap, ezért a nehézségek gyakran összetettebben jelennek meg.",
-      recommendations: [
-        "A cél ne csak a több ellenőrzés legyen, hanem közös tervezés, priorizálás és terhelhető rutin kialakítása.",
-        "Figyeld, hogy a nehézség inkább szervezésben, teljesítményszorongásban, kortárs helyzetekben vagy energiaszintben jelentkezik-e.",
-        "A gyermeket érdemes bevonni a megoldásokba, mert ebben a korban az autonómiát tiszteletben tartó támogatás hatékonyabb."
-      ]
-    },
-    teen: {
-      label: "Serdülő korosztály",
-      interpretation:
-        "Serdülőknél a mintázatok gyakran belső feszültségben, kimerülésben, elkerülésben, teljesítményromlásban vagy kapcsolati terhelésben látszanak, nem mindig nyílt viselkedésben.",
-      recommendations: [
-        "A beszélgetés legyen partneri: kevesebb kioktatás, több közös problémafeltárás és konkrét tervezés.",
-        "Fontos figyelni az alvásra, energiaszintre, önértékelésre, iskolai terhelésre és elkerülésre.",
-        "Tartós hangulati romlás, erős szorongás, visszahúzódás vagy biztonsági aggodalom esetén szakember bevonása különösen fontos."
-      ]
-    },
-    older: {
-      label: "Idősebb serdülő/fiatal felnőtt korosztály",
-      interpretation:
-        "Ebben az életkorban a mindennapi önállóság, tanulási vagy munkaszervezés, kapcsolatok és mentális terhelés szempontjából érdemes értelmezni a mintázatot.",
-      recommendations: [
-        "A támogatás a saját célokhoz, önmonitorozáshoz és fenntartható rutinokhoz kapcsolódjon.",
-        "Értékes lehet megfigyelni, mely helyzetekben romlik leginkább a teljesítmény vagy közérzet.",
-        "Ha a nehézség tartósan rontja a működést, szakemberrel való konzultáció segíthet pontosabb keretet adni."
-      ]
-    }
+function getLangCopy(lang = "en") {
+  return LANG_COPY[lang] || LANG_COPY.en;
+}
+
+function getAgeCopy(lang = "en") {
+  return AGE_COPY[lang] || AGE_COPY.en;
+}
+
+function getActionCopy(lang = "en") {
+  return DOMAIN_ACTIONS[lang] || DOMAIN_ACTIONS.en;
+}
+
+function translateAgeCopy(lang, ageBand) {
+  const fallback = getAgeCopy("en");
+  const source = getAgeCopy(lang);
+  const tuple = source[ageBand] || source.unknown || fallback[ageBand] || fallback.unknown;
+  const fallbackTuple = fallback[ageBand] || fallback.unknown;
+
+  const recommendations = {
+    hu: [
+      "A javaslatokat az életkornak megfelelő elvárásokhoz érdemes igazítani.",
+      "Figyeld, hogy a nehézség több helyzetben is megjelenik-e, vagy inkább egy adott rutin váltja ki.",
+      "Konkrét, nyugodt megfigyelésekkel könnyebb eldönteni, mi legyen a következő lépés."
+    ],
+    en: [
+      "Adapt the recommendations to age-appropriate expectations.",
+      "Observe whether the difficulty appears across several settings or mainly around one routine.",
+      "Concrete calm observations make the next step easier to choose."
+    ],
+    de: [
+      "Passe die Empfehlungen an altersgerechte Erwartungen an.",
+      "Beobachte, ob die Schwierigkeit in mehreren Situationen oder vor allem in einer Routine erscheint.",
+      "Konkrete ruhige Beobachtungen erleichtern den nächsten Schritt."
+    ],
+    it: [
+      "Adatta le raccomandazioni alle aspettative legate all'età.",
+      "Osserva se la difficoltà compare in più contesti o soprattutto in una routine.",
+      "Osservazioni concrete aiutano a scegliere il passo successivo."
+    ],
+    es: [
+      "Adapta las recomendaciones a expectativas adecuadas a la edad.",
+      "Observa si la dificultad aparece en varios contextos o sobre todo en una rutina.",
+      "Las observaciones concretas ayudan a elegir el siguiente paso."
+    ],
+    zh: [
+      "请把建议调整到符合孩子年龄的发展期待。",
+      "观察困难是否出现在多个情境，还是主要集中在某个固定流程。",
+      "具体而平静的观察能帮助决定下一步。"
+    ],
+    ja: [
+      "提案は年齢に合った期待に合わせて調整してください。",
+      "困りごとが複数の場面で出るのか、特定の流れで強いのかを見てください。",
+      "具体的で落ち着いた観察が次の一歩を選びやすくします。"
+    ],
+    ar: [
+      "اجعل التوصيات مناسبة لتوقعات المرحلة العمرية.",
+      "لاحظ هل تظهر الصعوبة في عدة مواقف أم في روتين محدد فقط.",
+      "الملاحظات الهادئة والمحددة تساعد على اختيار الخطوة التالية."
+    ],
+    pl: [
+      "Dopasuj zalecenia do oczekiwań odpowiednich dla wieku.",
+      "Obserwuj, czy trudność pojawia się w kilku sytuacjach, czy głównie w jednej rutynie.",
+      "Konkretne spokojne obserwacje ułatwiają wybór kolejnego kroku."
+    ],
+    pt: [
+      "Adapte as recomendações às expectativas adequadas à idade.",
+      "Observe se a dificuldade aparece em vários contextos ou principalmente em uma rotina.",
+      "Observações concretas ajudam a escolher o próximo passo."
+    ],
+    fr: [
+      "Adapte les recommandations aux attentes liées à l'âge.",
+      "Observe si la difficulté apparaît dans plusieurs contextes ou surtout dans une routine.",
+      "Des observations concrètes aident à choisir l'étape suivante."
+    ]
   };
 
-  const en = {
-    unknown: {
-      label: "Age group not provided",
-      interpretation:
-        "The child's age was not provided separately, so the report interprets the answer pattern within a general developmental and family-functioning frame.",
-      recommendations: [
-        "Adapt the recommendations to age-appropriate expectations.",
-        "Observe whether the difficulty appears across several settings or mainly around one routine, load, or environment.",
-        "If age is added later, the report can give more precise developmental emphasis."
-      ]
-    },
-    under_three: {
-      label: "Under 3 years",
-      interpretation:
-        "At this age, attention, regulation, transitions, and communication are still developing rapidly, so the pattern should be interpreted very cautiously.",
-      recommendations: [
-        "Use short predictable routines and frequent emotional co-regulation.",
-        "Look first at rhythm, sleep, transitions, and sensory load rather than high expectations.",
-        "If concerns are persistent or broad, pediatric or early-development consultation may be useful."
-      ]
-    },
-    preschool: {
-      label: "Preschool age",
-      interpretation:
-        "Around preschool age, attention, impulse control, flexibility, social signals, and emotion regulation may still vary strongly by situation.",
-      recommendations: [
-        "Use short instructions, visual routines, advance transition cues, and calm adult co-regulation.",
-        "Observe whether the difficulty is strongest during play, meals, dressing, separation, or group settings.",
-        "Ask daycare or preschool adults for concrete situation-based feedback, not broad labels."
-      ]
-    },
-    early_school: {
-      label: "Early school age",
-      interpretation:
-        "At early school age, task persistence, rules, peer situations, learning load, and more independent routines can make patterns more visible.",
-      recommendations: [
-        "Break tasks into short visible steps and check that the next step is truly understood.",
-        "Pay attention to morning routines, homework, school transitions, and peer situations.",
-        "Discuss concrete supports with teachers, such as shorter instructions, visual lists, calm placement, or transition warnings."
-      ]
-    },
-    middle_school: {
-      label: "Middle school / early adolescence",
-      interpretation:
-        "Planning, load management, peer relationships, self-esteem, and performance pressure become more important, so difficulties can look more layered.",
-      recommendations: [
-        "Aim for shared planning and prioritizing, not only more checking.",
-        "Observe whether the difficulty is strongest in organization, performance pressure, peer situations, or energy level.",
-        "Involve the child in choosing supports because autonomy-respecting help is usually more effective at this age."
-      ]
-    },
-    teen: {
-      label: "Adolescence",
-      interpretation:
-        "In adolescence, patterns may appear as internal tension, exhaustion, avoidance, performance decline, or relationship strain rather than obvious behavior.",
-      recommendations: [
-        "Use a collaborative tone: less lecturing, more joint problem-solving and concrete planning.",
-        "Watch sleep, energy, self-view, school load, withdrawal, and avoidance.",
-        "Persistent low mood, strong anxiety, withdrawal, or safety concerns should prompt qualified support."
-      ]
-    },
-    older: {
-      label: "Older teen / young adult",
-      interpretation:
-        "At this age, the pattern is best interpreted through daily independence, study or work organization, relationships, and mental load.",
-      recommendations: [
-        "Connect support to personal goals, self-monitoring, and sustainable routines.",
-        "Observe which situations most affect performance or wellbeing.",
-        "If functioning is persistently affected, professional consultation can help clarify the pattern."
-      ]
-    }
+  return {
+    label: tuple?.[0] || fallbackTuple[0],
+    interpretation: tuple?.[1] || fallbackTuple[1],
+    recommendations: recommendations[lang] || recommendations.en
   };
-
-  return lang === "hu" ? hu : en;
 }
 
 function getReportSignals(payload = {}) {
   const profile = payload?.specificProfile || {};
   const scoring = payload?.specificScoring || {};
   const summary = payload?.resultSummary || {};
-
-  const detectedRisk =
-    payload?.detectedRisk ||
-    profile?.kind ||
-    summary?.kind ||
-    "UNKNOWN";
-
-  const secondaryRisk =
-    payload?.secondaryRisk ||
-    summary?.secondaryRisk ||
-    null;
-
-  const severity =
-    profile?.severity ||
-    summary?.signal?.key ||
-    "unknown";
-
+  const detectedRisk = payload?.detectedRisk || profile?.kind || summary?.kind || "UNKNOWN";
+  const secondaryRisk = payload?.secondaryRisk || summary?.secondaryRisk || null;
+  const severity = profile?.severity || summary?.signal?.key || "unknown";
   const subdomainSource =
     summary?.topSubdomains ||
     Object.entries(scoring?.subdomains || profile?.subdomains || {}).map(([key, value]) => ({
@@ -284,112 +421,6 @@ function getReportSignals(payload = {}) {
   };
 }
 
-function getActionCopy(lang = "en") {
-  const hu = {
-    ADHD: {
-      title: "Kovetkezo 7 nap: figyelmi es feladattartasi tamogatas",
-      items: [
-        "Valassz ki egyetlen visszatero rutint, es bontsd 3-5 lathato lepesre.",
-        "Adj rovid instrukciot, majd kerj visszamondast: mi az elso kovetkezo lepes?",
-        "Figyeld, hogy a nehezseg inkabb inditasnal, fenntartasnal, valtasnal vagy befejezesnel jelenik meg."
-      ]
-    },
-    ASD: {
-      title: "Kovetkezo 7 nap: kiszamithatosag es tarsas-szenzoros terheles",
-      items: [
-        "Jelolj ki egy nehez atmenetet, es adj elore lathato jelzest a valtas elott.",
-        "Figyeld, hogy a reakciohoz tarsas bizonytalansag, szenzoros terheles vagy rutinvaltozas kapcsolodik-e.",
-        "Hasznalj konkret, rovid mondatokat, es hagyj tobb feldolgozasi idot valasz vagy valtas elott."
-      ]
-    },
-    ANXIETY: {
-      title: "Kovetkezo 7 nap: aggodalom es elkerules finom kovetese",
-      items: [
-        "Jegyezd fel, mely helyzetekben no meg a feszultseg, es mi segit visszarendezodni.",
-        "A megnyugtatas mellett probalj kis, biztonsagos lepest adni az elkerult helyzet fele.",
-        "Figyeld a testi jeleket is: alvas, hasfajas, fejfajas, feszultseg vagy visszahuzodas."
-      ]
-    },
-    DEPRESSION: {
-      title: "Kovetkezo 7 nap: hangulat, energia es kapcsolodas",
-      items: [
-        "Naponta egyszer figyeld meg az energiaszintet, erdeklodest es kedvet egy rovid skalan.",
-        "Tervezz be egy alacsony terhelesu, kapcsolodo tevekenyseget, ahol nem a teljesitmeny a cel.",
-        "Ha a lehangoltsag, visszahuzodas vagy onertekelesi romlas erosodik, kerj szakmai segitseget."
-      ]
-    },
-    LEARNING: {
-      title: "Kovetkezo 7 nap: tanulasi helyzetek pontos szetvalasztasa",
-      items: [
-        "Valassz ki egy konkret feladattipust, ahol gyakran elakadas van: olvasas, iras, matek vagy instrukcio.",
-        "Nezd meg, hogy a gond a megertesnel, emlekezetben tartasnal, tempoban vagy kivitelezesben jelenik meg.",
-        "Kerj konkret pedagogusi peldat arrol, milyen formatum segit: rovidebb utasitas, vizualis minta vagy tobb ido."
-      ]
-    },
-    UNKNOWN: {
-      title: "Kovetkezo 7 nap: egyetlen minta tisztazasa",
-      items: [
-        "Valassz egy visszatero helyzetet, ahol a nehezseg jol megfigyelheto.",
-        "Figyeld, mi tortenik elotte, mi tartja fenn, es mi segit visszarendezodni.",
-        "A kovetkezo lepes legyen kicsi, merheto es eletkorhoz igazitott."
-      ]
-    }
-  };
-
-  const en = {
-    ADHD: {
-      title: "Next 7 days: support attention and task persistence",
-      items: [
-        "Choose one recurring routine and break it into 3-5 visible steps.",
-        "Give a short instruction, then ask the child to repeat the first next step.",
-        "Observe whether the difficulty appears most during starting, staying with, switching, or finishing a task."
-      ]
-    },
-    ASD: {
-      title: "Next 7 days: predictability and social-sensory load",
-      items: [
-        "Choose one difficult transition and give a visible warning before the change.",
-        "Observe whether reactions are linked to social uncertainty, sensory load, or routine change.",
-        "Use concrete short sentences and allow more processing time before a response or transition."
-      ]
-    },
-    ANXIETY: {
-      title: "Next 7 days: track worry and avoidance gently",
-      items: [
-        "Note which situations increase tension and what helps the child settle again.",
-        "Alongside reassurance, offer one small safe step toward the avoided situation.",
-        "Watch body signals too: sleep, stomachaches, headaches, tension, or withdrawal."
-      ]
-    },
-    DEPRESSION: {
-      title: "Next 7 days: mood, energy, and connection",
-      items: [
-        "Once a day, briefly track energy, interest, and mood on a simple scale.",
-        "Plan one low-pressure connecting activity where performance is not the goal.",
-        "If low mood, withdrawal, or negative self-view increases, seek qualified support."
-      ]
-    },
-    LEARNING: {
-      title: "Next 7 days: separate learning situations clearly",
-      items: [
-        "Choose one task type where the child often gets stuck: reading, writing, math, or instructions.",
-        "Check whether the difficulty is in understanding, holding information, pace, or output.",
-        "Ask educators for concrete examples of what helps: shorter instructions, visual models, or more time."
-      ]
-    },
-    UNKNOWN: {
-      title: "Next 7 days: clarify one recurring pattern",
-      items: [
-        "Choose one recurring situation where the difficulty is easy to observe.",
-        "Watch what happens before it, what keeps it going, and what helps the child settle.",
-        "Make the next step small, measurable, and age-appropriate."
-      ]
-    }
-  };
-
-  return lang === "hu" ? hu : en;
-}
-
 function formatFocusLabel(value = "") {
   return String(value || "")
     .replace(/[_-]+/g, " ")
@@ -398,68 +429,43 @@ function formatFocusLabel(value = "") {
 }
 
 function buildObservationFocus(signals, lang = "en") {
-  const areas = (signals.topSubdomains || [])
-    .map((item) => formatFocusLabel(item.key))
-    .filter(Boolean);
+  const copy = getLangCopy(lang);
+  const areas = (signals.topSubdomains || []).map((item) => formatFocusLabel(item.key)).filter(Boolean);
 
-  if (lang === "hu") {
-    if (!areas.length) {
-      return "A kovetkezo heten azt erdemes figyelni, hogy a nehezseg mely helyzetekben erosodik, es mi segit a visszarendezodesben.";
-    }
-
-    return `A kovetkezo heten kulon figyeld ezeket a teruleteket: ${areas.join(", ")}. A cel nem cimkezes, hanem annak tisztazasa, milyen helyzetben es milyen tamogatassal valtozik a minta.`;
-  }
-
-  if (!areas.length) {
-    return "Over the next week, observe where the difficulty becomes stronger and what helps the child settle or re-engage.";
-  }
-
-  return `Over the next week, pay special attention to these areas: ${areas.join(", ")}. The goal is not labeling, but understanding where the pattern changes and which supports help.`;
+  if (!areas.length) return copy.observationEmpty;
+  return copy.observationWithAreas.replace("{areas}", areas.join(", "));
 }
 
 function buildEscalationNote(signals, lang = "en") {
+  const copy = getLangCopy(lang);
   const severity = String(signals.severity || "").toLowerCase();
-  const isHigh = severity === "high";
   const hasMoodRisk = signals.detectedRisk === "DEPRESSION" || signals.secondaryRisk === "DEPRESSION";
 
-  if (lang === "hu") {
-    if (isHigh || hasMoodRisk) {
-      return "Ha a jelzes eros, tobb kornyezetben tartos, romlo onertekelest, visszahuzodast, eros szorongast vagy biztonsagi aggodalmat erint, ne csak megfigyelesben gondolkodj: erdemes szakemberrel egyeztetni.";
-    }
-
-    return "Ha a nehezseg tobb kornyezetben tartosan fennall, a csaladi vagy iskolai mukodest erdemben terheli, vagy a gyermek onbizalma csokken, szakember bevonasa segithet pontosabb kepet adni.";
-  }
-
-  if (isHigh || hasMoodRisk) {
-    return "If the signal is strong, persistent across settings, or linked with declining confidence, withdrawal, intense anxiety, or safety concerns, do not rely on observation alone: consider qualified support.";
-  }
-
-  return "If the difficulty persists across settings, meaningfully affects family or school functioning, or the child's confidence declines, qualified support can help clarify the picture.";
+  return severity === "high" || hasMoodRisk ? copy.escalationHigh : copy.escalationDefault;
 }
 
 export function buildReportV2Context(payload = {}, lang = "en") {
   const ageYears = extractChildAgeYears(payload);
   const ageBand = getAgeBand(ageYears);
-  const copy = getCopy(lang);
-  const bandCopy = copy[ageBand] || copy.unknown;
+  const ageCopy = translateAgeCopy(lang, ageBand);
   const signals = getReportSignals(payload);
-  const actionCopy = getActionCopy(lang);
-  const domainAction = actionCopy[signals.detectedRisk] || actionCopy.UNKNOWN;
+  const actions = getActionCopy(lang);
+  const domainAction = actions[signals.detectedRisk] || actions.UNKNOWN || getActionCopy("en").UNKNOWN;
 
   return {
     version: "structured_report_v2",
     ageYears,
     ageBand,
-    ageBandLabel: bandCopy.label,
+    ageBandLabel: ageCopy.label,
     hasAge: ageYears !== null,
-    interpretation: bandCopy.interpretation,
-    recommendations: bandCopy.recommendations,
+    interpretation: ageCopy.interpretation,
+    recommendations: ageCopy.recommendations,
     primaryFocus: signals.detectedRisk,
     secondaryFocus: signals.secondaryRisk,
     severity: signals.severity,
     focusSubdomains: signals.topSubdomains,
-    actionPlanTitle: domainAction.title,
-    actionPlan: domainAction.items,
+    actionPlanTitle: domainAction[0],
+    actionPlan: domainAction[1],
     observationFocus: buildObservationFocus(signals, lang),
     escalationNote: buildEscalationNote(signals, lang)
   };
@@ -467,22 +473,21 @@ export function buildReportV2Context(payload = {}, lang = "en") {
 
 export function buildReportV2PromptContext(payload = {}, lang = "en") {
   const context = buildReportV2Context(payload, lang);
+  const copy = getLangCopy(lang);
 
   return {
     ...context,
-    instruction:
-      context.hasAge
-        ? "Use this age band to make section 6 and the practical recommendations developmentally specific. Do not overstate age precision."
-        : "Age is missing. Do not infer exact age. Include a short age-missing caveat and keep developmental advice adaptable."
+    instruction: context.hasAge ? copy.promptWithAge : copy.promptWithoutAge
   };
 }
 
 export function buildReportV2EmailContext(payload = {}, lang = "en") {
   const context = buildReportV2Context(payload, lang);
+  const copy = getLangCopy(lang);
 
   return {
     ...context,
-    title: lang === "hu" ? "Korosztalyi ertelmezes" : "Age-group interpretation",
-    recommendationTitle: lang === "hu" ? "Korosztalyi javaslatok" : "Age-aware recommendations"
+    title: copy.emailTitle,
+    recommendationTitle: copy.emailRecommendationTitle
   };
 }
