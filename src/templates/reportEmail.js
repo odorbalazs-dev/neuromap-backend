@@ -263,9 +263,9 @@ export function buildReportEmail({ lang, name, reportText, payload = null }) {
     ? customerExperience.microPlanItems
     : safeLang === "hu"
       ? [
-          "1. nap: olvasd el a fo mintazatot, es valassz ki egyetlen helyzetet, amit megfigyelsz.",
-          "2. nap: probalj ki egy kis, konnyen tarthato javaslatot a riportbol.",
-          "3. nap: jegyezd fel, mi enyhitette vagy erositette a jelzest."
+          "1. nap: olvasd el a fő mintázatot, és válassz ki egyetlen helyzetet, amit megfigyelsz.",
+          "2. nap: próbálj ki egy kis, könnyen tartható javaslatot a riportból.",
+          "3. nap: jegyezd fel, mi enyhítette vagy erősítette a jelzést."
         ]
       : [
           "Day 1: read the main pattern and choose one everyday situation to observe.",

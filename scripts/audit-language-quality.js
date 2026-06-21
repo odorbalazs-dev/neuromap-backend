@@ -4,7 +4,7 @@ const checks = [
   {
     file: "public/webflow/engine.js",
     required: [
-      "20260613-cx-i18n-polish-v1",
+      "20260621-launch-audit-fixes-v1",
       "analytics-event-schema-v2",
       "DRAFT_STORAGE_KEY",
       "buildSummaryConversionHtml",
@@ -31,7 +31,7 @@ const checks = [
     file: "web/engine-embed.full.html",
     required: [
       "/public/webflow/engine.js",
-      "20260613-cx-i18n-polish-v1"
+      "20260621-launch-audit-fixes-v1"
     ],
     forbidden: [
       "20260527-age-i18n",

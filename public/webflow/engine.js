@@ -5,7 +5,7 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260613-cx-i18n-polish-v1";
+  const ENGINE_VERSION = "20260621-launch-audit-fixes-v1";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
   const DRAFT_STORAGE_KEY = "nm_questionnaire_draft_v1";
   const DRAFT_TTL_MS = 1000 * 60 * 60 * 24 * 14;
@@ -3983,9 +3983,9 @@
     if (state.lang === "hu") {
       return {
         title: "Folytathatod, ahol abbahagytad",
-        body: "A kitoltesedet ezen az eszkozon automatikusan elmentettuk.",
-        continueLabel: "Folytatas",
-        restartLabel: "Ujrakezdes"
+        body: "A kitöltésedet ezen az eszközön automatikusan elmentettük.",
+        continueLabel: "Folytatás",
+        restartLabel: "Újrakezdés"
       };
     }
 
@@ -6964,7 +6964,7 @@
           extraAnswers: state.extraAnswers.length
         });
 
-        errors.push("Az extra kerdesek nincsenek kitoltve.");
+        errors.push("Az extra kérdések nincsenek kitöltve.");
       }
     }
 
@@ -7051,7 +7051,7 @@
 
     if (/too many requests/i.test(message)) {
       return isHu
-        ? "Tul sok probalkozas tortent rovid idon belul. Kerlek varj egy kicsit, majd probald ujra."
+        ? "Túl sok próbálkozás történt rövid időn belül. Kérlek várj egy kicsit, majd próbáld újra."
         : "Too many attempts were made in a short time. Please wait a moment and try again.";
     }
 
