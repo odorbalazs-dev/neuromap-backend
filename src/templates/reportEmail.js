@@ -29,6 +29,69 @@ function getDomainLabel(domain, lang) {
       ANXIETY: "anxiety signals",
       DEPRESSION: "mood-related signals",
       LEARNING: "learning difficulties"
+    },
+    de: {
+      ADHD: "Aufmerksamkeit und Impulsivität",
+      ASD: "soziale Kommunikation und Flexibilität",
+      ANXIETY: "Angstsignale",
+      DEPRESSION: "stimmungsbezogene Signale",
+      LEARNING: "Lernschwierigkeiten"
+    },
+    it: {
+      ADHD: "attenzione e impulsività",
+      ASD: "comunicazione sociale e flessibilità",
+      ANXIETY: "segnali di ansia",
+      DEPRESSION: "segnali legati all'umore",
+      LEARNING: "difficoltà di apprendimento"
+    },
+    es: {
+      ADHD: "atención e impulsividad",
+      ASD: "comunicación social y flexibilidad",
+      ANXIETY: "señales de ansiedad",
+      DEPRESSION: "señales relacionadas con el estado de ánimo",
+      LEARNING: "dificultades de aprendizaje"
+    },
+    zh: {
+      ADHD: "注意力与冲动性",
+      ASD: "社交沟通与灵活性",
+      ANXIETY: "焦虑信号",
+      DEPRESSION: "情绪相关信号",
+      LEARNING: "学习困难"
+    },
+    ja: {
+      ADHD: "注意と衝動性",
+      ASD: "社会的コミュニケーションと柔軟性",
+      ANXIETY: "不安のサイン",
+      DEPRESSION: "気分に関連するサイン",
+      LEARNING: "学習の困りごと"
+    },
+    ar: {
+      ADHD: "الانتباه والاندفاعية",
+      ASD: "التواصل الاجتماعي والمرونة",
+      ANXIETY: "إشارات القلق",
+      DEPRESSION: "إشارات مرتبطة بالمزاج",
+      LEARNING: "صعوبات التعلم"
+    },
+    pl: {
+      ADHD: "uwaga i impulsywność",
+      ASD: "komunikacja społeczna i elastyczność",
+      ANXIETY: "sygnały lęku",
+      DEPRESSION: "sygnały związane z nastrojem",
+      LEARNING: "trudności w uczeniu się"
+    },
+    pt: {
+      ADHD: "atenção e impulsividade",
+      ASD: "comunicação social e flexibilidade",
+      ANXIETY: "sinais de ansiedade",
+      DEPRESSION: "sinais relacionados com o humor",
+      LEARNING: "dificuldades de aprendizagem"
+    },
+    fr: {
+      ADHD: "attention et impulsivité",
+      ASD: "communication sociale et flexibilité",
+      ANXIETY: "signaux d'anxiété",
+      DEPRESSION: "signaux liés à l'humeur",
+      LEARNING: "difficultés d'apprentissage"
     }
   };
 
@@ -39,14 +102,24 @@ function getDomainLabel(domain, lang) {
 function buildSubject(baseSubject, payload, lang) {
   const domain = payload?.detectedRisk || payload?.specificProfile?.kind || null;
   const label = getDomainLabel(domain, lang);
+  const safeLang = getSafeLang(lang);
+  const subjects = {
+    hu: "NeuroMap Kids – elkészült a kiértékelés",
+    en: "NeuroMap Kids – report ready",
+    de: "NeuroMap Kids – Bericht ist fertig",
+    it: "NeuroMap Kids – report pronto",
+    es: "NeuroMap Kids – informe listo",
+    zh: "NeuroMap Kids – 报告已准备好",
+    ja: "NeuroMap Kids – レポートが完成しました",
+    ar: "NeuroMap Kids – التقرير جاهز",
+    pl: "NeuroMap Kids – raport jest gotowy",
+    pt: "NeuroMap Kids – relatório pronto",
+    fr: "NeuroMap Kids – rapport prêt"
+  };
 
   if (!label) return baseSubject;
 
-  if (getSafeLang(lang) === "hu") {
-    return `NeuroMap Kids – elkészült a kiértékelés: ${label}`;
-  }
-
-  return `NeuroMap Kids – report ready: ${label}`;
+  return `${subjects[safeLang] || subjects.en}: ${label}`;
 }
 
 function getCustomerExperienceCopy(lang) {
@@ -110,118 +183,247 @@ function getCustomerExperienceCopy(lang) {
 
   Object.assign(copy, {
     de: {
-      title: "Dein PDF-Bericht ist angehaengt",
+      title: "Dein PDF-Bericht ist angehängt",
       body: "Das PDF ist die klare, elternfreundliche Version des Berichts. Du kannst es speichern, ausdrucken oder bei Bedarf mit einer Fachperson teilen.",
-      nextTitle: "Empfohlene naechste Schritte",
+      nextTitle: "Empfohlene nächste Schritte",
       nextSteps: [
-        "Lies zuerst den kurzen Ueberblick und dann die altersbezogenen Empfehlungen.",
+        "Lies zuerst den kurzen Überblick und dann die altersbezogenen Empfehlungen.",
         "Notiere 2-3 Alltagssituationen, in denen das Muster besonders sichtbar ist.",
         "Wenn die Signale stark oder anhaltend wirken, besprich den Bericht mit einer qualifizierten Fachperson."
       ],
       readingTitle: "So liest du den Bericht",
       readingTips: [
-        "Beginne mit dem Hauptmuster und den staerksten Alltagsbeispielen.",
+        "Beginne mit dem Hauptmuster und den stärksten Alltagsbeispielen.",
         "Nutze Empfehlungen als kleine Experimente, nicht als starres Programm.",
         "Schau nach einigen Tagen erneut hinein und markiere, was am hilfreichsten war."
       ],
-      personalNote: "Der Bericht ist am nuetzlichsten, wenn du ihn mit echten Situationen zu Hause, in Kita, Schule oder Routinen verbindest.",
-      reassurance: "Du musst nicht alles auf einmal loesen. Ein kleiner, konsequenter Schritt ist oft der beste Anfang.",
+      includedTitle: "Was jetzt enthalten ist",
+      includedItems: [
+        "Der vollständige personalisierte PDF-Bericht ist an diese E-Mail angehängt.",
+        "Der Bericht enthält eine altersbezogene Übersicht und praktische Empfehlungen.",
+        "Du kannst das PDF für eigene Notizen behalten oder mit einer Fachperson teilen."
+      ],
+      followUpTitle: "Idee für die Nachbeobachtung nach 2-3 Tagen",
+      followUpBody: "Wähle eine Beobachtung oder Empfehlung aus dem Bericht und achte in den nächsten Tagen darauf, wie sie im Alltag erscheint.",
+      personalNote: "Der Bericht ist am nützlichsten, wenn du ihn mit echten Situationen zu Hause, in der Kita, Schule oder täglichen Routinen verbindest.",
+      reassurance: "Du musst nicht alles auf einmal lösen. Ein kleiner, konsequenter Schritt ist oft der beste Anfang.",
       support: "Brauchst du Hilfe oder fehlt der Anhang? Antworte auf diese E-Mail oder schreibe an info@neuromapkids.com."
     },
     it: {
-      title: "Il report PDF e allegato",
-      body: "Il PDF e la versione chiara e adatta ai genitori del report. Puoi salvarlo, stamparlo o condividerlo con un professionista.",
+      title: "Il report PDF è allegato",
+      body: "Il PDF è la versione chiara e adatta ai genitori del report. Puoi salvarlo, stamparlo o condividerlo con un professionista.",
       nextTitle: "Prossimi passi suggeriti",
       nextSteps: [
-        "Leggi prima la panoramica, poi le raccomandazioni per eta.",
-        "Annota 2-3 situazioni quotidiane in cui il modello e piu evidente.",
+        "Leggi prima la panoramica, poi le raccomandazioni legate all'età.",
+        "Annota 2-3 situazioni quotidiane in cui il modello è più evidente.",
         "Se i segnali sono forti o persistenti, parlane con un professionista qualificato."
       ],
       readingTitle: "Come leggere il report",
       readingTips: [
-        "Inizia dal modello principale e dagli esempi quotidiani piu forti.",
-        "Usa i suggerimenti come piccoli esperimenti, non come programma rigido.",
-        "Rileggi il report dopo alcuni giorni e segna cio che sembra piu utile."
+        "Inizia dal modello principale e dagli esempi quotidiani più forti.",
+        "Usa i suggerimenti come piccoli esperimenti, non come un programma rigido.",
+        "Rileggi il report dopo alcuni giorni e segna ciò che sembra più utile."
       ],
+      includedTitle: "Che cosa contiene ora",
+      includedItems: [
+        "Il report PDF completo e personalizzato è allegato a questa email.",
+        "Il report include una panoramica legata all'età e raccomandazioni pratiche.",
+        "Puoi conservare il PDF per le tue note o condividerlo con un professionista qualificato."
+      ],
+      followUpTitle: "Idea di follow-up dopo 2-3 giorni",
+      followUpBody: "Scegli un'osservazione o un suggerimento dal report e osserva come compare nei prossimi giorni.",
       personalNote: "Il report funziona meglio quando lo colleghi a momenti reali a casa, a scuola o nelle routine quotidiane.",
-      reassurance: "Non devi risolvere tutto subito. Un piccolo cambiamento costante e spesso il miglior primo passo.",
+      reassurance: "Non devi risolvere tutto subito. Un piccolo cambiamento costante è spesso il miglior primo passo.",
       support: "Hai bisogno di aiuto o non vedi l'allegato? Rispondi a questa email o scrivi a info@neuromapkids.com."
     },
     es: {
-      title: "Tu informe PDF esta adjunto",
-      body: "El PDF es la version clara y facil de usar para familias. Puedes guardarlo, imprimirlo o compartirlo con un profesional.",
+      title: "Tu informe PDF está adjunto",
+      body: "El PDF es la versión clara y fácil de usar para familias. Puedes guardarlo, imprimirlo o compartirlo con un profesional.",
       nextTitle: "Siguientes pasos sugeridos",
       nextSteps: [
-        "Lee primero el resumen rapido y luego las recomendaciones por edad.",
-        "Anota 2-3 situaciones diarias donde el patron aparece con mas claridad.",
-        "Si las senales parecen fuertes o persistentes, comenta el informe con un profesional cualificado."
+        "Lee primero el resumen rápido y luego las recomendaciones por edad.",
+        "Anota 2-3 situaciones diarias donde el patrón aparece con más claridad.",
+        "Si las señales parecen fuertes o persistentes, comenta el informe con un profesional cualificado."
       ],
-      readingTitle: "Como leer el informe",
+      readingTitle: "Cómo leer el informe",
       readingTips: [
-        "Empieza por el patron principal y los ejemplos cotidianos mas claros.",
-        "Usa las recomendaciones como pequenos experimentos, no como un programa rigido.",
-        "Vuelve al informe despues de unos dias y marca lo que resulte mas util."
+        "Empieza por el patrón principal y los ejemplos cotidianos más claros.",
+        "Usa las recomendaciones como pequeños experimentos, no como un programa rígido.",
+        "Vuelve al informe después de unos días y marca lo que resulte más útil."
       ],
-      personalNote: "El informe aporta mas cuando lo conectas con momentos reales en casa, escuela o rutinas diarias.",
-      reassurance: "No necesitas resolverlo todo de una vez. Un pequeno cambio constante suele ser el mejor primer paso.",
-      support: "Necesitas ayuda o no ves el adjunto? Responde a este email o escribe a info@neuromapkids.com."
+      includedTitle: "Qué incluye ahora",
+      includedItems: [
+        "El PDF personalizado completo está adjunto a este email.",
+        "El informe incluye una visión por edad y recomendaciones prácticas.",
+        "Puedes conservar el PDF para tus notas o compartirlo con un profesional cualificado."
+      ],
+      followUpTitle: "Idea de seguimiento a los 2-3 días",
+      followUpBody: "Elige una observación o recomendación del informe y mira cómo aparece durante los próximos días.",
+      personalNote: "El informe aporta más cuando lo conectas con momentos reales en casa, escuela o rutinas diarias.",
+      reassurance: "No necesitas resolverlo todo de una vez. Un pequeño cambio constante suele ser el mejor primer paso.",
+      support: "¿Necesitas ayuda o no ves el adjunto? Responde a este email o escribe a info@neuromapkids.com."
+    },
+    zh: {
+      title: "PDF报告已作为附件发送",
+      body: "附件中的PDF是清晰、适合家长阅读的报告版本。你可以保存、打印，或在需要时与专业人士分享。",
+      nextTitle: "建议的下一步",
+      nextSteps: [
+        "先阅读快速概览，再看按年龄调整的建议。",
+        "记录2-3个最能看出该模式的日常情境。",
+        "如果信号强烈或持续，请与合格的专业人士讨论报告。"
+      ],
+      readingTitle: "如何阅读报告",
+      readingTips: [
+        "从主要模式和最清楚的日常例子开始。",
+        "把建议当作小的尝试，而不是严格计划。",
+        "几天后再次查看报告，并标记最有帮助的部分。"
+      ],
+      includedTitle: "现在包含的内容",
+      includedItems: [
+        "完整的个性化PDF报告已附在这封邮件中。",
+        "报告包含按年龄调整的概览和实用建议。",
+        "你可以保留PDF作为个人记录，也可以与合格的专业人士分享。"
+      ],
+      followUpTitle: "2-3天后的跟进想法",
+      followUpBody: "从报告中选择一个观察点或建议，看看它在接下来几天如何出现。",
+      personalNote: "当你把报告与家庭、幼儿园、学校或日常流程中的真实时刻联系起来时，它最有帮助。",
+      reassurance: "你不需要一次解决所有问题。一个小而持续的改变通常是最好的第一步。",
+      support: "需要帮助或没有看到附件？请回复此邮件，或联系 info@neuromapkids.com。"
+    },
+    ja: {
+      title: "PDFレポートを添付しました",
+      body: "添付のPDFは、保護者が読みやすいように整理したレポート版です。保存、印刷、必要に応じて専門家と共有できます。",
+      nextTitle: "おすすめの次のステップ",
+      nextSteps: [
+        "まず簡単な概要を読み、次に年齢に合わせた提案を確認してください。",
+        "パターンが最もはっきり出る日常場面を2-3個書き留めてください。",
+        "サインが強い、または続く場合は、資格のある専門家に相談してください。"
+      ],
+      readingTitle: "レポートの読み方",
+      readingTips: [
+        "主なパターンと、日常で最もわかりやすい例から読み始めてください。",
+        "提案は厳密なプログラムではなく、小さな試しとして使ってください。",
+        "数日後にもう一度読み返し、役立った部分に印を付けてください。"
+      ],
+      includedTitle: "今回含まれている内容",
+      includedItems: [
+        "個別化されたPDFレポート全体をこのメールに添付しています。",
+        "レポートには年齢に合わせた概要と実践的な提案が含まれます。",
+        "PDFは手元の記録として保管したり、資格のある専門家と共有したりできます。"
+      ],
+      followUpTitle: "2-3日後のフォローアップ案",
+      followUpBody: "レポートから観察点や提案を一つ選び、数日間どのように現れるかを見てください。",
+      personalNote: "家庭、園、学校、日常の流れにある実際の場面と結びつけると、レポートはより役立ちます。",
+      reassurance: "すべてを一度に解決する必要はありません。小さく一貫した変化が、最初の一歩として役立つことがよくあります。",
+      support: "サポートが必要な場合、または添付が見当たらない場合は、このメールに返信するか info@neuromapkids.com までご連絡ください。"
+    },
+    ar: {
+      title: "تم إرفاق تقرير PDF",
+      body: "ملف PDF المرفق هو النسخة الواضحة والمناسبة للوالدين من التقرير. يمكنك حفظه أو طباعته أو مشاركته مع مختص عند الحاجة.",
+      nextTitle: "خطوات مقترحة تالية",
+      nextSteps: [
+        "اقرأ الملخص السريع أولًا، ثم التوصيات المناسبة للعمر.",
+        "اكتب 2-3 مواقف يومية يظهر فيها النمط بوضوح.",
+        "إذا بدت الإشارات قوية أو مستمرة، ناقش التقرير مع مختص مؤهل."
+      ],
+      readingTitle: "كيف تقرأ التقرير",
+      readingTips: [
+        "ابدأ بالنمط الرئيسي وبأوضح الأمثلة اليومية.",
+        "استخدم التوصيات كتجارب صغيرة، لا كبرنامج صارم.",
+        "ارجع إلى التقرير بعد عدة أيام وحدد ما كان أكثر فائدة."
+      ],
+      includedTitle: "ما الذي يتضمنه الآن",
+      includedItems: [
+        "التقرير الكامل والمخصص بصيغة PDF مرفق بهذه الرسالة.",
+        "يتضمن التقرير نظرة مناسبة للعمر وتوصيات عملية.",
+        "يمكنك الاحتفاظ بملف PDF لملاحظاتك أو مشاركته مع مختص مؤهل."
+      ],
+      followUpTitle: "فكرة متابعة بعد 2-3 أيام",
+      followUpBody: "اختر ملاحظة أو توصية واحدة من التقرير وراقب كيف تظهر خلال الأيام القادمة.",
+      personalNote: "يكون التقرير أكثر فائدة عندما تربطه بمواقف حقيقية في البيت أو الروضة أو المدرسة أو الروتين اليومي.",
+      reassurance: "لا تحتاج إلى حل كل شيء دفعة واحدة. غالبًا ما تكون خطوة صغيرة وثابتة أفضل بداية.",
+      support: "هل تحتاج إلى مساعدة أو لم يظهر المرفق؟ رد على هذه الرسالة أو تواصل عبر info@neuromapkids.com."
     },
     pl: {
-      title: "Raport PDF jest zalaczony",
-      body: "PDF to przejrzysta, przyjazna dla rodzica wersja raportu. Mozesz go zapisac, wydrukowac lub pokazac specjalisce.",
+      title: "Raport PDF jest załączony",
+      body: "PDF to przejrzysta, przyjazna dla rodzica wersja raportu. Możesz go zapisać, wydrukować lub pokazać specjaliście.",
       nextTitle: "Sugerowane kolejne kroki",
       nextSteps: [
-        "Najpierw przeczytaj szybki przeglad, potem zalecenia dla wieku dziecka.",
-        "Zapisz 2-3 codzienne sytuacje, w ktorych wzorzec jest najbardziej widoczny.",
-        "Jesli sygnaly sa silne lub stale, omow raport z wykwalifikowanym specjalista."
+        "Najpierw przeczytaj szybki przegląd, potem zalecenia dla wieku dziecka.",
+        "Zapisz 2-3 codzienne sytuacje, w których wzorzec jest najbardziej widoczny.",
+        "Jeśli sygnały są silne lub stałe, omów raport z wykwalifikowanym specjalistą."
       ],
-      readingTitle: "Jak czytac raport",
+      readingTitle: "Jak czytać raport",
       readingTips: [
-        "Zacznij od glownego wzorca i najsilniejszych przykladow z codziennosci.",
-        "Traktuj wskazowki jak male eksperymenty, nie sztywny program.",
-        "Wroc do raportu po kilku dniach i zaznacz, co bylo najbardziej pomocne."
+        "Zacznij od głównego wzorca i najsilniejszych przykładów z codzienności.",
+        "Traktuj wskazówki jak małe eksperymenty, nie sztywny program.",
+        "Wróć do raportu po kilku dniach i zaznacz, co było najbardziej pomocne."
       ],
-      personalNote: "Raport jest najbardziej uzyteczny, gdy laczysz go z realnymi sytuacjami w domu, szkole lub codziennych rutynach.",
-      reassurance: "Nie trzeba rozwiazac wszystkiego od razu. Jeden maly, konsekwentny krok czesto jest najlepszym poczatkiem.",
-      support: "Potrzebujesz pomocy albo nie widzisz zalacznika? Odpowiedz na ten email lub napisz na info@neuromapkids.com."
+      includedTitle: "Co zawiera raport",
+      includedItems: [
+        "Pełny, spersonalizowany raport PDF jest załączony do tego emaila.",
+        "Raport zawiera przegląd dopasowany do wieku i praktyczne zalecenia.",
+        "Możesz zachować PDF do własnych notatek albo udostępnić go specjaliście."
+      ],
+      followUpTitle: "Pomysł na obserwację po 2-3 dniach",
+      followUpBody: "Wybierz jedną obserwację lub wskazówkę z raportu i zobacz, jak pojawia się w kolejnych dniach.",
+      personalNote: "Raport jest najbardziej użyteczny, gdy łączysz go z realnymi sytuacjami w domu, szkole lub codziennych rutynach.",
+      reassurance: "Nie trzeba rozwiązać wszystkiego od razu. Jeden mały, konsekwentny krok często jest najlepszym początkiem.",
+      support: "Potrzebujesz pomocy albo nie widzisz załącznika? Odpowiedz na ten email lub napisz na info@neuromapkids.com."
     },
     pt: {
-      title: "O relatorio PDF esta anexado",
-      body: "O PDF e a versao clara e amigavel para pais do relatorio. Pode guardar, imprimir ou partilhar com um profissional.",
-      nextTitle: "Proximos passos sugeridos",
+      title: "O relatório PDF está anexado",
+      body: "O PDF é a versão clara e amigável para pais do relatório. Pode guardar, imprimir ou partilhar com um profissional.",
+      nextTitle: "Próximos passos sugeridos",
       nextSteps: [
-        "Leia primeiro a visao rapida e depois as recomendacoes por idade.",
-        "Anote 2-3 situacoes do dia a dia em que o padrao aparece com mais clareza.",
-        "Se os sinais forem fortes ou persistentes, fale sobre o relatorio com um profissional qualificado."
+        "Leia primeiro a visão rápida e depois as recomendações por idade.",
+        "Anote 2-3 situações do dia a dia em que o padrão aparece com mais clareza.",
+        "Se os sinais forem fortes ou persistentes, fale sobre o relatório com um profissional qualificado."
       ],
-      readingTitle: "Como ler o relatorio",
+      readingTitle: "Como ler o relatório",
       readingTips: [
-        "Comece pelo padrao principal e pelos exemplos diarios mais claros.",
-        "Use as recomendacoes como pequenos testes, nao como um programa rigido.",
-        "Volte ao relatorio depois de alguns dias e marque o que pareceu mais util."
+        "Comece pelo padrão principal e pelos exemplos diários mais claros.",
+        "Use as recomendações como pequenos testes, não como um programa rígido.",
+        "Volte ao relatório depois de alguns dias e marque o que pareceu mais útil."
       ],
-      personalNote: "O relatorio e mais util quando ligado a momentos reais em casa, escola ou rotinas diarias.",
-      reassurance: "Nao precisa resolver tudo de uma vez. Uma pequena mudanca consistente costuma ser o melhor primeiro passo.",
-      support: "Precisa de ajuda ou nao recebeu o anexo? Responda a este email ou escreva para info@neuromapkids.com."
+      includedTitle: "O que está incluído agora",
+      includedItems: [
+        "O relatório PDF completo e personalizado está anexado a este email.",
+        "O relatório inclui uma visão por idade e recomendações práticas.",
+        "Pode guardar o PDF para as suas notas ou partilhá-lo com um profissional qualificado."
+      ],
+      followUpTitle: "Ideia de acompanhamento em 2-3 dias",
+      followUpBody: "Escolha uma observação ou sugestão do relatório e veja como aparece nos próximos dias.",
+      personalNote: "O relatório é mais útil quando ligado a momentos reais em casa, escola ou rotinas diárias.",
+      reassurance: "Não precisa resolver tudo de uma vez. Uma pequena mudança consistente costuma ser o melhor primeiro passo.",
+      support: "Precisa de ajuda ou não recebeu o anexo? Responda a este email ou escreva para info@neuromapkids.com."
     },
     fr: {
       title: "Votre rapport PDF est joint",
-      body: "Le PDF est la version claire et adaptee aux parents du rapport. Vous pouvez l'enregistrer, l'imprimer ou le partager avec un professionnel.",
-      nextTitle: "Prochaines etapes suggerees",
+      body: "Le PDF est la version claire et adaptée aux parents du rapport. Vous pouvez l'enregistrer, l'imprimer ou le partager avec un professionnel.",
+      nextTitle: "Prochaines étapes suggérées",
       nextSteps: [
-        "Lisez d'abord l'aperçu rapide, puis les recommandations par age.",
-        "Notez 2-3 situations quotidiennes ou le schema apparait le plus clairement.",
-        "Si les signaux semblent forts ou persistants, discutez du rapport avec un professionnel qualifie."
+        "Lisez d'abord l'aperçu rapide, puis les recommandations adaptées à l'âge.",
+        "Notez 2-3 situations quotidiennes où le schéma apparaît le plus clairement.",
+        "Si les signaux semblent forts ou persistants, discutez du rapport avec un professionnel qualifié."
       ],
       readingTitle: "Comment lire le rapport",
       readingTips: [
-        "Commencez par le schema principal et les exemples quotidiens les plus forts.",
-        "Utilisez les recommandations comme de petites experiences, pas comme un programme rigide.",
-        "Relisez le rapport apres quelques jours et marquez ce qui semble le plus utile."
+        "Commencez par le schéma principal et les exemples quotidiens les plus parlants.",
+        "Utilisez les recommandations comme de petites expériences, pas comme un programme rigide.",
+        "Relisez le rapport après quelques jours et marquez ce qui semble le plus utile."
       ],
-      personalNote: "Le rapport est plus utile quand vous le reliez a des moments reels a la maison, a l'ecole ou dans les routines.",
-      reassurance: "Vous n'avez pas besoin de tout resoudre en une fois. Un petit changement regulier est souvent le meilleur debut.",
-      support: "Besoin d'aide ou piece jointe manquante? Repondez a cet email ou contactez info@neuromapkids.com."
+      includedTitle: "Ce qui est inclus maintenant",
+      includedItems: [
+        "Le PDF personnalisé complet est joint à cet email.",
+        "Le rapport comprend une vue adaptée à l'âge et des recommandations pratiques.",
+        "Vous pouvez conserver le PDF pour vos notes ou le partager avec un professionnel qualifié."
+      ],
+      followUpTitle: "Idée de suivi après 2-3 jours",
+      followUpBody: "Choisissez une observation ou une recommandation du rapport et observez comment elle apparaît dans les prochains jours.",
+      personalNote: "Le rapport est plus utile quand vous le reliez à des moments réels à la maison, à l'école ou dans les routines.",
+      reassurance: "Vous n'avez pas besoin de tout résoudre en une fois. Un petit changement régulier est souvent le meilleur début.",
+      support: "Besoin d'aide ou pièce jointe manquante ? Répondez à cet email ou contactez info@neuromapkids.com."
     }
   });
 

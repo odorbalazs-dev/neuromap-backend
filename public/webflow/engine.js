@@ -5,7 +5,7 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260621-language-audit-v2";
+  const ENGINE_VERSION = "20260622-language-content-audit-v3";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
   const DRAFT_STORAGE_KEY = "nm_questionnaire_draft_v1";
   const DRAFT_TTL_MS = 1000 * 60 * 60 * 24 * 14;
@@ -6012,24 +6012,103 @@
 
   function getAgeContextLabel() {
     const age = getChildAgeValue();
+    const copy = getCustomerCopy({
+      hu: {
+        missing: "korosztály megadása után pontosabb",
+        toddler: "kisgyermekkori kontextus",
+        preschool: "óvoda előtti / óvodás korosztály",
+        primary: "kisiskolás korosztály",
+        adolescent: "serdülőkori kontextus",
+        youngAdult: "fiatal felnőtt korosztály"
+      },
+      en: {
+        missing: "refined after age is provided",
+        toddler: "early childhood context",
+        preschool: "preschool age context",
+        primary: "primary school age context",
+        adolescent: "adolescent context",
+        youngAdult: "young adult context"
+      },
+      de: {
+        missing: "genauer nach Angabe des Alters",
+        toddler: "frühkindlicher Kontext",
+        preschool: "Vorschulkontext",
+        primary: "Grundschulalter",
+        adolescent: "Jugendalter",
+        youngAdult: "junger Erwachsenen-Kontext"
+      },
+      it: {
+        missing: "più preciso dopo aver indicato l'età",
+        toddler: "contesto della prima infanzia",
+        preschool: "contesto prescolare",
+        primary: "età della scuola primaria",
+        adolescent: "contesto adolescenziale",
+        youngAdult: "contesto di giovane adulto"
+      },
+      es: {
+        missing: "más preciso al indicar la edad",
+        toddler: "contexto de primera infancia",
+        preschool: "contexto preescolar",
+        primary: "edad de primaria",
+        adolescent: "contexto adolescente",
+        youngAdult: "contexto de joven adulto"
+      },
+      zh: {
+        missing: "填写年龄后会更精确",
+        toddler: "幼儿早期背景",
+        preschool: "学前年龄背景",
+        primary: "小学年龄背景",
+        adolescent: "青春期背景",
+        youngAdult: "青年早期背景"
+      },
+      ja: {
+        missing: "年齢を入力するとより正確になります",
+        toddler: "乳幼児期の背景",
+        preschool: "就学前の年齢背景",
+        primary: "小学生期の背景",
+        adolescent: "思春期の背景",
+        youngAdult: "若年成人期の背景"
+      },
+      ar: {
+        missing: "يصبح أدق بعد إدخال العمر",
+        toddler: "سياق الطفولة المبكرة",
+        preschool: "سياق ما قبل المدرسة",
+        primary: "سياق المرحلة الابتدائية",
+        adolescent: "سياق المراهقة",
+        youngAdult: "سياق بداية الرشد"
+      },
+      pl: {
+        missing: "dokładniejsze po podaniu wieku",
+        toddler: "kontekst wczesnego dzieciństwa",
+        preschool: "wiek przedszkolny",
+        primary: "wiek wczesnoszkolny",
+        adolescent: "kontekst dorastania",
+        youngAdult: "kontekst młodej dorosłości"
+      },
+      pt: {
+        missing: "mais preciso após informar a idade",
+        toddler: "contexto da primeira infância",
+        preschool: "contexto pré-escolar",
+        primary: "idade escolar inicial",
+        adolescent: "contexto adolescente",
+        youngAdult: "contexto de jovem adulto"
+      },
+      fr: {
+        missing: "plus précis après l'âge indiqué",
+        toddler: "contexte de petite enfance",
+        preschool: "contexte préscolaire",
+        primary: "âge de l'école primaire",
+        adolescent: "contexte adolescent",
+        youngAdult: "contexte jeune adulte"
+      }
+    });
 
-    if (age === null || Number.isNaN(age)) {
-      return state.lang === "hu" ? "korosztály megadása után pontosabb" : "refined after age is provided";
-    }
-
-    if (state.lang === "hu") {
-      if (age < 3) return "kisgyermekkori kontextus";
-      if (age < 6) return "óvoda előtti / óvodás korosztály";
-      if (age < 12) return "kisiskolás korosztály";
-      if (age < 18) return "serdülőkori kontextus";
-      return "fiatal felnőtt korosztály";
-    }
-
-    if (age < 3) return "early childhood context";
-    if (age < 6) return "preschool age context";
-    if (age < 12) return "primary school age context";
-    if (age < 18) return "adolescent context";
-    return "young adult context";
+    if (age === null || Number.isNaN(age)) return copy.missing;
+    if (age < 3) return copy.toddler;
+    if (age < 6) return copy.preschool;
+    if (age < 12) return copy.primary;
+    if (age < 18) return copy.adolescent;
+    return copy.youngAdult;
   }
 
   function formatDecisionScore(value) {

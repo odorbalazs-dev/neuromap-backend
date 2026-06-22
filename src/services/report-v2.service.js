@@ -223,6 +223,87 @@ const AGE_COPY = {
     middle_school: ["Middle school / early adolescence", "Planning, load management, peer relationships, self-esteem, and performance pressure become more important."],
     teen: ["Adolescence", "In adolescence, patterns may appear as internal tension, exhaustion, avoidance, or performance decline."],
     older: ["Older teen / young adult", "At this age, the pattern is best interpreted through independence, study or work organization, relationships, and mental load."]
+  },
+  de: {
+    unknown: ["Altersgruppe nicht angegeben", "Das Alter wurde nicht angegeben, daher wird das Muster in einem allgemeinen entwicklungsbezogenen und familiären Rahmen eingeordnet."],
+    under_three: ["Unter 3 Jahren", "In diesem Alter entwickeln sich Aufmerksamkeit, Regulation, Übergänge und Kommunikation noch sehr schnell."],
+    preschool: ["Vorschulalter", "Im Vorschulalter können Aufmerksamkeit, Flexibilität, soziale Signale und Emotionsregulation noch stark von der Situation abhängen."],
+    early_school: ["Frühes Schulalter", "Im frühen Schulalter werden Ausdauer bei Aufgaben, Regeln, Lernbelastung und Situationen mit Gleichaltrigen deutlicher sichtbar."],
+    middle_school: ["Mittlere Schulzeit / frühe Adoleszenz", "Planung, Umgang mit Belastung, Beziehungen zu Gleichaltrigen, Selbstwert und Leistungsdruck werden wichtiger."],
+    teen: ["Adoleszenz", "In der Adoleszenz zeigen sich Muster oft als innere Anspannung, Erschöpfung, Vermeidung oder Leistungsabfall."],
+    older: ["Ältere Jugendliche / junge Erwachsene", "In diesem Alter sollte das Muster vor allem über Selbstständigkeit, Lern- oder Arbeitsorganisation, Beziehungen und mentale Belastung verstanden werden."]
+  },
+  it: {
+    unknown: ["Fascia d'età non indicata", "L'età non è stata indicata, quindi il profilo viene interpretato in un quadro generale di sviluppo e funzionamento familiare."],
+    under_three: ["Meno di 3 anni", "A questa età attenzione, regolazione, passaggi da un'attività all'altra e comunicazione sono ancora in rapido sviluppo."],
+    preschool: ["Età prescolare", "In età prescolare attenzione, flessibilità, segnali sociali e regolazione emotiva possono variare molto a seconda della situazione."],
+    early_school: ["Primi anni di scuola", "Nei primi anni di scuola, persistenza nel compito, regole, carico di apprendimento e situazioni con i pari rendono i pattern più visibili."],
+    middle_school: ["Scuola media / prima adolescenza", "Pianificazione, gestione del carico, relazioni con i pari, autostima e pressione prestazionale diventano più rilevanti."],
+    teen: ["Adolescenza", "In adolescenza i pattern possono emergere come tensione interna, stanchezza, evitamento o calo del rendimento."],
+    older: ["Tarda adolescenza / giovane adulto", "A questa età il pattern si comprende meglio attraverso autonomia, organizzazione dello studio o del lavoro, relazioni e carico mentale."]
+  },
+  es: {
+    unknown: ["Grupo de edad no indicado", "No se indicó la edad, por lo que el patrón se interpreta dentro de un marco general de desarrollo y funcionamiento familiar."],
+    under_three: ["Menores de 3 años", "A esta edad, la atención, la regulación, las transiciones y la comunicación todavía se desarrollan con rapidez."],
+    preschool: ["Edad preescolar", "En edad preescolar, la atención, la flexibilidad, las señales sociales y la regulación emocional pueden variar mucho según la situación."],
+    early_school: ["Primeros años escolares", "En los primeros años escolares, la persistencia en tareas, las reglas, la carga de aprendizaje y las situaciones con pares hacen más visibles los patrones."],
+    middle_school: ["Edad escolar media / inicio de adolescencia", "La planificación, el manejo de la carga, las relaciones con pares, la autoestima y la presión por el rendimiento cobran más importancia."],
+    teen: ["Adolescencia", "En la adolescencia, los patrones pueden aparecer como tensión interna, agotamiento, evitación o descenso del rendimiento."],
+    older: ["Adolescente mayor / adulto joven", "A esta edad, conviene interpretar el patrón desde la autonomía, la organización del estudio o trabajo, las relaciones y la carga mental."]
+  },
+  zh: {
+    unknown: ["未提供年龄段", "未提供孩子年龄，因此会在一般发展与家庭功能框架下理解这些模式。"],
+    under_three: ["3岁以下", "在这个年龄，注意力、情绪调节、转换适应和沟通能力仍在快速发展。"],
+    preschool: ["学龄前阶段", "学龄前儿童的注意力、灵活性、社交信号理解和情绪调节仍可能明显受情境影响。"],
+    early_school: ["小学低年级阶段", "在小学低年级，任务坚持、规则、学习负荷和同伴情境会让模式更容易被观察到。"],
+    middle_school: ["小学高年级 / 青春期早期", "计划能力、压力管理、同伴关系、自我评价和表现压力会变得更重要。"],
+    teen: ["青春期阶段", "青春期的模式可能表现为内在紧张、疲惫、回避或学习表现下降。"],
+    older: ["青春期后期 / 年轻成人", "在这个年龄，应从独立性、学习或工作组织、人际关系和心理负荷角度理解这些模式。"]
+  },
+  ja: {
+    unknown: ["年齢段階が未入力", "年齢が入力されていないため、一般的な発達と家庭での様子を踏まえて解釈します。"],
+    under_three: ["3歳未満", "この年齢では、注意、調整、切り替え、コミュニケーションがまだ急速に発達しています。"],
+    preschool: ["未就学段階", "未就学の時期は、注意、柔軟性、社会的なサイン、感情調整が場面によって大きく変わることがあります。"],
+    early_school: ["小学校低学年", "小学校低学年では、課題への取り組み、ルール、学習負荷、友人関係の中でパターンが見えやすくなります。"],
+    middle_school: ["小学校高学年 / 思春期初期", "計画、負荷の調整、友人関係、自己評価、成績へのプレッシャーがより重要になります。"],
+    teen: ["思春期", "思春期には、内面的な緊張、疲れ、回避、成績低下としてパターンが表れることがあります。"],
+    older: ["思春期後期 / 若年成人", "この年齢では、自立、学習や仕事の整理、人間関係、精神的負荷の観点から理解すると役立ちます。"]
+  },
+  ar: {
+    unknown: ["لم تُذكر المرحلة العمرية", "لم يتم إدخال عمر الطفل، لذلك يتم تفسير النمط ضمن إطار عام للنمو ووظائف الأسرة."],
+    under_three: ["أقل من 3 سنوات", "في هذا العمر ما زالت مهارات الانتباه والتنظيم والانتقال بين الأنشطة والتواصل تتطور بسرعة."],
+    preschool: ["مرحلة ما قبل المدرسة", "في مرحلة ما قبل المدرسة قد يختلف الانتباه والمرونة وفهم الإشارات الاجتماعية وتنظيم المشاعر كثيرًا حسب الموقف."],
+    early_school: ["السنوات المدرسية الأولى", "في السنوات المدرسية الأولى تصبح المثابرة على المهمة والقواعد وعبء التعلم ومواقف الأقران أكثر وضوحًا."],
+    middle_school: ["المرحلة المدرسية المتوسطة / بداية المراهقة", "يصبح التخطيط وإدارة العبء والعلاقات مع الأقران وتقدير الذات وضغط الأداء أكثر أهمية."],
+    teen: ["مرحلة المراهقة", "في المراهقة قد تظهر الأنماط كتوتّر داخلي أو إنهاك أو تجنّب أو تراجع في الأداء."],
+    older: ["مراهق أكبر سنًا / شاب بالغ", "في هذا العمر من الأفضل فهم النمط من خلال الاستقلالية وتنظيم الدراسة أو العمل والعلاقات والعبء النفسي."]
+  },
+  pl: {
+    unknown: ["Nie podano grupy wiekowej", "Wiek dziecka nie został podany, dlatego wzorzec interpretujemy w ogólnych ramach rozwojowych i rodzinnych."],
+    under_three: ["Poniżej 3 lat", "W tym wieku uwaga, regulacja, przejścia między aktywnościami i komunikacja nadal rozwijają się bardzo szybko."],
+    preschool: ["Wiek przedszkolny", "W wieku przedszkolnym uwaga, elastyczność, sygnały społeczne i regulacja emocji mogą jeszcze silnie zależeć od sytuacji."],
+    early_school: ["Wczesny wiek szkolny", "We wczesnym wieku szkolnym wytrwałość w zadaniu, zasady, obciążenie nauką i sytuacje rówieśnicze wyraźniej pokazują wzorce."],
+    middle_school: ["Starsza szkoła podstawowa / wczesna adolescencja", "Planowanie, radzenie sobie z obciążeniem, relacje rówieśnicze, samoocena i presja wyników stają się ważniejsze."],
+    teen: ["Adolescencja", "W adolescencji wzorce mogą pojawiać się jako napięcie wewnętrzne, wyczerpanie, unikanie lub spadek wyników."],
+    older: ["Starszy nastolatek / młody dorosły", "W tym wieku warto interpretować wzorzec przez samodzielność, organizację nauki lub pracy, relacje i obciążenie psychiczne."]
+  },
+  pt: {
+    unknown: ["Faixa etária não indicada", "A idade da criança não foi informada, por isso o padrão é interpretado num enquadramento geral de desenvolvimento e funcionamento familiar."],
+    under_three: ["Menos de 3 anos", "Nesta idade, atenção, regulação, transições e comunicação ainda estão em desenvolvimento rápido."],
+    preschool: ["Idade pré-escolar", "Na idade pré-escolar, atenção, flexibilidade, sinais sociais e regulação emocional ainda podem variar muito conforme a situação."],
+    early_school: ["Primeiros anos escolares", "Nos primeiros anos escolares, persistência na tarefa, regras, carga de aprendizagem e situações com colegas tornam os padrões mais visíveis."],
+    middle_school: ["Ensino básico intermédio / início da adolescência", "Planeamento, gestão da carga, relações com colegas, autoestima e pressão de desempenho tornam-se mais importantes."],
+    teen: ["Adolescência", "Na adolescência, os padrões podem aparecer como tensão interna, exaustão, evitamento ou queda no desempenho."],
+    older: ["Adolescente mais velho / jovem adulto", "Nesta idade, o padrão é melhor interpretado através da autonomia, organização do estudo ou trabalho, relações e carga mental."]
+  },
+  fr: {
+    unknown: ["Tranche d'âge non indiquée", "L'âge de l'enfant n'a pas été indiqué, le profil est donc interprété dans un cadre développemental et familial général."],
+    under_three: ["Moins de 3 ans", "À cet âge, l'attention, la régulation, les transitions et la communication se développent encore très rapidement."],
+    preschool: ["Âge préscolaire", "À l'âge préscolaire, l'attention, la flexibilité, les signaux sociaux et la régulation émotionnelle peuvent encore beaucoup varier selon la situation."],
+    early_school: ["Début de scolarité", "Au début de la scolarité, la persévérance dans les tâches, les règles, la charge d'apprentissage et les situations avec les pairs rendent les schémas plus visibles."],
+    middle_school: ["Fin d'école primaire / début d'adolescence", "La planification, la gestion de la charge, les relations avec les pairs, l'estime de soi et la pression de performance deviennent plus importantes."],
+    teen: ["Adolescence", "À l'adolescence, les schémas peuvent apparaître comme une tension interne, de l'épuisement, de l'évitement ou une baisse des performances."],
+    older: ["Grand adolescent / jeune adulte", "À cet âge, il est utile d'interpréter le schéma à travers l'autonomie, l'organisation des études ou du travail, les relations et la charge mentale."]
   }
 };
 
@@ -242,6 +323,78 @@ const DOMAIN_ACTIONS = {
     DEPRESSION: ["Next 7 days: mood, energy, and connection", ["Once a day, briefly track energy, interest, and mood.", "Plan one low-pressure connecting activity.", "If low mood or withdrawal increases, seek qualified support."]],
     LEARNING: ["Next 7 days: separate learning situations clearly", ["Choose one task type: reading, writing, math, or instructions.", "Check whether the difficulty is in understanding, pace, or output.", "Ask educators for concrete examples of what helps."]],
     UNKNOWN: ["Next 7 days: clarify one recurring pattern", ["Choose one recurring situation.", "Watch what happens before it, what keeps it going, and what helps.", "Make the next step small, measurable, and age-appropriate."]]
+  },
+  de: {
+    ADHD: ["Nächste 7 Tage: Aufmerksamkeit und Aufgaben-Ausdauer unterstützen", ["Teile eine wiederkehrende Routine in 3-5 sichtbare Schritte.", "Gib eine kurze Anweisung und lass den ersten nächsten Schritt wiederholen.", "Beobachte, ob die Schwierigkeit beim Starten, Dranbleiben, Wechseln oder Beenden am stärksten ist."]],
+    ASD: ["Nächste 7 Tage: Vorhersagbarkeit und sozial-sensorische Belastung", ["Kündige einen schwierigen Übergang sichtbar vorher an.", "Beobachte, ob soziale Unsicherheit, sensorische Belastung oder Routineänderung damit zusammenhängen.", "Nutze kurze, konkrete Sätze und gib mehr Verarbeitungszeit."]],
+    ANXIETY: ["Nächste 7 Tage: Sorgen und Vermeidung behutsam beobachten", ["Notiere, wann die Anspannung zunimmt.", "Biete neben Beruhigung einen kleinen sicheren Schritt in Richtung der vermiedenen Situation an.", "Achte auch auf Körpersignale: Schlaf, Bauchweh, Kopfschmerzen oder Rückzug."]],
+    DEPRESSION: ["Nächste 7 Tage: Stimmung, Energie und Verbindung", ["Beobachte einmal täglich kurz Energie, Interesse und Stimmung.", "Plane eine verbindende Aktivität mit wenig Druck.", "Wenn Niedergeschlagenheit oder Rückzug zunehmen, suche qualifizierte Unterstützung."]],
+    LEARNING: ["Nächste 7 Tage: Lernsituationen klar trennen", ["Wähle einen Aufgabentyp: Lesen, Schreiben, Mathematik oder Anweisungen.", "Prüfe, ob die Schwierigkeit im Verstehen, Tempo oder in der Ausführung liegt.", "Bitte Lehrkräfte um konkrete Beispiele, welche Unterstützung hilft."]],
+    UNKNOWN: ["Nächste 7 Tage: ein wiederkehrendes Muster klären", ["Wähle eine wiederkehrende Situation.", "Beobachte, was davor passiert, was es aufrechterhält und was hilft.", "Der nächste Schritt sollte klein, messbar und altersgerecht sein."]]
+  },
+  it: {
+    ADHD: ["Prossimi 7 giorni: sostenere attenzione e persistenza nel compito", ["Dividi una routine ricorrente in 3-5 passaggi visibili.", "Dai un'istruzione breve e chiedi quale sia il primo passo successivo.", "Osserva se la difficoltà è più forte nell'iniziare, mantenere, cambiare o concludere."]],
+    ASD: ["Prossimi 7 giorni: prevedibilità e carico sociale-sensoriale", ["Prepara in modo visibile una transizione difficile.", "Osserva se sono collegati incertezza sociale, carico sensoriale o cambiamenti di routine.", "Usa frasi brevi e concrete e concedi più tempo di elaborazione."]],
+    ANXIETY: ["Prossimi 7 giorni: osservare con delicatezza preoccupazione ed evitamento", ["Annota quando aumenta la tensione.", "Oltre alla rassicurazione, proponi un piccolo passo sicuro verso la situazione evitata.", "Osserva anche i segnali corporei: sonno, mal di pancia, mal di testa o ritiro."]],
+    DEPRESSION: ["Prossimi 7 giorni: umore, energia e connessione", ["Una volta al giorno osserva brevemente energia, interesse e umore.", "Programma un'attività di connessione a bassa pressione.", "Se umore basso o ritiro aumentano, cerca supporto qualificato."]],
+    LEARNING: ["Prossimi 7 giorni: distinguere chiaramente le situazioni di apprendimento", ["Scegli un tipo di compito: lettura, scrittura, matematica o istruzioni.", "Verifica se la difficoltà riguarda comprensione, ritmo o produzione.", "Chiedi agli insegnanti esempi concreti di ciò che aiuta."]],
+    UNKNOWN: ["Prossimi 7 giorni: chiarire un pattern ricorrente", ["Scegli una situazione ricorrente.", "Osserva cosa accade prima, cosa la mantiene e cosa aiuta.", "Il prossimo passo dovrebbe essere piccolo, misurabile e adatto all'età."]]
+  },
+  es: {
+    ADHD: ["Próximos 7 días: apoyar la atención y la persistencia en tareas", ["Divide una rutina recurrente en 3-5 pasos visibles.", "Da una instrucción breve y pide que diga el primer paso siguiente.", "Observa si la dificultad aparece más al empezar, mantener, cambiar o terminar."]],
+    ASD: ["Próximos 7 días: previsibilidad y carga social-sensorial", ["Anticipa de forma visible una transición difícil.", "Observa si se relaciona con incertidumbre social, carga sensorial o cambio de rutina.", "Usa frases breves y concretas, y deja más tiempo para procesar."]],
+    ANXIETY: ["Próximos 7 días: seguir con calma la preocupación y la evitación", ["Anota cuándo aumenta la tensión.", "Además de tranquilizar, ofrece un pequeño paso seguro hacia la situación evitada.", "Observa también señales corporales: sueño, dolor de barriga, dolor de cabeza o retraimiento."]],
+    DEPRESSION: ["Próximos 7 días: ánimo, energía y conexión", ["Una vez al día observa brevemente energía, interés y estado de ánimo.", "Planifica una actividad de conexión con poca presión.", "Si aumentan el bajo ánimo o el retraimiento, busca apoyo cualificado."]],
+    LEARNING: ["Próximos 7 días: separar claramente las situaciones de aprendizaje", ["Elige un tipo de tarea: lectura, escritura, matemáticas o instrucciones.", "Comprueba si la dificultad está en la comprensión, el ritmo o la ejecución.", "Pide al profesorado ejemplos concretos de qué ayuda."]],
+    UNKNOWN: ["Próximos 7 días: aclarar un patrón recurrente", ["Elige una situación recurrente.", "Observa qué ocurre antes, qué lo mantiene y qué ayuda.", "El siguiente paso debe ser pequeño, medible y adecuado a la edad."]]
+  },
+  zh: {
+    ADHD: ["接下来7天：支持注意力和任务坚持", ["把一个反复出现的日常流程拆成3-5个可见步骤。", "给出简短指令，然后请孩子说出下一步。", "观察困难最明显是在开始、保持、切换还是结束时。"]],
+    ASD: ["接下来7天：可预测性与社交-感官负荷", ["在一个困难转换前给出可见提示。", "观察是否与社交不确定、感官负荷或日常变化有关。", "使用简短具体的句子，并给更多处理时间。"]],
+    ANXIETY: ["接下来7天：温和观察担忧和回避", ["记录紧张何时升高。", "在安抚之外，提供一个小而安全的步骤，慢慢接近被回避的情境。", "也观察身体信号：睡眠、腹痛、头痛或退缩。"]],
+    DEPRESSION: ["接下来7天：情绪、能量和连接", ["每天简短观察一次能量、兴趣和情绪。", "安排一个低压力的连接活动。", "如果低落或退缩加重，请寻求专业支持。"]],
+    LEARNING: ["接下来7天：清楚区分学习情境", ["选择一种任务类型：阅读、书写、数学或指令理解。", "判断困难主要在理解、速度还是输出。", "向老师询问具体哪些支持方式有帮助。"]],
+    UNKNOWN: ["接下来7天：澄清一个反复出现的模式", ["选择一个反复出现的情境。", "观察之前发生什么、什么维持了它、什么有帮助。", "下一步应小、可观察，并符合年龄。"]]
+  },
+  ja: {
+    ADHD: ["今後7日間：注意と課題継続を支える", ["繰り返し起こる流れを3-5個の見えるステップに分けます。", "短い指示を出し、次の最初の一歩を確認します。", "始める時、続ける時、切り替える時、終える時のどこで困りやすいかを見ます。"]],
+    ASD: ["今後7日間：見通しと社会・感覚負荷", ["難しい切り替えの前に、見える形で予告します。", "社会的な不確実さ、感覚負荷、ルーティン変更が関係しているかを見ます。", "短く具体的な言葉を使い、処理する時間を多めに取ります。"]],
+    ANXIETY: ["今後7日間：不安と回避をやさしく観察する", ["緊張が高まる場面を記録します。", "安心づけに加えて、避けている場面に向けた小さく安全な一歩を用意します。", "睡眠、腹痛、頭痛、引きこもりなど身体のサインも見ます。"]],
+    DEPRESSION: ["今後7日間：気分、エネルギー、つながり", ["1日1回、エネルギー、興味、気分を短く観察します。", "負担の少ないつながりの活動を一つ計画します。", "気分の落ち込みや引きこもりが強まる場合は、専門的な支援を検討してください。"]],
+    LEARNING: ["今後7日間：学習場面を明確に分ける", ["読む、書く、算数、指示理解のどれか一つを選びます。", "困りごとが理解、速度、出力のどこにあるかを確認します。", "先生に、どんな支援が役立つか具体例を聞きます。"]],
+    UNKNOWN: ["今後7日間：繰り返すパターンを一つ整理する", ["繰り返し起こる場面を一つ選びます。", "その前に何があり、何が続けさせ、何が助けになるかを見ます。", "次の一歩は小さく、測りやすく、年齢に合ったものにします。"]]
+  },
+  ar: {
+    ADHD: ["الأيام السبعة القادمة: دعم الانتباه والمثابرة على المهمة", ["قسّم روتينًا متكررًا إلى 3-5 خطوات مرئية.", "أعطِ تعليمة قصيرة ثم اطلب ذكر الخطوة التالية الأولى.", "لاحظ هل تكون الصعوبة أقوى عند البدء أو الاستمرار أو الانتقال أو الإنهاء."]],
+    ASD: ["الأيام السبعة القادمة: قابلية التوقع والعبء الاجتماعي-الحسي", ["قدّم تنبيهًا مرئيًا قبل انتقال صعب.", "لاحظ هل يرتبط الأمر بعدم اليقين الاجتماعي أو العبء الحسي أو تغيير الروتين.", "استخدم جملًا قصيرة ومحددة وامنح وقتًا أطول للمعالجة."]],
+    ANXIETY: ["الأيام السبعة القادمة: متابعة القلق والتجنّب بلطف", ["دوّن متى يزداد التوتر.", "إلى جانب الطمأنة، قدّم خطوة صغيرة وآمنة نحو الموقف الذي يتم تجنّبه.", "انتبه أيضًا لإشارات الجسم: النوم أو ألم البطن أو الصداع أو الانسحاب."]],
+    DEPRESSION: ["الأيام السبعة القادمة: المزاج والطاقة والتواصل", ["مرة يوميًا، راقب باختصار مستوى الطاقة والاهتمام والمزاج.", "خطط لنشاط تواصلي منخفض الضغط.", "إذا ازداد انخفاض المزاج أو الانسحاب، فاطلب دعمًا مؤهلًا."]],
+    LEARNING: ["الأيام السبعة القادمة: فصل مواقف التعلم بوضوح", ["اختر نوع مهمة واحدًا: القراءة أو الكتابة أو الرياضيات أو التعليمات.", "تحقق هل تكمن الصعوبة في الفهم أو السرعة أو التنفيذ.", "اطلب من المعلمين أمثلة محددة لما يساعد."]],
+    UNKNOWN: ["الأيام السبعة القادمة: توضيح نمط متكرر واحد", ["اختر موقفًا متكررًا واحدًا.", "راقب ما يحدث قبله، وما يبقيه مستمرًا، وما يساعد.", "اجعل الخطوة التالية صغيرة وقابلة للملاحظة ومناسبة للعمر."]]
+  },
+  pl: {
+    ADHD: ["Najbliższe 7 dni: wspieranie uwagi i wytrwałości w zadaniu", ["Podziel jedną powtarzającą się rutynę na 3-5 widocznych kroków.", "Podaj krótką instrukcję, a potem poproś o wskazanie pierwszego następnego kroku.", "Obserwuj, czy trudność jest największa przy rozpoczęciu, utrzymaniu, zmianie czy kończeniu."]],
+    ASD: ["Najbliższe 7 dni: przewidywalność i obciążenie społeczne-sensoryczne", ["Zapowiedz widocznie jedno trudne przejście.", "Obserwuj, czy wiąże się to z niepewnością społeczną, obciążeniem sensorycznym lub zmianą rutyny.", "Używaj krótkich, konkretnych zdań i daj więcej czasu na przetworzenie."]],
+    ANXIETY: ["Najbliższe 7 dni: łagodne śledzenie lęku i unikania", ["Zapisuj, kiedy napięcie rośnie.", "Obok uspokojenia zaproponuj jeden mały, bezpieczny krok w stronę unikanej sytuacji.", "Obserwuj też sygnały z ciała: sen, bóle brzucha, bóle głowy lub wycofanie."]],
+    DEPRESSION: ["Najbliższe 7 dni: nastrój, energia i kontakt", ["Raz dziennie krótko obserwuj energię, zainteresowanie i nastrój.", "Zaplanuj jedną mało obciążającą aktywność budującą kontakt.", "Jeśli obniżony nastrój lub wycofanie narastają, poszukaj kwalifikowanego wsparcia."]],
+    LEARNING: ["Najbliższe 7 dni: jasne rozdzielenie sytuacji uczenia się", ["Wybierz jeden typ zadania: czytanie, pisanie, matematyka lub instrukcje.", "Sprawdź, czy trudność dotyczy rozumienia, tempa czy wykonania.", "Poproś nauczycieli o konkretne przykłady tego, co pomaga."]],
+    UNKNOWN: ["Najbliższe 7 dni: doprecyzowanie jednego powtarzalnego wzorca", ["Wybierz jedną powtarzającą się sytuację.", "Obserwuj, co dzieje się wcześniej, co ją podtrzymuje i co pomaga.", "Kolejny krok powinien być mały, mierzalny i dopasowany do wieku."]]
+  },
+  pt: {
+    ADHD: ["Próximos 7 dias: apoiar atenção e persistência na tarefa", ["Divida uma rotina recorrente em 3-5 passos visíveis.", "Dê uma instrução curta e peça qual é o primeiro passo seguinte.", "Observe se a dificuldade é maior ao começar, manter, mudar ou terminar."]],
+    ASD: ["Próximos 7 dias: previsibilidade e carga social-sensorial", ["Avise visualmente antes de uma transição difícil.", "Observe se incerteza social, carga sensorial ou mudança de rotina estão ligadas.", "Use frases curtas e concretas e dê mais tempo de processamento."]],
+    ANXIETY: ["Próximos 7 dias: acompanhar preocupação e evitamento com cuidado", ["Anote quando a tensão aumenta.", "Além de tranquilizar, ofereça um pequeno passo seguro em direção à situação evitada.", "Observe também sinais físicos: sono, dores de barriga, dores de cabeça ou retraimento."]],
+    DEPRESSION: ["Próximos 7 dias: humor, energia e ligação", ["Uma vez por dia, observe brevemente energia, interesse e humor.", "Planeie uma atividade de ligação com pouca pressão.", "Se o humor baixo ou o retraimento aumentarem, procure apoio qualificado."]],
+    LEARNING: ["Próximos 7 dias: separar claramente as situações de aprendizagem", ["Escolha um tipo de tarefa: leitura, escrita, matemática ou instruções.", "Veja se a dificuldade está na compreensão, no ritmo ou na execução.", "Peça aos educadores exemplos concretos do que ajuda."]],
+    UNKNOWN: ["Próximos 7 dias: clarificar um padrão recorrente", ["Escolha uma situação recorrente.", "Observe o que acontece antes, o que mantém a situação e o que ajuda.", "O próximo passo deve ser pequeno, mensurável e adequado à idade."]]
+  },
+  fr: {
+    ADHD: ["7 prochains jours : soutenir l'attention et la persévérance", ["Découpez une routine récurrente en 3-5 étapes visibles.", "Donnez une consigne courte, puis demandez le premier pas à faire.", "Observez si la difficulté est plus forte au démarrage, au maintien, au changement ou à la fin."]],
+    ASD: ["7 prochains jours : prévisibilité et charge sociale-sensorielle", ["Annoncez visiblement une transition difficile.", "Observez si l'incertitude sociale, la charge sensorielle ou le changement de routine est lié.", "Utilisez des phrases courtes et concrètes, et laissez plus de temps de traitement."]],
+    ANXIETY: ["7 prochains jours : observer doucement l'inquiétude et l'évitement", ["Notez quand la tension augmente.", "En plus de rassurer, proposez un petit pas sûr vers la situation évitée.", "Observez aussi les signaux corporels : sommeil, maux de ventre, maux de tête ou retrait."]],
+    DEPRESSION: ["7 prochains jours : humeur, énergie et lien", ["Une fois par jour, observez brièvement l'énergie, l'intérêt et l'humeur.", "Prévoyez une activité de lien avec peu de pression.", "Si la baisse d'humeur ou le retrait augmente, demandez un soutien qualifié."]],
+    LEARNING: ["7 prochains jours : distinguer clairement les situations d'apprentissage", ["Choisissez un type de tâche : lecture, écriture, mathématiques ou consignes.", "Vérifiez si la difficulté concerne la compréhension, le rythme ou la production.", "Demandez aux enseignants des exemples concrets de ce qui aide."]],
+    UNKNOWN: ["7 prochains jours : clarifier un schéma récurrent", ["Choisissez une situation récurrente.", "Observez ce qui arrive avant, ce qui maintient la difficulté et ce qui aide.", "La prochaine étape doit être petite, observable et adaptée à l'âge."]]
   }
 };
 

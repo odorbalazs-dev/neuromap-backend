@@ -406,6 +406,69 @@ function getDomainLabel(lang, domain, labels) {
       ANXIETY: "Anxiety",
       DEPRESSION: "Mood and motivation",
       LEARNING: "Learning profile"
+    },
+    de: {
+      ADHD: "ADHS",
+      ASD: "Autismus-Spektrum",
+      ANXIETY: "Angst",
+      DEPRESSION: "Stimmung und Motivation",
+      LEARNING: "Lernprofil"
+    },
+    it: {
+      ADHD: "ADHD",
+      ASD: "Spettro autistico",
+      ANXIETY: "Ansia",
+      DEPRESSION: "Umore e motivazione",
+      LEARNING: "Profilo di apprendimento"
+    },
+    es: {
+      ADHD: "TDAH",
+      ASD: "Espectro autista",
+      ANXIETY: "Ansiedad",
+      DEPRESSION: "Estado de ánimo y motivación",
+      LEARNING: "Perfil de aprendizaje"
+    },
+    zh: {
+      ADHD: "注意力与冲动性",
+      ASD: "自闭症谱系",
+      ANXIETY: "焦虑",
+      DEPRESSION: "情绪与动机",
+      LEARNING: "学习表现"
+    },
+    ja: {
+      ADHD: "ADHD",
+      ASD: "自閉スペクトラム",
+      ANXIETY: "不安",
+      DEPRESSION: "気分と意欲",
+      LEARNING: "学習プロフィール"
+    },
+    ar: {
+      ADHD: "اضطراب فرط الحركة وتشتت الانتباه",
+      ASD: "طيف التوحد",
+      ANXIETY: "القلق",
+      DEPRESSION: "المزاج والدافعية",
+      LEARNING: "ملف التعلم"
+    },
+    pl: {
+      ADHD: "ADHD",
+      ASD: "Spektrum autyzmu",
+      ANXIETY: "Lęk",
+      DEPRESSION: "Nastrój i motywacja",
+      LEARNING: "Profil uczenia się"
+    },
+    pt: {
+      ADHD: "TDAH",
+      ASD: "Espectro do autismo",
+      ANXIETY: "Ansiedade",
+      DEPRESSION: "Humor e motivação",
+      LEARNING: "Perfil de aprendizagem"
+    },
+    fr: {
+      ADHD: "TDAH",
+      ASD: "Spectre de l'autisme",
+      ANXIETY: "Anxiété",
+      DEPRESSION: "Humeur et motivation",
+      LEARNING: "Profil d'apprentissage"
     }
   };
 
@@ -428,6 +491,60 @@ function getSeverityLabel(lang, severity, labels) {
       mild: "Mild signal level",
       moderate: "Moderate signal level",
       high: "High signal level"
+    },
+    de: {
+      low: "Niedriges Signalniveau",
+      mild: "Leichtes Signalniveau",
+      moderate: "Mittleres Signalniveau",
+      high: "Hohes Signalniveau"
+    },
+    it: {
+      low: "Livello di segnale basso",
+      mild: "Livello di segnale lieve",
+      moderate: "Livello di segnale moderato",
+      high: "Livello di segnale alto"
+    },
+    es: {
+      low: "Nivel de señal bajo",
+      mild: "Nivel de señal leve",
+      moderate: "Nivel de señal moderado",
+      high: "Nivel de señal alto"
+    },
+    zh: {
+      low: "低信号水平",
+      mild: "轻度信号水平",
+      moderate: "中度信号水平",
+      high: "高信号水平"
+    },
+    ja: {
+      low: "低いサインレベル",
+      mild: "軽度のサインレベル",
+      moderate: "中程度のサインレベル",
+      high: "高いサインレベル"
+    },
+    ar: {
+      low: "مستوى إشارة منخفض",
+      mild: "مستوى إشارة خفيف",
+      moderate: "مستوى إشارة متوسط",
+      high: "مستوى إشارة مرتفع"
+    },
+    pl: {
+      low: "Niski poziom sygnału",
+      mild: "Łagodny poziom sygnału",
+      moderate: "Umiarkowany poziom sygnału",
+      high: "Wysoki poziom sygnału"
+    },
+    pt: {
+      low: "Nível de sinal baixo",
+      mild: "Nível de sinal leve",
+      moderate: "Nível de sinal moderado",
+      high: "Nível de sinal alto"
+    },
+    fr: {
+      low: "Niveau de signal faible",
+      mild: "Niveau de signal léger",
+      moderate: "Niveau de signal modéré",
+      high: "Niveau de signal élevé"
     }
   };
 

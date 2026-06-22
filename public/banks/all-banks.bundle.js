@@ -5550,7 +5550,7 @@ window.NM_ADHD_BANK = [
       de: `Hat Schwierigkeiten, Veränderungen zu tolerieren.`,
       it: `Fa fatica a tollerare i cambiamenti.`,
       es: `Tiene dificultad para tolerar los cambios.`,
-      zh: `难以适应变化。`,
+      zh: `在意外或变化的情境中，较难适应和承受变化。`,
       ja: `変化を受け入れることが困難です。`,
       ar: `يجد صعوبة في تحمل التغيير.`,
       pl: `Ma trudności z tolerowaniem zmian.`,
