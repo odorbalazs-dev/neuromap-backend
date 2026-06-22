@@ -34,6 +34,18 @@ const checks = [
     run: () => read("src/services/analysis-queue.service.js").includes("getAnalysisQueueSnapshot")
   },
   {
+    label: "Queue supports retry backoff instead of immediate permanent failure",
+    run: () => {
+      const source = read("src/services/analysis-queue.service.js");
+      return (
+        source.includes("calculateRetryDelaySeconds") &&
+        source.includes("next_attempt_at") &&
+        source.includes("WHEN attempts >= $3::int THEN 'failed'") &&
+        read("src/jobs/analysis.worker.js").includes("job scheduled for retry")
+      );
+    }
+  },
+  {
     label: "Campaign capacity estimator is wired into admin controller",
     run: () => (
       read("src/services/campaign-capacity.service.js").includes("buildCampaignCapacitySnapshot") &&
@@ -49,13 +61,35 @@ const checks = [
     )
   },
   {
+    label: "Queue retry backoff migration exists",
+    run: () => (
+      exists("src/db/migrations/011_analysis_jobs_retry_backoff.sql") &&
+      read("src/db/migrations/011_analysis_jobs_retry_backoff.sql").includes("next_attempt_at") &&
+      read("src/db/migrations/011_analysis_jobs_retry_backoff.sql").includes("idx_analysis_jobs_queue_retry_claim")
+    )
+  },
+  {
     label: "Campaign env variables are documented",
     run: () => {
       const envExample = read(".env.example");
       return (
         envExample.includes("WORKER_CONCURRENCY") &&
+        envExample.includes("WORKER_MAX_ATTEMPTS") &&
+        envExample.includes("WORKER_RETRY_BASE_SECONDS") &&
         envExample.includes("WORKER_EXPECTED_JOB_SECONDS") &&
-        envExample.includes("CAMPAIGN_TARGET_REPORTS_PER_DAY")
+        envExample.includes("CAMPAIGN_TARGET_REPORTS_PER_DAY") &&
+        envExample.includes("PG_POOL_MAX")
+      );
+    }
+  },
+  {
+    label: "Webhook keeps paid checkout critical path short",
+    run: () => {
+      const source = read("src/services/webhook.service.js");
+      return (
+        source.includes("schedulePostPaymentSideEffects") &&
+        source.includes("schedule_post_payment_side_effects") &&
+        source.includes("setTimeout(async () =>")
       );
     }
   },

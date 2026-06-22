@@ -7,6 +7,11 @@ import { env } from "../config/env.js";
 const pool = env.DATABASE_URL
   ? new pg.Pool({
       connectionString: env.DATABASE_URL,
+      max: env.PG_POOL_MAX,
+      connectionTimeoutMillis: env.PG_CONNECTION_TIMEOUT_MS,
+      idleTimeoutMillis: env.PG_IDLE_TIMEOUT_MS,
+      query_timeout: env.PG_QUERY_TIMEOUT_MS,
+      statement_timeout: env.PG_QUERY_TIMEOUT_MS,
       ssl: {
         rejectUnauthorized: false,
       },

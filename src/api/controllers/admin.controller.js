@@ -68,6 +68,8 @@ function normalizeAnalysisJob(row = {}) {
     last_error: row.last_error || null,
     created_at: row.created_at || null,
     updated_at: row.updated_at || null,
+    next_attempt_at: row.next_attempt_at || null,
+    failed_at: row.failed_at || null,
     processed_at: row.processed_at || null
   };
 }

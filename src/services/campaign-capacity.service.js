@@ -21,6 +21,8 @@ export function buildCampaignCapacitySnapshot({
   const counts = queueSnapshot?.counts || {};
   const timing = queueSnapshot?.timing || {};
   const queued = number(counts.queued);
+  const queuedReady = number(counts.queuedReady, queued);
+  const queuedDelayed = number(counts.queuedDelayed);
   const processing = number(counts.processing);
   const active = queued + processing;
 
@@ -31,17 +33,25 @@ export function buildCampaignCapacitySnapshot({
     1,
     ceilDiv(targetReportsPerHour, reportsPerHourPerWorker)
   );
+  const recommendedBurstConcurrency = Math.max(
+    recommendedConcurrency,
+    Math.ceil(recommendedConcurrency * 1.25)
+  );
 
   const estimatedDrainMinutes =
-    queued > 0
-      ? Math.ceil((queued * jobSeconds) / concurrency / 60)
+    queuedReady > 0
+      ? Math.ceil((queuedReady * jobSeconds) / concurrency / 60)
       : 0;
 
   let level = "healthy";
-  if (timing.oldestQueuedAgeSeconds >= 1800 || queued >= targetReportsPerHour) {
+  if (queuedDelayed > 0 || timing.oldestQueuedAgeSeconds >= 1800 || queuedReady >= targetReportsPerHour) {
     level = "warning";
   }
-  if (timing.oldestQueuedAgeSeconds >= 3600 || queued >= targetReportsPerHour * 2) {
+  if (
+    timing.oldestQueuedAgeSeconds >= 3600 ||
+    queuedReady >= targetReportsPerHour * 2 ||
+    number(counts.failed24h) >= Math.max(5, Math.ceil(targetReportsPerHour * 0.05))
+  ) {
     level = "critical";
   }
 
@@ -49,13 +59,19 @@ export function buildCampaignCapacitySnapshot({
 
   if (concurrency < recommendedConcurrency) {
     recommendations.push(
-      `A napi ${targetDailyReports} riportos kampanycelhoz legalabb ${recommendedConcurrency} WORKER_CONCURRENCY javasolt.`
+      `A napi ${targetDailyReports} riportos kampanycelhoz legalabb ${recommendedConcurrency} WORKER_CONCURRENCY javasolt. Kampanyinditasnal ${recommendedBurstConcurrency} erosebb biztonsagi tartalek.`
     );
   }
 
   if (estimatedDrainMinutes > 20) {
     recommendations.push(
-      `A jelenlegi varakozo sor kb. ${estimatedDrainMinutes} perc alatt urulhet ki a mostani worker beallitassal.`
+      `A jelenlegi azonnal feldolgozhato sor kb. ${estimatedDrainMinutes} perc alatt urulhet ki a mostani worker beallitassal.`
+    );
+  }
+
+  if (queuedDelayed > 0) {
+    recommendations.push(
+      `${queuedDelayed} job kesleltetett ujraprobalkozasra var; ez altalaban kulso szolgaltatoi lassulas vagy atmeneti hiba jele.`
     );
   }
 
@@ -71,8 +87,13 @@ export function buildCampaignCapacitySnapshot({
     targetReportsPerHour,
     estimatedReportsPerHour,
     recommendedConcurrency,
+    recommendedBurstConcurrency,
     estimatedDrainMinutes,
     activeJobs: active,
+    queuedReady,
+    queuedDelayed,
+    failed24h: number(counts.failed24h),
+    nextRetryAt: timing.nextRetryAt || null,
     recommendations
   };
 }

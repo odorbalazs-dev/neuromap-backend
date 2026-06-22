@@ -2,15 +2,18 @@ import {
   getSessionById,
   markAnalysisProcessing,
   markAnalysisDone,
-  markAnalysisFailed
+  markAnalysisFailed,
+  markAnalysisQueued
 } from "./session.service.js";
 import {
   claimNextAnalysisJob,
+  calculateRetryDelaySeconds,
   markAnalysisJobDone,
   markAnalysisJobFailed
 } from "./analysis-queue.service.js";
 import { generateAnalysis } from "./analysis.service.js";
 import { deliverReportEmailForSession } from "./report-email-delivery.service.js";
+import { env } from "../config/env.js";
 
 export async function processNextAnalysisJob() {
   const job = await claimNextAnalysisJob();
@@ -25,7 +28,10 @@ export async function processNextAnalysisJob() {
   const session = await getSessionById(job.session_id);
 
   if (!session) {
-    await markAnalysisJobFailed(job.id, "Session not found");
+    await markAnalysisJobFailed(job.id, "Session not found", {
+      maxAttempts: 1,
+      retryDelaySeconds: 0
+    });
 
     return {
       processed: false,
@@ -35,6 +41,18 @@ export async function processNextAnalysisJob() {
   }
 
   try {
+    if (session.analysis_status === "done" && session.analysis_result) {
+      await deliverReportEmailForSession(session, { source: "analysis-job-email-only" });
+      await markAnalysisJobDone(job.id);
+
+      return {
+        processed: true,
+        jobId: job.id,
+        sessionId: session.id,
+        emailOnlyRetry: true
+      };
+    }
+
     await markAnalysisProcessing(session.id);
 
     const resultText = await generateAnalysis({
@@ -67,8 +85,22 @@ export async function processNextAnalysisJob() {
       message
     });
 
-    await markAnalysisFailed(session.id, message);
-    await markAnalysisJobFailed(job.id, message);
+    const retryDelaySeconds = calculateRetryDelaySeconds({
+      attempts: job.attempts,
+      baseSeconds: env.WORKER_RETRY_BASE_SECONDS,
+      maxSeconds: env.WORKER_RETRY_MAX_SECONDS
+    });
+
+    const updatedJob = await markAnalysisJobFailed(job.id, message, {
+      maxAttempts: env.WORKER_MAX_ATTEMPTS,
+      retryDelaySeconds
+    });
+
+    if (updatedJob?.status === "failed") {
+      await markAnalysisFailed(session.id, message);
+    } else {
+      await markAnalysisQueued(session.id);
+    }
 
     throw error;
   }

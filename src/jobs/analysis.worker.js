@@ -1,5 +1,6 @@
 import {
   claimNextAnalysisJob,
+  calculateRetryDelaySeconds,
   markAnalysisJobDone,
   markAnalysisJobFailed,
   requeueStaleJobs
@@ -9,7 +10,8 @@ import {
   getSessionById,
   markAnalysisProcessing,
   markAnalysisDone,
-  markAnalysisFailed
+  markAnalysisFailed,
+  markAnalysisQueued
 } from "../services/session.service.js";
 
 import { generateAnalysis }
@@ -25,7 +27,10 @@ const workerConfig = {
   idleSleepMs: env.WORKER_IDLE_SLEEP_MS,
   errorSleepMs: env.WORKER_ERROR_SLEEP_MS,
   staleRequeueIntervalMs: env.WORKER_STALE_REQUEUE_INTERVAL_MS,
-  staleJobMinutes: env.WORKER_STALE_JOB_MINUTES
+  staleJobMinutes: env.WORKER_STALE_JOB_MINUTES,
+  maxAttempts: env.WORKER_MAX_ATTEMPTS,
+  retryBaseSeconds: env.WORKER_RETRY_BASE_SECONDS,
+  retryMaxSeconds: env.WORKER_RETRY_MAX_SECONDS
 };
 
 let lastStaleRequeueAt = 0;
@@ -35,7 +40,18 @@ async function processSingleJob(job) {
     await getSessionById(job.session_id);
 
   if (!session) {
-    throw new Error("Session not found");
+    const error = new Error("Session not found");
+    error.terminal = true;
+    throw error;
+  }
+
+  if (session.analysis_status === "done" && session.analysis_result) {
+    await deliverReportEmailForSession(
+      session,
+      { source: "worker-retry-email-only" }
+    );
+
+    return;
   }
 
   await markAnalysisProcessing(
@@ -120,15 +136,39 @@ async function workerLane(laneId) {
           }
         );
 
-        await markAnalysisFailed(
-          job.session_id,
-          error.message
+        const retryDelaySeconds = calculateRetryDelaySeconds({
+          attempts: job.attempts,
+          baseSeconds: workerConfig.retryBaseSeconds,
+          maxSeconds: workerConfig.retryMaxSeconds
+        });
+
+        const updatedJob = await markAnalysisJobFailed(
+          job.id,
+          error.message,
+          {
+            maxAttempts: error.terminal ? 1 : workerConfig.maxAttempts,
+            retryDelaySeconds
+          }
         );
 
-        await markAnalysisJobFailed(
-          job.id,
-          error.message
-        );
+        if (updatedJob?.status === "failed") {
+          await markAnalysisFailed(
+            job.session_id,
+            error.message
+          );
+        } else {
+          await markAnalysisQueued(job.session_id);
+
+          console.warn(
+            "[worker] job scheduled for retry",
+            {
+              jobId: job.id,
+              laneId,
+              attempts: job.attempts,
+              retryDelaySeconds
+            }
+          );
+        }
       }
 
     } catch (error) {

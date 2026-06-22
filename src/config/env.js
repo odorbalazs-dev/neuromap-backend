@@ -190,7 +190,21 @@ export const env = {
   ADMIN_OPERATIONAL_ALERT_MIN_LEVEL: optional("ADMIN_OPERATIONAL_ALERT_MIN_LEVEL", "warning"),
   ADMIN_OPERATIONAL_ALERT_WINDOW_HOURS: optional("ADMIN_OPERATIONAL_ALERT_WINDOW_HOURS", "24"),
 
-  WORKER_CONCURRENCY: optionalInt("WORKER_CONCURRENCY", 1, { min: 1, max: 8 }),
+  PG_POOL_MAX: optionalInt("PG_POOL_MAX", 10, { min: 1, max: 100 }),
+  PG_CONNECTION_TIMEOUT_MS: optionalInt("PG_CONNECTION_TIMEOUT_MS", 5000, {
+    min: 1000,
+    max: 60000
+  }),
+  PG_IDLE_TIMEOUT_MS: optionalInt("PG_IDLE_TIMEOUT_MS", 30000, {
+    min: 1000,
+    max: 600000
+  }),
+  PG_QUERY_TIMEOUT_MS: optionalInt("PG_QUERY_TIMEOUT_MS", 30000, {
+    min: 1000,
+    max: 300000
+  }),
+
+  WORKER_CONCURRENCY: optionalInt("WORKER_CONCURRENCY", 1, { min: 1, max: 64 }),
   WORKER_IDLE_SLEEP_MS: optionalInt("WORKER_IDLE_SLEEP_MS", 4000, { min: 500, max: 60000 }),
   WORKER_ERROR_SLEEP_MS: optionalInt("WORKER_ERROR_SLEEP_MS", 5000, { min: 1000, max: 120000 }),
   WORKER_STALE_REQUEUE_INTERVAL_MS: optionalInt("WORKER_STALE_REQUEUE_INTERVAL_MS", 60000, {
@@ -198,6 +212,15 @@ export const env = {
     max: 600000
   }),
   WORKER_STALE_JOB_MINUTES: optionalInt("WORKER_STALE_JOB_MINUTES", 15, { min: 2, max: 180 }),
+  WORKER_MAX_ATTEMPTS: optionalInt("WORKER_MAX_ATTEMPTS", 4, { min: 1, max: 20 }),
+  WORKER_RETRY_BASE_SECONDS: optionalInt("WORKER_RETRY_BASE_SECONDS", 60, {
+    min: 5,
+    max: 3600
+  }),
+  WORKER_RETRY_MAX_SECONDS: optionalInt("WORKER_RETRY_MAX_SECONDS", 900, {
+    min: 30,
+    max: 21600
+  }),
   WORKER_EXPECTED_JOB_SECONDS: optionalInt("WORKER_EXPECTED_JOB_SECONDS", 90, { min: 20, max: 900 }),
   CAMPAIGN_TARGET_REPORTS_PER_DAY: optionalInt("CAMPAIGN_TARGET_REPORTS_PER_DAY", 1000, {
     min: 1,

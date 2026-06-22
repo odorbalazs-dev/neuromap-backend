@@ -82,6 +82,49 @@ function isCheckoutPaid(checkoutSession) {
   );
 }
 
+function schedulePostPaymentSideEffects({
+  session,
+  checkoutSession,
+  internalSessionId,
+  includeMeta = true,
+  includeInvoice = true
+} = {}) {
+  setTimeout(async () => {
+    if (includeMeta) {
+      try {
+        await sendMetaPurchaseEvent({
+          email: session?.email,
+          eventId: checkoutSession?.id,
+          value: 5,
+          currency: "USD"
+        });
+      } catch (metaError) {
+        console.error("[meta] purchase event failed after webhook acknowledgement:", {
+          message: metaError?.message || metaError,
+          internalSessionId,
+          stripeSessionId: checkoutSession?.id
+        });
+      }
+    }
+
+    if (includeInvoice) {
+      try {
+        await createInvoiceForPaidSession({
+          session,
+          checkoutSession,
+          throwOnError: false
+        });
+      } catch (invoiceError) {
+        console.error("[invoice] invoice step failed after webhook acknowledgement:", {
+          message: invoiceError?.message || invoiceError,
+          internalSessionId,
+          stripeSessionId: checkoutSession?.id
+        });
+      }
+    }
+  }, 0);
+}
+
 export async function handleStripeWebhook(rawBody, signature) {
   const event = constructStripeEvent(rawBody, signature);
   const webhookRow = await registerWebhookEvent(event);
@@ -137,21 +180,13 @@ export async function handleStripeWebhook(rawBody, signature) {
 
     if (sessionRow.analysis_status === "done") {
       if (sessionRow.payment_status === "paid" && sessionRow.invoice_status !== "issued") {
-        phase = "create_invoice_for_completed_session";
-
-        try {
-          await createInvoiceForPaidSession({
-            session: sessionRow,
-            checkoutSession,
-            throwOnError: false
-          });
-        } catch (invoiceError) {
-          console.error("[invoice] completed session invoice step failed, continuing:", {
-            message: invoiceError?.message || invoiceError,
-            internalSessionId,
-            stripeSessionId: checkoutSession.id
-          });
-        }
+        schedulePostPaymentSideEffects({
+          session: sessionRow,
+          checkoutSession,
+          internalSessionId,
+          includeMeta: false,
+          includeInvoice: true
+        });
       }
 
       await markWebhookProcessed(event.id);
@@ -173,36 +208,14 @@ export async function handleStripeWebhook(rawBody, signature) {
         payment_status: "paid"
       };
 
-    phase = "send_meta_purchase";
-    try {
-      await sendMetaPurchaseEvent({
-        email: sessionRow.email,
-        eventId: checkoutSession.id,
-        value: 5,
-        currency: "USD"
-      });
-    } catch (metaError) {
-      console.error("[meta] purchase event failed, continuing webhook:", {
-        message: metaError?.message || metaError,
-        internalSessionId,
-        stripeSessionId: checkoutSession.id
-      });
-    }
-
-    phase = "create_invoice";
-    try {
-      await createInvoiceForPaidSession({
-        session: paidSession,
-        checkoutSession,
-        throwOnError: false
-      });
-    } catch (invoiceError) {
-      console.error("[invoice] webhook invoice step failed, continuing:", {
-        message: invoiceError?.message || invoiceError,
-        internalSessionId,
-        stripeSessionId: checkoutSession.id
-      });
-    }
+    phase = "schedule_post_payment_side_effects";
+    schedulePostPaymentSideEffects({
+      session: paidSession,
+      checkoutSession,
+      internalSessionId,
+      includeMeta: true,
+      includeInvoice: true
+    });
 
     phase = "queue_analysis";
 

@@ -4,14 +4,29 @@ import { db } from "../db/db.js";
 const WORKER_ID =
   `${os.hostname()}-${process.pid}`;
 
+export function calculateRetryDelaySeconds({
+  attempts = 1,
+  baseSeconds = 60,
+  maxSeconds = 900
+} = {}) {
+  const safeAttempts = Math.max(1, Number(attempts || 1));
+  const safeBase = Math.max(5, Number(baseSeconds || 60));
+  const safeMax = Math.max(safeBase, Number(maxSeconds || 900));
+  const exponent = Math.min(8, safeAttempts - 1);
+
+  return Math.min(safeMax, Math.round(safeBase * (2 ** exponent)));
+}
+
 export async function enqueueAnalysisJob(sessionId) {
   const result = await db.query(
     `
     INSERT INTO analysis_jobs (
       session_id,
-      status
+      status,
+      next_attempt_at,
+      failed_at
     )
-    VALUES ($1, 'queued')
+    VALUES ($1, 'queued', NOW(), NULL)
     ON CONFLICT (session_id)
     WHERE status IN ('queued', 'processing')
     DO NOTHING
@@ -53,6 +68,7 @@ export async function claimNextAnalysisJob() {
       SELECT id
       FROM analysis_jobs
       WHERE status = 'queued'
+        AND (next_attempt_at IS NULL OR next_attempt_at <= NOW())
       ORDER BY created_at ASC
       LIMIT 1
       FOR UPDATE SKIP LOCKED
@@ -71,6 +87,10 @@ export async function markAnalysisJobDone(jobId) {
     UPDATE analysis_jobs
     SET
       status = 'done',
+      locked_at = NULL,
+      locked_by = NULL,
+      next_attempt_at = NULL,
+      failed_at = NULL,
       processed_at = NOW(),
       updated_at = NOW()
     WHERE id = $1
@@ -81,19 +101,39 @@ export async function markAnalysisJobDone(jobId) {
 
 export async function markAnalysisJobFailed(
   jobId,
-  errorMessage
+  errorMessage,
+  {
+    maxAttempts = 4,
+    retryDelaySeconds = 60
+  } = {}
 ) {
-  await db.query(
+  const result = await db.query(
     `
     UPDATE analysis_jobs
     SET
-      status = 'failed',
+      status = CASE
+        WHEN attempts >= $3::int THEN 'failed'
+        ELSE 'queued'
+      END,
       last_error = $2,
+      locked_at = NULL,
+      locked_by = NULL,
+      next_attempt_at = CASE
+        WHEN attempts >= $3::int THEN NULL
+        ELSE NOW() + ($4::int * INTERVAL '1 second')
+      END,
+      failed_at = CASE
+        WHEN attempts >= $3::int THEN NOW()
+        ELSE NULL
+      END,
       updated_at = NOW()
     WHERE id = $1
+    RETURNING *
     `,
-    [jobId, errorMessage]
+    [jobId, errorMessage, maxAttempts, retryDelaySeconds]
   );
+
+  return result.rows[0] || null;
 }
 
 export async function requeueStaleJobs({
@@ -106,6 +146,7 @@ export async function requeueStaleJobs({
       status = 'queued',
       locked_at = NULL,
       locked_by = NULL,
+      next_attempt_at = NOW(),
       updated_at = NOW()
     WHERE status = 'processing'
       AND locked_at < NOW() - ($1::int * INTERVAL '1 minute')
@@ -122,6 +163,14 @@ export async function getAnalysisQueueSnapshot() {
     WITH stats AS (
       SELECT
         COUNT(*) FILTER (WHERE status = 'queued')::int AS queued,
+        COUNT(*) FILTER (
+          WHERE status = 'queued'
+            AND (next_attempt_at IS NULL OR next_attempt_at <= NOW())
+        )::int AS queued_ready,
+        COUNT(*) FILTER (
+          WHERE status = 'queued'
+            AND next_attempt_at > NOW()
+        )::int AS queued_delayed,
         COUNT(*) FILTER (WHERE status = 'processing')::int AS processing,
         COUNT(*) FILTER (WHERE status = 'done')::int AS done,
         COUNT(*) FILTER (WHERE status = 'failed')::int AS failed,
@@ -129,7 +178,18 @@ export async function getAnalysisQueueSnapshot() {
           WHERE status = 'done'
             AND processed_at >= NOW() - INTERVAL '24 hours'
         )::int AS done_24h,
-        MIN(created_at) FILTER (WHERE status = 'queued') AS oldest_queued_at,
+        COUNT(*) FILTER (
+          WHERE status = 'failed'
+            AND failed_at >= NOW() - INTERVAL '24 hours'
+        )::int AS failed_24h,
+        MIN(created_at) FILTER (
+          WHERE status = 'queued'
+            AND (next_attempt_at IS NULL OR next_attempt_at <= NOW())
+        ) AS oldest_queued_at,
+        MIN(next_attempt_at) FILTER (
+          WHERE status = 'queued'
+            AND next_attempt_at > NOW()
+        ) AS next_retry_at,
         MIN(locked_at) FILTER (WHERE status = 'processing') AS oldest_processing_at
       FROM analysis_jobs
     )
@@ -151,14 +211,18 @@ export async function getAnalysisQueueSnapshot() {
   return {
     counts: {
       queued: Number(row.queued || 0),
+      queuedReady: Number(row.queued_ready || 0),
+      queuedDelayed: Number(row.queued_delayed || 0),
       processing: Number(row.processing || 0),
       done: Number(row.done || 0),
       failed: Number(row.failed || 0),
-      done24h: Number(row.done_24h || 0)
+      done24h: Number(row.done_24h || 0),
+      failed24h: Number(row.failed_24h || 0)
     },
     timing: {
       oldestQueuedAt: row.oldest_queued_at || null,
       oldestQueuedAgeSeconds: Number(row.oldest_queued_age_seconds || 0),
+      nextRetryAt: row.next_retry_at || null,
       oldestProcessingAt: row.oldest_processing_at || null,
       oldestProcessingAgeSeconds: Number(row.oldest_processing_age_seconds || 0)
     }
