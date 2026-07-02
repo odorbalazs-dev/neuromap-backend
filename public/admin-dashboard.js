@@ -740,15 +740,15 @@
     const filters = {
       "low-confidence": {
         target: "engineAnalyticsPanel",
-        status: "Alacsony confidence nezete: engine dontesi audit megnyitva."
+        status: "Alacsony confidence nézete: engine döntési audit megnyitva."
       },
       "email-risk": {
         target: "emailDeliveryPanel",
-        status: "Email kockazati nezet: kezbesitesi es retry sorok eloterben."
+        status: "Email kockázati nézet: kézbesítési és retry sorok előtérben."
       },
       "checkout-dropoff": {
         target: "customerMetricsPanel",
-        status: "Checkout dropoff nezet: vasarloi ut metrikak eloterben."
+        status: "Checkout dropoff nézet: vásárlói út metrikák előtérben."
       }
     };
 
@@ -1738,7 +1738,7 @@
 
     if (els.postPaymentSummary) {
       els.postPaymentSummary.textContent =
-        `${Number(metrics.analysisDone || 0)} kesz elemzes, ${formatPercent(metrics.completionRate)} completion, ${formatPercent(metrics.emailSentRate)} email sent rate.`;
+        `${Number(metrics.analysisDone || 0)} kész elemzés, ${formatPercent(metrics.completionRate)} completion, ${formatPercent(metrics.emailSentRate)} email sent rate.`;
     }
 
     if (els.postPaymentWindow) {
@@ -2478,7 +2478,7 @@
     els.engineReviewRows.replaceChildren();
 
     if (!items.length) {
-      emptyRow(els.engineReviewRows, 5, "Nincs ellenorzest igenylo engine dontes.");
+      emptyRow(els.engineReviewRows, 5, "Nincs ellenőrzést igénylő engine döntés.");
       return;
     }
 
@@ -2487,10 +2487,10 @@
 
       const engineDecision = document.createElement("div");
       const primary = document.createElement("div");
-      primary.textContent = `Fo: ${text(row.primaryDomain)}`;
+      primary.textContent = `Fő: ${text(row.primaryDomain)}`;
       const secondary = document.createElement("div");
       secondary.className = "subtle";
-      secondary.textContent = `Masodlagos: ${text(row.secondaryDomain)}`;
+      secondary.textContent = `Másodlagos: ${text(row.secondaryDomain)}`;
       const pattern = document.createElement("div");
       pattern.className = "subtle";
       pattern.textContent = `${enginePatternLabel(row.patternType)} / extra: ${yesNo(row.shouldAskExtra)}`;
@@ -2575,7 +2575,7 @@
     if (els.bankQualityGeneratedAt) {
       els.bankQualityGeneratedAt.textContent = data?.generatedAt
         ? `Bank audit: ${formatDate(data.generatedAt)}`
-        : "Meg nincs bank audit";
+        : "Még nincs bank audit";
     }
 
     if (els.bankQualityAverageScore) {
@@ -3460,8 +3460,8 @@
           </div>
           <div class="timeline-steps">
             <span class="timeline-step done">Session</span>
-            <span class="timeline-step ${paid ? "done" : "waiting"}">Fizetes</span>
-            <span class="timeline-step ${analyzed ? "done" : "waiting"}">Elemzes</span>
+            <span class="timeline-step ${paid ? "done" : "waiting"}">Fizetés</span>
+            <span class="timeline-step ${analyzed ? "done" : "waiting"}">Elemzés</span>
             <span class="timeline-step ${pdf ? "done" : "waiting"}">PDF</span>
             <span class="timeline-step ${email ? "done" : "waiting"}">Email</span>
           </div>
@@ -3510,7 +3510,7 @@
 
     els.i18nAuditGeneratedAt.textContent = data?.generatedAt
       ? `Frissítve: ${formatDate(data.generatedAt)}`
-      : "Meg nincs nyelvi audit";
+      : "Még nincs nyelvi audit";
     els.i18nAuditLevel.textContent = data?.level || "-";
     els.i18nAuditSummary.textContent =
       data?.ok === false
@@ -3980,7 +3980,7 @@
     bindClick(els.bankQualityAlertBtn, () => {
       postAction(
         "/admin/trigger-bank-quality-alert-check?minLevel=review",
-        "Bank audit riasztas lefutott."
+        "Bank audit riasztás lefutott."
       );
     });
 
@@ -4018,7 +4018,7 @@
         if (action === "bank-quality-alert") {
           postAction(
             "/admin/trigger-bank-quality-alert-check?minLevel=review",
-            "Bank audit riasztas lefutott."
+            "Bank audit riasztás lefutott."
           );
         }
       });

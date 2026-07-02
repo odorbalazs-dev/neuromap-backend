@@ -55,7 +55,7 @@ export function buildBillingInfo({ session, checkoutSession }) {
   const address = customerDetails.address || {};
 
   return {
-    name: customerDetails.name || session?.name || "NeuroMap Kids vasarlo",
+    name: customerDetails.name || session?.name || "NeuroMap Kids vásárló",
     email: customerDetails.email || session?.email || "",
     country: address.country || "",
     zip: address.postal_code || "",
@@ -94,9 +94,9 @@ function buildInvoiceXml({
 }) {
   const today = formatDate();
   const invoiceNote = [
-    "NeuroMap Kids online kerdoiv riport.",
+    "NeuroMap Kids online kérdőív riport.",
     checkoutSession?.id ? `Stripe checkout session: ${checkoutSession.id}` : null,
-    session?.id ? `Belso session: ${session.id}` : null
+    session?.id ? `Belső session: ${session.id}` : null
   ].filter(Boolean).join(" ");
 
   const sellerXml = [

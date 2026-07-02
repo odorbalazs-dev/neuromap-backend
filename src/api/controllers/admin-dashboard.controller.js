@@ -48,13 +48,13 @@ export function getAdminDashboard(_req, res) {
         <button id="operationalAlertBtn" type="button" class="secondary">Operational alert</button>
         <button id="runFollowUpEmailsBtn" type="button" class="secondary">Follow-up email</button>
         <button id="clearTokenBtn" type="button" class="secondary">Token törlése</button>
-        <button id="bankQualityAlertBtn" type="button" class="secondary">Bank audit riasztas</button>
+        <button id="bankQualityAlertBtn" type="button" class="secondary">Bank audit riasztás</button>
         <span id="statusText" class="status-text" role="status"></span>
       </section>
 
       <nav class="quick-nav" aria-label="Dashboard gyors navigáció">
         <button type="button" data-scroll-target="controlPulsePanel">Pulzus</button>
-        <button type="button" data-scroll-target="customerMetricsPanel">Metrikak</button>
+        <button type="button" data-scroll-target="customerMetricsPanel">Metrikák</button>
         <button type="button" data-scroll-target="customerExperiencePanel">UX KPI</button>
         <button type="button" data-scroll-target="operatorFocusPanel">Teendők</button>
         <button type="button" data-scroll-target="sessionTimelinePanel">Timeline</button>
@@ -73,7 +73,7 @@ export function getAdminDashboard(_req, res) {
 
       <nav class="quick-nav quick-filter-nav" aria-label="Dashboard gyors szurok">
         <button type="button" data-dashboard-filter="low-confidence">Alacsony confidence</button>
-        <button type="button" data-dashboard-filter="email-risk">Email teendo</button>
+        <button type="button" data-dashboard-filter="email-risk">Email teendő</button>
         <button type="button" data-dashboard-filter="checkout-dropoff">Checkout dropoff</button>
       </nav>
 
@@ -104,7 +104,7 @@ export function getAdminDashboard(_req, res) {
             <button type="button" data-control-action="post-payment-recovery" class="warn">Post-payment recovery v2</button>
             <button type="button" data-control-action="alert-check" class="secondary">Riasztásellenőrzés</button>
             <button type="button" data-control-action="operational-alert" class="secondary">Operational alert</button>
-            <button type="button" data-control-action="bank-quality-alert" class="secondary">Bank audit riasztas</button>
+            <button type="button" data-control-action="bank-quality-alert" class="secondary">Bank audit riasztás</button>
           </div>
         </article>
       </section>
@@ -113,9 +113,9 @@ export function getAdminDashboard(_req, res) {
         <div class="panel-head">
           <div>
             <h2>Control Center v2 pulzus</h2>
-            <p>Azonnali, muveleti szintu allapotkep: fizetes, worker, email, engine es riasztasok.</p>
+            <p>Azonnali, műveleti szintű állapotkép: fizetés, worker, email, engine és riasztások.</p>
           </div>
-          <span id="controlPulseUpdatedAt" class="snapshot-time">Meg nincs pulzus</span>
+          <span id="controlPulseUpdatedAt" class="snapshot-time">Még nincs pulzus</span>
         </div>
         <div class="control-pulse-grid">
           <article id="pulseCheckout" class="pulse-card">
@@ -126,17 +126,17 @@ export function getAdminDashboard(_req, res) {
           <article id="pulseWorker" class="pulse-card">
             <span>Worker</span>
             <strong>-</strong>
-            <p>Queue, lock es feldolgozasi allapot</p>
+            <p>Queue, lock és feldolgozási állapot</p>
           </article>
           <article id="pulseEmail" class="pulse-card">
             <span>Email</span>
             <strong>-</strong>
-            <p>Riport kezbesites es retry allapot</p>
+            <p>Riport kézbesítés és retry állapot</p>
           </article>
           <article id="pulseEngine" class="pulse-card">
             <span>Engine</span>
             <strong>-</strong>
-            <p>Dontesi audit es atnezendo mintak</p>
+            <p>Döntési audit és átnézendő minták</p>
           </article>
           <article id="pulseAlerts" class="pulse-card">
             <span>Riasztas</span>
@@ -150,13 +150,13 @@ export function getAdminDashboard(_req, res) {
         <div class="panel-head">
           <div>
             <h2>Vasarloi ut metrikak</h2>
-            <p>Konverzio, riportkeszites, email kezbesites, queue es webhook allapot egy osszefoglalo panelen.</p>
+            <p>Konverzió, riportkészítés, email kézbesítés, queue és webhook állapot egy összefoglaló panelen.</p>
           </div>
-          <span id="dashboardMetricsUpdatedAt" class="snapshot-time">Meg nincs metrika</span>
+          <span id="dashboardMetricsUpdatedAt" class="snapshot-time">Még nincs metrika</span>
         </div>
         <div class="metrics-kpi-grid">
           <article class="health-card metric-kpi">
-            <span>Allapot</span>
+            <span>Állapot</span>
             <strong id="dashboardMetricsLevel">-</strong>
             <p id="dashboardMetricsLevelMeta">Admin tokenre var.</p>
           </article>
@@ -208,7 +208,7 @@ export function getAdminDashboard(_req, res) {
             <h2>Vasarloi elmeny KPI</h2>
             <p>Bizalom, kivancsisag, fizetes utani biztonsag es nyelvi stabilitas egy operativ nezetben.</p>
           </div>
-          <span id="customerExperienceUpdatedAt" class="snapshot-time">Meg nincs UX allapotkep</span>
+          <span id="customerExperienceUpdatedAt" class="snapshot-time">Még nincs UX állapotkép</span>
         </div>
         <div class="health-grid">
           <article class="health-card">
@@ -239,7 +239,7 @@ export function getAdminDashboard(_req, res) {
         <div class="panel-head">
           <div>
             <h2>Session timeline</h2>
-            <p>Legutobbi sessionok allapotutja: checkout, fizetes, elemzes, PDF es email.</p>
+            <p>Legutóbbi sessionök állapotútja: checkout, fizetés, elemzés, PDF és email.</p>
           </div>
         </div>
         <div id="sessionTimelineRows" class="timeline-list"></div>
@@ -290,16 +290,16 @@ export function getAdminDashboard(_req, res) {
         <div class="panel-head">
           <div>
             <h2>Post-payment monitoring</h2>
-            <p>Fizetes utani lanc: Stripe webhook, worker, PDF/riport es email kezbesites egy nezoben.</p>
+            <p>Fizetés utáni lánc: Stripe webhook, worker, PDF/riport és email kézbesítés egy nézőben.</p>
           </div>
           <div class="panel-actions">
-            <button id="postPaymentRecoveryPanelBtn" type="button" class="warn">Recovery v2 futtatasa</button>
-            <span id="postPaymentWindow" class="snapshot-time">Meg nincs post-payment allapotkep</span>
+            <button id="postPaymentRecoveryPanelBtn" type="button" class="warn">Recovery v2 futtatása</button>
+            <span id="postPaymentWindow" class="snapshot-time">Még nincs post-payment állapotkép</span>
           </div>
         </div>
         <div class="health-grid">
           <article class="health-card">
-            <span>Post-payment allapot</span>
+            <span>Post-payment állapot</span>
             <strong id="postPaymentLevel">-</strong>
             <p id="postPaymentSummary">Add meg az admin tokent, majd frissits.</p>
           </article>
@@ -314,14 +314,14 @@ export function getAdminDashboard(_req, res) {
             <p id="postPaymentWebhookMeta">Stripe checkout session completed kovetes.</p>
           </article>
           <article class="health-card">
-            <span>Elemzesi gond</span>
+            <span>Elemzési gond</span>
             <strong id="postPaymentAnalysisIssues">0</strong>
             <p id="postPaymentAnalysisMeta">Queued / processing / failed / job nelkuli session.</p>
           </article>
           <article class="health-card">
             <span>Email gond</span>
             <strong id="postPaymentEmailIssues">0</strong>
-            <p id="postPaymentEmailMeta">Done report, de email nincs sent allapotban.</p>
+            <p id="postPaymentEmailMeta">Kész riport, de az email nincs elküldött állapotban.</p>
           </article>
         </div>
         <div class="engine-split">
@@ -335,7 +335,7 @@ export function getAdminDashboard(_req, res) {
           <article>
             <div class="subpanel-head">
               <h3>Javasolt teendok</h3>
-              <p>Prioritas szerint rendezett kovetkezo lepesek.</p>
+              <p>Prioritás szerint rendezett következő lépések.</p>
             </div>
             <div id="postPaymentRecommendationRows" class="engine-list"></div>
           </article>
@@ -344,11 +344,11 @@ export function getAdminDashboard(_req, res) {
           <table>
             <thead>
               <tr>
-                <th>Prioritas</th>
-                <th>Nev / email</th>
+                <th>Prioritás</th>
+                <th>Név / email</th>
                 <th>Folyamat hiba</th>
                 <th>Kor</th>
-                <th>Muveletek</th>
+                <th>Műveletek</th>
               </tr>
             </thead>
             <tbody id="postPaymentIssueRows"></tbody>
@@ -362,7 +362,7 @@ export function getAdminDashboard(_req, res) {
             <h2>Email follow-up</h2>
             <p>Riport utani bizalomepito es visszateresi email folyamat.</p>
           </div>
-          <button id="runFollowUpEmailsPanelBtn" type="button" class="secondary">Follow-up futtatasa</button>
+          <button id="runFollowUpEmailsPanelBtn" type="button" class="secondary">Follow-up futtatása</button>
         </div>
         <div class="health-grid">
           <article class="health-card">
@@ -378,10 +378,10 @@ export function getAdminDashboard(_req, res) {
           <article class="health-card">
             <span>Hibas</span>
             <strong id="followUpFailed">-</strong>
-            <p>Kezi ellenorzest igenyel.</p>
+            <p>Kézi ellenőrzést igényel.</p>
           </article>
         </div>
-        <span id="followUpGeneratedAt" class="snapshot-time">Meg nincs follow-up allapotkep</span>
+        <span id="followUpGeneratedAt" class="snapshot-time">Még nincs follow-up állapotkép</span>
         <div id="followUpRows" class="engine-list"></div>
       </section>
 
@@ -391,7 +391,7 @@ export function getAdminDashboard(_req, res) {
             <h2>Webflow Embed Manager</h2>
             <p>Bemasolhato loader kodok, forrasfajl-meretek es Webflow 50k limit figyeles egy helyen.</p>
           </div>
-          <span id="webflowEmbedGeneratedAt" class="snapshot-time">Meg nincs embed allapotkep</span>
+          <span id="webflowEmbedGeneratedAt" class="snapshot-time">Még nincs embed állapotkép</span>
         </div>
         <div class="health-grid">
           <article class="health-card">
@@ -407,19 +407,19 @@ export function getAdminDashboard(_req, res) {
           <article class="health-card">
             <span>Webflow limit</span>
             <strong id="webflowEmbedLimit">50 000</strong>
-            <p>Forras es snippet karakterellenorzes.</p>
+            <p>Forrás és snippet karakterellenőrzés.</p>
           </article>
         </div>
         <div id="webflowEmbedRows" class="embed-manager-list"></div>
       </section>
 
-      <section id="i18nAuditPanel" class="panel" aria-label="Tobbnyelvu minoseg audit">
+      <section id="i18nAuditPanel" class="panel" aria-label="Többnyelvű minőség audit">
         <div class="panel-head">
           <div>
-            <h2>Tobbnyelvu minoseg audit</h2>
-            <p>Engine, checkout es bank bundle nyelvi lefedettseg a Webflow kockazatok kiszuresere.</p>
+            <h2>Többnyelvű minőség audit</h2>
+            <p>Engine, checkout és bank bundle nyelvi lefedettség a Webflow kockázatok kiszűrésére.</p>
           </div>
-          <span id="i18nAuditGeneratedAt" class="snapshot-time">Meg nincs nyelvi audit</span>
+          <span id="i18nAuditGeneratedAt" class="snapshot-time">Még nincs nyelvi audit</span>
         </div>
         <div class="health-grid">
           <article class="health-card">
@@ -570,9 +570,9 @@ export function getAdminDashboard(_req, res) {
         <div class="panel-head">
           <div>
             <h2>Engine analytics</h2>
-            <p>Aggregalt kep az Engine Intelligence v2 donteseirol, atfedeseirol es ellenorzendo sessionjeirol.</p>
+            <p>Aggregált kép az Engine Intelligence v2 döntéseiről, átfedéseiről és ellenőrzendő sessionjeiről.</p>
           </div>
-          <span id="engineAnalyticsGeneratedAt" class="snapshot-time">Meg nincs engine allapotkep</span>
+          <span id="engineAnalyticsGeneratedAt" class="snapshot-time">Még nincs engine állapotkép</span>
         </div>
         <div class="engine-summary-grid">
           <article class="health-card">
@@ -583,7 +583,7 @@ export function getAdminDashboard(_req, res) {
           <article class="health-card">
             <span>Atlag confidence</span>
             <strong id="engineAnalyticsConfidence">-</strong>
-            <p>Engine dontesi magabiztossag.</p>
+            <p>Engine döntési magabiztosság.</p>
           </article>
           <article class="health-card">
             <span>Atlag pontkulonbseg</span>
@@ -598,7 +598,7 @@ export function getAdminDashboard(_req, res) {
         </div>
         <div class="engine-decision-audit-grid">
           <article class="health-card">
-            <span>Dontesi audit session</span>
+            <span>Döntési audit session</span>
             <strong id="engineAuditAudited">0</strong>
             <p>Valos session payloadok ujraszamolva.</p>
           </article>
@@ -608,14 +608,14 @@ export function getAdminDashboard(_req, res) {
             <p id="engineAuditReviewMeta">-</p>
           </article>
           <article class="health-card">
-            <span>Fo dontes elteres</span>
+            <span>Fő döntés eltérés</span>
             <strong id="engineAuditPrimaryMismatch">0</strong>
             <p>Mentett vs Engine v2 primary.</p>
           </article>
           <article class="health-card">
             <span>Extra kerdes elteres</span>
             <strong id="engineAuditExtraMismatch">0</strong>
-            <p>Mentett extra vs ujraszamolt extra.</p>
+            <p>Mentett extra vs újraszámolt extra.</p>
           </article>
         </div>
         <div class="subpanel-head">
@@ -623,13 +623,13 @@ export function getAdminDashboard(_req, res) {
             <h3>Bank quality audit</h3>
             <p>Schema, fordítás, subdomain arány és kérdésszöveg minőség bankonként.</p>
           </div>
-          <span id="bankQualityGeneratedAt" class="snapshot-time">Meg nincs bank audit</span>
+          <span id="bankQualityGeneratedAt" class="snapshot-time">Még nincs bank audit</span>
         </div>
         <div class="engine-decision-audit-grid">
           <article class="health-card">
             <span>Atlag bank score</span>
             <strong id="bankQualityAverageScore">-</strong>
-            <p>0-100 kozotti minosegi pontszam.</p>
+            <p>0-100 közötti minőségi pontszám.</p>
           </article>
           <article class="health-card">
             <span>Kritikus issue</span>
@@ -644,7 +644,7 @@ export function getAdminDashboard(_req, res) {
           <article class="health-card">
             <span>Review jelzes</span>
             <strong id="bankQualityReview">0</strong>
-            <p>Finomhangolasi bankminosegi teendok.</p>
+            <p>Finomhangolási bankminőségi teendők.</p>
           </article>
         </div>
         <article class="engine-card bank-quality-card">
@@ -653,11 +653,11 @@ export function getAdminDashboard(_req, res) {
         </article>
         <div class="engine-analytics-grid">
           <article class="engine-card">
-            <h3>Fo teruletek</h3>
+            <h3>Fő területek</h3>
             <div id="engineDomainRows" class="engine-bars"></div>
           </article>
           <article class="engine-card">
-            <h3>Dontesi minoseg</h3>
+            <h3>Döntési minőség</h3>
             <div id="engineQualityRows" class="engine-bars"></div>
           </article>
           <article class="engine-card">
@@ -681,11 +681,11 @@ export function getAdminDashboard(_req, res) {
             <table>
               <thead>
                 <tr>
-                  <th>Dontesi minoseg</th>
-                  <th>Nev / email</th>
-                  <th>Engine dontes</th>
+                  <th>Döntési minőség</th>
+                  <th>Név / email</th>
+                  <th>Engine döntés</th>
                   <th>Confidence</th>
-                  <th>Muveletek</th>
+                  <th>Műveletek</th>
                 </tr>
               </thead>
               <tbody id="engineReviewRows"></tbody>
@@ -706,10 +706,10 @@ export function getAdminDashboard(_req, res) {
                 <tr>
                   <th>Audit szint</th>
                   <th>Session</th>
-                  <th>Mentett dontes</th>
-                  <th>Engine v2 dontes</th>
-                  <th>Megjegyzes</th>
-                  <th>Muveletek</th>
+                  <th>Mentett döntés</th>
+                  <th>Engine v2 döntés</th>
+                  <th>Megjegyzés</th>
+                  <th>Műveletek</th>
                 </tr>
               </thead>
               <tbody id="engineDecisionAuditRows"></tbody>

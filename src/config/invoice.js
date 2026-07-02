@@ -23,7 +23,7 @@ export const invoiceConfig = {
   productName: optional("INVOICE_PRODUCT_NAME", "NeuroMap Kids riport"),
   productComment: optional(
     "INVOICE_PRODUCT_COMMENT",
-    "Egyszeri digitalis riport, online kerdoiv alapjan."
+    "Egyszeri digitális riport, online kérdőív alapján."
   ),
 
   szamlazzhu: {
@@ -32,7 +32,7 @@ export const invoiceConfig = {
     eInvoice: optionalBool("SZAMLAZZHU_E_INVOICE", true),
     downloadPdf: optionalBool("SZAMLAZZHU_DOWNLOAD_PDF", true),
     sendEmail: optionalBool("SZAMLAZZHU_SEND_EMAIL", true),
-    paymentMethod: optional("SZAMLAZZHU_PAYMENT_METHOD", "Bankkartya"),
+    paymentMethod: optional("SZAMLAZZHU_PAYMENT_METHOD", "Bankkártya"),
     invoiceLanguage: optional("SZAMLAZZHU_INVOICE_LANGUAGE", "auto"),
     currency: optional("SZAMLAZZHU_CURRENCY", "USD"),
     vatRate: optional("SZAMLAZZHU_VAT_RATE", "AAM"),
