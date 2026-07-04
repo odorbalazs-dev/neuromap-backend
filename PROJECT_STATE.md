@@ -108,10 +108,12 @@ After rotation:
 
 Backend service:
 - Runs Express server.
-- Start command should be `npm start` or default package start.
+- Railway start command should be `npm run railway:start`.
+- Leave `RAILWAY_SERVICE_ROLE` unset or set it to `web`.
 - Expected healthy log includes:
 
 ```text
+[railway-start] role=web entry=src/app/server.js
 [migrate] Starting database migrations...
 [migrate] ... migration files ...
 Server running on port 3000
@@ -119,17 +121,17 @@ Server running on port 3000
 
 Worker service:
 - Service name in screenshots: `neuromap-analysis-worker`.
-- Must run:
+- Railway start command should also be `npm run railway:start`.
+- Set Railway service variable:
 
 ```text
-npm run worker
+RAILWAY_SERVICE_ROLE=worker
 ```
 
 Good worker log:
 
 ```text
-> npm run worker
-> node src/jobs/analysis.worker.js
+[railway-start] role=worker entry=src/jobs/analysis.worker.js
 [worker] analysis worker started
 ```
 
@@ -139,7 +141,7 @@ Bad worker log:
 Server running on port 3000
 ```
 
-If the worker shows `Server running on port 3000`, the worker is actually running the web server, not processing jobs.
+If the worker shows `Server running on port 3000`, the worker is actually running the web server, not processing jobs. Check that the worker service has `RAILWAY_SERVICE_ROLE=worker`.
 
 Railway log findings from uploaded CSVs/screenshots:
 - Earlier logs showed missing DB config and missing `OPENAI_API_KEY` on one service.
@@ -346,9 +348,9 @@ Cleanup status, 2026-06-04:
 2. Rotate exposed secrets before/around deployment.
 3. Deploy backend.
 4. Confirm migrations include `005_analysis_jobs_idempotency.sql`.
-5. Configure worker start command as `npm run worker`.
+5. Configure worker Railway variable as `RAILWAY_SERVICE_ROLE=worker`.
 6. Deploy worker.
-7. Verify worker log says `[worker] analysis worker started`.
+7. Verify worker log says `[railway-start] role=worker` and `[worker] analysis worker started`.
 8. Run one test Stripe checkout.
 9. Confirm webhook -> job -> worker -> PDF/email.
 10. Confirm GTM/Meta purchase still fires on the success page.
@@ -383,7 +385,7 @@ Expected:
 
 ## Open Risks
 
-- Worker service may still accidentally run `npm start` unless Railway start command is checked after deploy.
+- Worker service may still accidentally run as the web server unless `RAILWAY_SERVICE_ROLE=worker` is set on the Railway worker service.
 - Secrets in screenshots should be considered compromised.
 - Webflow embeds are fragile because order matters and all code is in Webflow custom embeds.
 - Tracking can be duplicated if both old and new GTM containers are active.

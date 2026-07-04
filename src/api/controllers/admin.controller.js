@@ -1062,7 +1062,7 @@ async function buildLaunchReadinessChecks() {
 
   const packageJson = safeJsonFile("package.json");
   const scripts = packageJson?.scripts || {};
-  const missingScripts = ["start", "worker", "audit:all"].filter((name) => !scripts[name]);
+  const missingScripts = ["start", "worker", "railway:start", "audit:all"].filter((name) => !scripts[name]);
 
   checks.push(readinessCheck({
     id: "runtime-scripts",
@@ -1071,13 +1071,14 @@ async function buildLaunchReadinessChecks() {
     status: missingScripts.length ? "fail" : "pass",
     detail: missingScripts.length
       ? `Hianyzo npm scriptek: ${missingScripts.join(", ")}.`
-      : "Megvan a start, worker es audit:all script.",
+      : "Megvan a start, worker, railway:start es audit:all script.",
     action: missingScripts.length
       ? "Allitsd vissza a package.json deployment scripteket."
       : null,
     meta: {
       start: scripts.start || null,
       worker: scripts.worker || null,
+      railwayStart: scripts["railway:start"] || null,
       auditAll: scripts["audit:all"] || null
     }
   }));
@@ -1086,15 +1087,22 @@ async function buildLaunchReadinessChecks() {
     ? fs.readFileSync(path.join(process.cwd(), "railway.toml"), "utf8")
     : "";
 
+  const usesRoleAwareRailwayStart = railwayToml.includes('startCommand = "npm run railway:start"');
+  const forcesNpmStart = railwayToml.includes('startCommand = "npm start"');
+
   checks.push(readinessCheck({
     id: "railway-worker-command",
     group: "Deploy",
-    label: "Worker start command",
-    status: railwayToml.includes('startCommand = "npm start"') ? "warn" : "pass",
-    detail: railwayToml.includes('startCommand = "npm start"')
-      ? "A repo railway.toml alapertelmezett startCommand erteke npm start. Ez jo a web service-nek, de a worker service-ben Railway override kell: npm run worker."
-      : "A railway.toml nem kenyszeriti npm start parancsra a worker service-t.",
-    action: "Railway worker service Settings alatt ellenorizd: Start Command = npm run worker."
+    label: "Role-aware Railway start",
+    status: forcesNpmStart ? "warn" : usesRoleAwareRailwayStart ? "pass" : "warn",
+    detail: forcesNpmStart
+      ? "A repo railway.toml npm start parancsot kenyszerit. Ez a worker service-t web szerverkent indithatja."
+      : usesRoleAwareRailwayStart
+        ? "A railway.toml szerep-alapu inditast hasznal. A web service alapbol webkent, a worker RAILWAY_SERVICE_ROLE=worker valtozoval workerkent indul."
+        : "A railway.toml nem tartalmaz role-aware startCommand beallitast.",
+    action: usesRoleAwareRailwayStart
+      ? "Railway worker service valtozoknal allitsd be: RAILWAY_SERVICE_ROLE=worker."
+      : "Allitsd be a railway.toml-ben: startCommand = \"npm run railway:start\"."
   }));
 
   return checks;

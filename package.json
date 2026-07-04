@@ -7,6 +7,7 @@
     "start": "node src/app/server.js",
     "dev": "node --watch src/app/server.js",
     "worker": "node src/jobs/analysis.worker.js",
+    "railway:start": "node scripts/railway-start.js",
     "audit:banks": "node scripts/audit-banks.js",
     "audit:bank-quality": "node scripts/audit-bank-quality.js",
     "audit:engine-selection": "node scripts/audit-engine-selection.js",
