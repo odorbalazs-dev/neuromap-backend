@@ -19,12 +19,13 @@ function main() {
     loaderHtml.includes("/public/webflow/engine.js"),
     "Webflow Engine loader should load the public engine file."
   );
+  const currentEngineVersion = "20260622-language-content-audit-v3";
   assert(
-    loaderHtml.includes("20260621-launch-audit-fixes-v1"),
+    loaderHtml.includes(currentEngineVersion),
     "Webflow Engine loader should include the current questionnaire shell cache-busting version."
   );
   assert(script.includes("ENGINE_VERSION"), "Engine should expose an engine version.");
-  assert(script.includes("20260621-launch-audit-fixes-v1"), "Engine should expose the current questionnaire shell version.");
+  assert(script.includes(currentEngineVersion), "Engine should expose the current questionnaire shell version.");
   assert(script.includes("ANALYTICS_SCHEMA_VERSION"), "Engine should define an analytics schema version.");
   assert(script.includes("analytics-event-schema-v2"), "Engine should use analytics event schema v2.");
   assert(script.includes("trackSchemaEvent"), "Engine should send normalized analytics events.");

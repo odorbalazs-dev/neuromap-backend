@@ -1030,6 +1030,8 @@ export function getAdminDashboard(_req, res) {
       </section>
     </main>
 
+    <button id="backToTopBtn" class="back-to-top-btn" type="button" hidden aria-label="Ugrás az oldal tetejére">↑ Tetejére</button>
+
     <script src="/public/admin-dashboard.js?v=${ADMIN_DASHBOARD_ASSET_VERSION}"></script>
   </body>
 </html>`);

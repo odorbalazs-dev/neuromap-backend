@@ -11,6 +11,7 @@
 
   const els = {
     token: document.getElementById("adminToken"),
+    backToTopBtn: document.getElementById("backToTopBtn"),
     saveTokenBtn: document.getElementById("saveTokenBtn"),
     clearTokenBtn: document.getElementById("clearTokenBtn"),
     refreshBtn: document.getElementById("refreshBtn"),
@@ -709,6 +710,7 @@
       behavior: "smooth",
       block: "start"
     });
+    updateBackToTopVisibility();
   }
 
   function scrollToPanel(targetId) {
@@ -734,6 +736,27 @@
       behavior: "smooth",
       block: "start"
     });
+    updateBackToTopVisibility();
+  }
+
+  function scrollToDashboardTop() {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+
+    window.setTimeout(() => {
+      els.token?.focus({ preventScroll: true });
+      updateBackToTopVisibility();
+    }, 350);
+  }
+
+  function updateBackToTopVisibility() {
+    if (!els.backToTopBtn) return;
+
+    const shouldShow = window.scrollY > 560;
+    els.backToTopBtn.hidden = !shouldShow;
+    els.backToTopBtn.classList.toggle("is-visible", shouldShow);
   }
 
   function applyDashboardQuickFilter(filter) {
@@ -4062,6 +4085,8 @@
       event.preventDefault();
       scrollToPanel(button.dataset.scrollTarget);
     });
+    els.backToTopBtn?.addEventListener("click", scrollToDashboardTop);
+    window.addEventListener("scroll", updateBackToTopVisibility, { passive: true });
     document.addEventListener("click", (event) => {
       const button = event.target.closest("[data-dashboard-filter]");
       if (!button) return;
@@ -4094,6 +4119,8 @@
       renderControlPulse(null);
       setStatus("Add meg az ADMIN_TOKEN értékét.");
     }
+
+    updateBackToTopVisibility();
   }
 
   init();
