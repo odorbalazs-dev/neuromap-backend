@@ -62,6 +62,11 @@ function verifyLandingContract() {
   assert(engine.includes('buildPackageSelectorHtml("summary")'), "Summary must include a package selector.");
   assert(engine.includes('packageCode: normalizeClientPackageCode(state.packageCode)'), "Checkout payload must contain the selected package code.");
   assert(engine.includes('localStorage.setItem(PACKAGE_STORAGE_KEY, nextCode)'), "Landing package selection must persist across questionnaire steps.");
+  assert(engine.includes('element.dataset.nmPackageSelectorBound'), "Package cards must use a stable delegated click handler.");
+  assert(engine.includes('element.dataset.nmPackageRenderKey'), "Landing rescue must not replace unchanged package cards.");
+  assert(engine.includes('if (landingRescueInProgress) return;'), "Landing MutationObserver must ignore rescue-owned DOM changes.");
+  assert(engine.includes('readStoredPackageCode() || draft.packageCode'), "A direct package choice must win over an older questionnaire draft.");
+  assert(engine.includes('window.NM_SET_SELECTED_PACKAGE'), "Package selection must expose a browser diagnostic API.");
   assert(engine.includes('standard_v1') && engine.includes('plus_v1'), "Landing must expose Standard and Plus.");
 }
 

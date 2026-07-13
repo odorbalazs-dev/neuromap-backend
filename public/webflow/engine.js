@@ -5,7 +5,7 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260713-two-tier-offer-v1";
+  const ENGINE_VERSION = "20260713-two-tier-selector-fix-v2";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
   const DRAFT_STORAGE_KEY = "nm_questionnaire_draft_v1";
   const PACKAGE_STORAGE_KEY = "nm_package_code_v1";
@@ -3434,12 +3434,17 @@
     return Object.hasOwn(CLIENT_PACKAGE_CATALOG, normalized) ? normalized : "standard_v1";
   }
 
-  function getStoredPackageCode() {
+  function readStoredPackageCode() {
     try {
-      return normalizeClientPackageCode(localStorage.getItem(PACKAGE_STORAGE_KEY));
+      const stored = String(localStorage.getItem(PACKAGE_STORAGE_KEY) || "").trim().toLowerCase();
+      return Object.hasOwn(CLIENT_PACKAGE_CATALOG, stored) ? stored : null;
     } catch (_error) {
-      return "standard_v1";
+      return null;
     }
+  }
+
+  function getStoredPackageCode() {
+    return readStoredPackageCode() || "standard_v1";
   }
 
   function getSelectedClientPackage() {
@@ -3764,19 +3769,40 @@
 
   function bindPackageSelector(element) {
     if (!element) return;
+    if (element.dataset.nmPackageSelectorBound === "1") return;
 
-    element.querySelectorAll("[data-nm-package-code]").forEach((button) => {
-      button.addEventListener("click", () => {
-        const scope = element.getAttribute("data-nm-package-selector") || "unknown";
-        setSelectedPackageCode(button.getAttribute("data-nm-package-code"), scope);
-      });
+    element.dataset.nmPackageSelectorBound = "1";
+    element.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-nm-package-code]");
+      if (!button || !element.contains(button)) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      const scope = element.getAttribute("data-nm-package-selector") || "unknown";
+      setSelectedPackageCode(button.getAttribute("data-nm-package-code"), scope);
     });
+  }
+
+  function renderPackageSelector(element, lang = state.lang) {
+    if (!element) return;
+
+    const activeLang = lang || state.lang || "en";
+    const selectedCode = normalizeClientPackageCode(state.packageCode);
+    const renderKey = `${activeLang}:${selectedCode}`;
+    const hasCompleteCards = element.querySelectorAll("[data-nm-package-code]").length === 2;
+
+    if (element.dataset.nmPackageRenderKey !== renderKey || !hasCompleteCards) {
+      element.innerHTML = getPackageSelectorInnerHtml(activeLang);
+      element.dataset.nmPackageRenderKey = renderKey;
+    }
+
+    bindPackageSelector(element);
   }
 
   function refreshPackageSelectors() {
     document.querySelectorAll("[data-nm-package-selector]").forEach((element) => {
-      element.innerHTML = getPackageSelectorInnerHtml(state.lang);
-      bindPackageSelector(element);
+      renderPackageSelector(element, state.lang);
     });
     updatePackageCheckoutButtons();
   }
@@ -3835,11 +3861,15 @@
       }
     }
 
-    selector.innerHTML = getPackageSelectorInnerHtml(lang);
-    bindPackageSelector(selector);
+    renderPackageSelector(selector, lang);
   }
 
   window.NM_GET_SELECTED_PACKAGE = function () {
+    return { ...getSelectedClientPackage() };
+  };
+
+  window.NM_SET_SELECTED_PACKAGE = function (packageCode) {
+    setSelectedPackageCode(packageCode, "public_api");
     return { ...getSelectedClientPackage() };
   };
 
@@ -4537,19 +4567,19 @@
     document.querySelectorAll("[data-nm-i18n]").forEach((element) => {
       const key = element.getAttribute("data-nm-i18n");
       const value = copy[key];
-      if (typeof value === "string") {
+      if (typeof value === "string" && element.textContent !== value) {
         element.textContent = value;
         applied += 1;
       }
     });
 
     const modalTitle = document.getElementById("modalTitle");
-    if (modalTitle && copy.modalTitle) {
+    if (modalTitle && copy.modalTitle && modalTitle.textContent !== copy.modalTitle) {
       modalTitle.textContent = copy.modalTitle;
     }
 
     const modalIntro = document.getElementById("modalIntro");
-    if (modalIntro && copy.modalIntro) {
+    if (modalIntro && copy.modalIntro && modalIntro.textContent !== copy.modalIntro) {
       modalIntro.textContent = copy.modalIntro;
     }
 
@@ -4602,7 +4632,11 @@
 
       return applied;
     } finally {
-      landingRescueInProgress = false;
+      // MutationObserver callbacks run before the next task. Keeping the guard
+      // active until then prevents the landing rescue from reacting to its own DOM work.
+      window.setTimeout(() => {
+        landingRescueInProgress = false;
+      }, 0);
     }
   }
 
@@ -4626,6 +4660,7 @@
 
       let rescueTimer = null;
       const queueRescue = () => {
+        if (landingRescueInProgress) return;
         if (document.documentElement.classList.contains("nm-questionnaire-open")) return;
         window.clearTimeout(rescueTimer);
         rescueTimer = window.setTimeout(() => rescueLandingText(resolveLang()), 40);
@@ -4960,7 +4995,7 @@
     if (!draft || draft.version !== 1) return false;
 
     state.lang = draft.lang || state.lang;
-    state.packageCode = normalizeClientPackageCode(draft.packageCode || getStoredPackageCode());
+    state.packageCode = normalizeClientPackageCode(readStoredPackageCode() || draft.packageCode);
     state.step = draft.step || "triage";
     state.triageQuestions =
       Array.isArray(draft.triageQuestions) && draft.triageQuestions.length
