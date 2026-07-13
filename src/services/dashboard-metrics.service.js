@@ -1,6 +1,5 @@
 import { db } from "../db/db.js";
-
-const REPORT_PRICE_USD = 5;
+import { listProductPackages } from "../config/products.js";
 
 const WINDOW_SQL = {
   last24h: "24 hours",
@@ -26,6 +25,7 @@ function rate(numerator, denominator) {
 }
 
 function withRates(row) {
+  const revenueUsd = round(number(row.revenue_minor_usd) / 100, 2);
   const metrics = {
     sessions: number(row.sessions),
     checkoutStarted: number(row.checkout_started),
@@ -36,7 +36,8 @@ function withRates(row) {
     reportEmailSent: number(row.report_email_sent),
     reportEmailFailed: number(row.report_email_failed),
     reportEmailUnsent: number(row.report_email_unsent),
-    estimatedRevenueUsd: number(row.paid) * REPORT_PRICE_USD
+    revenueUsd,
+    estimatedRevenueUsd: revenueUsd
   };
   const checkoutDropoffCount = Math.max(0, metrics.checkoutStarted - metrics.paid);
 
@@ -82,39 +83,48 @@ function buildFunnel(metrics = {}) {
 
 function buildWindowQuery(intervalText) {
   return `
-    WITH window AS (
+    WITH metric_window AS (
       SELECT NOW() - INTERVAL '${intervalText}' AS starts_at
     )
     SELECT
-      COUNT(*) FILTER (WHERE s.created_at >= window.starts_at)::int AS sessions,
-      COUNT(*) FILTER (WHERE s.checkout_started_at >= window.starts_at)::int AS checkout_started,
-      COUNT(*) FILTER (WHERE s.checkout_cancelled_at >= window.starts_at)::int AS checkout_cancelled,
+      COUNT(*) FILTER (WHERE s.created_at >= metric_window.starts_at)::int AS sessions,
+      COUNT(*) FILTER (WHERE s.checkout_started_at >= metric_window.starts_at)::int AS checkout_started,
+      COUNT(*) FILTER (WHERE s.checkout_cancelled_at >= metric_window.starts_at)::int AS checkout_cancelled,
       COUNT(*) FILTER (
         WHERE s.payment_status = 'paid'
-          AND COALESCE(s.paid_at, s.updated_at, s.created_at) >= window.starts_at
+          AND COALESCE(s.paid_at, s.updated_at, s.created_at) >= metric_window.starts_at
       )::int AS paid,
+      COALESCE(SUM(
+        CASE
+          WHEN s.payment_status = 'paid'
+            AND COALESCE(s.paid_at, s.updated_at, s.created_at) >= metric_window.starts_at
+            AND LOWER(COALESCE(NULLIF(s.currency, ''), 'usd')) = 'usd'
+          THEN COALESCE(s.amount_total, 500)
+          ELSE 0
+        END
+      ), 0)::bigint AS revenue_minor_usd,
       COUNT(*) FILTER (
         WHERE s.analysis_status = 'done'
-          AND COALESCE(s.analysis_completed_at, s.updated_at, s.created_at) >= window.starts_at
+          AND COALESCE(s.analysis_completed_at, s.updated_at, s.created_at) >= metric_window.starts_at
       )::int AS analysis_done,
       COUNT(*) FILTER (
         WHERE s.analysis_status = 'failed'
-          AND COALESCE(s.updated_at, s.created_at) >= window.starts_at
+          AND COALESCE(s.updated_at, s.created_at) >= metric_window.starts_at
       )::int AS analysis_failed,
       COUNT(*) FILTER (
         WHERE s.report_email_status = 'sent'
-          AND COALESCE(s.report_email_sent_at, s.report_email_last_attempt_at, s.updated_at, s.created_at) >= window.starts_at
+          AND COALESCE(s.report_email_sent_at, s.report_email_last_attempt_at, s.updated_at, s.created_at) >= metric_window.starts_at
       )::int AS report_email_sent,
       COUNT(*) FILTER (
         WHERE s.report_email_status = 'failed'
-          AND COALESCE(s.report_email_last_attempt_at, s.updated_at, s.created_at) >= window.starts_at
+          AND COALESCE(s.report_email_last_attempt_at, s.updated_at, s.created_at) >= metric_window.starts_at
       )::int AS report_email_failed,
       COUNT(*) FILTER (
         WHERE s.analysis_status = 'done'
           AND s.report_email_status <> 'sent'
-          AND COALESCE(s.analysis_completed_at, s.updated_at, s.created_at) >= window.starts_at
+          AND COALESCE(s.analysis_completed_at, s.updated_at, s.created_at) >= metric_window.starts_at
       )::int AS report_email_unsent
-    FROM sessions s, window;
+    FROM sessions s, metric_window;
   `;
 }
 
@@ -143,6 +153,14 @@ async function getTrendMetrics() {
       COUNT(s.id)::int AS sessions,
       COUNT(s.id) FILTER (WHERE s.checkout_started_at IS NOT NULL)::int AS checkout_started,
       COUNT(s.id) FILTER (WHERE s.payment_status = 'paid')::int AS paid,
+      COALESCE(SUM(
+        CASE
+          WHEN s.payment_status = 'paid'
+            AND LOWER(COALESCE(NULLIF(s.currency, ''), 'usd')) = 'usd'
+          THEN COALESCE(s.amount_total, 500)
+          ELSE 0
+        END
+      ), 0)::bigint AS revenue_minor_usd,
       COUNT(s.id) FILTER (WHERE s.analysis_status = 'done')::int AS analysis_done,
       COUNT(s.id) FILTER (WHERE s.report_email_status = 'sent')::int AS report_email_sent
     FROM days
@@ -158,8 +176,37 @@ async function getTrendMetrics() {
     sessions: number(row.sessions),
     checkoutStarted: number(row.checkout_started),
     paid: number(row.paid),
+    revenueUsd: round(number(row.revenue_minor_usd) / 100, 2),
     analysisDone: number(row.analysis_done),
     reportEmailSent: number(row.report_email_sent)
+  }));
+}
+
+async function getPackageMetrics() {
+  const result = await db.query(`
+    SELECT
+      COALESCE(NULLIF(s.package_code, ''), 'legacy_500_v1') AS package_code,
+      COUNT(*) FILTER (WHERE s.checkout_started_at IS NOT NULL)::int AS checkout_started,
+      COUNT(*) FILTER (WHERE s.payment_status = 'paid')::int AS paid,
+      COALESCE(SUM(
+        CASE
+          WHEN s.payment_status = 'paid'
+            AND LOWER(COALESCE(NULLIF(s.currency, ''), 'usd')) = 'usd'
+          THEN COALESCE(s.amount_total, 500)
+          ELSE 0
+        END
+      ), 0)::bigint AS revenue_minor_usd
+    FROM sessions s
+    WHERE s.created_at >= NOW() - INTERVAL '30 days'
+    GROUP BY COALESCE(NULLIF(s.package_code, ''), 'legacy_500_v1')
+    ORDER BY paid DESC, package_code ASC;
+  `);
+
+  return result.rows.map((row) => ({
+    packageCode: row.package_code,
+    checkoutStarted: number(row.checkout_started),
+    paid: number(row.paid),
+    revenueUsd: round(number(row.revenue_minor_usd) / 100, 2)
   }));
 }
 
@@ -388,14 +435,16 @@ export async function buildDashboardMetrics() {
     queue,
     webhook,
     alerts,
-    engine
+    engine,
+    packages
   ] = await Promise.all([
     getWindowMetrics(),
     getTrendMetrics(),
     getQueueMetrics(),
     getWebhookMetrics(),
     getAlertMetrics(),
-    getEngineMetrics()
+    getEngineMetrics(),
+    getPackageMetrics()
   ]);
 
   const funnel = buildFunnel(windows.last7d || {});
@@ -403,7 +452,12 @@ export async function buildDashboardMetrics() {
   const summary = {
     level: buildLevel({ windows, queue, webhook }),
     generatedAt: new Date().toISOString(),
-    reportPriceUsd: REPORT_PRICE_USD
+    packagePricesUsd: Object.fromEntries(
+      listProductPackages().map((productPackage) => [
+        productPackage.code,
+        round(productPackage.unitAmount / 100, 2)
+      ])
+    )
   };
 
   return {
@@ -417,6 +471,7 @@ export async function buildDashboardMetrics() {
       alerts
     },
     engine,
+    packages,
     funnel,
     recommendations: buildRecommendations({
       windows,

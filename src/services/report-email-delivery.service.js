@@ -4,6 +4,8 @@ import {
   markReportEmailFailed
 } from "./session.service.js";
 import { sendReportEmail } from "./email.service.js";
+import { getProductPackage } from "../config/products.js";
+import { ensureObservationProgram } from "./observation-program.service.js";
 
 export function getEmailProviderId(response) {
   return response?.data?.id || response?.id || null;
@@ -29,12 +31,21 @@ export async function deliverReportEmailForSession(
   await markReportEmailSending(sessionId);
 
   try {
+    const productPackage = getProductPackage(
+      sessionRow.package_code || "legacy_500_v1"
+    );
+    const observationProgram = productPackage.entitlements.observationDiary14Days
+      ? await ensureObservationProgram(sessionRow)
+      : null;
+
     const response = await sendReportEmail({
       to: sessionRow.email,
       lang: sessionRow.lang,
       name: sessionRow.name,
       reportText: sessionRow.analysis_result,
-      payload: sessionRow.payload
+      payload: sessionRow.payload,
+      productPackage,
+      observationProgram
     });
 
     const providerId = getEmailProviderId(response);
@@ -45,7 +56,8 @@ export async function deliverReportEmailForSession(
       ok: true,
       sessionId,
       status: "sent",
-      providerId
+      providerId,
+      packageCode: productPackage.code
     };
   } catch (error) {
     const message =

@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex,nofollow,noarchive">
+    <title>NeuroMap Kids Plus</title>
+    <link rel="stylesheet" href="/public/observation-diary.css">
+  </head>
+  <body>
+    <header class="nm-header">
+      <a class="nm-brand" href="https://neuromap-kids.webflow.io/" rel="noreferrer">
+        <span class="nm-mark" aria-hidden="true"><i></i><b></b><em></em></span>
+        <span>Neuro<span>Map</span> Kids</span>
+      </a>
+      <span class="nm-plus">Plus</span>
+    </header>
+
+    <main class="nm-shell">
+      <section class="nm-intro" aria-labelledby="pageTitle">
+        <p class="nm-eyebrow">NEUROMAP KIDS PLUS</p>
+        <h1 id="pageTitle">14-day observation diary</h1>
+        <p id="pageIntro" class="nm-lead"></p>
+        <p id="disclosure" class="nm-disclosure"></p>
+      </section>
+
+      <section class="nm-progress" aria-labelledby="progressTitle">
+        <div>
+          <p class="nm-label" id="progressTitle">Progress</p>
+          <strong id="progressValue">0 / 14</strong>
+        </div>
+        <div class="nm-progress-track" aria-hidden="true"><span id="progressBar"></span></div>
+        <p id="trendSummary" class="nm-trend"></p>
+      </section>
+
+      <section class="nm-tool" aria-labelledby="entryTitle">
+        <div class="nm-tool-heading">
+          <div>
+            <p class="nm-eyebrow" id="todayLabel">TODAY</p>
+            <h2 id="entryTitle">Add an observation</h2>
+          </div>
+          <time id="todayDate"></time>
+        </div>
+
+        <form id="entryForm" novalidate>
+          <label>
+            <span id="dateLabel">Date</span>
+            <input id="entryDate" name="entryDate" type="date" required>
+          </label>
+
+          <label>
+            <span id="contextLabel">Situation</span>
+            <select id="context" name="context" required></select>
+          </label>
+
+          <fieldset>
+            <legend id="signalLabel">How strong was the difficulty?</legend>
+            <div id="signalOptions" class="nm-segments"></div>
+          </fieldset>
+
+          <label class="nm-check">
+            <input id="strategyUsed" name="strategyUsed" type="checkbox">
+            <span id="strategyLabel">A planned support strategy was used</span>
+          </label>
+
+          <label class="nm-note">
+            <span id="noteLabel">Short factual note (optional)</span>
+            <textarea id="note" name="note" maxlength="500" rows="3"></textarea>
+          </label>
+
+          <div class="nm-form-actions">
+            <button id="saveButton" type="submit">Save observation</button>
+            <span id="formStatus" role="status" aria-live="polite"></span>
+          </div>
+        </form>
+      </section>
+
+      <section class="nm-history" aria-labelledby="historyTitle">
+        <div class="nm-section-heading">
+          <h2 id="historyTitle">Recorded days</h2>
+          <span id="historyCount">0</span>
+        </div>
+        <div id="entryList" class="nm-entry-list"></div>
+      </section>
+
+      <section class="nm-search" aria-labelledby="nearbyTitle">
+        <div>
+          <h2 id="nearbyTitle">Find a professional nearby</h2>
+          <p id="nearbyDisclaimer"></p>
+        </div>
+        <form id="nearbyForm">
+          <label class="nm-sr-only" for="locationInput">Location</label>
+          <input id="locationInput" type="text" maxlength="120" autocomplete="address-level2">
+          <button id="nearbyButton" type="submit">Search maps</button>
+        </form>
+      </section>
+    </main>
+
+    <noscript>This page requires JavaScript.</noscript>
+    <script src="/public/observation-diary.js" defer></script>
+  </body>
+</html>

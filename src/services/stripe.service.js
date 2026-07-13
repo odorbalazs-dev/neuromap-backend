@@ -1,5 +1,6 @@
 import Stripe from "stripe";
 import { env } from "../config/env.js";
+import { getProductPackage } from "../config/products.js";
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
   apiVersion: "2024-06-20"
@@ -7,93 +8,144 @@ const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
 
 const SUPPORTED_LANGS = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];
 
+const CHECKOUT_COPY = {
+  hu: {
+    standardName: "NeuroMap Kids Standard riport",
+    standardDescription: "Személyre szabott, korosztályra finomított PDF riport szülői javaslatokkal.",
+    plusName: "NeuroMap Kids Plus riport és 14 napos megfigyelés",
+    plusDescription: "Standard riport, megosztható összefoglaló, helyzettervek, beszélgetési útmutató és 14 napos megfigyelési napló."
+  },
+  en: {
+    standardName: "NeuroMap Kids Standard report",
+    standardDescription: "A personalized, age-aware PDF report with practical guidance for parents.",
+    plusName: "NeuroMap Kids Plus report and 14-day observation",
+    plusDescription: "Standard report, shareable summary, situation plans, conversation guide, and a 14-day observation diary."
+  },
+  de: {
+    standardName: "NeuroMap Kids Standard-Bericht",
+    standardDescription: "Personalisierter, altersgerechter PDF-Bericht mit praktischen Hinweisen für Eltern.",
+    plusName: "NeuroMap Kids Plus-Bericht und 14-Tage-Beobachtung",
+    plusDescription: "Standard-Bericht, teilbare Zusammenfassung, Situationspläne, Gesprächsleitfaden und 14-Tage-Beobachtungstagebuch."
+  },
+  it: {
+    standardName: "Report NeuroMap Kids Standard",
+    standardDescription: "Report PDF personalizzato e adatto all'età, con indicazioni pratiche per i genitori.",
+    plusName: "Report NeuroMap Kids Plus e osservazione di 14 giorni",
+    plusDescription: "Report Standard, sintesi condivisibile, piani situazionali, guida al colloquio e diario di osservazione di 14 giorni."
+  },
+  es: {
+    standardName: "Informe NeuroMap Kids Standard",
+    standardDescription: "Informe PDF personalizado y adaptado a la edad, con orientación práctica para madres y padres.",
+    plusName: "Informe NeuroMap Kids Plus y observación de 14 días",
+    plusDescription: "Informe Standard, resumen para compartir, planes por situación, guía de conversación y diario de observación de 14 días."
+  },
+  zh: {
+    standardName: "NeuroMap Kids 标准报告",
+    standardDescription: "个性化、符合年龄特点的 PDF 报告，并提供实用的家长建议。",
+    plusName: "NeuroMap Kids Plus 报告与 14 天观察",
+    plusDescription: "包含标准报告、可分享摘要、情境行动方案、沟通指南和 14 天观察日记。"
+  },
+  ja: {
+    standardName: "NeuroMap Kids スタンダードレポート",
+    standardDescription: "年齢に配慮した個別PDFレポートと、保護者向けの実践的な提案です。",
+    plusName: "NeuroMap Kids Plus レポートと14日間の観察",
+    plusDescription: "スタンダードレポート、共有用要約、場面別プラン、話し合いガイド、14日間の観察日記が含まれます。"
+  },
+  ar: {
+    standardName: "تقرير NeuroMap Kids القياسي",
+    standardDescription: "تقرير PDF مخصص ومراعٍ للعمر مع إرشادات عملية للوالدين.",
+    plusName: "تقرير NeuroMap Kids Plus ومتابعة لمدة 14 يومًا",
+    plusDescription: "يتضمن التقرير القياسي وملخصًا قابلًا للمشاركة وخططًا للمواقف ودليلًا للمحادثة وسجل متابعة لمدة 14 يومًا."
+  },
+  pl: {
+    standardName: "Raport NeuroMap Kids Standard",
+    standardDescription: "Spersonalizowany raport PDF dostosowany do wieku, z praktycznymi wskazówkami dla rodziców.",
+    plusName: "Raport NeuroMap Kids Plus i 14-dniowa obserwacja",
+    plusDescription: "Raport Standard, podsumowanie do udostępnienia, plany sytuacyjne, przewodnik rozmowy i 14-dniowy dziennik obserwacji."
+  },
+  pt: {
+    standardName: "Relatório NeuroMap Kids Standard",
+    standardDescription: "Relatório PDF personalizado e adequado à idade, com orientações práticas para os pais.",
+    plusName: "Relatório NeuroMap Kids Plus e observação de 14 dias",
+    plusDescription: "Relatório Standard, resumo partilhável, planos por situação, guia de conversa e diário de observação de 14 dias."
+  },
+  fr: {
+    standardName: "Rapport NeuroMap Kids Standard",
+    standardDescription: "Rapport PDF personnalisé et adapté à l'âge, avec des conseils pratiques pour les parents.",
+    plusName: "Rapport NeuroMap Kids Plus et observation sur 14 jours",
+    plusDescription: "Rapport Standard, synthèse à partager, plans par situation, guide de discussion et journal d'observation sur 14 jours."
+  }
+};
+
 function getSafeLang(lang) {
-  if (!lang) return "en";
   return SUPPORTED_LANGS.includes(lang) ? lang : "en";
 }
 
 function getStripeCheckoutLocale(lang) {
   const safeLang = getSafeLang(lang);
-
-  const localeMap = {
-    hu: "hu",
-    en: "en",
-    de: "de",
-    it: "it",
-    es: "es",
-    zh: "zh",
-    ja: "ja",
-    pl: "pl",
-    pt: "pt",
-    fr: "fr",
-    ar: "en"
-  };
-
-  return localeMap[safeLang] || "en";
+  return safeLang === "ar" ? "auto" : safeLang;
 }
 
 function getBaseAppUrl() {
-  const base =
-    env.APP_BASE_URL ||
-    "https://neuromap-kids.webflow.io";
-
-  return String(base).replace(/\/+$/, "");
+  return String(env.APP_BASE_URL || "https://neuromap-kids.webflow.io").replace(/\/+$/, "");
 }
 
 function getLocalizedSuccessUrl(lang) {
-  const safeLang = getSafeLang(lang);
-  return `${getBaseAppUrl()}/${safeLang}-checkout-success`;
+  return `${getBaseAppUrl()}/${getSafeLang(lang)}-checkout-success`;
 }
 
 function getLocalizedCancelUrl(lang) {
-  const safeLang = getSafeLang(lang);
-  return `${getBaseAppUrl()}/${safeLang}-checkout-cancel`;
+  return `${getBaseAppUrl()}/${getSafeLang(lang)}-checkout-cancel`;
 }
 
-function getProductName(lang) {
-  const safeLang = getSafeLang(lang);
+function getCheckoutCopy(lang, packageCode) {
+  const copy = CHECKOUT_COPY[getSafeLang(lang)] || CHECKOUT_COPY.en;
+  const isPlus = packageCode === "plus_v1";
 
-  const names = {
-    hu: "NeuroMap Kids – AI kiértékelés",
-    en: "NeuroMap Kids – AI Assessment",
-    de: "NeuroMap Kids – KI-Auswertung",
-    it: "NeuroMap Kids – Valutazione AI",
-    es: "NeuroMap Kids – Evaluación con IA",
-    zh: "NeuroMap Kids – AI 评估",
-    ja: "NeuroMap Kids – AI評価",
-    ar: "NeuroMap Kids – تقييم بالذكاء الاصطناعي",
-    pl: "NeuroMap Kids – Ocena AI",
-    pt: "NeuroMap Kids – Avaliação por IA",
-    fr: "NeuroMap Kids – Évaluation IA"
+  return {
+    name: isPlus ? copy.plusName : copy.standardName,
+    description: isPlus ? copy.plusDescription : copy.standardDescription
   };
-
-  return names[safeLang] || names.en;
 }
 
-function getProductDescription(lang) {
-  const safeLang = getSafeLang(lang);
+function getConfiguredPriceId(productPackage) {
+  if (!productPackage.stripePriceEnv) return null;
+  return env[productPackage.stripePriceEnv] || null;
+}
 
-  const descriptions = {
-    hu: "Egyszeri fizetés. Személyre szabott NeuroMap Kids riport PDF-ben, emailben elküldve.",
-    en: "One-time payment. Personalized NeuroMap Kids report delivered by email as a PDF.",
-    de: "Einmalige Zahlung. Personalisierter NeuroMap Kids Bericht als PDF per E-Mail.",
-    it: "Pagamento unico. Report NeuroMap Kids personalizzato inviato via email in PDF.",
-    es: "Pago único. Informe NeuroMap Kids personalizado enviado por email en PDF.",
-    zh: "一次性付款。个性化 NeuroMap Kids PDF 报告将通过电子邮件发送。",
-    ja: "1回払い。個別の NeuroMap Kids PDFレポートをメールで送信します。",
-    ar: "دفع لمرة واحدة. تقرير NeuroMap Kids مخصص بصيغة PDF يتم إرساله عبر البريد الإلكتروني.",
-    pl: "Płatność jednorazowa. Spersonalizowany raport NeuroMap Kids PDF wysłany e-mailem.",
-    pt: "Pagamento único. Relatório NeuroMap Kids personalizado enviado por email em PDF.",
-    fr: "Paiement unique. Rapport NeuroMap Kids personnalisé envoyé par email en PDF."
+function buildLineItem({ productPackage, lang }) {
+  const configuredPriceId = getConfiguredPriceId(productPackage);
+
+  if (configuredPriceId) {
+    return {
+      lineItem: { price: configuredPriceId, quantity: 1 },
+      stripePriceId: configuredPriceId
+    };
+  }
+
+  const copy = getCheckoutCopy(lang, productPackage.code);
+
+  return {
+    lineItem: {
+      price_data: {
+        currency: productPackage.currency,
+        unit_amount: productPackage.unitAmount,
+        product_data: {
+          name: copy.name,
+          description: copy.description
+        }
+      },
+      quantity: 1
+    },
+    stripePriceId: null
   };
-
-  return descriptions[safeLang] || descriptions.en;
 }
 
 export async function createCheckoutSession({
   internalSessionId,
   email,
-  lang
+  lang,
+  productPackage: requestedPackage
 }) {
   if (!internalSessionId) {
     throw new Error("Missing internalSessionId for Stripe checkout session.");
@@ -108,76 +160,49 @@ export async function createCheckoutSession({
   }
 
   const safeLang = getSafeLang(lang);
-
+  const productPackage = getProductPackage(requestedPackage?.code || requestedPackage);
+  const { lineItem, stripePriceId } = buildLineItem({ productPackage, lang: safeLang });
   const successUrl = `${getLocalizedSuccessUrl(safeLang)}?session_id={CHECKOUT_SESSION_ID}`;
-  const cancelUrl = getLocalizedCancelUrl(safeLang);
-
-  console.log("[stripe] checkout urls", {
+  const cancelUrl = `${getLocalizedCancelUrl(safeLang)}?sid=${encodeURIComponent(internalSessionId)}`;
+  const metadata = {
+    internalSessionId,
     lang: safeLang,
-    successUrl,
-    cancelUrl
+    product: "neuromap_kids_report",
+    packageCode: productPackage.code,
+    offerVersion: productPackage.offerVersion,
+    amountTotal: String(productPackage.unitAmount),
+    currency: productPackage.currency,
+    stripePriceId: stripePriceId || ""
+  };
+
+  console.log("[stripe] creating checkout", {
+    internalSessionId,
+    lang: safeLang,
+    packageCode: productPackage.code,
+    amountTotal: productPackage.unitAmount,
+    currency: productPackage.currency,
+    usesConfiguredPrice: Boolean(stripePriceId)
   });
 
-  const session = await stripe.checkout.sessions.create({
+  return stripe.checkout.sessions.create({
     mode: "payment",
     payment_method_types: ["card"],
+    client_reference_id: internalSessionId,
     customer_email: email,
     billing_address_collection: "required",
-    tax_id_collection: {
-      enabled: true
-    },
-
-    line_items: [
-      {
-        price_data: {
-          currency: "usd",
-          unit_amount: 500,
-          product_data: {
-            name: getProductName(safeLang),
-            description: getProductDescription(safeLang)
-          }
-        },
-        quantity: 1
-      }
-    ],
-
+    tax_id_collection: { enabled: true },
+    line_items: [lineItem],
     locale: getStripeCheckoutLocale(safeLang),
-
     success_url: successUrl,
-    cancel_url: `${cancelUrl}?sid=${internalSessionId}`,
-
-    metadata: {
-      internalSessionId,
-      lang: safeLang,
-      product: "neuromap_kids_report",
-      amount_usd: "5.00"
-    },
-
-    payment_intent_data: {
-      metadata: {
-        internalSessionId,
-        lang: safeLang,
-        product: "neuromap_kids_report",
-        amount_usd: "5.00"
-      }
-    }
+    cancel_url: cancelUrl,
+    metadata,
+    payment_intent_data: { metadata }
   });
-
-  return session;
 }
 
 export function constructStripeEvent(rawBody, signature) {
-  if (!signature) {
-    throw new Error("Missing Stripe signature header.");
-  }
+  if (!signature) throw new Error("Missing Stripe signature header.");
+  if (!env.STRIPE_WEBHOOK_SECRET) throw new Error("Missing STRIPE_WEBHOOK_SECRET.");
 
-  if (!env.STRIPE_WEBHOOK_SECRET) {
-    throw new Error("Missing STRIPE_WEBHOOK_SECRET.");
-  }
-
-  return stripe.webhooks.constructEvent(
-    rawBody,
-    signature,
-    env.STRIPE_WEBHOOK_SECRET
-  );
+  return stripe.webhooks.constructEvent(rawBody, signature, env.STRIPE_WEBHOOK_SECRET);
 }

@@ -7,6 +7,7 @@ import {
 import { createCheckoutSession } from "../../services/stripe.service.js";
 import { normalizeCheckoutPayload } from "../../utils/normalizeCheckoutPayload.js";
 import { validateCheckoutPayload } from "../../utils/validateCheckoutPayload.js";
+import { getProductPackage } from "../../config/products.js";
 
 export async function createCheckout(req, res) {
   try {
@@ -20,21 +21,24 @@ export async function createCheckout(req, res) {
       });
     }
 
-    const { email, name, lang, payload } =
+    const { email, name, lang, payload, packageCode } =
       normalizeCheckoutPayload(req.body || {});
+    const productPackage = getProductPackage(packageCode);
 
     const session = await createSession({
       email,
       name,
       lang,
-      payload
+      payload,
+      productPackage
     });
 
     const stripeSession = await createCheckoutSession({
       internalSessionId: session.id,
       email,
       name,
-      lang
+      lang,
+      productPackage
     });
 
     await updateStripeSessionId(session.id, stripeSession.id);
@@ -42,7 +46,10 @@ export async function createCheckout(req, res) {
     return res.status(200).json({
       ok: true,
       sessionId: session.id,
-      checkoutUrl: stripeSession.url
+      checkoutUrl: stripeSession.url,
+      packageCode: productPackage.code,
+      amountTotal: productPackage.unitAmount,
+      currency: productPackage.currency
     });
   } catch (error) {
     console.error("checkout controller error:", error);
@@ -92,7 +99,8 @@ export async function retryCheckout(req, res) {
       internalSessionId: session.id,
       email: session.email,
       name: session.name,
-      lang: session.lang
+      lang: session.lang,
+      productPackage: getProductPackage(session.package_code)
     });
 
     await updateStripeSessionId(session.id, stripeSession.id);

@@ -5,10 +5,22 @@
 (function () {
   if (typeof window === "undefined" || typeof document === "undefined") return;
 
-  const CHECKOUT_PAGES_VERSION = "20260613-cx-i18n-polish-v1";
+  const CHECKOUT_PAGES_VERSION = "20260713-two-tier-offer-v1";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
   const DEFAULT_API_BASE_URL = "https://neuromap-backend-production-969d.up.railway.app";
   const SUPPORTED_LANGS = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];
+  const CAMPAIGN_ATTRIBUTION_STORAGE_KEY = "nm_campaign_attribution_v1";
+  const CAMPAIGN_ATTRIBUTION_TTL_MS = 1000 * 60 * 60 * 24 * 90;
+  const CAMPAIGN_ATTRIBUTION_KEYS = [
+    "utm_source",
+    "utm_medium",
+    "utm_campaign",
+    "utm_content",
+    "utm_term",
+    "gclid",
+    "gbraid",
+    "wbraid"
+  ];
 
   const BASE_COPY = {
     home: "Home",
@@ -417,6 +429,37 @@
     }
   }
 
+  function getCampaignAnalyticsFields() {
+    try {
+      const raw = localStorage.getItem(CAMPAIGN_ATTRIBUTION_STORAGE_KEY);
+      if (!raw) return {};
+
+      const attribution = JSON.parse(raw);
+      const updatedAt = Date.parse(attribution && attribution.updated_at);
+
+      if (!Number.isFinite(updatedAt) || Date.now() - updatedAt > CAMPAIGN_ATTRIBUTION_TTL_MS) {
+        localStorage.removeItem(CAMPAIGN_ATTRIBUTION_STORAGE_KEY);
+        return {};
+      }
+
+      const touch = attribution.last_touch || attribution.first_touch || {};
+      const fields = {};
+
+      CAMPAIGN_ATTRIBUTION_KEYS.forEach((key) => {
+        const value = String(touch[key] || "").trim();
+        if (value) fields[key] = value.slice(0, key.startsWith("utm_") ? 180 : 300);
+      });
+
+      if (attribution.first_touch && attribution.first_touch.utm_source) {
+        fields.first_touch_source = String(attribution.first_touch.utm_source).trim().slice(0, 180);
+      }
+
+      return fields;
+    } catch (_error) {
+      return {};
+    }
+  }
+
   function buildAnalyticsPayload(eventName, payload) {
     return Object.assign({
       event_id: `${eventName}_${Date.now()}_${randomIdPart()}`,
@@ -430,7 +473,7 @@
       source: "webflow_checkout_pages",
       version: CHECKOUT_PAGES_VERSION,
       generated_at: new Date().toISOString()
-    }, payload || {});
+    }, getCampaignAnalyticsFields(), payload || {});
   }
 
   function trackOnce(eventName, payload) {
@@ -1323,6 +1366,7 @@
       renderStatusMeta(copy, sessionId, data.status);
       updateDeliveryEstimate(copy, sessionId, data.status);
       updateDelayedHelp(data.status);
+      trackPurchaseFromStatus(data.status.lang || "en", sessionId, data.status);
 
       if (supportLink) {
         supportLink.href = buildSupportHref(copy, sessionId, "success", data.status.overall || "unknown");
@@ -1463,26 +1507,57 @@
     }
   }
 
+  function trackPurchaseFromStatus(lang, sessionId, status) {
+    const amountTotal = Number(status?.amountTotal);
+    const currency = String(status?.currency || "").trim().toUpperCase();
+    const packageCode = String(status?.packageCode || "legacy_500_v1").trim();
+
+    if (
+      status?.paymentStatus !== "paid" ||
+      !Number.isInteger(amountTotal) ||
+      amountTotal <= 0 ||
+      !/^[A-Z]{3}$/.test(currency)
+    ) {
+      return false;
+    }
+
+    const value = amountTotal / 100;
+    const isPlus = packageCode === "plus_v1";
+
+    trackOnce("purchase", {
+      value,
+      currency,
+      package_code: packageCode,
+      offer_version: status?.offerVersion || "",
+      checkout_session_id: sessionId || "",
+      session_id: sessionId || "",
+      lang: status?.lang || lang,
+      source: "webflow_success_page",
+      version: CHECKOUT_PAGES_VERSION,
+      items: [
+        {
+          item_id: packageCode,
+          item_name: isPlus ? "NeuroMap Kids Plus" : "NeuroMap Kids Standard",
+          item_category: "Digital screening report",
+          price: value,
+          quantity: 1
+        }
+      ]
+    });
+
+    console.log("PURCHASE EVENT SENT", {
+      sessionId,
+      packageCode,
+      value,
+      currency,
+      version: CHECKOUT_PAGES_VERSION
+    });
+
+    return true;
+  }
+
   function trackPage(kind, lang, sessionId) {
     if (kind === "success") {
-      trackOnce("purchase", {
-        value: 5,
-        currency: "USD",
-        checkout_session_id: sessionId || "",
-        session_id: sessionId || "",
-        lang,
-        source: "webflow_success_page",
-        version: CHECKOUT_PAGES_VERSION,
-        items: [
-          {
-            item_id: "neuromap_kids_report",
-            item_name: "NeuroMap Kids report",
-            price: 5,
-            quantity: 1
-          }
-        ]
-      });
-
       trackOnce("nm_checkout_success_view", {
         checkout_session_id: sessionId || "",
         session_id: sessionId || "",
@@ -1490,8 +1565,6 @@
         source: "webflow_success_page",
         version: CHECKOUT_PAGES_VERSION
       });
-
-      console.log("PURCHASE EVENT SENT", { sessionId, version: CHECKOUT_PAGES_VERSION });
       return;
     }
 

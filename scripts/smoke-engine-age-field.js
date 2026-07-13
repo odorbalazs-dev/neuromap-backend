@@ -19,7 +19,7 @@ function main() {
     loaderHtml.includes("/public/webflow/engine.js"),
     "Webflow Engine loader should load the public engine file."
   );
-  const currentEngineVersion = "20260622-language-content-audit-v3";
+  const currentEngineVersion = "20260713-two-tier-offer-v1";
   assert(
     loaderHtml.includes(currentEngineVersion),
     "Webflow Engine loader should include the current questionnaire shell cache-busting version."
@@ -72,6 +72,19 @@ function main() {
   assert(script.includes("validateChildAge"), "Engine should validate child age before checkout.");
   assert(script.includes("childAge,"), "Engine should include childAge in checkout payload.");
   assert(script.includes("ageYears: childAge"), "Engine should include ageYears in checkout payload.");
+  assert(script.includes("getRequestedLanguage"), "Engine should support campaign language query parameters.");
+  assert(script.includes("CAMPAIGN_ATTRIBUTION_STORAGE_KEY"), "Engine should retain campaign attribution.");
+  assert(script.includes("captureCampaignAttribution"), "Engine should capture Google click and UTM parameters.");
+  assert(script.includes("acquisition,"), "Engine should include acquisition data in checkout payload.");
+  assert(script.includes("PACKAGE_SELECTOR_COPY"), "Engine should include localized package selector copy.");
+  assert(script.includes("ensureLandingPackageSelector"), "Engine should render package selection on the landing page.");
+  assert(script.includes('data-nm-package-selector="landing"'), "Landing page should expose the package selector scope.");
+  assert(script.includes("standard_v1"), "Engine should expose the Standard package.");
+  assert(script.includes("plus_v1"), "Engine should expose the Plus package.");
+  assert(
+    script.includes("packageCode: normalizeClientPackageCode(state.packageCode)"),
+    "Engine should include the selected package in checkout payloads."
+  );
 
   const expectedAgeLabels = [
     "Gyermek \\u00e9letkora",

@@ -83,6 +83,34 @@ const checks = [
     }
   },
   {
+    label: "Webflow engine supports campaign language URLs",
+    run: () => {
+      const source = read("public/webflow/engine.js");
+      return (
+        source.includes("getRequestedLanguage") &&
+        source.includes('params.get("lang")') &&
+        source.includes('localStorage.setItem("nm_lang", requested)')
+      );
+    }
+  },
+  {
+    label: "Google click and UTM attribution survive checkout",
+    run: () => {
+      const engine = read("public/webflow/engine.js");
+      const checkoutPages = read("public/webflow/checkout-pages.js");
+      const normalizer = read("src/utils/normalizeCheckoutPayload.js");
+
+      return (
+        engine.includes("CAMPAIGN_ATTRIBUTION_STORAGE_KEY") &&
+        engine.includes("captureCampaignAttribution") &&
+        engine.includes("acquisition,") &&
+        checkoutPages.includes("getCampaignAnalyticsFields") &&
+        normalizer.includes("normalizeAcquisition") &&
+        normalizer.includes('"gclid"')
+      );
+    }
+  },
+  {
     label: "Webhook keeps paid checkout critical path short",
     run: () => {
       const source = read("src/services/webhook.service.js");

@@ -1,0 +1,158 @@
+:root {
+  color-scheme: light;
+  --blue: #1197d5;
+  --orange: #ff7a00;
+  --green: #72be00;
+  --ink: #102139;
+  --muted: #53667f;
+  --line: #d9e7ef;
+  --surface: #ffffff;
+  --soft: #f3f9fc;
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: #eef7fb;
+  letter-spacing: 0;
+}
+
+button, input, select, textarea { font: inherit; }
+
+.nm-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px max(20px, calc((100vw - 980px) / 2));
+  background: rgba(255, 255, 255, 0.98);
+  border-bottom: 1px solid var(--line);
+}
+
+.nm-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--blue);
+  font-size: 20px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.nm-brand > span:last-child > span { color: var(--orange); }
+
+.nm-mark { position: relative; width: 36px; height: 28px; display: inline-block; }
+.nm-mark i, .nm-mark b, .nm-mark em { position: absolute; display: block; border-radius: 50%; }
+.nm-mark i { width: 18px; height: 18px; left: 1px; top: 1px; background: var(--blue); }
+.nm-mark b { width: 18px; height: 18px; right: 1px; top: 1px; background: var(--orange); }
+.nm-mark em { width: 11px; height: 11px; left: 13px; bottom: 0; background: var(--green); }
+
+.nm-plus {
+  padding: 5px 10px;
+  border-radius: 999px;
+  color: #386200;
+  background: #e9f8dc;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.nm-shell {
+  width: min(980px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 52px 0 72px;
+}
+
+.nm-intro { max-width: 760px; }
+.nm-eyebrow, .nm-label { margin: 0 0 8px; color: #0d7eb3; font-size: 12px; font-weight: 800; text-transform: uppercase; }
+h1 { max-width: 720px; margin: 0; font-size: 42px; line-height: 1.12; }
+h2 { margin: 0; font-size: 22px; line-height: 1.25; }
+.nm-lead { margin: 16px 0 0; color: var(--muted); font-size: 18px; line-height: 1.6; }
+.nm-disclosure { margin: 18px 0 0; padding-left: 14px; border-left: 4px solid var(--orange); color: #5e4a38; line-height: 1.55; }
+
+.nm-progress, .nm-tool, .nm-history, .nm-search {
+  margin-top: 30px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.nm-progress { padding: 22px 24px; display: grid; grid-template-columns: 150px 1fr; gap: 18px 24px; align-items: center; }
+.nm-progress strong { font-size: 22px; }
+.nm-progress-track { height: 12px; overflow: hidden; border-radius: 999px; background: #e5f0f5; }
+.nm-progress-track span { display: block; width: 0; height: 100%; background: var(--green); transition: width 180ms ease; }
+.nm-trend { grid-column: 1 / -1; margin: 0; color: var(--muted); }
+
+.nm-tool { padding: 28px; }
+.nm-tool-heading, .nm-section-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
+.nm-tool-heading time, .nm-section-heading span { color: var(--muted); font-weight: 700; }
+
+#entryForm { margin-top: 26px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+label > span, legend { display: block; margin-bottom: 8px; font-weight: 700; }
+input[type="date"], input[type="text"], select, textarea {
+  width: 100%;
+  border: 1px solid #bed6e4;
+  border-radius: 6px;
+  padding: 12px 13px;
+  color: var(--ink);
+  background: #fff;
+}
+textarea { resize: vertical; min-height: 96px; }
+fieldset { grid-column: 1 / -1; margin: 0; padding: 0; border: 0; }
+.nm-segments { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.nm-segments label { position: relative; }
+.nm-segments input { position: absolute; opacity: 0; pointer-events: none; }
+.nm-segments span { min-height: 48px; display: flex; align-items: center; justify-content: center; margin: 0; padding: 8px; border: 1px solid #bed6e4; border-radius: 6px; text-align: center; cursor: pointer; }
+.nm-segments input:checked + span { border-color: var(--blue); color: #075a82; background: #eaf7fd; box-shadow: inset 0 0 0 1px var(--blue); }
+.nm-check { grid-column: 1 / -1; display: flex; align-items: center; gap: 10px; padding: 14px; background: var(--soft); }
+.nm-check span { margin: 0; }
+.nm-check input { width: 18px; height: 18px; accent-color: var(--green); }
+.nm-note, .nm-form-actions { grid-column: 1 / -1; }
+.nm-form-actions { display: flex; align-items: center; gap: 16px; }
+button {
+  min-height: 44px;
+  border: 0;
+  border-radius: 6px;
+  padding: 11px 18px;
+  color: #fff;
+  background: var(--blue);
+  font-weight: 800;
+  cursor: pointer;
+}
+button:disabled { opacity: .55; cursor: wait; }
+#formStatus { color: var(--muted); }
+
+.nm-history { padding: 26px 28px; }
+.nm-entry-list { margin-top: 18px; }
+.nm-entry { display: grid; grid-template-columns: 120px 1fr auto; gap: 16px; padding: 16px 0; border-top: 1px solid #e8eef2; }
+.nm-entry:first-child { border-top: 0; }
+.nm-entry strong { display: block; }
+.nm-entry p { margin: 4px 0 0; color: var(--muted); line-height: 1.45; }
+.nm-level { align-self: center; padding: 5px 8px; border-radius: 4px; color: #075a82; background: #eaf7fd; font-weight: 800; }
+.nm-empty { margin: 0; padding: 24px 0; color: var(--muted); text-align: center; }
+
+.nm-search { display: grid; grid-template-columns: 1fr 360px; gap: 28px; padding: 26px 28px; }
+.nm-search p { margin: 10px 0 0; color: var(--muted); line-height: 1.5; }
+.nm-search form { align-self: center; display: flex; gap: 8px; }
+.nm-search input { min-width: 0; }
+.nm-sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); }
+
+[dir="rtl"] body { font-family: "Segoe UI", Tahoma, Arial, sans-serif; }
+[dir="rtl"] .nm-disclosure { padding-right: 14px; padding-left: 0; border-right: 4px solid var(--orange); border-left: 0; }
+
+@media (max-width: 720px) {
+  .nm-shell { width: min(100% - 24px, 620px); padding-top: 34px; }
+  h1 { font-size: 32px; }
+  .nm-lead { font-size: 16px; }
+  .nm-progress, .nm-search { grid-template-columns: 1fr; }
+  #entryForm { grid-template-columns: 1fr; }
+  #entryForm > * { grid-column: 1; }
+  .nm-segments { grid-template-columns: 1fr 1fr; }
+  .nm-entry { grid-template-columns: 92px 1fr; }
+  .nm-level { grid-column: 2; justify-self: start; }
+  .nm-search form { flex-direction: column; }
+}

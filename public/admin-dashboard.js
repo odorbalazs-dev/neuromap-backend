@@ -50,6 +50,7 @@
     dashboardMetricsWebhookMeta: document.getElementById("dashboardMetricsWebhookMeta"),
     dashboardMetricsTrendRows: document.getElementById("dashboardMetricsTrendRows"),
     dashboardMetricsDomainRows: document.getElementById("dashboardMetricsDomainRows"),
+    dashboardPackageRows: document.getElementById("dashboardPackageRows"),
     dashboardMetricsRecommendationRows: document.getElementById("dashboardMetricsRecommendationRows"),
     customerExperienceUpdatedAt: document.getElementById("customerExperienceUpdatedAt"),
     customerExperienceTrust: document.getElementById("customerExperienceTrust"),
@@ -2360,7 +2361,7 @@
       setMetricText(els.dashboardMetricsLevel, "-");
       setMetricText(els.dashboardMetricsLevelMeta, "Add meg az admin tokent, majd frissits.");
       setMetricText(els.dashboardMetricsPaid24h, "0");
-      setMetricText(els.dashboardMetricsRevenue24h, "Becsult bevetel: $0");
+      setMetricText(els.dashboardMetricsRevenue24h, "Tényleges bevétel: $0.00");
       setMetricText(els.dashboardMetricsConversion7d, "-");
       setMetricText(els.dashboardMetricsCheckout7d, "Checkout inditas: 0");
       setMetricText(els.dashboardMetricsEmailRate7d, "-");
@@ -2371,6 +2372,7 @@
       setMetricText(els.dashboardMetricsWebhookMeta, "Failed webhook");
       renderDashboardTrendRows([]);
       renderEngineBars(els.dashboardMetricsDomainRows, []);
+      renderEngineList(els.dashboardPackageRows, [], () => ({ title: "-", meta: "-" }));
       renderEngineList(els.dashboardMetricsRecommendationRows, [], () => ({ title: "-", meta: "-" }));
       return;
     }
@@ -2397,7 +2399,10 @@
       `${countValue(last7d.sessions)} session / ${countValue(last7d.checkoutStarted)} checkout / ${countValue(last7d.paid)} fizetés. Session -> paid: ${formatPercent(last7d.sessionToPaidRate)}.`
     );
     setMetricText(els.dashboardMetricsPaid24h, String(countValue(last24h.paid)));
-    setMetricText(els.dashboardMetricsRevenue24h, `Becsult bevetel: $${countValue(last24h.estimatedRevenueUsd)}`);
+    setMetricText(
+      els.dashboardMetricsRevenue24h,
+      `Tényleges bevétel: $${Number(last24h.revenueUsd || 0).toFixed(2)}`
+    );
     setMetricText(els.dashboardMetricsConversion7d, formatPercent(last7d.checkoutToPaidRate));
     setMetricText(
       els.dashboardMetricsCheckout7d,
@@ -2421,6 +2426,21 @@
 
     renderDashboardTrendRows(data.trend || []);
     renderEngineBars(els.dashboardMetricsDomainRows, engine.domainDistribution || []);
+    renderEngineList(
+      els.dashboardPackageRows,
+      data.packages || [],
+      (item) => {
+        const labels = {
+          standard_v1: "Standard ($7.99)",
+          plus_v1: "Plus ($9.99)",
+          legacy_500_v1: "Korábbi csomag ($5.00)"
+        };
+        return {
+          title: `${labels[item.packageCode] || item.packageCode || "Ismeretlen"}: ${countValue(item.paid)} fizetés`,
+          meta: `$${Number(item.revenueUsd || 0).toFixed(2)} bevétel / ${countValue(item.checkoutStarted)} checkout indítás`
+        };
+      }
+    );
     renderEngineList(
       els.dashboardMetricsRecommendationRows,
       data.recommendations || [],

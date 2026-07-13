@@ -163,7 +163,7 @@ export function getAdminDashboard(_req, res) {
           <article class="health-card metric-kpi">
             <span>24h fizetett</span>
             <strong id="dashboardMetricsPaid24h">0</strong>
-            <p id="dashboardMetricsRevenue24h">Becsult bevetel: $0</p>
+            <p id="dashboardMetricsRevenue24h">Tényleges bevétel: $0.00</p>
           </article>
           <article class="health-card metric-kpi">
             <span>7d checkout -> paid</span>
@@ -194,6 +194,10 @@ export function getAdminDashboard(_req, res) {
           <article class="engine-card">
             <h3>Engine fokuszok</h3>
             <div id="dashboardMetricsDomainRows" class="engine-bars"></div>
+          </article>
+          <article class="engine-card">
+            <h3>Csomagmegoszlás (30 nap)</h3>
+            <div id="dashboardPackageRows" class="engine-list"></div>
           </article>
           <article class="engine-card metrics-recommendations-card">
             <h3>Metrika javaslatok</h3>

@@ -5,10 +5,262 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260622-language-content-audit-v3";
+  const ENGINE_VERSION = "20260713-two-tier-offer-v1";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
   const DRAFT_STORAGE_KEY = "nm_questionnaire_draft_v1";
+  const PACKAGE_STORAGE_KEY = "nm_package_code_v1";
   const DRAFT_TTL_MS = 1000 * 60 * 60 * 24 * 14;
+  const CAMPAIGN_ATTRIBUTION_STORAGE_KEY = "nm_campaign_attribution_v1";
+  const CAMPAIGN_ATTRIBUTION_TTL_MS = 1000 * 60 * 60 * 24 * 90;
+  const CAMPAIGN_ATTRIBUTION_KEYS = [
+    "utm_source",
+    "utm_medium",
+    "utm_campaign",
+    "utm_content",
+    "utm_term",
+    "gclid",
+    "gbraid",
+    "wbraid"
+  ];
+  const CAMPAIGN_SUPPORTED_LANGS = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];
+
+  const CLIENT_PACKAGE_CATALOG = Object.freeze({
+    standard_v1: Object.freeze({
+      code: "standard_v1",
+      amount: 799,
+      analyticsValue: 7.99,
+      currency: "USD"
+    }),
+    plus_v1: Object.freeze({
+      code: "plus_v1",
+      amount: 999,
+      analyticsValue: 9.99,
+      currency: "USD"
+    })
+  });
+
+  const PACKAGE_SELECTOR_COPY = {
+    hu: {
+      eyebrow: "Egyszeri vásárlás, nincs előfizetés",
+      title: "Válaszd ki, mennyi támogatást szeretnél",
+      lead: "Mindkét csomag ugyanarra a személyre szabott kérdőívre épül. A Plus a riport után is segít megfigyelni a változásokat.",
+      recommended: "Ajánlott",
+      selected: "Kiválasztva",
+      select: "Ezt választom",
+      standard: {
+        name: "Standard riport",
+        description: "Részletes, korosztályhoz igazított PDF a legfontosabb mintázatokról.",
+        features: ["Személyre szabott PDF riport", "Gyakorlati javaslatok szülőknek", "Emailes kézbesítés és számla"]
+      },
+      plus: {
+        name: "Plus támogatás",
+        description: "A teljes riport mellé 14 napos, irányított megfigyelési támogatást kapsz.",
+        features: ["Minden, ami a Standardban", "Megosztható egyoldalas összefoglaló", "Helyzettervek és óvoda/iskola beszélgetési útmutató", "14 napos megfigyelési napló és trendkövetés"]
+      },
+      disclosure: "A Plus kiegészítő tartalma automatizáltan, a szülő válaszai alapján készül. Nem szakember által ellenőrzött értékelés és nem diagnózis.",
+      checkout: "Fizetés"
+    },
+    en: {
+      eyebrow: "One-time purchase, no subscription",
+      title: "Choose how much ongoing support you want",
+      lead: "Both options use the same personalized questionnaire. Plus also helps you observe changes after receiving the report.",
+      recommended: "Recommended",
+      selected: "Selected",
+      select: "Choose this",
+      standard: {
+        name: "Standard report",
+        description: "A detailed, age-aware PDF explaining the most relevant patterns.",
+        features: ["Personalized PDF report", "Practical suggestions for parents", "Email delivery and invoice"]
+      },
+      plus: {
+        name: "Plus support",
+        description: "The full report plus 14 days of guided observation support.",
+        features: ["Everything in Standard", "Shareable one-page summary", "Situation plans and preschool/school conversation guide", "14-day observation diary and trend follow-up"]
+      },
+      disclosure: "Plus content is generated automatically from the parent's answers. It is not reviewed by a professional and is not a diagnosis.",
+      checkout: "Pay"
+    },
+    de: {
+      eyebrow: "Einmalige Zahlung, kein Abo",
+      title: "Wähle den gewünschten Umfang der Begleitung",
+      lead: "Beide Pakete basieren auf demselben personalisierten Fragebogen. Plus unterstützt auch die Beobachtung nach dem Bericht.",
+      recommended: "Empfohlen",
+      selected: "Ausgewählt",
+      select: "Auswählen",
+      standard: {
+        name: "Standard-Bericht",
+        description: "Ein ausführlicher, altersbezogener PDF-Bericht zu den wichtigsten Mustern.",
+        features: ["Personalisierter PDF-Bericht", "Praktische Hinweise für Eltern", "Versand per E-Mail und Rechnung"]
+      },
+      plus: {
+        name: "Plus-Begleitung",
+        description: "Der vollständige Bericht plus 14 Tage angeleitete Beobachtung.",
+        features: ["Alles aus Standard", "Teilbare einseitige Zusammenfassung", "Situationspläne und Leitfaden für Kita/Schule", "14-Tage-Beobachtungstagebuch und Trendbericht"]
+      },
+      disclosure: "Die Plus-Inhalte werden automatisch aus den Antworten der Eltern erstellt. Sie werden nicht von Fachpersonal geprüft und sind keine Diagnose.",
+      checkout: "Bezahlen"
+    },
+    it: {
+      eyebrow: "Pagamento unico, nessun abbonamento",
+      title: "Scegli il livello di supporto che desideri",
+      lead: "Entrambe le opzioni usano lo stesso questionario personalizzato. Plus aiuta anche a osservare i cambiamenti dopo il report.",
+      recommended: "Consigliato",
+      selected: "Selezionato",
+      select: "Scegli questo",
+      standard: {
+        name: "Report Standard",
+        description: "Un PDF dettagliato e adatto all'età sui pattern più rilevanti.",
+        features: ["Report PDF personalizzato", "Suggerimenti pratici per genitori", "Invio via email e fattura"]
+      },
+      plus: {
+        name: "Supporto Plus",
+        description: "Il report completo con 14 giorni di osservazione guidata.",
+        features: ["Tutto ciò che include Standard", "Sintesi condivisibile di una pagina", "Piani situazionali e guida per scuola o asilo", "Diario di 14 giorni e andamento finale"]
+      },
+      disclosure: "I contenuti Plus sono generati automaticamente dalle risposte del genitore. Non sono revisionati da un professionista e non costituiscono una diagnosi.",
+      checkout: "Paga"
+    },
+    es: {
+      eyebrow: "Pago único, sin suscripción",
+      title: "Elige el nivel de acompañamiento que deseas",
+      lead: "Ambas opciones usan el mismo cuestionario personalizado. Plus también ayuda a observar cambios después del informe.",
+      recommended: "Recomendado",
+      selected: "Seleccionado",
+      select: "Elegir",
+      standard: {
+        name: "Informe Standard",
+        description: "Un PDF detallado y adaptado a la edad sobre los patrones más relevantes.",
+        features: ["Informe PDF personalizado", "Sugerencias prácticas para familias", "Entrega por email y factura"]
+      },
+      plus: {
+        name: "Acompañamiento Plus",
+        description: "El informe completo con 14 días de observación guiada.",
+        features: ["Todo lo incluido en Standard", "Resumen compartible de una página", "Planes por situación y guía para la escuela", "Diario de 14 días y seguimiento de tendencias"]
+      },
+      disclosure: "El contenido Plus se genera automáticamente a partir de las respuestas de la familia. No está revisado por un profesional y no es un diagnóstico.",
+      checkout: "Pagar"
+    },
+    zh: {
+      eyebrow: "一次性付款，无订阅",
+      title: "选择你需要的后续支持",
+      lead: "两个方案都使用同一份个性化问卷。Plus 还会在收到报告后帮助你持续观察变化。",
+      recommended: "推荐",
+      selected: "已选择",
+      select: "选择此方案",
+      standard: {
+        name: "标准报告",
+        description: "一份详细、结合年龄背景的个性化PDF报告。",
+        features: ["个性化PDF报告", "给家长的实用建议", "邮件发送和发票"]
+      },
+      plus: {
+        name: "Plus支持",
+        description: "完整报告加14天引导式观察支持。",
+        features: ["包含标准方案全部内容", "可分享的一页摘要", "情境计划及与幼儿园或学校沟通指南", "14天观察日记和趋势跟进"]
+      },
+      disclosure: "Plus内容根据家长回答自动生成，未经专业人员审核，也不构成诊断。",
+      checkout: "支付"
+    },
+    ja: {
+      eyebrow: "一回払い・サブスクリプションなし",
+      title: "必要な継続サポートを選んでください",
+      lead: "どちらも同じ個別質問票を使用します。Plusでは、レポート後の変化も継続して観察できます。",
+      recommended: "おすすめ",
+      selected: "選択中",
+      select: "このプランを選ぶ",
+      standard: {
+        name: "スタンダードレポート",
+        description: "重要なパターンを年齢背景とともに説明する詳細なPDFです。",
+        features: ["個別PDFレポート", "保護者向けの実践的な提案", "メール送付と請求書"]
+      },
+      plus: {
+        name: "Plusサポート",
+        description: "完全版レポートに14日間の観察サポートを追加します。",
+        features: ["スタンダードの全内容", "共有できる1ページ要約", "場面別プランと園・学校との会話ガイド", "14日間の観察日記と傾向フォロー"]
+      },
+      disclosure: "Plusの内容は保護者の回答から自動生成されます。専門家による確認済み評価ではなく、診断でもありません。",
+      checkout: "支払う"
+    },
+    ar: {
+      eyebrow: "دفعة واحدة بلا اشتراك",
+      title: "اختر مستوى المتابعة الذي تريده",
+      lead: "يعتمد الخياران على الاستبيان المخصص نفسه. ويساعد Plus أيضا على متابعة التغيرات بعد استلام التقرير.",
+      recommended: "موصى به",
+      selected: "تم الاختيار",
+      select: "اختر هذه الباقة",
+      standard: {
+        name: "التقرير القياسي",
+        description: "تقرير PDF مفصل يراعي عمر الطفل ويشرح الأنماط الأهم.",
+        features: ["تقرير PDF مخصص", "اقتراحات عملية للوالدين", "إرسال بالبريد الإلكتروني وفاتورة"]
+      },
+      plus: {
+        name: "دعم Plus",
+        description: "التقرير الكامل مع 14 يوما من المتابعة الموجهة.",
+        features: ["كل ما في الباقة القياسية", "ملخص من صفحة واحدة قابل للمشاركة", "خطط للمواقف ودليل للحوار مع الروضة أو المدرسة", "مفكرة ملاحظة لمدة 14 يوما ومتابعة الاتجاه"]
+      },
+      disclosure: "يتم إنشاء محتوى Plus تلقائيا من إجابات الوالدين. لا يراجعه مختص ولا يعد تشخيصا.",
+      checkout: "الدفع"
+    },
+    pl: {
+      eyebrow: "Płatność jednorazowa, bez abonamentu",
+      title: "Wybierz poziom dalszego wsparcia",
+      lead: "Obie opcje korzystają z tego samego spersonalizowanego kwestionariusza. Plus pomaga też obserwować zmiany po raporcie.",
+      recommended: "Polecany",
+      selected: "Wybrano",
+      select: "Wybierz",
+      standard: {
+        name: "Raport Standard",
+        description: "Szczegółowy PDF uwzględniający wiek i najważniejsze wzorce.",
+        features: ["Spersonalizowany raport PDF", "Praktyczne wskazówki dla rodziców", "Wysyłka emailem i faktura"]
+      },
+      plus: {
+        name: "Wsparcie Plus",
+        description: "Pełny raport oraz 14 dni ukierunkowanej obserwacji.",
+        features: ["Wszystko ze Standard", "Jednostronicowe podsumowanie do udostępnienia", "Plany sytuacyjne i przewodnik do rozmowy ze szkołą", "14-dniowy dziennik i podsumowanie trendu"]
+      },
+      disclosure: "Treści Plus są generowane automatycznie na podstawie odpowiedzi rodzica. Nie są sprawdzane przez specjalistę i nie stanowią diagnozy.",
+      checkout: "Zapłać"
+    },
+    pt: {
+      eyebrow: "Pagamento único, sem assinatura",
+      title: "Escolha o nível de acompanhamento desejado",
+      lead: "As duas opções usam o mesmo questionário personalizado. O Plus também ajuda a acompanhar mudanças após o relatório.",
+      recommended: "Recomendado",
+      selected: "Selecionado",
+      select: "Escolher",
+      standard: {
+        name: "Relatório Standard",
+        description: "Um PDF detalhado e adaptado à idade sobre os padrões mais relevantes.",
+        features: ["Relatório PDF personalizado", "Sugestões práticas para pais", "Envio por email e fatura"]
+      },
+      plus: {
+        name: "Acompanhamento Plus",
+        description: "O relatório completo com 14 dias de observação orientada.",
+        features: ["Tudo do Standard", "Resumo de uma página para compartilhar", "Planos por situação e guia para conversar com a escola", "Diário de 14 dias e acompanhamento de tendência"]
+      },
+      disclosure: "O conteúdo Plus é gerado automaticamente a partir das respostas dos pais. Não é revisto por um profissional e não constitui diagnóstico.",
+      checkout: "Pagar"
+    },
+    fr: {
+      eyebrow: "Paiement unique, sans abonnement",
+      title: "Choisissez le niveau d'accompagnement souhaité",
+      lead: "Les deux options utilisent le même questionnaire personnalisé. Plus aide aussi à observer les changements après le rapport.",
+      recommended: "Recommandé",
+      selected: "Sélectionné",
+      select: "Choisir",
+      standard: {
+        name: "Rapport Standard",
+        description: "Un PDF détaillé, adapté à l'âge, sur les schémas les plus pertinents.",
+        features: ["Rapport PDF personnalisé", "Conseils pratiques pour les parents", "Envoi par email et facture"]
+      },
+      plus: {
+        name: "Accompagnement Plus",
+        description: "Le rapport complet avec 14 jours d'observation guidée.",
+        features: ["Tout le contenu Standard", "Résumé partageable d'une page", "Plans par situation et guide de dialogue avec l'école", "Journal de 14 jours et suivi de tendance"]
+      },
+      disclosure: "Le contenu Plus est généré automatiquement à partir des réponses du parent. Il n'est pas vérifié par un professionnel et ne constitue pas un diagnostic.",
+      checkout: "Payer"
+    }
+  };
 
   const state = {
     lang: "hu",
@@ -33,6 +285,7 @@
     extraDebug: null,
 
     needsExtra: false,
+    packageCode: "standard_v1",
     draftRestored: false
   };
 
@@ -289,7 +542,7 @@
       needs_extra: Boolean(state.needsExtra),
       funnel_step: state.step || "landing",
       generated_at: new Date().toISOString()
-    }, extra || {});
+    }, getCampaignAnalyticsFields(), extra || {});
   }
 
   function hasSchemaV2Event(eventName, dedupeKey) {
@@ -327,10 +580,198 @@
     return window.NM_CONFIG || {};
   }
 
+  function getSupportedLanguages() {
+    const configured = getConfig().SUPPORTED_LANGS;
+    const supported = Array.isArray(configured) && configured.length
+      ? configured
+      : CAMPAIGN_SUPPORTED_LANGS;
+
+    return supported
+      .map((lang) => String(lang || "").trim().toLowerCase())
+      .filter(Boolean);
+  }
+
+  function normalizeLanguageCode(value) {
+    return String(value || "")
+      .trim()
+      .toLowerCase()
+      .replace(/_/g, "-")
+      .split("-")[0];
+  }
+
+  function getRequestedLanguage() {
+    try {
+      const params = new URLSearchParams(window.location.search || "");
+      return normalizeLanguageCode(params.get("lang") || params.get("hl"));
+    } catch (_error) {
+      return "";
+    }
+  }
+
+  function getBrowserLanguage() {
+    const candidates = Array.isArray(window.navigator && window.navigator.languages)
+      ? window.navigator.languages
+      : [window.navigator && window.navigator.language];
+
+    return candidates.map(normalizeLanguageCode).find(Boolean) || "";
+  }
+
   function getLang() {
-    const saved = localStorage.getItem("nm_lang") || "hu";
-    const supported = getConfig().SUPPORTED_LANGS || ["hu"];
-    return supported.includes(saved) ? saved : "hu";
+    const supported = getSupportedLanguages();
+    const requested = getRequestedLanguage();
+
+    if (supported.includes(requested)) {
+      try {
+        localStorage.setItem("nm_lang", requested);
+      } catch (_error) {
+        // The URL language still works when storage is unavailable.
+      }
+      return requested;
+    }
+
+    let saved = "";
+    try {
+      saved = normalizeLanguageCode(localStorage.getItem("nm_lang"));
+    } catch (_error) {
+      saved = "";
+    }
+
+    if (supported.includes(saved)) return saved;
+
+    const browserLanguage = getBrowserLanguage();
+    if (supported.includes(browserLanguage)) return browserLanguage;
+
+    return supported.includes("hu") ? "hu" : (supported[0] || "en");
+  }
+
+  function cleanCampaignValue(value, maxLength = 300) {
+    return String(value || "")
+      .trim()
+      .replace(/[\u0000-\u001F\u007F]/g, "")
+      .slice(0, maxLength);
+  }
+
+  function getReferrerOrigin() {
+    try {
+      return document.referrer ? new URL(document.referrer).origin : "";
+    } catch (_error) {
+      return "";
+    }
+  }
+
+  function normalizeCampaignTouch(input = {}) {
+    const touch = {};
+
+    CAMPAIGN_ATTRIBUTION_KEYS.forEach((key) => {
+      const value = cleanCampaignValue(input[key], key.startsWith("utm_") ? 180 : 300);
+      if (value) touch[key] = value;
+    });
+
+    const capturedAt = cleanCampaignValue(input.captured_at, 40);
+    const landingPath = cleanCampaignValue(input.landing_path, 500);
+    const landingUrl = cleanCampaignValue(input.landing_url, 700);
+    const referrerOrigin = cleanCampaignValue(input.referrer_origin, 300);
+    const lang = normalizeLanguageCode(input.lang);
+
+    if (capturedAt) touch.captured_at = capturedAt;
+    if (landingPath) touch.landing_path = landingPath;
+    if (landingUrl) touch.landing_url = landingUrl;
+    if (referrerOrigin) touch.referrer_origin = referrerOrigin;
+    if (lang) touch.lang = lang;
+
+    return touch;
+  }
+
+  function readCampaignAttribution() {
+    try {
+      const raw = localStorage.getItem(CAMPAIGN_ATTRIBUTION_STORAGE_KEY);
+      if (!raw) return null;
+
+      const parsed = JSON.parse(raw);
+      const updatedAt = Date.parse(parsed && parsed.updated_at);
+
+      if (!Number.isFinite(updatedAt) || Date.now() - updatedAt > CAMPAIGN_ATTRIBUTION_TTL_MS) {
+        localStorage.removeItem(CAMPAIGN_ATTRIBUTION_STORAGE_KEY);
+        return null;
+      }
+
+      return {
+        schema_version: "campaign-attribution-v1",
+        first_touch: normalizeCampaignTouch(parsed.first_touch || {}),
+        last_touch: normalizeCampaignTouch(parsed.last_touch || {}),
+        updated_at: new Date(updatedAt).toISOString()
+      };
+    } catch (_error) {
+      return null;
+    }
+  }
+
+  function captureCampaignAttribution() {
+    let params;
+
+    try {
+      params = new URLSearchParams(window.location.search || "");
+    } catch (_error) {
+      return readCampaignAttribution();
+    }
+
+    const touch = {};
+    CAMPAIGN_ATTRIBUTION_KEYS.forEach((key) => {
+      const value = cleanCampaignValue(params.get(key), key.startsWith("utm_") ? 180 : 300);
+      if (value) touch[key] = value;
+    });
+
+    const hasCampaignSignal = CAMPAIGN_ATTRIBUTION_KEYS.some((key) => Boolean(touch[key]));
+    if (!hasCampaignSignal) return readCampaignAttribution();
+
+    const now = new Date().toISOString();
+    const current = readCampaignAttribution();
+    const normalizedTouch = normalizeCampaignTouch(Object.assign(touch, {
+      captured_at: now,
+      landing_path: `${window.location.pathname || "/"}${window.location.search || ""}`,
+      landing_url: `${window.location.origin || ""}${window.location.pathname || "/"}`,
+      referrer_origin: getReferrerOrigin(),
+      lang: getRequestedLanguage() || getLang()
+    }));
+
+    const next = {
+      schema_version: "campaign-attribution-v1",
+      first_touch: current && Object.keys(current.first_touch || {}).length
+        ? current.first_touch
+        : normalizedTouch,
+      last_touch: normalizedTouch,
+      updated_at: now
+    };
+
+    try {
+      localStorage.setItem(CAMPAIGN_ATTRIBUTION_STORAGE_KEY, JSON.stringify(next));
+    } catch (_error) {
+      return next;
+    }
+
+    return next;
+  }
+
+  function getCampaignAttribution() {
+    return readCampaignAttribution();
+  }
+
+  function getCampaignAnalyticsFields() {
+    const attribution = getCampaignAttribution();
+    const touch = attribution && attribution.last_touch
+      ? attribution.last_touch
+      : {};
+    const fields = {};
+
+    CAMPAIGN_ATTRIBUTION_KEYS.forEach((key) => {
+      if (touch[key]) fields[key] = touch[key];
+    });
+
+    if (attribution && attribution.first_touch && attribution.first_touch.utm_source) {
+      fields.first_touch_source = attribution.first_touch.utm_source;
+    }
+
+    return fields;
   }
 
   const QUESTIONNAIRE_UI_FALLBACK = {
@@ -2537,7 +2978,7 @@
       "heroTitle": "Értsd meg, mi állhat gyermeked viselkedése mögött",
       "heroSub": "10 perces kérdőív után személyre szabott, szülőbarát riportot és PDF-et kapsz.",
       "primaryCta": "Kezdjük ->",
-      "microcopy": "Csak $5 - nincs előfizetés - PDF riport emailben",
+      "microcopy": "7,99 USD-től - két csomag - nincs előfizetés",
       "trust1": "kb. 10 perc",
       "trust2": "PDF riport emailben",
       "trust3": "strukturált elemzés",
@@ -2567,7 +3008,7 @@
       "trustTitle": "Fontos tudni",
       "trustText": "A NeuroMap Kids nem diagnózis, hanem strukturált előszűrés.",
       "priceTitle": "Egyszeri díj",
-      "priceValue": "Csak $5",
+      "priceValue": "7,99 USD-től",
       "priceCta": "Riport elkészítése ->",
       "priceMicrocopy": "Nincs előfizetés - biztonságos fizetés - PDF emailben",
       "stickyCta": "Kezdjük ->"
@@ -2578,7 +3019,7 @@
       "heroTitle": "Understand what may be behind your child's behavior",
       "heroSub": "After a 10-minute questionnaire, you receive a personalized, parent-friendly report and PDF.",
       "primaryCta": "Start ->",
-      "microcopy": "Only $5 - No subscription - PDF report by email",
+      "microcopy": "From $7.99 - two options - no subscription",
       "trust1": "about 10 minutes",
       "trust2": "PDF report by email",
       "trust3": "structured analysis",
@@ -2608,7 +3049,7 @@
       "trustTitle": "Important to know",
       "trustText": "NeuroMap Kids is not a diagnosis.",
       "priceTitle": "One-time payment",
-      "priceValue": "Only $5",
+      "priceValue": "From $7.99",
       "priceCta": "Get report ->",
       "priceMicrocopy": "No subscription - Secure payment - PDF by email",
       "stickyCta": "Start ->"
@@ -2619,7 +3060,7 @@
       "heroTitle": "Verstehe, was hinter dem Verhalten deines Kindes stehen kann",
       "heroSub": "Nach einem 10-minütigen Fragebogen erhältst du einen personalisierten, elternfreundlichen PDF-Bericht.",
       "primaryCta": "Starten ->",
-      "microcopy": "Nur $5 - kein Abo - PDF-Bericht per E-Mail",
+      "microcopy": "Ab 7,99 USD - zwei Optionen - kein Abo",
       "trust1": "ca. 10 Minuten",
       "trust2": "PDF-Bericht per E-Mail",
       "trust3": "strukturierte Analyse",
@@ -2649,7 +3090,7 @@
       "trustTitle": "Wichtig zu wissen",
       "trustText": "NeuroMap Kids ist keine Diagnose, sondern ein strukturiertes Screening.",
       "priceTitle": "Einmalige Zahlung",
-      "priceValue": "Nur $5",
+      "priceValue": "Ab 7,99 USD",
       "priceCta": "Bericht erhalten ->",
       "priceMicrocopy": "Kein Abo - sichere Zahlung - PDF per E-Mail",
       "stickyCta": "Starten ->"
@@ -2660,7 +3101,7 @@
       "heroTitle": "Capisci cosa può esserci dietro il comportamento di tuo figlio",
       "heroSub": "Dopo un questionario di 10 minuti ricevi un report PDF personalizzato e chiaro per genitori.",
       "primaryCta": "Inizia ->",
-      "microcopy": "Solo $5 - nessun abbonamento - PDF via email",
+      "microcopy": "Da 7,99 USD - due opzioni - nessun abbonamento",
       "trust1": "circa 10 minuti",
       "trust2": "PDF via email",
       "trust3": "analisi strutturata",
@@ -2690,7 +3131,7 @@
       "trustTitle": "Importante sapere",
       "trustText": "NeuroMap Kids non è una diagnosi, ma uno screening strutturato.",
       "priceTitle": "Pagamento unico",
-      "priceValue": "Solo $5",
+      "priceValue": "Da 7,99 USD",
       "priceCta": "Ricevi il report ->",
       "priceMicrocopy": "Nessun abbonamento - pagamento sicuro - PDF via email",
       "stickyCta": "Inizia ->"
@@ -2701,7 +3142,7 @@
       "heroTitle": "Comprende qué puede haber detrás del comportamiento de tu hijo",
       "heroSub": "Tras un cuestionario de 10 minutos recibes un informe PDF personalizado y claro para familias.",
       "primaryCta": "Empezar ->",
-      "microcopy": "Solo $5 - sin suscripción - PDF por email",
+      "microcopy": "Desde 7,99 USD - dos opciones - sin suscripción",
       "trust1": "unos 10 minutos",
       "trust2": "PDF por email",
       "trust3": "análisis estructurado",
@@ -2731,7 +3172,7 @@
       "trustTitle": "Importante",
       "trustText": "NeuroMap Kids no es un diagnóstico, sino un cribado estructurado.",
       "priceTitle": "Pago único",
-      "priceValue": "Solo $5",
+      "priceValue": "Desde 7,99 USD",
       "priceCta": "Recibir informe ->",
       "priceMicrocopy": "Sin suscripción - pago seguro - PDF por email",
       "stickyCta": "Empezar ->"
@@ -2742,7 +3183,7 @@
       "heroTitle": "理解孩子行为背后的可能原因",
       "heroSub": "完成约10分钟的问卷后，你会收到一份个性化、家长友好的PDF报告。",
       "primaryCta": "开始 ->",
-      "microcopy": "仅需 $5 - 无订阅 - PDF报告通过邮件发送",
+      "microcopy": "7.99美元起 - 两种方案 - 无订阅",
       "trust1": "约10分钟",
       "trust2": "PDF报告通过邮件发送",
       "trust3": "结构化分析",
@@ -2772,7 +3213,7 @@
       "trustTitle": "重要说明",
       "trustText": "NeuroMap Kids不是诊断，而是结构化初筛。",
       "priceTitle": "一次性付款",
-      "priceValue": "仅需 $5",
+      "priceValue": "7.99美元起",
       "priceCta": "获取报告 ->",
       "priceMicrocopy": "无订阅 - 安全支付 - PDF邮件发送",
       "stickyCta": "开始 ->"
@@ -2783,7 +3224,7 @@
       "heroTitle": "お子さまの行動の背景にある可能性を理解する",
       "heroSub": "約10分の質問票に回答すると、保護者向けにわかりやすい個別PDFレポートを受け取れます。",
       "primaryCta": "開始 ->",
-      "microcopy": "わずか $5 - サブスクなし - PDFをメールで送付",
+      "microcopy": "7.99米ドルから - 2つのプラン - サブスクなし",
       "trust1": "約10分",
       "trust2": "PDFレポートをメールで送付",
       "trust3": "構造化された分析",
@@ -2813,7 +3254,7 @@
       "trustTitle": "大切なこと",
       "trustText": "NeuroMap Kidsは診断ではなく、構造化されたスクリーニングです。",
       "priceTitle": "一回払い",
-      "priceValue": "わずか $5",
+      "priceValue": "7.99米ドルから",
       "priceCta": "レポートを受け取る ->",
       "priceMicrocopy": "サブスクなし - 安全な支払い - PDFをメールで送付",
       "stickyCta": "開始 ->"
@@ -2824,7 +3265,7 @@
       "heroTitle": "افهم ما قد يكون وراء سلوك طفلك",
       "heroSub": "بعد استبيان يستغرق نحو 10 دقائق، تحصل على تقرير PDF مخصص وواضح للوالدين.",
       "primaryCta": "ابدأ ->",
-      "microcopy": "فقط 5 دولارات - بدون اشتراك - تقرير PDF عبر البريد الإلكتروني",
+      "microcopy": "ابتداء من 7.99 دولار - خياران - بدون اشتراك",
       "trust1": "نحو 10 دقائق",
       "trust2": "تقرير PDF عبر البريد الإلكتروني",
       "trust3": "تحليل منظم",
@@ -2854,7 +3295,7 @@
       "trustTitle": "معلومة مهمة",
       "trustText": "NeuroMap Kids ليس تشخيصا، بل فرز أولي منظم.",
       "priceTitle": "دفعة واحدة",
-      "priceValue": "فقط 5 دولارات",
+      "priceValue": "ابتداء من 7.99 دولار",
       "priceCta": "احصل على التقرير ->",
       "priceMicrocopy": "بدون اشتراك - دفع آمن - PDF عبر البريد الإلكتروني",
       "stickyCta": "ابدأ ->"
@@ -2865,7 +3306,7 @@
       "heroTitle": "Zrozum, co może stać za zachowaniem Twojego dziecka",
       "heroSub": "Po 10-minutowym kwestionariuszu otrzymasz spersonalizowany raport PDF przyjazny rodzicom.",
       "primaryCta": "Zacznij ->",
-      "microcopy": "Tylko $5 - bez abonamentu - raport PDF emailem",
+      "microcopy": "Od 7,99 USD - dwie opcje - bez abonamentu",
       "trust1": "ok. 10 minut",
       "trust2": "raport PDF emailem",
       "trust3": "analiza strukturalna",
@@ -2895,7 +3336,7 @@
       "trustTitle": "Ważne",
       "trustText": "NeuroMap Kids nie jest diagnozą, lecz strukturalnym screeningiem.",
       "priceTitle": "Płatność jednorazowa",
-      "priceValue": "Tylko $5",
+      "priceValue": "Od 7,99 USD",
       "priceCta": "Otrzymaj raport ->",
       "priceMicrocopy": "Bez abonamentu - bezpieczna płatność - PDF emailem",
       "stickyCta": "Zacznij ->"
@@ -2906,7 +3347,7 @@
       "heroTitle": "Entenda o que pode estar por trás do comportamento do seu filho",
       "heroSub": "Após um questionário de 10 minutos, você recebe um relatório PDF personalizado e claro para pais.",
       "primaryCta": "Começar ->",
-      "microcopy": "Apenas $5 - sem assinatura - PDF por email",
+      "microcopy": "Desde 7,99 USD - duas opções - sem assinatura",
       "trust1": "cerca de 10 minutos",
       "trust2": "PDF por email",
       "trust3": "análise estruturada",
@@ -2936,7 +3377,7 @@
       "trustTitle": "Importante saber",
       "trustText": "NeuroMap Kids não é diagnóstico, mas uma triagem estruturada.",
       "priceTitle": "Pagamento único",
-      "priceValue": "Apenas $5",
+      "priceValue": "Desde 7,99 USD",
       "priceCta": "Receber relatório ->",
       "priceMicrocopy": "Sem assinatura - pagamento seguro - PDF por email",
       "stickyCta": "Começar ->"
@@ -2947,7 +3388,7 @@
       "heroTitle": "Comprendre ce qui peut se cacher derrière le comportement de votre enfant",
       "heroSub": "Après un questionnaire de 10 minutes, vous recevez un rapport PDF personnalisé et clair pour les parents.",
       "primaryCta": "Commencer ->",
-      "microcopy": "Seulement $5 - sans abonnement - PDF par email",
+      "microcopy": "À partir de 7,99 USD - deux options - sans abonnement",
       "trust1": "environ 10 minutes",
       "trust2": "PDF par email",
       "trust3": "analyse structurée",
@@ -2977,7 +3418,7 @@
       "trustTitle": "Important",
       "trustText": "NeuroMap Kids n'est pas un diagnostic, mais un screening structuré.",
       "priceTitle": "Paiement unique",
-      "priceValue": "Seulement $5",
+      "priceValue": "À partir de 7,99 USD",
       "priceCta": "Recevoir le rapport ->",
       "priceMicrocopy": "Sans abonnement - paiement sécurisé - PDF par email",
       "stickyCta": "Commencer ->"
@@ -2987,6 +3428,420 @@
   function getLandingFallbackText(lang = state.lang) {
     return LANDING_FALLBACK_TEXT[lang] || LANDING_FALLBACK_TEXT.en || null;
   }
+
+  function normalizeClientPackageCode(value) {
+    const normalized = String(value || "").trim().toLowerCase();
+    return Object.hasOwn(CLIENT_PACKAGE_CATALOG, normalized) ? normalized : "standard_v1";
+  }
+
+  function getStoredPackageCode() {
+    try {
+      return normalizeClientPackageCode(localStorage.getItem(PACKAGE_STORAGE_KEY));
+    } catch (_error) {
+      return "standard_v1";
+    }
+  }
+
+  function getSelectedClientPackage() {
+    return CLIENT_PACKAGE_CATALOG[normalizeClientPackageCode(state.packageCode)];
+  }
+
+  function getPackageSelectorCopy(lang = state.lang) {
+    return PACKAGE_SELECTOR_COPY[lang] || PACKAGE_SELECTOR_COPY.en;
+  }
+
+  function formatPackagePrice(productPackage, lang = state.lang) {
+    const localeMap = {
+      hu: "hu-HU",
+      en: "en-US",
+      de: "de-DE",
+      it: "it-IT",
+      es: "es-ES",
+      zh: "zh-CN",
+      ja: "ja-JP",
+      ar: "ar",
+      pl: "pl-PL",
+      pt: "pt-PT",
+      fr: "fr-FR"
+    };
+
+    try {
+      return new Intl.NumberFormat(localeMap[lang] || "en-US", {
+        style: "currency",
+        currency: productPackage.currency,
+        minimumFractionDigits: 2
+      }).format(productPackage.amount / 100);
+    } catch (_error) {
+      return `$${(productPackage.amount / 100).toFixed(2)}`;
+    }
+  }
+
+  function installPackageSelectorStyles() {
+    if (document.getElementById("nm-package-selector-style")) return;
+
+    const style = document.createElement("style");
+    style.id = "nm-package-selector-style";
+    style.textContent = `
+      .nm-package-selector {
+        box-sizing: border-box;
+        margin: 22px auto;
+        max-width: 860px;
+        text-align: start;
+        width: 100%;
+      }
+
+      .nm-package-selector * {
+        box-sizing: border-box;
+      }
+
+      .nm-package-selector-head {
+        margin: 0 auto 14px;
+        max-width: 720px;
+        text-align: center;
+      }
+
+      .nm-package-selector-eyebrow {
+        color: #087fb7;
+        display: block;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+      }
+
+      .nm-package-selector-head h3 {
+        color: #102033;
+        font-size: 22px;
+        line-height: 1.22;
+        margin: 0 0 7px;
+      }
+
+      .nm-package-selector-head p {
+        color: #49627a;
+        font-size: 14px;
+        line-height: 1.5;
+        margin: 0 auto;
+      }
+
+      .nm-package-grid {
+        display: grid;
+        gap: 12px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .nm-package-card {
+        appearance: none;
+        background: #ffffff;
+        border: 1px solid #cfe4f1;
+        border-radius: 8px;
+        color: #102033;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        font: inherit;
+        min-height: 100%;
+        padding: 17px;
+        position: relative;
+        text-align: start;
+        transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+        width: 100%;
+      }
+
+      .nm-package-card:hover {
+        border-color: #1197d5;
+        box-shadow: 0 8px 22px rgba(16, 32, 51, 0.08);
+        transform: translateY(-1px);
+      }
+
+      .nm-package-card:focus-visible {
+        outline: 3px solid rgba(17, 151, 213, 0.26);
+        outline-offset: 2px;
+      }
+
+      .nm-package-card.is-selected {
+        background: #f3faff;
+        border-color: #1197d5;
+        box-shadow: 0 8px 24px rgba(17, 151, 213, 0.13);
+      }
+
+      .nm-package-card.is-plus {
+        border-top: 4px solid #70bf00;
+        padding-top: 14px;
+      }
+
+      .nm-package-badge {
+        background: #eaf7dc;
+        border-radius: 999px;
+        color: #367400;
+        font-size: 11px;
+        font-weight: 800;
+        inset-inline-end: 13px;
+        padding: 4px 8px;
+        position: absolute;
+        top: 12px;
+      }
+
+      .nm-package-card-head {
+        align-items: flex-start;
+        display: flex;
+        gap: 10px;
+        justify-content: space-between;
+        padding-inline-end: 74px;
+      }
+
+      .nm-package-card:not(.is-plus) .nm-package-card-head {
+        padding-inline-end: 0;
+      }
+
+      .nm-package-name {
+        font-size: 17px;
+        font-weight: 800;
+        line-height: 1.25;
+      }
+
+      .nm-package-price {
+        color: #087fb7;
+        flex: 0 0 auto;
+        font-size: 21px;
+        font-weight: 900;
+        line-height: 1.15;
+        white-space: nowrap;
+      }
+
+      .nm-package-description {
+        color: #49627a;
+        font-size: 13px;
+        line-height: 1.48;
+        margin: 10px 0 12px;
+      }
+
+      .nm-package-features {
+        display: grid;
+        gap: 7px;
+        margin: 0 0 14px;
+        padding: 0;
+      }
+
+      .nm-package-feature {
+        color: #243b52;
+        display: block;
+        font-size: 12px;
+        line-height: 1.42;
+        padding-inline-start: 19px;
+        position: relative;
+      }
+
+      .nm-package-feature::before {
+        color: #5fa900;
+        content: "✓";
+        font-weight: 900;
+        inset-inline-start: 0;
+        position: absolute;
+      }
+
+      .nm-package-action {
+        align-items: center;
+        background: #e9f3f9;
+        border-radius: 6px;
+        color: #102033;
+        display: flex;
+        font-size: 12px;
+        font-weight: 800;
+        justify-content: center;
+        margin-top: auto;
+        min-height: 36px;
+        padding: 8px 10px;
+        text-align: center;
+      }
+
+      .nm-package-card.is-selected .nm-package-action {
+        background: #1197d5;
+        color: #ffffff;
+      }
+
+      .nm-package-disclosure {
+        color: #64748b;
+        display: block;
+        font-size: 11px;
+        line-height: 1.48;
+        margin: 10px auto 0;
+        max-width: 760px;
+        text-align: center;
+      }
+
+      html[dir="rtl"] .nm-package-selector,
+      html[dir="rtl"] .nm-package-card {
+        text-align: right;
+      }
+
+      @media (max-width: 680px) {
+        .nm-package-selector {
+          margin: 18px auto;
+        }
+
+        .nm-package-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .nm-package-selector-head h3 {
+          font-size: 20px;
+        }
+
+        .nm-package-card {
+          padding: 15px;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  function getPackageSelectorInnerHtml(lang = state.lang) {
+    const copy = getPackageSelectorCopy(lang);
+    const selectedCode = normalizeClientPackageCode(state.packageCode);
+
+    const cards = ["standard_v1", "plus_v1"].map((code) => {
+      const productPackage = CLIENT_PACKAGE_CATALOG[code];
+      const packageCopy = code === "plus_v1" ? copy.plus : copy.standard;
+      const selected = selectedCode === code;
+      const recommended = code === "plus_v1";
+
+      return `
+        <button
+          type="button"
+          class="nm-package-card${selected ? " is-selected" : ""}${recommended ? " is-plus" : ""}"
+          data-nm-package-code="${code}"
+          role="radio"
+          aria-checked="${selected ? "true" : "false"}"
+        >
+          ${recommended ? `<span class="nm-package-badge">${escapeHtml(copy.recommended)}</span>` : ""}
+          <span class="nm-package-card-head">
+            <span class="nm-package-name">${escapeHtml(packageCopy.name)}</span>
+            <span class="nm-package-price">${escapeHtml(formatPackagePrice(productPackage, lang))}</span>
+          </span>
+          <span class="nm-package-description">${escapeHtml(packageCopy.description)}</span>
+          <span class="nm-package-features" role="list">
+            ${packageCopy.features.map((feature) => `<span class="nm-package-feature" role="listitem">${escapeHtml(feature)}</span>`).join("")}
+          </span>
+          <span class="nm-package-action">${escapeHtml(selected ? copy.selected : copy.select)}</span>
+        </button>
+      `;
+    }).join("");
+
+    return `
+      <div class="nm-package-selector-head">
+        <span class="nm-package-selector-eyebrow">${escapeHtml(copy.eyebrow)}</span>
+        <h3>${escapeHtml(copy.title)}</h3>
+        <p>${escapeHtml(copy.lead)}</p>
+      </div>
+      <div class="nm-package-grid" role="radiogroup" aria-label="${escapeHtml(copy.title)}">
+        ${cards}
+      </div>
+      <span class="nm-package-disclosure">${escapeHtml(copy.disclosure)}</span>
+    `;
+  }
+
+  function buildPackageSelectorHtml(scope, lang = state.lang) {
+    return `
+      <section class="nm-package-selector" data-nm-package-selector="${escapeHtml(scope || "default")}">
+        ${getPackageSelectorInnerHtml(lang)}
+      </section>
+    `;
+  }
+
+  function updatePackageCheckoutButtons() {
+    const productPackage = getSelectedClientPackage();
+    const copy = getPackageSelectorCopy(state.lang);
+    const label = `${copy.checkout} · ${formatPackagePrice(productPackage, state.lang)}`;
+
+    const paymentButton = document.getElementById("paymentBtn");
+    if (paymentButton && state.step === "summary") paymentButton.textContent = label;
+
+    document.querySelectorAll("[data-nm-summary-pay]").forEach((button) => {
+      button.textContent = label;
+    });
+  }
+
+  function bindPackageSelector(element) {
+    if (!element) return;
+
+    element.querySelectorAll("[data-nm-package-code]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const scope = element.getAttribute("data-nm-package-selector") || "unknown";
+        setSelectedPackageCode(button.getAttribute("data-nm-package-code"), scope);
+      });
+    });
+  }
+
+  function refreshPackageSelectors() {
+    document.querySelectorAll("[data-nm-package-selector]").forEach((element) => {
+      element.innerHTML = getPackageSelectorInnerHtml(state.lang);
+      bindPackageSelector(element);
+    });
+    updatePackageCheckoutButtons();
+  }
+
+  function setSelectedPackageCode(value, source = "unknown") {
+    const previousCode = normalizeClientPackageCode(state.packageCode);
+    const nextCode = normalizeClientPackageCode(value);
+    state.packageCode = nextCode;
+
+    try {
+      localStorage.setItem(PACKAGE_STORAGE_KEY, nextCode);
+    } catch (_error) {
+      // The selection still remains available in memory when storage is blocked.
+    }
+
+    refreshPackageSelectors();
+    saveDraft("package_selected");
+
+    if (previousCode !== nextCode) {
+      const productPackage = getSelectedClientPackage();
+      trackSchemaEvent("nm_package_selected", {
+        funnel_step: state.step || "landing",
+        package_code: nextCode,
+        package_source: source,
+        value: productPackage.analyticsValue,
+        currency: productPackage.currency
+      });
+    }
+  }
+
+  function ensureLandingPackageSelector(lang = state.lang) {
+    const hero =
+      document.querySelector("#nmSocialLanding .nm-hero") ||
+      document.querySelector(".nm-social-landing .nm-hero") ||
+      document.querySelector(".nm-landing .nm-hero") ||
+      document.querySelector("[data-nm-section='hero']");
+
+    if (!hero) return;
+    installPackageSelectorStyles();
+
+    let selector = hero.querySelector('[data-nm-package-selector="landing"]');
+    if (!selector) {
+      selector = document.createElement("section");
+      selector.className = "nm-package-selector";
+      selector.setAttribute("data-nm-package-selector", "landing");
+
+      const insertAfter =
+        hero.querySelector(".nm-landing-reason-panel") ||
+        hero.querySelector(".nm-landing-proof-strip") ||
+        hero.lastElementChild;
+
+      if (insertAfter) {
+        insertAfter.insertAdjacentElement("afterend", selector);
+      } else {
+        hero.appendChild(selector);
+      }
+    }
+
+    selector.innerHTML = getPackageSelectorInnerHtml(lang);
+    bindPackageSelector(selector);
+  }
+
+  window.NM_GET_SELECTED_PACKAGE = function () {
+    return { ...getSelectedClientPackage() };
+  };
 
   let landingRescueInProgress = false;
 
@@ -3659,6 +4514,7 @@
     ensureReportPreviewMockup(activeLang);
     ensureLandingTrustStrip(activeLang);
     ensureLandingReasonPanel(activeLang);
+    ensureLandingPackageSelector(activeLang);
     ensureLandingMiniDemo(activeLang);
   }
 
@@ -4071,6 +4927,7 @@
         reason,
         savedAt: Date.now(),
         lang: state.lang,
+        packageCode: normalizeClientPackageCode(state.packageCode),
         step: state.step,
         name: getInputValue("name"),
         email: getInputValue("email"),
@@ -4103,6 +4960,7 @@
     if (!draft || draft.version !== 1) return false;
 
     state.lang = draft.lang || state.lang;
+    state.packageCode = normalizeClientPackageCode(draft.packageCode || getStoredPackageCode());
     state.step = draft.step || "triage";
     state.triageQuestions =
       Array.isArray(draft.triageQuestions) && draft.triageQuestions.length
@@ -6741,6 +7599,8 @@
           </button>
         </div>
 
+        ${buildPackageSelectorHtml("summary")}
+
         <div class="nm-summary-card">
           <div class="nm-summary-pills">
             <div class="nm-summary-pill"><span class="nm-pill-dot focus"></span>${t.possibleFocus || "Likely focus area"}: ${focus}</div>
@@ -6799,10 +7659,11 @@
       </div>
     `;
 
-    const topPayButton = container.querySelector("[data-nm-summary-pay]");
-    if (topPayButton) {
-      topPayButton.addEventListener("click", startCheckout);
-    }
+    container.querySelectorAll("[data-nm-summary-pay]").forEach((button) => {
+      button.addEventListener("click", startCheckout);
+    });
+    container.querySelectorAll("[data-nm-package-selector]").forEach(bindPackageSelector);
+    updatePackageCheckoutButtons();
   }
 
   function buildSpecificStepTitle(t) {
@@ -6892,6 +7753,7 @@
 
     updateProgress();
     updateResumeBanner();
+    updatePackageCheckoutButtons();
   }
 
   function nextStep() {
@@ -7058,6 +7920,7 @@
 
   function buildCheckoutPayload() {
     const childAge = getChildAgeValue();
+    const acquisition = getCampaignAttribution();
 
     return {
       name: document.getElementById("name").value.trim(),
@@ -7065,9 +7928,11 @@
       childAge,
       ageYears: childAge,
       lang: state.lang,
+      packageCode: normalizeClientPackageCode(state.packageCode),
       payload: {
         childAge,
         ageYears: childAge,
+        acquisition,
         triageQuestions: state.triageQuestions.map((q) => ({
           id: q.id,
           text: getQuestionText(q),
@@ -7787,12 +8652,14 @@
     }
 
     const payload = buildCheckoutPayload();
+    const selectedPackage = getSelectedClientPackage();
     saveDraft("checkout_started");
 
     trackSchemaEvent("nm_checkout_started", {
       funnel_step: "checkout_started",
-      value: 5,
-      currency: "USD",
+      package_code: selectedPackage.code,
+      value: selectedPackage.analyticsValue,
+      currency: selectedPackage.currency,
       detected_risk: state.detectedRisk,
       secondary_risk: state.secondaryRisk || "",
       normalized_average: Number(state.specificScoring?.normalizedAverage || 0),
@@ -7869,6 +8736,7 @@
   function init() {
     try {
       installEngineBootGate();
+      captureCampaignAttribution();
       setEngineBootStatus("design", "Felület előkészítése...", "loading");
       installFrontendDesign();
       installLandingPolishV2();
@@ -7876,6 +8744,8 @@
       bindLanguageSwitchers();
       ensureChildAgeField();
       state.lang = getLang();
+      state.packageCode = getStoredPackageCode();
+      installPackageSelectorStyles();
       scheduleLandingTextRescue(state.lang);
 
       setEngineBootStatus("banks", "Kérdésbankok ellenőrzése...", "loading");

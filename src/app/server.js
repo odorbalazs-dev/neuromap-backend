@@ -15,6 +15,7 @@ import adminStatusRoutes from "../api/routes/admin-status.js";
 import adminRoutes from "../api/routes/admin.js";
 import cronRoutes from "../api/routes/cron.js";
 import jobsRoutes from "../api/routes/jobs.js";
+import observationRoutes from "../api/routes/observation.js";
 
 const app = express();
 
@@ -81,6 +82,12 @@ app.use("/session", createRateLimit({
   max: 80,
   keyPrefix: "session"
 }), sessionRoutes);
+
+app.use("/observation", createRateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 120,
+  keyPrefix: "observation"
+}), observationRoutes);
 
 app.use("/webhook", webhookRoutes);
 app.use("/health", healthRoutes);

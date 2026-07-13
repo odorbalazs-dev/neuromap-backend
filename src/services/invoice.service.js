@@ -9,12 +9,28 @@ import {
   createSzamlazzHuInvoice
 } from "../infrastructure/invoice/szamlazzhuClient.js";
 import { getSessionById } from "./session.service.js";
+import { getProductPackage } from "../config/products.js";
 
 function compactError(error) {
   return String(error?.message || error || "Invoice error").slice(0, 1000);
 }
 
 const SZAMLAZZHU_SUPPORTED_INVOICE_LANGS = new Set(["hu", "en", "de"]);
+
+const PACKAGE_INVOICE_COPY = {
+  hu: {
+    standard_v1: "NeuroMap Kids Standard riport",
+    plus_v1: "NeuroMap Kids Plus riport és megfigyelési program"
+  },
+  en: {
+    standard_v1: "NeuroMap Kids Standard report",
+    plus_v1: "NeuroMap Kids Plus report and observation program"
+  },
+  de: {
+    standard_v1: "NeuroMap Kids Standard-Bericht",
+    plus_v1: "NeuroMap Kids Plus-Bericht und Beobachtungsprogramm"
+  }
+};
 
 function resolveSzamlazzHuInvoiceLanguage(sessionLang) {
   const configured = String(invoiceConfig.szamlazzhu.invoiceLanguage || "auto")
@@ -43,10 +59,34 @@ function getSzamlazzHuConfigForSession(session) {
   };
 }
 
+function getInvoiceProductCopy(session) {
+  const lang = resolveSzamlazzHuInvoiceLanguage(session?.lang);
+  const packageCode = getProductPackage(
+    session?.package_code || "legacy_500_v1"
+  ).code;
+  const localized = PACKAGE_INVOICE_COPY[lang] || PACKAGE_INVOICE_COPY.en;
+
+  return {
+    name:
+      localized[packageCode] ||
+      invoiceConfig.productName ||
+      "NeuroMap Kids report",
+    comment:
+      packageCode === "plus_v1"
+        ? lang === "hu"
+          ? "Egyszeri digitális riport és 14 napos automatikus megfigyelési program, online kérdőív alapján."
+          : lang === "de"
+            ? "Einmaliger digitaler Bericht und automatisches 14-Tage-Beobachtungsprogramm auf Grundlage eines Online-Fragebogens."
+            : "One-time digital report and automated 14-day observation program based on an online questionnaire."
+        : invoiceConfig.productComment
+  };
+}
+
 async function upsertInvoiceProcessing({ session, checkoutSession }) {
   const billing = buildBillingInfo({ session, checkoutSession });
   const szamlazzhuConfig = getSzamlazzHuConfigForSession(session);
   const amounts = buildInvoiceAmounts({
+    session,
     checkoutSession,
     config: szamlazzhuConfig
   });
@@ -286,13 +326,14 @@ export async function createInvoiceForPaidSession({
 
   try {
     const szamlazzhuConfig = getSzamlazzHuConfigForSession(session);
+    const productCopy = getInvoiceProductCopy(session);
 
     const invoiceResult = await createSzamlazzHuInvoice({
       session,
       checkoutSession,
       config: szamlazzhuConfig,
-      productName: invoiceConfig.productName,
-      productComment: invoiceConfig.productComment
+      productName: productCopy.name,
+      productComment: productCopy.comment
     });
 
     return await markInvoiceIssued(session.id, invoiceResult);

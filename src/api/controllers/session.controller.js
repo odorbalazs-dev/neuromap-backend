@@ -2,6 +2,7 @@ import {
   getSessionById,
   getSessionByPublicIdentifier
 } from "../../services/session.service.js";
+import { getObservationStatusForSession } from "../../services/observation-program.service.js";
 
 function maskEmail(email = "") {
   const value = String(email || "").trim();
@@ -32,7 +33,18 @@ function buildStage({ key, label, state }) {
   return { key, label, state };
 }
 
-function buildCustomerStatus(session) {
+function parseEntitlements(value) {
+  if (!value) return {};
+  if (typeof value === "object") return value;
+
+  try {
+    return JSON.parse(value);
+  } catch (_error) {
+    return {};
+  }
+}
+
+function buildCustomerStatus(session, observation = null) {
   const paymentPaid = session.payment_status === "paid";
   const analysisStatus = normalizeAnalysisStatus(session.analysis_status);
   const emailStatus = normalizeEmailStatus(session.report_email_status);
@@ -90,6 +102,24 @@ function buildCustomerStatus(session) {
     analysisCompletedAt: session.analysis_completed_at || null,
     emailSentAt: session.report_email_sent_at || null,
     emailMasked: maskEmail(session.email),
+    packageCode: session.package_code || "legacy_500_v1",
+    offerVersion: session.offer_version || "legacy",
+    amountTotal: Number.isInteger(Number(session.amount_total))
+      ? Number(session.amount_total)
+      : null,
+    currency: session.currency ? String(session.currency).toUpperCase() : null,
+    entitlements: parseEntitlements(session.entitlements),
+    observation: observation
+      ? {
+          status: observation.status,
+          startsAt: observation.starts_at,
+          endsAt: observation.ends_at,
+          completedAt: observation.completed_at,
+          entryCount: Number(observation.entry_count || 0),
+          trendStatus: observation.trend_status || "pending",
+          trendSummary: observation.trend_summary || null
+        }
+      : null,
     stages: [
       buildStage({
         key: "payment",
@@ -176,9 +206,11 @@ export async function getSessionStatus(req, res) {
       });
     }
 
+    const observation = await getObservationStatusForSession(session.id);
+
     return res.status(200).json({
       ok: true,
-      status: buildCustomerStatus(session)
+      status: buildCustomerStatus(session, observation)
     });
   } catch (error) {
     console.error("session status controller error:", error);

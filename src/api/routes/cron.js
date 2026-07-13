@@ -2,6 +2,7 @@ import express from "express";
 
 import {
   recoverAbandonedCheckouts,
+  runObservationFollowUps,
   runPostPaymentRecovery,
   retryReportEmails,
   sendBankQualityAlert,
@@ -13,6 +14,7 @@ const router = express.Router();
 
 router.post("/recover-checkouts", recoverAbandonedCheckouts);
 router.post("/post-payment-recovery", runPostPaymentRecovery);
+router.post("/observation-follow-ups", runObservationFollowUps);
 router.post("/retry-report-emails", retryReportEmails);
 router.post("/production-health-alert", sendProductionHealthAlert);
 router.post("/operational-alert", sendOperationalAlert);

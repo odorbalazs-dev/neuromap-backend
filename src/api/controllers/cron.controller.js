@@ -12,6 +12,7 @@ import {
   runProductionHealthAlertCheck
 } from "../../services/admin-alert.service.js";
 import { runPostPaymentRecoveryV2 } from "../../services/post-payment-recovery.service.js";
+import { processObservationFollowUps } from "../../services/observation-follow-up.service.js";
 
 import { env } from "../../config/env.js";
 import { secureCompare } from "../../utils/secureCompare.js";
@@ -237,6 +238,33 @@ export async function runPostPaymentRecovery(req, res) {
     return res.status(500).json({
       ok: false,
       error: error.message || "Cron failed"
+    });
+  }
+}
+
+export async function runObservationFollowUps(req, res) {
+  try {
+    if (!isAuthorizedCron(req)) {
+      return res.status(401).json({ ok: false, error: "Unauthorized" });
+    }
+
+    const result = await processObservationFollowUps({
+      limit: normalizeNumber(req.query.limit, 25, 1, 100),
+      maxAttempts: normalizeNumber(req.query.maxAttempts, 5, 1, 10),
+      staleSendingMinutes: normalizeNumber(
+        req.query.staleSendingMinutes,
+        20,
+        5,
+        1440
+      )
+    });
+
+    return res.status(result.failed > 0 ? 207 : 200).json(result);
+  } catch (error) {
+    console.error("[cron] runObservationFollowUps failed:", error);
+    return res.status(500).json({
+      ok: false,
+      error: error?.message || "Observation follow-up cron failed"
     });
   }
 }

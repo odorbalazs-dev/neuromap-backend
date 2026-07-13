@@ -1,3 +1,5 @@
+import { normalizePackageCode } from "../config/products.js";
+
 function cleanText(value, maxLength = 1000) {
   if (typeof value !== "string") return "";
   return value.trim().slice(0, maxLength);
@@ -120,6 +122,61 @@ function normalizeResultSummary(summary = null) {
   };
 }
 
+const ATTRIBUTION_KEYS = [
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_content",
+  "utm_term",
+  "gclid",
+  "gbraid",
+  "wbraid"
+];
+
+function normalizeAttributionTouch(touch = {}) {
+  if (!touch || typeof touch !== "object") return {};
+
+  const normalized = {};
+
+  ATTRIBUTION_KEYS.forEach((key) => {
+    const maxLength = key.startsWith("utm_") ? 180 : 300;
+    const value = cleanText(touch[key], maxLength);
+    if (value) normalized[key] = value;
+  });
+
+  const capturedAt = cleanText(touch.captured_at, 40);
+  const landingPath = cleanText(touch.landing_path, 500);
+  const landingUrl = cleanText(touch.landing_url, 700);
+  const referrerOrigin = cleanText(touch.referrer_origin, 300);
+  const lang = cleanText(touch.lang, 10).toLowerCase();
+
+  if (capturedAt) normalized.captured_at = capturedAt;
+  if (landingPath) normalized.landing_path = landingPath;
+  if (landingUrl) normalized.landing_url = landingUrl;
+  if (referrerOrigin) normalized.referrer_origin = referrerOrigin;
+  if (lang) normalized.lang = lang;
+
+  return normalized;
+}
+
+function normalizeAcquisition(acquisition = null) {
+  if (!acquisition || typeof acquisition !== "object") return null;
+
+  const firstTouch = normalizeAttributionTouch(acquisition.first_touch);
+  const lastTouch = normalizeAttributionTouch(acquisition.last_touch);
+
+  if (!Object.keys(firstTouch).length && !Object.keys(lastTouch).length) {
+    return null;
+  }
+
+  return {
+    schema_version: "campaign-attribution-v1",
+    first_touch: firstTouch,
+    last_touch: lastTouch,
+    updated_at: cleanText(acquisition.updated_at, 40) || null
+  };
+}
+
 export function normalizeCheckoutPayload(body = {}) {
   const payload = body.payload || {};
   const childAge = cleanAge(
@@ -130,10 +187,12 @@ export function normalizeCheckoutPayload(body = {}) {
     email: cleanText(body.email, 254).toLowerCase(),
     name: cleanText(body.name, 120),
     lang: cleanText(body.lang || "en", 10),
+    packageCode: normalizePackageCode(body.packageCode) || null,
 
     payload: {
       childAge,
       ageYears: childAge,
+      acquisition: normalizeAcquisition(payload.acquisition),
       triageQuestions: Array.isArray(payload.triageQuestions)
         ? payload.triageQuestions.slice(0, 40).map(normalizeQuestion)
         : [],

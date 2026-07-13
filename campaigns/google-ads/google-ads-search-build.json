@@ -1,0 +1,533 @@
+{
+  "schemaVersion": "neuromap-google-ads-build-v1",
+  "generatedFor": "150 purchases per day scale target",
+  "accountCurrency": "HUF",
+  "defaultStatus": "PAUSED",
+  "finalUrlSuffix": "utm_source=google&utm_medium=cpc&utm_campaign={campaignid}&utm_content={adgroupid}-{creative}&utm_term={keyword}&device={device}&network={network}",
+  "primaryConversion": "purchase",
+  "secondaryConversions": [
+    "nm_questionnaire_started",
+    "nm_triage_completed",
+    "nm_specific_completed",
+    "nm_checkout_started",
+    "checkout_cancelled"
+  ],
+  "pilot": {
+    "durationDays": 14,
+    "campaigns": [
+      "NM_HU_Search_Core",
+      "NM_EN_Search_Core_Tier1",
+      "NM_DE_Search_Core_DACH",
+      "NM_GLOBAL_Search_Brand"
+    ],
+    "dailyBudgetHuf": 10500,
+    "maximumSpendHuf": 147000,
+    "targetCpaHuf": 1200,
+    "bidStrategy": "MAXIMIZE_CLICKS_WITH_CPC_CAP"
+  },
+  "campaigns": [
+    {
+      "name": "NM_HU_Search_Core",
+      "phase": 1,
+      "status": "PAUSED",
+      "language": "hu",
+      "locations": ["HU"],
+      "dailyBudgetHuf": 3000,
+      "finalUrl": "https://neuromap-kids.webflow.io/?lang=hu",
+      "headlines": [
+        "Értsd jobban gyermeked",
+        "Rövid kérdőív szülőknek",
+        "Szülőbarát PDF riport",
+        "Mindennapi mintázatok",
+        "Kb. 10 perc alatt",
+        "Nyugodtabb kiindulópont",
+        "Nem diagnózis",
+        "Riport emailben",
+        "Gyakorlati következő lépés",
+        "NeuroMap Kids"
+      ],
+      "descriptions": [
+        "Rövid kérdőív szülőknek, érthető PDF riporttal a mindennapi mintázatokról.",
+        "Segít rendszerezni, mire figyelj otthon, óvodában vagy iskolában. Nem diagnózis.",
+        "Válaszolj kb. 10 perc alatt. A személyre szabott riport emailben érkezik.",
+        "Nyugodt, korosztályhoz igazított összegzés és gyakorlati javaslatok, 5 USD-ért."
+      ],
+      "adGroups": [
+        {
+          "name": "Behavior_Questionnaire",
+          "keywords": ["gyermek viselkedés kérdőív", "szülői kérdőív gyerekeknek", "gyermek viselkedési minták"]
+        },
+        {
+          "name": "Everyday_Patterns",
+          "keywords": ["gyerek figyelmi nehézség", "gyerek érzelmi nehézség", "tanulási nehézség gyereknél"]
+        },
+        {
+          "name": "Parent_PDF_Report",
+          "keywords": ["gyermek viselkedés riport", "szülőbarát pdf riport", "gyermek kérdőív pdf"]
+        }
+      ]
+    },
+    {
+      "name": "NM_EN_Search_Core_Tier1",
+      "phase": 1,
+      "status": "PAUSED",
+      "language": "en",
+      "locations": ["US", "GB", "CA", "AU", "IE", "NZ", "SG"],
+      "dailyBudgetHuf": 4000,
+      "finalUrl": "https://neuromap-kids.webflow.io/?lang=en",
+      "headlines": [
+        "Understand Daily Patterns",
+        "Short Parent Questionnaire",
+        "Parent-Friendly PDF Report",
+        "Everyday Behavior Patterns",
+        "About 10 Minutes",
+        "A Calmer Starting Point",
+        "Not a Diagnosis",
+        "Report Sent by Email",
+        "Clear Practical Next Steps",
+        "NeuroMap Kids"
+      ],
+      "descriptions": [
+        "Complete a short parent questionnaire and receive a clear PDF report on daily patterns.",
+        "Organize what you notice at home or school. Informational screening, not a diagnosis.",
+        "Answer in about 10 minutes. Your personalized report is delivered by email.",
+        "A calm, age-aware summary with practical next steps for parents, for just 5 USD."
+      ],
+      "adGroups": [
+        {
+          "name": "Behavior_Questionnaire",
+          "keywords": ["child behavior questionnaire", "parent questionnaire child behavior", "child behavior patterns"]
+        },
+        {
+          "name": "Everyday_Patterns",
+          "keywords": ["child attention difficulties", "child emotional difficulties", "learning difficulties child"]
+        },
+        {
+          "name": "Parent_PDF_Report",
+          "keywords": ["child behavior report", "parent friendly pdf report", "child questionnaire report"]
+        }
+      ]
+    },
+    {
+      "name": "NM_DE_Search_Core_DACH",
+      "phase": 1,
+      "status": "PAUSED",
+      "language": "de",
+      "locations": ["DE", "AT", "CH"],
+      "dailyBudgetHuf": 3000,
+      "finalUrl": "https://neuromap-kids.webflow.io/?lang=de",
+      "headlines": [
+        "Kind besser verstehen",
+        "Kurzer Elternfragebogen",
+        "Elternfreundlicher PDF-Bericht",
+        "Alltagsmuster klarer sehen",
+        "Etwa 10 Minuten",
+        "Ruhiger Ausgangspunkt",
+        "Keine Diagnose",
+        "Bericht per E-Mail",
+        "Praktische nächste Schritte",
+        "NeuroMap Kids"
+      ],
+      "descriptions": [
+        "Kurzer Fragebogen für Eltern mit einem klaren PDF-Bericht zu Alltagsmustern.",
+        "Ordnet Beobachtungen zu Hause, in Kita oder Schule. Keine Diagnose.",
+        "Etwa 10 Minuten. Der persönliche Bericht kommt per E-Mail.",
+        "Ruhige, altersgerechte Zusammenfassung mit praktischen nächsten Schritten."
+      ],
+      "adGroups": [
+        {
+          "name": "Behavior_Questionnaire",
+          "keywords": ["kinder verhalten fragebogen", "elternfragebogen kind verhalten", "verhaltensmuster kind"]
+        },
+        {
+          "name": "Everyday_Patterns",
+          "keywords": ["konzentrationsprobleme kind", "emotionale schwierigkeiten kind", "lernschwierigkeiten kind"]
+        },
+        {
+          "name": "Parent_PDF_Report",
+          "keywords": ["bericht kind verhalten", "pdf bericht für eltern", "fragebogen kind bericht"]
+        }
+      ]
+    },
+    {
+      "name": "NM_FR_Search_Core",
+      "phase": 2,
+      "status": "PAUSED",
+      "language": "fr",
+      "locations": ["FR", "BE", "CH", "CA"],
+      "dailyBudgetHuf": 2000,
+      "finalUrl": "https://neuromap-kids.webflow.io/?lang=fr",
+      "headlines": [
+        "Mieux comprendre votre enfant",
+        "Questionnaire court parents",
+        "Rapport PDF pour les parents",
+        "Repères du quotidien",
+        "Environ 10 minutes",
+        "Un départ plus serein",
+        "Ce n'est pas un diagnostic",
+        "Rapport envoyé par email",
+        "Prochaines étapes pratiques",
+        "NeuroMap Kids"
+      ],
+      "descriptions": [
+        "Court questionnaire pour parents avec un rapport PDF clair sur les repères du quotidien.",
+        "Aide à organiser vos observations à la maison ou à l'école. Ce n'est pas un diagnostic.",
+        "Répondez en environ 10 minutes. Votre rapport personnalisé arrive par email.",
+        "Un résumé serein, adapté à l'âge, avec des pistes pratiques pour seulement 5 USD."
+      ],
+      "adGroups": [
+        {
+          "name": "Behavior_Questionnaire",
+          "keywords": ["questionnaire comportement enfant", "questionnaire parents enfant", "comportement enfant repères"]
+        },
+        {
+          "name": "Everyday_Patterns",
+          "keywords": ["difficultés attention enfant", "difficultés émotionnelles enfant", "difficultés apprentissage enfant"]
+        },
+        {
+          "name": "Parent_PDF_Report",
+          "keywords": ["rapport comportement enfant", "rapport pdf parents", "questionnaire enfant rapport"]
+        }
+      ]
+    },
+    {
+      "name": "NM_ES_Search_Core",
+      "phase": 2,
+      "status": "PAUSED",
+      "language": "es",
+      "locations": ["ES", "MX", "AR", "CL", "CO", "PE", "UY", "CR"],
+      "dailyBudgetHuf": 2000,
+      "finalUrl": "https://neuromap-kids.webflow.io/?lang=es",
+      "headlines": [
+        "Comprende mejor a tu hijo",
+        "Cuestionario breve para padres",
+        "Informe PDF para familias",
+        "Patrones cotidianos claros",
+        "Unos 10 minutos",
+        "Un inicio más tranquilo",
+        "No es un diagnóstico",
+        "Informe enviado por email",
+        "Próximos pasos prácticos",
+        "NeuroMap Kids"
+      ],
+      "descriptions": [
+        "Cuestionario breve para padres con un informe PDF claro sobre patrones cotidianos.",
+        "Ayuda a ordenar lo que observas en casa o en la escuela. No es un diagnóstico.",
+        "Responde en unos 10 minutos. Recibirás el informe personalizado por email.",
+        "Resumen tranquilo, adaptado a la edad, con pasos prácticos por solo 5 USD."
+      ],
+      "adGroups": [
+        {
+          "name": "Behavior_Questionnaire",
+          "keywords": ["cuestionario comportamiento infantil", "cuestionario para padres", "patrones comportamiento niño"]
+        },
+        {
+          "name": "Everyday_Patterns",
+          "keywords": ["dificultades atención niños", "dificultades emocionales niños", "dificultades aprendizaje niños"]
+        },
+        {
+          "name": "Parent_PDF_Report",
+          "keywords": ["informe comportamiento niño", "informe pdf para padres", "cuestionario infantil informe"]
+        }
+      ]
+    },
+    {
+      "name": "NM_PL_Search_Core",
+      "phase": 2,
+      "status": "PAUSED",
+      "language": "pl",
+      "locations": ["PL"],
+      "dailyBudgetHuf": 2000,
+      "finalUrl": "https://neuromap-kids.webflow.io/?lang=pl",
+      "headlines": [
+        "Lepiej zrozum swoje dziecko",
+        "Krótki kwestionariusz rodzica",
+        "Przyjazny raport PDF",
+        "Codzienne wzorce zachowań",
+        "Około 10 minut",
+        "Spokojniejszy punkt wyjścia",
+        "To nie jest diagnoza",
+        "Raport wysłany e-mailem",
+        "Praktyczne kolejne kroki",
+        "NeuroMap Kids"
+      ],
+      "descriptions": [
+        "Krótki kwestionariusz dla rodziców i jasny raport PDF o codziennych wzorcach.",
+        "Pomaga uporządkować obserwacje z domu lub szkoły. To nie jest diagnoza.",
+        "Wypełnienie zajmuje około 10 minut. Spersonalizowany raport przyjdzie e-mailem.",
+        "Spokojne, dopasowane do wieku podsumowanie z praktycznymi krokami za 5 USD."
+      ],
+      "adGroups": [
+        {
+          "name": "Behavior_Questionnaire",
+          "keywords": ["kwestionariusz zachowania dziecka", "kwestionariusz dla rodziców", "wzorce zachowania dziecka"]
+        },
+        {
+          "name": "Everyday_Patterns",
+          "keywords": ["trudności z koncentracją dziecko", "trudności emocjonalne dziecko", "trudności w nauce dziecko"]
+        },
+        {
+          "name": "Parent_PDF_Report",
+          "keywords": ["raport zachowania dziecka", "raport pdf dla rodziców", "kwestionariusz dziecka raport"]
+        }
+      ]
+    },
+    {
+      "name": "NM_IT_Search_Core",
+      "phase": 3,
+      "status": "PAUSED",
+      "language": "it",
+      "locations": ["IT", "CH"],
+      "dailyBudgetHuf": 2000,
+      "finalUrl": "https://neuromap-kids.webflow.io/?lang=it",
+      "headlines": [
+        "Capisci meglio tuo figlio",
+        "Questionario breve genitori",
+        "Report PDF per genitori",
+        "Pattern quotidiani più chiari",
+        "Circa 10 minuti",
+        "Un punto di partenza chiaro",
+        "Non è una diagnosi",
+        "Report inviato via email",
+        "Prossimi passi pratici",
+        "NeuroMap Kids"
+      ],
+      "descriptions": [
+        "Questionario breve per genitori con un report PDF chiaro sui pattern quotidiani.",
+        "Aiuta a organizzare ciò che osservi a casa o a scuola. Non è una diagnosi.",
+        "Rispondi in circa 10 minuti. Il report personalizzato arriva via email.",
+        "Sintesi rassicurante e adatta all'età, con passi pratici, a soli 5 USD."
+      ],
+      "adGroups": [
+        {
+          "name": "Behavior_Questionnaire",
+          "keywords": ["questionario comportamento bambino", "questionario genitori bambino", "pattern comportamento bambino"]
+        },
+        {
+          "name": "Everyday_Patterns",
+          "keywords": ["difficoltà attenzione bambini", "difficoltà emotive bambini", "difficoltà apprendimento bambini"]
+        },
+        {
+          "name": "Parent_PDF_Report",
+          "keywords": ["report comportamento bambino", "report pdf per genitori", "questionario bambino report"]
+        }
+      ]
+    },
+    {
+      "name": "NM_PT_Search_Core",
+      "phase": 3,
+      "status": "PAUSED",
+      "language": "pt",
+      "locations": ["PT", "BR"],
+      "dailyBudgetHuf": 2000,
+      "finalUrl": "https://neuromap-kids.webflow.io/?lang=pt",
+      "headlines": [
+        "Entenda melhor seu filho",
+        "Questionário breve para pais",
+        "Relatório PDF para famílias",
+        "Padrões do dia a dia",
+        "Cerca de 10 minutos",
+        "Um começo mais tranquilo",
+        "Não é um diagnóstico",
+        "Relatório por email",
+        "Próximos passos práticos",
+        "NeuroMap Kids"
+      ],
+      "descriptions": [
+        "Questionário breve para pais com relatório PDF claro sobre padrões do dia a dia.",
+        "Ajuda a organizar o que você observa em casa ou na escola. Não é diagnóstico.",
+        "Responda em cerca de 10 minutos. O relatório personalizado chega por email.",
+        "Resumo tranquilo, adequado à idade, com passos práticos por apenas 5 USD."
+      ],
+      "adGroups": [
+        {
+          "name": "Behavior_Questionnaire",
+          "keywords": ["questionário comportamento infantil", "questionário para pais", "padrões comportamento criança"]
+        },
+        {
+          "name": "Everyday_Patterns",
+          "keywords": ["dificuldades atenção criança", "dificuldades emocionais criança", "dificuldades aprendizagem criança"]
+        },
+        {
+          "name": "Parent_PDF_Report",
+          "keywords": ["relatório comportamento criança", "relatório pdf para pais", "questionário infantil relatório"]
+        }
+      ]
+    },
+    {
+      "name": "NM_JA_Search_Core",
+      "phase": 3,
+      "status": "PAUSED",
+      "language": "ja",
+      "locations": ["JP"],
+      "dailyBudgetHuf": 2000,
+      "finalUrl": "https://neuromap-kids.webflow.io/?lang=ja",
+      "headlines": [
+        "お子さまの行動を理解",
+        "保護者向け短い質問票",
+        "わかりやすいPDFレポート",
+        "日常のパターンを整理",
+        "約10分で回答",
+        "落ち着いた出発点",
+        "診断ではありません",
+        "メールでレポート送付",
+        "実践的な次のステップ",
+        "NeuroMap Kids"
+      ],
+      "descriptions": [
+        "保護者向けの短い質問票で、日常のパターンを整理したPDFレポートを受け取れます。",
+        "家庭や園・学校での観察を整理する参考情報です。診断ではありません。",
+        "約10分で回答できます。個別レポートはメールで届きます。",
+        "年齢に配慮した穏やかなまとめと、実践しやすい次のステップを5 USDで。"
+      ],
+      "adGroups": [
+        {
+          "name": "Behavior_Questionnaire",
+          "keywords": ["子ども 行動 質問票", "保護者向け 質問票", "子ども 行動 パターン"]
+        },
+        {
+          "name": "Everyday_Patterns",
+          "keywords": ["子ども 注意 困難", "子ども 感情 困難", "学習 困難 子ども"]
+        },
+        {
+          "name": "Parent_PDF_Report",
+          "keywords": ["子ども 行動 レポート", "保護者 PDF レポート", "子ども 質問票 レポート"]
+        }
+      ]
+    },
+    {
+      "name": "NM_ZH_Search_Core",
+      "phase": 4,
+      "status": "PAUSED",
+      "language": "zh",
+      "locations": ["TW", "HK", "SG", "MO"],
+      "dailyBudgetHuf": 2000,
+      "finalUrl": "https://neuromap-kids.webflow.io/?lang=zh",
+      "headlines": [
+        "更好理解孩子的行为",
+        "给家长的简短问卷",
+        "清晰易懂的PDF报告",
+        "整理日常行为线索",
+        "约10分钟完成",
+        "更安心的起点",
+        "不作为诊断",
+        "报告通过邮件发送",
+        "清晰实用的下一步",
+        "NeuroMap Kids"
+      ],
+      "descriptions": [
+        "完成面向家长的简短问卷，获得整理日常行为线索的清晰PDF报告。",
+        "帮助整理家庭、幼儿园或学校中的观察重点。仅供参考，不作为诊断。",
+        "约10分钟即可完成。个性化报告将通过电子邮件发送。",
+        "按年龄提供平和、清晰的总结和实用建议，价格仅为5美元。"
+      ],
+      "adGroups": [
+        {
+          "name": "Behavior_Questionnaire",
+          "keywords": ["儿童行为问卷", "家长儿童问卷", "孩子行为模式"]
+        },
+        {
+          "name": "Everyday_Patterns",
+          "keywords": ["儿童注意力困难", "儿童情绪困难", "儿童学习困难"]
+        },
+        {
+          "name": "Parent_PDF_Report",
+          "keywords": ["儿童行为报告", "家长PDF报告", "儿童问卷报告"]
+        }
+      ]
+    },
+    {
+      "name": "NM_AR_Search_Core_GCC",
+      "phase": 4,
+      "status": "PAUSED",
+      "language": "ar",
+      "locations": ["AE", "SA", "QA", "KW", "BH", "OM"],
+      "dailyBudgetHuf": 2000,
+      "finalUrl": "https://neuromap-kids.webflow.io/?lang=ar",
+      "headlines": [
+        "فهم أوضح لسلوك طفلك",
+        "استبيان قصير للوالدين",
+        "تقرير PDF واضح للوالدين",
+        "تنظيم أنماط الحياة اليومية",
+        "يستغرق نحو 10 دقائق",
+        "نقطة بداية أكثر هدوءا",
+        "ليس تشخيصا",
+        "التقرير يصل عبر البريد",
+        "خطوات عملية تالية",
+        "NeuroMap Kids"
+      ],
+      "descriptions": [
+        "استبيان قصير للوالدين مع تقرير PDF واضح عن الأنماط اليومية للطفل.",
+        "يساعد في تنظيم ملاحظات المنزل أو المدرسة. معلومات إرشادية وليست تشخيصا.",
+        "أجب خلال نحو 10 دقائق، وسيصل التقرير المخصص عبر البريد الإلكتروني.",
+        "ملخص هادئ يراعي العمر مع خطوات عملية، مقابل 5 دولارات فقط."
+      ],
+      "adGroups": [
+        {
+          "name": "Behavior_Questionnaire",
+          "keywords": ["استبيان سلوك الطفل", "استبيان للوالدين", "أنماط سلوك الطفل"]
+        },
+        {
+          "name": "Everyday_Patterns",
+          "keywords": ["صعوبات الانتباه عند الأطفال", "صعوبات عاطفية عند الأطفال", "صعوبات التعلم عند الأطفال"]
+        },
+        {
+          "name": "Parent_PDF_Report",
+          "keywords": ["تقرير سلوك الطفل", "تقرير PDF للوالدين", "تقرير استبيان الطفل"]
+        }
+      ]
+    },
+    {
+      "name": "NM_GLOBAL_Search_Brand",
+      "phase": 1,
+      "status": "PAUSED",
+      "language": "all",
+      "locations": ["HU", "US", "GB", "CA", "AU", "IE", "NZ", "SG", "DE", "AT", "CH", "FR", "BE", "ES", "MX", "IT", "PT", "BR", "PL", "JP", "TW", "HK", "AE", "SA"],
+      "dailyBudgetHuf": 500,
+      "finalUrl": "https://neuromap-kids.webflow.io/",
+      "headlines": [
+        "NeuroMap Kids",
+        "NeuroMap Kids Report",
+        "Official NeuroMap Kids",
+        "Parent-Friendly PDF Report",
+        "Short Parent Questionnaire",
+        "Report Sent by Email",
+        "About 10 Minutes",
+        "Not a Diagnosis"
+      ],
+      "descriptions": [
+        "Visit the official NeuroMap Kids questionnaire and receive a parent-friendly PDF report.",
+        "A short informational screening for parents. Clear next steps, not a diagnosis.",
+        "Complete the questionnaire in about 10 minutes. Your report arrives by email.",
+        "Understand everyday patterns with a calm, age-aware report for just 5 USD."
+      ],
+      "adGroups": [
+        {
+          "name": "Brand",
+          "keywords": ["neuromap kids", "neuromap kids report", "neuromapkids"]
+        }
+      ]
+    }
+  ],
+  "keywordMatchTypes": ["EXACT", "PHRASE"],
+  "negativeKeywordSeed": [
+    "free",
+    "ingyenes",
+    "official diagnosis",
+    "diagnózis",
+    "adult",
+    "felnőtt",
+    "emergency",
+    "crisis",
+    "suicide",
+    "medication",
+    "medicine",
+    "therapy near me",
+    "iq test",
+    "eq test",
+    "DSM",
+    "ICD",
+    "job",
+    "university"
+  ]
+}

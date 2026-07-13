@@ -165,6 +165,8 @@ export const env = {
 
   STRIPE_SECRET_KEY: required("STRIPE_SECRET_KEY"),
   STRIPE_WEBHOOK_SECRET: required("STRIPE_WEBHOOK_SECRET"),
+  STRIPE_PRICE_STANDARD_USD: optional("STRIPE_PRICE_STANDARD_USD", null),
+  STRIPE_PRICE_PLUS_USD: optional("STRIPE_PRICE_PLUS_USD", null),
 
   RESEND_API_KEY: required("RESEND_API_KEY"),
   EMAIL_FROM: required("EMAIL_FROM"),
@@ -178,12 +180,18 @@ export const env = {
     (process.env.RAILWAY_PUBLIC_DOMAIN
       ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`
       : "http://localhost:3000"),
+  BACKEND_PUBLIC_URL:
+    optional("BACKEND_PUBLIC_URL", null) ||
+    (process.env.RAILWAY_PUBLIC_DOMAIN
+      ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`
+      : "http://localhost:3000"),
 
   META_PIXEL_ID: optional("META_PIXEL_ID", null),
   META_ACCESS_TOKEN: optional("META_ACCESS_TOKEN", null),
 
   ADMIN_TOKEN: optional("ADMIN_TOKEN", null),
   CRON_SECRET: optional("CRON_SECRET", null),
+  OBSERVATION_LINK_SECRET: optional("OBSERVATION_LINK_SECRET", null),
 
   ADMIN_ALERT_EMAIL: optional("ADMIN_ALERT_EMAIL", null),
   ADMIN_ALERT_COOLDOWN_MINUTES: optional("ADMIN_ALERT_COOLDOWN_MINUTES", "30"),

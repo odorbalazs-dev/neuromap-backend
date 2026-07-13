@@ -91,7 +91,7 @@ function buildSpecificProfile(kind, scoring) {
   };
 }
 
-function buildBasePayload({ includeExtra = false } = {}) {
+function buildBasePayload({ includeExtra = false, packageCode = "standard_v1" } = {}) {
   const triageQuestions = selectTriageQuestions();
   const triageAnswers = triageQuestions.map((question) => (question.domain === "ADHD" ? 3 : 1));
   const triageScores = {
@@ -135,9 +135,33 @@ function buildBasePayload({ includeExtra = false } = {}) {
     childAge: 7,
     ageYears: 7,
     lang: "hu",
+    packageCode,
     payload: {
       childAge: 7,
       ageYears: 7,
+      acquisition: {
+        schema_version: "campaign-attribution-v1",
+        first_touch: {
+          utm_source: "google",
+          utm_medium: "cpc",
+          utm_campaign: "nm_hu_search_core",
+          utm_content: "behavior-rsa-a",
+          utm_term: "gyerek viselkedes kerdoiv",
+          gclid: "test-click-id",
+          landing_path: "/?lang=hu&utm_source=google",
+          landing_url: "https://neuromap-kids.webflow.io/",
+          captured_at: "2026-07-12T08:00:00.000Z",
+          lang: "hu"
+        },
+        last_touch: {
+          utm_source: "google",
+          utm_medium: "cpc",
+          utm_campaign: "nm_hu_search_core",
+          captured_at: "2026-07-12T08:00:00.000Z",
+          lang: "hu"
+        },
+        updated_at: "2026-07-12T08:00:00.000Z"
+      },
       triageQuestions: triageQuestions.map((question) => toPayloadQuestion(question)),
       triageAnswers,
       triageScores,
@@ -177,6 +201,9 @@ function expectValidPayload(name, payload) {
   assert(normalized.email === payload.email, `${name} should keep lowercase email.`);
   assert(normalized.payload.childAge === 7, `${name} should keep childAge.`);
   assert(normalized.payload.ageYears === 7, `${name} should keep ageYears.`);
+  assert(normalized.packageCode === payload.packageCode, `${name} should keep the selected package code.`);
+  assert(normalized.payload.acquisition?.first_touch?.utm_source === "google", `${name} should keep campaign source.`);
+  assert(normalized.payload.acquisition?.first_touch?.gclid === "test-click-id", `${name} should keep Google click id.`);
   assert(normalized.payload.triageQuestions.length === 25, `${name} should keep 25 triage questions.`);
   assert(normalized.payload.specificQuestions.length === 30, `${name} should keep 30 specific questions.`);
   assert(
@@ -218,6 +245,20 @@ function main() {
     "broken extra payload should fail on extraAnswers length."
   );
   console.log("broken extra payload rejected as expected");
+
+  const plusPayload = buildBasePayload({ packageCode: "plus_v1" });
+  const plusNormalized = expectValidPayload("plus payload", plusPayload);
+  assert(plusNormalized.packageCode === "plus_v1", "plus payload should keep plus_v1.");
+  console.log("plus payload ok", { packageCode: plusNormalized.packageCode });
+
+  const invalidPackagePayload = buildBasePayload({ packageCode: "custom_price_001" });
+  const invalidPackageValidation = validateCheckoutPayload(invalidPackagePayload);
+  assert(!invalidPackageValidation.ok, "invalid package payload should fail validation.");
+  assert(
+    invalidPackageValidation.errors.includes("Invalid packageCode."),
+    "invalid package payload should fail on packageCode."
+  );
+  console.log("invalid package rejected as expected");
 
   console.log("Checkout payload smoke passed.");
 }

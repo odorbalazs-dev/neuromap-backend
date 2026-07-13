@@ -1,7 +1,13 @@
 import { randomUUID, randomBytes } from "crypto";
 import { db } from "../db/db.js";
 
-export async function createSession({ email, name, lang, payload }) {
+export async function createSession({
+  email,
+  name,
+  lang,
+  payload,
+  productPackage
+}) {
   const id = randomUUID();
 
   const result = await db.query(
@@ -12,14 +18,30 @@ export async function createSession({ email, name, lang, payload }) {
       name,
       lang,
       payload,
+      package_code,
+      offer_version,
+      amount_total,
+      currency,
+      entitlements,
       payment_status,
       analysis_status,
       created_at
     )
-    VALUES ($1, $2, $3, $4, $5, 'pending', 'pending', NOW())
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, 'pending', 'pending', NOW())
     RETURNING *
     `,
-    [id, email, name || "", lang || "en", payload || {}]
+    [
+      id,
+      email,
+      name || "",
+      lang || "en",
+      payload || {},
+      productPackage.code,
+      productPackage.offerVersion,
+      productPackage.unitAmount,
+      productPackage.currency,
+      productPackage.entitlements
+    ]
   );
 
   return result.rows[0];
@@ -139,16 +161,22 @@ export async function getSessionByPublicIdentifier(identifier) {
   return result.rows[0] || null;
 }
 
-export async function markSessionPaid(sessionId) {
+export async function markSessionPaid(
+  sessionId,
+  { amountTotal = null, currency = null, stripePriceId = null } = {}
+) {
   const result = await db.query(
     `
     UPDATE sessions
     SET payment_status = 'paid',
-        paid_at = COALESCE(paid_at, NOW())
+        paid_at = COALESCE(paid_at, NOW()),
+        amount_total = COALESCE($2, amount_total),
+        currency = COALESCE($3, currency),
+        stripe_price_id = COALESCE($4, stripe_price_id)
     WHERE id = $1
     RETURNING *
     `,
-    [sessionId]
+    [sessionId, amountTotal, currency, stripePriceId]
   );
 
   return result.rows[0] || null;

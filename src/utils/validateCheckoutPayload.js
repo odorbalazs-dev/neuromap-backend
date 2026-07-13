@@ -1,3 +1,5 @@
+import { normalizePackageCode } from "../config/products.js";
+
 const REQUIRED_DOMAINS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
 const SUPPORTED_LANGS = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -68,6 +70,12 @@ export function validateCheckoutPayload(body = {}) {
 
   if (!body.lang || typeof body.lang !== "string" || !SUPPORTED_LANGS.includes(body.lang)) {
     errors.push("Missing or invalid lang.");
+  }
+
+  if (body.packageCode !== undefined && body.packageCode !== null) {
+    if (!normalizePackageCode(body.packageCode, { defaultIfMissing: false })) {
+      errors.push("Invalid packageCode.");
+    }
   }
 
   const payload = body.payload;

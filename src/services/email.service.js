@@ -6,6 +6,11 @@ import { buildRecoveryEmail } from "../templates/recoveryEmail.js";
 import { buildFollowUpEmail } from "../templates/followUpEmail.js";
 
 import { generatePdfBuffer } from "./pdf.service.js";
+import {
+  buildShareableSummaryFilename,
+  generateShareableSummaryPdf
+} from "./shareable-summary-pdf.service.js";
+import { getPlusContent } from "./plus-content.service.js";
 
 const resend = new Resend(env.RESEND_API_KEY);
 
@@ -62,12 +67,53 @@ function buildPdfFilename(lang) {
   return map[safeLang] || map.en;
 }
 
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function appendHtmlBlock(html, block) {
+  const source = String(html || "");
+  return /<\/body>/i.test(source)
+    ? source.replace(/<\/body>/i, `${block}</body>`)
+    : `${source}${block}`;
+}
+
+function buildPlusEmailContent({ lang, observationUrl }) {
+  const copy = getPlusContent(lang);
+  const safeUrl = escapeHtml(observationUrl);
+  const diaryAction = observationUrl
+    ? `<p style="margin:20px 0 8px;"><a href="${safeUrl}" style="display:inline-block;background:#1197d5;color:#fff;text-decoration:none;padding:12px 18px;border-radius:8px;font-weight:700;">${escapeHtml(copy.diaryTitle)}</a></p>`
+    : "";
+  const diaryText = observationUrl
+    ? `\n${copy.diaryTitle}: ${observationUrl}\n${copy.diaryIntro}`
+    : "";
+
+  return {
+    html: `
+      <section style="margin:28px auto 0;max-width:640px;border:1px solid #d7eef9;border-left:5px solid #72be00;border-radius:8px;padding:20px;background:#f7fcff;color:#1f2937;">
+        <h2 style="margin:0 0 10px;font-size:20px;line-height:1.3;">${escapeHtml(copy.packageName)}</h2>
+        <p style="margin:0 0 12px;line-height:1.6;">${escapeHtml(copy.diaryIntro)}</p>
+        ${diaryAction}
+        <p style="margin:16px 0 0;font-size:13px;line-height:1.55;color:#667085;">${escapeHtml(copy.disclosure)}</p>
+      </section>
+    `,
+    text: `\n\n${copy.packageName}${diaryText}\n${copy.disclosure}`
+  };
+}
+
 export async function sendReportEmail({
   to,
   lang,
   name,
   reportText,
-  payload
+  payload,
+  productPackage = null,
+  observationProgram = null
 }) {
   const recipients = normalizeRecipients(to);
 
@@ -101,12 +147,16 @@ export async function sendReportEmail({
       throw new Error("Missing reportText for email sending.");
     }
 
-    const { subject, html, text } = buildReportEmail({
+    const template = buildReportEmail({
       lang: safeLang,
       name,
       reportText: cleanReportText,
       payload
     });
+
+    const subject = template.subject;
+    let html = template.html;
+    let text = template.text;
 
     const pdfBuffer = await generatePdfBuffer({
       name,
@@ -124,11 +174,41 @@ export async function sendReportEmail({
       );
     }
 
+    const attachments = [
+      {
+        filename: buildPdfFilename(safeLang),
+        content: pdfBuffer.toString("base64")
+      }
+    ];
+
+    if (productPackage?.entitlements?.shareableObservationSummary === true) {
+      const shareableSummary = await generateShareableSummaryPdf({
+        lang: safeLang,
+        payload
+      });
+
+      attachments.push({
+        filename: buildShareableSummaryFilename(safeLang),
+        content: shareableSummary.toString("base64")
+      });
+    }
+
+    if (productPackage?.entitlements?.observationDiary14Days === true) {
+      const plusContent = buildPlusEmailContent({
+        lang: safeLang,
+        observationUrl: observationProgram?.url || null
+      });
+      html = appendHtmlBlock(html, plusContent.html);
+      text += plusContent.text;
+    }
+
     console.log("[email] template built", {
       subjectLength: subject.length,
       htmlLength: html.length,
       textLength: text.length,
-      pdfBytes: pdfBuffer.length
+      pdfBytes: pdfBuffer.length,
+      attachmentCount: attachments.length,
+      packageCode: productPackage?.code || "legacy_500_v1"
     });
 
     const response = await resend.emails.send({
@@ -137,12 +217,7 @@ export async function sendReportEmail({
       subject,
       html,
       text,
-      attachments: [
-        {
-          filename: buildPdfFilename(safeLang),
-          content: pdfBuffer.toString("base64")
-        }
-      ]
+      attachments
     });
 
     if (response?.error) {
@@ -167,6 +242,63 @@ export async function sendReportEmail({
 
     throw error;
   }
+}
+
+export async function sendObservationFollowUpEmail({
+  to,
+  lang,
+  name,
+  kind,
+  observationUrl,
+  trend = null
+}) {
+  const recipients = normalizeRecipients(to);
+  const safeLang = getSafeLang(lang);
+  const copy = getPlusContent(safeLang);
+  const subject = copy.reminderSubjects[kind] || copy.diaryTitle;
+  const body = copy.reminderBodies[kind] || copy.diaryIntro;
+  const greetingName = String(name || "").trim();
+  const trendText = trend
+    ? `\nEntries: ${Number(trend.entryCount || 0)} | Direction: ${String(trend.direction || "insufficient_data")}`
+    : "";
+  const safeUrl = escapeHtml(observationUrl);
+  const html = `
+    <!doctype html>
+    <html lang="${safeLang}">
+      <body style="margin:0;background:#f5f9fc;font-family:Arial,sans-serif;color:#1f2937;">
+        <main style="max-width:620px;margin:0 auto;padding:32px 20px;">
+          <section style="background:#fff;border:1px solid #d7eef9;border-radius:8px;padding:24px;">
+            <p style="margin:0 0 8px;color:#1197d5;font-weight:700;">NeuroMap Kids Plus</p>
+            <h1 style="margin:0 0 14px;font-size:23px;line-height:1.3;">${escapeHtml(subject)}</h1>
+            ${greetingName ? `<p style="margin:0 0 12px;">${escapeHtml(greetingName)},</p>` : ""}
+            <p style="margin:0;line-height:1.65;">${escapeHtml(body)}</p>
+            <p style="margin:20px 0 8px;"><a href="${safeUrl}" style="display:inline-block;background:#1197d5;color:#fff;text-decoration:none;padding:12px 18px;border-radius:8px;font-weight:700;">${escapeHtml(copy.diaryTitle)}</a></p>
+            <p style="margin:18px 0 0;font-size:12px;line-height:1.55;color:#667085;">${escapeHtml(copy.disclosure)}</p>
+          </section>
+        </main>
+      </body>
+    </html>
+  `;
+  const text = `${subject}\n\n${greetingName ? `${greetingName},\n\n` : ""}${body}\n\n${copy.diaryTitle}: ${observationUrl}${trendText}\n\n${copy.disclosure}`;
+
+  if (!env.RESEND_API_KEY) throw new Error("Missing RESEND_API_KEY.");
+  if (!env.EMAIL_FROM) throw new Error("Missing EMAIL_FROM.");
+  if (!observationUrl) throw new Error("Missing observation diary URL.");
+  if (recipients.length === 0) throw new Error("Missing observation follow-up recipient.");
+
+  const response = await resend.emails.send({
+    from: env.EMAIL_FROM,
+    to: recipients,
+    subject,
+    html,
+    text
+  });
+
+  if (response?.error) {
+    throw new Error(response.error.message || "Observation follow-up email failed.");
+  }
+
+  return response;
 }
 
 export async function sendCheckoutRecoveryEmail({

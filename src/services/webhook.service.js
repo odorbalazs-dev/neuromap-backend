@@ -10,6 +10,10 @@ import {
 } from "./session.service.js";
 import { sendMetaPurchaseEvent } from "./meta.service.js";
 import { createInvoiceForPaidSession } from "./invoice.service.js";
+import {
+  assertCheckoutMatchesPackage,
+  getProductPackage
+} from "../config/products.js";
 
 async function registerWebhookEvent(event) {
   const result = await db.query(
@@ -95,8 +99,8 @@ function schedulePostPaymentSideEffects({
         await sendMetaPurchaseEvent({
           email: session?.email,
           eventId: checkoutSession?.id,
-          value: 5,
-          currency: "USD"
+          value: Number(checkoutSession?.amount_total || session?.amount_total || 0) / 100,
+          currency: String(checkoutSession?.currency || session?.currency || "usd").toUpperCase()
         });
       } catch (metaError) {
         console.error("[meta] purchase event failed after webhook acknowledgement:", {
@@ -178,6 +182,18 @@ export async function handleStripeWebhook(rawBody, signature) {
       throw new Error("Session not found.");
     }
 
+    phase = "verify_product";
+    const productPackage = getProductPackage(sessionRow.package_code);
+    const metadataPackageCode = checkoutSession.metadata?.packageCode || "legacy_500_v1";
+
+    if (metadataPackageCode !== productPackage.code) {
+      throw new Error(
+        `Stripe package mismatch: expected ${productPackage.code}, received ${metadataPackageCode}.`
+      );
+    }
+
+    assertCheckoutMatchesPackage(checkoutSession, productPackage);
+
     if (sessionRow.analysis_status === "done") {
       if (sessionRow.payment_status === "paid" && sessionRow.invoice_status !== "issued") {
         schedulePostPaymentSideEffects({
@@ -199,13 +215,19 @@ export async function handleStripeWebhook(rawBody, signature) {
     }
 
     phase = "mark_paid";
-    await markSessionPaid(internalSessionId);
+    await markSessionPaid(internalSessionId, {
+      amountTotal: checkoutSession.amount_total,
+      currency: String(checkoutSession.currency || productPackage.currency).toLowerCase(),
+      stripePriceId: checkoutSession.metadata?.stripePriceId || null
+    });
 
     phase = "clear_recovery_state";
     const paidSession =
       await markCheckoutRecoveredOrPaid(internalSessionId) || {
         ...sessionRow,
-        payment_status: "paid"
+        payment_status: "paid",
+        amount_total: checkoutSession.amount_total,
+        currency: String(checkoutSession.currency || productPackage.currency).toLowerCase()
       };
 
     phase = "schedule_post_payment_side_effects";

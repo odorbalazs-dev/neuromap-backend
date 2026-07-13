@@ -66,11 +66,19 @@ export function buildBillingInfo({ session, checkoutSession }) {
   };
 }
 
-export function buildInvoiceAmounts({ checkoutSession, config }) {
-  const currency = String(checkoutSession?.currency || config.currency || "USD").toUpperCase();
-  const grossAmount = checkoutSession?.amount_total
-    ? Number(checkoutSession.amount_total) / 100
-    : 5;
+export function buildInvoiceAmounts({ session, checkoutSession, config }) {
+  const currency = String(
+    checkoutSession?.currency || session?.currency || config.currency || "USD"
+  ).toUpperCase();
+  const amountTotal = Number(
+    checkoutSession?.amount_total ?? session?.amount_total
+  );
+
+  if (!Number.isInteger(amountTotal) || amountTotal <= 0) {
+    throw new Error("Missing or invalid paid amount for invoice creation.");
+  }
+
+  const grossAmount = amountTotal / 100;
 
   return {
     currency,
@@ -192,7 +200,7 @@ export async function createSzamlazzHuInvoice({
   }
 
   const billing = buildBillingInfo({ session, checkoutSession });
-  const amounts = buildInvoiceAmounts({ checkoutSession, config });
+  const amounts = buildInvoiceAmounts({ session, checkoutSession, config });
 
   const xml = buildInvoiceXml({
     session,
