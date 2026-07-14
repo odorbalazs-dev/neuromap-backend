@@ -19,7 +19,7 @@ function main() {
     loaderHtml.includes("/public/webflow/engine.js"),
     "Webflow Engine loader should load the public engine file."
   );
-  const currentEngineVersion = "20260713-two-tier-selector-fix-v2";
+  const currentEngineVersion = "20260714-landing-minimal-v2";
   assert(
     loaderHtml.includes(currentEngineVersion),
     "Webflow Engine loader should include the current questionnaire shell cache-busting version."
@@ -79,6 +79,12 @@ function main() {
   assert(script.includes("PACKAGE_SELECTOR_COPY"), "Engine should include localized package selector copy.");
   assert(script.includes("ensureLandingPackageSelector"), "Engine should render package selection on the landing page.");
   assert(script.includes('data-nm-package-selector="landing"'), "Landing page should expose the package selector scope.");
+  assert(script.includes('data-nm-package-section'), "Landing packages should live in a dedicated section after the hero.");
+  assert(script.includes("simplifyLandingHero"), "Engine should remove repeated hero content during landing rescue.");
+  assert(script.includes('landing.querySelector(".nm-report-preview-section")'), "Landing packages should follow the report preview instead of crowding the hero.");
+  assert(script.includes('data-nm-hero-detail'), "Engine should hide the small-print hero details.");
+  assert(!script.includes("ensureLandingTrustStrip(activeLang)"), "Engine should not rebuild the three-item hero proof strip.");
+  assert(!script.includes("function ensureLandingReasonPanel"), "Engine should not rebuild the repetitive landing reason panel.");
   assert(script.includes("standard_v1"), "Engine should expose the Standard package.");
   assert(script.includes("plus_v1"), "Engine should expose the Plus package.");
   assert(

@@ -117,7 +117,7 @@ const checks = [
       return (
         source.includes("schedulePostPaymentSideEffects") &&
         source.includes("schedule_post_payment_side_effects") &&
-        source.includes("setTimeout(async () =>")
+        source.includes("post_payment_side_effects_failed")
       );
     }
   },

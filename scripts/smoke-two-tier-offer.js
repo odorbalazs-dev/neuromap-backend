@@ -59,6 +59,8 @@ function verifyLandingContract() {
   const engine = fs.readFileSync(path.join(root, "public", "webflow", "engine.js"), "utf8");
 
   assert(engine.includes('data-nm-package-selector="landing"'), "Landing must include a dedicated package selector.");
+  assert(engine.includes('data-nm-package-section'), "Landing package choice must be separated from the hero.");
+  assert(engine.includes('simplifyLandingHero'), "Landing must suppress repeated hero proof content.");
   assert(engine.includes('buildPackageSelectorHtml("summary")'), "Summary must include a package selector.");
   assert(engine.includes('packageCode: normalizeClientPackageCode(state.packageCode)'), "Checkout payload must contain the selected package code.");
   assert(engine.includes('localStorage.setItem(PACKAGE_STORAGE_KEY, nextCode)'), "Landing package selection must persist across questionnaire steps.");

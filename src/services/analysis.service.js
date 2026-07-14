@@ -26,7 +26,7 @@ function buildLanguageInstruction(lang) {
     es: "Escribe todo el informe en español natural, correcto y profesional. Evita frases genéricas o demasiado mecánicas.",
     zh: "请用自然、准确、专业的中文撰写整份报告，避免生硬翻译和模板化表达。",
     ja: "レポート全体を自然で正確な日本語で書いてください。機械的・定型的な表現は避けてください。",
-    ar: "اكتب التقرير كاملًا باللغة العربية الطبيعية والواضحة والمهنية، وتجنب العبارات الجامدة أو المترجمة حرفيًا.",
+    ar: "اكتب التقرير بالكامل باللغة العربية الطبيعية والواضحة والمهنية، وتجنب العبارات الجامدة أو الترجمة الحرفية.",
     pl: "Napisz cały raport naturalnym, poprawnym i profesjonalnym językiem polskim. Unikaj szablonowych i sztucznych sformułowań.",
     pt: "Escreva todo o relatório em português natural, correto e profissional. Evite frases genéricas ou mecânicas.",
     fr: "Rédige tout le rapport en français naturel, correct et professionnel. Évite les formulations génériques ou trop mécaniques."
@@ -625,33 +625,54 @@ export async function generateAnalysis(payload) {
   const lang = getSafeLang(safePayload.lang || safePayload.language || "en");
   const prompt = buildPrompt(safePayload, lang);
 
-  const response = await openai.responses.create({
-    model: env.OPENAI_MODEL || "gpt-4.1-mini",
-    input: prompt,
-    temperature: 0.28
-  });
+  async function runGeneration(inputPrompt, attempt) {
+    const response = await openai.responses.create({
+      model: env.OPENAI_MODEL || "gpt-4.1-mini",
+      input: inputPrompt,
+      temperature: attempt === 1 ? 0.28 : 0.22
+    });
 
-  const text =
-    response.output_text ||
-    (Array.isArray(response.output)
-      ? response.output
-          .flatMap((item) => item.content || [])
-          .map((c) => c.text || "")
-          .join("\n")
-      : "");
+    const text =
+      response.output_text ||
+      (Array.isArray(response.output)
+        ? response.output
+            .flatMap((item) => item.content || [])
+            .map((c) => c.text || "")
+            .join("\n")
+        : "");
 
-  const cleaned = cleanGeneratedReportText(text);
+    return cleanGeneratedReportText(text);
+  }
+
+  let cleaned = await runGeneration(prompt, 1);
 
   if (!cleaned) {
     throw new Error("Analysis generation returned empty content.");
   }
 
-  const reportValidation = validateReportStructure(cleaned, {
+  let reportValidation = validateReportStructure(cleaned, {
     minLength: 5000
   });
 
   if (!reportValidation.ok) {
-    console.warn("[analysis] report structure warning:", reportValidation.errors.join("; "));
+    console.warn("[analysis] report structure warning, retrying once:", reportValidation.errors.join("; "));
+
+    const retryPrompt = `${prompt}
+
+The previous draft did not satisfy the required report contract.
+Rewrite the full report now. Keep the same language, preserve all 11 numbered sections, avoid markdown, and make the content complete enough for PDF delivery.
+Missing or weak contract points:
+${reportValidation.errors.map((error) => `- ${error}`).join("\n")}
+`;
+
+    cleaned = await runGeneration(retryPrompt, 2);
+    reportValidation = validateReportStructure(cleaned, {
+      minLength: 5000
+    });
+  }
+
+  if (!reportValidation.ok) {
+    console.warn("[analysis] report structure warning after retry:", reportValidation.errors.join("; "));
   }
 
   return cleaned;

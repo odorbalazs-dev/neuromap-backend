@@ -154,9 +154,13 @@ function schedulePostPaymentSideEffects(options) {
     stripeSessionId: options?.checkoutSession?.id || null
   });
 
-  setTimeout(async () => {
-    await runPostPaymentSideEffects(options);
-  }, 0);
+  void runPostPaymentSideEffects(options).catch((error) => {
+    console.error("[webhook] post_payment_side_effects_failed", {
+      message: error?.message || error,
+      internalSessionId: options?.internalSessionId || null,
+      stripeSessionId: options?.checkoutSession?.id || null
+    });
+  });
 }
 
 export async function handleStripeWebhook(rawBody, signature) {

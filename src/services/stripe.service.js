@@ -53,7 +53,7 @@ const CHECKOUT_COPY = {
   },
   ar: {
     standardName: "تقرير NeuroMap Kids القياسي",
-    standardDescription: "تقرير PDF مخصص ومراعٍ للعمر مع إرشادات عملية للوالدين.",
+    standardDescription: "تقرير PDF مخصص ومناسب للعمر مع إرشادات عملية للوالدين.",
     plusName: "تقرير NeuroMap Kids Plus ومتابعة لمدة 14 يومًا",
     plusDescription: "يتضمن التقرير القياسي وملخصًا قابلًا للمشاركة وخططًا للمواقف ودليلًا للمحادثة وسجل متابعة لمدة 14 يومًا."
   },
@@ -141,6 +141,11 @@ function buildLineItem({ productPackage, lang }) {
   };
 }
 
+function buildCheckoutIdempotencyKey({ internalSessionId, productPackage }) {
+  const attemptNonce = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+  return `neuromap-checkout-${internalSessionId}-${productPackage.code}-${attemptNonce}`;
+}
+
 export async function createCheckoutSession({
   internalSessionId,
   email,
@@ -200,7 +205,10 @@ export async function createCheckoutSession({
       payment_intent_data: { metadata }
     },
     {
-      idempotencyKey: `neuromap-checkout-${internalSessionId}-${productPackage.code}`
+      idempotencyKey: buildCheckoutIdempotencyKey({
+        internalSessionId,
+        productPackage
+      })
     }
   );
 }

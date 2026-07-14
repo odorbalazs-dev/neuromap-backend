@@ -209,7 +209,7 @@ function expectValidPayload(name, payload) {
   assert(canonical.specificProfile.kind === "ADHD", `${name} should replace the client profile kind.`);
   assert(canonical.triageScores.ADHD > canonical.triageScores.ANXIETY || payload.payload.extraQuestions.length === 5,
     `${name} should recompute triage scores.`);
-  assert(canonical.scoringAuthority === "server-canonical-v1", `${name} should mark server scoring authority.`);
+  assert(canonical.scoringAuthority === "server-canonical-v2-extra-aware", `${name} should mark server scoring authority.`);
   assert(canonical.extraQuestions.length === payload.payload.extraQuestions.length,
     `${name} should keep only canonical extra questions.`);
 

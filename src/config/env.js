@@ -185,6 +185,10 @@ export const env = {
     (process.env.RAILWAY_PUBLIC_DOMAIN
       ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`
       : "http://localhost:3000"),
+  CORS_ORIGINS: optional(
+    "CORS_ORIGINS",
+    "https://neuromap-kids.webflow.io,https://neuromapkids.com,https://www.neuromapkids.com"
+  ),
 
   META_PIXEL_ID: optional("META_PIXEL_ID", null),
   META_ACCESS_TOKEN: optional("META_ACCESS_TOKEN", null),
@@ -234,6 +238,10 @@ export const env = {
     max: 21600
   }),
   WORKER_EXPECTED_JOB_SECONDS: optionalInt("WORKER_EXPECTED_JOB_SECONDS", 90, { min: 20, max: 900 }),
+  ENGINE_LIVE_AUDIT_LIMIT: optionalInt("ENGINE_LIVE_AUDIT_LIMIT", 100, {
+    min: 1,
+    max: 5000
+  }),
   CAMPAIGN_TARGET_REPORTS_PER_DAY: optionalInt("CAMPAIGN_TARGET_REPORTS_PER_DAY", 1000, {
     min: 1,
     max: 100000

@@ -47,6 +47,29 @@ function normalizeRecipients(to) {
     .filter(Boolean);
 }
 
+function maskEmail(value = "") {
+  const email = String(value || "").trim();
+  const [name, domain] = email.split("@");
+
+  if (!name || !domain) return "";
+
+  const visible = name.slice(0, Math.min(2, name.length));
+  return `${visible}${"*".repeat(Math.max(2, name.length - visible.length))}@${domain}`;
+}
+
+function maskRecipients(recipients) {
+  return normalizeRecipients(recipients)
+    .map(maskEmail)
+    .filter(Boolean);
+}
+
+function summarizeEmailResponse(response) {
+  return {
+    id: response?.data?.id || response?.id || null,
+    hasError: Boolean(response?.error)
+  };
+}
+
 function buildPdfFilename(lang) {
   const safeLang = getSafeLang(lang);
 
@@ -123,9 +146,9 @@ export async function sendReportEmail({
 
   try {
     console.log("[email] start", {
-      recipients,
+      recipients: maskRecipients(recipients),
       lang: safeLang,
-      name,
+      hasName: Boolean(String(name || "").trim()),
       hasReportText: !!cleanReportText,
       reportLength: cleanReportText.length,
       from: env.EMAIL_FROM
@@ -227,7 +250,7 @@ export async function sendReportEmail({
       );
     }
 
-    console.log("[email] send success", response);
+    console.log("[email] send success", summarizeEmailResponse(response));
 
     return response;
 
@@ -236,7 +259,7 @@ export async function sendReportEmail({
       message:
         error?.message || "Unknown email error",
       stack: error?.stack || null,
-      recipients,
+      recipients: maskRecipients(recipients),
       lang: safeLang
     });
 
@@ -313,9 +336,9 @@ export async function sendCheckoutRecoveryEmail({
 
   try {
     console.log("[recovery-email] start", {
-      recipients,
+      recipients: maskRecipients(recipients),
       lang: safeLang,
-      name,
+      hasName: Boolean(String(name || "").trim()),
       hasCheckoutUrl: !!checkoutUrl,
       from: env.EMAIL_FROM
     });
@@ -355,7 +378,7 @@ export async function sendCheckoutRecoveryEmail({
 
     console.log(
       "[recovery-email] send success",
-      response
+      summarizeEmailResponse(response)
     );
 
     return response;
@@ -368,7 +391,7 @@ export async function sendCheckoutRecoveryEmail({
 
       stack: error?.stack || null,
 
-      recipients,
+      recipients: maskRecipients(recipients),
       lang: safeLang
     });
 
@@ -386,7 +409,7 @@ export async function sendAdminAlertEmail({
 
   try {
     console.log("[admin-alert-email] start", {
-      recipients,
+      recipients: maskRecipients(recipients),
       subject,
       from: env.EMAIL_FROM
     });
@@ -422,14 +445,14 @@ export async function sendAdminAlertEmail({
       );
     }
 
-    console.log("[admin-alert-email] send success", response);
+    console.log("[admin-alert-email] send success", summarizeEmailResponse(response));
 
     return response;
   } catch (error) {
     console.error("[admin-alert-email] send failed", {
       message: error?.message || "Unknown admin alert email error",
       stack: error?.stack || null,
-      recipients
+      recipients: maskRecipients(recipients)
     });
 
     throw error;
@@ -447,9 +470,9 @@ export async function sendFollowUpEmail({
 
   try {
     console.log("[follow-up-email] start", {
-      recipients,
+      recipients: maskRecipients(recipients),
       lang: safeLang,
-      name,
+      hasName: Boolean(String(name || "").trim()),
       detectedRisk,
       from: env.EMAIL_FROM
     });
@@ -488,14 +511,14 @@ export async function sendFollowUpEmail({
       );
     }
 
-    console.log("[follow-up-email] send success", response);
+    console.log("[follow-up-email] send success", summarizeEmailResponse(response));
 
     return response;
   } catch (error) {
     console.error("[follow-up-email] send failed", {
       message: error?.message || "Unknown follow-up email error",
       stack: error?.stack || null,
-      recipients,
+      recipients: maskRecipients(recipients),
       lang: safeLang
     });
 

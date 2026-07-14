@@ -2,7 +2,7 @@ import fs from "node:fs";
 import vm from "node:vm";
 
 const SUPPORTED_LANGS = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];
-const REQUIRED_ENGINE_VERSION = "20260713-two-tier-selector-fix-v2";
+const REQUIRED_ENGINE_VERSION = "20260714-landing-minimal-v2";
 
 const checks = [
   {

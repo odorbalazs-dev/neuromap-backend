@@ -92,6 +92,20 @@ function normalizeAnswer(value, reverse = false) {
   return reverse ? 3 - numeric : numeric;
 }
 
+function validateAnswers(answers, expectedCount, label, errors) {
+  if (!Array.isArray(answers) || answers.length !== expectedCount) {
+    errors.push(`${label} must contain exactly ${expectedCount} answers.`);
+    return;
+  }
+
+  answers.forEach((answer, index) => {
+    const numeric = Number(answer);
+    if (!Number.isInteger(numeric) || numeric < 0 || numeric > 3) {
+      errors.push(`${label}[${index}] must be an integer between 0 and 3.`);
+    }
+  });
+}
+
 function evaluateTriage(questions, answers) {
   const rawScores = Object.fromEntries(DOMAINS.map((domain) => [domain, 0]));
   const domainStats = Object.fromEntries(
@@ -204,6 +218,58 @@ function evaluateSpecific(questions, answers) {
   return result;
 }
 
+function evaluateExtraDecision({ questions, answers, primaryRisk, secondaryRisk }) {
+  const domainScores = {};
+
+  questions.forEach((question, index) => {
+    const domain = question.domain || "UNKNOWN";
+    const normalized = normalizeAnswer(answers[index], question.reverse);
+    const weight = question.weight || 1;
+
+    if (!domainScores[domain]) {
+      domainScores[domain] = {
+        weightedSum: 0,
+        totalWeight: 0,
+        itemCount: 0,
+        average: 0
+      };
+    }
+
+    domainScores[domain].weightedSum += normalized * weight;
+    domainScores[domain].totalWeight += weight;
+    domainScores[domain].itemCount += 1;
+  });
+
+  Object.values(domainScores).forEach((score) => {
+    score.average = score.totalWeight > 0 ? score.weightedSum / score.totalWeight : 0;
+  });
+
+  const primaryAverage = domainScores[primaryRisk]?.average || 0;
+  const secondaryAverage = secondaryRisk ? domainScores[secondaryRisk]?.average || 0 : 0;
+  const scoreGap = primaryAverage - secondaryAverage;
+  const secondaryStrengthened = Boolean(
+    secondaryRisk &&
+    domainScores[secondaryRisk]?.itemCount > 0 &&
+    secondaryAverage > primaryAverage + 0.15
+  );
+
+  return {
+    applied: questions.length > 0,
+    primaryRisk,
+    secondaryRisk,
+    domainScores,
+    primaryAverage,
+    secondaryAverage,
+    scoreGap,
+    secondaryStrengthened,
+    confidenceModifier: secondaryStrengthened
+      ? "lower_primary_confidence"
+      : Math.abs(scoreGap) <= 0.2
+        ? "close_extra_signal"
+        : "supports_primary"
+  };
+}
+
 function getSeverity(score) {
   if (score >= 2.2) return "high";
   if (score >= 1.4) return "moderate";
@@ -222,7 +288,7 @@ function getSignal(score) {
   return { key, ...labels[key] };
 }
 
-function buildResultSummary(kind, scoring, triageScores, secondaryRisk) {
+function buildResultSummary(kind, scoring, triageScores, secondaryRisk, extraDecision = null) {
   const summaries = {
     ADHD: {
       hu: "A leger\u0151sebb mint\u00e1zat a figyelem, impulzivit\u00e1s, aktivit\u00e1sszab\u00e1lyoz\u00e1s vagy v\u00e9grehajt\u00f3 m\u0171k\u00f6d\u00e9s ter\u00fclet\u00e9hez kapcsol\u00f3dik.",
@@ -256,6 +322,12 @@ function buildResultSummary(kind, scoring, triageScores, secondaryRisk) {
     signal: getSignal(scoring.normalizedAverage),
     topSubdomains,
     secondaryRisk,
+    extraDecision,
+    decisionConfidence: extraDecision?.secondaryStrengthened
+      ? "low"
+      : extraDecision?.applied
+        ? "moderate"
+        : "standard",
     triageScores,
     summaryText: summaries[kind]
   };
@@ -284,6 +356,12 @@ export function canonicalizeQuestionnairePayload(payload, lang = "en") {
     errors
   });
   validateDomainCoverage(triageQuestions, errors);
+  validateAnswers(
+    payload.triageAnswers,
+    DOMAINS.length * TRIAGE_COUNT_PER_DOMAIN,
+    "triageAnswers",
+    errors
+  );
 
   if (errors.length) throw new QuestionnaireIntegrityError(errors);
 
@@ -297,6 +375,7 @@ export function canonicalizeQuestionnairePayload(payload, lang = "en") {
     lang,
     errors
   });
+  validateAnswers(payload.specificAnswers, SPECIFIC_QUESTION_COUNT, "specificAnswers", errors);
 
   const needsExtra = Boolean(
     risks.primaryScore && risks.secondaryScore &&
@@ -330,6 +409,7 @@ export function canonicalizeQuestionnairePayload(payload, lang = "en") {
         `extraQuestions must contain 3 ${risks.primaryRisk} and 2 ${risks.secondaryRisk} questions.`
       );
     }
+    validateAnswers(payload.extraAnswers, EXTRA_QUESTION_COUNT, "extraAnswers", errors);
   } else if (submittedExtra.length > 0) {
     errors.push("extraQuestions are not allowed when the triage result is unambiguous.");
   } else if (Array.isArray(payload.extraAnswers) && payload.extraAnswers.length > 0) {
@@ -339,6 +419,24 @@ export function canonicalizeQuestionnairePayload(payload, lang = "en") {
   if (errors.length) throw new QuestionnaireIntegrityError(errors);
 
   const specificScoring = evaluateSpecific(specificQuestions, payload.specificAnswers);
+  const extraDecision = needsExtra
+    ? evaluateExtraDecision({
+        questions: extraQuestions,
+        answers: payload.extraAnswers,
+        primaryRisk: risks.primaryRisk,
+        secondaryRisk: risks.secondaryRisk
+      })
+    : {
+        applied: false,
+        primaryRisk: risks.primaryRisk,
+        secondaryRisk: risks.secondaryRisk,
+        domainScores: {},
+        primaryAverage: 0,
+        secondaryAverage: 0,
+        scoreGap: null,
+        secondaryStrengthened: false,
+        confidenceModifier: "not_needed"
+      };
   const severity = getSeverity(specificScoring.normalizedAverage);
   const specificProfile = {
     kind: risks.primaryRisk,
@@ -361,10 +459,12 @@ export function canonicalizeQuestionnairePayload(payload, lang = "en") {
       risks.primaryRisk,
       specificScoring,
       triageResult.rawScores,
-      risks.secondaryRisk
+      risks.secondaryRisk,
+      extraDecision
     ),
     extraQuestions,
     extraAnswers: needsExtra ? payload.extraAnswers : [],
-    scoringAuthority: "server-canonical-v1"
+    extraDecision,
+    scoringAuthority: "server-canonical-v2-extra-aware"
   };
 }

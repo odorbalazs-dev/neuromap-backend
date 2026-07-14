@@ -21,10 +21,35 @@ const app = express();
 
 app.set("trust proxy", 1);
 
+function parseCorsOrigins(value) {
+  return String(value || "")
+    .split(",")
+    .map((origin) => origin.trim().replace(/\/+$/, ""))
+    .filter(Boolean);
+}
+
+const allowedCorsOrigins = new Set(parseCorsOrigins(env.CORS_ORIGINS));
+
+if (env.NODE_ENV !== "production") {
+  [
+    "http://localhost:3000",
+    "http://localhost:5173",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:5173"
+  ].forEach((origin) => allowedCorsOrigins.add(origin));
+}
+
 const corsOptions = {
-  origin: [
-    "https://neuromap-kids.webflow.io"
-  ],
+  origin(origin, callback) {
+    if (!origin) return callback(null, true);
+
+    const normalizedOrigin = String(origin).replace(/\/+$/, "");
+    if (allowedCorsOrigins.has(normalizedOrigin)) {
+      return callback(null, true);
+    }
+
+    return callback(null, false);
+  },
   methods: ["GET", "POST", "OPTIONS"],
   allowedHeaders: [
     "Content-Type",

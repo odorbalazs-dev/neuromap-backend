@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Syntax check
+        run: |
+          node --check src/app/server.js
+          node --check src/services/stripe.service.js
+          node --check src/services/questionnaire-integrity.service.js
+          node --check src/services/analysis.service.js
+          node --check src/services/email.service.js
+          node --check src/services/webhook.service.js
+          node --check public/webflow/engine.js
+          node --check public/webflow/checkout-pages.js
+          node --check public/admin-dashboard.js
+
+      - name: Product audits and smoke checks
+        run: npm run audit:all
+
+      - name: Dependency audit
+        run: npm audit --omit=dev --audit-level=high

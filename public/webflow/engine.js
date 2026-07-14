@@ -5,7 +5,7 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260713-two-tier-selector-fix-v2";
+  const ENGINE_VERSION = "20260714-landing-minimal-v2";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
   const DRAFT_STORAGE_KEY = "nm_questionnaire_draft_v1";
   const PACKAGE_STORAGE_KEY = "nm_package_code_v1";
@@ -1925,28 +1925,6 @@
         margin-top: 12px;
       }
 
-      .nm-landing-proof-strip {
-        display: grid;
-        gap: 8px;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        margin: 12px auto 0;
-        max-width: 720px;
-        padding: 0 16px;
-      }
-
-      .nm-landing-proof-item {
-        background: rgba(255, 255, 255, 0.92);
-        border: 1px solid #dbeef8;
-        border-radius: 999px;
-        color: #344054;
-        font-size: 12.5px;
-        font-weight: 800;
-        line-height: 1.25;
-        min-height: 34px;
-        padding: 8px 12px;
-        text-align: center;
-      }
-
       .nm-subdomain-row {
         align-items: center;
         border-bottom: 1px solid #edf3f7;
@@ -2313,8 +2291,7 @@
           grid-template-columns: 1fr;
         }
 
-        .nm-trust-grid,
-        .nm-landing-proof-strip {
+        .nm-trust-grid {
           grid-template-columns: 1fr;
         }
 
@@ -2668,10 +2645,10 @@
         padding: 10px 18px !important;
       }
 
-      .nm-social-landing .nm-trust-row,
-      .nm-landing .nm-trust-row {
-        gap: 8px !important;
-        margin-top: 12px !important;
+      .nm-social-landing .nm-hero .nm-trust-row,
+      .nm-landing .nm-hero .nm-trust-row,
+      [data-nm-section="hero"] .nm-trust-row {
+        display: none !important;
       }
 
       .nm-social-landing .nm-trust-pill,
@@ -2825,7 +2802,6 @@
         line-height: 1.45 !important;
       }
 
-      .nm-landing-reason-panel,
       .nm-mini-demo-card,
       .nm-summary-next-card,
       .nm-summary-science-card {
@@ -2840,7 +2816,6 @@
         text-align: left !important;
       }
 
-      .nm-landing-reason-panel h3,
       .nm-mini-demo-card h3,
       .nm-summary-next-card h4,
       .nm-summary-science-card h4 {
@@ -2850,7 +2825,6 @@
         margin: 0 0 8px !important;
       }
 
-      .nm-landing-reason-panel p,
       .nm-mini-demo-card p,
       .nm-summary-next-card p,
       .nm-summary-science-card p {
@@ -2860,7 +2834,6 @@
         margin: 0 0 12px !important;
       }
 
-      .nm-landing-reason-actions,
       .nm-mini-demo-grid,
       .nm-summary-next-grid {
         display: grid !important;
@@ -2868,7 +2841,6 @@
         grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
       }
 
-      .nm-landing-reason-button,
       .nm-mini-demo-item,
       .nm-summary-next-item {
         background: #f3fbff !important;
@@ -2916,7 +2888,6 @@
         text-transform: uppercase !important;
       }
 
-      .nm-landing-reason-note,
       .nm-mini-demo-note {
         color: #64748b !important;
         display: block !important;
@@ -2960,7 +2931,6 @@
           grid-template-columns: 1fr !important;
         }
 
-        .nm-landing-reason-actions,
         .nm-mini-demo-grid,
         .nm-summary-next-grid {
           grid-template-columns: 1fr !important;
@@ -3487,12 +3457,25 @@
     const style = document.createElement("style");
     style.id = "nm-package-selector-style";
     style.textContent = `
+      .nm-landing-package-section {
+        background: #ffffff;
+        border-bottom: 1px solid #e4eef5;
+        border-top: 1px solid #e4eef5;
+        box-sizing: border-box;
+        padding: clamp(26px, 4vw, 42px) clamp(18px, 4vw, 32px);
+        width: 100%;
+      }
+
       .nm-package-selector {
         box-sizing: border-box;
         margin: 22px auto;
         max-width: 860px;
         text-align: start;
         width: 100%;
+      }
+
+      .nm-landing-package-section .nm-package-selector {
+        margin: 0 auto;
       }
 
       .nm-package-selector * {
@@ -3681,6 +3664,10 @@
       }
 
       @media (max-width: 680px) {
+        .nm-landing-package-section {
+          padding: 24px 16px 28px;
+        }
+
         .nm-package-selector {
           margin: 18px auto;
         }
@@ -3834,32 +3821,50 @@
   }
 
   function ensureLandingPackageSelector(lang = state.lang) {
+    const landing =
+      document.getElementById("nmSocialLanding") ||
+      document.querySelector(".nm-social-landing") ||
+      document.querySelector(".nm-landing") ||
+      document.querySelector("[data-nm-landing]");
+
     const hero =
-      document.querySelector("#nmSocialLanding .nm-hero") ||
-      document.querySelector(".nm-social-landing .nm-hero") ||
-      document.querySelector(".nm-landing .nm-hero") ||
+      landing?.querySelector(".nm-hero") ||
+      landing?.querySelector("[data-nm-section='hero']") ||
       document.querySelector("[data-nm-section='hero']");
 
-    if (!hero) return;
+    if (!landing || !hero) return;
     installPackageSelectorStyles();
 
-    let selector = hero.querySelector('[data-nm-package-selector="landing"]');
+    let selector = landing.querySelector('[data-nm-package-selector="landing"]');
+    let section = landing.querySelector('[data-nm-package-section="landing"]');
+
+    if (!section) {
+      section = document.createElement("section");
+      section.className = "nm-landing-package-section";
+      section.setAttribute("data-nm-package-section", "landing");
+      section.setAttribute("data-nm-hidden-for-questionnaire", "1");
+    }
+
+    const reportPreviewSection = landing.querySelector(".nm-report-preview-section");
+    const packageAnchor = reportPreviewSection || hero;
+
+    if (packageAnchor === landing) {
+      if (section.parentElement !== landing) landing.appendChild(section);
+    } else if (
+      packageAnchor.parentElement &&
+      (section.parentElement !== packageAnchor.parentElement || section.previousElementSibling !== packageAnchor)
+    ) {
+      packageAnchor.insertAdjacentElement("afterend", section);
+    }
+
     if (!selector) {
       selector = document.createElement("section");
       selector.className = "nm-package-selector";
       selector.setAttribute("data-nm-package-selector", "landing");
-
-      const insertAfter =
-        hero.querySelector(".nm-landing-reason-panel") ||
-        hero.querySelector(".nm-landing-proof-strip") ||
-        hero.lastElementChild;
-
-      if (insertAfter) {
-        insertAfter.insertAdjacentElement("afterend", selector);
-      } else {
-        hero.appendChild(selector);
-      }
     }
+
+    if (selector.parentElement !== section) section.appendChild(selector);
+    section.setAttribute("aria-label", getPackageSelectorCopy(lang).title);
 
     renderPackageSelector(selector, lang);
   }
@@ -4308,16 +4313,18 @@
 
     const existing = hero.querySelector(".nm-landing-proof-strip");
     if (existing) {
+      existing.setAttribute("role", "list");
       existing.innerHTML = copy
-        .map((item) => `<div class="nm-landing-proof-item">${escapeHtml(item)}</div>`)
+        .map((item) => `<div class="nm-landing-proof-item" role="listitem">${escapeHtml(item)}</div>`)
         .join("");
       return;
     }
 
     const strip = document.createElement("div");
     strip.className = "nm-landing-proof-strip";
+    strip.setAttribute("role", "list");
     strip.innerHTML = copy
-      .map((item) => `<div class="nm-landing-proof-item">${escapeHtml(item)}</div>`)
+      .map((item) => `<div class="nm-landing-proof-item" role="listitem">${escapeHtml(item)}</div>`)
       .join("");
 
     const insertAfter =
@@ -4333,47 +4340,19 @@
     }
   }
 
-  function ensureLandingReasonPanel(lang = state.lang) {
-    const hero =
-      document.querySelector("#nmSocialLanding .nm-hero") ||
-      document.querySelector(".nm-social-landing .nm-hero") ||
-      document.querySelector(".nm-landing .nm-hero") ||
-      document.querySelector("[data-nm-section='hero']");
-
+  function simplifyLandingHero(hero) {
     if (!hero) return;
 
-    const copy = getLandingFallbackText(lang) || getLandingFallbackText("en");
-    if (!copy) return;
-
-    let panel = hero.querySelector(".nm-landing-reason-panel");
-
-    if (!panel) {
-      panel = document.createElement("div");
-      panel.className = "nm-landing-reason-panel";
-
-      const insertAfter =
-        hero.querySelector(".nm-landing-proof-strip") ||
-        hero.querySelector("[data-nm-i18n='microcopy']") ||
-        hero.querySelector(".nm-hero-microcopy") ||
-        hero.lastElementChild;
-
-      if (insertAfter) {
-        insertAfter.insertAdjacentElement("afterend", panel);
-      } else {
-        hero.appendChild(panel);
-      }
-    }
-
-    panel.innerHTML = `
-      <h3>${escapeHtml(copy.reasonTitle || LANDING_FALLBACK_TEXT.en.reasonTitle)}</h3>
-      <p>${escapeHtml(copy.reasonBody || LANDING_FALLBACK_TEXT.en.reasonBody)}</p>
-      <div class="nm-landing-reason-actions">
-        <div class="nm-landing-reason-button">${escapeHtml(copy.reasonParent || LANDING_FALLBACK_TEXT.en.reasonParent)}</div>
-        <div class="nm-landing-reason-button">${escapeHtml(copy.reasonSchool || LANDING_FALLBACK_TEXT.en.reasonSchool)}</div>
-        <div class="nm-landing-reason-button">${escapeHtml(copy.reasonCalm || LANDING_FALLBACK_TEXT.en.reasonCalm)}</div>
-      </div>
-      <span class="nm-landing-reason-note">${escapeHtml(copy.reasonNote || LANDING_FALLBACK_TEXT.en.reasonNote)}</span>
-    `;
+    hero.querySelectorAll(".nm-landing-reason-panel").forEach((panel) => panel.remove());
+    hero.querySelectorAll(".nm-landing-proof-strip").forEach((strip) => strip.remove());
+    hero
+      .querySelectorAll("[data-nm-i18n='microcopy'], .nm-hero-microcopy, .nm-hero-trust, .nm-trust-row")
+      .forEach((detail) => {
+        detail.hidden = true;
+        detail.setAttribute("aria-hidden", "true");
+        detail.setAttribute("data-nm-hero-detail", "hidden");
+        setImportantStyle(detail, "display", "none");
+      });
   }
 
   function ensureLandingMiniDemo(lang = state.lang) {
@@ -4513,10 +4492,10 @@
     setImportantStyle(landing, "padding-bottom", "18px");
 
     setImportantStyle(hero, "min-height", "auto");
-    setImportantStyle(hero, "padding-top", "24px");
-    setImportantStyle(hero, "padding-bottom", "22px");
+    setImportantStyle(hero, "padding-top", "34px");
+    setImportantStyle(hero, "padding-bottom", "38px");
 
-    landing.querySelectorAll("h1").forEach((heading) => {
+    hero.querySelectorAll("h1").forEach((heading) => {
       setImportantStyle(heading, "font-size", "clamp(30px, 2.4vw, 40px)");
       setImportantStyle(heading, "line-height", "1.08");
       setImportantStyle(heading, "margin-top", "0");
@@ -4524,26 +4503,25 @@
       setImportantStyle(heading, "max-width", "660px");
     });
 
-    landing.querySelectorAll("p").forEach((paragraph) => {
-      setImportantStyle(paragraph, "font-size", "clamp(14px, 1.15vw, 16px)");
-      setImportantStyle(paragraph, "line-height", "1.45");
-      setImportantStyle(paragraph, "margin-bottom", "12px");
-      setImportantStyle(paragraph, "max-width", "620px");
+    hero.querySelectorAll("p").forEach((paragraph) => {
+      setImportantStyle(paragraph, "font-size", "clamp(16px, 1.2vw, 18px)");
+      setImportantStyle(paragraph, "line-height", "1.5");
+      setImportantStyle(paragraph, "margin-bottom", "20px");
+      setImportantStyle(paragraph, "max-width", "600px");
     });
 
-    landing.querySelectorAll("[data-nm-cta], a[href='#questionnaireStart'], a[href*='questionnaireStart']").forEach((cta) => {
-      setImportantStyle(cta, "max-width", "560px");
-      setImportantStyle(cta, "min-height", "40px");
-      setImportantStyle(cta, "padding-top", "9px");
-      setImportantStyle(cta, "padding-bottom", "9px");
+    hero.querySelectorAll("[data-nm-cta], a[href='#questionnaireStart'], a[href*='questionnaireStart']").forEach((cta) => {
+      setImportantStyle(cta, "max-width", "480px");
+      setImportantStyle(cta, "min-height", "48px");
+      setImportantStyle(cta, "padding-top", "12px");
+      setImportantStyle(cta, "padding-bottom", "12px");
     });
 
     const activeLang = getLang() || state.lang || "hu";
 
     ensureStickyBrandHeader();
     ensureReportPreviewMockup(activeLang);
-    ensureLandingTrustStrip(activeLang);
-    ensureLandingReasonPanel(activeLang);
+    simplifyLandingHero(hero);
     ensureLandingPackageSelector(activeLang);
     ensureLandingMiniDemo(activeLang);
   }

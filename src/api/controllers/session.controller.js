@@ -14,6 +14,11 @@ function maskEmail(email = "") {
   return `${visible}${"*".repeat(Math.max(2, name.length - visible.length))}@${domain}`;
 }
 
+function setPrivateNoStore(res) {
+  res.setHeader("Cache-Control", "no-store, private, max-age=0");
+  res.setHeader("Pragma", "no-cache");
+}
+
 function normalizeAnalysisStatus(status) {
   const value = String(status || "pending").toLowerCase();
   if (value === "done" || value === "completed") return "done";
@@ -146,6 +151,8 @@ function buildCustomerStatus(session, observation = null) {
 }
 
 export async function getSession(req, res) {
+  setPrivateNoStore(res);
+
   try {
     const { id } = req.params;
 
@@ -177,16 +184,20 @@ export async function getSession(req, res) {
 }
     });
   } catch (error) {
-    console.error("session controller error:", error);
+    console.error("session controller error:", {
+      message: error?.message || "Unknown session controller error"
+    });
 
     return res.status(500).json({
       ok: false,
-      error: error.message || "Failed to fetch session"
+      error: "Failed to fetch session"
     });
   }
 }
 
 export async function getSessionStatus(req, res) {
+  setPrivateNoStore(res);
+
   try {
     const { id } = req.params;
 
