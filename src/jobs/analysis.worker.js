@@ -5,6 +5,8 @@ import {
   markAnalysisJobFailed,
   requeueStaleJobs
 } from "../services/analysis-queue.service.js";
+import { startAnalysisJobLease }
+  from "../services/analysis-job-lease.service.js";
 
 import {
   getSessionById,
@@ -21,6 +23,8 @@ import { deliverReportEmailForSession }
   from "../services/report-email-delivery.service.js";
 
 import { env } from "../config/env.js";
+import { runMigrations } from "../db/migrate.js";
+import { db } from "../db/db.js";
 
 const workerConfig = {
   concurrency: env.WORKER_CONCURRENCY,
@@ -28,14 +32,16 @@ const workerConfig = {
   errorSleepMs: env.WORKER_ERROR_SLEEP_MS,
   staleRequeueIntervalMs: env.WORKER_STALE_REQUEUE_INTERVAL_MS,
   staleJobMinutes: env.WORKER_STALE_JOB_MINUTES,
+  heartbeatIntervalMs: env.WORKER_HEARTBEAT_INTERVAL_MS,
   maxAttempts: env.WORKER_MAX_ATTEMPTS,
   retryBaseSeconds: env.WORKER_RETRY_BASE_SECONDS,
   retryMaxSeconds: env.WORKER_RETRY_MAX_SECONDS
 };
 
 let lastStaleRequeueAt = 0;
+let stopRequested = false;
 
-async function processSingleJob(job) {
+async function processSingleJob(job, lease) {
   const session =
     await getSessionById(job.session_id);
 
@@ -46,6 +52,7 @@ async function processSingleJob(job) {
   }
 
   if (session.analysis_status === "done" && session.analysis_result) {
+    await lease.assertOwned();
     await deliverReportEmailForSession(
       session,
       { source: "worker-retry-email-only" }
@@ -64,11 +71,13 @@ async function processSingleJob(job) {
       lang: session.lang
     });
 
+  await lease.assertOwned();
   await markAnalysisDone(
     session.id,
     resultText
   );
 
+  await lease.assertOwned();
   await deliverReportEmailForSession(
     {
       ...session,
@@ -90,10 +99,11 @@ async function workerLoop() {
   );
 
   await Promise.all(lanes);
+  console.log("[worker] analysis worker stopped");
 }
 
 async function workerLane(laneId) {
-  while (true) {
+  while (!stopRequested) {
     try {
       await maybeRequeueStaleJobs(laneId);
 
@@ -113,10 +123,22 @@ async function workerLane(laneId) {
         }
       );
 
-      try {
-        await processSingleJob(job);
+      const lease = startAnalysisJobLease(job, {
+        source: `worker-lane-${laneId}`
+      });
 
-        await markAnalysisJobDone(job.id);
+      try {
+        await processSingleJob(job, lease);
+
+        await lease.assertOwned();
+        const completed = await markAnalysisJobDone(job.id, job.lease_token);
+
+        if (!completed) {
+          const error = new Error("Analysis job lease was lost before completion");
+          error.code = "ANALYSIS_JOB_LEASE_LOST";
+          error.terminal = true;
+          throw error;
+        }
 
         console.log(
           "[worker] job done",
@@ -144,6 +166,7 @@ async function workerLane(laneId) {
 
         const updatedJob = await markAnalysisJobFailed(
           job.id,
+          job.lease_token,
           error.message,
           {
             maxAttempts: error.terminal ? 1 : workerConfig.maxAttempts,
@@ -151,7 +174,12 @@ async function workerLane(laneId) {
           }
         );
 
-        if (updatedJob?.status === "failed") {
+        if (!updatedJob) {
+          console.warn("[worker] job lease no longer owned; status left unchanged", {
+            jobId: job.id,
+            laneId
+          });
+        } else if (updatedJob.status === "failed") {
           await markAnalysisFailed(
             job.session_id,
             error.message
@@ -169,6 +197,8 @@ async function workerLane(laneId) {
             }
           );
         }
+      } finally {
+        await lease.stop();
       }
 
     } catch (error) {
@@ -216,11 +246,21 @@ function sleep(ms) {
   });
 }
 
-workerLoop().catch((error) => {
-  console.error(
-    "[worker] fatal error",
-    error
-  );
+for (const signal of ["SIGTERM", "SIGINT"]) {
+  process.once(signal, () => {
+    console.log(`[worker] ${signal} received; finishing active jobs`);
+    stopRequested = true;
+  });
+}
 
-  process.exit(1);
+async function main() {
+  await runMigrations();
+  await workerLoop();
+  await db.close();
+}
+
+main().catch(async (error) => {
+  console.error("[worker] fatal error", error);
+  await db.close().catch(() => {});
+  process.exitCode = 1;
 });

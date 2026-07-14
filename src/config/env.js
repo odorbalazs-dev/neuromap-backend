@@ -220,6 +220,10 @@ export const env = {
     max: 600000
   }),
   WORKER_STALE_JOB_MINUTES: optionalInt("WORKER_STALE_JOB_MINUTES", 15, { min: 2, max: 180 }),
+  WORKER_HEARTBEAT_INTERVAL_MS: optionalInt("WORKER_HEARTBEAT_INTERVAL_MS", 30000, {
+    min: 5000,
+    max: 120000
+  }),
   WORKER_MAX_ATTEMPTS: optionalInt("WORKER_MAX_ATTEMPTS", 4, { min: 1, max: 20 }),
   WORKER_RETRY_BASE_SECONDS: optionalInt("WORKER_RETRY_BASE_SECONDS", 60, {
     min: 5,

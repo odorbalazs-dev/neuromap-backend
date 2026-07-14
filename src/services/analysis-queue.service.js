@@ -62,6 +62,8 @@ export async function claimNextAnalysisJob() {
       status = 'processing',
       locked_at = NOW(),
       locked_by = $1,
+      lease_token = gen_random_uuid(),
+      heartbeat_at = NOW(),
       attempts = attempts + 1,
       updated_at = NOW()
     WHERE id = (
@@ -81,26 +83,72 @@ export async function claimNextAnalysisJob() {
   return result.rows[0] || null;
 }
 
-export async function markAnalysisJobDone(jobId) {
-  await db.query(
+export async function heartbeatAnalysisJob(jobId, leaseToken) {
+  const result = await db.query(
+    `
+    UPDATE analysis_jobs
+    SET
+      heartbeat_at = NOW(),
+      updated_at = NOW()
+    WHERE id = $1
+      AND status = 'processing'
+      AND lease_token = $2::uuid
+    RETURNING id
+    `,
+    [jobId, leaseToken]
+  );
+
+  return Boolean(result.rows[0]);
+}
+
+export async function assertAnalysisJobLease(jobId, leaseToken) {
+  const result = await db.query(
+    `
+    SELECT id
+    FROM analysis_jobs
+    WHERE id = $1
+      AND status = 'processing'
+      AND lease_token = $2::uuid
+    `,
+    [jobId, leaseToken]
+  );
+
+  if (!result.rows[0]) {
+    const error = new Error("Analysis job lease was lost");
+    error.code = "ANALYSIS_JOB_LEASE_LOST";
+    error.terminal = true;
+    throw error;
+  }
+}
+
+export async function markAnalysisJobDone(jobId, leaseToken) {
+  const result = await db.query(
     `
     UPDATE analysis_jobs
     SET
       status = 'done',
       locked_at = NULL,
       locked_by = NULL,
+      lease_token = NULL,
+      heartbeat_at = NULL,
       next_attempt_at = NULL,
       failed_at = NULL,
       processed_at = NOW(),
       updated_at = NOW()
     WHERE id = $1
+      AND status = 'processing'
+      AND lease_token = $2::uuid
+    RETURNING id
     `,
-    [jobId]
+    [jobId, leaseToken]
   );
+
+  return Boolean(result.rows[0]);
 }
 
 export async function markAnalysisJobFailed(
   jobId,
+  leaseToken,
   errorMessage,
   {
     maxAttempts = 4,
@@ -115,12 +163,14 @@ export async function markAnalysisJobFailed(
         WHEN attempts >= $3::int THEN 'failed'
         ELSE 'queued'
       END,
-      last_error = $2,
+      last_error = $4,
       locked_at = NULL,
       locked_by = NULL,
+      lease_token = NULL,
+      heartbeat_at = NULL,
       next_attempt_at = CASE
         WHEN attempts >= $3::int THEN NULL
-        ELSE NOW() + ($4::int * INTERVAL '1 second')
+        ELSE NOW() + ($5::int * INTERVAL '1 second')
       END,
       failed_at = CASE
         WHEN attempts >= $3::int THEN NOW()
@@ -128,9 +178,11 @@ export async function markAnalysisJobFailed(
       END,
       updated_at = NOW()
     WHERE id = $1
+      AND status = 'processing'
+      AND lease_token = $2::uuid
     RETURNING *
     `,
-    [jobId, errorMessage, maxAttempts, retryDelaySeconds]
+    [jobId, leaseToken, maxAttempts, errorMessage, retryDelaySeconds]
   );
 
   return result.rows[0] || null;
@@ -146,10 +198,12 @@ export async function requeueStaleJobs({
       status = 'queued',
       locked_at = NULL,
       locked_by = NULL,
+      lease_token = NULL,
+      heartbeat_at = NULL,
       next_attempt_at = NOW(),
       updated_at = NOW()
     WHERE status = 'processing'
-      AND locked_at < NOW() - ($1::int * INTERVAL '1 minute')
+      AND COALESCE(heartbeat_at, locked_at) < NOW() - ($1::int * INTERVAL '1 minute')
     RETURNING id
     `,
     [staleMinutes]
@@ -190,7 +244,9 @@ export async function getAnalysisQueueSnapshot() {
           WHERE status = 'queued'
             AND next_attempt_at > NOW()
         ) AS next_retry_at,
-        MIN(locked_at) FILTER (WHERE status = 'processing') AS oldest_processing_at
+        MIN(COALESCE(heartbeat_at, locked_at)) FILTER (
+          WHERE status = 'processing'
+        ) AS oldest_processing_at
       FROM analysis_jobs
     )
     SELECT

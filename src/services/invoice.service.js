@@ -82,6 +82,22 @@ function getInvoiceProductCopy(session) {
   };
 }
 
+async function getIssuedInvoice(sessionId) {
+  const existing = await db.query(
+    `
+    SELECT *
+    FROM invoices
+    WHERE session_id = $1
+      AND provider = $2
+      AND status = 'issued'
+    LIMIT 1
+    `,
+    [sessionId, invoiceConfig.provider]
+  );
+
+  return existing.rows[0] || null;
+}
+
 async function upsertInvoiceProcessing({ session, checkoutSession }) {
   const billing = buildBillingInfo({ session, checkoutSession });
   const szamlazzhuConfig = getSzamlazzHuConfigForSession(session);
@@ -110,12 +126,14 @@ async function upsertInvoiceProcessing({ session, checkoutSession }) {
       tax_id,
       attempts,
       last_attempt_at,
+      processing_token,
+      processing_started_at,
       error_message,
       updated_at
     )
     VALUES (
       $1, $2, 'processing', $3, $4, $5, $6, $7, $8, $9,
-      $10, $11, $12, $13, 1, NOW(), NULL, NOW()
+      $10, $11, $12, $13, 1, NOW(), gen_random_uuid(), NOW(), NULL, NOW()
     )
     ON CONFLICT (session_id, provider)
     DO UPDATE SET
@@ -133,8 +151,20 @@ async function upsertInvoiceProcessing({ session, checkoutSession }) {
       tax_id = EXCLUDED.tax_id,
       attempts = invoices.attempts + 1,
       last_attempt_at = NOW(),
+      processing_token = gen_random_uuid(),
+      processing_started_at = NOW(),
       error_message = NULL,
       updated_at = NOW()
+    WHERE invoices.status IN ('pending', 'failed', 'skipped')
+       OR (
+        invoices.status = 'processing'
+        AND COALESCE(
+          invoices.processing_started_at,
+          invoices.last_attempt_at,
+          invoices.updated_at,
+          invoices.created_at
+        ) < NOW() - INTERVAL '15 minutes'
+       )
     RETURNING *
     `,
     [
@@ -154,6 +184,12 @@ async function upsertInvoiceProcessing({ session, checkoutSession }) {
     ]
   );
 
+  const invoiceRow = result.rows[0] || null;
+
+  if (!invoiceRow) {
+    return null;
+  }
+
   await db.query(
     `
     UPDATE sessions
@@ -162,10 +198,10 @@ async function upsertInvoiceProcessing({ session, checkoutSession }) {
         invoice_error = NULL
     WHERE id = $1
     `,
-    [session.id, result.rows[0]?.id || null]
+    [session.id, invoiceRow.id]
   );
 
-  return result.rows[0] || null;
+  return invoiceRow;
 }
 
 async function markInvoiceSkipped(sessionId, reason) {
@@ -184,10 +220,17 @@ async function markInvoiceSkipped(sessionId, reason) {
       status = 'skipped',
       error_message = EXCLUDED.error_message,
       updated_at = NOW()
+    WHERE invoices.status IS DISTINCT FROM 'issued'
     RETURNING *
     `,
     [sessionId, invoiceConfig.provider, reason]
   );
+
+  const invoiceRow = result.rows[0] || await getIssuedInvoice(sessionId);
+
+  if (!invoiceRow || invoiceRow.status === "issued") {
+    return invoiceRow || null;
+  }
 
   await db.query(
     `
@@ -197,13 +240,13 @@ async function markInvoiceSkipped(sessionId, reason) {
         invoice_error = $3
     WHERE id = $1
     `,
-    [sessionId, result.rows[0]?.id || null, reason]
+    [sessionId, invoiceRow.id, reason]
   );
 
-  return result.rows[0] || null;
+  return invoiceRow;
 }
 
-async function markInvoiceIssued(sessionId, invoiceResult) {
+async function markInvoiceIssued(sessionId, invoiceId, invoiceResult) {
   const result = await db.query(
     `
     UPDATE invoices
@@ -217,9 +260,12 @@ async function markInvoiceIssued(sessionId, invoiceResult) {
           WHEN $6::boolean THEN COALESCE(sent_at, NOW())
           ELSE sent_at
         END,
+        processing_token = NULL,
         updated_at = NOW()
     WHERE session_id = $1
       AND provider = $2
+      AND id = $7
+      AND status = 'processing'
     RETURNING *
     `,
     [
@@ -228,9 +274,16 @@ async function markInvoiceIssued(sessionId, invoiceResult) {
       invoiceResult.providerInvoiceId || null,
       invoiceResult.invoiceNumber || null,
       invoiceResult.providerResponse || {},
-      Boolean(invoiceConfig.szamlazzhu.sendEmail)
+      Boolean(invoiceConfig.szamlazzhu.sendEmail),
+      invoiceId
     ]
   );
+
+  const invoiceRow = result.rows[0] || null;
+
+  if (!invoiceRow) {
+    return null;
+  }
 
   await db.query(
     `
@@ -247,16 +300,16 @@ async function markInvoiceIssued(sessionId, invoiceResult) {
     `,
     [
       sessionId,
-      result.rows[0]?.id || null,
+      invoiceRow.id,
       invoiceResult.invoiceNumber || null,
       Boolean(invoiceConfig.szamlazzhu.sendEmail)
     ]
   );
 
-  return result.rows[0] || null;
+  return invoiceRow;
 }
 
-async function markInvoiceFailed(sessionId, error) {
+async function markInvoiceFailed(sessionId, invoiceId, error) {
   const message = compactError(error);
 
   const result = await db.query(
@@ -264,13 +317,22 @@ async function markInvoiceFailed(sessionId, error) {
     UPDATE invoices
     SET status = 'failed',
         error_message = $3,
+        processing_token = NULL,
         updated_at = NOW()
     WHERE session_id = $1
       AND provider = $2
+      AND id = $4
+      AND status = 'processing'
     RETURNING *
     `,
-    [sessionId, invoiceConfig.provider, message]
+    [sessionId, invoiceConfig.provider, message, invoiceId]
   );
+
+  const invoiceRow = result.rows[0] || null;
+
+  if (!invoiceRow) {
+    return null;
+  }
 
   await db.query(
     `
@@ -280,10 +342,10 @@ async function markInvoiceFailed(sessionId, error) {
         invoice_error = $3
     WHERE id = $1
     `,
-    [sessionId, result.rows[0]?.id || null, message]
+    [sessionId, invoiceRow.id, message]
   );
 
-  return result.rows[0] || null;
+  return invoiceRow;
 }
 
 export async function createInvoiceForPaidSession({
@@ -306,23 +368,17 @@ export async function createInvoiceForPaidSession({
     );
   }
 
-  const existing = await db.query(
-    `
-    SELECT *
-    FROM invoices
-    WHERE session_id = $1
-      AND provider = $2
-      AND status = 'issued'
-    LIMIT 1
-    `,
-    [session.id, invoiceConfig.provider]
-  );
+  const existing = await getIssuedInvoice(session.id);
 
-  if (existing.rows[0]) {
-    return existing.rows[0];
+  if (existing) {
+    return existing;
   }
 
-  await upsertInvoiceProcessing({ session, checkoutSession });
+  const invoiceClaim = await upsertInvoiceProcessing({ session, checkoutSession });
+
+  if (!invoiceClaim) {
+    return null;
+  }
 
   try {
     const szamlazzhuConfig = getSzamlazzHuConfigForSession(session);
@@ -336,9 +392,9 @@ export async function createInvoiceForPaidSession({
       productComment: productCopy.comment
     });
 
-    return await markInvoiceIssued(session.id, invoiceResult);
+    return await markInvoiceIssued(session.id, invoiceClaim.id, invoiceResult);
   } catch (error) {
-    await markInvoiceFailed(session.id, error);
+    await markInvoiceFailed(session.id, invoiceClaim.id, error);
 
     if (throwOnError) {
       throw error;

@@ -11,6 +11,7 @@ import {
   markAnalysisJobDone,
   markAnalysisJobFailed
 } from "./analysis-queue.service.js";
+import { startAnalysisJobLease } from "./analysis-job-lease.service.js";
 import { generateAnalysis } from "./analysis.service.js";
 import { deliverReportEmailForSession } from "./report-email-delivery.service.js";
 import { env } from "../config/env.js";
@@ -25,25 +26,27 @@ export async function processNextAnalysisJob() {
     };
   }
 
-  const session = await getSessionById(job.session_id);
-
-  if (!session) {
-    await markAnalysisJobFailed(job.id, "Session not found", {
-      maxAttempts: 1,
-      retryDelaySeconds: 0
-    });
-
-    return {
-      processed: false,
-      reason: "session_not_found",
-      jobId: job.id
-    };
-  }
+  const lease = startAnalysisJobLease(job, { source: "analysis-job-service" });
+  let session = null;
 
   try {
+    session = await getSessionById(job.session_id);
+
+    if (!session) {
+      const error = new Error("Session not found");
+      error.code = "SESSION_NOT_FOUND";
+      error.terminal = true;
+      throw error;
+    }
+
     if (session.analysis_status === "done" && session.analysis_result) {
+      await lease.assertOwned();
       await deliverReportEmailForSession(session, { source: "analysis-job-email-only" });
-      await markAnalysisJobDone(job.id);
+      await lease.assertOwned();
+
+      if (!(await markAnalysisJobDone(job.id, job.lease_token))) {
+        throw createLeaseLostError();
+      }
 
       return {
         processed: true,
@@ -60,8 +63,10 @@ export async function processNextAnalysisJob() {
       lang: session.lang
     });
 
+    await lease.assertOwned();
     await markAnalysisDone(session.id, resultText);
 
+    await lease.assertOwned();
     await deliverReportEmailForSession(
       {
         ...session,
@@ -70,7 +75,11 @@ export async function processNextAnalysisJob() {
       { source: "analysis-job" }
     );
 
-    await markAnalysisJobDone(job.id);
+    await lease.assertOwned();
+
+    if (!(await markAnalysisJobDone(job.id, job.lease_token))) {
+      throw createLeaseLostError();
+    }
 
     return {
       processed: true,
@@ -81,7 +90,7 @@ export async function processNextAnalysisJob() {
     const message = error?.message || "Analysis job failed";
 
     console.error("[analysis-job] failed:", {
-      sessionId: session.id,
+      sessionId: session?.id || job.session_id,
       message
     });
 
@@ -91,17 +100,36 @@ export async function processNextAnalysisJob() {
       maxSeconds: env.WORKER_RETRY_MAX_SECONDS
     });
 
-    const updatedJob = await markAnalysisJobFailed(job.id, message, {
-      maxAttempts: env.WORKER_MAX_ATTEMPTS,
+    const updatedJob = await markAnalysisJobFailed(job.id, job.lease_token, message, {
+      maxAttempts: error.terminal ? 1 : env.WORKER_MAX_ATTEMPTS,
       retryDelaySeconds
     });
 
-    if (updatedJob?.status === "failed") {
+    if (error.code === "SESSION_NOT_FOUND") {
+      return {
+        processed: false,
+        reason: "session_not_found",
+        jobId: job.id
+      };
+    } else if (!updatedJob) {
+      console.warn("[analysis-job] lease no longer owned; status left unchanged", {
+        jobId: job.id
+      });
+    } else if (session && updatedJob.status === "failed") {
       await markAnalysisFailed(session.id, message);
-    } else {
+    } else if (session) {
       await markAnalysisQueued(session.id);
     }
 
     throw error;
+  } finally {
+    await lease.stop();
   }
+}
+
+function createLeaseLostError() {
+  const error = new Error("Analysis job lease was lost before completion");
+  error.code = "ANALYSIS_JOB_LEASE_LOST";
+  error.terminal = true;
+  return error;
 }

@@ -184,20 +184,25 @@ export async function createCheckoutSession({
     usesConfiguredPrice: Boolean(stripePriceId)
   });
 
-  return stripe.checkout.sessions.create({
-    mode: "payment",
-    payment_method_types: ["card"],
-    client_reference_id: internalSessionId,
-    customer_email: email,
-    billing_address_collection: "required",
-    tax_id_collection: { enabled: true },
-    line_items: [lineItem],
-    locale: getStripeCheckoutLocale(safeLang),
-    success_url: successUrl,
-    cancel_url: cancelUrl,
-    metadata,
-    payment_intent_data: { metadata }
-  });
+  return stripe.checkout.sessions.create(
+    {
+      mode: "payment",
+      payment_method_types: ["card"],
+      client_reference_id: internalSessionId,
+      customer_email: email,
+      billing_address_collection: "required",
+      tax_id_collection: { enabled: true },
+      line_items: [lineItem],
+      locale: getStripeCheckoutLocale(safeLang),
+      success_url: successUrl,
+      cancel_url: cancelUrl,
+      metadata,
+      payment_intent_data: { metadata }
+    },
+    {
+      idempotencyKey: `neuromap-checkout-${internalSessionId}-${productPackage.code}`
+    }
+  );
 }
 
 export function constructStripeEvent(rawBody, signature) {

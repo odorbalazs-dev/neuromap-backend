@@ -306,6 +306,14 @@
     return raw.length > max ? `${raw.slice(0, max)}...` : raw;
   }
 
+  function appendTextElement(parent, tagName, value, className = "") {
+    const element = document.createElement(tagName);
+    if (className) element.className = className;
+    element.textContent = text(value);
+    parent.appendChild(element);
+    return element;
+  }
+
   function summaryChip(label, value) {
     const chip = document.createElement("div");
     chip.className = "summary-chip";
@@ -3474,7 +3482,8 @@
       recommendations,
       "Nincs UX javaslat.",
       (row, item) => {
-        row.innerHTML = `<strong>${compact(item.title, 80)}</strong><span>${compact(item.meta, 180)}</span>`;
+        appendTextElement(row, "strong", compact(item.title, 80));
+        appendTextElement(row, "span", compact(item.meta, 180));
       }
     );
   }
@@ -3496,19 +3505,32 @@
         const pdf = Boolean(item.pdfGeneratedAt || item.pdfPath || item.reportPdfPath);
         const email = item.reportEmailStatus === "sent" || Boolean(item.reportEmailSentAt);
 
-        row.innerHTML = `
-          <div>
-            <strong>${compact(item.name || item.email || item.id, 80)}</strong>
-            <span>${compact(item.email || item.id, 120)} · ${formatDate(item.createdAt)}</span>
-          </div>
-          <div class="timeline-steps">
-            <span class="timeline-step done">Session</span>
-            <span class="timeline-step ${paid ? "done" : "waiting"}">Fizetés</span>
-            <span class="timeline-step ${analyzed ? "done" : "waiting"}">Elemzés</span>
-            <span class="timeline-step ${pdf ? "done" : "waiting"}">PDF</span>
-            <span class="timeline-step ${email ? "done" : "waiting"}">Email</span>
-          </div>
-        `;
+        const identity = document.createElement("div");
+        appendTextElement(identity, "strong", compact(item.name || item.email || item.id, 80));
+        appendTextElement(
+          identity,
+          "span",
+          `${compact(item.email || item.id, 120)} · ${formatDate(item.createdAt)}`
+        );
+        row.appendChild(identity);
+
+        const steps = document.createElement("div");
+        steps.className = "timeline-steps";
+        [
+          ["Session", true],
+          ["Fizetés", paid],
+          ["Elemzés", analyzed],
+          ["PDF", pdf],
+          ["Email", email]
+        ].forEach(([label, done]) => {
+          appendTextElement(
+            steps,
+            "span",
+            label,
+            `timeline-step ${done ? "done" : "waiting"}`
+          );
+        });
+        row.appendChild(steps);
       }
     );
   }
@@ -3531,16 +3553,23 @@
       items,
       "Nincs follow-up email jelzés.",
       (row, item) => {
-        row.innerHTML = `
-          <div>
-            <strong>${compact(item.name || item.email || item.id, 90)}</strong>
-            <span>${compact(item.email || item.id, 130)}</span>
-          </div>
-          <div>
-            <strong>${compact(item.followUpEmailStatus || "not_due", 40)}</strong>
-            <span>due: ${formatDate(item.followUpEmailDueAt)} · sent: ${formatDate(item.followUpEmailSentAt)}</span>
-          </div>
-        `;
+        const identity = document.createElement("div");
+        appendTextElement(identity, "strong", compact(item.name || item.email || item.id, 90));
+        appendTextElement(identity, "span", compact(item.email || item.id, 130));
+        row.appendChild(identity);
+
+        const delivery = document.createElement("div");
+        appendTextElement(
+          delivery,
+          "strong",
+          compact(item.followUpEmailStatus || "not_due", 40)
+        );
+        appendTextElement(
+          delivery,
+          "span",
+          `due: ${formatDate(item.followUpEmailDueAt)} · sent: ${formatDate(item.followUpEmailSentAt)}`
+        );
+        row.appendChild(delivery);
       }
     );
   }
@@ -3565,13 +3594,17 @@
       checks.slice(0, 40),
       "Nincs nyelvi audit sor.",
       (row, item) => {
-        row.innerHTML = `
-          <div>
-            <strong>${compact(item.label || item.key || "i18n check", 100)}</strong>
-            <span>${compact(item.message || item.detail || "-", 180)}</span>
-          </div>
-          <span class="pill ${statusClass(item.level || item.status || "ok")}">${compact(item.level || item.status || "ok", 32)}</span>
-        `;
+        const detail = document.createElement("div");
+        appendTextElement(
+          detail,
+          "strong",
+          compact(item.label || item.key || "i18n check", 100)
+        );
+        appendTextElement(detail, "span", compact(item.message || item.detail || "-", 180));
+        row.appendChild(detail);
+
+        const status = item.level || item.status || "ok";
+        appendTextElement(row, "span", compact(status, 32), `pill ${statusClass(status)}`);
       }
     );
   }

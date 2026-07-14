@@ -49,7 +49,7 @@ function validateQuestionArray(name, questions, minLength = 1, maxLength = 60) {
       errors.push(`${name}[${index}] has invalid id.`);
     }
 
-    if (typeof q.text !== "string" || q.text.length < 1 || q.text.length > 1000) {
+    if (q.text !== undefined && (typeof q.text !== "string" || q.text.length > 1000)) {
       errors.push(`${name}[${index}] has invalid text.`);
     }
   });
@@ -89,54 +89,16 @@ export function validateCheckoutPayload(body = {}) {
     errors.push("Invalid child age.");
   }
 
-  errors.push(...validateQuestionArray("triageQuestions", payload.triageQuestions, 25, 40));
+  errors.push(...validateQuestionArray("triageQuestions", payload.triageQuestions, 25, 25));
 
   if (!isNumberArray(payload.triageAnswers, payload.triageQuestions?.length || 25)) {
     errors.push("triageAnswers must match triageQuestions length and contain values 0-3.");
   }
 
-  if (!isObject(payload.triageScores)) {
-    errors.push("Missing triageScores.");
-  } else {
-    REQUIRED_DOMAINS.forEach((domain) => {
-      if (typeof payload.triageScores[domain] !== "number") {
-        errors.push(`triageScores.${domain} must be a number.`);
-      }
-    });
-  }
-
-  if (!REQUIRED_DOMAINS.includes(payload.detectedRisk)) {
-    errors.push("Invalid detectedRisk.");
-  }
-
-  if (payload.secondaryRisk !== null && payload.secondaryRisk !== undefined) {
-    if (!REQUIRED_DOMAINS.includes(payload.secondaryRisk)) {
-      errors.push("Invalid secondaryRisk.");
-    }
-  }
-
-  errors.push(...validateQuestionArray("specificQuestions", payload.specificQuestions, 1, 60));
+  errors.push(...validateQuestionArray("specificQuestions", payload.specificQuestions, 30, 30));
 
   if (!isNumberArray(payload.specificAnswers, payload.specificQuestions?.length || 0)) {
     errors.push("specificAnswers must match specificQuestions length and contain values 0-3.");
-  }
-
-  if (!isObject(payload.specificScoring)) {
-    errors.push("Missing specificScoring.");
-  } else if (typeof payload.specificScoring.normalizedAverage !== "number") {
-    errors.push("specificScoring.normalizedAverage must be a number.");
-  }
-
-  if (!isObject(payload.specificProfile)) {
-    errors.push("Missing specificProfile.");
-  } else {
-    if (!REQUIRED_DOMAINS.includes(payload.specificProfile.kind)) {
-      errors.push("specificProfile.kind is invalid.");
-    }
-
-    if (!["low", "mild", "moderate", "high"].includes(payload.specificProfile.severity)) {
-      errors.push("specificProfile.severity is invalid.");
-    }
   }
 
   if (Array.isArray(payload.extraQuestions) && payload.extraQuestions.length > 0) {
@@ -145,6 +107,8 @@ export function validateCheckoutPayload(body = {}) {
     if (!isNumberArray(payload.extraAnswers, payload.extraQuestions.length)) {
       errors.push("extraAnswers must match extraQuestions length and contain values 0-3.");
     }
+  } else if (Array.isArray(payload.extraAnswers) && payload.extraAnswers.length > 0) {
+    errors.push("extraAnswers are not allowed without extraQuestions.");
   }
 
   return {

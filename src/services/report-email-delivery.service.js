@@ -28,22 +28,39 @@ export async function deliverReportEmailForSession(
     throw new Error("No analysis result found for this session.");
   }
 
-  await markReportEmailSending(sessionId);
+  const claimedSession = await markReportEmailSending(sessionId);
+
+  if (!claimedSession) {
+    return {
+      ok: true,
+      sessionId,
+      status: "skipped",
+      skipped: true,
+      reason: "report_email_already_sent_or_in_progress"
+    };
+  }
 
   try {
+    const deliverableSession = {
+      ...sessionRow,
+      ...claimedSession,
+      payload: sessionRow.payload || claimedSession.payload,
+      analysis_result: sessionRow.analysis_result || claimedSession.analysis_result
+    };
+
     const productPackage = getProductPackage(
-      sessionRow.package_code || "legacy_500_v1"
+      deliverableSession.package_code || "legacy_500_v1"
     );
     const observationProgram = productPackage.entitlements.observationDiary14Days
-      ? await ensureObservationProgram(sessionRow)
+      ? await ensureObservationProgram(deliverableSession)
       : null;
 
     const response = await sendReportEmail({
-      to: sessionRow.email,
-      lang: sessionRow.lang,
-      name: sessionRow.name,
-      reportText: sessionRow.analysis_result,
-      payload: sessionRow.payload,
+      to: deliverableSession.email,
+      lang: deliverableSession.lang,
+      name: deliverableSession.name,
+      reportText: deliverableSession.analysis_result,
+      payload: deliverableSession.payload,
       productPackage,
       observationProgram
     });

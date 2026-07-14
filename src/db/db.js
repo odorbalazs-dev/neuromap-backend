@@ -39,4 +39,14 @@ export const db = {
     }
     return pool.query(text, params);
   },
+  connect: () => {
+    if (!pool) {
+      throw new Error(
+        "Database is not available. " +
+          (env.DATABASE_ERROR ?? "DATABASE_URL was not set at startup.")
+      );
+    }
+    return pool.connect();
+  },
+  close: () => (pool ? pool.end() : Promise.resolve())
 };

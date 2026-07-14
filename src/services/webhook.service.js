@@ -15,66 +15,87 @@ import {
   getProductPackage
 } from "../config/products.js";
 
-async function registerWebhookEvent(event) {
+async function claimWebhookEvent(event) {
   const result = await db.query(
     `
-    INSERT INTO webhook_events (provider, event_id, event_type, payload, status)
-    VALUES ($1, $2, $3, $4, 'received')
+    INSERT INTO webhook_events (
+      provider,
+      event_id,
+      event_type,
+      payload,
+      status,
+      processing_token,
+      processing_started_at
+    )
+    VALUES ($1, $2, $3, $4, 'processing', gen_random_uuid(), NOW())
     ON CONFLICT (event_id)
     DO UPDATE SET
       event_type = EXCLUDED.event_type,
       payload = EXCLUDED.payload,
-      status = CASE
-        WHEN webhook_events.status = 'processed' THEN 'processed'
-        ELSE 'received'
-      END,
-      error_message = CASE
-        WHEN webhook_events.status = 'processed' THEN webhook_events.error_message
-        ELSE NULL
-      END
+      status = 'processing',
+      processing_token = gen_random_uuid(),
+      processing_started_at = NOW(),
+      error_message = NULL
+    WHERE webhook_events.status IN ('received', 'failed')
+       OR (
+        webhook_events.status = 'processing'
+        AND COALESCE(webhook_events.processing_started_at, webhook_events.created_at)
+          < NOW() - INTERVAL '15 minutes'
+       )
     RETURNING *
     `,
     ["stripe", event.id, event.type, event]
   );
 
-  return result.rows[0] || null;
-}
+  if (result.rows[0]) {
+    return {
+      row: result.rows[0],
+      processingToken: result.rows[0].processing_token
+    };
+  }
 
-async function markWebhookProcessing(eventId) {
-  await db.query(
+  const existing = await db.query(
     `
-    UPDATE webhook_events
-    SET status = 'processing',
-        error_message = NULL
+    SELECT *
+    FROM webhook_events
     WHERE event_id = $1
-      AND status != 'processed'
+    LIMIT 1
     `,
-    [eventId]
+    [event.id]
   );
+
+  return {
+    row: existing.rows[0] || null,
+    processingToken: null
+  };
 }
 
-async function markWebhookProcessed(eventId) {
+async function markWebhookProcessed(eventId, processingToken) {
   await db.query(
     `
     UPDATE webhook_events
     SET status = 'processed',
         processed_at = NOW(),
-        error_message = NULL
+        error_message = NULL,
+        processing_token = NULL
     WHERE event_id = $1
+      AND processing_token = $2
     `,
-    [eventId]
+    [eventId, processingToken]
   );
 }
 
-async function markWebhookFailed(eventId, errorMessage) {
+async function markWebhookFailed(eventId, processingToken, errorMessage) {
   await db.query(
     `
     UPDATE webhook_events
     SET status = 'failed',
-        error_message = $2
+        error_message = $3,
+        processing_token = NULL
     WHERE event_id = $1
+      AND processing_token = $2
     `,
-    [eventId, errorMessage]
+    [eventId, processingToken, errorMessage]
   );
 }
 
@@ -86,58 +107,71 @@ function isCheckoutPaid(checkoutSession) {
   );
 }
 
-function schedulePostPaymentSideEffects({
+async function runPostPaymentSideEffects({
   session,
   checkoutSession,
   internalSessionId,
   includeMeta = true,
   includeInvoice = true
 } = {}) {
-  setTimeout(async () => {
-    if (includeMeta) {
-      try {
-        await sendMetaPurchaseEvent({
-          email: session?.email,
-          eventId: checkoutSession?.id,
-          value: Number(checkoutSession?.amount_total || session?.amount_total || 0) / 100,
-          currency: String(checkoutSession?.currency || session?.currency || "usd").toUpperCase()
-        });
-      } catch (metaError) {
-        console.error("[meta] purchase event failed after webhook acknowledgement:", {
-          message: metaError?.message || metaError,
-          internalSessionId,
-          stripeSessionId: checkoutSession?.id
-        });
-      }
+  if (includeMeta) {
+    try {
+      await sendMetaPurchaseEvent({
+        email: session?.email,
+        eventId: checkoutSession?.id,
+        value: Number(checkoutSession?.amount_total || session?.amount_total || 0) / 100,
+        currency: String(checkoutSession?.currency || session?.currency || "usd").toUpperCase()
+      });
+    } catch (metaError) {
+      console.error("[meta] purchase event failed after webhook acknowledgement:", {
+        message: metaError?.message || metaError,
+        internalSessionId,
+        stripeSessionId: checkoutSession?.id
+      });
     }
+  }
 
-    if (includeInvoice) {
-      try {
-        await createInvoiceForPaidSession({
-          session,
-          checkoutSession,
-          throwOnError: false
-        });
-      } catch (invoiceError) {
-        console.error("[invoice] invoice step failed after webhook acknowledgement:", {
-          message: invoiceError?.message || invoiceError,
-          internalSessionId,
-          stripeSessionId: checkoutSession?.id
-        });
-      }
+  if (includeInvoice) {
+    try {
+      await createInvoiceForPaidSession({
+        session,
+        checkoutSession,
+        throwOnError: false
+      });
+    } catch (invoiceError) {
+      console.error("[invoice] invoice step failed after webhook acknowledgement:", {
+        message: invoiceError?.message || invoiceError,
+        internalSessionId,
+        stripeSessionId: checkoutSession?.id
+      });
     }
+  }
+}
+
+function schedulePostPaymentSideEffects(options) {
+  console.log("[webhook] schedule_post_payment_side_effects", {
+    internalSessionId: options?.internalSessionId || null,
+    stripeSessionId: options?.checkoutSession?.id || null
+  });
+
+  setTimeout(async () => {
+    await runPostPaymentSideEffects(options);
   }, 0);
 }
 
 export async function handleStripeWebhook(rawBody, signature) {
   const event = constructStripeEvent(rawBody, signature);
-  const webhookRow = await registerWebhookEvent(event);
+  const webhookClaim = await claimWebhookEvent(event);
+  const webhookRow = webhookClaim.row;
+  const processingToken = webhookClaim.processingToken;
 
-  if (webhookRow?.status === "processed") {
+  if (!processingToken) {
     return {
       received: true,
       duplicate: true,
-      alreadyProcessed: true
+      alreadyProcessed: webhookRow?.status === "processed",
+      inProgress: webhookRow?.status === "processing",
+      eventType: event.type
     };
   }
 
@@ -145,10 +179,8 @@ export async function handleStripeWebhook(rawBody, signature) {
   let phase = "received";
 
   try {
-    await markWebhookProcessing(event.id);
-
     if (event.type !== "checkout.session.completed") {
-      await markWebhookProcessed(event.id);
+      await markWebhookProcessed(event.id, processingToken);
 
       return {
         received: true,
@@ -165,7 +197,7 @@ export async function handleStripeWebhook(rawBody, signature) {
     }
 
     if (!isCheckoutPaid(checkoutSession)) {
-      await markWebhookProcessed(event.id);
+      await markWebhookProcessed(event.id, processingToken);
 
       return {
         received: true,
@@ -205,7 +237,7 @@ export async function handleStripeWebhook(rawBody, signature) {
         });
       }
 
-      await markWebhookProcessed(event.id);
+      await markWebhookProcessed(event.id, processingToken);
 
       return {
         received: true,
@@ -230,15 +262,6 @@ export async function handleStripeWebhook(rawBody, signature) {
         currency: String(checkoutSession.currency || productPackage.currency).toLowerCase()
       };
 
-    phase = "schedule_post_payment_side_effects";
-    schedulePostPaymentSideEffects({
-      session: paidSession,
-      checkoutSession,
-      internalSessionId,
-      includeMeta: true,
-      includeInvoice: true
-    });
-
     phase = "queue_analysis";
 
     const queuedRow = await markAnalysisQueued(internalSessionId);
@@ -249,7 +272,15 @@ export async function handleStripeWebhook(rawBody, signature) {
 
     await enqueueAnalysisJob(internalSessionId);
 
-    await markWebhookProcessed(event.id);
+    await markWebhookProcessed(event.id, processingToken);
+
+    schedulePostPaymentSideEffects({
+      session: paidSession,
+      checkoutSession,
+      internalSessionId,
+      includeMeta: true,
+      includeInvoice: true
+    });
 
     return {
       received: true,
@@ -280,7 +311,7 @@ export async function handleStripeWebhook(rawBody, signature) {
       }
     }
 
-    await markWebhookFailed(event.id, message);
+    await markWebhookFailed(event.id, processingToken, message);
 
     throw error;
   }

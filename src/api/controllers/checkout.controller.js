@@ -8,6 +8,10 @@ import { createCheckoutSession } from "../../services/stripe.service.js";
 import { normalizeCheckoutPayload } from "../../utils/normalizeCheckoutPayload.js";
 import { validateCheckoutPayload } from "../../utils/validateCheckoutPayload.js";
 import { getProductPackage } from "../../config/products.js";
+import {
+  canonicalizeQuestionnairePayload,
+  QuestionnaireIntegrityError
+} from "../../services/questionnaire-integrity.service.js";
 
 export async function createCheckout(req, res) {
   try {
@@ -21,8 +25,9 @@ export async function createCheckout(req, res) {
       });
     }
 
-    const { email, name, lang, payload, packageCode } =
-      normalizeCheckoutPayload(req.body || {});
+    const normalized = normalizeCheckoutPayload(req.body || {});
+    const { email, name, lang, packageCode } = normalized;
+    const payload = canonicalizeQuestionnairePayload(normalized.payload, lang);
     const productPackage = getProductPackage(packageCode);
 
     const session = await createSession({
@@ -54,9 +59,17 @@ export async function createCheckout(req, res) {
   } catch (error) {
     console.error("checkout controller error:", error);
 
+    if (error instanceof QuestionnaireIntegrityError) {
+      return res.status(400).json({
+        ok: false,
+        error: "Invalid questionnaire payload",
+        details: error.errors
+      });
+    }
+
     return res.status(500).json({
       ok: false,
-      error: error.message || "Failed to create checkout"
+      error: "Failed to create checkout"
     });
   }
 }

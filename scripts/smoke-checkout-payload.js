@@ -1,5 +1,10 @@
 import { TRIAGE_BANK, SPECIFIC_BANKS } from "../src/data/banks/index.js";
-import { analyzeAdaptiveState, pickBalancedSpecificQuestions } from "../src/services/adaptive-engine.service.js";
+import { EXTRA_BANKS } from "../src/data/banks/webflow-bridge.js";
+import { pickBalancedSpecificQuestions } from "../src/services/adaptive-engine.service.js";
+import {
+  canonicalizeQuestionnairePayload,
+  QuestionnaireIntegrityError
+} from "../src/services/questionnaire-integrity.service.js";
 import { normalizeCheckoutPayload } from "../src/utils/normalizeCheckoutPayload.js";
 import { validateCheckoutPayload } from "../src/utils/validateCheckoutPayload.js";
 
@@ -93,39 +98,32 @@ function buildSpecificProfile(kind, scoring) {
 
 function buildBasePayload({ includeExtra = false, packageCode = "standard_v1" } = {}) {
   const triageQuestions = selectTriageQuestions();
-  const triageAnswers = triageQuestions.map((question) => (question.domain === "ADHD" ? 3 : 1));
+  const triageAnswers = triageQuestions.map((question) => (
+    includeExtra || question.domain === "ADHD" ? 3 : 1
+  ));
   const triageScores = {
-    ADHD: 2.6,
-    ASD: includeExtra ? 2.45 : 1.5,
-    ANXIETY: 1.1,
-    DEPRESSION: 0.8,
-    LEARNING: 1.0
+    ADHD: 0,
+    ASD: 0,
+    ANXIETY: 0,
+    DEPRESSION: 0,
+    LEARNING: 0
   };
+  const detectedRisk = "LEARNING";
+  const secondaryRisk = "DEPRESSION";
 
-  const adaptive = analyzeAdaptiveState({ triageScores });
-  const detectedRisk = adaptive.primaryDomain || "ADHD";
-  const secondaryRisk = adaptive.secondaryDomain || "ASD";
-
-  const specificQuestions = pickBalancedSpecificQuestions(SPECIFIC_BANKS[detectedRisk], {
+  const specificQuestions = pickBalancedSpecificQuestions(SPECIFIC_BANKS.ADHD, {
     count: 30,
-    seed: `smoke:${detectedRisk}`,
-    focusSubdomains: adaptive.recommendedFocusAreas || [],
+    seed: "smoke:ADHD",
+    focusSubdomains: [],
     maxPerStem: 1,
     targetReverseRatio: 0.2
   });
   const specificAnswers = specificQuestions.map(() => 2);
   const specificScoring = buildScoring(specificQuestions, specificAnswers);
-  const specificProfile = buildSpecificProfile(detectedRisk, specificScoring);
+  const specificProfile = buildSpecificProfile("LEARNING", specificScoring);
 
-  const extraBank = SPECIFIC_BANKS[secondaryRisk] || [];
   const extraQuestions = includeExtra
-    ? pickBalancedSpecificQuestions(extraBank, {
-        count: 5,
-        seed: `smoke:extra:${secondaryRisk}`,
-        focusSubdomains: adaptive.recommendedFocusAreas || [],
-        maxPerStem: 1,
-        targetReverseRatio: 0.2
-      })
+    ? [...EXTRA_BANKS.ADHD.slice(0, 3), ...EXTRA_BANKS.ASD.slice(0, 2)]
     : [];
   const extraAnswers = extraQuestions.map(() => 1);
 
@@ -165,7 +163,7 @@ function buildBasePayload({ includeExtra = false, packageCode = "standard_v1" } 
       triageQuestions: triageQuestions.map((question) => toPayloadQuestion(question)),
       triageAnswers,
       triageScores,
-      triageRanking: adaptive.rankedDomains || [],
+      triageRanking: [],
       detectedRisk,
       secondaryRisk,
       specificQuestions: specificQuestions.map((question) => toPayloadQuestion(question)),
@@ -198,6 +196,7 @@ function expectValidPayload(name, payload) {
   assert(validation.ok, `${name} should validate. Errors: ${validation.errors.join("; ")}`);
 
   const normalized = normalizeCheckoutPayload(payload);
+  const canonical = canonicalizeQuestionnairePayload(normalized.payload, normalized.lang);
   assert(normalized.email === payload.email, `${name} should keep lowercase email.`);
   assert(normalized.payload.childAge === 7, `${name} should keep childAge.`);
   assert(normalized.payload.ageYears === 7, `${name} should keep ageYears.`);
@@ -206,11 +205,15 @@ function expectValidPayload(name, payload) {
   assert(normalized.payload.acquisition?.first_touch?.gclid === "test-click-id", `${name} should keep Google click id.`);
   assert(normalized.payload.triageQuestions.length === 25, `${name} should keep 25 triage questions.`);
   assert(normalized.payload.specificQuestions.length === 30, `${name} should keep 30 specific questions.`);
-  assert(
-    normalized.payload.extraQuestions.length === payload.payload.extraQuestions.length,
-    `${name} should keep extra question count.`
-  );
+  assert(canonical.detectedRisk === "ADHD", `${name} should derive ADHD on the server.`);
+  assert(canonical.specificProfile.kind === "ADHD", `${name} should replace the client profile kind.`);
+  assert(canonical.triageScores.ADHD > canonical.triageScores.ANXIETY || payload.payload.extraQuestions.length === 5,
+    `${name} should recompute triage scores.`);
+  assert(canonical.scoringAuthority === "server-canonical-v1", `${name} should mark server scoring authority.`);
+  assert(canonical.extraQuestions.length === payload.payload.extraQuestions.length,
+    `${name} should keep only canonical extra questions.`);
 
+  normalized.payload = canonical;
   return normalized;
 }
 
@@ -245,6 +248,18 @@ function main() {
     "broken extra payload should fail on extraAnswers length."
   );
   console.log("broken extra payload rejected as expected");
+
+  const tamperedQuestionPayload = buildBasePayload();
+  tamperedQuestionPayload.payload.specificQuestions[0].id = "UNKNOWN_QUESTION";
+  let integrityRejected = false;
+  try {
+    const normalized = normalizeCheckoutPayload(tamperedQuestionPayload);
+    canonicalizeQuestionnairePayload(normalized.payload, normalized.lang);
+  } catch (error) {
+    integrityRejected = error instanceof QuestionnaireIntegrityError;
+  }
+  assert(integrityRejected, "unknown question ids should fail canonical integrity validation.");
+  console.log("unknown question id rejected as expected");
 
   const plusPayload = buildBasePayload({ packageCode: "plus_v1" });
   const plusNormalized = expectValidPayload("plus payload", plusPayload);

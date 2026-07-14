@@ -262,18 +262,36 @@ export async function markAnalysisDone(sessionId, resultText) {
   return result.rows[0] || null;
 }
 
-export async function markReportEmailSending(sessionId) {
+export async function markReportEmailSending(
+  sessionId,
+  { staleSendingMinutes = 15 } = {}
+) {
   const result = await db.query(
     `
     UPDATE sessions
     SET report_email_status = 'sending',
         report_email_last_attempt_at = NOW(),
         report_email_error = NULL,
-        report_email_attempts = report_email_attempts + 1
+        report_email_attempts = COALESCE(report_email_attempts, 0) + 1
     WHERE id = $1
+      AND payment_status = 'paid'
+      AND analysis_status = 'done'
+      AND analysis_result IS NOT NULL
+      AND LENGTH(TRIM(analysis_result)) > 0
+      AND COALESCE(report_email_status, 'not_sent') IS DISTINCT FROM 'sent'
+      AND (
+        COALESCE(report_email_status, 'not_sent') IN ('failed', 'not_sent')
+        OR (
+          report_email_status = 'sending'
+          AND (
+            report_email_last_attempt_at IS NULL
+            OR report_email_last_attempt_at < NOW() - ($2::int * INTERVAL '1 minute')
+          )
+        )
+      )
     RETURNING *
     `,
-    [sessionId]
+    [sessionId, staleSendingMinutes]
   );
 
   return result.rows[0] || null;
@@ -289,6 +307,7 @@ export async function markReportEmailSent(sessionId, providerId = null) {
         report_email_error = NULL,
         report_email_provider_id = $2
     WHERE id = $1
+      AND report_email_status = 'sending'
     RETURNING *
     `,
     [sessionId, providerId]
@@ -305,6 +324,7 @@ export async function markReportEmailFailed(sessionId, errorMessage) {
         report_email_last_attempt_at = COALESCE(report_email_last_attempt_at, NOW()),
         report_email_error = $2
     WHERE id = $1
+      AND COALESCE(report_email_status, 'not_sent') IS DISTINCT FROM 'sent'
     RETURNING *
     `,
     [sessionId, errorMessage || "Report email failed"]
