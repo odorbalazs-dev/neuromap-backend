@@ -1,6 +1,5 @@
 import { normalizePackageCode } from "../config/products.js";
 
-const REQUIRED_DOMAINS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
 const SUPPORTED_LANGS = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -8,111 +7,87 @@ function isObject(value) {
   return value && typeof value === "object" && !Array.isArray(value);
 }
 
-function isNumberArray(arr, expectedLength) {
-  return (
-    Array.isArray(arr) &&
-    arr.length === expectedLength &&
-    arr.every((v) => typeof v === "number" && v >= 0 && v <= 3)
-  );
+function isNumberArray(values, expectedLength) {
+  return Array.isArray(values) &&
+    values.length === expectedLength &&
+    values.every((value) => Number.isInteger(value) && value >= 0 && value <= 3);
 }
 
-function hasInvalidAge(value) {
-  if (value === null || value === undefined || value === "") return false;
-
-  const age = Number(String(value).trim().replace(",", "."));
-  return !Number.isFinite(age) || age < 1 || age > 24;
-}
-
-function validateQuestionArray(name, questions, minLength = 1, maxLength = 60) {
+function validateQuestionReferences(name, questions, expectedLength) {
   const errors = [];
-
-  if (!Array.isArray(questions)) {
-    errors.push(`${name} must be an array.`);
-    return errors;
+  if (!Array.isArray(questions) || questions.length !== expectedLength) {
+    return [`${name} must contain exactly ${expectedLength} item(s).`];
   }
 
-  if (questions.length < minLength) {
-    errors.push(`${name} must contain at least ${minLength} item(s).`);
-  }
-
-  if (questions.length > maxLength) {
-    errors.push(`${name} must contain at most ${maxLength} item(s).`);
-  }
-
-  questions.forEach((q, index) => {
-    if (!q || typeof q !== "object" || Array.isArray(q)) {
-      errors.push(`${name}[${index}] must be an object.`);
-      return;
-    }
-
-    if (typeof q.id !== "string" || q.id.length < 1 || q.id.length > 120) {
+  questions.forEach((question, index) => {
+    const keys = isObject(question) ? Object.keys(question) : [];
+    if (!isObject(question) || typeof question.id !== "string" || !question.id.trim()) {
       errors.push(`${name}[${index}] has invalid id.`);
+    } else if (question.id.length > 120) {
+      errors.push(`${name}[${index}] id is too long.`);
     }
-
-    if (q.text !== undefined && (typeof q.text !== "string" || q.text.length > 1000)) {
-      errors.push(`${name}[${index}] has invalid text.`);
+    if (keys.some((key) => key !== "id")) {
+      errors.push(`${name}[${index}] may only contain an id.`);
     }
   });
+  return errors;
+}
 
+function validateConsent(consent) {
+  const errors = [];
+  if (!isObject(consent)) return ["Missing consent receipt."];
+  if (typeof consent.id !== "string" ||
+      !/^[0-9a-f]{8}-[0-9a-f-]{27}$/i.test(consent.id.trim())) {
+    errors.push("Invalid consent receipt id.");
+  }
+  if (typeof consent.token !== "string" || consent.token.length < 32 || consent.token.length > 128) {
+    errors.push("Invalid consent receipt token.");
+  }
   return errors;
 }
 
 export function validateCheckoutPayload(body = {}) {
   const errors = [];
-
   if (!body.name || typeof body.name !== "string" || body.name.length > 120) {
     errors.push("Missing or invalid name.");
   }
-
   if (!body.email || typeof body.email !== "string" || body.email.length > 254 || !EMAIL_RE.test(body.email)) {
     errors.push("Missing or invalid email.");
   }
-
-  if (!body.lang || typeof body.lang !== "string" || !SUPPORTED_LANGS.includes(body.lang)) {
-    errors.push("Missing or invalid lang.");
+  if (!SUPPORTED_LANGS.includes(body.lang)) errors.push("Missing or invalid lang.");
+  if (body.packageCode !== undefined && body.packageCode !== null &&
+      !normalizePackageCode(body.packageCode, { defaultIfMissing: false })) {
+    errors.push("Invalid packageCode.");
   }
-
-  if (body.packageCode !== undefined && body.packageCode !== null) {
-    if (!normalizePackageCode(body.packageCode, { defaultIfMissing: false })) {
-      errors.push("Invalid packageCode.");
-    }
-  }
+  errors.push(...validateConsent(body.consent));
 
   const payload = body.payload;
+  if (!isObject(payload)) return { ok: false, errors: [...errors, "Missing payload."] };
 
-  if (!isObject(payload)) {
-    errors.push("Missing payload.");
-    return { ok: false, errors };
+  const age = Number(payload.childAge ?? payload.ageYears ?? body.childAge ?? body.ageYears);
+  if (!Number.isFinite(age) || age < 3 || age > 17) {
+    errors.push("Child age must be between 3 and 17 years.");
   }
 
-  if (hasInvalidAge(body.childAge) || hasInvalidAge(body.ageYears) || hasInvalidAge(payload.childAge) || hasInvalidAge(payload.ageYears)) {
-    errors.push("Invalid child age.");
+  errors.push(...validateQuestionReferences("triageQuestions", payload.triageQuestions, 25));
+  if (!isNumberArray(payload.triageAnswers, 25)) {
+    errors.push("triageAnswers must contain exactly 25 integer values from 0 to 3.");
+  }
+  errors.push(...validateQuestionReferences("specificQuestions", payload.specificQuestions, 30));
+  if (!isNumberArray(payload.specificAnswers, 30)) {
+    errors.push("specificAnswers must contain exactly 30 integer values from 0 to 3.");
   }
 
-  errors.push(...validateQuestionArray("triageQuestions", payload.triageQuestions, 25, 25));
-
-  if (!isNumberArray(payload.triageAnswers, payload.triageQuestions?.length || 25)) {
-    errors.push("triageAnswers must match triageQuestions length and contain values 0-3.");
-  }
-
-  errors.push(...validateQuestionArray("specificQuestions", payload.specificQuestions, 30, 30));
-
-  if (!isNumberArray(payload.specificAnswers, payload.specificQuestions?.length || 0)) {
-    errors.push("specificAnswers must match specificQuestions length and contain values 0-3.");
-  }
-
-  if (Array.isArray(payload.extraQuestions) && payload.extraQuestions.length > 0) {
-    errors.push(...validateQuestionArray("extraQuestions", payload.extraQuestions, 1, 10));
-
-    if (!isNumberArray(payload.extraAnswers, payload.extraQuestions.length)) {
-      errors.push("extraAnswers must match extraQuestions length and contain values 0-3.");
+  const extraQuestions = payload.extraQuestions || [];
+  const extraAnswers = payload.extraAnswers || [];
+  if (extraQuestions.length) {
+    errors.push(...validateQuestionReferences("extraQuestions", extraQuestions, 5));
+    if (!isNumberArray(extraAnswers, 5)) {
+      errors.push("extraAnswers must contain exactly 5 integer values from 0 to 3.");
     }
-  } else if (Array.isArray(payload.extraAnswers) && payload.extraAnswers.length > 0) {
+  } else if (extraAnswers.length) {
     errors.push("extraAnswers are not allowed without extraQuestions.");
   }
 
-  return {
-    ok: errors.length === 0,
-    errors
-  };
+  return { ok: errors.length === 0, errors };
 }

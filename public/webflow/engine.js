@@ -5,8 +5,10 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260714-landing-minimal-v2";
+  const ENGINE_VERSION = "20260715-gdpr-consent-v1";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
+  const LEGAL_CONSENT_VERSION = "20260715-gdpr-legal-v1";
+  const LANGUAGE_CONFIRMED_KEY = "nm_language_confirmed_v1";
   const DRAFT_STORAGE_KEY = "nm_questionnaire_draft_v1";
   const PACKAGE_STORAGE_KEY = "nm_package_code_v1";
   const DRAFT_TTL_MS = 1000 * 60 * 60 * 24 * 14;
@@ -23,6 +25,23 @@
     "wbraid"
   ];
   const CAMPAIGN_SUPPORTED_LANGS = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];
+  let legalManagerPromise = null;
+  const trackedSchemaEvents = new Set();
+
+  function installPrivacyDefaults() {
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = window.gtag || function () {
+      window.dataLayer.push(arguments);
+    };
+
+    window.gtag("consent", "default", {
+      ad_storage: "denied",
+      analytics_storage: "denied",
+      ad_user_data: "denied",
+      ad_personalization: "denied",
+      wait_for_update: 500
+    });
+  }
 
   const CLIENT_PACKAGE_CATALOG = Object.freeze({
     standard_v1: Object.freeze({
@@ -522,27 +541,48 @@
   }
 
   function getAnalyticsBasePayload(extra = {}) {
-    const childAge = typeof getChildAgeValue === "function" ? getChildAgeValue() : null;
-
     return Object.assign({
       event_schema_version: ANALYTICS_SCHEMA_VERSION,
       app_name: "neuromap_kids",
       app_surface: "webflow",
       source: "webflow_engine",
       page_kind: getAnalyticsPageKind(),
-      page_path: window.location.pathname || "",
-      page_url: window.location.href || "",
       lang: state.lang || getLang(),
-      client_session_id: getClientSessionId(),
       questionnaire_version: "v5-browser-adaptive-picker",
       engine_version: ENGINE_VERSION,
-      child_age: childAge == null ? "" : childAge,
-      detected_risk: state.detectedRisk || "",
-      secondary_risk: state.secondaryRisk || "",
-      needs_extra: Boolean(state.needsExtra),
-      funnel_step: state.step || "landing",
-      generated_at: new Date().toISOString()
-    }, getCampaignAnalyticsFields(), extra || {});
+      funnel_step: state.step || "landing"
+    }, sanitizeAnalyticsPayload(extra || {}));
+  }
+
+  function isAnalyticsAllowed() {
+    return Boolean(window.NM_LEGAL && typeof window.NM_LEGAL.isAnalyticsAllowed === "function" && window.NM_LEGAL.isAnalyticsAllowed());
+  }
+
+  function sanitizeAnalyticsPayload(payload = {}) {
+    const allowedKeys = new Set([
+      "event_id",
+      "funnel_step",
+      "package_code",
+      "package_source",
+      "value",
+      "currency",
+      "selected_lang",
+      "previous_lang",
+      "answer_count",
+      "specific_answer_count",
+      "extra_answer_count",
+      "triage_question_count",
+      "specific_bank_adhd_count",
+      "specific_bank_asd_count",
+      "specific_bank_anxiety_count",
+      "specific_bank_depression_count",
+      "specific_bank_learning_count"
+    ]);
+
+    return Object.keys(payload || {}).reduce((safe, key) => {
+      if (allowedKeys.has(key)) safe[key] = payload[key];
+      return safe;
+    }, {});
   }
 
   function hasSchemaV2Event(eventName, dedupeKey) {
@@ -556,15 +596,23 @@
   }
 
   function trackSchemaEvent(eventName, payload = {}, options = {}) {
-    const dedupeKey = options.dedupeKey || "";
-
-    if (dedupeKey && hasSchemaV2Event(eventName, dedupeKey)) {
+    if (!isAnalyticsAllowed()) {
       return;
     }
 
+    const dedupeKey = options.dedupeKey || "";
+    const dedupeCacheKey = dedupeKey ? `${eventName}:${dedupeKey}` : "";
+
+    if (dedupeCacheKey && (trackedSchemaEvents.has(dedupeCacheKey) || hasSchemaV2Event(eventName, dedupeKey))) {
+      return;
+    }
+
+    if (dedupeCacheKey) {
+      trackedSchemaEvents.add(dedupeCacheKey);
+    }
+
     const enhancedPayload = getAnalyticsBasePayload(Object.assign({
-      event_id: `${eventName}_${Date.now()}_${randomIdPart()}`,
-      dedupe_key: dedupeKey
+      event_id: `${eventName}_${Date.now()}_${randomIdPart()}`
     }, payload || {}));
 
     if (typeof window.nmTrack === "function") {
@@ -578,6 +626,83 @@
 
   function getConfig() {
     return window.NM_CONFIG || {};
+  }
+
+  function getApiBaseUrl() {
+    const configured = String(getConfig().API_BASE_URL || "").trim();
+    if (configured) return configured.replace(/\/+$/, "");
+    return "https://neuromap-backend-production-969d.up.railway.app";
+  }
+
+  function loadExternalScriptOnce(src, globalName) {
+    if (globalName && window[globalName]) return Promise.resolve(window[globalName]);
+
+    return new Promise((resolve, reject) => {
+      const existing = Array.from(document.scripts).find((script) => script.src === src);
+
+      if (existing) {
+        if (globalName && window[globalName]) {
+          resolve(window[globalName]);
+          return;
+        }
+
+        existing.addEventListener("load", () => resolve(globalName ? window[globalName] : true), { once: true });
+        existing.addEventListener("error", reject, { once: true });
+        return;
+      }
+
+      const script = document.createElement("script");
+      script.src = src;
+      script.async = true;
+      script.onload = () => resolve(globalName ? window[globalName] : true);
+      script.onerror = () => reject(new Error("The legal consent module could not be loaded."));
+      document.head.appendChild(script);
+    });
+  }
+
+  function ensureLegalManager() {
+    if (window.NM_LEGAL && typeof window.NM_LEGAL.ensureConsent === "function") {
+      return Promise.resolve(window.NM_LEGAL);
+    }
+
+    if (!legalManagerPromise) {
+      const src = `${getApiBaseUrl()}/public/webflow/legal-consent.js?v=${encodeURIComponent(LEGAL_CONSENT_VERSION)}`;
+      legalManagerPromise = loadExternalScriptOnce(src, "NM_LEGAL").then((manager) => {
+        if (!manager || typeof manager.ensureConsent !== "function") {
+          throw new Error("The legal consent module is unavailable.");
+        }
+        return manager;
+      });
+    }
+
+    return legalManagerPromise;
+  }
+
+  function hasConfirmedLanguage() {
+    try {
+      return window.sessionStorage && window.sessionStorage.getItem(LANGUAGE_CONFIRMED_KEY) === "1";
+    } catch (_error) {
+      return false;
+    }
+  }
+
+  function markLanguageConfirmed() {
+    try {
+      if (window.sessionStorage) window.sessionStorage.setItem(LANGUAGE_CONFIRMED_KEY, "1");
+    } catch (_error) {
+      // Storage failure does not bypass checkout consent validation.
+    }
+  }
+
+  function getLegalReceipt() {
+    if (!window.NM_LEGAL || typeof window.NM_LEGAL.getReceipt !== "function") return null;
+    return window.NM_LEGAL.getReceipt();
+  }
+
+  async function ensureLegalConsentForCurrentLanguage() {
+    const manager = await ensureLegalManager();
+    const receipt = await manager.ensureConsent(state.lang || getLang());
+    return receipt || getLegalReceipt();
   }
 
   function getSupportedLanguages() {
@@ -754,24 +879,6 @@
 
   function getCampaignAttribution() {
     return readCampaignAttribution();
-  }
-
-  function getCampaignAnalyticsFields() {
-    const attribution = getCampaignAttribution();
-    const touch = attribution && attribution.last_touch
-      ? attribution.last_touch
-      : {};
-    const fields = {};
-
-    CAMPAIGN_ATTRIBUTION_KEYS.forEach((key) => {
-      if (touch[key]) fields[key] = touch[key];
-    });
-
-    if (attribution && attribution.first_touch && attribution.first_touch.utm_source) {
-      fields.first_touch_source = attribution.first_touch.utm_source;
-    }
-
-    return fields;
   }
 
   const QUESTIONNAIRE_UI_FALLBACK = {
@@ -4720,7 +4827,23 @@
     }, 125);
   }
 
-  function showQuestionnaireFromLanding() {
+  async function showQuestionnaireFromLanding() {
+    if (!hasConfirmedLanguage()) {
+      showModal(true);
+      return false;
+    }
+
+    try {
+      await ensureLegalConsentForCurrentLanguage();
+    } catch (error) {
+      console.error("Legal consent is required before starting the questionnaire:", error);
+      setStatus(state.lang === "hu"
+        ? "A kérdőív indításához előbb jóvá kell hagyni a jogi és adatvédelmi tájékoztatót."
+        : "Please review and approve the legal and privacy information before starting.");
+      showModal(true);
+      return false;
+    }
+
     const app = document.getElementById("nmApp");
     const target =
       document.getElementById("questionnaireStart") ||
@@ -4757,6 +4880,8 @@
         firstField.focus({ preventScroll: true });
       }
     }, 450);
+
+    return true;
   }
 
   function ensureLandingStartHandlers() {
@@ -4773,7 +4898,7 @@
       element.dataset.nmEngineStartBound = "1";
       element.addEventListener("click", (event) => {
         event.preventDefault();
-        showQuestionnaireFromLanding();
+        void showQuestionnaireFromLanding();
       });
     });
   }
@@ -5060,7 +5185,7 @@
         state.draftRestored = false;
         updateResumeBanner(false);
         renderCurrentStep();
-        if (typeof showQuestionnaireFromLanding === "function") showQuestionnaireFromLanding();
+        if (typeof showQuestionnaireFromLanding === "function") void showQuestionnaireFromLanding();
       });
     }
 
@@ -5986,27 +6111,33 @@
     modal.querySelectorAll(".nm-modal-close, [data-nm-close-language]").forEach((button) => {
       if (button.dataset.nmCloseBound === "1") return;
       button.dataset.nmCloseBound = "1";
-      button.addEventListener("click", hideModal);
+      button.addEventListener("click", () => hideModal(false));
     });
 
     if (modal.dataset.nmBackdropBound !== "1") {
       modal.dataset.nmBackdropBound = "1";
       modal.addEventListener("click", (event) => {
-        if (event.target === modal) hideModal();
+        if (event.target === modal) hideModal(false);
       });
     }
 
     return modal;
   }
 
-  function showModal() {
+  function showModal(required = false) {
     const el = ensureLanguageModal();
-    if (el) el.style.display = "flex";
+    if (el) {
+      el.dataset.nmRequired = required ? "1" : "0";
+      el.style.display = "flex";
+    }
   }
 
-  function hideModal() {
+  function hideModal(force = false) {
     const el = document.getElementById("languageModal");
-    if (el) el.style.display = "none";
+    if (!el) return;
+    if (el.dataset.nmRequired === "1" && !force) return;
+    el.style.display = "none";
+    el.dataset.nmRequired = "0";
   }
 
   function buildLangButtons() {
@@ -7812,12 +7943,8 @@
 
       trackSchemaEvent("nm_triage_completed", {
         funnel_step: "triage_completed",
-        detected_risk: state.detectedRisk,
-        secondary_risk: state.secondaryRisk || "",
         needs_extra: state.needsExtra,
-        answer_count: state.triageAnswers.length,
-        primary_score: Number(risks.primaryScore || 0),
-        secondary_score: Number(risks.secondaryScore || 0)
+        answer_count: state.triageAnswers.length
       });
 
       state.step = "specific";
@@ -7854,14 +7981,10 @@
 
       trackSchemaEvent("nm_specific_completed", {
         funnel_step: "specific_completed",
-        detected_risk: state.detectedRisk,
-        secondary_risk: state.secondaryRisk || "",
         needs_extra: state.needsExtra,
         answer_count: state.specificAnswers.length + state.extraAnswers.length,
         specific_answer_count: state.specificAnswers.length,
-        extra_answer_count: state.extraAnswers.length,
-        normalized_average: Number(state.specificScoring?.normalizedAverage || 0),
-        severity: state.specificProfile?.severity || ""
+        extra_answer_count: state.extraAnswers.length
       });
 
       state.step = "summary";
@@ -7931,9 +8054,8 @@
     return { ok: true };
   }
 
-  function buildCheckoutPayload() {
+  function buildCheckoutPayload(consentReceipt = null) {
     const childAge = getChildAgeValue();
-    const acquisition = getCampaignAttribution();
 
     return {
       name: document.getElementById("name").value.trim(),
@@ -7942,10 +8064,15 @@
       ageYears: childAge,
       lang: state.lang,
       packageCode: normalizeClientPackageCode(state.packageCode),
+      consent: consentReceipt
+        ? {
+            id: consentReceipt.id || consentReceipt.consentId || "",
+            token: consentReceipt.token || ""
+          }
+        : null,
       payload: {
         childAge,
         ageYears: childAge,
-        acquisition,
         triageQuestions: state.triageQuestions.map((q) => ({
           id: q.id,
           text: getQuestionText(q),
@@ -8664,7 +8791,19 @@
       return;
     }
 
-    const payload = buildCheckoutPayload();
+    let consentReceipt = null;
+
+    try {
+      consentReceipt = await ensureLegalConsentForCurrentLanguage();
+    } catch (error) {
+      console.error("Checkout blocked because legal consent is missing:", error);
+      alert(state.lang === "hu"
+        ? "A fizetés előtt kérjük, hagyd jóvá a jogi és adatvédelmi tájékoztatót."
+        : "Please review and approve the legal and privacy information before checkout.");
+      return;
+    }
+
+    const payload = buildCheckoutPayload(consentReceipt);
     const selectedPackage = getSelectedClientPackage();
     saveDraft("checkout_started");
 
@@ -8672,11 +8811,7 @@
       funnel_step: "checkout_started",
       package_code: selectedPackage.code,
       value: selectedPackage.analyticsValue,
-      currency: selectedPackage.currency,
-      detected_risk: state.detectedRisk,
-      secondary_risk: state.secondaryRisk || "",
-      normalized_average: Number(state.specificScoring?.normalizedAverage || 0),
-      severity: state.specificProfile?.severity || ""
+      currency: selectedPackage.currency
     });
 
     try {
@@ -8718,7 +8853,7 @@
     }
   }
 
-  window.selectLang = function (lang) {
+  window.selectLang = async function (lang) {
     const previousLang = state.lang || getLang();
 
     localStorage.setItem("nm_lang", lang);
@@ -8741,13 +8876,22 @@
     rescueLandingText(lang);
     scheduleLandingTextRescue(lang);
 
-    hideModal();
+    markLanguageConfirmed();
+    hideModal(true);
+
+    try {
+      await ensureLegalConsentForCurrentLanguage();
+    } catch (error) {
+      console.error("Legal consent flow failed after language selection:", error);
+      showModal(true);
+    }
   };
 
   window.NM_SET_LANGUAGE = window.selectLang;
 
-  function init() {
+  async function init() {
     try {
+      installPrivacyDefaults();
       installEngineBootGate();
       captureCampaignAttribution();
       setEngineBootStatus("design", "Felület előkészítése...", "loading");
@@ -8781,6 +8925,19 @@
 
       setEngineBootStatus("render", "Nyitóoldal frissítése...", "loading");
       applyLang(state.lang);
+      await ensureLegalManager();
+
+      if (!hasConfirmedLanguage()) {
+        showModal(true);
+      } else {
+        try {
+          await ensureLegalConsentForCurrentLanguage();
+        } catch (error) {
+          console.error("Stored legal consent is unavailable or expired:", error);
+          showModal(true);
+        }
+      }
+
       bindDraftAutosave();
       updateResumeBanner(Boolean(state.draftRestored));
       scheduleLandingTextRescue(state.lang);
@@ -8794,7 +8951,7 @@
       trackSchemaEvent("nm_landing_view", {
         funnel_step: "landing_view"
       }, {
-        dedupeKey: `landing:${window.location.pathname || "/"}:${state.lang}`
+        dedupeKey: `landing:${state.lang}`
       });
 
       trackSchemaEvent("nm_questionnaire_loaded", {
@@ -8807,7 +8964,7 @@
         specific_bank_depression_count: specificBankCounts.DEPRESSION || 0,
         specific_bank_learning_count: specificBankCounts.LEARNING || 0
       }, {
-        dedupeKey: `questionnaire_loaded:${window.location.pathname || "/"}:${state.lang}`
+        dedupeKey: `questionnaire_loaded:${state.lang}`
       });
 
       finishEngineBootGate(650);

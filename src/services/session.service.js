@@ -1,12 +1,15 @@
 import { randomUUID, randomBytes } from "crypto";
 import { db } from "../db/db.js";
+import { env } from "../config/env.js";
 
 export async function createSession({
   email,
   name,
   lang,
   payload,
-  productPackage
+  productPackage,
+  consent,
+  consentEventId
 }) {
   const id = randomUUID();
 
@@ -23,11 +26,22 @@ export async function createSession({
       amount_total,
       currency,
       entitlements,
+      consent_record,
+      privacy_policy_version,
+      terms_version,
+      consented_at,
+      consent_event_id,
+      retention_delete_at,
       payment_status,
       analysis_status,
       created_at
     )
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, 'pending', 'pending', NOW())
+    VALUES (
+      $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
+      $11, $12, $13, $14::timestamptz, $15,
+      NOW() + ($16::int * INTERVAL '1 day'),
+      'pending', 'pending', NOW()
+    )
     RETURNING *
     `,
     [
@@ -40,7 +54,13 @@ export async function createSession({
       productPackage.offerVersion,
       productPackage.unitAmount,
       productPackage.currency,
-      productPackage.entitlements
+      productPackage.entitlements,
+      consent,
+      consent.privacyPolicyVersion,
+      consent.termsVersion,
+      consent.consentedAt,
+      consentEventId,
+      env.DATA_RETENTION_DAYS
     ]
   );
 

@@ -117,7 +117,6 @@ async function runPostPaymentSideEffects({
   if (includeMeta) {
     try {
       await sendMetaPurchaseEvent({
-        email: session?.email,
         eventId: checkoutSession?.id,
         value: Number(checkoutSession?.amount_total || session?.amount_total || 0) / 100,
         currency: String(checkoutSession?.currency || session?.currency || "usd").toUpperCase()

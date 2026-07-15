@@ -22,15 +22,9 @@ function selectTriageQuestions() {
   });
 }
 
-function toPayloadQuestion(question, lang = "hu") {
+function toPayloadQuestion(question) {
   return {
-    id: question.id,
-    text: question.text?.[lang] || question.text?.en || question.text?.hu || question.prompt || question.id,
-    domain: question.domain || null,
-    subdomain: question.subdomain || null,
-    stemKey: question.stemKey || null,
-    weight: typeof question.weight === "number" ? question.weight : 1,
-    reverse: typeof question.reverse === "boolean" ? question.reverse : false
+    id: question.id
   };
 }
 
@@ -134,32 +128,13 @@ function buildBasePayload({ includeExtra = false, packageCode = "standard_v1" } 
     ageYears: 7,
     lang: "hu",
     packageCode,
+    consent: {
+      id: "123e4567-e89b-12d3-a456-426614174000",
+      token: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
     payload: {
       childAge: 7,
       ageYears: 7,
-      acquisition: {
-        schema_version: "campaign-attribution-v1",
-        first_touch: {
-          utm_source: "google",
-          utm_medium: "cpc",
-          utm_campaign: "nm_hu_search_core",
-          utm_content: "behavior-rsa-a",
-          utm_term: "gyerek viselkedes kerdoiv",
-          gclid: "test-click-id",
-          landing_path: "/?lang=hu&utm_source=google",
-          landing_url: "https://neuromap-kids.webflow.io/",
-          captured_at: "2026-07-12T08:00:00.000Z",
-          lang: "hu"
-        },
-        last_touch: {
-          utm_source: "google",
-          utm_medium: "cpc",
-          utm_campaign: "nm_hu_search_core",
-          captured_at: "2026-07-12T08:00:00.000Z",
-          lang: "hu"
-        },
-        updated_at: "2026-07-12T08:00:00.000Z"
-      },
       triageQuestions: triageQuestions.map((question) => toPayloadQuestion(question)),
       triageAnswers,
       triageScores,
@@ -201,8 +176,8 @@ function expectValidPayload(name, payload) {
   assert(normalized.payload.childAge === 7, `${name} should keep childAge.`);
   assert(normalized.payload.ageYears === 7, `${name} should keep ageYears.`);
   assert(normalized.packageCode === payload.packageCode, `${name} should keep the selected package code.`);
-  assert(normalized.payload.acquisition?.first_touch?.utm_source === "google", `${name} should keep campaign source.`);
-  assert(normalized.payload.acquisition?.first_touch?.gclid === "test-click-id", `${name} should keep Google click id.`);
+  assert(normalized.consent.id === payload.consent.id, `${name} should keep consent id.`);
+  assert(normalized.consent.token === payload.consent.token, `${name} should keep consent token.`);
   assert(normalized.payload.triageQuestions.length === 25, `${name} should keep 25 triage questions.`);
   assert(normalized.payload.specificQuestions.length === 30, `${name} should keep 30 specific questions.`);
   assert(canonical.detectedRisk === "ADHD", `${name} should derive ADHD on the server.`);

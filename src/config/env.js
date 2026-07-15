@@ -57,6 +57,11 @@ function optionalInt(name, fallback, { min = 0, max = Number.MAX_SAFE_INTEGER } 
   return Math.min(max, Math.max(min, parsed));
 }
 
+function optionalBoolean(name, fallback = false) {
+  const raw = optional(name, String(fallback));
+  return String(raw).trim().toLowerCase() === "true";
+}
+
 // ---------------------------------------------------------------------------
 // Database URL resolution
 // ---------------------------------------------------------------------------
@@ -246,6 +251,36 @@ export const env = {
     min: 1,
     max: 100000
   }),
+
+  PRIVACY_POLICY_URL: optional("PRIVACY_POLICY_URL", null),
+  PRIVACY_POLICY_VERSION: optional("PRIVACY_POLICY_VERSION", "2026-07-15"),
+  TERMS_URL: optional("TERMS_URL", null),
+  TERMS_VERSION: optional("TERMS_VERSION", "2026-07-15"),
+  CONSENT_POLICY_VERSION: optional("CONSENT_POLICY_VERSION", "2026-07-15"),
+  POLICY_EFFECTIVE_DATE: optional("POLICY_EFFECTIVE_DATE", "2026-07-15"),
+  CONSENT_RECEIPT_TTL_HOURS: optionalInt("CONSENT_RECEIPT_TTL_HOURS", 24, {
+    min: 1,
+    max: 168
+  }),
+  DATA_CONTROLLER_NAME: optional("DATA_CONTROLLER_NAME", null),
+  DATA_CONTROLLER_ADDRESS: optional("DATA_CONTROLLER_ADDRESS", null),
+  DATA_CONTROLLER_COUNTRY: optional("DATA_CONTROLLER_COUNTRY", null),
+  PRIVACY_CONTACT_EMAIL: optional("PRIVACY_CONTACT_EMAIL", null),
+  DPO_CONTACT_EMAIL: optional("DPO_CONTACT_EMAIL", null),
+  EEA_REPRESENTATIVE: optional("EEA_REPRESENTATIVE", null),
+  SUPERVISORY_AUTHORITY_NAME: optional("SUPERVISORY_AUTHORITY_NAME", null),
+  SUPERVISORY_AUTHORITY_URL: optional("SUPERVISORY_AUTHORITY_URL", null),
+  MARKETING_SERVER_EVENTS_ENABLED: optionalBoolean("MARKETING_SERVER_EVENTS_ENABLED", false),
+  DATA_RETENTION_DAYS: optionalInt("DATA_RETENTION_DAYS", 90, { min: 7, max: 730 }),
+  PRODUCTION_CHECKOUT_ENABLED: optionalBoolean("PRODUCTION_CHECKOUT_ENABLED", false),
+  LEGAL_REVIEW_APPROVED: optionalBoolean("LEGAL_REVIEW_APPROVED", false),
+  DPIA_APPROVED: optionalBoolean("DPIA_APPROVED", false),
+  CLINICAL_CONTENT_REVIEW_APPROVED: optionalBoolean("CLINICAL_CONTENT_REVIEW_APPROVED", false),
+  PRIVACY_POLICY_PUBLISHED: optionalBoolean("PRIVACY_POLICY_PUBLISHED", false),
+  TERMS_PUBLISHED: optionalBoolean("TERMS_PUBLISHED", false),
+  CONSENT_MANAGER_CONFIGURED: optionalBoolean("CONSENT_MANAGER_CONFIGURED", false),
+  VENDOR_DPA_REVIEWED: optionalBoolean("VENDOR_DPA_REVIEWED", false),
+  SECURITY_REVIEW_APPROVED: optionalBoolean("SECURITY_REVIEW_APPROVED", false),
 
   INVOICE_PROVIDER: optional("INVOICE_PROVIDER", null),
   INVOICE_AUTO_CREATE: optional("INVOICE_AUTO_CREATE", null),

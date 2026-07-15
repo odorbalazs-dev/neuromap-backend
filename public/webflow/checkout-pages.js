@@ -5,22 +5,38 @@
 (function () {
   if (typeof window === "undefined" || typeof document === "undefined") return;
 
-  const CHECKOUT_PAGES_VERSION = "20260713-two-tier-offer-v1";
+  const CHECKOUT_PAGES_VERSION = "20260715-gdpr-checkout-v1";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
+  const ANALYTICS_CONSENT_KEY = "nm_analytics_consent_v1";
   const DEFAULT_API_BASE_URL = "https://neuromap-backend-production-969d.up.railway.app";
   const SUPPORTED_LANGS = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];
-  const CAMPAIGN_ATTRIBUTION_STORAGE_KEY = "nm_campaign_attribution_v1";
-  const CAMPAIGN_ATTRIBUTION_TTL_MS = 1000 * 60 * 60 * 24 * 90;
-  const CAMPAIGN_ATTRIBUTION_KEYS = [
-    "utm_source",
-    "utm_medium",
-    "utm_campaign",
-    "utm_content",
-    "utm_term",
-    "gclid",
-    "gbraid",
-    "wbraid"
-  ];
+  function installPrivacyDefaults() {
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = window.gtag || function () {
+      window.dataLayer.push(arguments);
+    };
+
+    window.gtag("consent", "default", {
+      ad_storage: "denied",
+      analytics_storage: "denied",
+      ad_user_data: "denied",
+      ad_personalization: "denied",
+      wait_for_update: 500
+    });
+  }
+
+  function isAnalyticsAllowed() {
+    try {
+      if (window.NM_LEGAL && typeof window.NM_LEGAL.isAnalyticsAllowed === "function") {
+        return window.NM_LEGAL.isAnalyticsAllowed();
+      }
+
+      const parsed = JSON.parse(localStorage.getItem(ANALYTICS_CONSENT_KEY) || "null");
+      return parsed && parsed.allowed === true;
+    } catch (_error) {
+      return false;
+    }
+  }
 
   const BASE_COPY = {
     home: "Home",
@@ -401,63 +417,30 @@
       .replace(/'/g, "&#39;");
   }
 
-  function hasDataLayerEvent(eventName, sessionId) {
-    const dataLayer = Array.isArray(window.dataLayer) ? window.dataLayer : [];
-    return dataLayer.some((entry) => {
-      if (!entry || entry.event !== eventName) return false;
-      if (!sessionId) return true;
-      return entry.session_id === sessionId || entry.checkout_session_id === sessionId;
-    });
-  }
+  const trackedCheckoutEvents = new Set();
 
   function randomIdPart() {
     return Math.random().toString(36).slice(2, 10);
   }
 
-  function getClientSessionId() {
-    const key = "nm_client_session_id";
+  function sanitizeCheckoutAnalyticsPayload(payload) {
+    const allowedKeys = new Set([
+      "event_id",
+      "page_kind",
+      "package_code",
+      "offer_version",
+      "value",
+      "currency",
+      "lang",
+      "status",
+      "feedback",
+      "items"
+    ]);
 
-    try {
-      const existing = window.sessionStorage && window.sessionStorage.getItem(key);
-      if (existing) return existing;
-
-      const generated = `nmcs_${Date.now()}_${randomIdPart()}`;
-      if (window.sessionStorage) window.sessionStorage.setItem(key, generated);
-      return generated;
-    } catch (_error) {
-      return `nmcs_${Date.now()}_${randomIdPart()}`;
-    }
-  }
-
-  function getCampaignAnalyticsFields() {
-    try {
-      const raw = localStorage.getItem(CAMPAIGN_ATTRIBUTION_STORAGE_KEY);
-      if (!raw) return {};
-
-      const attribution = JSON.parse(raw);
-      const updatedAt = Date.parse(attribution && attribution.updated_at);
-
-      if (!Number.isFinite(updatedAt) || Date.now() - updatedAt > CAMPAIGN_ATTRIBUTION_TTL_MS) {
-        localStorage.removeItem(CAMPAIGN_ATTRIBUTION_STORAGE_KEY);
-        return {};
-      }
-
-      const touch = attribution.last_touch || attribution.first_touch || {};
-      const fields = {};
-
-      CAMPAIGN_ATTRIBUTION_KEYS.forEach((key) => {
-        const value = String(touch[key] || "").trim();
-        if (value) fields[key] = value.slice(0, key.startsWith("utm_") ? 180 : 300);
-      });
-
-      if (attribution.first_touch && attribution.first_touch.utm_source) {
-        fields.first_touch_source = String(attribution.first_touch.utm_source).trim().slice(0, 180);
-      }
-
-      return fields;
-    } catch (_error) {
-      return {};
-    }
+    return Object.keys(payload || {}).reduce((safe, key) => {
+      if (allowedKeys.has(key)) safe[key] = payload[key];
+      return safe;
+    }, {});
   }
 
   function buildAnalyticsPayload(eventName, payload) {
@@ -467,28 +450,29 @@
       app_name: "neuromap_kids",
       app_surface: "webflow",
       page_kind: getPageKind() === "success" ? "checkout_success" : "checkout_cancel",
-      page_path: window.location.pathname || "",
-      page_url: window.location.href || "",
-      client_session_id: getClientSessionId(),
       source: "webflow_checkout_pages",
-      version: CHECKOUT_PAGES_VERSION,
-      generated_at: new Date().toISOString()
-    }, getCampaignAnalyticsFields(), payload || {});
+      version: CHECKOUT_PAGES_VERSION
+    }, sanitizeCheckoutAnalyticsPayload(payload || {}));
   }
 
   function trackOnce(eventName, payload) {
+    if (!isAnalyticsAllowed()) {
+      return;
+    }
+
     window.dataLayer = window.dataLayer || [];
 
-    const sessionId = payload && (payload.session_id || payload.checkout_session_id || "");
-    const key = ["nm_track", eventName, sessionId || "no-session"].join(":");
+    const key = ["nm_track", eventName, getPageKind(), payload?.package_code || "", payload?.status || ""].join(":");
 
     try {
       if (window.sessionStorage && window.sessionStorage.getItem(key)) return;
-      if (hasDataLayerEvent(eventName, sessionId)) return;
       if (window.sessionStorage) window.sessionStorage.setItem(key, "1");
     } catch (_error) {
-      if (hasDataLayerEvent(eventName, sessionId)) return;
+      if (trackedCheckoutEvents.has(key)) return;
     }
+
+    if (trackedCheckoutEvents.has(key)) return;
+    trackedCheckoutEvents.add(key);
 
     window.dataLayer.push(Object.assign(
       { event: eventName },
@@ -1373,13 +1357,9 @@
       }
 
       trackOnce("nm_report_status_view", {
-        checkout_session_id: sessionId || "",
-        session_id: sessionId || "",
-        report_status: data.status.overall || "",
-        report_email_status: data.status.reportEmailStatus || "",
+        status: data.status.overall || "",
         lang: data.status.lang || "",
-        source: "webflow_success_page",
-        version: CHECKOUT_PAGES_VERSION
+        page_kind: "checkout_success"
       });
 
       if (data.status.overall !== "sent" && data.status.overall !== "attention" && attempt < 5) {
@@ -1426,10 +1406,7 @@
 
       setRuntimeStatus(copy.copiedSession);
       trackOnce("nm_support_reference_copied", {
-        checkout_session_id: sessionId || "",
-        session_id: sessionId || "",
-        source: "webflow_checkout_pages",
-        version: CHECKOUT_PAGES_VERSION
+        page_kind: getPageKind() === "success" ? "checkout_success" : "checkout_cancel"
       });
     } catch (_error) {
       setRuntimeStatus(sessionId);
@@ -1440,11 +1417,8 @@
     const normalized = value === "need_help" ? "need_help" : "positive";
 
     trackOnce(`nm_checkout_page_feedback_${normalized}`, {
-      checkout_session_id: sessionId || "",
-      session_id: sessionId || "",
       feedback: normalized,
-      source: kind === "success" ? "webflow_success_page" : "webflow_cancel_page",
-      version: CHECKOUT_PAGES_VERSION
+      page_kind: kind === "success" ? "checkout_success" : "checkout_cancel"
     });
 
     if (normalized === "need_help") {
@@ -1494,10 +1468,7 @@
       }
 
       trackOnce("checkout_retry_started", {
-        checkout_session_id: sessionId,
-        session_id: sessionId,
-        source: "webflow_cancel_page",
-        version: CHECKOUT_PAGES_VERSION
+        page_kind: "checkout_cancel"
       });
 
       window.location.href = checkoutUrl;
@@ -1529,11 +1500,7 @@
       currency,
       package_code: packageCode,
       offer_version: status?.offerVersion || "",
-      checkout_session_id: sessionId || "",
-      session_id: sessionId || "",
       lang: status?.lang || lang,
-      source: "webflow_success_page",
-      version: CHECKOUT_PAGES_VERSION,
       items: [
         {
           item_id: packageCode,
@@ -1546,7 +1513,6 @@
     });
 
     console.log("PURCHASE EVENT SENT", {
-      sessionId,
       packageCode,
       value,
       currency,
@@ -1559,21 +1525,15 @@
   function trackPage(kind, lang, sessionId) {
     if (kind === "success") {
       trackOnce("nm_checkout_success_view", {
-        checkout_session_id: sessionId || "",
-        session_id: sessionId || "",
         lang,
-        source: "webflow_success_page",
-        version: CHECKOUT_PAGES_VERSION
+        page_kind: "checkout_success"
       });
       return;
     }
 
     trackOnce("checkout_cancelled", {
-      checkout_session_id: sessionId || "",
-      session_id: sessionId || "",
       lang,
-      source: "webflow_cancel_page",
-      version: CHECKOUT_PAGES_VERSION
+      page_kind: "checkout_cancel"
     });
   }
 
@@ -1581,6 +1541,8 @@
     const kind = getPageKind();
     const lang = getLang();
     const sessionId = getSessionId(kind);
+
+    installPrivacyDefaults();
 
     document.documentElement.lang = lang;
     document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
@@ -1603,11 +1565,8 @@
       loadReportStatus(sessionId, copy, 1);
     } else {
       trackOnce("checkout_recovery_view", {
-        checkout_session_id: sessionId || "",
-        session_id: sessionId || "",
         lang,
-        source: "webflow_cancel_page",
-        version: CHECKOUT_PAGES_VERSION
+        page_kind: "checkout_cancel"
       });
     }
   }

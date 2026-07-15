@@ -94,7 +94,7 @@ const checks = [
     }
   },
   {
-    label: "Google click and UTM attribution survive checkout",
+    label: "Campaign measurement is consent-gated and minimized",
     run: () => {
       const engine = read("public/webflow/engine.js");
       const checkoutPages = read("public/webflow/checkout-pages.js");
@@ -103,10 +103,12 @@ const checks = [
       return (
         engine.includes("CAMPAIGN_ATTRIBUTION_STORAGE_KEY") &&
         engine.includes("captureCampaignAttribution") &&
-        engine.includes("acquisition,") &&
-        checkoutPages.includes("getCampaignAnalyticsFields") &&
-        normalizer.includes("normalizeAcquisition") &&
-        normalizer.includes('"gclid"')
+        !engine.includes("acquisition,") &&
+        checkoutPages.includes("isAnalyticsAllowed") &&
+        checkoutPages.includes("sanitizeCheckoutAnalyticsPayload") &&
+        !checkoutPages.includes("getCampaignAnalyticsFields") &&
+        !normalizer.includes("normalizeAcquisition") &&
+        !normalizer.includes('"gclid"')
       );
     }
   },

@@ -19,7 +19,7 @@ function main() {
     loaderHtml.includes("/public/webflow/engine.js"),
     "Webflow Engine loader should load the public engine file."
   );
-  const currentEngineVersion = "20260714-landing-minimal-v2";
+  const currentEngineVersion = "20260715-gdpr-consent-v1";
   assert(
     loaderHtml.includes(currentEngineVersion),
     "Webflow Engine loader should include the current questionnaire shell cache-busting version."
@@ -30,7 +30,7 @@ function main() {
   assert(script.includes("analytics-event-schema-v2"), "Engine should use analytics event schema v2.");
   assert(script.includes("trackSchemaEvent"), "Engine should send normalized analytics events.");
   assert(script.includes("event_schema_version"), "Engine analytics events should include the schema version.");
-  assert(script.includes("client_session_id"), "Engine analytics events should include a client session id.");
+  assert(!script.includes("client_session_id:"), "Engine analytics events should not include a client session id.");
   assert(script.includes("installLandingPolishV2"), "Engine should install landing polish v2.");
   assert(script.includes("nm-landing-polish-v2"), "Engine should include the scoped landing polish stylesheet.");
   assert(script.includes("ensureStickyBrandHeader"), "Engine should keep the sticky landing brand header alive.");
@@ -75,7 +75,7 @@ function main() {
   assert(script.includes("getRequestedLanguage"), "Engine should support campaign language query parameters.");
   assert(script.includes("CAMPAIGN_ATTRIBUTION_STORAGE_KEY"), "Engine should retain campaign attribution.");
   assert(script.includes("captureCampaignAttribution"), "Engine should capture Google click and UTM parameters.");
-  assert(script.includes("acquisition,"), "Engine should include acquisition data in checkout payload.");
+  assert(!script.includes("acquisition,"), "Engine should not include campaign acquisition data in checkout payload.");
   assert(script.includes("PACKAGE_SELECTOR_COPY"), "Engine should include localized package selector copy.");
   assert(script.includes("ensureLandingPackageSelector"), "Engine should render package selection on the landing page.");
   assert(script.includes('data-nm-package-selector="landing"'), "Landing page should expose the package selector scope.");

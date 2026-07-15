@@ -12,9 +12,20 @@ import {
   canonicalizeQuestionnairePayload,
   QuestionnaireIntegrityError
 } from "../../services/questionnaire-integrity.service.js";
+import {
+  assertCheckoutLaunchReady,
+  assertCurrentPolicyAcceptance,
+  LaunchGateError
+} from "../../services/launch-gate.service.js";
+import {
+  claimConsentReceipt,
+  ConsentError,
+  releaseConsentReceipt
+} from "../../services/consent.service.js";
 
 export async function createCheckout(req, res) {
   try {
+    assertCheckoutLaunchReady();
     const validation = validateCheckoutPayload(req.body || {});
 
     if (!validation.ok) {
@@ -26,17 +37,28 @@ export async function createCheckout(req, res) {
     }
 
     const normalized = normalizeCheckoutPayload(req.body || {});
-    const { email, name, lang, packageCode } = normalized;
+    const { email, name, lang, packageCode, consent } = normalized;
     const payload = canonicalizeQuestionnairePayload(normalized.payload, lang);
     const productPackage = getProductPackage(packageCode);
+    const claimedConsent = await claimConsentReceipt(consent);
 
-    const session = await createSession({
-      email,
-      name,
-      lang,
-      payload,
-      productPackage
-    });
+    let session;
+    try {
+      session = await createSession({
+        email,
+        name,
+        lang,
+        payload,
+        productPackage,
+        consent: claimedConsent.snapshot,
+        consentEventId: claimedConsent.id
+      });
+    } catch (sessionError) {
+      await releaseConsentReceipt(claimedConsent.id).catch((releaseError) => {
+        console.error("failed to release consent receipt:", releaseError);
+      });
+      throw sessionError;
+    }
 
     const stripeSession = await createCheckoutSession({
       internalSessionId: session.id,
@@ -67,6 +89,24 @@ export async function createCheckout(req, res) {
       });
     }
 
+    if (error instanceof LaunchGateError) {
+      console.warn("checkout launch gate blocked:", error.missing);
+      return res.status(503).json({
+        ok: false,
+        error: error.message,
+        code: "CHECKOUT_NOT_READY"
+      });
+    }
+
+    if (error instanceof ConsentError) {
+      return res.status(error.status).json({
+        ok: false,
+        error: error.message,
+        code: error.code,
+        details: error.details
+      });
+    }
+
     return res.status(500).json({
       ok: false,
       error: "Failed to create checkout"
@@ -76,6 +116,7 @@ export async function createCheckout(req, res) {
 
 export async function retryCheckout(req, res) {
   try {
+    assertCheckoutLaunchReady();
     const { id } = req.params;
 
     if (!id) {
@@ -108,6 +149,16 @@ export async function retryCheckout(req, res) {
       });
     }
 
+
+    if (!session.consent_record) {
+      return res.status(409).json({
+        ok: false,
+        error: "Consent must be collected again before checkout can be retried.",
+        code: "CONSENT_REFRESH_REQUIRED"
+      });
+    }
+    assertCurrentPolicyAcceptance(session.consent_record);
+
     const stripeSession = await createCheckoutSession({
       internalSessionId: session.id,
       email: session.email,
@@ -125,6 +176,14 @@ export async function retryCheckout(req, res) {
     });
   } catch (error) {
     console.error("retry checkout error:", error);
+
+    if (error instanceof LaunchGateError) {
+      return res.status(503).json({
+        ok: false,
+        error: error.message,
+        code: "CHECKOUT_NOT_READY"
+      });
+    }
 
     return res.status(500).json({
       ok: false,

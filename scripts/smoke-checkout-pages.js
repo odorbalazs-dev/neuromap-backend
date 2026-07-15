@@ -9,7 +9,7 @@ function assert(condition, message) {
 function main() {
   console.log("\n=== CHECKOUT PAGES SMOKE ===");
 
-  const currentVersion = "20260713-two-tier-offer-v1";
+  const currentVersion = "20260715-gdpr-checkout-v1";
   const script = fs.readFileSync("public/webflow/checkout-pages.js", "utf8");
   const sharedEmbed = fs.readFileSync("web/checkout-pages-embed.html", "utf8").trim();
   const successEmbed = fs.readFileSync("web/checkout-success-embed.html", "utf8").trim();
@@ -34,7 +34,7 @@ function main() {
   assert(script.includes("analytics-event-schema-v2"), "Checkout pages should use analytics event schema v2.");
   assert(script.includes("buildAnalyticsPayload"), "Checkout pages should build normalized analytics payloads.");
   assert(script.includes("event_schema_version"), "Checkout events should include the schema version.");
-  assert(script.includes("client_session_id"), "Checkout events should include a client session id.");
+  assert(!script.includes("client_session_id"), "Checkout analytics should not include a client session id.");
   assert(script.includes("nm-checkout-pages-stable-v1"), "Checkout pages should install the stable design layer.");
   assert(!/(Ã|Â|Ă|Ĺ|Å|Ä|â€|�)/.test(script), "Checkout pages should not contain mojibake characters.");
   assert(script.includes("&#10003;"), "Success page should render a safe checkmark entity.");
@@ -57,7 +57,7 @@ function main() {
   assert(script.includes("checkout_recovery_view"), "Cancel page should track the recovery guidance view.");
   assert(script.includes("Your answers are safe"), "Cancel page should reassure customers after a failed payment.");
   assert(script.includes("trackOnce(\"checkout_cancelled\""), "Cancel page should send a checkout_cancelled event.");
-  assert(script.includes("hasDataLayerEvent"), "Checkout tracking should protect against duplicate dataLayer events.");
+  assert(script.includes("trackOnce(\"checkout_cancelled\""), "Checkout tracking should protect against duplicate checkout_cancelled events.");
   assert(script.includes("/checkout/retry/"), "Cancel page should support retry checkout.");
   assert(script.includes("nmRetryCheckout"), "Cancel page should render a retry checkout button.");
   assert(script.includes("SUPPORTED_LANGS"), "Checkout pages should support localized success and cancel pages.");

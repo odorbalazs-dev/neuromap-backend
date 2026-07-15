@@ -16,6 +16,7 @@ import adminRoutes from "../api/routes/admin.js";
 import cronRoutes from "../api/routes/cron.js";
 import jobsRoutes from "../api/routes/jobs.js";
 import observationRoutes from "../api/routes/observation.js";
+import legalRoutes from "../api/routes/legal.js";
 
 const app = express();
 
@@ -55,7 +56,8 @@ const corsOptions = {
     "Content-Type",
     "Authorization",
     "x-admin-token",
-    "x-cron-secret"
+    "x-cron-secret",
+    "x-consent-token"
   ]
 };
 
@@ -113,6 +115,12 @@ app.use("/observation", createRateLimit({
   max: 120,
   keyPrefix: "observation"
 }), observationRoutes);
+
+app.use("/legal", createRateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 80,
+  keyPrefix: "legal"
+}), legalRoutes);
 
 app.use("/webhook", webhookRoutes);
 app.use("/health", healthRoutes);
