@@ -8724,6 +8724,7 @@
 
   function getCheckoutErrorMessage(error, t) {
     const message = String((error && error.message) || "");
+    const code = String((error && error.code) || "");
     const copy = getCustomerCopy({
       hu: {
         invalidUrl: "A fizetési link nem érkezett meg megfelelően. Kérlek, próbáld újra, vagy jelezd nekünk, ha megismétlődik.",
@@ -8751,6 +8752,9 @@
     if (/not a valid url/i.test(message)) return copy.invalidUrl;
     if (/failed to fetch|network|load failed/i.test(message)) return copy.network;
     if (/too many requests/i.test(message)) return copy.rate;
+    if (code === "CHECKOUT_NOT_READY" || /checkout is temporarily unavailable/i.test(message)) {
+      return t.checkoutError || copy.fallback;
+    }
     return message || t.checkoutError || copy.fallback;
   }
 
@@ -8831,7 +8835,11 @@
       console.log("CHECKOUT RESPONSE:", data);
 
       if (!response.ok) {
-        throw new Error((data && data.error) || t.checkoutError || "Checkout error");
+        const checkoutError = new Error(
+          (data && data.error) || t.checkoutError || "Checkout error"
+        );
+        checkoutError.code = (data && data.code) || "";
+        throw checkoutError;
       }
 
       if (!data || !data.checkoutUrl) {

@@ -32,6 +32,7 @@ import { buildDashboardMetrics } from "../../services/dashboard-metrics.service.
 import { buildCampaignCapacitySnapshot } from "../../services/campaign-capacity.service.js";
 import { getFollowUpEmailStatus, processDueFollowUpEmails } from "../../services/follow-up-email.service.js";
 import { buildI18nQualityAudit } from "../../services/i18n-quality-audit.service.js";
+import { getLaunchGateStatus } from "../../services/launch-gate.service.js";
 import { env } from "../../config/env.js";
 import {
   createInvoiceForSessionId,
@@ -1081,6 +1082,26 @@ async function buildLaunchReadinessChecks() {
       railwayStart: scripts["railway:start"] || null,
       auditAll: scripts["audit:all"] || null
     }
+  }));
+
+  const launchGate = getLaunchGateStatus();
+  checks.push(readinessCheck({
+    id: "legal-launch-gate",
+    group: "Jogi megfeleles",
+    label: "Jogi es adatvedelmi launch gate",
+    status: launchGate.ready ? "pass" : launchGate.blocking ? "fail" : "warn",
+    detail: launchGate.ready
+      ? "Minden dokumentalt launch-gate ellenorzes teljesult."
+      : `${launchGate.missing.length} ellenorzes hianyzik: ${launchGate.missing.join(", ")}. ` +
+        (launchGate.blocking
+          ? "A checkout jelenleg blokkolva van."
+          : "A checkout mukodik, a hianyok launch-readiness figyelmeztetesek."),
+    action: launchGate.ready
+      ? null
+      : launchGate.blocking
+        ? "Ellenorizd a PRODUCTION_CHECKOUT_ENABLED es LAUNCH_GATE_ENFORCED valtozokat, majd csak valos jovahagyas utan allits audit flaget true ertekre."
+        : "Potold a valos jogi, DPIA, klinikai, vendor-DPA es security jovahagyasokat. Szigoru blokkolast csak ezutan kapcsolj be.",
+    meta: launchGate
   }));
 
   const railwayToml = fileExists("railway.toml")
