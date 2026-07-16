@@ -4,6 +4,7 @@ import { env } from "../config/env.js";
 import { buildReportEmail } from "../templates/reportEmail.js";
 import { buildRecoveryEmail } from "../templates/recoveryEmail.js";
 import { buildFollowUpEmail } from "../templates/followUpEmail.js";
+import { buildContractConfirmationEmail } from "../templates/contractConfirmationEmail.js";
 
 import { generatePdfBuffer } from "./pdf.service.js";
 import {
@@ -265,6 +266,65 @@ export async function sendReportEmail({
 
     throw error;
   }
+}
+
+export async function sendContractConfirmationEmail({
+  to,
+  lang,
+  name,
+  sessionId,
+  packageCode,
+  amountTotal,
+  currency,
+  paidAt
+}) {
+  const recipients = normalizeRecipients(to);
+  const safeLang = getSafeLang(lang);
+
+  if (!env.RESEND_API_KEY) throw new Error("Missing RESEND_API_KEY.");
+  if (!env.EMAIL_FROM) throw new Error("Missing EMAIL_FROM.");
+  if (recipients.length === 0) throw new Error("Missing contract confirmation recipient.");
+  if (!sessionId) throw new Error("Missing session ID for contract confirmation.");
+
+  const { subject, html, text } = buildContractConfirmationEmail({
+    lang: safeLang,
+    name,
+    sessionId,
+    packageCode,
+    amountTotal,
+    currency,
+    paidAt,
+    termsUrl: env.TERMS_URL,
+    termsVersion: env.TERMS_VERSION,
+    privacyUrl: env.PRIVACY_POLICY_URL,
+    privacyVersion: env.PRIVACY_POLICY_VERSION,
+    privacyContact: env.PRIVACY_CONTACT_EMAIL || env.DPO_CONTACT_EMAIL
+  });
+
+  const response = await resend.emails.send(
+    {
+      from: env.EMAIL_FROM,
+      to: recipients,
+      subject,
+      html,
+      text
+    },
+    {
+      idempotencyKey: `contract-confirmation/${sessionId}`
+    }
+  );
+
+  if (response?.error) {
+    throw new Error(response.error.message || "Contract confirmation email failed.");
+  }
+
+  console.log("[contract-confirmation-email] send success", {
+    sessionId,
+    recipients: maskRecipients(recipients),
+    ...summarizeEmailResponse(response)
+  });
+
+  return response;
 }
 
 export async function sendObservationFollowUpEmail({

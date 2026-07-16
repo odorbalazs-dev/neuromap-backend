@@ -192,6 +192,9 @@ export async function getRecoverableCheckoutSessions({ olderThanMinutes = 30, li
       AND checkout_url IS NOT NULL
       AND recovery_token IS NOT NULL
       AND recovery_email_sent_at IS NULL
+      AND processing_restricted_at IS NULL
+      AND sensitive_data_erased_at IS NULL
+      AND data_redacted_at IS NULL
       AND checkout_started_at < NOW() - ($1::int * INTERVAL '1 minute')
     ORDER BY checkout_started_at ASC
     LIMIT $2::int
@@ -285,6 +288,9 @@ export async function markAnalysisQueued(sessionId) {
     WHERE id = $1
       AND payment_status = 'paid'
       AND analysis_status IS DISTINCT FROM 'done'
+      AND processing_restricted_at IS NULL
+      AND sensitive_data_erased_at IS NULL
+      AND data_redacted_at IS NULL
     RETURNING *
     `,
     [sessionId]
@@ -305,6 +311,9 @@ export async function getNextQueuedAnalysisSession() {
       FROM sessions
       WHERE payment_status = 'paid'
         AND analysis_status IN ('queued', 'failed')
+        AND processing_restricted_at IS NULL
+        AND sensitive_data_erased_at IS NULL
+        AND data_redacted_at IS NULL
       ORDER BY paid_at ASC NULLS LAST, created_at ASC
       LIMIT 1
       FOR UPDATE SKIP LOCKED
@@ -325,6 +334,9 @@ export async function markAnalysisProcessing(sessionId) {
         error_message = NULL
     WHERE id = $1
       AND analysis_status IS DISTINCT FROM 'done'
+      AND processing_restricted_at IS NULL
+      AND sensitive_data_erased_at IS NULL
+      AND data_redacted_at IS NULL
     RETURNING *
     `,
     [sessionId]
@@ -342,6 +354,9 @@ export async function markAnalysisDone(sessionId, resultText) {
         error_message = NULL,
         analysis_completed_at = NOW()
     WHERE id = $1
+      AND processing_restricted_at IS NULL
+      AND sensitive_data_erased_at IS NULL
+      AND data_redacted_at IS NULL
     RETURNING *
     `,
     [sessionId, resultText]
@@ -362,6 +377,9 @@ export async function markReportEmailSending(
         report_email_error = NULL,
         report_email_attempts = COALESCE(report_email_attempts, 0) + 1
     WHERE id = $1
+      AND processing_restricted_at IS NULL
+      AND sensitive_data_erased_at IS NULL
+      AND data_redacted_at IS NULL
       AND payment_status = 'paid'
       AND analysis_status = 'done'
       AND analysis_result IS NOT NULL
@@ -436,6 +454,9 @@ export async function resetReportEmailRetry(sessionId) {
       AND analysis_status = 'done'
       AND analysis_result IS NOT NULL
       AND LENGTH(TRIM(analysis_result)) > 0
+      AND processing_restricted_at IS NULL
+      AND sensitive_data_erased_at IS NULL
+      AND data_redacted_at IS NULL
     RETURNING *
     `,
     [sessionId]
@@ -458,6 +479,9 @@ export async function getReportEmailRetryCandidates({
       AND analysis_status = 'done'
       AND analysis_result IS NOT NULL
       AND LENGTH(TRIM(analysis_result)) > 0
+      AND processing_restricted_at IS NULL
+      AND sensitive_data_erased_at IS NULL
+      AND data_redacted_at IS NULL
       AND COALESCE(report_email_attempts, 0) < $2
       AND (
         (

@@ -6,6 +6,7 @@ import {
 import { sendReportEmail } from "./email.service.js";
 import { getProductPackage } from "../config/products.js";
 import { ensureObservationProgram } from "./observation-program.service.js";
+import { assertSessionProcessingAllowed } from "./data-governance.service.js";
 
 export function getEmailProviderId(response) {
   return response?.data?.id || response?.id || null;
@@ -28,6 +29,7 @@ export async function deliverReportEmailForSession(
     throw new Error("No analysis result found for this session.");
   }
 
+  await assertSessionProcessingAllowed(sessionId);
   const claimedSession = await markReportEmailSending(sessionId);
 
   if (!claimedSession) {
@@ -55,6 +57,7 @@ export async function deliverReportEmailForSession(
       ? await ensureObservationProgram(deliverableSession)
       : null;
 
+    await assertSessionProcessingAllowed(sessionId);
     const response = await sendReportEmail({
       to: deliverableSession.email,
       lang: deliverableSession.lang,

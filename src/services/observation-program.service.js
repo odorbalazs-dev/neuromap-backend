@@ -2,6 +2,10 @@ import { createHash, createHmac, timingSafeEqual } from "crypto";
 import { db } from "../db/db.js";
 import { env } from "../config/env.js";
 import { buildObservationTrend } from "../utils/observationTrend.js";
+import {
+  assertSessionProcessingAllowed,
+  isSessionProcessingRestricted
+} from "./data-governance.service.js";
 
 export { buildObservationTrend } from "../utils/observationTrend.js";
 
@@ -126,6 +130,8 @@ export async function ensureObservationProgram(session) {
     throw new Error("Observation program requires a paid session.");
   }
 
+  await assertSessionProcessingAllowed(session.id);
+
   if (!hasObservationEntitlement(session)) {
     return null;
   }
@@ -200,7 +206,10 @@ export async function getObservationProgramByToken(token) {
       s.payment_status,
       s.payload,
       s.email,
-      s.name
+      s.name,
+      s.processing_restricted_at,
+      s.sensitive_data_erased_at,
+      s.data_redacted_at
     FROM observation_programs p
     JOIN sessions s ON s.id = p.session_id
     WHERE p.token_hash = $1
@@ -211,7 +220,11 @@ export async function getObservationProgramByToken(token) {
 
   const program = result.rows[0] || null;
 
-  if (!program || !safeEqual(program.token_hash, hashToken(normalizedToken))) {
+  if (
+    !program ||
+    isSessionProcessingRestricted(program) ||
+    !safeEqual(program.token_hash, hashToken(normalizedToken))
+  ) {
     return null;
   }
 

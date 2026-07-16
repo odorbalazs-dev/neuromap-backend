@@ -1,5 +1,6 @@
 import { db } from "../db/db.js";
 import { sendFollowUpEmail } from "./email.service.js";
+import { assertSessionProcessingAllowed } from "./data-governance.service.js";
 
 function number(value) {
   return Number(value || 0);
@@ -52,7 +53,10 @@ export async function getFollowUpEmailStatus({ limit = 20 } = {}) {
           AND follow_up_email_sent_at IS NULL
           AND COALESCE(follow_up_email_due_at, report_email_sent_at + INTERVAL '3 days') > NOW()
       )::int AS scheduled
-    FROM sessions;
+    FROM sessions
+    WHERE processing_restricted_at IS NULL
+      AND sensitive_data_erased_at IS NULL
+      AND data_redacted_at IS NULL;
   `);
 
   const rowsResult = await db.query(
@@ -64,6 +68,9 @@ export async function getFollowUpEmailStatus({ limit = 20 } = {}) {
         follow_up_email_last_attempt_at, follow_up_email_attempts, follow_up_email_error
       FROM sessions
       WHERE report_email_status = 'sent'
+        AND processing_restricted_at IS NULL
+        AND sensitive_data_erased_at IS NULL
+        AND data_redacted_at IS NULL
       ORDER BY
         follow_up_email_sent_at ASC NULLS FIRST,
         COALESCE(follow_up_email_due_at, report_email_sent_at + INTERVAL '3 days') ASC NULLS LAST,
@@ -101,6 +108,9 @@ export async function processDueFollowUpEmails({ limit = 10, maxAttempts = 3 } =
       FROM sessions
       WHERE report_email_status = 'sent'
         AND follow_up_email_sent_at IS NULL
+        AND processing_restricted_at IS NULL
+        AND sensitive_data_erased_at IS NULL
+        AND data_redacted_at IS NULL
         AND COALESCE(follow_up_email_due_at, report_email_sent_at + INTERVAL '3 days') <= NOW()
         AND COALESCE(follow_up_email_attempts, 0) < $2::int
       ORDER BY COALESCE(follow_up_email_due_at, report_email_sent_at + INTERVAL '3 days') ASC
@@ -122,6 +132,9 @@ export async function processDueFollowUpEmails({ limit = 10, maxAttempts = 3 } =
           follow_up_email_error = NULL
         WHERE id = $1
           AND follow_up_email_sent_at IS NULL
+          AND processing_restricted_at IS NULL
+          AND sensitive_data_erased_at IS NULL
+          AND data_redacted_at IS NULL
         RETURNING *;
       `,
       [row.id]
@@ -131,6 +144,8 @@ export async function processDueFollowUpEmails({ limit = 10, maxAttempts = 3 } =
     if (!locked) continue;
 
     try {
+      await assertSessionProcessingAllowed(locked.id);
+
       await sendFollowUpEmail({
         to: locked.email,
         name: locked.name,

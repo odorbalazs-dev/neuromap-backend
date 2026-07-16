@@ -2,6 +2,7 @@ import { createHash, randomBytes, randomUUID, timingSafeEqual } from "crypto";
 
 import { env } from "../config/env.js";
 import { db } from "../db/db.js";
+import { restrictSessionProcessing } from "./data-governance.service.js";
 
 const SUPPORTED_LANGS = new Set([
   "hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"
@@ -322,24 +323,45 @@ export async function withdrawConsentReceipt(receipt = {}) {
     });
   }
 
-  if (row.withdrawn_at) {
+  const client = await db.connect();
+
+  try {
+    await client.query("BEGIN");
+    const result = await client.query(
+      `
+      UPDATE consent_events
+      SET withdrawn_at = COALESCE(withdrawn_at, NOW()),
+          withdrawal_reason = COALESCE(withdrawal_reason, 'Withdrawn by the data subject'),
+          withdrawal_source = COALESCE(withdrawal_source, 'consent_manager')
+      WHERE id = $1 AND token_hash = $2
+      RETURNING withdrawn_at
+      `,
+      [id, hashToken(token)]
+    );
+
+    const sessions = await client.query(
+      "SELECT id FROM sessions WHERE consent_event_id = $1 FOR UPDATE",
+      [id]
+    );
+
+    for (const session of sessions.rows) {
+      await restrictSessionProcessing(
+        session.id,
+        `Special-category consent withdrawn (${id})`,
+        { executor: client }
+      );
+    }
+
+    await client.query("COMMIT");
     return {
       id,
-      withdrawnAt: new Date(row.withdrawn_at).toISOString()
+      withdrawnAt: new Date(result.rows[0].withdrawn_at).toISOString(),
+      restrictedSessions: sessions.rowCount
     };
+  } catch (error) {
+    await client.query("ROLLBACK");
+    throw error;
+  } finally {
+    client.release();
   }
-
-  const result = await db.query(
-    `
-    UPDATE consent_events
-    SET withdrawn_at = COALESCE(withdrawn_at, NOW())
-    WHERE id = $1 AND token_hash = $2
-    RETURNING withdrawn_at
-    `,
-    [id, hashToken(token)]
-  );
-  return {
-    id,
-    withdrawnAt: new Date(result.rows[0].withdrawn_at).toISOString()
-  };
 }

@@ -26,7 +26,12 @@ export async function enqueueAnalysisJob(sessionId) {
       next_attempt_at,
       failed_at
     )
-    VALUES ($1, 'queued', NOW(), NULL)
+    SELECT id, 'queued', NOW(), NULL
+    FROM sessions
+    WHERE id = $1
+      AND processing_restricted_at IS NULL
+      AND sensitive_data_erased_at IS NULL
+      AND data_redacted_at IS NULL
     ON CONFLICT (session_id)
     WHERE status IN ('queued', 'processing')
     DO NOTHING
@@ -42,9 +47,13 @@ export async function enqueueAnalysisJob(sessionId) {
   const existing = await db.query(
     `
     SELECT *
-    FROM analysis_jobs
-    WHERE session_id = $1
-      AND status IN ('queued', 'processing')
+    FROM analysis_jobs job
+    JOIN sessions session ON session.id = job.session_id
+    WHERE job.session_id = $1
+      AND job.status IN ('queued', 'processing')
+      AND session.processing_restricted_at IS NULL
+      AND session.sensitive_data_erased_at IS NULL
+      AND session.data_redacted_at IS NULL
     ORDER BY created_at ASC
     LIMIT 1
     `,
@@ -67,11 +76,15 @@ export async function claimNextAnalysisJob() {
       attempts = attempts + 1,
       updated_at = NOW()
     WHERE id = (
-      SELECT id
-      FROM analysis_jobs
-      WHERE status = 'queued'
-        AND (next_attempt_at IS NULL OR next_attempt_at <= NOW())
-      ORDER BY created_at ASC
+      SELECT job.id
+      FROM analysis_jobs job
+      JOIN sessions session ON session.id = job.session_id
+      WHERE job.status = 'queued'
+        AND (job.next_attempt_at IS NULL OR job.next_attempt_at <= NOW())
+        AND session.processing_restricted_at IS NULL
+        AND session.sensitive_data_erased_at IS NULL
+        AND session.data_redacted_at IS NULL
+      ORDER BY job.created_at ASC
       LIMIT 1
       FOR UPDATE SKIP LOCKED
     )
@@ -193,7 +206,7 @@ export async function requeueStaleJobs({
 } = {}) {
   const result = await db.query(
     `
-    UPDATE analysis_jobs
+    UPDATE analysis_jobs job
     SET
       status = 'queued',
       locked_at = NULL,
@@ -202,9 +215,14 @@ export async function requeueStaleJobs({
       heartbeat_at = NULL,
       next_attempt_at = NOW(),
       updated_at = NOW()
-    WHERE status = 'processing'
-      AND COALESCE(heartbeat_at, locked_at) < NOW() - ($1::int * INTERVAL '1 minute')
-    RETURNING id
+    FROM sessions session
+    WHERE job.session_id = session.id
+      AND job.status = 'processing'
+      AND session.processing_restricted_at IS NULL
+      AND session.sensitive_data_erased_at IS NULL
+      AND session.data_redacted_at IS NULL
+      AND COALESCE(job.heartbeat_at, job.locked_at) < NOW() - ($1::int * INTERVAL '1 minute')
+    RETURNING job.id
     `,
     [staleMinutes]
   );

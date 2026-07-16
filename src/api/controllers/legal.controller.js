@@ -5,6 +5,12 @@ import {
   inspectConsentReceipt,
   withdrawConsentReceipt
 } from "../../services/consent.service.js";
+import { getSessionAccessTokenFromRequest } from "../../services/session.service.js";
+import {
+  createPrivacyRequest,
+  getPrivacyRequestStatus,
+  privacyRequestTokenFromRequest
+} from "../../services/privacy-rights.service.js";
 
 function readReceipt(req) {
   return {
@@ -47,6 +53,34 @@ export async function withdrawLegalConsent(req, res) {
   }
 }
 
+export async function submitPrivacyRequest(req, res) {
+  try {
+    const result = await createPrivacyRequest({
+      sessionId: req.body?.sessionId,
+      sessionToken: getSessionAccessTokenFromRequest(req),
+      requestType: req.body?.requestType,
+      language: req.body?.language,
+      details: req.body?.details
+    });
+
+    return res.status(201).json({ ok: true, ...result });
+  } catch (error) {
+    return handlePrivacyRequestError(error, res);
+  }
+}
+
+export async function inspectPrivacyRequest(req, res) {
+  try {
+    const request = await getPrivacyRequestStatus(
+      req.params.id,
+      privacyRequestTokenFromRequest(req)
+    );
+    return res.status(200).json({ ok: true, request });
+  } catch (error) {
+    return handlePrivacyRequestError(error, res);
+  }
+}
+
 function handleConsentError(error, res) {
   if (error instanceof ConsentError) {
     return res.status(error.status).json({
@@ -60,5 +94,22 @@ function handleConsentError(error, res) {
   return res.status(500).json({
     ok: false,
     error: "The consent service is temporarily unavailable."
+  });
+}
+
+function handlePrivacyRequestError(error, res) {
+  const status = Number(error?.status || 500);
+  if (status >= 400 && status < 500) {
+    return res.status(status).json({
+      ok: false,
+      error: error.message,
+      code: error.code || "PRIVACY_REQUEST_ERROR"
+    });
+  }
+
+  console.error("privacy request error:", error);
+  return res.status(500).json({
+    ok: false,
+    error: "The privacy request service is temporarily unavailable."
   });
 }

@@ -5,6 +5,7 @@ import {
 } from "./analysis-queue.service.js";
 import { markAnalysisQueued } from "./session.service.js";
 import { retryReportEmailsBatch } from "./report-email-retry.service.js";
+import { retryContractConfirmationsBatch } from "./contract-confirmation.service.js";
 
 function normalizeNumber(value, fallback, min, max) {
   const number = Number(value);
@@ -27,6 +28,9 @@ async function enqueuePaidSessionsWithoutActiveJobs({ limit = 20 } = {}) {
     WHERE s.payment_status = 'paid'
       AND s.payload IS NOT NULL
       AND s.analysis_status IN ('pending', 'queued', 'processing', 'failed')
+      AND s.processing_restricted_at IS NULL
+      AND s.sensitive_data_erased_at IS NULL
+      AND s.data_redacted_at IS NULL
       AND NOT EXISTS (
         SELECT 1
         FROM analysis_jobs j
@@ -90,6 +94,9 @@ async function findCheckoutRecoveryCandidates({
     FROM sessions
     WHERE checkout_started_at IS NOT NULL
       AND COALESCE(payment_status, '') <> 'paid'
+      AND processing_restricted_at IS NULL
+      AND sensitive_data_erased_at IS NULL
+      AND data_redacted_at IS NULL
       AND checkout_started_at < NOW() - ($1::int * INTERVAL '1 minute')
       AND checkout_started_at > NOW() - INTERVAL '14 days'
     ORDER BY checkout_started_at DESC NULLS LAST
@@ -175,6 +182,13 @@ export async function runPostPaymentRecoveryV2(options = {}) {
     { source: "post-payment-recovery-v2" }
   );
 
+  const contractConfirmationRetry = await retryContractConfirmationsBatch({
+    limit: emailLimit,
+    maxAttempts: maxEmailAttempts,
+    retryAfterMinutes,
+    staleSendingMinutes
+  });
+
   const checkoutRecovery = await findCheckoutRecoveryCandidates({
     limit: jobLimit,
     staleMinutes: retryAfterMinutes
@@ -198,7 +212,10 @@ export async function runPostPaymentRecoveryV2(options = {}) {
       checkoutRecoveryCandidates: checkoutRecovery.checked,
       reportEmailsChecked: emailRetry.checked,
       reportEmailsSent: emailRetry.sent,
-      reportEmailsFailed: emailRetry.failed
+      reportEmailsFailed: emailRetry.failed,
+      contractConfirmationsChecked: contractConfirmationRetry.checked,
+      contractConfirmationsSent: contractConfirmationRetry.sent,
+      contractConfirmationsFailed: contractConfirmationRetry.failed
     },
     actions: [
       {
@@ -224,6 +241,12 @@ export async function runPostPaymentRecoveryV2(options = {}) {
         label: "Report email retry batch",
         count: emailRetry.checked,
         items: emailRetry.results
+      },
+      {
+        key: "contract_confirmation_retry",
+        label: "Contract confirmation retry batch",
+        count: contractConfirmationRetry.checked,
+        items: contractConfirmationRetry.results
       }
     ]
   };

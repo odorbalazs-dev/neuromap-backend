@@ -15,6 +15,11 @@ import { startAnalysisJobLease } from "./analysis-job-lease.service.js";
 import { generateAnalysis } from "./analysis.service.js";
 import { deliverReportEmailForSession } from "./report-email-delivery.service.js";
 import { env } from "../config/env.js";
+import {
+  assertSessionProcessingAllowed,
+  assertSessionProcessingAllowedRecord,
+  ProcessingRestrictedError
+} from "./data-governance.service.js";
 
 export async function processNextAnalysisJob() {
   const job = await claimNextAnalysisJob();
@@ -39,6 +44,8 @@ export async function processNextAnalysisJob() {
       throw error;
     }
 
+    assertSessionProcessingAllowedRecord(session);
+
     if (session.analysis_status === "done" && session.analysis_result) {
       await lease.assertOwned();
       await deliverReportEmailForSession(session, { source: "analysis-job-email-only" });
@@ -56,16 +63,26 @@ export async function processNextAnalysisJob() {
       };
     }
 
-    await markAnalysisProcessing(session.id);
+    const processingSession = await markAnalysisProcessing(session.id);
+    if (!processingSession) {
+      await assertSessionProcessingAllowed(session.id);
+      throw new ProcessingRestrictedError();
+    }
 
     const resultText = await generateAnalysis({
       ...(session.payload || {}),
       lang: session.lang
     });
 
+    await assertSessionProcessingAllowed(session.id);
     await lease.assertOwned();
-    await markAnalysisDone(session.id, resultText);
+    const completedSession = await markAnalysisDone(session.id, resultText);
+    if (!completedSession) {
+      await assertSessionProcessingAllowed(session.id);
+      throw new ProcessingRestrictedError();
+    }
 
+    await assertSessionProcessingAllowed(session.id);
     await lease.assertOwned();
     await deliverReportEmailForSession(
       {
@@ -110,6 +127,13 @@ export async function processNextAnalysisJob() {
         processed: false,
         reason: "session_not_found",
         jobId: job.id
+      };
+    } else if (error.code === "PROCESSING_RESTRICTED") {
+      return {
+        processed: false,
+        reason: "processing_restricted",
+        jobId: job.id,
+        sessionId: session?.id || job.session_id
       };
     } else if (!updatedJob) {
       console.warn("[analysis-job] lease no longer owned; status left unchanged", {

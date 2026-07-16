@@ -60,7 +60,10 @@ assert(
 assert(
   legalConsentSource.includes("window.NM_LEGAL") &&
     legalConsentSource.includes("/legal/consent") &&
-    legalConsentSource.includes("/legal/config"),
+    legalConsentSource.includes("/legal/config") &&
+    legalConsentSource.includes("/legal/privacy-requests") &&
+    legalConsentSource.includes("showPrivacyRights") &&
+    legalConsentSource.includes("openPrivacyRights"),
   "Legal consent manager API wiring is incomplete"
 );
 

@@ -10,6 +10,7 @@ import {
 } from "./session.service.js";
 import { sendMetaPurchaseEvent } from "./meta.service.js";
 import { createInvoiceForPaidSession } from "./invoice.service.js";
+import { sendContractConfirmationForSession } from "./contract-confirmation.service.js";
 import {
   assertCheckoutMatchesPackage,
   getProductPackage
@@ -148,8 +149,21 @@ async function runPostPaymentSideEffects({
   checkoutSession,
   internalSessionId,
   includeMeta = true,
-  includeInvoice = true
+  includeInvoice = true,
+  includeContractConfirmation = true
 } = {}) {
+  if (includeContractConfirmation) {
+    try {
+      await sendContractConfirmationForSession(internalSessionId);
+    } catch (confirmationError) {
+      console.error("[contract-confirmation] step failed after webhook acknowledgement:", {
+        message: confirmationError?.message || confirmationError,
+        internalSessionId,
+        stripeSessionId: checkoutSession?.id
+      });
+    }
+  }
+
   if (includeMeta) {
     try {
       await sendMetaPurchaseEvent({
@@ -266,13 +280,18 @@ export async function handleStripeWebhook(rawBody, signature) {
     assertCheckoutMatchesPackage(checkoutSession, productPackage);
 
     if (sessionRow.analysis_status === "done") {
-      if (sessionRow.payment_status === "paid" && sessionRow.invoice_status !== "issued") {
+      const confirmationMissing =
+        sessionRow.contract_confirmation_status !== "sent";
+      const invoiceMissing = sessionRow.invoice_status !== "issued";
+
+      if (sessionRow.payment_status === "paid" && (invoiceMissing || confirmationMissing)) {
         schedulePostPaymentSideEffects({
           session: sessionRow,
           checkoutSession,
           internalSessionId,
           includeMeta: false,
-          includeInvoice: true
+          includeInvoice: invoiceMissing,
+          includeContractConfirmation: confirmationMissing
         });
       }
 
@@ -318,7 +337,8 @@ export async function handleStripeWebhook(rawBody, signature) {
       checkoutSession,
       internalSessionId,
       includeMeta: true,
-      includeInvoice: true
+      includeInvoice: true,
+      includeContractConfirmation: true
     });
 
     return {

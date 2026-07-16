@@ -5,30 +5,37 @@ import {
   generateObservationTrend,
   getObservationProgramById
 } from "./observation-program.service.js";
+import { assertSessionProcessingAllowed } from "./data-governance.service.js";
 
 async function claimNextFollowUp({ maxAttempts, staleSendingMinutes }) {
   const result = await db.query(
     `
-    UPDATE observation_follow_ups
+    UPDATE observation_follow_ups follow_up
     SET
       status = 'sending',
       attempts = attempts + 1,
       last_attempt_at = NOW(),
       error_message = NULL,
       updated_at = NOW()
-    WHERE id = (
-      SELECT id
-      FROM observation_follow_ups
-      WHERE due_at <= NOW()
-        AND attempts < $1::integer
+    WHERE follow_up.id = (
+      SELECT candidate.id
+      FROM observation_follow_ups candidate
+      JOIN observation_programs program ON program.id = candidate.program_id
+      JOIN sessions session ON session.id = program.session_id
+      WHERE candidate.due_at <= NOW()
+        AND candidate.attempts < $1::integer
+        AND program.status = 'active'
+        AND session.processing_restricted_at IS NULL
+        AND session.sensitive_data_erased_at IS NULL
+        AND session.data_redacted_at IS NULL
         AND (
-          status IN ('pending', 'failed')
+          candidate.status IN ('pending', 'failed')
           OR (
-            status = 'sending'
-            AND last_attempt_at < NOW() - ($2::integer * INTERVAL '1 minute')
+            candidate.status = 'sending'
+            AND candidate.last_attempt_at < NOW() - ($2::integer * INTERVAL '1 minute')
           )
         )
-      ORDER BY due_at ASC, created_at ASC
+      ORDER BY candidate.due_at ASC, candidate.created_at ASC
       FOR UPDATE SKIP LOCKED
       LIMIT 1
     )
@@ -101,6 +108,8 @@ async function deliverFollowUp(followUp) {
   if (!program) {
     throw new Error("Observation program was not found.");
   }
+
+  await assertSessionProcessingAllowed(program.session_id);
 
   if (program.payment_status !== "paid") {
     throw new Error("Observation follow-up requires a paid session.");

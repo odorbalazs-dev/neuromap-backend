@@ -59,7 +59,8 @@ const corsOptions = {
     "x-admin-csrf",
     "x-session-token",
     "x-cron-secret",
-    "x-consent-token"
+    "x-consent-token",
+    "x-privacy-request-token"
   ]
 };
 

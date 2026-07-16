@@ -13,6 +13,8 @@ import {
 } from "../../services/admin-alert.service.js";
 import { runPostPaymentRecoveryV2 } from "../../services/post-payment-recovery.service.js";
 import { processObservationFollowUps } from "../../services/observation-follow-up.service.js";
+import { runDataLifecycle } from "../../services/data-lifecycle.service.js";
+import { assertSessionProcessingAllowed } from "../../services/data-governance.service.js";
 
 import { env } from "../../config/env.js";
 import { secureCompare } from "../../utils/secureCompare.js";
@@ -89,6 +91,8 @@ export async function recoverAbandonedCheckouts(req, res) {
 
           continue;
         }
+
+        await assertSessionProcessingAllowed(freshSession.id);
 
         const retryUrl =
           `${env.APP_BASE_URL}/${freshSession.lang || "en"}-checkout-cancel?sid=${freshSession.id}`;
@@ -265,6 +269,29 @@ export async function runObservationFollowUps(req, res) {
     return res.status(500).json({
       ok: false,
       error: error?.message || "Observation follow-up cron failed"
+    });
+  }
+}
+
+export async function runDataLifecycleCron(req, res) {
+  try {
+    if (!isAuthorizedCron(req)) {
+      return res.status(401).json({ ok: false, error: "Unauthorized" });
+    }
+
+    const result = await runDataLifecycle({
+      sessionLimit: normalizeNumber(req.query.sessionLimit, 50, 1, 200),
+      webhookLimit: normalizeNumber(req.query.webhookLimit, 500, 1, 2000),
+      observationLimit: normalizeNumber(req.query.observationLimit, 100, 1, 500),
+      operationalLimit: normalizeNumber(req.query.operationalLimit, 1000, 1, 5000)
+    });
+
+    return res.status(result.ok ? 200 : 207).json(result);
+  } catch (error) {
+    console.error("[cron] runDataLifecycle failed:", error);
+    return res.status(500).json({
+      ok: false,
+      error: error?.message || "Data lifecycle cron failed"
     });
   }
 }

@@ -885,7 +885,7 @@
     hu: {
       pageTitle: "Első szűrőkérdőív",
       pageIntro: "Töltsd ki a kérdőívet, hogy személyre szabott visszajelzést kapj.",
-      labelName: "Név",
+      labelName: "Szülő / felnőtt vásárló neve",
       labelEmail: "Email",
       progressLabel: "Lépés",
       back: "Vissza",
@@ -915,7 +915,7 @@
     en: {
       pageTitle: "Initial screening questionnaire",
       pageIntro: "Complete the questionnaire to receive personalized feedback.",
-      labelName: "Name",
+      labelName: "Parent / adult purchaser name",
       labelEmail: "Email",
       progressLabel: "Step",
       back: "Back",
@@ -945,7 +945,7 @@
     de: {
       pageTitle: "Erster Screening-Fragebogen",
       pageIntro: "Fülle den Fragebogen aus, um eine personalisierte Rückmeldung zu erhalten.",
-      labelName: "Name",
+      labelName: "Name des Elternteils / erwachsenen Käufers",
       labelEmail: "E-Mail",
       progressLabel: "Schritt",
       back: "Zurück",
@@ -975,7 +975,7 @@
     it: {
       pageTitle: "Questionario di screening iniziale",
       pageIntro: "Compila il questionario per ricevere un feedback personalizzato.",
-      labelName: "Nome",
+      labelName: "Nome del genitore / acquirente adulto",
       labelEmail: "Email",
       progressLabel: "Passaggio",
       back: "Indietro",
@@ -1005,7 +1005,7 @@
     es: {
       pageTitle: "Cuestionario inicial de cribado",
       pageIntro: "Completa el cuestionario para recibir una orientación personalizada.",
-      labelName: "Nombre",
+      labelName: "Nombre del progenitor / comprador adulto",
       labelEmail: "Correo electrónico",
       progressLabel: "Paso",
       back: "Atrás",
@@ -1035,7 +1035,7 @@
     zh: {
       pageTitle: "初步筛查问卷",
       pageIntro: "完成问卷，获得个性化反馈。",
-      labelName: "姓名",
+      labelName: "家长／成年购买者姓名",
       labelEmail: "电子邮箱",
       progressLabel: "步骤",
       back: "返回",
@@ -1065,7 +1065,7 @@
     ja: {
       pageTitle: "初期スクリーニング質問票",
       pageIntro: "質問票に回答して、個別化されたフィードバックを受け取ってください。",
-      labelName: "名前",
+      labelName: "保護者／成人購入者の氏名",
       labelEmail: "メールアドレス",
       progressLabel: "ステップ",
       back: "戻る",
@@ -1095,7 +1095,7 @@
     ar: {
       pageTitle: "استبيان الفحص الأولي",
       pageIntro: "أكمل الاستبيان للحصول على ملاحظات مخصصة.",
-      labelName: "الاسم",
+      labelName: "اسم الوالد أو المشتري البالغ",
       labelEmail: "البريد الإلكتروني",
       progressLabel: "الخطوة",
       back: "رجوع",
@@ -1125,7 +1125,7 @@
     pl: {
       pageTitle: "Wstępny kwestionariusz przesiewowy",
       pageIntro: "Wypełnij kwestionariusz, aby otrzymać spersonalizowaną informację zwrotną.",
-      labelName: "Imię",
+      labelName: "Imię rodzica / dorosłego kupującego",
       labelEmail: "Email",
       progressLabel: "Krok",
       back: "Wstecz",
@@ -1155,7 +1155,7 @@
     pt: {
       pageTitle: "Questionário inicial de triagem",
       pageIntro: "Preencha o questionário para receber uma orientação personalizada.",
-      labelName: "Nome",
+      labelName: "Nome do responsável / comprador adulto",
       labelEmail: "Email",
       progressLabel: "Etapa",
       back: "Voltar",
@@ -1185,7 +1185,7 @@
     fr: {
       pageTitle: "Questionnaire de dépistage initial",
       pageIntro: "Complétez le questionnaire pour recevoir un retour personnalisé.",
-      labelName: "Nom",
+      labelName: "Nom du parent / acheteur adulte",
       labelEmail: "Email",
       progressLabel: "Étape",
       back: "Retour",
