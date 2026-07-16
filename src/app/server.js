@@ -56,6 +56,8 @@ const corsOptions = {
     "Content-Type",
     "Authorization",
     "x-admin-token",
+    "x-admin-csrf",
+    "x-session-token",
     "x-cron-secret",
     "x-consent-token"
   ]

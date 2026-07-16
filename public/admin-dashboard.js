@@ -1,6 +1,6 @@
 ﻿(function () {
-  const TOKEN_KEY = "nm_admin_token";
-  const TOKEN_STORAGE_KEYS = [TOKEN_KEY, "adminToken", "ADMIN_TOKEN"];
+  const CSRF_KEY = "nm_admin_csrf";
+  const LEGACY_TOKEN_STORAGE_KEYS = ["nm_admin_token", "adminToken", "ADMIN_TOKEN"];
   const OPERATIONS_LOG_KEY = "nm_operations_log_open";
   const COLLAPSIBLE_SECTION_KEY_PREFIX = "nm_dashboard_collapsed_";
   const DEFAULT_COLLAPSED_SECTIONS = new Set([
@@ -222,46 +222,36 @@
   }
 
   function readSavedToken() {
-    for (const key of TOKEN_STORAGE_KEYS) {
-      const token = normalizeToken(sessionStorage.getItem(key) || "");
-      if (token) return token;
-    }
-
-    return "";
+    return normalizeToken(sessionStorage.getItem(CSRF_KEY) || "");
   }
 
   function saveToken(token) {
     const normalized = normalizeToken(token);
 
-    TOKEN_STORAGE_KEYS.forEach((key) => {
+    LEGACY_TOKEN_STORAGE_KEYS.forEach((key) => {
       sessionStorage.removeItem(key);
       localStorage.removeItem(key);
     });
 
     if (normalized) {
-      sessionStorage.setItem(TOKEN_KEY, normalized);
+      sessionStorage.setItem(CSRF_KEY, normalized);
+    } else {
+      sessionStorage.removeItem(CSRF_KEY);
     }
 
     return normalized;
   }
 
   function clearSavedTokens() {
-    TOKEN_STORAGE_KEYS.forEach((key) => {
+    sessionStorage.removeItem(CSRF_KEY);
+    LEGACY_TOKEN_STORAGE_KEYS.forEach((key) => {
       sessionStorage.removeItem(key);
       localStorage.removeItem(key);
     });
   }
 
   function getToken() {
-    const fromInput = normalizeToken(els.token?.value || "");
-    if (fromInput) return fromInput;
-
-    const saved = readSavedToken();
-    if (saved && els.token) {
-      els.token.value = saved;
-    }
-
-    return saved;
+    return readSavedToken();
   }
 
   function setBusy(isBusy) {
@@ -444,18 +434,22 @@
   }
 
   async function api(path, options = {}) {
-    const token = getToken();
+    const csrfToken = getToken();
 
-    if (!token) {
-      throw new Error("Add meg az ADMIN_TOKEN értékét.");
+    if (!csrfToken) {
+      throw new Error("Admin session szükséges. Add meg az ADMIN_TOKEN értékét, majd kattints a Mentés gombra.");
     }
+
+    const method = String(options.method || "GET").toUpperCase();
+    const unsafe = !["GET", "HEAD", "OPTIONS"].includes(method);
 
     const response = await fetch(path, {
       ...options,
+      method,
+      credentials: "same-origin",
       headers: {
         "Content-Type": "application/json",
-        "x-admin-token": token,
-        Authorization: `Bearer ${token}`,
+        ...(unsafe ? { "x-admin-csrf": csrfToken } : {}),
         ...(options.headers || {})
       }
     });
@@ -465,7 +459,7 @@
     if (!response.ok || data.ok === false) {
       if (response.status === 401) {
         throw new Error(
-          "Az admin token nem egyezik az éles backend ADMIN_TOKEN változójával. Töröld a mentett tokent, másold be újra a neuromap-backend service ADMIN_TOKEN értékét, majd szükség esetén indíts új deployt."
+          "Az admin session lejárt vagy nem érvényes. Add meg újra az ADMIN_TOKEN értékét, majd kattints a Mentés gombra."
         );
       }
 
@@ -480,20 +474,60 @@
   }
 
   async function fetchAdmin(path, options = {}) {
-    const token = getToken();
+    const csrfToken = getToken();
 
-    if (!token) {
-      throw new Error("Add meg az ADMIN_TOKEN értékét.");
+    if (!csrfToken) {
+      throw new Error("Admin session szükséges. Add meg az ADMIN_TOKEN értékét, majd kattints a Mentés gombra.");
     }
+
+    const method = String(options.method || "GET").toUpperCase();
+    const unsafe = !["GET", "HEAD", "OPTIONS"].includes(method);
 
     return fetch(path, {
       ...options,
+      method,
+      credentials: "same-origin",
       headers: {
-        "x-admin-token": token,
-        Authorization: `Bearer ${token}`,
+        ...(unsafe ? { "x-admin-csrf": csrfToken } : {}),
         ...(options.headers || {})
       }
     });
+  }
+
+  async function loginAdmin(rawToken) {
+    const adminToken = normalizeToken(rawToken);
+
+    if (!adminToken) {
+      throw new Error("Add meg az ADMIN_TOKEN értékét.");
+    }
+
+    const response = await fetch("/admin/login", {
+      method: "POST",
+      credentials: "same-origin",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ adminToken })
+    });
+
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok || data.ok === false || !data.csrfToken) {
+      throw new Error(data.error || "Admin bejelentkezés sikertelen.");
+    }
+
+    saveToken(data.csrfToken);
+    return data;
+  }
+
+  async function logoutAdmin() {
+    const csrfToken = getToken();
+
+    await fetch("/admin/logout", {
+      method: "POST",
+      credentials: "same-origin",
+      headers: csrfToken ? { "x-admin-csrf": csrfToken } : {}
+    }).catch(() => {});
+
+    clearSavedTokens();
   }
 
   function filenameFromDisposition(value, fallback) {
@@ -3948,26 +3982,35 @@
 
   function init() {
     const savedToken = readSavedToken();
-    if (savedToken && els.token) {
-      els.token.value = savedToken;
+    if (savedToken) {
       saveToken(savedToken);
     }
 
-    bindClick(els.saveTokenBtn, () => {
-      const token = getToken();
+    if (els.token) {
+      els.token.value = "";
+    }
+
+    bindClick(els.saveTokenBtn, async () => {
+      const token = normalizeToken(els.token?.value || "");
       if (!token) {
         setStatus("Add meg az ADMIN_TOKEN értékét.", true);
         return;
       }
 
-      const saved = saveToken(token);
-      if (els.token) els.token.value = saved;
-      setStatus("Token mentve.");
-      refreshDashboard();
+      try {
+        setStatus("Admin session létrehozása...");
+        await loginAdmin(token);
+        if (els.token) els.token.value = "";
+        setStatus("Admin session aktív.");
+        refreshDashboard();
+      } catch (error) {
+        clearSavedTokens();
+        setStatus(error && error.message ? error.message : "Admin bejelentkezés sikertelen.", true);
+      }
     });
 
-    bindClick(els.clearTokenBtn, () => {
-      clearSavedTokens();
+    bindClick(els.clearTokenBtn, async () => {
+      await logoutAdmin();
       if (els.token) els.token.value = "";
       showEmptyDetail();
       if (els.sessionSearchInput) els.sessionSearchInput.value = "";

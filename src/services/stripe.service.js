@@ -146,11 +146,26 @@ function buildCheckoutIdempotencyKey({ internalSessionId, productPackage }) {
   return `neuromap-checkout-${internalSessionId}-${productPackage.code}-${attemptNonce}`;
 }
 
+function appendSessionAccessFragment(url, { internalSessionId, sessionAccessToken }) {
+  if (!sessionAccessToken) return url;
+
+  const parsed = new URL(url);
+  const hashParams = new URLSearchParams(parsed.hash ? parsed.hash.slice(1) : "");
+
+  hashParams.set("nm_session", internalSessionId);
+  hashParams.set("nm_access", sessionAccessToken);
+  parsed.hash = hashParams.toString();
+
+  return parsed.toString();
+}
+
 export async function createCheckoutSession({
   internalSessionId,
   email,
   lang,
-  productPackage: requestedPackage
+  productPackage: requestedPackage,
+  sessionAccessToken = "",
+  checkoutAttempt = 1
 }) {
   if (!internalSessionId) {
     throw new Error("Missing internalSessionId for Stripe checkout session.");
@@ -167,8 +182,14 @@ export async function createCheckoutSession({
   const safeLang = getSafeLang(lang);
   const productPackage = getProductPackage(requestedPackage?.code || requestedPackage);
   const { lineItem, stripePriceId } = buildLineItem({ productPackage, lang: safeLang });
-  const successUrl = `${getLocalizedSuccessUrl(safeLang)}?session_id={CHECKOUT_SESSION_ID}`;
-  const cancelUrl = `${getLocalizedCancelUrl(safeLang)}?sid=${encodeURIComponent(internalSessionId)}`;
+  const successUrl = appendSessionAccessFragment(
+    `${getLocalizedSuccessUrl(safeLang)}?session_id={CHECKOUT_SESSION_ID}`,
+    { internalSessionId, sessionAccessToken }
+  );
+  const cancelUrl = appendSessionAccessFragment(
+    `${getLocalizedCancelUrl(safeLang)}?sid=${encodeURIComponent(internalSessionId)}`,
+    { internalSessionId, sessionAccessToken }
+  );
   const metadata = {
     internalSessionId,
     lang: safeLang,
@@ -177,7 +198,8 @@ export async function createCheckoutSession({
     offerVersion: productPackage.offerVersion,
     amountTotal: String(productPackage.unitAmount),
     currency: productPackage.currency,
-    stripePriceId: stripePriceId || ""
+    stripePriceId: stripePriceId || "",
+    checkoutAttempt: String(checkoutAttempt || 1)
   };
 
   console.log("[stripe] creating checkout", {

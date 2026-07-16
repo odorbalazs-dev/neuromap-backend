@@ -385,6 +385,49 @@
     return params.get("session_id") || params.get("sid") || params.get("session") || "";
   }
 
+  function getHashParams() {
+    return new URLSearchParams(String(window.location.hash || "").replace(/^#/, ""));
+  }
+
+  function getSessionAccessToken(sessionId) {
+    const hashParams = getHashParams();
+    const hashSessionId = hashParams.get("nm_session") || "";
+    const hashToken = hashParams.get("nm_access") || "";
+
+    if (hashToken && (!hashSessionId || hashSessionId === sessionId)) {
+      try {
+        sessionStorage.setItem(`nm_session_access:${sessionId}`, hashToken);
+        sessionStorage.setItem("nm_last_session_id", sessionId);
+        sessionStorage.setItem("nm_last_session_access", hashToken);
+      } catch (_error) {
+        // sessionStorage can be blocked in strict browser privacy modes.
+      }
+
+      return hashToken;
+    }
+
+    try {
+      return (
+        sessionStorage.getItem(`nm_session_access:${sessionId}`) ||
+        (sessionStorage.getItem("nm_last_session_id") === sessionId
+          ? sessionStorage.getItem("nm_last_session_access")
+          : "") ||
+        ""
+      );
+    } catch (_error) {
+      return "";
+    }
+  }
+
+  function getSessionHeaders(sessionId, extra = {}) {
+    const accessToken = getSessionAccessToken(sessionId);
+    return Object.assign(
+      {},
+      extra,
+      accessToken ? { "x-session-token": accessToken } : {}
+    );
+  }
+
   function safeHref(value, fallback) {
     try {
       const url = new URL(value, window.location.origin);
@@ -1336,6 +1379,7 @@
 
       const response = await fetch(`${getApiBaseUrl()}/session/status/${encodeURIComponent(sessionId)}`, {
         method: "GET",
+        headers: getSessionHeaders(sessionId),
         credentials: "omit"
       });
 
@@ -1449,7 +1493,7 @@
 
       const response = await fetch(`${getApiBaseUrl()}/checkout/retry/${encodeURIComponent(sessionId)}`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: getSessionHeaders(sessionId, { "Content-Type": "application/json" }),
         credentials: "omit"
       });
 

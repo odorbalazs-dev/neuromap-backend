@@ -1,4 +1,6 @@
 import {
+  assertSessionAccess,
+  getSessionAccessTokenFromRequest,
   getSessionById,
   getSessionByPublicIdentifier
 } from "../../services/session.service.js";
@@ -172,6 +174,8 @@ export async function getSession(req, res) {
       });
     }
 
+    assertSessionAccess(session, getSessionAccessTokenFromRequest(req));
+
     return res.status(200).json({
       ok: true,
       session: {
@@ -184,6 +188,13 @@ export async function getSession(req, res) {
 }
     });
   } catch (error) {
+    if (error.status === 403) {
+      return res.status(403).json({
+        ok: false,
+        error: "Session access denied"
+      });
+    }
+
     console.error("session controller error:", {
       message: error?.message || "Unknown session controller error"
     });
@@ -217,6 +228,8 @@ export async function getSessionStatus(req, res) {
       });
     }
 
+    assertSessionAccess(session, getSessionAccessTokenFromRequest(req));
+
     const observation = await getObservationStatusForSession(session.id);
 
     return res.status(200).json({
@@ -224,6 +237,13 @@ export async function getSessionStatus(req, res) {
       status: buildCustomerStatus(session, observation)
     });
   } catch (error) {
+    if (error.status === 403) {
+      return res.status(403).json({
+        ok: false,
+        error: "Session access denied"
+      });
+    }
+
     console.error("session status controller error:", error);
 
     return res.status(500).json({

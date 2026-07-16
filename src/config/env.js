@@ -199,6 +199,15 @@ export const env = {
   META_ACCESS_TOKEN: optional("META_ACCESS_TOKEN", null),
 
   ADMIN_TOKEN: optional("ADMIN_TOKEN", null),
+  ADMIN_SESSION_TTL_MINUTES: optionalInt("ADMIN_SESSION_TTL_MINUTES", 480, {
+    min: 5,
+    max: 1440
+  }),
+  ADMIN_LEGACY_TOKEN_AUTH: optionalBoolean("ADMIN_LEGACY_TOKEN_AUTH", false),
+  ADMIN_COOKIE_SECURE: optionalBoolean(
+    "ADMIN_COOKIE_SECURE",
+    (process.env.NODE_ENV || "development") === "production"
+  ),
   CRON_SECRET: optional("CRON_SECRET", null),
   OBSERVATION_LINK_SECRET: optional("OBSERVATION_LINK_SECRET", null),
 
@@ -220,6 +229,14 @@ export const env = {
     min: 1000,
     max: 300000
   }),
+  DATABASE_SSL_MODE: optional(
+    "DATABASE_SSL_MODE",
+    (process.env.NODE_ENV || "development") === "production" ? "require" : "disable"
+  ),
+  DATABASE_SSL_CA_BASE64: optional("DATABASE_SSL_CA_BASE64", null),
+  RATE_LIMIT_BACKEND: optional("RATE_LIMIT_BACKEND", "database"),
+  RATE_LIMIT_FAIL_OPEN: optionalBoolean("RATE_LIMIT_FAIL_OPEN", false),
+  PUBLIC_SESSION_TOKEN_REQUIRED: optionalBoolean("PUBLIC_SESSION_TOKEN_REQUIRED", true),
 
   WORKER_CONCURRENCY: optionalInt("WORKER_CONCURRENCY", 1, { min: 1, max: 64 }),
   WORKER_IDLE_SLEEP_MS: optionalInt("WORKER_IDLE_SLEEP_MS", 4000, { min: 500, max: 60000 }),
@@ -272,6 +289,10 @@ export const env = {
   SUPERVISORY_AUTHORITY_URL: optional("SUPERVISORY_AUTHORITY_URL", null),
   MARKETING_SERVER_EVENTS_ENABLED: optionalBoolean("MARKETING_SERVER_EVENTS_ENABLED", false),
   DATA_RETENTION_DAYS: optionalInt("DATA_RETENTION_DAYS", 90, { min: 7, max: 730 }),
+  WEBHOOK_EVENT_PAYLOAD_RETENTION_DAYS: optionalInt("WEBHOOK_EVENT_PAYLOAD_RETENTION_DAYS", 14, {
+    min: 1,
+    max: 365
+  }),
   LAUNCH_GATE_ENFORCED: optionalBoolean("LAUNCH_GATE_ENFORCED", false),
   PRODUCTION_CHECKOUT_ENABLED: optionalBoolean("PRODUCTION_CHECKOUT_ENABLED", true),
   LEGAL_REVIEW_APPROVED: optionalBoolean("LEGAL_REVIEW_APPROVED", false),

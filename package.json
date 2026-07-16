@@ -15,6 +15,7 @@
     "audit:language-quality": "node scripts/audit-language-quality.js",
     "audit:campaign-readiness": "node scripts/audit-campaign-readiness.js",
     "audit:google-ads": "node scripts/validate-google-ads-build.js",
+    "audit:security": "node scripts/security-audit.js",
     "smoke:checkout-payload": "node scripts/smoke-checkout-payload.js",
     "smoke:two-tier-offer": "node scripts/smoke-two-tier-offer.js",
     "smoke:browser-engine": "node scripts/smoke-browser-engine-bundle.js",
@@ -26,7 +27,7 @@
     "smoke:report-v2": "node scripts/smoke-report-v2.js",
     "smoke:pdf": "node scripts/smoke-pdf-report.js",
     "smoke:admin-dashboard": "node scripts/smoke-admin-dashboard.js",
-    "audit:all": "npm run audit:banks && npm run audit:bank-quality && npm run audit:engine-selection && npm run audit:language-quality && npm run audit:campaign-readiness && npm run audit:google-ads && npm run smoke:checkout-payload && npm run smoke:two-tier-offer && npm run smoke:browser-engine && npm run smoke:engine-age-field && npm run smoke:legal-consent && npm run smoke:launch-gate && npm run smoke:checkout-pages && npm run smoke:analysis-report && npm run smoke:report-v2 && npm run smoke:pdf && npm run smoke:admin-dashboard"
+    "audit:all": "npm run audit:banks && npm run audit:bank-quality && npm run audit:engine-selection && npm run audit:language-quality && npm run audit:campaign-readiness && npm run audit:google-ads && npm run audit:security && npm run smoke:checkout-payload && npm run smoke:two-tier-offer && npm run smoke:browser-engine && npm run smoke:engine-age-field && npm run smoke:legal-consent && npm run smoke:launch-gate && npm run smoke:checkout-pages && npm run smoke:analysis-report && npm run smoke:report-v2 && npm run smoke:pdf && npm run smoke:admin-dashboard"
   },
   "dependencies": {
     "cors": "^2.8.6",

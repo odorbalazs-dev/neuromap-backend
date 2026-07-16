@@ -5029,21 +5029,12 @@
 
   function readDraft() {
     try {
-      const raw = localStorage.getItem(DRAFT_STORAGE_KEY);
-      if (!raw) return null;
-
-      const draft = JSON.parse(raw);
-      const savedAt = Number(draft && draft.savedAt ? draft.savedAt : 0);
-
-      if (!draft || !savedAt || Date.now() - savedAt > DRAFT_TTL_MS) {
-        localStorage.removeItem(DRAFT_STORAGE_KEY);
-        return null;
-      }
-
-      return draft;
+      localStorage.removeItem(DRAFT_STORAGE_KEY);
     } catch (_error) {
-      return null;
+      // localStorage can be blocked in strict browser privacy modes.
     }
+
+    return null;
   }
 
   function clearDraft() {
@@ -5056,38 +5047,7 @@
 
   function saveDraft(reason = "auto") {
     try {
-      if (!state.triageQuestions.length) return;
-
-      syncPartialAnswersForDraft();
-
-      const draft = {
-        version: 1,
-        reason,
-        savedAt: Date.now(),
-        lang: state.lang,
-        packageCode: normalizeClientPackageCode(state.packageCode),
-        step: state.step,
-        name: getInputValue("name"),
-        email: getInputValue("email"),
-        childAge: getInputValue("childAge"),
-        triageQuestions: state.triageQuestions,
-        triageAnswers: state.triageAnswers,
-        triageScores: state.triageScores,
-        triageRanking: state.triageRanking,
-        detectedRisk: state.detectedRisk,
-        secondaryRisk: state.secondaryRisk,
-        needsExtra: state.needsExtra,
-        specificQuestions: state.specificQuestions,
-        specificAnswers: state.specificAnswers,
-        specificScoring: state.specificScoring,
-        specificProfile: state.specificProfile,
-        resultSummary: state.resultSummary,
-        extraQuestions: state.extraQuestions,
-        extraAnswers: state.extraAnswers,
-        extraDebug: state.extraDebug
-      };
-
-      localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(draft));
+      localStorage.removeItem(DRAFT_STORAGE_KEY);
       updateResumeBanner(false);
     } catch (error) {
       console.warn("NeuroMap draft save failed:", error);
@@ -8851,6 +8811,19 @@
       } catch (_error) {
         console.error("Invalid checkoutUrl:", data.checkoutUrl);
         throw new Error("Not a valid URL");
+      }
+
+      if (data.sessionId && data.sessionAccessToken && window.sessionStorage) {
+        try {
+          window.sessionStorage.setItem(
+            `nm_session_access:${data.sessionId}`,
+            data.sessionAccessToken
+          );
+          window.sessionStorage.setItem("nm_last_session_id", data.sessionId);
+          window.sessionStorage.setItem("nm_last_session_access", data.sessionAccessToken);
+        } catch (_error) {
+          // sessionStorage can be blocked; the Stripe URL fragment still carries access.
+        }
       }
 
       window.location.href = data.checkoutUrl;

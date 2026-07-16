@@ -1,5 +1,10 @@
 import express from "express";
-import { adminAuth } from "../../middleware/adminAuth.js";
+import {
+  adminAuth,
+  adminLogin,
+  adminLogout,
+  getAdminAuthStatus
+} from "../../middleware/adminAuth.js";
 import { createRateLimit } from "../../middleware/security.js";
 import { getAdminDashboard } from "../controllers/admin-dashboard.controller.js";
 
@@ -49,6 +54,10 @@ router.use(createRateLimit({
   max: 220,
   keyPrefix: "admin-api"
 }));
+
+router.post("/login", adminLogin);
+router.post("/logout", adminLogout);
+router.get("/session", adminAuth, getAdminAuthStatus);
 
 router.use(adminAuth);
 

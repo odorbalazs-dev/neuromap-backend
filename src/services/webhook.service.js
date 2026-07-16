@@ -15,7 +15,43 @@ import {
   getProductPackage
 } from "../config/products.js";
 
+function sanitizeWebhookPayload(event) {
+  const object = event?.data?.object || {};
+  const metadata = object.metadata || {};
+
+  return {
+    id: event?.id || null,
+    type: event?.type || null,
+    created: event?.created || null,
+    livemode: Boolean(event?.livemode),
+    data: {
+      object: {
+        id: object.id || null,
+        object: object.object || null,
+        status: object.status || null,
+        payment_status: object.payment_status || null,
+        amount_total: object.amount_total ?? null,
+        currency: object.currency || null,
+        client_reference_id: object.client_reference_id || null,
+        metadata: {
+          internalSessionId: metadata.internalSessionId || null,
+          lang: metadata.lang || null,
+          product: metadata.product || null,
+          packageCode: metadata.packageCode || null,
+          offerVersion: metadata.offerVersion || null,
+          amountTotal: metadata.amountTotal || null,
+          currency: metadata.currency || null,
+          stripePriceId: metadata.stripePriceId || null,
+          checkoutAttempt: metadata.checkoutAttempt || null
+        }
+      }
+    }
+  };
+}
+
 async function claimWebhookEvent(event) {
+  const safePayload = sanitizeWebhookPayload(event);
+
   const result = await db.query(
     `
     INSERT INTO webhook_events (
@@ -44,7 +80,7 @@ async function claimWebhookEvent(event) {
        )
     RETURNING *
     `,
-    ["stripe", event.id, event.type, event]
+    ["stripe", event.id, event.type, safePayload]
   );
 
   if (result.rows[0]) {

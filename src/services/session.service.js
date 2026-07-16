@@ -1,6 +1,52 @@
-import { randomUUID, randomBytes } from "crypto";
+import { randomUUID, randomBytes, createHash } from "crypto";
 import { db } from "../db/db.js";
 import { env } from "../config/env.js";
+import { secureCompare } from "../utils/secureCompare.js";
+
+export function createPublicSessionToken() {
+  return randomBytes(32).toString("base64url");
+}
+
+export function hashSessionAccessToken(token) {
+  return createHash("sha256")
+    .update(String(token || ""), "utf8")
+    .digest("hex");
+}
+
+export function getSessionAccessTokenFromRequest(req) {
+  const header = req.headers["x-session-token"];
+  const headerValue = Array.isArray(header) ? header[0] : header;
+  const authorization = String(req.headers.authorization || "");
+
+  if (authorization.startsWith("Session ")) {
+    return authorization.slice("Session ".length).trim();
+  }
+
+  return String(headerValue || "").trim();
+}
+
+export function verifySessionAccessToken(session, token) {
+  if (!env.PUBLIC_SESSION_TOKEN_REQUIRED && !session?.public_access_token_hash) {
+    return true;
+  }
+
+  if (!session?.public_access_token_hash || !token) {
+    return false;
+  }
+
+  return secureCompare(
+    hashSessionAccessToken(token),
+    session.public_access_token_hash
+  );
+}
+
+export function assertSessionAccess(session, token) {
+  if (verifySessionAccessToken(session, token)) return;
+
+  const error = new Error("Session access denied");
+  error.status = 403;
+  throw error;
+}
 
 export async function createSession({
   email,
@@ -12,6 +58,8 @@ export async function createSession({
   consentEventId
 }) {
   const id = randomUUID();
+  const publicAccessToken = createPublicSessionToken();
+  const publicAccessTokenHash = hashSessionAccessToken(publicAccessToken);
 
   const result = await db.query(
     `
@@ -32,6 +80,7 @@ export async function createSession({
       consented_at,
       consent_event_id,
       retention_delete_at,
+      public_access_token_hash,
       payment_status,
       analysis_status,
       created_at
@@ -40,6 +89,7 @@ export async function createSession({
       $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
       $11, $12, $13, $14::timestamptz, $15,
       NOW() + ($16::int * INTERVAL '1 day'),
+      $17,
       'pending', 'pending', NOW()
     )
     RETURNING *
@@ -60,11 +110,29 @@ export async function createSession({
       consent.termsVersion,
       consent.consentedAt,
       consentEventId,
-      env.DATA_RETENTION_DAYS
+      env.DATA_RETENTION_DAYS,
+      publicAccessTokenHash
     ]
   );
 
-  return result.rows[0];
+  return {
+    ...result.rows[0],
+    publicAccessToken
+  };
+}
+
+export async function incrementCheckoutAttempt(sessionId) {
+  const result = await db.query(
+    `
+    UPDATE sessions
+    SET checkout_attempt = COALESCE(checkout_attempt, 0) + 1
+    WHERE id = $1
+    RETURNING checkout_attempt
+    `,
+    [sessionId]
+  );
+
+  return Number(result.rows[0]?.checkout_attempt || 1);
 }
 
 export async function updateStripeSessionId(sessionId, stripeSessionId) {

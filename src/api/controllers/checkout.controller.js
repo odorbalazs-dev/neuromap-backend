@@ -1,6 +1,9 @@
 import {
   createSession,
   getSessionById,
+  assertSessionAccess,
+  getSessionAccessTokenFromRequest,
+  incrementCheckoutAttempt,
   updateStripeSessionId
 } from "../../services/session.service.js";
 
@@ -65,7 +68,9 @@ export async function createCheckout(req, res) {
       email,
       name,
       lang,
-      productPackage
+      productPackage,
+      sessionAccessToken: session.publicAccessToken,
+      checkoutAttempt: await incrementCheckoutAttempt(session.id)
     });
 
     await updateStripeSessionId(session.id, stripeSession.id);
@@ -73,6 +78,7 @@ export async function createCheckout(req, res) {
     return res.status(200).json({
       ok: true,
       sessionId: session.id,
+      sessionAccessToken: session.publicAccessToken,
       checkoutUrl: stripeSession.url,
       packageCode: productPackage.code,
       amountTotal: productPackage.unitAmount,
@@ -149,6 +155,9 @@ export async function retryCheckout(req, res) {
       });
     }
 
+    const sessionAccessToken = getSessionAccessTokenFromRequest(req);
+    assertSessionAccess(session, sessionAccessToken);
+
 
     if (!session.consent_record) {
       return res.status(409).json({
@@ -164,7 +173,9 @@ export async function retryCheckout(req, res) {
       email: session.email,
       name: session.name,
       lang: session.lang,
-      productPackage: getProductPackage(session.package_code)
+      productPackage: getProductPackage(session.package_code),
+      sessionAccessToken,
+      checkoutAttempt: await incrementCheckoutAttempt(session.id)
     });
 
     await updateStripeSessionId(session.id, stripeSession.id);
@@ -172,6 +183,7 @@ export async function retryCheckout(req, res) {
     return res.status(200).json({
       ok: true,
       sessionId: session.id,
+      sessionAccessToken,
       checkoutUrl: stripeSession.url
     });
   } catch (error) {
@@ -182,6 +194,13 @@ export async function retryCheckout(req, res) {
         ok: false,
         error: error.message,
         code: "CHECKOUT_NOT_READY"
+      });
+    }
+
+    if (error.status === 403) {
+      return res.status(403).json({
+        ok: false,
+        error: "Session access denied"
       });
     }
 
