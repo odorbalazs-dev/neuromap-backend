@@ -76,6 +76,14 @@ export async function upsertObservationEntry(req, res) {
   } catch (error) {
     const message = error?.message || "Failed to save observation.";
     const clientError = /Invalid|must|outside|not active/i.test(message);
-    return res.status(clientError ? 400 : 500).json({ ok: false, error: message });
+
+    if (!clientError) {
+      console.error("[observation] save failed", { message });
+    }
+
+    return res.status(clientError ? 400 : 500).json({
+      ok: false,
+      error: clientError ? message : "Failed to save observation."
+    });
   }
 }

@@ -12,13 +12,25 @@ export function cleanGeneratedReportText(text = "") {
 }
 
 export function getNumberedReportSections(text = "") {
-  const matches = [...String(text || "").matchAll(/^(\d{1,2})\.\s+\S.*$/gm)];
+  const source = String(text || "");
+  const matches = [...source.matchAll(/^(\d{1,2})\.\s+([^\r\n]+)[ \t]*$/gm)];
 
-  return matches.map((match) => ({
-    number: Number(match[1]),
-    heading: match[0].trim(),
-    index: match.index || 0
-  }));
+  return matches.map((match, index) => {
+    const headingIndex = match.index || 0;
+    const headingEnd = headingIndex + match[0].length;
+    const bodyEnd = matches[index + 1]?.index ?? source.length;
+    const body = source.slice(headingEnd, bodyEnd).trim();
+
+    return {
+      number: Number(match[1]),
+      title: String(match[2] || "").trim(),
+      heading: match[0].trim(),
+      index: headingIndex,
+      body,
+      bodyLength: body.length,
+      hasBlankLine: /^\r?\n[ \t]*\r?\n/.test(source.slice(headingEnd))
+    };
+  });
 }
 
 export function validateReportStructure(text = "", options = {}) {
@@ -66,6 +78,43 @@ export function validateReportStructure(text = "", options = {}) {
   if (options.minLength && cleaned.length < options.minLength) {
     errors.push(`Report is shorter than expected: ${cleaned.length} characters.`);
   }
+
+  const maxHeadingLength = options.maxHeadingLength || 0;
+  const minSectionLength = options.minSectionLength || 0;
+
+  sections.forEach((section) => {
+    if (maxHeadingLength && section.heading.length > maxHeadingLength) {
+      errors.push(`Section ${section.number} heading is too long: ${section.heading.length} characters.`);
+    }
+
+    if (minSectionLength && section.bodyLength < minSectionLength) {
+      errors.push(`Section ${section.number} is too short: ${section.bodyLength} characters.`);
+    }
+
+    if (options.requireBlankLine && !section.hasBlankLine) {
+      errors.push(`Section ${section.number} heading must be followed by a blank line.`);
+    }
+  });
+
+  const requiredPatterns = Array.isArray(options.requiredPatterns)
+    ? options.requiredPatterns
+    : [];
+
+  requiredPatterns.forEach((requirement, index) => {
+    const pattern = requirement?.pattern;
+    const label = requirement?.label || `required content ${index + 1}`;
+
+    if (!(pattern instanceof RegExp)) {
+      errors.push(`Invalid validation pattern for ${label}.`);
+      return;
+    }
+
+    pattern.lastIndex = 0;
+    if (!pattern.test(cleaned)) {
+      errors.push(`Report is missing ${label}.`);
+    }
+    pattern.lastIndex = 0;
+  });
 
   return {
     ok: errors.length === 0,

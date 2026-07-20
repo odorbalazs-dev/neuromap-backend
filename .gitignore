@@ -3,3 +3,5 @@ node_modules/
 .tmp.driveupload/
 .codex-tmp/
 work/
+tmp/
+~$*.docx

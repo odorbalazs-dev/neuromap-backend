@@ -8,13 +8,46 @@ import {
 import { buildReportV2PromptContext } from "./report-v2.service.js";
 
 const openai = new OpenAI({
-  apiKey: env.OPENAI_API_KEY
+  apiKey: env.OPENAI_API_KEY,
+  timeout: env.OPENAI_TIMEOUT_MS,
+  maxRetries: env.OPENAI_MAX_RETRIES
 });
 
 const ALLOWED_LANGS = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];
 
+const REPORT_DISCLAIMER_PATTERNS = {
+  hu: /nem (?:jelent |minősül )?diagn[oó]zis|nem diagnosztikai/i,
+  en: /not (?:a )?diagnosis|non-diagnostic|does not constitute (?:a )?diagnosis/i,
+  de: /keine diagnose|nicht[^.\n]{0,80}diagnose/i,
+  it: /non[^.\n]{0,80}diagnosi/i,
+  es: /no (?:es|constituye) un diagn[oó]stico|no[^.\n]{0,80}diagn[oó]stic/i,
+  zh: /(?:不(?:构成|是|等同于)|不能作为|非)[^。\n]{0,40}诊断/,
+  ja: /診断ではありません|診断を意味しません|診断ではない|診断を行うものではありません|診断に代わるものではありません/,
+  ar: /ليس (?:هذا )?تشخيص|لا[^.\n]{0,80}تشخيص/,
+  pl: /nie (?:jest|stanowi)[^.\n]{0,80}diagnoz/i,
+  pt: /não[^.\n]{0,100}diagn[oó]stic/i,
+  fr: /n['’]est pas (?:un )?diagnostic|ne constitue pas[^.\n]{0,80}diagnostic/i
+};
+
 function getSafeLang(lang) {
   return ALLOWED_LANGS.includes(lang) ? lang : "en";
+}
+
+function getReportValidationOptions(lang) {
+  const safeLang = getSafeLang(lang);
+
+  return {
+    minLength: 5000,
+    minSectionLength: 160,
+    maxHeadingLength: 180,
+    requireBlankLine: true,
+    requiredPatterns: [
+      {
+        label: `a non-diagnostic disclaimer in ${safeLang}`,
+        pattern: REPORT_DISCLAIMER_PATTERNS[safeLang]
+      }
+    ]
+  };
 }
 
 function buildLanguageInstruction(lang) {
@@ -629,7 +662,8 @@ export async function generateAnalysis(payload) {
     const response = await openai.responses.create({
       model: env.OPENAI_MODEL || "gpt-4.1-mini",
       input: inputPrompt,
-      temperature: attempt === 1 ? 0.28 : 0.22
+      temperature: attempt === 1 ? 0.28 : 0.22,
+      max_output_tokens: env.OPENAI_MAX_OUTPUT_TOKENS
     });
 
     const text =
@@ -650,9 +684,8 @@ export async function generateAnalysis(payload) {
     throw new Error("Analysis generation returned empty content.");
   }
 
-  let reportValidation = validateReportStructure(cleaned, {
-    minLength: 5000
-  });
+  const reportValidationOptions = getReportValidationOptions(lang);
+  let reportValidation = validateReportStructure(cleaned, reportValidationOptions);
 
   if (!reportValidation.ok) {
     console.warn("[analysis] report structure warning, retrying once:", reportValidation.errors.join("; "));
@@ -666,13 +699,15 @@ ${reportValidation.errors.map((error) => `- ${error}`).join("\n")}
 `;
 
     cleaned = await runGeneration(retryPrompt, 2);
-    reportValidation = validateReportStructure(cleaned, {
-      minLength: 5000
-    });
+    reportValidation = validateReportStructure(cleaned, reportValidationOptions);
   }
 
   if (!reportValidation.ok) {
-    console.warn("[analysis] report structure warning after retry:", reportValidation.errors.join("; "));
+    const error = new Error(
+      `Generated report failed the delivery contract after retry: ${reportValidation.errors.join("; ")}`
+    );
+    error.code = "REPORT_CONTRACT_INVALID";
+    throw error;
   }
 
   return cleaned;

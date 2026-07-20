@@ -2,7 +2,12 @@ import { normalizePackageCode } from "../config/products.js";
 
 function cleanText(value, maxLength = 1000) {
   if (typeof value !== "string") return "";
-  return value.trim().slice(0, maxLength);
+  return value
+    .normalize("NFKC")
+    .replace(/[\u0000-\u001F\u007F-\u009F]/g, "")
+    .replace(/[\u061C\u200E\u200F\u202A-\u202E\u2066-\u2069]/g, "")
+    .trim()
+    .slice(0, maxLength);
 }
 
 function cleanAge(value) {

@@ -28,6 +28,7 @@ const pool = env.DATABASE_URL
       idleTimeoutMillis: env.PG_IDLE_TIMEOUT_MS,
       query_timeout: env.PG_QUERY_TIMEOUT_MS,
       statement_timeout: env.PG_QUERY_TIMEOUT_MS,
+      application_name: `neuromap-${env.SERVICE_ROLE}`,
       ssl: buildSslConfig(),
     })
   : null;

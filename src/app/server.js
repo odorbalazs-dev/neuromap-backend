@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 
 import { env } from "../config/env.js";
+import { db } from "../db/db.js";
 import { runMigrations } from "../db/migrate.js";
 import {
   createRateLimit,
@@ -91,7 +92,7 @@ app.use("/public/webflow", express.static("public/webflow", {
 app.use("/public", express.static("public"));
 
 app.use("/webhook", express.raw({ type: "application/json" }));
-app.use(express.json({ limit: "2mb" }));
+app.use(express.json({ limit: env.HTTP_JSON_BODY_LIMIT_BYTES }));
 
 app.get("/", (_req, res) => {
   return res.status(200).json({
@@ -143,15 +144,96 @@ app.use("/jobs", createRateLimit({
   keyPrefix: "jobs"
 }), jobsRoutes);
 
+app.use((_req, res) => {
+  return res.status(404).json({
+    ok: false,
+    error: "Not found"
+  });
+});
+
+app.use((error, _req, res, next) => {
+  if (res.headersSent) {
+    return next(error);
+  }
+
+  const payloadTooLarge = error?.type === "entity.too.large";
+  const status = payloadTooLarge
+    ? 413
+    : Number.isInteger(error?.status) && error.status >= 400 && error.status < 500
+      ? error.status
+      : 500;
+
+  console.error("[http] request failed", {
+    status,
+    code: error?.code || null,
+    type: error?.type || null,
+    message: error?.message || "Unknown request error"
+  });
+
+  return res.status(status).json({
+    ok: false,
+    error: payloadTooLarge
+      ? "Request payload is too large"
+      : status >= 500
+        ? "Internal server error"
+        : "Invalid request"
+  });
+});
+
+let server = null;
+let shutdownStarted = false;
+
 async function start() {
   await runMigrations();
 
-  app.listen(Number(env.PORT), () => {
+  server = app.listen(Number(env.PORT), () => {
     console.log(`Server running on port ${env.PORT}`);
   });
+
+  server.headersTimeout = env.HTTP_HEADERS_TIMEOUT_MS;
+  server.requestTimeout = env.HTTP_REQUEST_TIMEOUT_MS;
+  server.keepAliveTimeout = env.HTTP_KEEP_ALIVE_TIMEOUT_MS;
 }
+
+async function shutdown(signal) {
+  if (shutdownStarted) return;
+  shutdownStarted = true;
+
+  console.log(`[shutdown] ${signal} received; draining HTTP connections.`);
+
+  const forceTimer = setTimeout(() => {
+    console.error("[shutdown] Grace period expired; forcing connection shutdown.");
+    server?.closeAllConnections?.();
+    process.exit(1);
+  }, env.HTTP_SHUTDOWN_GRACE_MS);
+  forceTimer.unref?.();
+
+  try {
+    if (server) {
+      await new Promise((resolve, reject) => {
+        server.close((error) => (error ? reject(error) : resolve()));
+        server.closeIdleConnections?.();
+      });
+    }
+
+    await db.close();
+    clearTimeout(forceTimer);
+    console.log("[shutdown] HTTP server and database pool closed.");
+    process.exit(0);
+  } catch (error) {
+    clearTimeout(forceTimer);
+    console.error("[shutdown] Failed to close cleanly:", error);
+    await db.close().catch(() => {});
+    process.exit(1);
+  }
+}
+
+process.once("SIGTERM", () => shutdown("SIGTERM"));
+process.once("SIGINT", () => shutdown("SIGINT"));
 
 start().catch((err) => {
   console.error("Failed to start server:", err);
-  process.exit(1);
+  db.close()
+    .catch(() => {})
+    .finally(() => process.exit(1));
 });

@@ -3,6 +3,7 @@ import {
   getSessionById,
   markRecoveryEmailSent
 } from "../../services/session.service.js";
+import { buildRecordEmailIdempotencyKey } from "../../services/email-idempotency.service.js";
 
 import { sendCheckoutRecoveryEmail } from "../../services/email.service.js";
 import { retryReportEmailsBatch } from "../../services/report-email-retry.service.js";
@@ -101,7 +102,11 @@ export async function recoverAbandonedCheckouts(req, res) {
           to: freshSession.email,
           lang: freshSession.lang,
           name: freshSession.name,
-          checkoutUrl: retryUrl
+          checkoutUrl: retryUrl,
+          idempotencyKey: buildRecordEmailIdempotencyKey(
+            "checkout-recovery",
+            freshSession.id
+          )
         });
 
         await markRecoveryEmailSent(freshSession.id);

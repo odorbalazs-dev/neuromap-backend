@@ -161,15 +161,54 @@ if (dbResult.error) {
 export const env = {
   NODE_ENV: process.env.NODE_ENV || "development",
   PORT: process.env.PORT || 3000,
+  SERVICE_ROLE: optional("RAILWAY_SERVICE_ROLE", "web"),
+
+  HTTP_JSON_BODY_LIMIT_BYTES: optionalInt("HTTP_JSON_BODY_LIMIT_BYTES", 262144, {
+    min: 16384,
+    max: 1048576
+  }),
+  HTTP_HEADERS_TIMEOUT_MS: optionalInt("HTTP_HEADERS_TIMEOUT_MS", 15000, {
+    min: 5000,
+    max: 120000
+  }),
+  HTTP_REQUEST_TIMEOUT_MS: optionalInt("HTTP_REQUEST_TIMEOUT_MS", 180000, {
+    min: 10000,
+    max: 600000
+  }),
+  HTTP_KEEP_ALIVE_TIMEOUT_MS: optionalInt("HTTP_KEEP_ALIVE_TIMEOUT_MS", 5000, {
+    min: 1000,
+    max: 60000
+  }),
+  HTTP_SHUTDOWN_GRACE_MS: optionalInt("HTTP_SHUTDOWN_GRACE_MS", 30000, {
+    min: 5000,
+    max: 120000
+  }),
 
   DATABASE_URL: dbResult.url ?? null,
   DATABASE_ERROR: dbResult.error ?? null,
 
   OPENAI_API_KEY: required("OPENAI_API_KEY"),
   OPENAI_MODEL: process.env.OPENAI_MODEL || "gpt-4.1-mini",
+  OPENAI_TIMEOUT_MS: optionalInt("OPENAI_TIMEOUT_MS", 120000, {
+    min: 10000,
+    max: 300000
+  }),
+  OPENAI_MAX_RETRIES: optionalInt("OPENAI_MAX_RETRIES", 2, { min: 0, max: 5 }),
+  OPENAI_MAX_OUTPUT_TOKENS: optionalInt("OPENAI_MAX_OUTPUT_TOKENS", 8000, {
+    min: 2000,
+    max: 20000
+  }),
 
   STRIPE_SECRET_KEY: required("STRIPE_SECRET_KEY"),
   STRIPE_WEBHOOK_SECRET: required("STRIPE_WEBHOOK_SECRET"),
+  STRIPE_TIMEOUT_MS: optionalInt("STRIPE_TIMEOUT_MS", 20000, {
+    min: 5000,
+    max: 120000
+  }),
+  STRIPE_MAX_NETWORK_RETRIES: optionalInt("STRIPE_MAX_NETWORK_RETRIES", 2, {
+    min: 0,
+    max: 5
+  }),
   STRIPE_PRICE_STANDARD_USD: optional("STRIPE_PRICE_STANDARD_USD", null),
   STRIPE_PRICE_PLUS_USD: optional("STRIPE_PRICE_PLUS_USD", null),
 

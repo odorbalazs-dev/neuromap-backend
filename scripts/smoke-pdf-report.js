@@ -1,3 +1,5 @@
+import fs from "node:fs";
+import path from "node:path";
 import { generatePdfBuffer } from "../src/services/pdf.service.js";
 
 function assert(condition, message) {
@@ -214,6 +216,15 @@ async function main() {
   assert(stressPdf.toString("latin1").includes("%%EOF"), "Stress PDF should contain an EOF marker.");
   assert(stressPages >= pages, `Stress PDF should be at least as long as the base PDF, found ${stressPages} vs ${pages}.`);
   assert(stressPages <= 18, `Stress PDF should not create excessive blank pages, found ${stressPages}.`);
+
+  const outputDir = String(process.env.PDF_SMOKE_OUTPUT_DIR || "").trim();
+  if (outputDir) {
+    const absoluteOutputDir = path.resolve(outputDir);
+    fs.mkdirSync(absoluteOutputDir, { recursive: true });
+    fs.writeFileSync(path.join(absoluteOutputDir, "sample-report.pdf"), pdf);
+    fs.writeFileSync(path.join(absoluteOutputDir, "stress-report.pdf"), stressPdf);
+    console.log("PDF smoke artifacts written.", { outputDir: absoluteOutputDir });
+  }
 
   console.log("PDF report smoke passed.", {
     bytes: pdf.length,

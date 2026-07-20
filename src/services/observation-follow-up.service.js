@@ -1,5 +1,6 @@
 import { db } from "../db/db.js";
 import { sendObservationFollowUpEmail } from "./email.service.js";
+import { buildRecordEmailIdempotencyKey } from "./email-idempotency.service.js";
 import {
   buildObservationProgramAccess,
   generateObservationTrend,
@@ -130,7 +131,11 @@ async function deliverFollowUp(followUp) {
     name: program.name,
     kind: followUp.kind,
     observationUrl: access.url,
-    trend
+    trend,
+    idempotencyKey: buildRecordEmailIdempotencyKey(
+      "observation-follow-up",
+      followUp.id
+    )
   });
 
   await markFollowUpSent(followUp, trend);

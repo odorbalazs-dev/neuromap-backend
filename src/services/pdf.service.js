@@ -35,7 +35,8 @@ const PAGE_LAYOUT = {
 
 const PDF_VISUAL_KEEP_WITH_BODY_HEIGHT = 76;
 const PDF_SECTION_TITLE_KEEP_HEIGHT = 78;
-const PDF_REPORT_VERSION = "pdf_report_v12_visual_qa_v4_1";
+const PDF_MIN_TEXT_CHUNK_HEIGHT = 48;
+const PDF_REPORT_VERSION = "pdf_report_v13_orphan_guard";
 const BODY_TEXT_COLOR = "#374151";
 const BULLET = "\u2022";
 
@@ -2230,15 +2231,30 @@ function addReportBulletList(doc, items, labels, lang, pageState = null) {
       align: getTextAlign(lang),
       lineGap: 3
     };
-    const chunks = splitTextForHeight(
-      doc,
-      item,
-      textOptions,
-      Math.max(100, getPageContentHeight(doc) - 32)
-    );
+    let remainingText = item;
+    let chunkIndex = 0;
 
-    chunks.forEach((chunk, chunkIndex) => {
+    while (remainingText) {
       doc.font(getFont(lang)).fontSize(fontSize);
+
+      let availableHeight = getSafeContentBottom(doc) - doc.y - 26;
+      if (availableHeight < PDF_MIN_TEXT_CHUNK_HEIGHT) {
+        addContentPage(doc, labels, lang, pageState);
+        availableHeight = getSafeContentBottom(doc) - doc.y - 26;
+      }
+
+      const chunks = splitTextForHeight(
+        doc,
+        remainingText,
+        textOptions,
+        Math.max(
+          PDF_MIN_TEXT_CHUNK_HEIGHT,
+          Math.min(getPageContentHeight(doc) - 32, availableHeight)
+        )
+      );
+      const chunk = chunks.shift();
+      if (!chunk) break;
+      remainingText = chunks.join("\n");
 
       const height = doc.heightOfString(chunk, textOptions);
 
@@ -2256,7 +2272,8 @@ function addReportBulletList(doc, items, labels, lang, pageState = null) {
         .text(chunk, x, doc.y, textOptions);
 
       doc.moveDown(0.42);
-    });
+      chunkIndex += 1;
+    }
   });
 }
 
@@ -2270,15 +2287,29 @@ function addReportParagraph(doc, paragraph, labels, lang, pageState = null) {
     align: getTextAlign(lang),
     lineGap: 4
   };
-  const chunks = splitTextForHeight(
-    doc,
-    splitLongParagraph(paragraph, lang).join("\n"),
-    options,
-    Math.max(120, getPageContentHeight(doc) - 28)
-  );
+  let remainingText = splitLongParagraph(paragraph, lang).join("\n");
 
-  chunks.forEach((chunk) => {
+  while (remainingText) {
     doc.font(getFont(lang)).fontSize(fontSize);
+
+    let availableHeight = getSafeContentBottom(doc) - doc.y - 28;
+    if (availableHeight < PDF_MIN_TEXT_CHUNK_HEIGHT) {
+      addContentPage(doc, labels, lang, pageState);
+      availableHeight = getSafeContentBottom(doc) - doc.y - 28;
+    }
+
+    const chunks = splitTextForHeight(
+      doc,
+      remainingText,
+      options,
+      Math.max(
+        PDF_MIN_TEXT_CHUNK_HEIGHT,
+        Math.min(getPageContentHeight(doc) - 28, availableHeight)
+      )
+    );
+    const chunk = chunks.shift();
+    if (!chunk) break;
+    remainingText = chunks.join("\n");
 
     const height = doc.heightOfString(chunk, options);
     ensureSpace(doc, height + 28, labels, lang, pageState);
@@ -2289,7 +2320,7 @@ function addReportParagraph(doc, paragraph, labels, lang, pageState = null) {
       .text(chunk, 56, doc.y, options);
 
     doc.moveDown(0.74);
-  });
+  }
 }
 
 function addReportText(doc, reportText, labels, lang, pageState = null) {

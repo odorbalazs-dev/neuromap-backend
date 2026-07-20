@@ -34,21 +34,30 @@ const child = spawn(process.execPath, [path.join(rootDir, entry)], {
   env: process.env
 });
 
+let terminating = false;
+
 function forwardSignal(signal) {
+  if (terminating) return;
+  terminating = true;
+
   if (!child.killed) {
     child.kill(signal);
   }
 }
 
-process.on("SIGTERM", () => forwardSignal("SIGTERM"));
-process.on("SIGINT", () => forwardSignal("SIGINT"));
+process.once("SIGTERM", () => forwardSignal("SIGTERM"));
+process.once("SIGINT", () => forwardSignal("SIGINT"));
 
 child.on("exit", (code, signal) => {
   if (signal) {
     console.log(`[railway-start] child exited from signal ${signal}`);
-    process.kill(process.pid, signal);
-    return;
+    process.exit(0);
   }
 
   process.exit(code ?? 0);
+});
+
+child.on("error", (error) => {
+  console.error("[railway-start] child process failed", error);
+  process.exit(1);
 });

@@ -3,7 +3,9 @@ import { env } from "../config/env.js";
 import { getProductPackage } from "../config/products.js";
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
-  apiVersion: "2024-06-20"
+  apiVersion: "2024-06-20",
+  timeout: env.STRIPE_TIMEOUT_MS,
+  maxNetworkRetries: env.STRIPE_MAX_NETWORK_RETRIES
 });
 
 const SUPPORTED_LANGS = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];
@@ -141,9 +143,13 @@ function buildLineItem({ productPackage, lang }) {
   };
 }
 
-function buildCheckoutIdempotencyKey({ internalSessionId, productPackage }) {
-  const attemptNonce = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
-  return `neuromap-checkout-${internalSessionId}-${productPackage.code}-${attemptNonce}`;
+function buildCheckoutIdempotencyKey({ internalSessionId, productPackage, checkoutAttempt }) {
+  const attempt = Math.max(
+    1,
+    Math.min(999999, Number.parseInt(checkoutAttempt, 10) || 1)
+  );
+
+  return `neuromap-checkout-${internalSessionId}-${productPackage.code}-attempt-${attempt}`;
 }
 
 function appendSessionAccessFragment(url, { internalSessionId, sessionAccessToken }) {
@@ -229,7 +235,8 @@ export async function createCheckoutSession({
     {
       idempotencyKey: buildCheckoutIdempotencyKey({
         internalSessionId,
-        productPackage
+        productPackage,
+        checkoutAttempt
       })
     }
   );

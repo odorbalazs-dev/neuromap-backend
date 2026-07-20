@@ -137,7 +137,8 @@ export async function sendReportEmail({
   reportText,
   payload,
   productPackage = null,
-  observationProgram = null
+  observationProgram = null,
+  idempotencyKey = null
 }) {
   const recipients = normalizeRecipients(to);
 
@@ -235,14 +236,17 @@ export async function sendReportEmail({
       packageCode: productPackage?.code || "legacy_500_v1"
     });
 
-    const response = await resend.emails.send({
+    const email = {
       from: env.EMAIL_FROM,
       to: recipients,
       subject,
       html,
       text,
       attachments
-    });
+    };
+    const response = idempotencyKey
+      ? await resend.emails.send(email, { idempotencyKey })
+      : await resend.emails.send(email);
 
     if (response?.error) {
       throw new Error(
@@ -333,7 +337,8 @@ export async function sendObservationFollowUpEmail({
   name,
   kind,
   observationUrl,
-  trend = null
+  trend = null,
+  idempotencyKey = null
 }) {
   const recipients = normalizeRecipients(to);
   const safeLang = getSafeLang(lang);
@@ -369,13 +374,16 @@ export async function sendObservationFollowUpEmail({
   if (!observationUrl) throw new Error("Missing observation diary URL.");
   if (recipients.length === 0) throw new Error("Missing observation follow-up recipient.");
 
-  const response = await resend.emails.send({
+  const email = {
     from: env.EMAIL_FROM,
     to: recipients,
     subject,
     html,
     text
-  });
+  };
+  const response = idempotencyKey
+    ? await resend.emails.send(email, { idempotencyKey })
+    : await resend.emails.send(email);
 
   if (response?.error) {
     throw new Error(response.error.message || "Observation follow-up email failed.");
@@ -388,7 +396,8 @@ export async function sendCheckoutRecoveryEmail({
   to,
   lang,
   name,
-  checkoutUrl
+  checkoutUrl,
+  idempotencyKey = null
 }) {
   const recipients = normalizeRecipients(to);
 
@@ -428,13 +437,20 @@ export async function sendCheckoutRecoveryEmail({
         checkoutUrl
       });
 
-    const response = await resend.emails.send({
+    const email = {
       from: env.EMAIL_FROM,
       to: recipients,
       subject,
       html,
       text
-    });
+    };
+    const response = idempotencyKey
+      ? await resend.emails.send(email, { idempotencyKey })
+      : await resend.emails.send(email);
+
+    if (response?.error) {
+      throw new Error(response.error.message || "Recovery email failed.");
+    }
 
     console.log(
       "[recovery-email] send success",
@@ -523,7 +539,8 @@ export async function sendFollowUpEmail({
   to,
   lang,
   name,
-  detectedRisk
+  detectedRisk,
+  idempotencyKey = null
 }) {
   const recipients = normalizeRecipients(to);
   const safeLang = getSafeLang(lang);
@@ -556,13 +573,16 @@ export async function sendFollowUpEmail({
       appUrl: env.APP_URL
     });
 
-    const response = await resend.emails.send({
+    const email = {
       from: env.EMAIL_FROM,
       to: recipients,
       subject,
       html,
       text
-    });
+    };
+    const response = idempotencyKey
+      ? await resend.emails.send(email, { idempotencyKey })
+      : await resend.emails.send(email);
 
     if (response?.error) {
       throw new Error(

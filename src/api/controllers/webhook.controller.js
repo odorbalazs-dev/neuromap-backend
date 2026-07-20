@@ -17,7 +17,7 @@ export async function stripeWebhookController(req, res) {
 
     return res.status(isSignatureError ? 400 : 500).json({
       received: false,
-      error: error.message || "Webhook processing failed"
+      error: isSignatureError ? "Invalid webhook signature" : "Webhook processing failed"
     });
   }
 }

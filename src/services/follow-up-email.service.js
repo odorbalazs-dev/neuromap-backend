@@ -1,5 +1,6 @@
 import { db } from "../db/db.js";
 import { sendFollowUpEmail } from "./email.service.js";
+import { buildRecordEmailIdempotencyKey } from "./email-idempotency.service.js";
 import { assertSessionProcessingAllowed } from "./data-governance.service.js";
 
 function number(value) {
@@ -150,7 +151,8 @@ export async function processDueFollowUpEmails({ limit = 10, maxAttempts = 3 } =
         to: locked.email,
         name: locked.name,
         lang: locked.lang || "en",
-        detectedRisk: getDetectedRisk(locked)
+        detectedRisk: getDetectedRisk(locked),
+        idempotencyKey: buildRecordEmailIdempotencyKey("follow-up", locked.id)
       });
 
       await db.query(

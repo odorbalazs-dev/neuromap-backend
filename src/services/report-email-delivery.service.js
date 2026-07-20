@@ -7,6 +7,9 @@ import { sendReportEmail } from "./email.service.js";
 import { getProductPackage } from "../config/products.js";
 import { ensureObservationProgram } from "./observation-program.service.js";
 import { assertSessionProcessingAllowed } from "./data-governance.service.js";
+import { buildReportEmailIdempotencyKey } from "./email-idempotency.service.js";
+
+export { buildReportEmailIdempotencyKey } from "./email-idempotency.service.js";
 
 export function getEmailProviderId(response) {
   return response?.data?.id || response?.id || null;
@@ -65,7 +68,11 @@ export async function deliverReportEmailForSession(
       reportText: deliverableSession.analysis_result,
       payload: deliverableSession.payload,
       productPackage,
-      observationProgram
+      observationProgram,
+      idempotencyKey: buildReportEmailIdempotencyKey(
+        sessionId,
+        deliverableSession.analysis_result
+      )
     });
 
     const providerId = getEmailProviderId(response);

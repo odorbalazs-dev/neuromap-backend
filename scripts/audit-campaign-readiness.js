@@ -37,11 +37,13 @@ const checks = [
     label: "Queue supports retry backoff instead of immediate permanent failure",
     run: () => {
       const source = read("src/services/analysis-queue.service.js");
+      const processor = read("src/services/analysis-job.service.js");
       return (
         source.includes("calculateRetryDelaySeconds") &&
         source.includes("next_attempt_at") &&
         source.includes("WHEN attempts >= $3::int THEN 'failed'") &&
-        read("src/jobs/analysis.worker.js").includes("job scheduled for retry")
+        processor.includes("calculateRetryDelaySeconds") &&
+        processor.includes("markAnalysisJobFailed")
       );
     }
   },

@@ -206,7 +206,7 @@ export async function retryCheckout(req, res) {
 
     return res.status(500).json({
       ok: false,
-      error: error.message || "Failed to retry checkout"
+      error: "Failed to retry checkout"
     });
   }
 }
