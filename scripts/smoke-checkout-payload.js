@@ -5,7 +5,10 @@ import {
   canonicalizeQuestionnairePayload,
   QuestionnaireIntegrityError
 } from "../src/services/questionnaire-integrity.service.js";
-import { normalizeCheckoutPayload } from "../src/utils/normalizeCheckoutPayload.js";
+import {
+  normalizeCheckoutPayload,
+  stripCheckoutQuestionMetadata
+} from "../src/utils/normalizeCheckoutPayload.js";
 import { validateCheckoutPayload } from "../src/utils/validateCheckoutPayload.js";
 
 const DOMAINS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
@@ -240,6 +243,38 @@ function main() {
   const plusNormalized = expectValidPayload("plus payload", plusPayload);
   assert(plusNormalized.packageCode === "plus_v1", "plus payload should keep plus_v1.");
   console.log("plus payload ok", { packageCode: plusNormalized.packageCode });
+
+  const cachedEnginePayload = buildBasePayload({ includeExtra: true, packageCode: "plus_v1" });
+  [
+    ...cachedEnginePayload.payload.triageQuestions,
+    ...cachedEnginePayload.payload.specificQuestions,
+    ...cachedEnginePayload.payload.extraQuestions
+  ].forEach((question) => {
+    question.text = "Cached translated display text";
+    question.domain = "ADHD";
+    question.subdomain = "legacy-display-metadata";
+    question.stemKey = "legacy-stem";
+    question.weight = 1;
+    question.reverse = false;
+  });
+
+  const strictCachedValidation = validateCheckoutPayload(cachedEnginePayload);
+  assert(!strictCachedValidation.ok, "cached engine metadata should fail strict validation before compatibility cleanup.");
+
+  const compatiblePayload = stripCheckoutQuestionMetadata(cachedEnginePayload);
+  const compatibleValidation = validateCheckoutPayload(compatiblePayload);
+  assert(
+    compatibleValidation.ok,
+    `cached engine payload should validate after compatibility cleanup. Errors: ${compatibleValidation.errors.join("; ")}`
+  );
+  assert(compatiblePayload.payload.triageQuestions.length === 25, "cached payload should keep 25 triage questions.");
+  assert(compatiblePayload.payload.specificQuestions.length === 30, "cached payload should keep 30 specific questions.");
+  assert(compatiblePayload.payload.extraQuestions.length === 5, "cached payload should keep 5 extra questions.");
+  assert(
+    Object.keys(compatiblePayload.payload.specificQuestions[0]).join(",") === "id",
+    "compatibility cleanup should retain only the authoritative question id."
+  );
+  console.log("cached 25+30+5 engine payload accepted after compatibility cleanup");
 
   const invalidPackagePayload = buildBasePayload({ packageCode: "custom_price_001" });
   const invalidPackageValidation = validateCheckoutPayload(invalidPackagePayload);

@@ -2,7 +2,7 @@ import fs from "node:fs";
 import vm from "node:vm";
 
 const SUPPORTED_LANGS = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];
-const REQUIRED_ENGINE_VERSION = "20260715-gdpr-consent-v1";
+const REQUIRED_ENGINE_VERSION = "20260810-checkout-payload-v1";
 
 const checks = [
   {

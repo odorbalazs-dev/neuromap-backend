@@ -33,6 +33,30 @@ function normalizeConsent(consent = {}) {
   };
 }
 
+function stripQuestionMetadata(questions) {
+  if (!Array.isArray(questions)) return questions;
+  return questions.map((question) => ({
+    id: question && typeof question === "object" ? question.id : undefined
+  }));
+}
+
+export function stripCheckoutQuestionMetadata(body = {}) {
+  if (!body || typeof body !== "object" || Array.isArray(body)) return body;
+
+  const payload = body.payload;
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) return body;
+
+  return {
+    ...body,
+    payload: {
+      ...payload,
+      triageQuestions: stripQuestionMetadata(payload.triageQuestions),
+      specificQuestions: stripQuestionMetadata(payload.specificQuestions),
+      extraQuestions: stripQuestionMetadata(payload.extraQuestions)
+    }
+  };
+}
+
 export function normalizeCheckoutPayload(body = {}) {
   const payload = body.payload || {};
   const childAge = cleanAge(

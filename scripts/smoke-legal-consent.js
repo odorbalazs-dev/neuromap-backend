@@ -68,7 +68,7 @@ assert(
 );
 
 assert(
-  engineSource.includes("20260715-gdpr-consent-v1") &&
+  engineSource.includes("20260810-checkout-payload-v1") &&
     engineSource.includes("ensureLegalConsentForCurrentLanguage") &&
     engineSource.includes("consentReceipt.token") &&
     engineSource.includes("sanitizeAnalyticsPayload"),

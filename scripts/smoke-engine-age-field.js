@@ -19,7 +19,7 @@ function main() {
     loaderHtml.includes("/public/webflow/engine.js"),
     "Webflow Engine loader should load the public engine file."
   );
-  const currentEngineVersion = "20260715-gdpr-consent-v1";
+  const currentEngineVersion = "20260810-checkout-payload-v1";
   assert(
     loaderHtml.includes(currentEngineVersion),
     "Webflow Engine loader should include the current questionnaire shell cache-busting version."

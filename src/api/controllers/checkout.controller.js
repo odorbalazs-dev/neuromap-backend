@@ -8,7 +8,10 @@ import {
 } from "../../services/session.service.js";
 
 import { createCheckoutSession } from "../../services/stripe.service.js";
-import { normalizeCheckoutPayload } from "../../utils/normalizeCheckoutPayload.js";
+import {
+  normalizeCheckoutPayload,
+  stripCheckoutQuestionMetadata
+} from "../../utils/normalizeCheckoutPayload.js";
 import { validateCheckoutPayload } from "../../utils/validateCheckoutPayload.js";
 import { getProductPackage } from "../../config/products.js";
 import {
@@ -29,17 +32,22 @@ import {
 export async function createCheckout(req, res) {
   try {
     assertCheckoutLaunchReady();
-    const validation = validateCheckoutPayload(req.body || {});
+    // Cached Webflow engines can still send translated display metadata with
+    // question references. The server-side banks remain authoritative, so
+    // strip only that metadata before applying the full strict validation.
+    const validationInput = stripCheckoutQuestionMetadata(req.body || {});
+    const validation = validateCheckoutPayload(validationInput);
 
     if (!validation.ok) {
       return res.status(400).json({
         ok: false,
         error: "Invalid checkout payload",
+        code: "INVALID_CHECKOUT_PAYLOAD",
         details: validation.errors
       });
     }
 
-    const normalized = normalizeCheckoutPayload(req.body || {});
+    const normalized = normalizeCheckoutPayload(validationInput);
     const { email, name, lang, packageCode, consent } = normalized;
     const payload = canonicalizeQuestionnairePayload(normalized.payload, lang);
     const productPackage = getProductPackage(packageCode);

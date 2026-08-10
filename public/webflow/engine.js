@@ -5,7 +5,7 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260715-gdpr-consent-v1";
+  const ENGINE_VERSION = "20260810-checkout-payload-v1";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
   const LEGAL_CONSENT_VERSION = "20260715-gdpr-legal-v1";
   const LANGUAGE_CONFIRMED_KEY = "nm_language_confirmed_v1";
@@ -8033,43 +8033,20 @@
       payload: {
         childAge,
         ageYears: childAge,
-        triageQuestions: state.triageQuestions.map((q) => ({
-          id: q.id,
-          text: getQuestionText(q),
-          domain: q.domain,
-          subdomain: q.subdomain,
-          stemKey: inferStemKey(q),
-          weight: q.weight
-        })),
+        triageQuestions: state.triageQuestions.map((q) => ({ id: q.id })),
         triageAnswers: state.triageAnswers,
         triageScores: state.triageScores,
         triageRanking: state.triageRanking,
         detectedRisk: state.detectedRisk,
         secondaryRisk: state.secondaryRisk,
 
-        specificQuestions: state.specificQuestions.map((q) => ({
-          id: q.id,
-          text: getQuestionText(q),
-          subdomain: q.subdomain,
-          domain: q.domain,
-          weight: q.weight,
-          reverse: q.reverse,
-          stemKey: inferStemKey(q)
-        })),
+        specificQuestions: state.specificQuestions.map((q) => ({ id: q.id })),
         specificAnswers: state.specificAnswers,
         specificScoring: state.specificScoring,
         specificProfile: state.specificProfile,
         resultSummary: state.resultSummary,
 
-        extraQuestions: state.extraQuestions.map((q) => ({
-          id: q.id,
-          text: getQuestionText(q),
-          subdomain: q.subdomain,
-          domain: q.domain,
-          weight: q.weight,
-          reverse: q.reverse,
-          stemKey: inferStemKey(q)
-        })),
+        extraQuestions: state.extraQuestions.map((q) => ({ id: q.id })),
         extraAnswers: state.extraAnswers,
 
         questionnaireVersion: "v5-browser-adaptive-picker"
