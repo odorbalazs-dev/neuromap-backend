@@ -201,7 +201,7 @@ assert(
 });
 
 assert(
-  checkoutPagesSource.includes("20260721-customer-experience-v2") &&
+  checkoutPagesSource.includes("20260811-status-sync-v1") &&
     checkoutPagesSource.includes("isAnalyticsAllowed") &&
     checkoutPagesSource.includes("sanitizeCheckoutAnalyticsPayload") &&
     checkoutPagesSource.includes("installPrivacyDefaults();"),

@@ -5,7 +5,9 @@
 (function () {
   if (typeof window === "undefined" || typeof document === "undefined") return;
 
-  const CHECKOUT_PAGES_VERSION = "20260721-customer-experience-v2";
+  const CHECKOUT_PAGES_VERSION = "20260811-status-sync-v1";
+  const STATUS_POLL_INTERVAL_MS = 12000;
+  const STATUS_POLL_MAX_ATTEMPTS = 10;
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
   const ANALYTICS_CONSENT_KEY = "nm_analytics_consent_v1";
   const DEFAULT_API_BASE_URL = "https://neuromap-backend-production-969d.up.railway.app";
@@ -781,19 +783,53 @@
     return new URLSearchParams(String(window.location.hash || "").replace(/^#/, ""));
   }
 
+  function persistSessionAccessToken(sessionId, hashSessionId, accessToken) {
+    if (!sessionId || !accessToken) return false;
+
+    try {
+      sessionStorage.setItem(`nm_session_access:${sessionId}`, accessToken);
+
+      if (hashSessionId && hashSessionId !== sessionId) {
+        sessionStorage.setItem(`nm_session_access:${hashSessionId}`, accessToken);
+      }
+
+      sessionStorage.setItem("nm_last_session_id", sessionId);
+      sessionStorage.setItem("nm_last_session_access", accessToken);
+      return true;
+    } catch (_error) {
+      // sessionStorage can be blocked in strict browser privacy modes.
+      return false;
+    }
+  }
+
+  function removeSessionAccessHash() {
+    const hashParams = getHashParams();
+    if (!hashParams.has("nm_access") && !hashParams.has("nm_session")) return;
+
+    hashParams.delete("nm_access");
+    hashParams.delete("nm_session");
+
+    const remainingHash = hashParams.toString();
+    const nextUrl = `${window.location.pathname}${window.location.search}${remainingHash ? `#${remainingHash}` : ""}`;
+
+    try {
+      window.history.replaceState(window.history.state, document.title, nextUrl);
+    } catch (_error) {
+      // The status request can still continue with the in-memory token.
+    }
+  }
+
   function getSessionAccessToken(sessionId) {
     const hashParams = getHashParams();
     const hashSessionId = hashParams.get("nm_session") || "";
     const hashToken = hashParams.get("nm_access") || "";
 
-    if (hashToken && (!hashSessionId || hashSessionId === sessionId)) {
-      try {
-        sessionStorage.setItem(`nm_session_access:${sessionId}`, hashToken);
-        sessionStorage.setItem("nm_last_session_id", sessionId);
-        sessionStorage.setItem("nm_last_session_access", hashToken);
-      } catch (_error) {
-        // sessionStorage can be blocked in strict browser privacy modes.
-      }
+    if (hashToken) {
+      // Stripe success pages use a public cs_ identifier while the fragment may
+      // contain the internal UUID. The API validates the token against either
+      // identifier, so the browser must not discard it when those IDs differ.
+      const persisted = persistSessionAccessToken(sessionId, hashSessionId, hashToken);
+      if (persisted) removeSessionAccessHash();
 
       return hashToken;
     }
@@ -1776,13 +1812,27 @@
         page_kind: "checkout_success"
       });
 
-      if (data.status.overall !== "sent" && data.status.overall !== "attention" && attempt < 5) {
-        window.setTimeout(() => loadReportStatus(sessionId, copy, attempt + 1), 12000);
+      if (
+        data.status.overall !== "sent" &&
+        data.status.overall !== "attention" &&
+        attempt < STATUS_POLL_MAX_ATTEMPTS
+      ) {
+        window.setTimeout(
+          () => loadReportStatus(sessionId, copy, attempt + 1),
+          STATUS_POLL_INTERVAL_MS
+        );
       }
     } catch (_error) {
       lead.textContent = copy.statusUnavailable;
       renderStatusMeta(copy, sessionId, null);
       updateDeliveryEstimate(copy, sessionId, null);
+
+      if (attempt < STATUS_POLL_MAX_ATTEMPTS) {
+        window.setTimeout(
+          () => loadReportStatus(sessionId, copy, attempt + 1),
+          STATUS_POLL_INTERVAL_MS
+        );
+      }
     } finally {
       if (refreshButton) {
         refreshButton.disabled = false;

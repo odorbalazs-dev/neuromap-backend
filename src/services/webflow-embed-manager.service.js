@@ -24,7 +24,7 @@ const EMBEDS = [
     sourcePath: "public/webflow/checkout-pages.js",
     snippetPath: "web/checkout-pages-embed.html",
     publicPath: "/public/webflow/checkout-pages.js",
-    version: "20260721-customer-experience-v2",
+    version: "20260811-status-sync-v1",
     note: "Use the same loader on every language-specific success and cancel page."
   },
   {

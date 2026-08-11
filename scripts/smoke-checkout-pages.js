@@ -9,8 +9,9 @@ function assert(condition, message) {
 function main() {
   console.log("\n=== CHECKOUT PAGES SMOKE ===");
 
-  const currentVersion = "20260721-customer-experience-v2";
+  const currentVersion = "20260811-status-sync-v1";
   const script = fs.readFileSync("public/webflow/checkout-pages.js", "utf8");
+  const stripeService = fs.readFileSync("src/services/stripe.service.js", "utf8");
   const sharedEmbed = fs.readFileSync("web/checkout-pages-embed.html", "utf8").trim();
   const successEmbed = fs.readFileSync("web/checkout-success-embed.html", "utf8").trim();
   const cancelEmbed = fs.readFileSync("web/checkout-cancel-embed.html", "utf8").trim();
@@ -44,6 +45,26 @@ function main() {
   assert(script.includes("package_code: packageCode"), "Purchase tracking should include the selected package.");
   assert(script.includes("NeuroMap Kids Plus"), "Purchase event should distinguish the Plus package.");
   assert(script.includes("/session/status/"), "Success page should load the customer-facing report status.");
+  assert(
+    script.includes("persistSessionAccessToken(sessionId, hashSessionId, hashToken)"),
+    "Success pages should preserve access tokens across internal and Stripe session identifiers."
+  );
+  assert(
+    !script.includes("hashSessionId === sessionId"),
+    "Success pages must not discard a valid token when the internal and Stripe identifiers differ."
+  );
+  assert(
+    script.includes("removeSessionAccessHash"),
+    "Success pages should remove persisted access tokens from the visible URL."
+  );
+  assert(
+    script.includes("STATUS_POLL_MAX_ATTEMPTS"),
+    "Success pages should keep polling after transient status failures."
+  );
+  assert(
+    stripeService.includes("includeSessionIdentifier: false"),
+    "New Stripe success URLs should avoid mixing internal and public session identifiers."
+  );
   assert(script.includes("nmReportStatusPanel"), "Success page should render a report status panel.");
   assert(script.includes("What happens next?"), "Success page should explain the post-payment next steps.");
   assert(script.includes("nmRefreshStatus"), "Success page should allow manual report status refresh.");

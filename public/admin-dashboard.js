@@ -501,6 +501,12 @@
       throw new Error("Add meg az ADMIN_TOKEN értékét.");
     }
 
+    if (adminToken.length < 32) {
+      throw new Error(
+        "Az éles ADMIN_TOKEN legalább 32 karakteres kell legyen. A Railway backend Variables részében cseréld le egy új, hosszú véletlen értékre."
+      );
+    }
+
     const response = await fetch("/admin/login", {
       method: "POST",
       credentials: "same-origin",

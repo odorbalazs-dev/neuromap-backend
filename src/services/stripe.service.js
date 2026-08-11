@@ -152,13 +152,18 @@ function buildCheckoutIdempotencyKey({ internalSessionId, productPackage, checko
   return `neuromap-checkout-${internalSessionId}-${productPackage.code}-attempt-${attempt}`;
 }
 
-function appendSessionAccessFragment(url, { internalSessionId, sessionAccessToken }) {
+function appendSessionAccessFragment(
+  url,
+  { internalSessionId, sessionAccessToken, includeSessionIdentifier = true }
+) {
   if (!sessionAccessToken) return url;
 
   const parsed = new URL(url);
   const hashParams = new URLSearchParams(parsed.hash ? parsed.hash.slice(1) : "");
 
-  hashParams.set("nm_session", internalSessionId);
+  if (includeSessionIdentifier && internalSessionId) {
+    hashParams.set("nm_session", internalSessionId);
+  }
   hashParams.set("nm_access", sessionAccessToken);
   parsed.hash = hashParams.toString();
 
@@ -190,7 +195,7 @@ export async function createCheckoutSession({
   const { lineItem, stripePriceId } = buildLineItem({ productPackage, lang: safeLang });
   const successUrl = appendSessionAccessFragment(
     `${getLocalizedSuccessUrl(safeLang)}?session_id={CHECKOUT_SESSION_ID}`,
-    { internalSessionId, sessionAccessToken }
+    { internalSessionId, sessionAccessToken, includeSessionIdentifier: false }
   );
   const cancelUrl = appendSessionAccessFragment(
     `${getLocalizedCancelUrl(safeLang)}?sid=${encodeURIComponent(internalSessionId)}`,
