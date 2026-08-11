@@ -1,0 +1,25 @@
+{
+  "document_id": "NMK-SEC-REG-001",
+  "generated_at_utc": "2026-07-20T10:45:56Z",
+  "source": "docs/SECURITY_REMEDIATION_EVIDENCE_REGISTER_HU.md",
+  "output": "docs/SECURITY_REMEDIATION_EVIDENCE_REGISTER_HU.docx",
+  "git_commit": "b2d8e6b27f8b3084abd232e0488a8acdd91dfeb9",
+  "source_sha256": "ded2760e9e84ac78d50e2edcd7a95864567edf0b193cd23238f05b7c5a1b9f6c",
+  "docx_sha256": "33bc8c48c3a7556ee768cadc02b77454ed056387325dc77f4863c88b525002f7",
+  "source_bytes": 36189,
+  "docx_bytes": 21593,
+  "parsed_counts": {
+    "headings": 40,
+    "paragraphs": 136,
+    "tables": 5,
+    "bullets": 99,
+    "code_blocks": 1
+  },
+  "structural_counts": {
+    "paragraphs": 409,
+    "tables": 6,
+    "headings": 40
+  },
+  "validation": "DOCX ZIP package and every XML relationship part parsed successfully",
+  "limitation": "Internal evidence artifact; not an independent security or legal certification"
+}

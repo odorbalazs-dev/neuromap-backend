@@ -1,6 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
 import { generatePdfBuffer } from "../src/services/pdf.service.js";
+import {
+  REPORT_SUBDOMAIN_KEYS,
+  formatProfessionalTerm,
+  localizeHungarianReportTerminology
+} from "../src/utils/report-terminology.js";
 
 function assert(condition, message) {
   if (!condition) {
@@ -28,8 +33,8 @@ function buildSampleReportText() {
       "Otthoni helyzetben ez gyakran ugy jelenhet meg, hogy a gyermek elkezd egy tevekenyseget, de kozben mas inger elviszi a figyelmet. Tanulasi vagy ovodai-iskolai helyzetben nagyobb lehet a kulonbseg a rovid, egyertelmu feladatok es a hosszan fenntartott figyelmet igenylo feladatok kozott. A szulo szamara fontos jelzes, hogy a nehezseg nem minden pillanatban latszik egyforman, ezert a jo napok nem zarjak ki a valos terhelest."
     ],
     [
-      "4. Erossegek es vedo tenyezok",
-      "A kerdoiv mintazata alapjan kulon figyelmet erdemelnek azok a helyzetek, ahol a gyermek erdeklodese, mozgasigenye vagy vizualis tamogatasa segiti a jobb teljesitmenyt. Ha a feladat rovidebb lepesekre bonthato, ha elore lathato a kovetkezo lepes, es ha a gyermek kap eleg idot a valtasra, a viselkedes gyakran rendezettebb lehet."
+      "4. Strengths and protective factors",
+      "A Primary area of concern az executive_function és az emotional regulation területeihez kapcsolódik. A kérdőív mintázata alapján külön figyelmet érdemelnek azok a helyzetek, ahol a gyermek érdeklődése, mozgásigénye vagy vizuális támogatása segíti a jobb teljesítményt."
     ],
     [
       "5. Szuloi tamogatasi iranyok",
@@ -186,6 +191,40 @@ function buildSamplePayload() {
 
 async function main() {
   console.log("\n=== PDF REPORT SMOKE ===");
+
+  REPORT_SUBDOMAIN_KEYS.forEach((key) => {
+    const label = formatProfessionalTerm(key, "hu", key);
+    assert(label.includes("("), `Hungarian terminology should include English: ${key}.`);
+    assert(!label.includes("_"), `Hungarian terminology must hide internal keys: ${key}.`);
+  });
+
+  const localizedTerminology = localizeHungarianReportTerminology(
+    "Strengths and protective factors; executive_function; emotional regulation; Primary area of concern"
+  );
+  assert(
+    localizedTerminology ===
+      "Erősségek és védő tényezők (strengths and protective factors); " +
+        "Végrehajtó működés (executive functioning); " +
+        "Érzelmi szabályozás (emotional regulation); " +
+        "Elsődleges figyelmet igénylő terület (primary area of concern)",
+    `Terminology localization should be exact and non-nested: ${localizedTerminology}`
+  );
+  const localizedHungarianArticle = localizeHungarianReportTerminology(
+    "A Primary area of concern több jelzéshez kapcsolódik."
+  );
+  assert(
+    localizedHungarianArticle ===
+      "Az elsődleges figyelmet igénylő terület (primary area of concern) több jelzéshez kapcsolódik.",
+    `Hungarian article should agree with the localized phrase: ${localizedHungarianArticle}`
+  );
+  const localizedInlineTerms = localizeHungarianReportTerminology(
+    "az executive_function és az emotional regulation területei"
+  );
+  assert(
+    localizedInlineTerms ===
+      "a végrehajtó működés (executive functioning) és az érzelmi szabályozás (emotional regulation) területei",
+    `Inline Hungarian terminology should use natural articles and casing: ${localizedInlineTerms}`
+  );
 
   const pdf = await generatePdfBuffer({
     name: "Teszt Szulo",

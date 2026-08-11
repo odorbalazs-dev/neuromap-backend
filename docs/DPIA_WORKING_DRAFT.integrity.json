@@ -1,0 +1,25 @@
+{
+  "document_id": "NMK-DPIA-EN-001",
+  "generated_at_utc": "2026-07-26T19:24:07Z",
+  "source": "docs/DPIA_WORKING_DRAFT.md",
+  "output": "docs/DPIA_WORKING_DRAFT.docx",
+  "git_commit": "4eae0933c7b8d1c065f0e38f5e7421091d005e08",
+  "source_sha256": "c4b83e859d12eb7937cf07f9c7da6a99d2f30e0f3109af07ca29b16e9ab5628a",
+  "docx_sha256": "7fe89d5ee4a4d8d9798504b0b3e6fd68acb77391235b587a50412b5de35a0a5b",
+  "source_bytes": 36400,
+  "docx_bytes": 23073,
+  "parsed_counts": {
+    "headings": 38,
+    "paragraphs": 62,
+    "tables": 7,
+    "bullets": 96,
+    "code_blocks": 0
+  },
+  "structural_counts": {
+    "paragraphs": 472,
+    "tables": 8,
+    "headings": 38
+  },
+  "validation": "DOCX ZIP package and every XML relationship part parsed successfully",
+  "limitation": "Controller working draft; not legal advice, certification, supervisory-authority approval or standalone evidence of GDPR compliance"
+}

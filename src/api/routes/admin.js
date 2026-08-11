@@ -55,7 +55,12 @@ router.use(createRateLimit({
   keyPrefix: "admin-api"
 }));
 
-router.post("/login", adminLogin);
+router.post("/login", createRateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  keyPrefix: "admin-login",
+  failClosed: true
+}), adminLogin);
 router.post("/logout", adminLogout);
 router.get("/session", adminAuth, getAdminAuthStatus);
 

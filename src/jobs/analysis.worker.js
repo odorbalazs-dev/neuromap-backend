@@ -104,6 +104,18 @@ for (const signal of ["SIGTERM", "SIGINT"]) {
 }
 
 async function main() {
+  if (env.SERVICE_ROLE !== "worker") {
+    throw new Error(
+      `Analysis worker started with service role "${env.SERVICE_ROLE}" ` +
+        `(source: ${env.SERVICE_ROLE_SOURCE}).`
+    );
+  }
+
+  console.log("[worker] runtime role verified", {
+    role: env.SERVICE_ROLE,
+    source: env.SERVICE_ROLE_SOURCE
+  });
+
   await runMigrations();
   await workerLoop();
   await db.close();
@@ -111,6 +123,15 @@ async function main() {
 
 main().catch(async (error) => {
   console.error("[worker] fatal error", error);
+
+  if (error?.code === "SELF_SIGNED_CERT_IN_CHAIN") {
+    console.error(
+      "[worker] Railway database TLS validation failed. Use a Postgres " +
+        "DATABASE_URL variable reference/private network with DATABASE_SSL_MODE=auto, " +
+        "or provide DATABASE_SSL_CA_BASE64 for certificate verification."
+    );
+  }
+
   await db.close().catch(() => {});
   process.exitCode = 1;
 });

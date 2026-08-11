@@ -424,6 +424,94 @@ export async function createInvoiceForSessionId(sessionId, options = {}) {
   });
 }
 
+export async function retryInvoicesBatch({
+  limit = 20,
+  maxAttempts = 5,
+  staleProcessingMinutes = 15
+} = {}) {
+  const safeLimit = Math.min(Math.max(Number(limit) || 20, 1), 100);
+  const safeMaxAttempts = Math.min(Math.max(Number(maxAttempts) || 5, 1), 10);
+  const safeStaleMinutes = Math.min(
+    Math.max(Number(staleProcessingMinutes) || 15, 5),
+    1440
+  );
+
+  if (!isInvoiceAutomationConfigured()) {
+    return {
+      configured: false,
+      checked: 0,
+      issued: 0,
+      failed: 0,
+      deferred: 0,
+      results: []
+    };
+  }
+
+  const candidates = await db.query(
+    `
+    SELECT s.id
+    FROM sessions s
+    LEFT JOIN invoices i
+      ON i.session_id = s.id
+     AND i.provider = $1::text
+    WHERE s.payment_status = 'paid'
+      AND COALESCE(s.invoice_status, 'pending') <> 'issued'
+      AND s.processing_restricted_at IS NULL
+      AND s.sensitive_data_erased_at IS NULL
+      AND s.data_redacted_at IS NULL
+      AND COALESCE(i.attempts, 0) < $2::int
+      AND (
+        i.id IS NULL
+        OR i.status IN ('pending', 'failed', 'skipped')
+        OR (
+          i.status = 'processing'
+          AND COALESCE(
+            i.processing_started_at,
+            i.last_attempt_at,
+            i.updated_at,
+            i.created_at
+          ) < NOW() - ($3::int * INTERVAL '1 minute')
+        )
+      )
+    ORDER BY s.paid_at ASC NULLS LAST, s.created_at ASC
+    LIMIT $4::int
+    `,
+    [invoiceConfig.provider, safeMaxAttempts, safeStaleMinutes, safeLimit]
+  );
+
+  const results = [];
+
+  for (const row of candidates.rows) {
+    try {
+      const invoice = await createInvoiceForSessionId(row.id, {
+        throwOnError: true
+      });
+
+      results.push({
+        sessionId: row.id,
+        status: invoice?.status === "issued" ? "issued" : "deferred",
+        invoiceId: invoice?.id || null,
+        invoiceNumber: invoice?.invoice_number || null
+      });
+    } catch (error) {
+      results.push({
+        sessionId: row.id,
+        status: "failed",
+        error: compactError(error)
+      });
+    }
+  }
+
+  return {
+    configured: true,
+    checked: candidates.rows.length,
+    issued: results.filter((item) => item.status === "issued").length,
+    failed: results.filter((item) => item.status === "failed").length,
+    deferred: results.filter((item) => item.status === "deferred").length,
+    results
+  };
+}
+
 export async function getInvoiceForSession(sessionId) {
   const result = await db.query(
     `

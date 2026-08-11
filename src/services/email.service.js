@@ -535,6 +535,66 @@ export async function sendAdminAlertEmail({
   }
 }
 
+const PRIVACY_VERIFICATION_COPY = Object.freeze({
+  hu: {
+    subject: "Adatvédelmi kérelem megerősítése",
+    title: "Erősítsd meg az adatvédelmi kérelmet",
+    intro: "Ezt a kódot add meg a NeuroMap Kids oldalon. A kód 15 percig használható.",
+    ignore: "Ha nem te indítottad a kérelmet, hagyd figyelmen kívül ezt az emailt. A kód nélkül nem hajtunk végre műveletet."
+  },
+  en: { subject: "Confirm your privacy request", title: "Confirm your privacy request", intro: "Enter this code on the NeuroMap Kids page. The code is valid for 15 minutes.", ignore: "If you did not make this request, ignore this email. No action is taken without the code." },
+  de: { subject: "Datenschutzanfrage bestätigen", title: "Datenschutzanfrage bestätigen", intro: "Gib diesen Code auf der NeuroMap Kids-Seite ein. Er ist 15 Minuten gültig.", ignore: "Wenn du diese Anfrage nicht gestellt hast, ignoriere diese E-Mail. Ohne den Code wird keine Maßnahme ausgeführt." },
+  it: { subject: "Conferma la richiesta privacy", title: "Conferma la richiesta privacy", intro: "Inserisci questo codice nella pagina NeuroMap Kids. Il codice è valido per 15 minuti.", ignore: "Se non hai inviato tu la richiesta, ignora questa email. Senza il codice non verrà eseguita alcuna azione." },
+  es: { subject: "Confirma tu solicitud de privacidad", title: "Confirma tu solicitud de privacidad", intro: "Introduce este código en la página de NeuroMap Kids. Es válido durante 15 minutos.", ignore: "Si no realizaste esta solicitud, ignora este correo. No se ejecutará ninguna acción sin el código." },
+  zh: { subject: "确认隐私请求", title: "确认隐私请求", intro: "请在 NeuroMap Kids 页面输入此验证码。验证码在 15 分钟内有效。", ignore: "如果并非由你发起此请求，请忽略本邮件。未输入验证码前不会执行任何操作。" },
+  ja: { subject: "プライバシー請求の確認", title: "プライバシー請求を確認してください", intro: "NeuroMap Kids のページでこのコードを入力してください。有効時間は15分です。", ignore: "この請求を行っていない場合は、このメールを無視してください。コードなしで処理は実行されません。" },
+  ar: { subject: "تأكيد طلب الخصوصية", title: "أكّد طلب الخصوصية", intro: "أدخل هذا الرمز في صفحة NeuroMap Kids. الرمز صالح لمدة 15 دقيقة.", ignore: "إذا لم ترسل هذا الطلب، فتجاهل الرسالة. لن يُنفَّذ أي إجراء دون الرمز." },
+  pl: { subject: "Potwierdź wniosek dotyczący prywatności", title: "Potwierdź wniosek dotyczący prywatności", intro: "Wpisz ten kod na stronie NeuroMap Kids. Kod jest ważny przez 15 minut.", ignore: "Jeśli to nie Ty wysłałeś wniosek, zignoruj tę wiadomość. Bez kodu nie wykonamy żadnej czynności." },
+  pt: { subject: "Confirma o pedido de privacidade", title: "Confirma o pedido de privacidade", intro: "Introduz este código na página NeuroMap Kids. O código é válido durante 15 minutos.", ignore: "Se não fizeste este pedido, ignora este email. Nenhuma ação será executada sem o código." },
+  fr: { subject: "Confirmez votre demande de confidentialité", title: "Confirmez votre demande de confidentialité", intro: "Saisissez ce code sur la page NeuroMap Kids. Il est valable pendant 15 minutes.", ignore: "Si vous n'êtes pas à l'origine de cette demande, ignorez cet email. Aucune action ne sera exécutée sans le code." }
+});
+
+export async function sendPrivacyRequestVerificationEmail({
+  to,
+  lang,
+  code,
+  requestId
+}) {
+  const recipients = normalizeRecipients(to);
+  const safeLang = getSafeLang(lang);
+  const copy = PRIVACY_VERIFICATION_COPY[safeLang] || PRIVACY_VERIFICATION_COPY.en;
+  const safeCode = String(code || "").replace(/\D/g, "");
+
+  if (!env.RESEND_API_KEY) throw new Error("Missing RESEND_API_KEY.");
+  if (!env.EMAIL_FROM) throw new Error("Missing EMAIL_FROM.");
+  if (recipients.length === 0) throw new Error("Missing privacy request recipient.");
+  if (!/^\d{6}$/.test(safeCode)) throw new Error("Invalid verification code.");
+
+  const response = await resend.emails.send(
+    {
+      from: env.EMAIL_FROM,
+      to: recipients,
+      subject: copy.subject,
+      html: `<div style="font-family:Arial,sans-serif;max-width:560px;margin:auto;color:#102033"><h1 style="font-size:24px">${escapeHtml(copy.title)}</h1><p style="line-height:1.6">${escapeHtml(copy.intro)}</p><div style="margin:24px 0;padding:18px;border:1px solid #b8dcef;background:#f2fbff;text-align:center;font-size:32px;font-weight:800;letter-spacing:8px">${safeCode}</div><p style="line-height:1.6;color:#52677d">${escapeHtml(copy.ignore)}</p></div>`,
+      text: `${copy.title}\n\n${copy.intro}\n\n${safeCode}\n\n${copy.ignore}`
+    },
+    { idempotencyKey: `privacy-verification/${requestId}` }
+  );
+
+  if (response?.error) {
+    throw new Error(response.error.message || "Privacy verification email failed.");
+  }
+
+  console.log("[privacy-verification-email] sent", {
+    requestId,
+    recipients: maskRecipients(recipients),
+    lang: safeLang,
+    response: summarizeEmailResponse(response)
+  });
+
+  return response;
+}
+
 export async function sendFollowUpEmail({
   to,
   lang,

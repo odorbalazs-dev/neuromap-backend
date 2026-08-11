@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-26",
+  "purpose": "New-chat onboarding for a new NeuroMap Kids Webflow landing page",
+  "repository": {
+    "name": "neuromap-backend",
+    "localPath": "C:\\Users\\odorb\\Documents\\Codex\\2026-05-17\\mire-j-a-codex-mi-az\\neuromap-backend",
+    "remote": "https://github.com/odorbalazs-dev/neuromap-backend.git",
+    "branch": "main",
+    "snapshotHead": "4eae093",
+    "workingTreeDirtyAtSnapshot": true
+  },
+  "sourceOfTruthOrder": [
+    "current source code and database migrations",
+    "current git status and git diff",
+    "docs/NEW_CHAT_HANDOFF",
+    "topic-specific docs",
+    "PROJECT_STATE.md as historical context only"
+  ],
+  "readingOrder": [
+    "NEW_CHAT_START_HERE.md",
+    "docs/NEW_CHAT_HANDOFF/README.md",
+    "docs/NEW_CHAT_HANDOFF/CURRENT_STATE.md",
+    "docs/NEW_CHAT_HANDOFF/ARCHITECTURE_AND_FLOWS.md",
+    "docs/NEW_CHAT_HANDOFF/REPOSITORY_MAP.md",
+    "docs/NEW_CHAT_HANDOFF/WEBFLOW_LANDING_CONTRACT.md",
+    "docs/NEW_CHAT_HANDOFF/LANDING_PAGE_BRIEF.md",
+    "docs/NEW_CHAT_HANDOFF/OPERATIONS_AND_DEPLOYMENT.md",
+    "docs/NEW_CHAT_HANDOFF/QUALITY_AND_RELEASE_CHECKLIST.md"
+  ],
+  "runtimeVersions": {
+    "engine": "20260726-legal-rights-v3",
+    "checkoutPages": "20260721-customer-experience-v2",
+    "webflowEmbedManager": "20260726-legal-rights-v3",
+    "offer": "2026-07-two-tier-v1"
+  },
+  "offers": [
+    {
+      "code": "standard_v1",
+      "priceUsd": 7.99
+    },
+    {
+      "code": "plus_v1",
+      "priceUsd": 9.99
+    }
+  ],
+  "languages": [
+    "hu",
+    "en",
+    "de",
+    "it",
+    "es",
+    "zh",
+    "ja",
+    "ar",
+    "pl",
+    "pt",
+    "fr"
+  ],
+  "questionBanks": {
+    "triage": 250,
+    "ADHD": 250,
+    "ASD": 250,
+    "ANXIETY": 250,
+    "DEPRESSION": 250,
+    "LEARNING": 250,
+    "runtimeSelection": {
+      "triage": 25,
+      "specific": 30,
+      "extraWhenNeeded": 5
+    }
+  },
+  "keyEntrypoints": {
+    "webServer": "src/app/server.js",
+    "worker": "src/jobs/analysis.worker.js",
+    "railwayRouter": "scripts/railway-start.js",
+    "webflowEngine": "public/webflow/engine.js",
+    "legalConsent": "public/webflow/legal-consent.js",
+    "legalContent": "public/webflow/legal-content.js",
+    "privacyRights": "src/services/privacy-rights.service.js",
+    "checkoutPages": "public/webflow/checkout-pages.js",
+    "embedManager": "src/services/webflow-embed-manager.service.js",
+    "productCatalog": "src/config/products.js",
+    "checkoutValidator": "src/utils/validateCheckoutPayload.js",
+    "checkoutNormalizer": "src/utils/normalizeCheckoutPayload.js",
+    "analysis": "src/services/analysis.service.js",
+    "pdf": "src/services/pdf.service.js",
+    "email": "src/services/email.service.js",
+    "webhook": "src/services/webhook.service.js",
+    "invoice": "src/services/invoice.service.js",
+    "adminFrontend": "public/admin-dashboard.js"
+  },
+  "externalSystems": [
+    "Webflow",
+    "Railway",
+    "PostgreSQL",
+    "Stripe",
+    "OpenAI",
+    "Resend",
+    "Szamlazz.hu"
+  ],
+  "securityNotes": [
+    "Never include .env values or secrets in chat or docs",
+    "Do not reset or discard unknown local changes",
+    "Do not send questionnaire answers or inferred focus to marketing analytics",
+    "Consent receipt and backend checkout validation are mandatory",
+    "Digital performance and withdrawal-right acknowledgements are collected separately at purchase time",
+    "Privacy-rights requests require the session token, a request token and a short-lived email OTP",
+    "Production launch remains blocked until required external evidence is registered",
+    "Commit and push only when explicitly requested"
+  ]
+}

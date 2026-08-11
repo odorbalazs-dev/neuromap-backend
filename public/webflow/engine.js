@@ -5,13 +5,14 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260810-checkout-payload-v1";
+  const ENGINE_VERSION = "20260811-step-scroll-v1";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
-  const LEGAL_CONSENT_VERSION = "20260715-gdpr-legal-v1";
+  const LEGAL_CONSENT_VERSION = "20260726-verified-rights-v3";
   const LANGUAGE_CONFIRMED_KEY = "nm_language_confirmed_v1";
-  const DRAFT_STORAGE_KEY = "nm_questionnaire_draft_v1";
+  const DRAFT_STORAGE_KEY = "nm_questionnaire_draft_v2";
+  const LEGACY_DRAFT_STORAGE_KEY = "nm_questionnaire_draft_v1";
   const PACKAGE_STORAGE_KEY = "nm_package_code_v1";
-  const DRAFT_TTL_MS = 1000 * 60 * 60 * 24 * 14;
+  const DRAFT_TTL_MS = 1000 * 60 * 60 * 4;
   const CAMPAIGN_ATTRIBUTION_STORAGE_KEY = "nm_campaign_attribution_v1";
   const CAMPAIGN_ATTRIBUTION_TTL_MS = 1000 * 60 * 60 * 24 * 90;
   const CAMPAIGN_ATTRIBUTION_KEYS = [
@@ -304,8 +305,10 @@
     extraDebug: null,
 
     needsExtra: false,
+    safetySupportAcknowledged: false,
     packageCode: "standard_v1",
-    draftRestored: false
+    draftRestored: false,
+    selectionSeed: getSelectionSeed()
   };
 
   const engineStatus = {
@@ -515,7 +518,13 @@
   installEngineBootGate();
 
   function randomIdPart() {
-    return Math.random().toString(36).slice(2, 10);
+    try {
+      const values = new Uint32Array(2);
+      window.crypto.getRandomValues(values);
+      return Array.from(values, (value) => value.toString(36)).join("").slice(0, 16);
+    } catch (_error) {
+      return `${Date.now().toString(36)}${performance.now().toString(36).replace(".", "")}`.slice(0, 16);
+    }
   }
 
   function getClientSessionId() {
@@ -1629,7 +1638,7 @@
       }
 
       .nm-answer-btn.is-selected,
-      .nm-answer-btn[aria-pressed="true"] {
+      .nm-answer-btn[aria-checked="true"] {
         background: linear-gradient(135deg, #1197d5, #0b86bf);
         border-color: #0b86bf;
         box-shadow: 0 12px 24px rgba(17, 151, 213, 0.22);
@@ -1651,7 +1660,7 @@
       }
 
       .nm-answer-btn.is-selected .nm-answer-value,
-      .nm-answer-btn[aria-pressed="true"] .nm-answer-value {
+      .nm-answer-btn[aria-checked="true"] .nm-answer-value {
         background: rgba(255, 255, 255, 0.22);
         color: #ffffff;
       }
@@ -2077,6 +2086,180 @@
         line-height: 1.6;
         margin-top: 16px;
         padding: 14px 16px;
+      }
+
+      .nm-safety-support {
+        background: #fff4f3;
+        border: 2px solid #d92d20;
+        border-radius: 16px;
+        color: #7a271a;
+        margin: 16px 0;
+        padding: 18px;
+      }
+
+      .nm-safety-support strong {
+        color: #912018;
+        display: block;
+        font-size: 19px;
+        font-weight: 900;
+        line-height: 1.3;
+        margin-bottom: 8px;
+      }
+
+      .nm-safety-support p {
+        font-size: 14px;
+        line-height: 1.65;
+        margin: 8px 0 0;
+      }
+
+      .nm-safety-modal {
+        align-items: center;
+        background: rgba(16, 24, 40, 0.76);
+        display: flex;
+        inset: 0;
+        justify-content: center;
+        padding: 20px;
+        position: fixed;
+        z-index: 2147483647;
+      }
+
+      .nm-safety-modal-panel {
+        background: #ffffff;
+        border: 3px solid #d92d20;
+        border-radius: 18px;
+        box-shadow: 0 24px 64px rgba(16, 24, 40, 0.28);
+        color: #344054;
+        max-height: calc(100vh - 40px);
+        max-width: 680px;
+        overflow-y: auto;
+        padding: 26px;
+        width: 100%;
+      }
+
+      .nm-safety-modal-mark {
+        align-items: center;
+        background: #d92d20;
+        border-radius: 50%;
+        color: #ffffff;
+        display: flex;
+        font-size: 24px;
+        font-weight: 900;
+        height: 48px;
+        justify-content: center;
+        margin-bottom: 14px;
+        width: 48px;
+      }
+
+      .nm-safety-modal-panel h2 {
+        color: #912018;
+        font-size: 25px;
+        font-weight: 900;
+        line-height: 1.25;
+        margin: 0 0 12px;
+      }
+
+      .nm-safety-modal-panel p {
+        font-size: 15px;
+        line-height: 1.65;
+        margin: 10px 0;
+      }
+
+      .nm-safety-modal-panel .nm-safety-emergency {
+        background: #fff4f3;
+        border-radius: 10px;
+        color: #7a271a;
+        font-weight: 750;
+        padding: 12px;
+      }
+
+      .nm-safety-modal-panel button {
+        background: #b42318;
+        border: 0;
+        border-radius: 10px;
+        color: #ffffff;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 850;
+        margin-top: 8px;
+        min-height: 46px;
+        padding: 12px 18px;
+        width: 100%;
+      }
+
+      .nm-safety-modal-panel button:focus-visible {
+        outline: 3px solid #fda29b;
+        outline-offset: 3px;
+      }
+
+      .nm-summary-more {
+        margin: 16px 0;
+      }
+
+      .nm-summary-more > summary {
+        align-items: center;
+        background: #f7fbff;
+        border: 1px solid #d9ecf7;
+        border-radius: 16px;
+        color: #102033;
+        cursor: pointer;
+        display: flex;
+        gap: 14px;
+        justify-content: space-between;
+        list-style: none;
+        min-height: 58px;
+        padding: 13px 16px;
+      }
+
+      .nm-summary-more > summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .nm-summary-more > summary::after {
+        align-items: center;
+        background: #e9f6fc;
+        border-radius: 50%;
+        color: #0b86bf;
+        content: "+";
+        display: inline-flex;
+        flex: 0 0 auto;
+        font-size: 20px;
+        font-weight: 900;
+        height: 32px;
+        justify-content: center;
+        width: 32px;
+      }
+
+      .nm-summary-more[open] > summary::after {
+        content: "−";
+      }
+
+      .nm-summary-more > summary:focus-visible {
+        box-shadow: 0 0 0 4px rgba(17, 151, 213, 0.16);
+        outline: 2px solid #1197d5;
+        outline-offset: 2px;
+      }
+
+      .nm-summary-more > summary strong,
+      .nm-summary-more > summary small {
+        display: block;
+      }
+
+      .nm-summary-more > summary strong {
+        font-size: 15px;
+        font-weight: 900;
+        line-height: 1.3;
+      }
+
+      .nm-summary-more > summary small {
+        color: #64748b;
+        font-size: 12px;
+        font-weight: 650;
+        line-height: 1.4;
+        margin-top: 2px;
+      }
+
+      .nm-summary-more-content {
+        padding-top: 2px;
       }
 
       .nm-checkout-review {
@@ -4629,7 +4812,6 @@
     ensureStickyBrandHeader();
     ensureReportPreviewMockup(activeLang);
     simplifyLandingHero(hero);
-    ensureLandingPackageSelector(activeLang);
     ensureLandingMiniDemo(activeLang);
   }
 
@@ -4717,8 +4899,8 @@
 
       return applied;
     } finally {
-      // MutationObserver callbacks run before the next task. Keeping the guard
-      // active until then prevents the landing rescue from reacting to its own DOM work.
+      // Keep the guard active until the next task so overlapping bounded rescue
+      // passes cannot react to the same DOM work.
       window.setTimeout(() => {
         landingRescueInProgress = false;
       }, 0);
@@ -4730,40 +4912,13 @@
 
     rescueLandingText(resolveLang());
 
-    [50, 250, 800, 1600, 2600, 4000].forEach((delay) => {
+    window.requestAnimationFrame(() => rescueLandingText(resolveLang()));
+    [80, 300, 800].forEach((delay) => {
       window.setTimeout(() => rescueLandingText(resolveLang()), delay);
     });
 
     if (document.readyState === "loading") {
       document.addEventListener("DOMContentLoaded", () => rescueLandingText(resolveLang()), { once: true });
-    }
-
-    window.addEventListener("load", () => rescueLandingText(resolveLang()), { once: true });
-
-    if (!window.__nmLandingRescueObserverInstalled && "MutationObserver" in window) {
-      window.__nmLandingRescueObserverInstalled = true;
-
-      let rescueTimer = null;
-      const queueRescue = () => {
-        if (landingRescueInProgress) return;
-        if (document.documentElement.classList.contains("nm-questionnaire-open")) return;
-        window.clearTimeout(rescueTimer);
-        rescueTimer = window.setTimeout(() => rescueLandingText(resolveLang()), 40);
-      };
-
-      const target =
-        document.getElementById("nmSocialLanding") ||
-        document.querySelector(".nm-social-landing") ||
-        document.body;
-
-      if (target) {
-        new MutationObserver(queueRescue).observe(target, {
-          attributes: true,
-          attributeFilter: ["class", "style"],
-          childList: true,
-          subtree: true
-        });
-      }
     }
   }
 
@@ -4812,19 +4967,30 @@
   }
 
   function lockQuestionnaireOpenLayout() {
-    ensureStickyBrandHeader();
-    hideLandingForQuestionnaire();
-
-    let attempts = 0;
-    const timer = window.setInterval(() => {
-      attempts += 1;
+    const enforceLayout = () => {
       ensureStickyBrandHeader();
       hideLandingForQuestionnaire();
+    };
 
-      if (attempts >= 24) {
-        window.clearInterval(timer);
-      }
-    }, 125);
+    enforceLayout();
+    window.requestAnimationFrame(enforceLayout);
+    [50, 180, 500].forEach((delay) => window.setTimeout(enforceLayout, delay));
+  }
+
+  function getLegalStartErrorMessage() {
+    return getCustomerCopy({
+      hu: "A kérdőív indításához jóvá kell hagynod a jogi és adatvédelmi tájékoztatót.",
+      en: "Please approve the legal and privacy information before starting the questionnaire.",
+      de: "Bitte stimme den rechtlichen Hinweisen und Datenschutzinformationen zu, bevor du den Fragebogen startest.",
+      it: "Prima di iniziare il questionario, approva le informazioni legali e sulla privacy.",
+      es: "Antes de iniciar el cuestionario, acepta la información legal y de privacidad.",
+      zh: "开始问卷前，请同意法律与隐私说明。",
+      ja: "質問票を始める前に、法的事項とプライバシー情報に同意してください。",
+      ar: "يرجى الموافقة على المعلومات القانونية ومعلومات الخصوصية قبل بدء الاستبيان.",
+      pl: "Przed rozpoczęciem kwestionariusza zaakceptuj informacje prawne i dotyczące prywatności.",
+      pt: "Antes de iniciar o questionário, aceite as informações legais e de privacidade.",
+      fr: "Avant de commencer le questionnaire, acceptez les informations juridiques et de confidentialité."
+    });
   }
 
   async function showQuestionnaireFromLanding() {
@@ -4836,11 +5002,11 @@
     try {
       await ensureLegalConsentForCurrentLanguage();
     } catch (error) {
+      if (error && error.code === "NM_LEGAL_CANCELLED") {
+        return false;
+      }
       console.error("Legal consent is required before starting the questionnaire:", error);
-      setStatus(state.lang === "hu"
-        ? "A kérdőív indításához előbb jóvá kell hagyni a jogi és adatvédelmi tájékoztatót."
-        : "Please review and approve the legal and privacy information before starting.");
-      showModal(true);
+      setStatus(getLegalStartErrorMessage());
       return false;
     }
 
@@ -4959,10 +5125,48 @@
     return labels[severity] || severity;
   }
 
-  function shuffle(array) {
+  function getSelectionSeed() {
+    const storageKey = "nm_selection_seed";
+
+    try {
+      const existing = window.sessionStorage && window.sessionStorage.getItem(storageKey);
+      if (existing) return existing;
+
+      const values = new Uint32Array(4);
+      window.crypto.getRandomValues(values);
+      const generated = Array.from(values, (value) => value.toString(16).padStart(8, "0")).join("");
+      if (window.sessionStorage) window.sessionStorage.setItem(storageKey, generated);
+      return generated;
+    } catch (_error) {
+      return `nm-${Date.now().toString(36)}`;
+    }
+  }
+
+  function hashSeed(value) {
+    let hash = 2166136261;
+    for (const character of String(value || "neuromap")) {
+      hash ^= character.charCodeAt(0);
+      hash = Math.imul(hash, 16777619);
+    }
+    return hash >>> 0;
+  }
+
+  function seededRandom(seed) {
+    let value = hashSeed(seed) || 1;
+    return function nextRandom() {
+      value = (Math.imul(value, 1664525) + 1013904223) >>> 0;
+      return value / 4294967296;
+    };
+  }
+
+  function shuffle(array, seed = "") {
+    const identity = (array || [])
+      .map((item) => item && (item.id || item.stemKey || item.subdomain || item.domain || String(item)))
+      .join("|");
+    const random = seededRandom(`${state?.selectionSeed || "neuromap"}:${seed}:${identity}`);
     const copy = [...array];
     for (let i = copy.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
+      const j = Math.floor(random() * (i + 1));
       [copy[i], copy[j]] = [copy[j], copy[i]];
     }
     return copy;
@@ -4974,21 +5178,19 @@
   }
 
   function getDraftCopy() {
-    if (state.lang === "hu") {
-      return {
-        title: "Folytathatod, ahol abbahagytad",
-        body: "A kitöltésedet ezen az eszközön automatikusan elmentettük.",
-        continueLabel: "Folytatás",
-        restartLabel: "Újrakezdés"
-      };
-    }
-
-    return {
-      title: "Continue where you left off",
-      body: "Your questionnaire progress was saved automatically on this device.",
-      continueLabel: "Continue",
-      restartLabel: "Restart"
-    };
+    return getCustomerCopy({
+      hu: { title: "Folytathatod, ahol abbahagytad", body: "A válaszaidat ebben a böngészőfülben, legfeljebb 4 órára mentettük. Nevet és email-címet nem tárolunk.", continueLabel: "Folytatás", restartLabel: "Újrakezdés" },
+      en: { title: "Continue where you left off", body: "Your answers are saved in this browser tab for up to 4 hours. Your name and email are not stored.", continueLabel: "Continue", restartLabel: "Restart" },
+      de: { title: "Dort fortfahren, wo du aufgehört hast", body: "Deine Antworten werden in diesem Browser-Tab bis zu 4 Stunden gespeichert. Name und E-Mail werden nicht gespeichert.", continueLabel: "Fortfahren", restartLabel: "Neu starten" },
+      it: { title: "Continua da dove hai lasciato", body: "Le risposte restano salvate in questa scheda del browser per un massimo di 4 ore. Nome ed email non vengono memorizzati.", continueLabel: "Continua", restartLabel: "Ricomincia" },
+      es: { title: "Continúa donde lo dejaste", body: "Tus respuestas se guardan en esta pestaña del navegador durante un máximo de 4 horas. No guardamos tu nombre ni tu email.", continueLabel: "Continuar", restartLabel: "Empezar de nuevo" },
+      zh: { title: "继续上次的进度", body: "回答会在当前浏览器标签页中保存最多4小时，不会保存姓名和电子邮箱。", continueLabel: "继续", restartLabel: "重新开始" },
+      ja: { title: "前回の続きから再開できます", body: "回答はこのブラウザータブに最長4時間保存されます。氏名とメールアドレスは保存されません。", continueLabel: "続ける", restartLabel: "最初から" },
+      ar: { title: "تابع من حيث توقفت", body: "تُحفظ إجاباتك في علامة تبويب المتصفح هذه لمدة تصل إلى 4 ساعات. لا نخزن الاسم أو البريد الإلكتروني.", continueLabel: "متابعة", restartLabel: "البدء من جديد" },
+      pl: { title: "Kontynuuj od miejsca, w którym przerwano", body: "Odpowiedzi są zapisane w tej karcie przeglądarki maksymalnie przez 4 godziny. Imię i email nie są zapisywane.", continueLabel: "Kontynuuj", restartLabel: "Zacznij od nowa" },
+      pt: { title: "Continue de onde parou", body: "As respostas ficam salvas nesta aba do navegador por até 4 horas. Nome e email não são armazenados.", continueLabel: "Continuar", restartLabel: "Recomeçar" },
+      fr: { title: "Reprendre là où vous vous êtes arrêté", body: "Vos réponses sont conservées dans cet onglet du navigateur pendant 4 heures maximum. Le nom et l'email ne sont pas enregistrés.", continueLabel: "Continuer", restartLabel: "Recommencer" }
+    });
   }
 
   function getInputValue(id) {
@@ -5029,37 +5231,101 @@
 
   function readDraft() {
     try {
+      localStorage.removeItem(LEGACY_DRAFT_STORAGE_KEY);
       localStorage.removeItem(DRAFT_STORAGE_KEY);
-    } catch (_error) {
-      // localStorage can be blocked in strict browser privacy modes.
-    }
+      if (!window.sessionStorage) return null;
 
-    return null;
+      const raw = window.sessionStorage.getItem(DRAFT_STORAGE_KEY);
+      if (!raw) return null;
+
+      const draft = JSON.parse(raw);
+      const savedAt = Date.parse(draft && draft.savedAt);
+      if (
+        !draft ||
+        draft.version !== 2 ||
+        !Number.isFinite(savedAt) ||
+        Date.now() - savedAt > DRAFT_TTL_MS
+      ) {
+        window.sessionStorage.removeItem(DRAFT_STORAGE_KEY);
+        return null;
+      }
+
+      return draft;
+    } catch (_error) {
+      try {
+        if (window.sessionStorage) window.sessionStorage.removeItem(DRAFT_STORAGE_KEY);
+      } catch (_storageError) {
+        // Storage can be blocked in strict browser privacy modes.
+      }
+      return null;
+    }
   }
 
   function clearDraft() {
     try {
+      if (window.sessionStorage) window.sessionStorage.removeItem(DRAFT_STORAGE_KEY);
       localStorage.removeItem(DRAFT_STORAGE_KEY);
+      localStorage.removeItem(LEGACY_DRAFT_STORAGE_KEY);
     } catch (_error) {
-      // localStorage can be blocked in strict browser privacy modes.
+      // Storage can be blocked in strict browser privacy modes.
     }
+    state.draftRestored = false;
+    updateResumeBanner(false);
   }
 
   function saveDraft(reason = "auto") {
     try {
-      localStorage.removeItem(DRAFT_STORAGE_KEY);
-      updateResumeBanner(false);
+      if (!window.sessionStorage) return;
+      syncPartialAnswersForDraft();
+
+      const answered = [...state.triageAnswers, ...state.specificAnswers, ...state.extraAnswers]
+        .some((value) => value !== null && value !== undefined && value !== "" && !Number.isNaN(Number(value)));
+      if (!answered && state.step === "triage") {
+        window.sessionStorage.removeItem(DRAFT_STORAGE_KEY);
+        return;
+      }
+
+      const previous = readDraft();
+      const now = new Date().toISOString();
+      const draft = {
+        version: 2,
+        createdAt: (previous && previous.createdAt) || now,
+        savedAt: now,
+        reason,
+        lang: state.lang,
+        packageCode: normalizeClientPackageCode(state.packageCode),
+        step: state.step,
+        childAge: getInputValue("childAge"),
+        triageQuestions: state.triageQuestions,
+        triageAnswers: state.triageAnswers,
+        triageScores: state.triageScores,
+        triageRanking: state.triageRanking,
+        detectedRisk: state.detectedRisk,
+        secondaryRisk: state.secondaryRisk,
+        needsExtra: state.needsExtra,
+        specificQuestions: state.specificQuestions,
+        specificAnswers: state.specificAnswers,
+        specificScoring: state.specificScoring,
+        specificProfile: state.specificProfile,
+        resultSummary: state.resultSummary,
+        safetySupportAcknowledged: state.safetySupportAcknowledged === true,
+        extraQuestions: state.extraQuestions,
+        extraAnswers: state.extraAnswers,
+        extraDebug: state.extraDebug
+      };
+
+      window.sessionStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(draft));
     } catch (error) {
       console.warn("NeuroMap draft save failed:", error);
     }
   }
 
   function restoreDraft(draft) {
-    if (!draft || draft.version !== 1) return false;
+    if (!draft || draft.version !== 2) return false;
 
     state.lang = draft.lang || state.lang;
     state.packageCode = normalizeClientPackageCode(readStoredPackageCode() || draft.packageCode);
-    state.step = draft.step || "triage";
+    state.step = ["triage", "specific", "summary"].includes(draft.step) ? draft.step : "triage";
     state.triageQuestions =
       Array.isArray(draft.triageQuestions) && draft.triageQuestions.length
         ? draft.triageQuestions
@@ -5075,14 +5341,13 @@
     state.specificScoring = draft.specificScoring || null;
     state.specificProfile = draft.specificProfile || null;
     state.resultSummary = draft.resultSummary || null;
+    state.safetySupportAcknowledged = draft.safetySupportAcknowledged === true;
     state.extraQuestions = Array.isArray(draft.extraQuestions) ? draft.extraQuestions : [];
     state.extraAnswers = Array.isArray(draft.extraAnswers) ? draft.extraAnswers : [];
     state.extraDebug = draft.extraDebug || null;
     state.draftRestored = true;
 
     setTimeout(() => {
-      setInputValue("name", draft.name);
-      setInputValue("email", draft.email);
       setInputValue("childAge", draft.childAge);
       if (typeof updateChildAgeFieldLanguage === "function") updateChildAgeFieldLanguage();
     }, 0);
@@ -5104,6 +5369,7 @@
     state.specificScoring = null;
     state.specificProfile = null;
     state.resultSummary = null;
+    state.safetySupportAcknowledged = false;
     state.extraQuestions = [];
     state.extraAnswers = [];
     state.extraDebug = null;
@@ -5192,11 +5458,27 @@
       (Array.isArray(draft.specificQuestions) ? draft.specificQuestions.length : 0) +
       (draft.needsExtra && Array.isArray(draft.extraQuestions) ? draft.extraQuestions.length : 0);
 
-    if (state.lang === "hu" || draft.lang === "hu") {
-      return `Mentett állapot: ${triageDone}/${triageTotal || 25} első szűrés, ${specificDone}/${specificTotal || 0} pontosítás.`;
-    }
+    const progressCopy = getCustomerCopy(
+      {
+        hu: (screening, details) => `Mentett állapot: ${screening} első szűrés, ${details} pontosítás.`,
+        en: (screening, details) => `Saved progress: ${screening} screening answers, ${details} detail answers.`,
+        de: (screening, details) => `Gespeicherter Stand: ${screening} Screening-Antworten, ${details} Detailantworten.`,
+        it: (screening, details) => `Progresso salvato: ${screening} risposte di screening, ${details} risposte di dettaglio.`,
+        es: (screening, details) => `Progreso guardado: ${screening} respuestas de cribado, ${details} respuestas detalladas.`,
+        zh: (screening, details) => `已保存进度：初筛 ${screening}，详细问卷 ${details}。`,
+        ja: (screening, details) => `保存済みの進捗：初期質問 ${screening}、詳細質問 ${details}。`,
+        ar: (screening, details) => `التقدم المحفوظ: ${screening} من أسئلة الفرز، و${details} من الأسئلة التفصيلية.`,
+        pl: (screening, details) => `Zapisany postęp: ${screening} odpowiedzi przesiewowych, ${details} odpowiedzi szczegółowych.`,
+        pt: (screening, details) => `Progresso salvo: ${screening} respostas de triagem, ${details} respostas detalhadas.`,
+        fr: (screening, details) => `Progression enregistrée : ${screening} réponses de dépistage, ${details} réponses détaillées.`
+      },
+      state.lang || draft.lang || "en"
+    );
 
-    return `Saved progress: ${triageDone}/${triageTotal || 25} screening answers, ${specificDone}/${specificTotal || 0} detail answers.`;
+    return progressCopy(
+      `${triageDone}/${triageTotal || 25}`,
+      `${specificDone}/${specificTotal || 0}`
+    );
   }
 
   function bindDraftAutosave() {
@@ -5205,7 +5487,7 @@
 
     document.addEventListener("change", (event) => {
       const target = event.target;
-      if (!target || !target.matches(".nm-answer-select,#name,#email,#childAge")) return;
+      if (!target || !target.matches(".nm-answer-select,#childAge")) return;
       saveDraft("change");
     });
 
@@ -5213,7 +5495,7 @@
       "blur",
       (event) => {
         const target = event.target;
-        if (!target || !target.matches("#name,#email,#childAge")) return;
+        if (!target || !target.matches("#childAge")) return;
         saveDraft("blur");
       },
       true
@@ -5222,7 +5504,9 @@
     window.addEventListener("beforeunload", () => saveDraft("beforeunload"));
   }
 
-  function scrollToQuestionnaireTop() {
+  let questionnaireScrollRequest = 0;
+
+  function scrollToQuestionnaireTop(behavior = "auto") {
     const app = document.getElementById("nmApp");
     const questionnaireVisible =
       app && app.style.display !== "none" && app.offsetParent !== null;
@@ -5236,10 +5520,25 @@
 
     if (target) {
       target.scrollIntoView({
-        behavior: "smooth",
+        behavior,
         block: "start"
       });
     }
+  }
+
+  function scheduleQuestionnaireTopScroll(behavior = "auto") {
+    const requestId = ++questionnaireScrollRequest;
+    const scheduleFrame =
+      typeof window.requestAnimationFrame === "function"
+        ? window.requestAnimationFrame.bind(window)
+        : (callback) => window.setTimeout(callback, 0);
+
+    scheduleFrame(() => {
+      scheduleFrame(() => {
+        if (requestId !== questionnaireScrollRequest) return;
+        scrollToQuestionnaireTop(behavior);
+      });
+    });
   }
 
   function validateRuntimeBanks() {
@@ -5376,6 +5675,38 @@
   function pickBalancedSpecificQuestions(bank, count = 30) {
     const browserEngine = window.NM_ADAPTIVE_ENGINE;
 
+    function isSafetyQuestion(question) {
+      return question?.safetySignal === true || ["DEP_112", "DEP_114", "DEP_119"].includes(question?.id);
+    }
+
+    function ensureSafetyQuestions(selection) {
+      const limit = Math.min(count, bank.length);
+      const required = bank.filter(isSafetyQuestion);
+      if (!required.length) return selection.slice(0, limit);
+
+      const result = selection.slice(0, limit);
+      const selectedIds = new Set(result.map((question) => question.id));
+
+      required.forEach((question) => {
+        if (selectedIds.has(question.id)) return;
+
+        const replacementIndex = result
+          .map((item, index) => ({ item, index }))
+          .reverse()
+          .find(({ item }) => !isSafetyQuestion(item))?.index;
+
+        if (typeof replacementIndex === "number") {
+          selectedIds.delete(result[replacementIndex]?.id);
+          result[replacementIndex] = question;
+        } else if (result.length < limit) {
+          result.push(question);
+        }
+        selectedIds.add(question.id);
+      });
+
+      return result.slice(0, limit);
+    }
+
     if (
       browserEngine &&
       typeof browserEngine.pickBalancedSpecificQuestions === "function"
@@ -5401,10 +5732,10 @@
         (state.triageAnswers || []).join("-")
       ];
 
-      return browserEngine
+      return ensureSafetyQuestions(browserEngine
         .pickBalancedSpecificQuestions(bank, {
           count,
-          seed: seedParts.join(":"),
+          seed: `${state.selectionSeed}:${seedParts.join(":")}`,
           focusSubdomains,
           avoidStemKeys: [],
           maxPerStem: 1,
@@ -5419,7 +5750,7 @@
                 ? browserEngine.inferStemKey(question)
                 : inferStemKey(question)
           });
-        });
+        }));
     }
 
     if (!Array.isArray(bank) || bank.length === 0) return [];
@@ -5435,7 +5766,7 @@
     const subdomains = Object.keys(bySubdomain);
 
     if (subdomains.length === 0) {
-      return shuffle(bank).slice(0, Math.min(count, bank.length));
+      return ensureSafetyQuestions(shuffle(bank, "specific:no-subdomains").slice(0, Math.min(count, bank.length)));
     }
 
     function diversifyPool(pool, targetCount) {
@@ -5495,7 +5826,10 @@
       selected.push(...shuffle(remaining).slice(0, count - selected.length));
     }
 
-    return shuffle(selected).slice(0, Math.min(count, selected.length));
+    return ensureSafetyQuestions(
+      shuffle(selected, `specific:${state.detectedRisk || "unknown"}`)
+        .slice(0, Math.min(count, selected.length))
+    );
   }
 
   function buildExtraQuestions(primaryKind, secondaryKind = null) {
@@ -5690,11 +6024,32 @@
       totalWeightedScore: 0,
       totalWeight: 0,
       normalizedAverage: 0,
-      subdomains: {}
+      subdomains: {},
+      safetySignals: [],
+      urgentSupportNeeded: false,
+      criticalSupportNeeded: false
     };
 
     questions.forEach((q, i) => {
       const rawAnswer = answers[i];
+      const numericAnswer = Number(rawAnswer || 0);
+      const isSafetyQuestion =
+        q?.safetySignal === true || ["DEP_112", "DEP_114", "DEP_119"].includes(q?.id);
+
+      if (isSafetyQuestion) {
+        if (numericAnswer > 0) {
+          const level = numericAnswer >= 2 ? "critical" : "urgent";
+          result.safetySignals.push({
+            id: q.id,
+            answer: numericAnswer,
+            level
+          });
+          result.urgentSupportNeeded = true;
+          if (level === "critical") result.criticalSupportNeeded = true;
+        }
+        return;
+      }
+
       const reverse = !!q.reverse;
       const weight = Number(q.weight || 1);
       const subdomain = q.subdomain || "general";
@@ -6226,28 +6581,105 @@
       .replace(/'/g, "&#39;");
   }
 
-  function renderAnswerScale(index, selectedValue = "") {
+  function getQuestionAccessibilityCopy() {
+    return getCustomerCopy({
+      hu: {
+        group: "Válasz erőssége",
+        answered: "megválaszolva",
+        remaining: (count) => `${count} kérdés van hátra. A következő üres kérdést kiemeltük.`,
+        complete: "Minden kérdés megválaszolva, mehetsz tovább."
+      },
+      en: {
+        group: "Answer strength",
+        answered: "answered",
+        remaining: (count) => `${count} questions left. The next unanswered question is highlighted.`,
+        complete: "All questions are answered. You can continue."
+      },
+      de: {
+        group: "Antwortstärke",
+        answered: "beantwortet",
+        remaining: (count) => `${count} Fragen sind noch offen. Die nächste unbeantwortete Frage ist markiert.`,
+        complete: "Alle Fragen sind beantwortet. Du kannst fortfahren."
+      },
+      it: {
+        group: "Intensità della risposta",
+        answered: "risposte",
+        remaining: (count) => `Restano ${count} domande. La prossima domanda senza risposta è evidenziata.`,
+        complete: "Hai risposto a tutte le domande. Puoi continuare."
+      },
+      es: {
+        group: "Intensidad de la respuesta",
+        answered: "respondidas",
+        remaining: (count) => `Quedan ${count} preguntas. La siguiente pregunta sin responder está resaltada.`,
+        complete: "Todas las preguntas están respondidas. Puedes continuar."
+      },
+      zh: {
+        group: "回答程度",
+        answered: "已回答",
+        remaining: (count) => `还剩 ${count} 题。下一道未回答的问题已突出显示。`,
+        complete: "所有问题均已回答，可以继续。"
+      },
+      ja: {
+        group: "回答の程度",
+        answered: "回答済み",
+        remaining: (count) => `残り ${count} 問です。次の未回答の質問を強調表示しています。`,
+        complete: "すべての質問に回答しました。次へ進めます。"
+      },
+      ar: {
+        group: "درجة الإجابة",
+        answered: "تمت الإجابة",
+        remaining: (count) => `تبقى ${count} أسئلة. تم تمييز السؤال التالي غير المجاب عنه.`,
+        complete: "تمت الإجابة عن جميع الأسئلة. يمكنك المتابعة."
+      },
+      pl: {
+        group: "Nasilenie odpowiedzi",
+        answered: "odpowiedziano",
+        remaining: (count) => `Pozostało ${count} pytań. Następne pytanie bez odpowiedzi jest wyróżnione.`,
+        complete: "Odpowiedziano na wszystkie pytania. Możesz przejść dalej."
+      },
+      pt: {
+        group: "Intensidade da resposta",
+        answered: "respondidas",
+        remaining: (count) => `Faltam ${count} perguntas. A próxima pergunta sem resposta está destacada.`,
+        complete: "Todas as perguntas foram respondidas. Você pode continuar."
+      },
+      fr: {
+        group: "Intensité de la réponse",
+        answered: "répondues",
+        remaining: (count) => `Il reste ${count} questions. La prochaine question sans réponse est mise en évidence.`,
+        complete: "Toutes les questions ont une réponse. Vous pouvez continuer."
+      }
+    });
+  }
+
+  function renderAnswerScale(index, selectedValue = "", labelId = "") {
     const labels = getUI().responseLabels || ["0", "1", "2", "3"];
     const safeValue =
       selectedValue === "" || selectedValue === null || selectedValue === undefined
         ? ""
         : String(selectedValue);
 
-    const ariaLabel = state.lang === "hu" ? "V\u00e1lasz er\u0151ss\u00e9ge" : "Answer strength";
+    const accessibilityCopy = getQuestionAccessibilityCopy();
+    const groupLabel = labelId
+      ? `aria-labelledby="${escapeHtml(labelId)}"`
+      : `aria-label="${escapeHtml(accessibilityCopy.group)}"`;
 
     return `
-      <div class="nm-answer-scale" role="radiogroup" aria-label="${ariaLabel}">
+      <div class="nm-answer-scale" role="radiogroup" ${groupLabel}>
         ${labels
           .map((label, value) => {
             const stringValue = String(value);
             const selected = safeValue === stringValue;
+            const focusable = selected || (safeValue === "" && value === 0);
             return `
               <button
                 type="button"
                 class="nm-answer-btn ${selected ? "is-selected" : ""}"
                 data-question-index="${index}"
                 data-answer-value="${stringValue}"
-                aria-pressed="${selected ? "true" : "false"}"
+                role="radio"
+                aria-checked="${selected ? "true" : "false"}"
+                tabindex="${focusable ? "0" : "-1"}"
               >
                 <span class="nm-answer-value">${stringValue}</span>
                 <span class="nm-answer-label">${escapeHtml(label)}</span>
@@ -6262,32 +6694,59 @@
   function bindAnswerScaleButtons(root) {
     const scope = root || document;
 
+    function selectAnswer(button) {
+      const card = button.closest(".nm-q-card");
+      const index = button.getAttribute("data-question-index");
+      const value = button.getAttribute("data-answer-value");
+      const select = card && card.querySelector(`.nm-answer-select[data-question-index="${index}"]`);
+
+      if (select) {
+        select.value = value;
+        select.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+
+      if (!card) return;
+
+      card.classList.add("is-answered");
+      card.querySelectorAll(".nm-answer-btn").forEach((item) => {
+        const isSelected = item === button;
+        item.classList.toggle("is-selected", isSelected);
+        item.setAttribute("aria-checked", isSelected ? "true" : "false");
+        item.setAttribute("tabindex", isSelected ? "0" : "-1");
+      });
+
+      const section = card.closest("#triageSection, #specificSection");
+      if (section && section.id) updateQuestionProgress(section.id);
+    }
+
     scope.querySelectorAll(".nm-answer-btn").forEach((button) => {
       if (button.dataset.nmAnswerBound === "1") return;
       button.dataset.nmAnswerBound = "1";
 
-      button.addEventListener("click", () => {
-        const card = button.closest(".nm-q-card");
-        const index = button.getAttribute("data-question-index");
-        const value = button.getAttribute("data-answer-value");
-        const select = card && card.querySelector(`.nm-answer-select[data-question-index="${index}"]`);
+      button.addEventListener("click", () => selectAnswer(button));
+      button.addEventListener("keydown", (event) => {
+        const group = button.closest('[role="radiogroup"]');
+        if (!group) return;
 
-        if (select) {
-          select.value = value;
-          select.dispatchEvent(new Event("change", { bubbles: true }));
-        }
+        const buttons = Array.from(group.querySelectorAll('.nm-answer-btn[role="radio"]'));
+        const currentIndex = buttons.indexOf(button);
+        if (currentIndex < 0 || buttons.length === 0) return;
 
-        if (card) {
-          card.classList.add("is-answered");
-          card.querySelectorAll(".nm-answer-btn").forEach((item) => {
-            const isSelected = item === button;
-            item.classList.toggle("is-selected", isSelected);
-            item.setAttribute("aria-pressed", isSelected ? "true" : "false");
-          });
+        const rtl = document.documentElement.dir === "rtl";
+        let nextIndex = currentIndex;
 
-          const section = card.closest("#triageSection, #specificSection");
-          if (section && section.id) updateQuestionProgress(section.id);
-        }
+        if (event.key === "Home") nextIndex = 0;
+        else if (event.key === "End") nextIndex = buttons.length - 1;
+        else if (event.key === "ArrowDown") nextIndex = (currentIndex + 1) % buttons.length;
+        else if (event.key === "ArrowUp") nextIndex = (currentIndex - 1 + buttons.length) % buttons.length;
+        else if (event.key === "ArrowRight") nextIndex = (currentIndex + (rtl ? -1 : 1) + buttons.length) % buttons.length;
+        else if (event.key === "ArrowLeft") nextIndex = (currentIndex + (rtl ? 1 : -1) + buttons.length) % buttons.length;
+        else return;
+
+        event.preventDefault();
+        const nextButton = buttons[nextIndex];
+        selectAnswer(nextButton);
+        nextButton.focus();
       });
     });
   }
@@ -6354,23 +6813,19 @@
     const total = selects.length;
     const answered = selects.filter((select) => select.value !== "").length;
     const remaining = Math.max(0, total - answered);
-    const isHu = state.lang === "hu";
+    const accessibilityCopy = getQuestionAccessibilityCopy();
 
     const countEl = root.querySelector("[data-nm-progress-count]");
     const labelEl = root.querySelector("[data-nm-progress-label]");
     const hintEl = root.querySelector("[data-nm-live-hint]");
 
     if (countEl) countEl.textContent = `${answered} / ${total}`;
-    if (labelEl) labelEl.textContent = isHu ? "megv\u00e1laszolva" : "answered";
+    if (labelEl) labelEl.textContent = accessibilityCopy.answered;
 
     if (hintEl) {
       hintEl.textContent = remaining
-        ? isHu
-          ? `${remaining} k\u00e9rd\u00e9s van h\u00e1tra. A k\u00f6vetkez\u0151 \u00fcres k\u00e9rd\u00e9st kiemelt\u00fck.`
-          : `${remaining} questions left. The next unanswered question is highlighted.`
-        : isHu
-          ? "Minden k\u00e9rd\u00e9s megv\u00e1laszolva, mehetsz tov\u00e1bb."
-          : "All questions are answered. You can continue.";
+        ? accessibilityCopy.remaining(remaining)
+        : accessibilityCopy.complete;
     }
 
     root.querySelectorAll(".nm-q-card.is-next").forEach((card) => card.classList.remove("is-next"));
@@ -6394,9 +6849,9 @@
         <div class="nm-step-assist" data-nm-step-assist="${targetId}">
           <div class="nm-question-progress">
             <strong data-nm-progress-count>0 / ${questions.length}</strong>
-            <span data-nm-progress-label>${state.lang === "hu" ? "megv\u00e1laszolva" : "answered"}</span>
+            <span data-nm-progress-label>${escapeHtml(getQuestionAccessibilityCopy().answered)}</span>
           </div>
-          <div class="nm-live-hint" data-nm-live-hint></div>
+          <div class="nm-live-hint" data-nm-live-hint role="status" aria-live="polite"></div>
         </div>
 
         ${questions
@@ -6407,11 +6862,11 @@
           }">
             <div class="nm-q-number">${index + 1}</div>
             <div class="nm-q-body">
-              <div class="nm-q-text">${getQuestionText(q)}</div>
+              <div class="nm-q-text" id="${targetId}-question-${index}">${getQuestionText(q)}</div>
               <select data-question-index="${index}" class="nm-answer-select" aria-hidden="true" tabindex="-1">
                 ${responseOptionsHtml(answers[index])}
               </select>
-              ${renderAnswerScale(index, answers[index])}
+              ${renderAnswerScale(index, answers[index], `${targetId}-question-${index}`)}
             </div>
           </div>
         `
@@ -7654,6 +8109,140 @@
     };
   }
 
+  function getSummaryDetailsCopy() {
+    return getCustomerCopy({
+      hu: { label: "Hogyan készült ez az összegzés?", intro: "Döntési és módszertani részletek" },
+      en: { label: "How was this summary created?", intro: "Decision and methodology details" },
+      de: { label: "Wie wurde diese Zusammenfassung erstellt?", intro: "Entscheidungs- und Methodendetails" },
+      it: { label: "Come è stato creato questo riepilogo?", intro: "Dettagli decisionali e metodologici" },
+      es: { label: "¿Cómo se creó este resumen?", intro: "Detalles de decisión y metodología" },
+      zh: { label: "这份总结是如何生成的？", intro: "决策与方法说明" },
+      ja: { label: "この要約はどのように作成されましたか？", intro: "判定と方法の詳細" },
+      ar: { label: "كيف أُعد هذا الملخص؟", intro: "تفاصيل القرار والمنهجية" },
+      pl: { label: "Jak powstało to podsumowanie?", intro: "Szczegóły decyzji i metodologii" },
+      pt: { label: "Como este resumo foi criado?", intro: "Detalhes da decisão e da metodologia" },
+      fr: { label: "Comment ce résumé a-t-il été créé ?", intro: "Détails de décision et de méthode" }
+    });
+  }
+
+  function getSafetySupportCopy() {
+    return getCustomerCopy({
+      hu: {
+        title: "Most a gyermek biztonsága az első",
+        text: "A válaszok között olyan jelzés szerepel, amelyet nem érdemes a fizetős riport elkészültéig halasztani. Maradj a gyermekkel, beszélj vele nyugodtan és ítélkezés nélkül, és mielőbb kérj segítséget gyermekpszichológustól, gyermekpszichiátertől vagy más, gyermekekkel foglalkozó egészségügyi szakembertől.",
+        emergency: "Ha a gyermek közvetlen veszélyben van, önmagában vagy másban kárt tehet, hívd a helyi sürgősségi segélyhívót. Ez a jelzés nem diagnózis, és a segítséghez nem szükséges vásárlás.",
+        acknowledge: "Megértettem, először segítséget kérek"
+      },
+      en: {
+        title: "The child's safety comes first",
+        text: "One or more answers indicate that support should not wait for a paid report. Stay with the child, speak calmly and without judgement, and seek prompt help from a child psychologist, child psychiatrist, or another qualified child health professional.",
+        emergency: "If the child is in immediate danger or may harm themselves or someone else, call your local emergency service. This is not a diagnosis, and no purchase is required to seek help.",
+        acknowledge: "I understand and will seek help first"
+      },
+      de: {
+        title: "Die Sicherheit des Kindes steht an erster Stelle",
+        text: "Eine oder mehrere Antworten weisen darauf hin, dass Hilfe nicht bis zum kostenpflichtigen Bericht warten sollte. Bleiben Sie beim Kind, sprechen Sie ruhig und ohne Vorwürfe und suchen Sie zeitnah Hilfe bei einer Kinderpsychologin, einem Kinderpsychologen, einer Kinderpsychiaterin, einem Kinderpsychiater oder einer anderen qualifizierten Fachperson.",
+        emergency: "Bei unmittelbarer Gefahr oder wenn das Kind sich oder andere verletzen könnte, rufen Sie den örtlichen Notdienst. Dies ist keine Diagnose, und für die Hilfe ist kein Kauf erforderlich.",
+        acknowledge: "Verstanden, ich suche zuerst Hilfe"
+      },
+      it: {
+        title: "La sicurezza del bambino viene prima di tutto",
+        text: "Una o più risposte indicano che il supporto non dovrebbe attendere il report a pagamento. Rimani con il bambino, parla con calma e senza giudicare e cerca rapidamente l'aiuto di uno psicologo infantile, neuropsichiatra infantile o altro professionista qualificato.",
+        emergency: "Se il bambino è in pericolo immediato o potrebbe fare del male a sé o ad altri, chiama il servizio di emergenza locale. Non è una diagnosi e non è necessario acquistare nulla per chiedere aiuto.",
+        acknowledge: "Ho capito, cercherò prima aiuto"
+      },
+      es: {
+        title: "La seguridad del menor es lo primero",
+        text: "Una o más respuestas indican que el apoyo no debe esperar al informe de pago. Permanece con el menor, habla con calma y sin juzgar, y solicita pronto ayuda de un psicólogo infantil, psiquiatra infantil u otro profesional cualificado de salud infantil.",
+        emergency: "Si existe peligro inmediato o el menor podría hacerse daño o dañar a otra persona, llama al servicio local de emergencias. Esto no es un diagnóstico y no es necesario comprar nada para pedir ayuda.",
+        acknowledge: "Lo entiendo y pediré ayuda primero"
+      },
+      zh: {
+        title: "孩子的安全最重要",
+        text: "一项或多项回答提示，不应等到付费报告完成后再寻求支持。请陪在孩子身边，以平静、不评判的方式交谈，并尽快联系儿童心理学家、儿童精神科医生或其他合格的儿童健康专业人员。",
+        emergency: "如果孩子正处于紧迫危险中，或可能伤害自己或他人，请立即拨打当地急救电话。这不是诊断，寻求帮助无需购买本报告。",
+        acknowledge: "我已理解，会先寻求帮助"
+      },
+      ja: {
+        title: "お子さまの安全が最優先です",
+        text: "回答の中に、有料レポートを待たずに支援を求めるべきサインが含まれています。お子さまのそばにいて、責めずに落ち着いて話し、児童心理士、児童精神科医、または資格を持つ子どもの健康専門家へ早めに相談してください。",
+        emergency: "差し迫った危険がある場合、または自分や他者を傷つける可能性がある場合は、地域の緊急通報先へ連絡してください。これは診断ではなく、助けを求めるために購入は必要ありません。",
+        acknowledge: "理解しました。まず支援を求めます"
+      },
+      ar: {
+        title: "سلامة الطفل تأتي أولاً",
+        text: "تشير إجابة أو أكثر إلى أن طلب الدعم لا ينبغي أن ينتظر التقرير المدفوع. ابقَ مع الطفل، وتحدث معه بهدوء ومن دون إصدار أحكام، واطلب سريعاً مساعدة اختصاصي نفسي للأطفال أو طبيب نفسي للأطفال أو مختص مؤهل في صحة الطفل.",
+        emergency: "إذا كان الطفل في خطر فوري أو قد يؤذي نفسه أو شخصاً آخر، فاتصل بخدمة الطوارئ المحلية. هذه ليست نتيجة تشخيصية، ولا يلزم الشراء لطلب المساعدة.",
+        acknowledge: "فهمت، وسأطلب المساعدة أولاً"
+      },
+      pl: {
+        title: "Bezpieczeństwo dziecka jest najważniejsze",
+        text: "Jedna lub więcej odpowiedzi wskazuje, że ze wsparciem nie należy czekać na płatny raport. Zostań z dzieckiem, rozmawiaj spokojnie i bez oceniania oraz szybko skontaktuj się z psychologiem dziecięcym, psychiatrą dziecięcym lub innym wykwalifikowanym specjalistą zdrowia dziecka.",
+        emergency: "Jeśli dziecko jest w bezpośrednim niebezpieczeństwie lub może skrzywdzić siebie albo inną osobę, zadzwoń pod lokalny numer alarmowy. To nie jest diagnoza, a uzyskanie pomocy nie wymaga zakupu.",
+        acknowledge: "Rozumiem i najpierw poproszę o pomoc"
+      },
+      pt: {
+        title: "A segurança da criança vem primeiro",
+        text: "Uma ou mais respostas indicam que o apoio não deve esperar pelo relatório pago. Fique com a criança, converse com calma e sem julgamentos e procure rapidamente um psicólogo infantil, psiquiatra infantil ou outro profissional qualificado de saúde infantil.",
+        emergency: "Se houver perigo imediato ou a criança puder magoar-se ou magoar outra pessoa, ligue para o serviço de emergência local. Isto não é um diagnóstico e não é necessário comprar o relatório para procurar ajuda.",
+        acknowledge: "Compreendi e vou procurar ajuda primeiro"
+      },
+      fr: {
+        title: "La sécurité de l'enfant passe avant tout",
+        text: "Une ou plusieurs réponses indiquent que l'aide ne devrait pas attendre le rapport payant. Restez avec l'enfant, parlez calmement et sans jugement, et sollicitez rapidement un psychologue pour enfants, un pédopsychiatre ou un autre professionnel qualifié de la santé de l'enfant.",
+        emergency: "En cas de danger immédiat, ou si l'enfant risque de se blesser ou de blesser quelqu'un, appelez les services d'urgence locaux. Ceci n'est pas un diagnostic et aucun achat n'est nécessaire pour demander de l'aide.",
+        acknowledge: "J'ai compris et je vais d'abord demander de l'aide"
+      }
+    });
+  }
+
+  function buildSafetySupportHtml() {
+    if (!state.specificScoring?.urgentSupportNeeded) return "";
+    const copy = getSafetySupportCopy();
+    return `
+      <section class="nm-safety-support" role="alert" aria-live="assertive">
+        <strong>${escapeHtml(copy.title)}</strong>
+        <p>${escapeHtml(copy.text)}</p>
+        <p>${escapeHtml(copy.emergency)}</p>
+      </section>
+    `;
+  }
+
+  function showImmediateSafetySupport() {
+    if (!state.specificScoring?.urgentSupportNeeded || typeof document === "undefined") return;
+
+    const existing = document.getElementById("nmSafetySupportModal");
+    if (existing) existing.remove();
+
+    const copy = getSafetySupportCopy();
+    const modal = document.createElement("div");
+    modal.id = "nmSafetySupportModal";
+    modal.className = "nm-safety-modal";
+    modal.setAttribute("role", "dialog");
+    modal.setAttribute("aria-modal", "true");
+    modal.setAttribute("aria-labelledby", "nmSafetySupportTitle");
+    modal.innerHTML = `
+      <div class="nm-safety-modal-panel">
+        <div class="nm-safety-modal-mark" aria-hidden="true">!</div>
+        <h2 id="nmSafetySupportTitle">${escapeHtml(copy.title)}</h2>
+        <p>${escapeHtml(copy.text)}</p>
+        <p class="nm-safety-emergency">${escapeHtml(copy.emergency)}</p>
+        <button type="button" data-nm-safety-ack>${escapeHtml(copy.acknowledge)}</button>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    const button = modal.querySelector("[data-nm-safety-ack]");
+    if (button) {
+      button.focus();
+      button.addEventListener("click", () => {
+        state.safetySupportAcknowledged = true;
+        modal.remove();
+        saveDraft("safety_support_acknowledged");
+      });
+    }
+  }
+
   function renderSummary() {
     const t = getUI();
     const container = document.getElementById("summarySection");
@@ -7671,18 +8260,28 @@
       (state.resultSummary && state.resultSummary.summaryText && state.resultSummary.summaryText.en) ||
       "";
     const topSubdomains = (state.resultSummary && state.resultSummary.topSubdomains) || [];
-    const topPayCopy =
-      state.lang === "hu"
-        ? {
-            title: "A teljes riport seg\u00edt \u00e9rthet\u0151en l\u00e1tni a mint\u00e1zatot.",
-            text: "Koroszt\u00e1lyi kontextust, r\u00e9szletes ter\u00fcleti bont\u00e1st \u00e9s gyakorlati k\u00f6vetkez\u0151 l\u00e9p\u00e9seket kapsz PDF-ben.",
-            label: t.summaryPayCta || "Fizet\u00e9s \u00e9s teljes riport"
-          }
-        : {
-            title: "The full report helps make the pattern easier to understand.",
-            text: "You get age-aware context, detailed area breakdowns, and practical next steps in a PDF report.",
-            label: t.summaryPayCta || t.pay || "Pay and get full report"
-          };
+    const topPayCopy = getSummaryPayCopy(t);
+    const detailsCopy = getSummaryDetailsCopy();
+    const topSubdomainsHtml = topSubdomains.length
+      ? `
+        <div class="nm-summary-card">
+          <h4>${t.specificProfileTitle || "Strongest areas"}</h4>
+          ${topSubdomains
+            .map(
+              (item) => `
+                <div class="nm-subdomain-row">
+                  <span>
+                    <span class="nm-subdomain-label">${getSubdomainLabel(item.key, state.detectedRisk)}</span>
+                    <span class="nm-subdomain-meta">${escapeHtml(item.key)}</span>
+                  </span>
+                  <strong>${item.average.toFixed(2)}</strong>
+                </div>
+              `
+            )
+            .join("")}
+        </div>
+      `
+      : "";
 
     container.innerHTML = `
       <div>
@@ -7692,6 +8291,8 @@
             ${t.summaryNote || ""}
           </div>
         </div>
+
+        ${buildSafetySupportHtml()}
 
         <div class="nm-summary-top-cta">
           <div class="nm-summary-top-cta-copy">
@@ -7719,43 +8320,21 @@
 
         ${buildReportPreviewV2Html()}
 
-        ${buildDecisionExplanationHtml()}
-
         ${buildSummaryConversionHtml()}
 
-        ${buildSummaryNextStepHtml()}
-
-        ${buildSummaryScienceHtml()}
-
-        ${
-          topSubdomains.length
-            ? `
-          <div class="nm-summary-card">
-            <h4>
-              ${t.specificProfileTitle || "Strongest areas"}
-            </h4>
-
-            ${topSubdomains
-              .map(
-                (item) => `
-              <div class="nm-subdomain-row">
-                <span>
-                  <span class="nm-subdomain-label">${getSubdomainLabel(item.key, state.detectedRisk)}</span>
-                  <span class="nm-subdomain-meta">${escapeHtml(item.key)}</span>
-                </span>
-                <strong>${item.average.toFixed(2)}</strong>
-              </div>
-            `
-              )
-              .join("")}
+        <details class="nm-summary-more">
+          <summary>
+            <span>
+              <strong>${escapeHtml(detailsCopy.label)}</strong>
+              <small>${escapeHtml(detailsCopy.intro)}</small>
+            </span>
+          </summary>
+          <div class="nm-summary-more-content">
+            ${buildDecisionExplanationHtml()}
+            ${buildSummaryScienceHtml()}
+            ${topSubdomainsHtml}
           </div>
-        `
-            : ""
-        }
-
-        ${buildCheckoutReviewHtml(t)}
-
-        ${buildPrePaymentTrustHtml()}
+        </details>
 
         <div class="nm-summary-warning">
           ${escapeHtml(getSummaryWarningText())}
@@ -7797,8 +8376,6 @@
   }
 
   function renderCurrentStep() {
-    scrollToQuestionnaireTop();
-
     const t = getUI();
 
     const triageSection = document.getElementById("triageSection");
@@ -7858,6 +8435,7 @@
     updateProgress();
     updateResumeBanner();
     updatePackageCheckoutButtons();
+    scheduleQuestionnaireTopScroll("auto");
   }
 
   function nextStep() {
@@ -7939,6 +8517,8 @@
         state.secondaryRisk
       );
 
+      state.safetySupportAcknowledged = false;
+
       trackSchemaEvent("nm_specific_completed", {
         funnel_step: "specific_completed",
         needs_extra: state.needsExtra,
@@ -7949,6 +8529,7 @@
 
       state.step = "summary";
       renderCurrentStep();
+      showImmediateSafetySupport();
       saveDraft("specific_completed");
     }
   }
@@ -8005,6 +8586,10 @@
       }
     }
 
+    if (state.specificScoring?.urgentSupportNeeded && !state.safetySupportAcknowledged) {
+      errors.push("A biztonsági tájékoztatás visszaigazolása szükséges.");
+    }
+
     if (errors.length) {
       console.error("Checkout validation failed:", errors);
       return { ok: false, errors };
@@ -8014,7 +8599,7 @@
     return { ok: true };
   }
 
-  function buildCheckoutPayload(consentReceipt = null) {
+  function buildCheckoutPayload(consentReceipt = null, purchaseConfirmations = null) {
     const childAge = getChildAgeValue();
 
     return {
@@ -8030,9 +8615,18 @@
             token: consentReceipt.token || ""
           }
         : null,
+      purchaseConfirmations: purchaseConfirmations
+        ? {
+            digitalPerformanceRequested:
+              purchaseConfirmations.digitalPerformanceRequested === true,
+            withdrawalRightAcknowledged:
+              purchaseConfirmations.withdrawalRightAcknowledged === true
+          }
+        : null,
       payload: {
         childAge,
         ageYears: childAge,
+        selectionSeed: state.selectionSeed,
         triageQuestions: state.triageQuestions.map((q) => ({ id: q.id })),
         triageAnswers: state.triageAnswers,
         triageScores: state.triageScores,
@@ -8045,11 +8639,17 @@
         specificScoring: state.specificScoring,
         specificProfile: state.specificProfile,
         resultSummary: state.resultSummary,
+        safetySupport: {
+          urgentSupportNeeded: state.specificScoring?.urgentSupportNeeded === true,
+          criticalSupportNeeded: state.specificScoring?.criticalSupportNeeded === true,
+          signals: state.specificScoring?.safetySignals || [],
+          acknowledged: state.safetySupportAcknowledged === true
+        },
 
         extraQuestions: state.extraQuestions.map((q) => ({ id: q.id })),
         extraAnswers: state.extraAnswers,
 
-        questionnaireVersion: "v5-browser-adaptive-picker"
+        questionnaireVersion: "v6-safety-aware-adaptive-picker"
       }
     };
   }
@@ -8081,6 +8681,96 @@
 
   function getCustomerCopy(copies, lang = state.lang) {
     return copies[lang] || copies.en || copies.hu || {};
+  }
+
+  function requestPurchaseConfirmations() {
+    const copy = getCustomerCopy({
+      hu: {
+        title: "Fizetés előtti nyilatkozatok",
+        lead: "A riport digitális tartalom, amelynek elkészítése a sikeres fizetés után azonnal megkezdődik.",
+        performance: "Kifejezetten kérem, hogy a digitális riport teljesítése a fizetés után azonnal megkezdődjön.",
+        withdrawal: "Tudomásul veszem, hogy a teljesítés megkezdése után, a jogszabályi feltételek teljesülése esetén elveszíthetem a 14 napos elállási jogomat.",
+        confirm: "Elfogadom és tovább a fizetéshez",
+        cancel: "Mégse"
+      },
+      en: {
+        title: "Pre-purchase confirmations",
+        lead: "The report is digital content and its preparation starts immediately after successful payment.",
+        performance: "I expressly request that delivery of the digital report begin immediately after payment.",
+        withdrawal: "I acknowledge that once performance begins, I may lose my 14-day withdrawal right where the legal conditions are met.",
+        confirm: "Accept and continue to payment",
+        cancel: "Cancel"
+      },
+      de: { title: "Bestätigungen vor dem Kauf", lead: "Der Bericht ist ein digitaler Inhalt und wird unmittelbar nach erfolgreicher Zahlung erstellt.", performance: "Ich verlange ausdrücklich, dass die Bereitstellung des digitalen Berichts sofort nach der Zahlung beginnt.", withdrawal: "Ich nehme zur Kenntnis, dass ich nach Beginn der Leistung mein 14-tägiges Widerrufsrecht verlieren kann, sofern die gesetzlichen Voraussetzungen erfüllt sind.", confirm: "Akzeptieren und zur Zahlung", cancel: "Abbrechen" },
+      it: { title: "Conferme prima dell'acquisto", lead: "Il report è un contenuto digitale e la sua preparazione inizia subito dopo il pagamento.", performance: "Chiedo espressamente che la fornitura del report digitale inizi subito dopo il pagamento.", withdrawal: "Prendo atto che, una volta iniziata l'esecuzione, potrei perdere il diritto di recesso di 14 giorni se ricorrono le condizioni di legge.", confirm: "Accetta e continua al pagamento", cancel: "Annulla" },
+      es: { title: "Confirmaciones antes de la compra", lead: "El informe es contenido digital y su preparación comienza justo después del pago.", performance: "Solicito expresamente que la entrega del informe digital comience inmediatamente después del pago.", withdrawal: "Reconozco que, una vez iniciada la ejecución, puedo perder el derecho de desistimiento de 14 días cuando se cumplan las condiciones legales.", confirm: "Aceptar y continuar al pago", cancel: "Cancelar" },
+      zh: { title: "付款前确认", lead: "报告属于数字内容，付款成功后将立即开始制作。", performance: "我明确要求在付款后立即开始提供数字报告。", withdrawal: "我知悉，在履行开始且符合法律条件时，我可能失去14天撤回权。", confirm: "接受并继续付款", cancel: "取消" },
+      ja: { title: "購入前の確認", lead: "レポートはデジタルコンテンツであり、支払い完了後すぐに作成が始まります。", performance: "支払い後、デジタルレポートの提供を直ちに開始するよう明示的に依頼します。", withdrawal: "法的条件を満たす場合、提供開始後は14日間の撤回権を失う可能性があることを理解しました。", confirm: "同意して支払いへ進む", cancel: "キャンセル" },
+      ar: { title: "تأكيدات ما قبل الشراء", lead: "التقرير محتوى رقمي ويبدأ إعداده فور نجاح الدفع.", performance: "أطلب صراحة بدء تقديم التقرير الرقمي فور إتمام الدفع.", withdrawal: "أقر بأنني قد أفقد حق الانسحاب خلال 14 يوما بعد بدء التنفيذ عند استيفاء الشروط القانونية.", confirm: "أوافق وأتابع إلى الدفع", cancel: "إلغاء" },
+      pl: { title: "Potwierdzenia przed zakupem", lead: "Raport jest treścią cyfrową, a jego przygotowanie rozpoczyna się natychmiast po płatności.", performance: "Wyraźnie żądam rozpoczęcia dostarczania raportu cyfrowego natychmiast po płatności.", withdrawal: "Przyjmuję do wiadomości, że po rozpoczęciu świadczenia mogę utracić 14-dniowe prawo odstąpienia, jeśli spełnione są warunki prawne.", confirm: "Akceptuję i przechodzę do płatności", cancel: "Anuluj" },
+      pt: { title: "Confirmações antes da compra", lead: "O relatório é conteúdo digital e começa a ser preparado logo após o pagamento.", performance: "Solicito expressamente que o fornecimento do relatório digital comece imediatamente após o pagamento.", withdrawal: "Reconheço que, após o início da execução, posso perder o direito de livre resolução de 14 dias quando se verificarem as condições legais.", confirm: "Aceitar e continuar para o pagamento", cancel: "Cancelar" },
+      fr: { title: "Confirmations avant l'achat", lead: "Le rapport est un contenu numérique dont la préparation commence juste après le paiement.", performance: "Je demande expressément que la fourniture du rapport numérique commence immédiatement après le paiement.", withdrawal: "Je reconnais qu'après le début de l'exécution, je peux perdre mon droit de rétractation de 14 jours lorsque les conditions légales sont remplies.", confirm: "Accepter et continuer vers le paiement", cancel: "Annuler" }
+    });
+
+    return new Promise((resolve) => {
+      const existing = document.getElementById("nmPurchaseConfirmOverlay");
+      if (existing) existing.remove();
+
+      const overlay = document.createElement("div");
+      overlay.id = "nmPurchaseConfirmOverlay";
+      overlay.setAttribute("role", "dialog");
+      overlay.setAttribute("aria-modal", "true");
+      overlay.setAttribute("aria-labelledby", "nmPurchaseConfirmTitle");
+      overlay.dir = state.lang === "ar" ? "rtl" : "ltr";
+      overlay.innerHTML = `
+        <style>
+          #nmPurchaseConfirmOverlay{position:fixed;inset:0;z-index:2147483646;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(15,32,51,.68)}
+          #nmPurchaseConfirmOverlay .nm-purchase-dialog{width:min(620px,100%);max-height:calc(100vh - 40px);overflow:auto;background:#fff;border:1px solid #cfe2ef;border-radius:8px;padding:24px;box-shadow:0 24px 70px rgba(15,32,51,.25);color:#102033}
+          #nmPurchaseConfirmOverlay h2{margin:0 0 8px;font-size:24px;line-height:1.25;letter-spacing:0}
+          #nmPurchaseConfirmOverlay p{margin:0 0 18px;color:#42566a;line-height:1.55}
+          #nmPurchaseConfirmOverlay label{display:flex;align-items:flex-start;gap:10px;margin:12px 0;padding:13px;border:1px solid #d7e5ef;border-radius:6px;background:#f7fbfd;line-height:1.45;cursor:pointer}
+          #nmPurchaseConfirmOverlay input{width:20px;height:20px;flex:0 0 auto;margin-top:1px}
+          #nmPurchaseConfirmOverlay .nm-purchase-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px}
+          #nmPurchaseConfirmOverlay button{min-height:44px;padding:10px 16px;border:1px solid #b9cddd;border-radius:6px;background:#edf5fa;color:#102033;font:inherit;font-weight:800;cursor:pointer}
+          #nmPurchaseConfirmOverlay button[data-confirm]{border-color:#0799d2;background:#0799d2;color:#fff}
+          #nmPurchaseConfirmOverlay button:disabled{opacity:.45;cursor:not-allowed}
+        </style>
+        <div class="nm-purchase-dialog">
+          <h2 id="nmPurchaseConfirmTitle">${copy.title}</h2>
+          <p>${copy.lead}</p>
+          <label><input type="checkbox" data-performance><span>${copy.performance}</span></label>
+          <label><input type="checkbox" data-withdrawal><span>${copy.withdrawal}</span></label>
+          <div class="nm-purchase-actions">
+            <button type="button" data-cancel>${copy.cancel}</button>
+            <button type="button" data-confirm disabled>${copy.confirm}</button>
+          </div>
+        </div>`;
+      document.body.appendChild(overlay);
+
+      const performance = overlay.querySelector("[data-performance]");
+      const withdrawal = overlay.querySelector("[data-withdrawal]");
+      const confirm = overlay.querySelector("[data-confirm]");
+      const finish = (value) => {
+        document.removeEventListener("keydown", onKeydown);
+        overlay.remove();
+        resolve(value);
+      };
+      const update = () => {
+        confirm.disabled = !(performance.checked && withdrawal.checked);
+      };
+      const onKeydown = (event) => {
+        if (event.key === "Escape") finish(null);
+      };
+      performance.addEventListener("change", update);
+      withdrawal.addEventListener("change", update);
+      overlay.querySelector("[data-cancel]").addEventListener("click", () => finish(null));
+      confirm.addEventListener("click", () => finish({
+        digitalPerformanceRequested: true,
+        withdrawalRightAcknowledged: true
+      }));
+      document.addEventListener("keydown", onKeydown);
+      requestAnimationFrame(() => performance.focus());
+    });
   }
 
   function getLandingProofCopy(lang = state.lang) {
@@ -8689,6 +9379,9 @@
     if (/not a valid url/i.test(message)) return copy.invalidUrl;
     if (/failed to fetch|network|load failed/i.test(message)) return copy.network;
     if (/too many requests/i.test(message)) return copy.rate;
+    if (code === "INVALID_CHECKOUT_PAYLOAD" || /invalid checkout payload/i.test(message)) {
+      return t.checkoutError || copy.fallback;
+    }
     if (code === "CHECKOUT_NOT_READY" || /checkout is temporarily unavailable/i.test(message)) {
       return t.checkoutError || copy.fallback;
     }
@@ -8744,7 +9437,10 @@
       return;
     }
 
-    const payload = buildCheckoutPayload(consentReceipt);
+    const purchaseConfirmations = await requestPurchaseConfirmations();
+    if (!purchaseConfirmations) return;
+
+    const payload = buildCheckoutPayload(consentReceipt, purchaseConfirmations);
     const selectedPackage = getSelectedClientPackage();
     saveDraft("checkout_started");
 
@@ -8776,6 +9472,10 @@
           (data && data.error) || t.checkoutError || "Checkout error"
         );
         checkoutError.code = (data && data.code) || "";
+        checkoutError.details = Array.isArray(data && data.details) ? data.details : [];
+        if (checkoutError.details.length) {
+          console.error("Checkout payload validation details:", checkoutError.details);
+        }
         throw checkoutError;
       }
 
@@ -8803,6 +9503,7 @@
         }
       }
 
+      clearDraft();
       window.location.href = data.checkoutUrl;
     } catch (error) {
       console.error("Checkout error:", error);
@@ -8811,7 +9512,7 @@
     }
   }
 
-  window.selectLang = async function (lang) {
+  window.selectLang = function (lang) {
     const previousLang = state.lang || getLang();
 
     localStorage.setItem("nm_lang", lang);
@@ -8836,13 +9537,6 @@
 
     markLanguageConfirmed();
     hideModal(true);
-
-    try {
-      await ensureLegalConsentForCurrentLanguage();
-    } catch (error) {
-      console.error("Legal consent flow failed after language selection:", error);
-      showModal(true);
-    }
   };
 
   window.NM_SET_LANGUAGE = window.selectLang;
@@ -8883,17 +9577,17 @@
 
       setEngineBootStatus("render", "Nyitóoldal frissítése...", "loading");
       applyLang(state.lang);
+      if (
+        state.step === "summary" &&
+        state.specificScoring?.urgentSupportNeeded &&
+        !state.safetySupportAcknowledged
+      ) {
+        setTimeout(showImmediateSafetySupport, 0);
+      }
       await ensureLegalManager();
 
       if (!hasConfirmedLanguage()) {
         showModal(true);
-      } else {
-        try {
-          await ensureLegalConsentForCurrentLanguage();
-        } catch (error) {
-          console.error("Stored legal consent is unavailable or expired:", error);
-          showModal(true);
-        }
       }
 
       bindDraftAutosave();

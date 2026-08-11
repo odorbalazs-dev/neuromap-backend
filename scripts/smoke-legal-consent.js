@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import vm from "vm";
 
 const root = process.cwd();
 
@@ -19,6 +20,77 @@ const legalContentSource = read("public/webflow/legal-content.js");
 const legalConsentSource = read("public/webflow/legal-consent.js");
 const engineSource = read("public/webflow/engine.js");
 const checkoutPagesSource = read("public/webflow/checkout-pages.js");
+
+const legalContext = { window: {} };
+vm.createContext(legalContext);
+vm.runInContext(legalContentSource, legalContext);
+
+const legalContent = legalContext.window.NM_LEGAL_CONTENT;
+
+assert(
+  legalContent && typeof legalContent === "object",
+  "Legal content bundle did not expose NM_LEGAL_CONTENT"
+);
+
+const requiredUiKeys = [
+  "termsTitle",
+  "privacyTitle",
+  "readAll",
+  "back",
+  "continue",
+  "accept",
+  "close",
+  "withdraw",
+  "optional",
+  "required",
+  "legalLinks",
+  "termsLink",
+  "privacyLink"
+];
+
+supportedLangs.forEach((lang) => {
+  const locale = legalContent[lang];
+  assert(locale && typeof locale === "object", `Missing evaluated legal locale: ${lang}`);
+  assert(locale.terms.length === 11, `${lang} terms must contain 11 sections`);
+  assert(locale.privacy.length === 16, `${lang} privacy notice must contain 16 sections`);
+  assert(locale.termsChecks.length === 3, `${lang} terms must contain 3 acknowledgements`);
+  assert(locale.privacyChecks.length === 2, `${lang} privacy notice must contain 2 consents`);
+
+  requiredUiKeys.forEach((key) => {
+    assert(
+      typeof locale.ui[key] === "string" && locale.ui[key].trim().length > 0,
+      `${lang} legal UI is missing: ${key}`
+    );
+  });
+
+  [...locale.terms, ...locale.privacy].forEach((section, index) => {
+    assert(
+      Array.isArray(section) &&
+        section.length === 2 &&
+        section.every((value) => typeof value === "string" && value.trim().length > 0),
+      `${lang} legal section ${index + 1} is incomplete`
+    );
+  });
+
+  if (lang !== "en") {
+    assert(
+      locale.ui.privacyTitle !== legalContent.en.ui.privacyTitle &&
+        locale.terms[0][1] !== legalContent.en.terms[0][1],
+      `${lang} legal content unexpectedly falls back to English`
+    );
+  }
+});
+
+[legalContentSource, legalConsentSource, engineSource, checkoutPagesSource].forEach(
+  (source, index) => {
+    ["\uFFFD", "Ã©", "Ã¡", "Ã¼", "Â ", "Â\u00a0", "â€", "ðŸ"].forEach((fragment) => {
+      assert(
+        !source.includes(fragment),
+        `Legal/frontend source ${index + 1} contains a broken encoding marker: ${fragment}`
+      );
+    });
+  }
+);
 
 supportedLangs.forEach((lang) => {
   assert(
@@ -68,11 +140,46 @@ assert(
 );
 
 assert(
-  engineSource.includes("20260810-checkout-payload-v1") &&
+  legalConsentSource.includes('role="dialog"') &&
+    legalConsentSource.includes('aria-modal="true"') &&
+    legalConsentSource.includes('event.key === "Escape"') &&
+    legalConsentSource.includes('event.key !== "Tab"') &&
+    legalConsentSource.includes("restoreFocusTarget"),
+  "Legal consent dialogs must trap focus, support Escape, and restore focus"
+);
+
+assert(
+  legalConsentSource.includes("installReadGate") &&
+    legalConsentSource.includes("termsScrollCompleted: termsResult.termsScrollCompleted === true") &&
+    legalConsentSource.includes("privacyScrollCompleted: isReadComplete()") &&
+    legalConsentSource.includes('data-action="cancel"'),
+  "Legal consent must record actual reading completion and retain an explicit decline path"
+);
+
+assert(
+  legalConsentSource.includes("/verify") &&
+    legalConsentSource.includes('data-verification-code') &&
+    legalConsentSource.includes("x-privacy-request-token") &&
+    legalConsentSource.includes("20260726-verified-rights-v3"),
+  "Verified privacy-rights workflow or legal version marker is incomplete"
+);
+
+assert(
+  engineSource.includes("20260811-step-scroll-v1") &&
     engineSource.includes("ensureLegalConsentForCurrentLanguage") &&
     engineSource.includes("consentReceipt.token") &&
-    engineSource.includes("sanitizeAnalyticsPayload"),
+    engineSource.includes("sanitizeAnalyticsPayload") &&
+    engineSource.includes("requestPurchaseConfirmations") &&
+    engineSource.includes("digitalPerformanceRequested: true") &&
+    engineSource.includes("withdrawalRightAcknowledged: true"),
   "Engine legal consent integration is incomplete"
+);
+
+assert(
+  engineSource.indexOf("ensureLegalConsentForCurrentLanguage") !==
+    engineSource.indexOf("requestPurchaseConfirmations") &&
+    engineSource.includes("const purchaseConfirmations = await requestPurchaseConfirmations()"),
+  "Purchase confirmations must remain a separate, just-in-time checkout step"
 );
 
 [
@@ -94,7 +201,7 @@ assert(
 });
 
 assert(
-  checkoutPagesSource.includes("20260715-gdpr-checkout-v1") &&
+  checkoutPagesSource.includes("20260721-customer-experience-v2") &&
     checkoutPagesSource.includes("isAnalyticsAllowed") &&
     checkoutPagesSource.includes("sanitizeCheckoutAnalyticsPayload") &&
     checkoutPagesSource.includes("installPrivacyDefaults();"),

@@ -93,7 +93,11 @@ function buildSpecificProfile(kind, scoring) {
   };
 }
 
-function buildBasePayload({ includeExtra = false, packageCode = "standard_v1" } = {}) {
+function buildBasePayload({
+  includeExtra = false,
+  packageCode = "standard_v1",
+  childAge = 7
+} = {}) {
   const triageQuestions = selectTriageQuestions();
   const triageAnswers = triageQuestions.map((question) => (
     includeExtra || question.domain === "ADHD" ? 3 : 1
@@ -127,17 +131,21 @@ function buildBasePayload({ includeExtra = false, packageCode = "standard_v1" } 
   return {
     name: "Smoke Tester",
     email: "smoke@example.com",
-    childAge: 7,
-    ageYears: 7,
+    childAge,
+    ageYears: childAge,
     lang: "hu",
     packageCode,
     consent: {
       id: "123e4567-e89b-12d3-a456-426614174000",
       token: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
     },
+    purchaseConfirmations: {
+      digitalPerformanceRequested: true,
+      withdrawalRightAcknowledged: true
+    },
     payload: {
-      childAge: 7,
-      ageYears: 7,
+      childAge,
+      ageYears: childAge,
       triageQuestions: triageQuestions.map((question) => toPayloadQuestion(question)),
       triageAnswers,
       triageScores,
@@ -170,17 +178,22 @@ function buildBasePayload({ includeExtra = false, packageCode = "standard_v1" } 
 }
 
 function expectValidPayload(name, payload) {
-  const validation = validateCheckoutPayload(payload);
+  const validationInput = stripCheckoutQuestionMetadata(payload);
+  const validation = validateCheckoutPayload(validationInput);
   assert(validation.ok, `${name} should validate. Errors: ${validation.errors.join("; ")}`);
 
-  const normalized = normalizeCheckoutPayload(payload);
+  const normalized = normalizeCheckoutPayload(validationInput);
   const canonical = canonicalizeQuestionnairePayload(normalized.payload, normalized.lang);
   assert(normalized.email === payload.email, `${name} should keep lowercase email.`);
-  assert(normalized.payload.childAge === 7, `${name} should keep childAge.`);
-  assert(normalized.payload.ageYears === 7, `${name} should keep ageYears.`);
+  assert(normalized.payload.childAge === Number(payload.payload.childAge), `${name} should keep childAge.`);
+  assert(normalized.payload.ageYears === Number(payload.payload.ageYears), `${name} should keep ageYears.`);
   assert(normalized.packageCode === payload.packageCode, `${name} should keep the selected package code.`);
   assert(normalized.consent.id === payload.consent.id, `${name} should keep consent id.`);
   assert(normalized.consent.token === payload.consent.token, `${name} should keep consent token.`);
+  assert(normalized.purchaseConfirmations.digitalPerformanceRequested === true,
+    `${name} should keep the immediate digital-performance request.`);
+  assert(normalized.purchaseConfirmations.withdrawalRightAcknowledged === true,
+    `${name} should keep the withdrawal-right acknowledgement.`);
   assert(normalized.payload.triageQuestions.length === 25, `${name} should keep 25 triage questions.`);
   assert(normalized.payload.specificQuestions.length === 30, `${name} should keep 30 specific questions.`);
   assert(canonical.detectedRisk === "ADHD", `${name} should derive ADHD on the server.`);
@@ -217,9 +230,36 @@ function main() {
     secondaryRisk: extraNormalized.payload.secondaryRisk
   });
 
+  const legacyMetadataPayload = buildBasePayload({
+    includeExtra: true,
+    packageCode: "plus_v1",
+    childAge: 8
+  });
+  ["triageQuestions", "specificQuestions", "extraQuestions"].forEach((key) => {
+    legacyMetadataPayload.payload[key] = legacyMetadataPayload.payload[key].map(
+      (question, index) => ({
+        ...question,
+        text: `Legacy display text ${index + 1}`,
+        domain: "ADHD",
+        subdomain: "legacy",
+        stemKey: `legacy_${index + 1}`,
+        weight: 1,
+        reverse: false
+      })
+    );
+  });
+  const rawLegacyValidation = validateCheckoutPayload(legacyMetadataPayload);
+  assert(!rawLegacyValidation.ok, "raw legacy question metadata should remain outside the strict contract.");
+  const legacyNormalized = expectValidPayload("legacy metadata payload", legacyMetadataPayload);
+  assert(
+    Object.keys(legacyNormalized.payload.triageQuestions[0]).includes("text"),
+    "canonical questions should be rebuilt from the server bank after metadata stripping."
+  );
+  console.log("legacy metadata payload normalized and canonicalized safely");
+
   const brokenExtraPayload = structuredClone(extraPayload);
   brokenExtraPayload.payload.extraAnswers = brokenExtraPayload.payload.extraAnswers.slice(0, 4);
-  const brokenValidation = validateCheckoutPayload(brokenExtraPayload);
+  const brokenValidation = validateCheckoutPayload(stripCheckoutQuestionMetadata(brokenExtraPayload));
   assert(!brokenValidation.ok, "broken extra payload should fail validation.");
   assert(
     brokenValidation.errors.some((error) => error.includes("extraAnswers")),
@@ -277,7 +317,9 @@ function main() {
   console.log("cached 25+30+5 engine payload accepted after compatibility cleanup");
 
   const invalidPackagePayload = buildBasePayload({ packageCode: "custom_price_001" });
-  const invalidPackageValidation = validateCheckoutPayload(invalidPackagePayload);
+  const invalidPackageValidation = validateCheckoutPayload(
+    stripCheckoutQuestionMetadata(invalidPackagePayload)
+  );
   assert(!invalidPackageValidation.ok, "invalid package payload should fail validation.");
   assert(
     invalidPackageValidation.errors.includes("Invalid packageCode."),

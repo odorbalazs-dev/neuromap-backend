@@ -149,6 +149,22 @@ export async function updateStripeSessionId(sessionId, stripeSessionId) {
   return result.rows[0] || null;
 }
 
+export async function deletePendingCheckoutSession(sessionId) {
+  const result = await db.query(
+    `
+    DELETE FROM sessions
+    WHERE id = $1
+      AND payment_status = 'pending'
+      AND analysis_status = 'pending'
+      AND stripe_session_id IS NULL
+    RETURNING id, consent_event_id
+    `,
+    [sessionId]
+  );
+
+  return result.rows[0] || null;
+}
+
 export async function markCheckoutStarted(sessionId, checkoutUrl) {
   const recoveryToken = randomBytes(32).toString("hex");
 

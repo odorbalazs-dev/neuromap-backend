@@ -30,6 +30,19 @@ R = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
 XML = "http://www.w3.org/XML/1998/namespace"
 
 DOCUMENT_ID = "NMK-SEC-REG-001"
+COVER_SUBTITLE = "Belső biztonsági kontroll- és bizonyítéknyilvántartás"
+COVER_NOTICE_TITLE = "BELSŐ MŰSZAKI IGAZOLÁS - NEM FÜGGETLEN TANÚSÍTVÁNY"
+COVER_NOTICE_BODY = (
+    "A dokumentum a megjelölt forrásállapot belső bizonyítékait rögzíti. "
+    "Külső audit, jogi szakvélemény vagy tanúsítás hiányában ilyen állításra nem használható."
+)
+FOOTER_LABEL = "Biztonsági javítások és bizonyítékok nyilvántartása"
+FOOTER_PAGE_LABEL = "Oldal "
+HEADER_CLASSIFICATION = "BELSŐ"
+CORE_TITLE = "Biztonsági javítások és bizonyítékok nyilvántartása"
+CORE_DESCRIPTION_PREFIX = "Belső biztonsági bizonyítéknyilvántartás"
+CORE_COMMIT_LABEL = "vizsgált commit"
+ARTIFACT_LIMITATION = "Internal evidence artifact; not an independent security or legal certification"
 ACCENT = "098DCC"
 ACCENT_DARK = "075985"
 INK = "14213D"
@@ -248,25 +261,24 @@ def render_markdown(markdown: str) -> tuple[str, dict[str, int]]:
     body.append(paragraph("NEUROMAP KIDS", style="Subtitle", after=160, raw_runs=run("NEUROMAP KIDS", bold=True, color=ACCENT, size=22)))
     body.append(paragraph(title, style="Title", after=180, keep_next=True))
     body.append(paragraph(
-        "Belső biztonsági kontroll- és bizonyítéknyilvántartás",
+        COVER_SUBTITLE,
         style="Subtitle", after=260, raw_runs=run(
-            "Belső biztonsági kontroll- és bizonyítéknyilvántartás",
+            COVER_SUBTITLE,
             color=MUTED, size=24
         )
     ))
     body.append(table(metadata, header=False, widths=[2800, 7380]))
     body.append(paragraph(
-        "BELSŐ MŰSZAKI IGAZOLÁS - NEM FÜGGETLEN TANÚSÍTVÁNY",
+        COVER_NOTICE_TITLE,
         style="Callout", before=120, after=100, shade=WARNING,
         border_color=WARNING_LINE,
         raw_runs=run(
-            "BELSŐ MŰSZAKI IGAZOLÁS - NEM FÜGGETLEN TANÚSÍTVÁNY",
+            COVER_NOTICE_TITLE,
             bold=True, color="9A4D00", size=19
         )
     ))
     body.append(paragraph(
-        "A dokumentum a megjelölt forrásállapot belső bizonyítékait rögzíti. "
-        "Külső audit, jogi szakvélemény vagy tanúsítás hiányában ilyen állításra nem használható.",
+        COVER_NOTICE_BODY,
         style="Callout", after=180, shade=WARNING, border_color=WARNING_LINE
     ))
     body.append(page_break())
@@ -434,7 +446,7 @@ def header_xml() -> str:
 <w:hdr xmlns:w="{W}" xmlns:r="{R}">
   <w:p><w:pPr><w:tabs><w:tab w:val="right" w:pos="10180"/></w:tabs><w:pBdr><w:bottom w:val="single" w:sz="5" w:space="5" w:color="{LINE}"/></w:pBdr><w:spacing w:after="80"/></w:pPr>
     {run("NEUROMAP KIDS", bold=True, color=ACCENT, size=17)}
-    <w:r><w:tab/></w:r>{run(DOCUMENT_ID + " · BELSŐ", bold=True, color=MUTED, size=16)}
+    <w:r><w:tab/></w:r>{run(DOCUMENT_ID + " · " + HEADER_CLASSIFICATION, bold=True, color=MUTED, size=16)}
   </w:p>
 </w:hdr>'''
 
@@ -453,8 +465,8 @@ def footer_xml() -> str:
     return f'''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <w:ftr xmlns:w="{W}" xmlns:r="{R}">
   <w:p><w:pPr><w:tabs><w:tab w:val="right" w:pos="10180"/></w:tabs><w:pBdr><w:top w:val="single" w:sz="5" w:space="5" w:color="{LINE}"/></w:pBdr><w:spacing w:before="80"/></w:pPr>
-    {run("Biztonsági javítások és bizonyítékok nyilvántartása", color=MUTED, size=16)}
-    <w:r><w:tab/></w:r>{run("Oldal ", color=MUTED, size=16)}{field("PAGE", "1")}{run(" / ", color=MUTED, size=16)}{field("NUMPAGES", "1")}
+    {run(FOOTER_LABEL, color=MUTED, size=16)}
+    <w:r><w:tab/></w:r>{run(FOOTER_PAGE_LABEL, color=MUTED, size=16)}{field("PAGE", "1")}{run(" / ", color=MUTED, size=16)}{field("NUMPAGES", "1")}
   </w:p>
 </w:ftr>'''
 
@@ -519,8 +531,8 @@ def settings_xml() -> str:
 
 
 def core_xml(commit: str, timestamp: str) -> str:
-    title = escape("Biztonsági javítások és bizonyítékok nyilvántartása")
-    description = escape(f"Belső biztonsági bizonyítéknyilvántartás; vizsgált commit: {commit}")
+    title = escape(CORE_TITLE)
+    description = escape(f"{CORE_DESCRIPTION_PREFIX}; {CORE_COMMIT_LABEL}: {commit}")
     return f'''<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dcmitype="http://purl.org/dc/dcmitype/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <dc:title>{title}</dc:title><dc:subject>{DOCUMENT_ID}</dc:subject><dc:creator>NeuroMap Kids</dc:creator><cp:lastModifiedBy>Codex belső dokumentumgenerátor</cp:lastModifiedBy><dc:description>{description}</dc:description><dcterms:created xsi:type="dcterms:W3CDTF">{timestamp}</dcterms:created><dcterms:modified xsi:type="dcterms:W3CDTF">{timestamp}</dcterms:modified>
@@ -600,7 +612,7 @@ def main() -> int:
         "parsed_counts": parsed_counts,
         "structural_counts": structural_counts,
         "validation": "DOCX ZIP package and every XML relationship part parsed successfully",
-        "limitation": "Internal evidence artifact; not an independent security or legal certification",
+        "limitation": ARTIFACT_LIMITATION,
     }
     MANIFEST.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 

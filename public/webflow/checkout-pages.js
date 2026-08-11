@@ -5,7 +5,7 @@
 (function () {
   if (typeof window === "undefined" || typeof document === "undefined") return;
 
-  const CHECKOUT_PAGES_VERSION = "20260715-gdpr-checkout-v1";
+  const CHECKOUT_PAGES_VERSION = "20260721-customer-experience-v2";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
   const ANALYTICS_CONSENT_KEY = "nm_analytics_consent_v1";
   const DEFAULT_API_BASE_URL = "https://neuromap-backend-production-969d.up.railway.app";
@@ -59,7 +59,7 @@
     statusSupportReference: "Support reference",
     deliveryEstimateTitle: "Estimated delivery",
     deliveryEstimateLoading: "We are checking the current report progress.",
-    deliveryEstimateSoon: "Most reports arrive within 1-2 minutes after payment.",
+    deliveryEstimateSoon: "Most reports arrive within a few minutes after payment. More complex reports can take a little longer.",
     deliveryEstimateQueued: "Your report is in the processing queue. This is normal right after payment.",
     deliveryEstimateDelayed: "This is taking longer than usual, but the automatic recovery checks are still watching it.",
     deliveryEstimateSent: "The report has been sent. Please check your inbox and Spam or Promotions folders.",
@@ -154,7 +154,7 @@
       statusSupportReference: "Support hivatkoz\u00e1s",
       deliveryEstimateTitle: "V\u00e1rhat\u00f3 \u00e9rkez\u00e9s",
       deliveryEstimateLoading: "Ellen\u0151rizz\u00fck a riport aktu\u00e1lis \u00e1llapot\u00e1t.",
-      deliveryEstimateSoon: "A legt\u00f6bb riport a fizet\u00e9s ut\u00e1n 1-2 percen bel\u00fcl meg\u00e9rkezik.",
+      deliveryEstimateSoon: "A legt\u00f6bb riport a fizet\u00e9s ut\u00e1n n\u00e9h\u00e1ny percen bel\u00fcl meg\u00e9rkezik. Az \u00f6sszetettebb riportok elk\u00e9sz\u00edt\u00e9se tov\u00e1bb tarthat.",
       deliveryEstimateQueued: "A riport feldolgoz\u00e1si sorban van. Ez k\u00f6zvetlen\u00fcl fizet\u00e9s ut\u00e1n norm\u00e1lis.",
       deliveryEstimateDelayed: "Ez most tov\u00e1bb tart a szok\u00e1sosn\u00e1l, de az automatikus helyre\u00e1ll\u00edt\u00e1si ellen\u0151rz\u00e9sek tov\u00e1bb figyelik.",
       deliveryEstimateSent: "A riport elk\u00fcldve. Ellen\u0151rizd a be\u00e9rkez\u0151, Spam \u00e9s Prom\u00f3ci\u00f3k mapp\u00e1t is.",
@@ -222,7 +222,7 @@
       cancelSafeNote: "A mentett k\u00e9rd\u0151\u00edv session err\u0151l az oldalr\u00f3l \u00fajraind\u00edthat\u00f3, am\u00edg a session el\u00e9rhet\u0151.",
       successTitle: "K\u00f6sz\u00f6nj\u00fck! A fizet\u00e9s sikeres volt.",
       successLead: "A szem\u00e9lyre szabott NeuroMap Kids riport elk\u00e9sz\u00edt\u00e9se elindult.",
-      successBody: "A r\u00e9szletes \u00e9rt\u00e9kel\u00e9s \u00e9s a PDF riport emailben \u00e9rkezik. Ez \u00e1ltal\u00e1ban 1-2 percen bel\u00fcl megt\u00f6rt\u00e9nik.",
+      successBody: "A r\u00e9szletes \u00e9rt\u00e9kel\u00e9s \u00e9s a PDF riport emailben \u00e9rkezik. Az elk\u00e9sz\u00edt\u00e9s \u00e1ltal\u00e1ban n\u00e9h\u00e1ny percet vesz ig\u00e9nybe, az \u00f6sszetettebb riportokn\u00e1l pedig tov\u00e1bb tarthat.",
       cancelTitle: "A fizet\u00e9s nem fejez\u0151d\u00f6tt be",
       cancelLead: "Nem t\u00f6rt\u00e9nt terhel\u00e9s.",
       cancelBody: "Innen biztons\u00e1gosan visszat\u00e9rhetsz a k\u00e9rd\u0151\u00edvhez, vagy \u00fajraind\u00edthatod a fizet\u00e9st."
@@ -230,7 +230,7 @@
     en: {
       successTitle: "Payment successful",
       successLead: "Thank you. Your purchase was successful.",
-      successBody: "The detailed parent-friendly report and PDF will be sent by email, usually within 1-2 minutes.",
+      successBody: "The detailed parent-friendly report and PDF will be sent by email. Preparation usually takes a few minutes, while more complex reports can take longer.",
       cancelTitle: "Payment was not completed",
       cancelLead: "No charge was made.",
       cancelBody: "You can safely return to the questionnaire or retry checkout from here."
@@ -354,8 +354,400 @@
     }
   };
 
+  const CUSTOMER_JOURNEY_COPY = {
+    hu: {
+      locale: "hu-HU",
+      supportSubject: "NeuroMap Kids fizetési segítség",
+      supportBody: "Szia NeuroMap Kids csapat!\n\nSegítséget kérek a fizetéssel vagy a riporttal kapcsolatban.\n\nAzonosító: {{sessionId}}\nOldal: {{pageKind}}\nÁllapot: {{status}}\n\nKöszönöm.",
+      successBody: "A részletes értékelést és a PDF riportot emailben küldjük. Ez általában néhány percet vesz igénybe; összetettebb feldolgozás esetén tovább tarthat.",
+      session: {
+        label: "Azonosító", ready: "Az oldal készen áll.", missing: "Hiányzik a fizetési azonosító.",
+        copy: "Azonosító másolása", copied: "Az azonosító másolva.", refresh: "Állapot frissítése",
+        refreshing: "Állapot frissítése...", checked: "Utolsó ellenőrzés", email: "Riport email", reference: "Ügyfélszolgálati hivatkozás"
+      },
+      delivery: {
+        title: "Várható érkezés", loading: "Ellenőrizzük a riport aktuális állapotát.",
+        soon: "A riport általában néhány percen belül megérkezik; összetettebb feldolgozás esetén ez tovább tarthat.",
+        queued: "A riport feldolgozási sorban van. Ez közvetlenül fizetés után normális.",
+        delayed: "A feldolgozás most tovább tart a szokásosnál. Az automatikus ellenőrzések tovább figyelik.",
+        sent: "A riportot elküldtük. Ellenőrizd a Beérkezett üzenetek, a Spam és a Promóciók mappát is.",
+        attention: "A riport kézi ellenőrzést igényelhet. Az ügyfélszolgálat az azonosító alapján gyorsan utánanézhet.",
+        missing: "Azonosító nélkül nem tudunk élő állapotot mutatni, de a fizetési visszaigazolás továbbra is érvényes."
+      },
+      status: {
+        title: "Riport állapota", lead: "Készítjük a személyre szabott PDF-et és az emailt.", loading: "Riportállapot ellenőrzése...",
+        unavailable: "Az állapot még nem elérhető. A riport feldolgozása folyamatban lehet.", sent: "A riport emailt elküldtük.",
+        attention: "A riport ellenőrzést igényel. Az automatikus újrapróbálkozás tovább fut.",
+        payment: "Fizetés", analysis: "Elemzés", report: "PDF riport", email: "Email",
+        complete: "Kész", active: "Folyamatban", pending: "Várakozik", failed: "Figyelmet igényel"
+      },
+      next: {
+        title: "Mi történik most?",
+        items: ["Elkészítjük a személyre szabott értelmezést.", "Létrehozzuk a PDF riportot.", "A riportot a megadott email-címre küldjük."]
+      },
+      cancel: {
+        title: "A válaszaid biztonságban vannak",
+        items: ["A fizetés nem fejeződött be, ezért nem történt terhelés.", "A fizetést a kérdőív újbóli kitöltése nélkül újraindíthatod.", "Ha továbbra sem sikerül, küldd el az azonosítót az ügyfélszolgálatnak."],
+        note: "A mentett kérdőív erről az oldalról újranyitható, amíg a munkamenet elérhető."
+      }
+    },
+    en: {
+      locale: "en-US",
+      supportSubject: "NeuroMap Kids checkout support",
+      supportBody: "Hello NeuroMap Kids team,\n\nI need help with my checkout or report.\n\nSession: {{sessionId}}\nPage: {{pageKind}}\nStatus: {{status}}\n\nThank you.",
+      successBody: "We will send the detailed assessment and PDF report by email. This usually takes a few minutes; more complex processing may take longer.",
+      session: {
+        label: "Session", ready: "The page is ready.", missing: "The checkout session ID is missing.", copy: "Copy session ID",
+        copied: "Session ID copied.", refresh: "Refresh status", refreshing: "Refreshing status...", checked: "Last checked",
+        email: "Report email", reference: "Support reference"
+      },
+      delivery: {
+        title: "Estimated delivery", loading: "We are checking the current report progress.",
+        soon: "Reports usually arrive within a few minutes; more complex processing may take longer.",
+        queued: "Your report is in the processing queue. This is normal just after payment.",
+        delayed: "Processing is taking longer than usual. Automatic checks are still monitoring it.",
+        sent: "The report has been sent. Please also check Spam or Promotions.",
+        attention: "The report may need a manual check. Support can investigate quickly using the session ID.",
+        missing: "Without a session ID we cannot show live progress, but your payment confirmation remains valid."
+      },
+      status: {
+        title: "Report status", lead: "We are preparing your personalized PDF and email.", loading: "Checking report status...",
+        unavailable: "Status is not available yet. Your report may still be processing.", sent: "Your report email has been sent.",
+        attention: "The report needs a check. Automatic retries are still running.", payment: "Payment", analysis: "Analysis",
+        report: "PDF report", email: "Email", complete: "Done", active: "In progress", pending: "Waiting", failed: "Needs attention"
+      },
+      next: {
+        title: "What happens next?",
+        items: ["We prepare the personalized interpretation.", "We generate the PDF report.", "We send the report to the email address you provided."]
+      },
+      cancel: {
+        title: "Your answers are safe",
+        items: ["Payment was not completed, so no charge was made.", "You can retry payment without completing the questionnaire again.", "If it still fails, send the session ID to support."],
+        note: "The saved questionnaire can be reopened from this page while the session remains available."
+      }
+    },
+    de: {
+      locale: "de-DE",
+      supportSubject: "NeuroMap Kids Hilfe bei Zahlung oder Bericht",
+      supportBody: "Hallo NeuroMap Kids Team,\n\nich brauche Hilfe bei der Zahlung oder beim Bericht.\n\nSitzung: {{sessionId}}\nSeite: {{pageKind}}\nStatus: {{status}}\n\nVielen Dank.",
+      successBody: "Wir senden die ausführliche Auswertung und den PDF-Bericht per E-Mail. Das dauert meist wenige Minuten; eine komplexere Verarbeitung kann länger dauern.",
+      session: {
+        label: "Sitzung", ready: "Die Seite ist bereit.", missing: "Die Zahlungskennung fehlt.", copy: "Sitzungs-ID kopieren",
+        copied: "Sitzungs-ID kopiert.", refresh: "Status aktualisieren", refreshing: "Status wird aktualisiert...", checked: "Zuletzt geprüft",
+        email: "Berichts-E-Mail", reference: "Support-Referenz"
+      },
+      delivery: {
+        title: "Voraussichtliche Zustellung", loading: "Wir prüfen den aktuellen Stand des Berichts.",
+        soon: "Berichte treffen meist innerhalb weniger Minuten ein; eine komplexere Verarbeitung kann länger dauern.",
+        queued: "Der Bericht befindet sich in der Warteschlange. Direkt nach der Zahlung ist das normal.",
+        delayed: "Die Verarbeitung dauert länger als üblich. Automatische Prüfungen laufen weiter.",
+        sent: "Der Bericht wurde gesendet. Bitte prüfe auch Spam und Werbung.",
+        attention: "Der Bericht muss möglicherweise manuell geprüft werden. Der Support kann ihn mit der Sitzungs-ID schnell finden.",
+        missing: "Ohne Sitzungs-ID können wir keinen Live-Status anzeigen; die Zahlungsbestätigung bleibt gültig."
+      },
+      status: {
+        title: "Berichtsstatus", lead: "Wir erstellen dein persönliches PDF und die E-Mail.", loading: "Berichtsstatus wird geprüft...",
+        unavailable: "Der Status ist noch nicht verfügbar. Der Bericht wird möglicherweise noch verarbeitet.", sent: "Die Berichts-E-Mail wurde gesendet.",
+        attention: "Der Bericht muss geprüft werden. Automatische Wiederholungen laufen weiter.", payment: "Zahlung", analysis: "Auswertung",
+        report: "PDF-Bericht", email: "E-Mail", complete: "Fertig", active: "In Bearbeitung", pending: "Wartet", failed: "Prüfung nötig"
+      },
+      next: { title: "Wie geht es weiter?", items: ["Wir erstellen die persönliche Auswertung.", "Wir erzeugen den PDF-Bericht.", "Wir senden den Bericht an die angegebene E-Mail-Adresse."] },
+      cancel: {
+        title: "Deine Antworten sind sicher", items: ["Die Zahlung wurde nicht abgeschlossen; es erfolgte keine Belastung.", "Du kannst die Zahlung wiederholen, ohne den Fragebogen erneut auszufüllen.", "Wenn es weiterhin nicht klappt, sende die Sitzungs-ID an den Support."],
+        note: "Der gespeicherte Fragebogen kann von dieser Seite erneut geöffnet werden, solange die Sitzung verfügbar ist."
+      }
+    },
+    it: {
+      locale: "it-IT",
+      supportSubject: "Assistenza NeuroMap Kids per pagamento o report",
+      supportBody: "Ciao team NeuroMap Kids,\n\nho bisogno di aiuto con il pagamento o il report.\n\nSessione: {{sessionId}}\nPagina: {{pageKind}}\nStato: {{status}}\n\nGrazie.",
+      successBody: "Invieremo via email la valutazione dettagliata e il report PDF. Di solito servono pochi minuti; elaborazioni più complesse possono richiedere più tempo.",
+      session: {
+        label: "Sessione", ready: "La pagina è pronta.", missing: "Manca l'identificativo della sessione di pagamento.", copy: "Copia ID sessione",
+        copied: "ID sessione copiato.", refresh: "Aggiorna stato", refreshing: "Aggiornamento in corso...", checked: "Ultimo controllo",
+        email: "Email del report", reference: "Riferimento assistenza"
+      },
+      delivery: {
+        title: "Consegna prevista", loading: "Stiamo controllando lo stato attuale del report.",
+        soon: "I report arrivano di solito entro pochi minuti; elaborazioni più complesse possono richiedere più tempo.",
+        queued: "Il report è in coda di elaborazione. È normale subito dopo il pagamento.",
+        delayed: "L'elaborazione richiede più tempo del solito. I controlli automatici continuano.",
+        sent: "Il report è stato inviato. Controlla anche Spam o Promozioni.",
+        attention: "Il report potrebbe richiedere un controllo manuale. L'assistenza può verificarlo rapidamente con l'ID sessione.",
+        missing: "Senza ID sessione non possiamo mostrare lo stato in tempo reale, ma la conferma di pagamento resta valida."
+      },
+      status: {
+        title: "Stato del report", lead: "Stiamo preparando il PDF personalizzato e l'email.", loading: "Controllo dello stato...",
+        unavailable: "Lo stato non è ancora disponibile. Il report potrebbe essere ancora in elaborazione.", sent: "L'email con il report è stata inviata.",
+        attention: "Il report richiede un controllo. I tentativi automatici continuano.", payment: "Pagamento", analysis: "Analisi",
+        report: "Report PDF", email: "Email", complete: "Completato", active: "In corso", pending: "In attesa", failed: "Richiede attenzione"
+      },
+      next: { title: "Cosa succede ora?", items: ["Prepariamo l'interpretazione personalizzata.", "Generiamo il report PDF.", "Invieremo il report all'indirizzo email indicato."] },
+      cancel: {
+        title: "Le tue risposte sono al sicuro", items: ["Il pagamento non è stato completato e non è stato effettuato alcun addebito.", "Puoi riprovare senza compilare di nuovo il questionario.", "Se il problema continua, invia l'ID sessione all'assistenza."],
+        note: "Il questionario salvato può essere riaperto da questa pagina finché la sessione è disponibile."
+      }
+    },
+    es: {
+      locale: "es-ES",
+      supportSubject: "Ayuda de NeuroMap Kids con el pago o el informe",
+      supportBody: "Hola, equipo de NeuroMap Kids:\n\nNecesito ayuda con el pago o el informe.\n\nSesión: {{sessionId}}\nPágina: {{pageKind}}\nEstado: {{status}}\n\nGracias.",
+      successBody: "Enviaremos por email la evaluación detallada y el informe PDF. Normalmente tarda unos minutos; un procesamiento más complejo puede tardar más.",
+      session: {
+        label: "Sesión", ready: "La página está lista.", missing: "Falta el identificador de la sesión de pago.", copy: "Copiar ID de sesión",
+        copied: "ID de sesión copiado.", refresh: "Actualizar estado", refreshing: "Actualizando estado...", checked: "Última comprobación",
+        email: "Email del informe", reference: "Referencia de soporte"
+      },
+      delivery: {
+        title: "Entrega estimada", loading: "Estamos comprobando el progreso actual del informe.",
+        soon: "Los informes suelen llegar en pocos minutos; un procesamiento más complejo puede tardar más.",
+        queued: "El informe está en la cola de procesamiento. Es normal justo después del pago.",
+        delayed: "El procesamiento tarda más de lo habitual. Las comprobaciones automáticas continúan.",
+        sent: "El informe se ha enviado. Revisa también Spam o Promociones.",
+        attention: "El informe puede necesitar una revisión manual. Soporte puede localizarlo con el ID de sesión.",
+        missing: "Sin ID de sesión no podemos mostrar el estado en vivo, pero la confirmación de pago sigue siendo válida."
+      },
+      status: {
+        title: "Estado del informe", lead: "Estamos preparando el PDF personalizado y el email.", loading: "Comprobando el estado...",
+        unavailable: "El estado aún no está disponible. Es posible que el informe siga procesándose.", sent: "El email del informe se ha enviado.",
+        attention: "El informe necesita revisión. Los reintentos automáticos continúan.", payment: "Pago", analysis: "Análisis",
+        report: "Informe PDF", email: "Email", complete: "Listo", active: "En curso", pending: "En espera", failed: "Requiere atención"
+      },
+      next: { title: "¿Qué ocurre ahora?", items: ["Preparamos la interpretación personalizada.", "Generamos el informe PDF.", "Enviamos el informe al email indicado."] },
+      cancel: {
+        title: "Tus respuestas están seguras", items: ["El pago no se completó y no se realizó ningún cargo.", "Puedes volver a intentarlo sin rellenar otra vez el cuestionario.", "Si sigue fallando, envía el ID de sesión a soporte."],
+        note: "El cuestionario guardado puede reabrirse desde esta página mientras la sesión esté disponible."
+      }
+    },
+    zh: {
+      locale: "zh-CN",
+      supportSubject: "NeuroMap Kids 支付或报告支持",
+      supportBody: "NeuroMap Kids 团队：\n\n我需要支付或报告方面的帮助。\n\n会话：{{sessionId}}\n页面：{{pageKind}}\n状态：{{status}}\n\n谢谢。",
+      successBody: "详细评估和 PDF 报告将通过电子邮件发送。通常需要几分钟；较复杂的处理可能需要更长时间。",
+      session: {
+        label: "会话", ready: "页面已准备就绪。", missing: "缺少支付会话标识。", copy: "复制会话标识", copied: "会话标识已复制。",
+        refresh: "刷新状态", refreshing: "正在刷新状态…", checked: "上次检查", email: "报告邮箱", reference: "客服参考编号"
+      },
+      delivery: {
+        title: "预计送达", loading: "正在检查报告的当前进度。", soon: "报告通常会在几分钟内送达；较复杂的处理可能需要更长时间。",
+        queued: "报告正在处理队列中。付款后出现此状态是正常的。", delayed: "处理时间比平时更长，自动检查仍在继续。",
+        sent: "报告已发送。请同时检查垃圾邮件或推广邮件文件夹。", attention: "报告可能需要人工检查。客服可通过会话标识快速查询。",
+        missing: "没有会话标识时无法显示实时进度，但付款确认仍然有效。"
+      },
+      status: {
+        title: "报告状态", lead: "正在准备个性化 PDF 和电子邮件。", loading: "正在检查报告状态…", unavailable: "状态暂不可用，报告可能仍在处理中。",
+        sent: "报告邮件已发送。", attention: "报告需要检查，系统仍在自动重试。", payment: "付款", analysis: "分析", report: "PDF 报告",
+        email: "电子邮件", complete: "完成", active: "处理中", pending: "等待中", failed: "需要处理"
+      },
+      next: { title: "接下来会怎样？", items: ["准备个性化解读。", "生成 PDF 报告。", "将报告发送到您提供的电子邮箱。"] },
+      cancel: {
+        title: "您的回答已安全保存", items: ["付款未完成，因此没有扣款。", "无需重新填写问卷即可再次尝试付款。", "如果仍有问题，请将会话标识发送给客服。"],
+        note: "只要会话仍然有效，就可以从此页面重新打开已保存的问卷。"
+      }
+    },
+    ja: {
+      locale: "ja-JP",
+      supportSubject: "NeuroMap Kids 決済・レポートのサポート",
+      supportBody: "NeuroMap Kids チームへ\n\n決済またはレポートについてサポートをお願いします。\n\nセッション：{{sessionId}}\nページ：{{pageKind}}\n状態：{{status}}\n\nよろしくお願いします。",
+      successBody: "詳細な評価と PDF レポートをメールでお送りします。通常は数分かかり、処理が複雑な場合はさらに時間がかかることがあります。",
+      session: {
+        label: "セッション", ready: "ページの準備ができました。", missing: "決済セッションIDがありません。", copy: "セッションIDをコピー",
+        copied: "セッションIDをコピーしました。", refresh: "状態を更新", refreshing: "状態を更新しています…", checked: "最終確認",
+        email: "レポート送信先", reference: "サポート参照番号"
+      },
+      delivery: {
+        title: "配信予定", loading: "現在のレポート進捗を確認しています。", soon: "レポートは通常数分で届きますが、処理が複雑な場合はさらに時間がかかることがあります。",
+        queued: "レポートは処理待ちです。決済直後は通常の状態です。", delayed: "通常より処理に時間がかかっています。自動確認は継続しています。",
+        sent: "レポートを送信しました。迷惑メールやプロモーションもご確認ください。", attention: "手動確認が必要な場合があります。サポートはセッションIDで迅速に確認できます。",
+        missing: "セッションIDがないため進捗を表示できませんが、決済確認は有効です。"
+      },
+      status: {
+        title: "レポートの状態", lead: "個別の PDF とメールを準備しています。", loading: "レポートの状態を確認しています…",
+        unavailable: "状態はまだ確認できません。レポートは処理中の可能性があります。", sent: "レポートメールを送信しました。",
+        attention: "レポートの確認が必要です。自動再試行は継続しています。", payment: "決済", analysis: "分析", report: "PDF レポート",
+        email: "メール", complete: "完了", active: "処理中", pending: "待機中", failed: "確認が必要"
+      },
+      next: { title: "次に行われること", items: ["個別の解釈を作成します。", "PDF レポートを生成します。", "入力したメールアドレスへ送信します。"] },
+      cancel: {
+        title: "回答は安全に保存されています", items: ["決済は完了しておらず、請求も発生していません。", "質問票を再入力せずに決済をやり直せます。", "解決しない場合はセッションIDをサポートへお知らせください。"],
+        note: "セッションが有効な間は、このページから保存済みの質問票を再度開けます。"
+      }
+    },
+    ar: {
+      locale: "ar",
+      supportSubject: "دعم NeuroMap Kids للدفع أو التقرير",
+      supportBody: "فريق NeuroMap Kids،\n\nأحتاج إلى مساعدة بشأن الدفع أو التقرير.\n\nالجلسة: {{sessionId}}\nالصفحة: {{pageKind}}\nالحالة: {{status}}\n\nشكرا لكم.",
+      successBody: "سنرسل التقييم المفصل وتقرير PDF عبر البريد الإلكتروني. يستغرق ذلك عادة بضع دقائق، وقد تستغرق المعالجة الأكثر تعقيدا وقتا أطول.",
+      session: {
+        label: "الجلسة", ready: "الصفحة جاهزة.", missing: "معرف جلسة الدفع مفقود.", copy: "نسخ معرف الجلسة", copied: "تم نسخ معرف الجلسة.",
+        refresh: "تحديث الحالة", refreshing: "جار تحديث الحالة...", checked: "آخر فحص", email: "بريد التقرير", reference: "مرجع الدعم"
+      },
+      delivery: {
+        title: "موعد الوصول المتوقع", loading: "نتحقق من تقدم التقرير حاليا.", soon: "تصل التقارير عادة خلال بضع دقائق، وقد تستغرق المعالجة الأكثر تعقيدا وقتا أطول.",
+        queued: "التقرير في قائمة المعالجة. هذا طبيعي بعد الدفع مباشرة.", delayed: "تستغرق المعالجة وقتا أطول من المعتاد، وما زالت الفحوص التلقائية مستمرة.",
+        sent: "تم إرسال التقرير. يرجى فحص مجلد الرسائل غير المرغوب فيها أو العروض أيضا.", attention: "قد يحتاج التقرير إلى مراجعة يدوية. يستطيع الدعم التحقق منه عبر معرف الجلسة.",
+        missing: "لا يمكن عرض التقدم المباشر دون معرف الجلسة، لكن تأكيد الدفع يظل صالحا."
+      },
+      status: {
+        title: "حالة التقرير", lead: "نجهز ملف PDF المخصص والبريد الإلكتروني.", loading: "جار التحقق من حالة التقرير...",
+        unavailable: "الحالة غير متاحة بعد. قد يكون التقرير قيد المعالجة.", sent: "تم إرسال بريد التقرير.",
+        attention: "يحتاج التقرير إلى مراجعة. تستمر المحاولات التلقائية.", payment: "الدفع", analysis: "التحليل", report: "تقرير PDF",
+        email: "البريد الإلكتروني", complete: "مكتمل", active: "قيد التنفيذ", pending: "قيد الانتظار", failed: "يحتاج إلى متابعة"
+      },
+      next: { title: "ماذا يحدث الآن؟", items: ["نعد التفسير المخصص.", "ننشىء تقرير PDF.", "نرسل التقرير إلى البريد الإلكتروني الذي قدمته."] },
+      cancel: {
+        title: "إجاباتك محفوظة بأمان", items: ["لم تكتمل عملية الدفع، لذلك لم يتم الخصم.", "يمكنك إعادة محاولة الدفع دون تعبئة الاستبيان مرة أخرى.", "إذا استمرت المشكلة، أرسل معرف الجلسة إلى الدعم."],
+        note: "يمكن فتح الاستبيان المحفوظ من هذه الصفحة ما دامت الجلسة متاحة."
+      }
+    },
+    pl: {
+      locale: "pl-PL",
+      supportSubject: "Pomoc NeuroMap Kids dotycząca płatności lub raportu",
+      supportBody: "Dzień dobry,\n\npotrzebuję pomocy z płatnością lub raportem.\n\nSesja: {{sessionId}}\nStrona: {{pageKind}}\nStatus: {{status}}\n\nDziękuję.",
+      successBody: "Szczegółową ocenę i raport PDF wyślemy emailem. Zwykle zajmuje to kilka minut; bardziej złożone przetwarzanie może potrwać dłużej.",
+      session: {
+        label: "Sesja", ready: "Strona jest gotowa.", missing: "Brakuje identyfikatora sesji płatności.", copy: "Kopiuj ID sesji",
+        copied: "ID sesji skopiowane.", refresh: "Odśwież status", refreshing: "Odświeżanie statusu...", checked: "Ostatnia kontrola",
+        email: "Email raportu", reference: "Numer dla pomocy"
+      },
+      delivery: {
+        title: "Przewidywane dostarczenie", loading: "Sprawdzamy aktualny postęp raportu.",
+        soon: "Raport zwykle dociera w ciągu kilku minut; bardziej złożone przetwarzanie może potrwać dłużej.",
+        queued: "Raport jest w kolejce przetwarzania. To normalne tuż po płatności.", delayed: "Przetwarzanie trwa dłużej niż zwykle. Automatyczne kontrole nadal działają.",
+        sent: "Raport został wysłany. Sprawdź także Spam lub Oferty.", attention: "Raport może wymagać ręcznej kontroli. Pomoc szybko go znajdzie po ID sesji.",
+        missing: "Bez ID sesji nie możemy pokazać postępu na żywo, ale potwierdzenie płatności pozostaje ważne."
+      },
+      status: {
+        title: "Status raportu", lead: "Przygotowujemy spersonalizowany PDF i email.", loading: "Sprawdzanie statusu raportu...",
+        unavailable: "Status nie jest jeszcze dostępny. Raport może być nadal przetwarzany.", sent: "Email z raportem został wysłany.",
+        attention: "Raport wymaga kontroli. Automatyczne ponowienia nadal działają.", payment: "Płatność", analysis: "Analiza", report: "Raport PDF",
+        email: "Email", complete: "Gotowe", active: "W toku", pending: "Oczekuje", failed: "Wymaga uwagi"
+      },
+      next: { title: "Co dzieje się teraz?", items: ["Przygotowujemy spersonalizowaną interpretację.", "Generujemy raport PDF.", "Wysyłamy raport na podany adres email."] },
+      cancel: {
+        title: "Twoje odpowiedzi są bezpieczne", items: ["Płatność nie została ukończona, więc nie pobrano opłaty.", "Możesz ponowić płatność bez ponownego wypełniania ankiety.", "Jeśli problem się powtarza, wyślij ID sesji do pomocy."],
+        note: "Zapisaną ankietę można ponownie otworzyć z tej strony, dopóki sesja jest dostępna."
+      }
+    },
+    pt: {
+      locale: "pt-PT",
+      supportSubject: "Ajuda NeuroMap Kids com pagamento ou relatório",
+      supportBody: "Olá, equipa NeuroMap Kids.\n\nPreciso de ajuda com o pagamento ou o relatório.\n\nSessão: {{sessionId}}\nPágina: {{pageKind}}\nEstado: {{status}}\n\nObrigado.",
+      successBody: "Enviaremos por email a avaliação detalhada e o relatório PDF. Normalmente demora alguns minutos; um processamento mais complexo pode demorar mais.",
+      session: {
+        label: "Sessão", ready: "A página está pronta.", missing: "Falta o identificador da sessão de pagamento.", copy: "Copiar ID da sessão",
+        copied: "ID da sessão copiado.", refresh: "Atualizar estado", refreshing: "A atualizar o estado...", checked: "Última verificação",
+        email: "Email do relatório", reference: "Referência de suporte"
+      },
+      delivery: {
+        title: "Entrega estimada", loading: "Estamos a verificar o progresso atual do relatório.",
+        soon: "Os relatórios costumam chegar em poucos minutos; um processamento mais complexo pode demorar mais.",
+        queued: "O relatório está na fila de processamento. É normal logo após o pagamento.", delayed: "O processamento está a demorar mais do que o habitual. As verificações automáticas continuam.",
+        sent: "O relatório foi enviado. Verifique também Spam ou Promoções.", attention: "O relatório pode precisar de verificação manual. O suporte pode encontrá-lo pelo ID da sessão.",
+        missing: "Sem ID da sessão não podemos mostrar o progresso em direto, mas a confirmação de pagamento continua válida."
+      },
+      status: {
+        title: "Estado do relatório", lead: "Estamos a preparar o PDF personalizado e o email.", loading: "A verificar o estado do relatório...",
+        unavailable: "O estado ainda não está disponível. O relatório pode continuar em processamento.", sent: "O email do relatório foi enviado.",
+        attention: "O relatório precisa de verificação. As novas tentativas automáticas continuam.", payment: "Pagamento", analysis: "Análise", report: "Relatório PDF",
+        email: "Email", complete: "Concluído", active: "Em curso", pending: "Em espera", failed: "Requer atenção"
+      },
+      next: { title: "O que acontece agora?", items: ["Preparamos a interpretação personalizada.", "Geramos o relatório PDF.", "Enviamos o relatório para o email indicado."] },
+      cancel: {
+        title: "As suas respostas estão seguras", items: ["O pagamento não foi concluído e não houve cobrança.", "Pode tentar novamente sem preencher o questionário outra vez.", "Se continuar a falhar, envie o ID da sessão ao suporte."],
+        note: "O questionário guardado pode ser reaberto nesta página enquanto a sessão estiver disponível."
+      }
+    },
+    fr: {
+      locale: "fr-FR",
+      supportSubject: "Aide NeuroMap Kids pour le paiement ou le rapport",
+      supportBody: "Bonjour l'équipe NeuroMap Kids,\n\nj'ai besoin d'aide pour le paiement ou le rapport.\n\nSession : {{sessionId}}\nPage : {{pageKind}}\nStatut : {{status}}\n\nMerci.",
+      successBody: "Nous enverrons l'évaluation détaillée et le rapport PDF par email. Cela prend généralement quelques minutes ; un traitement plus complexe peut demander davantage de temps.",
+      session: {
+        label: "Session", ready: "La page est prête.", missing: "L'identifiant de session de paiement est manquant.", copy: "Copier l'ID de session",
+        copied: "ID de session copié.", refresh: "Actualiser le statut", refreshing: "Actualisation du statut...", checked: "Dernière vérification",
+        email: "Email du rapport", reference: "Référence du support"
+      },
+      delivery: {
+        title: "Délai estimé", loading: "Nous vérifions l'avancement actuel du rapport.",
+        soon: "Les rapports arrivent généralement en quelques minutes ; un traitement plus complexe peut demander davantage de temps.",
+        queued: "Le rapport est dans la file de traitement. C'est normal juste après le paiement.", delayed: "Le traitement prend plus de temps que d'habitude. Les vérifications automatiques continuent.",
+        sent: "Le rapport a été envoyé. Vérifiez aussi les dossiers Spam ou Promotions.", attention: "Le rapport peut nécessiter une vérification manuelle. Le support peut le retrouver avec l'ID de session.",
+        missing: "Sans ID de session, nous ne pouvons pas afficher le suivi en direct, mais la confirmation de paiement reste valable."
+      },
+      status: {
+        title: "Statut du rapport", lead: "Nous préparons le PDF personnalisé et l'email.", loading: "Vérification du statut du rapport...",
+        unavailable: "Le statut n'est pas encore disponible. Le rapport est peut-être toujours en cours de traitement.", sent: "L'email du rapport a été envoyé.",
+        attention: "Le rapport nécessite une vérification. Les nouvelles tentatives automatiques continuent.", payment: "Paiement", analysis: "Analyse", report: "Rapport PDF",
+        email: "Email", complete: "Terminé", active: "En cours", pending: "En attente", failed: "À vérifier"
+      },
+      next: { title: "Que se passe-t-il maintenant ?", items: ["Nous préparons l'interprétation personnalisée.", "Nous générons le rapport PDF.", "Nous envoyons le rapport à l'adresse email indiquée."] },
+      cancel: {
+        title: "Vos réponses sont en sécurité", items: ["Le paiement n'a pas été finalisé et aucun débit n'a eu lieu.", "Vous pouvez réessayer sans remplir à nouveau le questionnaire.", "Si le problème persiste, envoyez l'ID de session au support."],
+        note: "Le questionnaire enregistré peut être rouvert depuis cette page tant que la session reste disponible."
+      }
+    }
+  };
+
+  function flattenCustomerJourneyCopy(lang) {
+    const source = CUSTOMER_JOURNEY_COPY[lang] || CUSTOMER_JOURNEY_COPY.en;
+    const session = source.session;
+    const delivery = source.delivery;
+    const status = source.status;
+
+    return {
+      locale: source.locale,
+      supportSubject: source.supportSubject,
+      supportBody: source.supportBody,
+      successBody: source.successBody,
+      sessionLabel: session.label,
+      statusReady: session.ready,
+      noSession: session.missing,
+      copySession: session.copy,
+      copiedSession: session.copied,
+      refreshStatus: session.refresh,
+      refreshingStatus: session.refreshing,
+      lastCheckedLabel: session.checked,
+      statusEmailMasked: session.email,
+      statusSupportReference: session.reference,
+      deliveryEstimateTitle: delivery.title,
+      deliveryEstimateLoading: delivery.loading,
+      deliveryEstimateSoon: delivery.soon,
+      deliveryEstimateQueued: delivery.queued,
+      deliveryEstimateDelayed: delivery.delayed,
+      deliveryEstimateSent: delivery.sent,
+      deliveryEstimateAttention: delivery.attention,
+      deliveryEstimateNoSession: delivery.missing,
+      reportStatusTitle: status.title,
+      reportStatusLead: status.lead,
+      statusLoading: status.loading,
+      statusUnavailable: status.unavailable,
+      statusSent: status.sent,
+      statusAttention: status.attention,
+      statusPayment: status.payment,
+      statusAnalysis: status.analysis,
+      statusReport: status.report,
+      statusEmail: status.email,
+      stateComplete: status.complete,
+      stateActive: status.active,
+      statePending: status.pending,
+      stateFailed: status.failed,
+      nextTitle: source.next.title,
+      nextItems: source.next.items,
+      cancelRecoveryTitle: source.cancel.title,
+      cancelRecoveryItems: source.cancel.items,
+      cancelSafeNote: source.cancel.note
+    };
+  }
+
   function getCopy(lang) {
-    return Object.assign({}, BASE_COPY, COPY.en, COPY[lang] || {});
+    return Object.assign(
+      {},
+      BASE_COPY,
+      COPY.en,
+      COPY[lang] || {},
+      flattenCustomerJourneyCopy(lang)
+    );
   }
 
   function getApiBaseUrl() {
@@ -1237,12 +1629,9 @@
         </ol>
       </div>
       ${renderDeliveryEstimate(copy, getSessionId("success"), null)}
-      ${renderStatusShortcut(copy)}
-      ${renderInboxChecklist(copy)}
-      ${renderFollowUpPanel(copy)}
-      <div class="nm-report-status-panel" id="nmReportStatusPanel">
-        <h2>${escapeHtml(copy.reportStatusTitle)}</h2>
-        <p class="nm-report-status-lead" id="nmReportStatusLead">${escapeHtml(copy.statusLoading)}</p>
+      <div class="nm-report-status-panel" id="nmReportStatusPanel" aria-labelledby="nmReportStatusTitle">
+        <h2 id="nmReportStatusTitle">${escapeHtml(copy.reportStatusTitle)}</h2>
+        <p class="nm-report-status-lead" id="nmReportStatusLead" role="status" aria-live="polite">${escapeHtml(copy.statusLoading)}</p>
         <div class="nm-status-steps" id="nmReportStatusSteps">
           ${renderStatusSteps(copy)}
         </div>
@@ -1251,7 +1640,6 @@
           <button class="nm-mini-button" type="button" id="nmRefreshStatus">${escapeHtml(copy.refreshStatus)}</button>
         </div>
       </div>
-      ${renderDelayedHelp(copy)}
     `;
   }
 
@@ -1276,7 +1664,7 @@
     if (!meta) return;
 
     const rows = [];
-    const checkedAt = new Date().toLocaleString();
+    const checkedAt = new Date().toLocaleString(copy.locale || undefined);
 
     rows.push(`${copy.lastCheckedLabel}: ${checkedAt}`);
 
@@ -1304,22 +1692,20 @@
     root.setAttribute("dir", lang === "ar" ? "rtl" : "ltr");
 
     root.innerHTML = `
-      <section class="nm-checkout-card" aria-live="polite">
+      <section class="nm-checkout-card" aria-labelledby="nmCheckoutTitle">
         <div class="nm-checkout-icon ${isSuccess ? "success" : "cancel"}" aria-hidden="true">${icon}</div>
-        <h1>${escapeHtml(isSuccess ? copy.successTitle : copy.cancelTitle)}</h1>
+        <h1 id="nmCheckoutTitle">${escapeHtml(isSuccess ? copy.successTitle : copy.cancelTitle)}</h1>
         <p class="nm-checkout-lead">${escapeHtml(isSuccess ? copy.successLead : copy.cancelLead)}</p>
         <p class="nm-checkout-body">${escapeHtml(isSuccess ? copy.successBody : copy.cancelBody)}</p>
-        ${renderCustomerTip(copy, isSuccess)}
         ${sessionId ? `<div class="nm-checkout-meta">${escapeHtml(copy.sessionLabel)}: ${escapeHtml(sessionId)}</div>` : ""}
         ${isSuccess ? renderSuccessExtras(copy) : renderCancelExtras(copy)}
-        ${renderFeedbackPanel(copy)}
         <div class="nm-checkout-actions">
           <a class="nm-checkout-button dark" href="${escapeHtml(safeHref(getHomeHref(lang), "/"))}">${escapeHtml(copy.home)}</a>
           ${!isSuccess ? `<button class="nm-checkout-button" type="button" id="nmRetryCheckout">${escapeHtml(copy.retry)}</button>` : ""}
           ${sessionId ? `<button class="nm-checkout-button secondary" type="button" id="nmCopySession">${escapeHtml(copy.copySession)}</button>` : ""}
           <a class="nm-checkout-button secondary" id="nmSupportLink" href="${escapeHtml(buildSupportHref(copy, sessionId, kind, isSuccess ? "success_page" : "cancel_page"))}">${escapeHtml(copy.support)}</a>
         </div>
-        <div class="nm-checkout-status" id="nmCheckoutStatus">${escapeHtml(copy.statusReady)}</div>
+        <div class="nm-checkout-status" id="nmCheckoutStatus" role="status" aria-live="polite">${escapeHtml(copy.statusReady)}</div>
       </section>
     `;
 
@@ -1341,21 +1727,6 @@
       });
     }
 
-    document.querySelectorAll("[data-nm-feedback]").forEach((button) => {
-      button.addEventListener("click", function () {
-        handleFeedback(button.getAttribute("data-nm-feedback"), copy, sessionId, kind);
-      });
-    });
-
-    const jumpToStatus = document.getElementById("nmJumpToStatus");
-    if (jumpToStatus) {
-      jumpToStatus.addEventListener("click", function () {
-        const panel = document.getElementById("nmReportStatusPanel");
-        if (panel) {
-          panel.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
-      });
-    }
   }
 
   async function loadReportStatus(sessionId, copy, attempt) {
@@ -1393,7 +1764,6 @@
       steps.innerHTML = renderStatusSteps(copy, data.status.stages);
       renderStatusMeta(copy, sessionId, data.status);
       updateDeliveryEstimate(copy, sessionId, data.status);
-      updateDelayedHelp(data.status);
       trackPurchaseFromStatus(data.status.lang || "en", sessionId, data.status);
 
       if (supportLink) {
@@ -1413,7 +1783,6 @@
       lead.textContent = copy.statusUnavailable;
       renderStatusMeta(copy, sessionId, null);
       updateDeliveryEstimate(copy, sessionId, null);
-      updateDelayedHelp(null);
     } finally {
       if (refreshButton) {
         refreshButton.disabled = false;
@@ -1602,6 +1971,10 @@
 
       if (refreshButton) {
         refreshButton.addEventListener("click", function () {
+          trackOnce("nm_report_status_refresh", {
+            lang,
+            page_kind: "checkout_success"
+          });
           loadReportStatus(sessionId, copy, 6);
         });
       }

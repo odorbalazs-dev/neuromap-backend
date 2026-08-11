@@ -1,0 +1,25 @@
+{
+  "document_id": "NMK-DPIA-HU-001",
+  "generated_at_utc": "2026-07-26T19:24:07Z",
+  "source": "docs/DPIA_WORKING_DRAFT_HU.md",
+  "output": "docs/DPIA_WORKING_DRAFT_HU.docx",
+  "git_commit": "4eae0933c7b8d1c065f0e38f5e7421091d005e08",
+  "source_sha256": "e0fea097153555130def5fd2d70ec2bbebc3ad9208ad9ce1e077e412a8225304",
+  "docx_sha256": "c8c1c9688e3ea7b6e4f599e0fc8abeb63f69780f6e5fe29e9a3f2740a7632e92",
+  "source_bytes": 40764,
+  "docx_bytes": 25122,
+  "parsed_counts": {
+    "headings": 38,
+    "paragraphs": 62,
+    "tables": 11,
+    "bullets": 70,
+    "code_blocks": 0
+  },
+  "structural_counts": {
+    "paragraphs": 539,
+    "tables": 12,
+    "headings": 38
+  },
+  "validation": "DOCX ZIP package and every XML relationship part parsed successfully",
+  "limitation": "Adatkezelői munkapéldány; nem jogi szakvélemény, tanúsítás, hatósági jóváhagyás vagy önálló GDPR-megfelelőségi bizonyíték"
+}

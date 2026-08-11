@@ -160,8 +160,8 @@ function calculateScoreGap(primary, secondary) {
 
 function getSeverity(score) {
   if (score >= 2.2) return "high";
-  if (score >= 1.6) return "moderate";
-  if (score >= 1.0) return "mild";
+  if (score >= 1.4) return "moderate";
+  if (score >= 0.8) return "mild";
   return "low";
 }
 
@@ -350,6 +350,17 @@ export function pickBalancedSpecificQuestions(
   const selected = [];
   const selectedIds = new Set();
   const randomizedBank = shuffle(bank, seed);
+
+  // Safety items are distinct from ordinary profile items. Include them in
+  // every relevant module so a concerning answer never depends on random
+  // selection and can trigger immediate, non-paywalled support guidance.
+  randomizedBank
+    .filter((item) => item?.safetySignal === true)
+    .slice(0, requestedCount)
+    .forEach((item) => {
+      selected.push(item);
+      selectedIds.add(item.id);
+    });
 
   while (selected.length < requestedCount) {
     const candidates = randomizedBank.filter((item) => !selectedIds.has(item.id));

@@ -1,32 +1,28 @@
 import { spawn } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { resolveServiceRole } from "../src/config/service-role.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, "..");
 
-const rawRole =
-  process.env.RAILWAY_SERVICE_ROLE ||
-  process.env.SERVICE_ROLE ||
-  process.env.NM_SERVICE_ROLE ||
-  "web";
+const resolvedRole = resolveServiceRole();
 
-const normalizedRole = String(rawRole).trim().toLowerCase();
-
-const workerRoles = new Set(["worker", "analysis-worker", "analysis_worker", "queue"]);
-const webRoles = new Set(["web", "api", "backend", "server", ""]);
-
-let role = normalizedRole;
-
-if (!workerRoles.has(role) && !webRoles.has(role)) {
-  console.warn(`[railway-start] unknown role "${rawRole}", defaulting to web`);
-  role = "web";
+if (resolvedRole.error) {
+  console.error(`[railway-start] ${resolvedRole.error}`);
+  process.exit(1);
 }
 
-const isWorker = workerRoles.has(role);
+if (resolvedRole.warning) {
+  console.warn(`[railway-start] ${resolvedRole.warning}`);
+}
+
+const isWorker = resolvedRole.role === "worker";
 const entry = isWorker ? "src/jobs/analysis.worker.js" : "src/app/server.js";
 
-console.log(`[railway-start] role=${isWorker ? "worker" : "web"} entry=${entry}`);
+console.log(
+  `[railway-start] role=${resolvedRole.role} source=${resolvedRole.source} entry=${entry}`
+);
 
 const child = spawn(process.execPath, [path.join(rootDir, entry)], {
   cwd: rootDir,

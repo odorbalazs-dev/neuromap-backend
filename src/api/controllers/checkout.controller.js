@@ -4,10 +4,14 @@ import {
   assertSessionAccess,
   getSessionAccessTokenFromRequest,
   incrementCheckoutAttempt,
-  updateStripeSessionId
+  updateStripeSessionId,
+  deletePendingCheckoutSession
 } from "../../services/session.service.js";
 
-import { createCheckoutSession } from "../../services/stripe.service.js";
+import {
+  createCheckoutSession,
+  expireCheckoutSession
+} from "../../services/stripe.service.js";
 import {
   normalizeCheckoutPayload,
   stripCheckoutQuestionMetadata
@@ -30,11 +34,15 @@ import {
 } from "../../services/consent.service.js";
 
 export async function createCheckout(req, res) {
+  let claimedConsent = null;
+  let session = null;
+  let stripeSession = null;
+  let checkoutLinked = false;
   try {
     assertCheckoutLaunchReady();
-    // Cached Webflow engines can still send translated display metadata with
-    // question references. The server-side banks remain authoritative, so
-    // strip only that metadata before applying the full strict validation.
+    // Older cached Webflow engines may still send question display metadata.
+    // Strip only that metadata before strict validation; all other raw fields
+    // keep their original types and lengths. Server-side banks stay authoritative.
     const validationInput = stripCheckoutQuestionMetadata(req.body || {});
     const validation = validateCheckoutPayload(validationInput);
 
@@ -48,30 +56,22 @@ export async function createCheckout(req, res) {
     }
 
     const normalized = normalizeCheckoutPayload(validationInput);
-    const { email, name, lang, packageCode, consent } = normalized;
+    const { email, name, lang, packageCode, consent, purchaseConfirmations } = normalized;
     const payload = canonicalizeQuestionnairePayload(normalized.payload, lang);
     const productPackage = getProductPackage(packageCode);
-    const claimedConsent = await claimConsentReceipt(consent);
+    claimedConsent = await claimConsentReceipt(consent, purchaseConfirmations);
 
-    let session;
-    try {
-      session = await createSession({
-        email,
-        name,
-        lang,
-        payload,
-        productPackage,
-        consent: claimedConsent.snapshot,
-        consentEventId: claimedConsent.id
-      });
-    } catch (sessionError) {
-      await releaseConsentReceipt(claimedConsent.id).catch((releaseError) => {
-        console.error("failed to release consent receipt:", releaseError);
-      });
-      throw sessionError;
-    }
+    session = await createSession({
+      email,
+      name,
+      lang,
+      payload,
+      productPackage,
+      consent: claimedConsent.snapshot,
+      consentEventId: claimedConsent.id
+    });
 
-    const stripeSession = await createCheckoutSession({
+    stripeSession = await createCheckoutSession({
       internalSessionId: session.id,
       email,
       name,
@@ -81,7 +81,11 @@ export async function createCheckout(req, res) {
       checkoutAttempt: await incrementCheckoutAttempt(session.id)
     });
 
-    await updateStripeSessionId(session.id, stripeSession.id);
+    const updatedSession = await updateStripeSessionId(session.id, stripeSession.id);
+    if (!updatedSession) {
+      throw new Error("Checkout session could not be linked to the internal session.");
+    }
+    checkoutLinked = true;
 
     return res.status(200).json({
       ok: true,
@@ -94,6 +98,26 @@ export async function createCheckout(req, res) {
     });
   } catch (error) {
     console.error("checkout controller error:", error);
+
+    if (stripeSession?.id && !checkoutLinked) {
+      await expireCheckoutSession(stripeSession.id).catch((expireError) => {
+        console.error("failed to expire orphaned Stripe checkout session:", expireError);
+      });
+    }
+
+    let deletedSession = null;
+    if (session?.id) {
+      deletedSession = await deletePendingCheckoutSession(session.id).catch((deleteError) => {
+        console.error("failed to delete incomplete checkout session:", deleteError);
+        return null;
+      });
+    }
+
+    if (claimedConsent?.id && (!session || deletedSession)) {
+      await releaseConsentReceipt(claimedConsent.id).catch((releaseError) => {
+        console.error("failed to release consent receipt after checkout failure:", releaseError);
+      });
+    }
 
     if (error instanceof QuestionnaireIntegrityError) {
       return res.status(400).json({
@@ -129,6 +153,8 @@ export async function createCheckout(req, res) {
 }
 
 export async function retryCheckout(req, res) {
+  let stripeSession = null;
+  let checkoutLinked = false;
   try {
     assertCheckoutLaunchReady();
     const { id } = req.params;
@@ -176,7 +202,7 @@ export async function retryCheckout(req, res) {
     }
     assertCurrentPolicyAcceptance(session.consent_record);
 
-    const stripeSession = await createCheckoutSession({
+    stripeSession = await createCheckoutSession({
       internalSessionId: session.id,
       email: session.email,
       name: session.name,
@@ -186,7 +212,11 @@ export async function retryCheckout(req, res) {
       checkoutAttempt: await incrementCheckoutAttempt(session.id)
     });
 
-    await updateStripeSessionId(session.id, stripeSession.id);
+    const updatedSession = await updateStripeSessionId(session.id, stripeSession.id);
+    if (!updatedSession) {
+      throw new Error("Checkout session could not be linked to the internal session.");
+    }
+    checkoutLinked = true;
 
     return res.status(200).json({
       ok: true,
@@ -196,6 +226,12 @@ export async function retryCheckout(req, res) {
     });
   } catch (error) {
     console.error("retry checkout error:", error);
+
+    if (stripeSession?.id && !checkoutLinked) {
+      await expireCheckoutSession(stripeSession.id).catch((expireError) => {
+        console.error("failed to expire orphaned retry checkout session:", expireError);
+      });
+    }
 
     if (error instanceof LaunchGateError) {
       return res.status(503).json({

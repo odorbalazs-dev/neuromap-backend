@@ -2,6 +2,11 @@
 import path from "path";
 import PDFDocument from "pdfkit";
 import { buildReportV2Context } from "./report-v2.service.js";
+import {
+  formatProfessionalTerm,
+  formatReportDomain,
+  localizeHungarianReportTerminology
+} from "../utils/report-terminology.js";
 
 const BRAND = {
   blue: "#1197D5",
@@ -75,8 +80,11 @@ function stripMarkdown(value = "") {
     .trim();
 }
 
-function polishHungarianReportWording(value = "") {
-  return clean(value)
+function polishHungarianReportWording(value = "", lang = "en") {
+  const cleaned = clean(value);
+  if (lang !== "hu") return cleaned;
+
+  return localizeHungarianReportTerminology(cleaned)
     .replace(/gyermek\s+mindennapi\s+m\u0171k\u00f6d\u00e9s\u00e9t/giu, "gyermek mindennapi viselked\u00e9s\u00e9t")
     .replace(/gyermek\s+m\u0171k\u00f6d\u00e9se/giu, "gyermek viselked\u00e9se")
     .replace(/gyermek\s+m\u0171k\u00f6d\u00e9s\u00e9r\u0151l/giu, "gyermek viselked\u00e9s\u00e9r\u0151l")
@@ -378,20 +386,26 @@ function extractSummary(payload = {}) {
   };
 }
 
-function formatKeyLabel(key, labels) {
+function formatKeyLabel(key, labels, lang = "en") {
   const value = clean(key);
   if (!value) return labels.notAvailable;
 
-  return value
+  const fallback = value
     .replace(/[_-]+/g, " ")
     .replace(/\s+/g, " ")
     .trim()
     .replace(/\b\w/g, (char) => char.toUpperCase());
+
+  return formatProfessionalTerm(value, lang, fallback);
 }
 
 function getDomainLabel(lang, domain, labels) {
   const value = clean(domain).toUpperCase();
   if (!value) return labels.notAvailable;
+
+  if (lang === "hu") {
+    return formatReportDomain(value, lang, labels.notAvailable);
+  }
 
   const names = {
     hu: {
@@ -473,7 +487,7 @@ function getDomainLabel(lang, domain, labels) {
     }
   };
 
-  return names[lang]?.[value] || names.en[value] || formatKeyLabel(value, labels);
+  return names[lang]?.[value] || names.en[value] || formatKeyLabel(value, labels, lang);
 }
 
 function getSeverityLabel(lang, severity, labels) {
@@ -549,7 +563,7 @@ function getSeverityLabel(lang, severity, labels) {
     }
   };
 
-  return names[lang]?.[value] || names.en[value] || formatKeyLabel(value, labels);
+  return names[lang]?.[value] || names.en[value] || formatKeyLabel(value, labels, lang);
 }
 
 function formatScore(value) {
@@ -1224,25 +1238,48 @@ function addInfoCard(doc, { name, lang }) {
 
 function addMiniCard(doc, x, y, w, title, value, lang, color = BRAND.blue, height = 72) {
   const h = height;
+  const textWidth = w - 28;
+  const align = getTextAlign(lang);
+  const titleFont = getFont(lang);
+  const valueFont = getFont(lang, true);
 
   doc.roundedRect(x, y, w, h, 14).fill("#FFFFFF");
   doc.roundedRect(x, y, w, h, 14).strokeColor(BRAND.border).lineWidth(1).stroke();
   doc.rect(x, y, 6, h).fill(color);
 
   doc.fillColor(BRAND.muted)
-    .font(getFont(lang))
+    .font(titleFont)
     .fontSize(8.5)
     .text(title, x + 16, y + 14, {
-      width: w - 28,
-      align: getTextAlign(lang)
+      width: textWidth,
+      align
     });
 
+  doc.font(titleFont).fontSize(8.5);
+  const titleHeight = doc.heightOfString(title, {
+    width: textWidth,
+    align
+  });
+  const valueY = y + 14 + titleHeight + 7;
+  const availableHeight = Math.max(12, h - (valueY - y) - 10);
+  const safeValue = value || "-";
+  let valueFontSize = 12;
+
+  for (; valueFontSize > 8; valueFontSize -= 0.5) {
+    doc.font(valueFont).fontSize(valueFontSize);
+    const valueHeight = doc.heightOfString(safeValue, {
+      width: textWidth,
+      align
+    });
+    if (valueHeight <= availableHeight) break;
+  }
+
   doc.fillColor(BRAND.dark)
-    .font(getFont(lang, true))
-    .fontSize(12)
-    .text(value || "-", x + 16, y + 36, {
-      width: w - 28,
-      align: getTextAlign(lang)
+    .font(valueFont)
+    .fontSize(valueFontSize)
+    .text(safeValue, x + 16, valueY, {
+      width: textWidth,
+      align
     });
 }
 
@@ -1268,6 +1305,7 @@ function addOverviewBlock(doc, payload, labels, lang, pageState = null) {
   const cardY = doc.y;
   const gap = 10;
   const cardW = (w - gap * 2) / 3;
+  const cardH = 92;
 
   addMiniCard(
     doc,
@@ -1277,7 +1315,8 @@ function addOverviewBlock(doc, payload, labels, lang, pageState = null) {
     labels.focusArea,
     getDomainLabel(lang, summary.detectedRisk, labels),
     lang,
-    BRAND.blue
+    BRAND.blue,
+    cardH
   );
 
   addMiniCard(
@@ -1288,7 +1327,8 @@ function addOverviewBlock(doc, payload, labels, lang, pageState = null) {
     labels.secondarySignal,
     getDomainLabel(lang, summary.secondaryRisk, labels),
     lang,
-    BRAND.orange
+    BRAND.orange,
+    cardH
   );
 
   addMiniCard(
@@ -1299,10 +1339,11 @@ function addOverviewBlock(doc, payload, labels, lang, pageState = null) {
     labels.signalLevel,
     getSeverityLabel(lang, summary.severity, labels),
     lang,
-    BRAND.green
+    BRAND.green,
+    cardH
   );
 
-  doc.y = cardY + 92;
+  doc.y = cardY + cardH + 20;
 
   if (summary.subdomains.length) {
     doc.fillColor(BRAND.dark)
@@ -1316,18 +1357,27 @@ function addOverviewBlock(doc, payload, labels, lang, pageState = null) {
     doc.moveDown(0.4);
 
     summary.subdomains.forEach((item) => {
-      ensureSpace(doc, 28, labels, lang, pageState);
+      const label = formatKeyLabel(item.key, labels, lang);
+      doc.font(getFont(lang)).fontSize(9);
+      const labelHeight = doc.heightOfString(label, {
+        width: w - 54,
+        align: getTextAlign(lang)
+      });
+      const rowHeight = Math.max(32, labelHeight + 21);
 
-      const barX = x + 150;
-      const barY = doc.y + 5;
-      const barW = w - 180;
+      ensureSpace(doc, rowHeight + 4, labels, lang, pageState);
+
+      const rowY = doc.y;
+      const barX = x;
+      const barY = rowY + labelHeight + 6;
+      const barW = w - 52;
       const ratio = Math.max(0, Math.min(1, item.average / 3));
 
       doc.fillColor(BRAND.muted)
         .font(getFont(lang))
         .fontSize(9)
-        .text(formatKeyLabel(item.key, labels), x, doc.y, {
-          width: 135,
+        .text(label, x, rowY, {
+          width: w - 54,
           align: getTextAlign(lang)
         });
 
@@ -1337,11 +1387,11 @@ function addOverviewBlock(doc, payload, labels, lang, pageState = null) {
       doc.fillColor(BRAND.muted)
         .font(getFont(lang))
         .fontSize(8)
-        .text(formatScore(item.average), barX + barW + 8, doc.y - 1, {
-          width: 30
+        .text(formatScore(item.average), barX + barW + 8, barY - 2, {
+          width: 38
         });
 
-      doc.moveDown(0.55);
+      doc.y = rowY + rowHeight;
     });
   }
 }
@@ -2324,7 +2374,7 @@ function addReportParagraph(doc, paragraph, labels, lang, pageState = null) {
 }
 
 function addReportText(doc, reportText, labels, lang, pageState = null) {
-  const parts = splitReportText(polishHungarianReportWording(reportText));
+  const parts = splitReportText(polishHungarianReportWording(reportText, lang));
 
   let sectionCounter = 1;
 

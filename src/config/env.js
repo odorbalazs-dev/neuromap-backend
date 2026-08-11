@@ -1,3 +1,5 @@
+import { resolveServiceRole } from "./service-role.js";
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
@@ -60,6 +62,20 @@ function optionalInt(name, fallback, { min = 0, max = Number.MAX_SAFE_INTEGER } 
 function optionalBoolean(name, fallback = false) {
   const raw = optional(name, String(fallback));
   return String(raw).trim().toLowerCase() === "true";
+}
+
+const serviceRole = resolveServiceRole();
+
+if (serviceRole.error) {
+  throw new Error(serviceRole.error);
+}
+
+if (serviceRole.warning) {
+  console.warn(`[env] ${serviceRole.warning}`);
+}
+
+function requiredForWeb(name) {
+  return serviceRole.role === "web" ? required(name) : optional(name, null);
 }
 
 // ---------------------------------------------------------------------------
@@ -161,7 +177,8 @@ if (dbResult.error) {
 export const env = {
   NODE_ENV: process.env.NODE_ENV || "development",
   PORT: process.env.PORT || 3000,
-  SERVICE_ROLE: optional("RAILWAY_SERVICE_ROLE", "web"),
+  SERVICE_ROLE: serviceRole.role,
+  SERVICE_ROLE_SOURCE: serviceRole.source,
 
   HTTP_JSON_BODY_LIMIT_BYTES: optionalInt("HTTP_JSON_BODY_LIMIT_BYTES", 262144, {
     min: 16384,
@@ -199,8 +216,8 @@ export const env = {
     max: 20000
   }),
 
-  STRIPE_SECRET_KEY: required("STRIPE_SECRET_KEY"),
-  STRIPE_WEBHOOK_SECRET: required("STRIPE_WEBHOOK_SECRET"),
+  STRIPE_SECRET_KEY: requiredForWeb("STRIPE_SECRET_KEY"),
+  STRIPE_WEBHOOK_SECRET: requiredForWeb("STRIPE_WEBHOOK_SECRET"),
   STRIPE_TIMEOUT_MS: optionalInt("STRIPE_TIMEOUT_MS", 20000, {
     min: 5000,
     max: 120000
@@ -215,8 +232,8 @@ export const env = {
   RESEND_API_KEY: required("RESEND_API_KEY"),
   EMAIL_FROM: required("EMAIL_FROM"),
 
-  SUCCESS_URL: required("SUCCESS_URL"),
-  CANCEL_URL: required("CANCEL_URL"),
+  SUCCESS_URL: requiredForWeb("SUCCESS_URL"),
+  CANCEL_URL: requiredForWeb("CANCEL_URL"),
 
   APP_URL: required("APP_URL"),
   APP_BASE_URL:
@@ -238,10 +255,11 @@ export const env = {
   META_ACCESS_TOKEN: optional("META_ACCESS_TOKEN", null),
 
   ADMIN_TOKEN: optional("ADMIN_TOKEN", null),
-  ADMIN_SESSION_TTL_MINUTES: optionalInt("ADMIN_SESSION_TTL_MINUTES", 480, {
+  ADMIN_SESSION_TTL_MINUTES: optionalInt("ADMIN_SESSION_TTL_MINUTES", 60, {
     min: 5,
     max: 1440
   }),
+  ADMIN_SESSION_BIND_IP: optionalBoolean("ADMIN_SESSION_BIND_IP", false),
   ADMIN_LEGACY_TOKEN_AUTH: optionalBoolean("ADMIN_LEGACY_TOKEN_AUTH", false),
   ADMIN_COOKIE_SECURE: optionalBoolean(
     "ADMIN_COOKIE_SECURE",
@@ -270,7 +288,7 @@ export const env = {
   }),
   DATABASE_SSL_MODE: optional(
     "DATABASE_SSL_MODE",
-    (process.env.NODE_ENV || "development") === "production" ? "require" : "disable"
+    "auto"
   ),
   DATABASE_SSL_CA_BASE64: optional("DATABASE_SSL_CA_BASE64", null),
   RATE_LIMIT_BACKEND: optional("RATE_LIMIT_BACKEND", "database"),
@@ -309,11 +327,11 @@ export const env = {
   }),
 
   PRIVACY_POLICY_URL: optional("PRIVACY_POLICY_URL", null),
-  PRIVACY_POLICY_VERSION: optional("PRIVACY_POLICY_VERSION", "2026-07-15"),
+  PRIVACY_POLICY_VERSION: optional("PRIVACY_POLICY_VERSION", "2026-07-26"),
   TERMS_URL: optional("TERMS_URL", null),
-  TERMS_VERSION: optional("TERMS_VERSION", "2026-07-15"),
-  CONSENT_POLICY_VERSION: optional("CONSENT_POLICY_VERSION", "2026-07-15"),
-  POLICY_EFFECTIVE_DATE: optional("POLICY_EFFECTIVE_DATE", "2026-07-15"),
+  TERMS_VERSION: optional("TERMS_VERSION", "2026-07-26"),
+  CONSENT_POLICY_VERSION: optional("CONSENT_POLICY_VERSION", "2026-07-26"),
+  POLICY_EFFECTIVE_DATE: optional("POLICY_EFFECTIVE_DATE", "2026-07-26"),
   CONSENT_RECEIPT_TTL_HOURS: optionalInt("CONSENT_RECEIPT_TTL_HOURS", 24, {
     min: 1,
     max: 168
@@ -335,13 +353,21 @@ export const env = {
   LAUNCH_GATE_ENFORCED: optionalBoolean("LAUNCH_GATE_ENFORCED", false),
   PRODUCTION_CHECKOUT_ENABLED: optionalBoolean("PRODUCTION_CHECKOUT_ENABLED", true),
   LEGAL_REVIEW_APPROVED: optionalBoolean("LEGAL_REVIEW_APPROVED", false),
+  LEGAL_REVIEW_EVIDENCE: optional("LEGAL_REVIEW_EVIDENCE", null),
   DPIA_APPROVED: optionalBoolean("DPIA_APPROVED", false),
+  DPIA_EVIDENCE: optional("DPIA_EVIDENCE", null),
   CLINICAL_CONTENT_REVIEW_APPROVED: optionalBoolean("CLINICAL_CONTENT_REVIEW_APPROVED", false),
+  CLINICAL_CONTENT_REVIEW_EVIDENCE: optional("CLINICAL_CONTENT_REVIEW_EVIDENCE", null),
   PRIVACY_POLICY_PUBLISHED: optionalBoolean("PRIVACY_POLICY_PUBLISHED", false),
+  PRIVACY_POLICY_EVIDENCE: optional("PRIVACY_POLICY_EVIDENCE", null),
   TERMS_PUBLISHED: optionalBoolean("TERMS_PUBLISHED", false),
+  TERMS_EVIDENCE: optional("TERMS_EVIDENCE", null),
   CONSENT_MANAGER_CONFIGURED: optionalBoolean("CONSENT_MANAGER_CONFIGURED", false),
+  CONSENT_MANAGER_EVIDENCE: optional("CONSENT_MANAGER_EVIDENCE", null),
   VENDOR_DPA_REVIEWED: optionalBoolean("VENDOR_DPA_REVIEWED", false),
+  VENDOR_DPA_EVIDENCE: optional("VENDOR_DPA_EVIDENCE", null),
   SECURITY_REVIEW_APPROVED: optionalBoolean("SECURITY_REVIEW_APPROVED", false),
+  SECURITY_REVIEW_EVIDENCE: optional("SECURITY_REVIEW_EVIDENCE", null),
 
   INVOICE_PROVIDER: optional("INVOICE_PROVIDER", null),
   INVOICE_AUTO_CREATE: optional("INVOICE_AUTO_CREATE", null),

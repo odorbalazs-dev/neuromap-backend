@@ -6,6 +6,10 @@ import {
   validateReportStructure
 } from "./report-contract.service.js";
 import { buildReportV2PromptContext } from "./report-v2.service.js";
+import {
+  formatProfessionalTerm,
+  formatReportDomain
+} from "../utils/report-terminology.js";
 
 const openai = new OpenAI({
   apiKey: env.OPENAI_API_KEY,
@@ -52,7 +56,7 @@ function getReportValidationOptions(lang) {
 
 function buildLanguageInstruction(lang) {
   const map = {
-    hu: "A teljes riportot magyar nyelven írd, természetes, helyes, igényes magyar mondatokkal. Kerüld a tükörfordításokat és a sablonos, gépies fordulatokat.",
+    hu: "A teljes riportot természetes, helyes és igényes magyar nyelven írd. Kerüld a tükörfordításokat, a sablonos fordulatokat és az önálló angol címeket. Minden pszichológiai vagy funkcionális terület, nehézség, probléma, erősség és védő tényező megnevezésénél először a magyar kifejezést használd, majd közvetlenül utána zárójelben add meg az angol szakmai megfelelőjét, például: Végrehajtó működés (executive functioning). A magyarázó mondatok maradjanak magyarul; angol szöveg csak a szakmai területnevek zárójeles megfelelőjeként szerepelhet. Soha ne jeleníts meg belső kulcsokat, például executive_function, emotional_regulation vagy social_communication.",
     en: "Write the entire report in natural, polished English. Avoid generic, robotic, or template-like wording.",
     de: "Schreibe den gesamten Bericht in natürlichem, korrektem Deutsch. Vermeide wörtliche Übersetzungen und schablonenhafte Formulierungen.",
     it: "Scrivi l'intero report in italiano naturale, corretto e professionale. Evita frasi generiche o troppo schematiche.",
@@ -74,12 +78,17 @@ function toFixedNumber(value, digits = 2) {
   return Number(num.toFixed(digits));
 }
 
-function compactQuestionAnswers(questions = [], answers = []) {
+function compactQuestionAnswers(questions = [], answers = [], lang = "en") {
   return questions.map((q, index) => ({
     id: q.id || `q_${index + 1}`,
-    domain: q.domain || null,
-    subdomain: q.subdomain || null,
-    stemKey: q.stemKey || null,
+    domain: q.domain
+      ? lang === "hu"
+        ? formatReportDomain(q.domain, lang, q.domain)
+        : q.domain
+      : null,
+    subdomain: q.subdomain
+      ? formatProfessionalTerm(q.subdomain, lang, q.subdomain)
+      : null,
     weight: typeof q.weight === "number" ? q.weight : null,
     reverse: typeof q.reverse === "boolean" ? q.reverse : null,
     text: q.text || "",
@@ -87,23 +96,28 @@ function compactQuestionAnswers(questions = [], answers = []) {
   }));
 }
 
-function summarizeSubdomains(source = {}) {
-  const subdomains = Object.entries(source || {}).map(([key, value]) => ({
-    name: key,
-    average: toFixedNumber(value?.average, 2),
-    itemCount: Number(value?.itemCount || 0),
-    totalWeight: toFixedNumber(value?.totalWeight, 2)
-  }));
+function summarizeSubdomains(source = {}, lang = "en") {
+  const subdomains = Object.entries(source || {}).map(([key, value]) => {
+    const displayName = formatProfessionalTerm(key, lang, key);
+
+    return {
+      name: displayName,
+      displayName,
+      average: toFixedNumber(value?.average, 2),
+      itemCount: Number(value?.itemCount || 0),
+      totalWeight: toFixedNumber(value?.totalWeight, 2)
+    };
+  });
 
   subdomains.sort((a, b) => (b.average || 0) - (a.average || 0));
 
   return subdomains;
 }
 
-function summarizeSpecificProfile(profile = null) {
+function summarizeSpecificProfile(profile = null, lang = "en") {
   if (!profile) return null;
 
-  const subdomains = summarizeSubdomains(profile.subdomains);
+  const subdomains = summarizeSubdomains(profile.subdomains, lang);
 
   return {
     kind: profile.kind || null,
@@ -114,10 +128,10 @@ function summarizeSpecificProfile(profile = null) {
   };
 }
 
-function summarizeSpecificScoring(scoring = null) {
+function summarizeSpecificScoring(scoring = null, lang = "en") {
   if (!scoring) return null;
 
-  const subdomains = summarizeSubdomains(scoring.subdomains);
+  const subdomains = summarizeSubdomains(scoring.subdomains, lang);
 
   return {
     totalWeightedScore: toFixedNumber(scoring.totalWeightedScore, 2),
@@ -401,7 +415,7 @@ function buildSignalQualityGuide({ specificProfileSummary, specificScoringSummar
     confidence,
     interpretation,
     overlapScore,
-    topSubdomains: topSubdomains.map((item) => item.name),
+    topSubdomains: topSubdomains.map((item) => item.displayName || item.name),
     writingInstruction:
       average < 0.8
         ? "Treat the pattern as weak. Keep the report reassuring, observational, and focused on monitoring rather than concern."
@@ -416,15 +430,15 @@ function buildSignalQualityGuide({ specificProfileSummary, specificScoringSummar
 function buildPrompt(payload = {}, lang = "en") {
   const safeLang = getSafeLang(lang);
 
-  const triage = compactQuestionAnswers(payload.triageQuestions, payload.triageAnswers);
-  const specific = compactQuestionAnswers(payload.specificQuestions, payload.specificAnswers);
-  const extra = compactQuestionAnswers(payload.extraQuestions, payload.extraAnswers);
+  const triage = compactQuestionAnswers(payload.triageQuestions, payload.triageAnswers, safeLang);
+  const specific = compactQuestionAnswers(payload.specificQuestions, payload.specificAnswers, safeLang);
+  const extra = compactQuestionAnswers(payload.extraQuestions, payload.extraAnswers, safeLang);
 
   const detectedRisk = payload.detectedRisk || "unknown";
   const secondaryRisk = payload.secondaryRisk || "unknown";
 
-  const specificScoringSummary = summarizeSpecificScoring(payload.specificScoring);
-  const specificProfileSummary = summarizeSpecificProfile(payload.specificProfile);
+  const specificScoringSummary = summarizeSpecificScoring(payload.specificScoring, safeLang);
+  const specificProfileSummary = summarizeSpecificProfile(payload.specificProfile, safeLang);
   const adaptiveSummary = buildAdaptiveSummary(payload);
   const domainGuide = getDomainInterpretationGuide(detectedRisk, secondaryRisk);
   const parentActionGuide = getParentActionGuide(detectedRisk, secondaryRisk);
@@ -434,6 +448,17 @@ function buildPrompt(payload = {}, lang = "en") {
     adaptiveSummary
   });
   const reportV2Context = buildReportV2PromptContext(payload, safeLang);
+  const detectedRiskLabel =
+    safeLang === "hu"
+      ? formatReportDomain(detectedRisk, safeLang, detectedRisk)
+      : detectedRisk;
+  const secondaryRiskLabel = payload.secondaryRisk
+    ? safeLang === "hu"
+      ? formatReportDomain(secondaryRisk, safeLang, secondaryRisk)
+      : secondaryRisk
+    : safeLang === "hu"
+    ? "Nincs külön másodlagos jelzés"
+    : "none";
 
   return `
 You are a senior child development and child mental-health screening interpreter writing a paid parent-facing report.
@@ -567,8 +592,8 @@ CLINICAL QUALITY GATE BEFORE WRITING:
 - Do not overuse the words "may", "can", or "appears" in every sentence; keep the tone careful but readable.
 
 INPUT DATA:
-Primary detected focus: ${detectedRisk}
-Secondary signal: ${secondaryRisk}
+Primary detected focus: ${detectedRiskLabel}
+Secondary signal: ${secondaryRiskLabel}
 Questionnaire version: ${payload.questionnaireVersion || "unknown"}
 
 ADAPTIVE SUMMARY:

@@ -1,3 +1,8 @@
+import {
+  formatProfessionalTerm,
+  formatReportDomain
+} from "../utils/report-terminology.js";
+
 const AGE_PATHS = [
   ["childAge"],
   ["child_age"],
@@ -581,9 +586,25 @@ function formatFocusLabel(value = "") {
     .trim();
 }
 
+function getFocusDisplayLabel(value = "", lang = "en") {
+  const fallback = formatFocusLabel(value);
+  return lang === "hu"
+    ? formatProfessionalTerm(value, lang, fallback)
+    : fallback;
+}
+
+function getDomainDisplayLabel(value = "", lang = "en") {
+  const fallback = formatFocusLabel(value);
+  return lang === "hu"
+    ? formatReportDomain(value, lang, fallback)
+    : fallback;
+}
+
 function buildObservationFocus(signals, lang = "en") {
   const copy = getLangCopy(lang);
-  const areas = (signals.topSubdomains || []).map((item) => formatFocusLabel(item.key)).filter(Boolean);
+  const areas = (signals.topSubdomains || [])
+    .map((item) => getFocusDisplayLabel(item.key, lang))
+    .filter(Boolean);
 
   if (!areas.length) return copy.observationEmpty;
   return copy.observationWithAreas.replace("{areas}", areas.join(", "));
@@ -604,6 +625,10 @@ export function buildReportV2Context(payload = {}, lang = "en") {
   const signals = getReportSignals(payload);
   const actions = getActionCopy(lang);
   const domainAction = actions[signals.detectedRisk] || actions.UNKNOWN || getActionCopy("en").UNKNOWN;
+  const focusSubdomains = signals.topSubdomains.map((item) => ({
+    ...item,
+    label: getFocusDisplayLabel(item.key, lang)
+  }));
 
   return {
     version: "structured_report_v2",
@@ -614,9 +639,13 @@ export function buildReportV2Context(payload = {}, lang = "en") {
     interpretation: ageCopy.interpretation,
     recommendations: ageCopy.recommendations,
     primaryFocus: signals.detectedRisk,
+    primaryFocusLabel: getDomainDisplayLabel(signals.detectedRisk, lang),
     secondaryFocus: signals.secondaryRisk,
+    secondaryFocusLabel: signals.secondaryRisk
+      ? getDomainDisplayLabel(signals.secondaryRisk, lang)
+      : null,
     severity: signals.severity,
-    focusSubdomains: signals.topSubdomains,
+    focusSubdomains,
     actionPlanTitle: domainAction[0],
     actionPlan: domainAction[1],
     observationFocus: buildObservationFocus(signals, lang),

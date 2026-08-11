@@ -46,6 +46,18 @@ function validateConsent(consent) {
   return errors;
 }
 
+function validatePurchaseConfirmations(confirmations) {
+  if (!isObject(confirmations)) return ["Missing purchase confirmations."];
+  const errors = [];
+  if (confirmations.digitalPerformanceRequested !== true) {
+    errors.push("Immediate digital performance must be explicitly requested.");
+  }
+  if (confirmations.withdrawalRightAcknowledged !== true) {
+    errors.push("Withdrawal-right acknowledgement is required.");
+  }
+  return errors;
+}
+
 export function validateCheckoutPayload(body = {}) {
   const errors = [];
   if (!body.name || typeof body.name !== "string" || body.name.length > 120) {
@@ -60,6 +72,7 @@ export function validateCheckoutPayload(body = {}) {
     errors.push("Invalid packageCode.");
   }
   errors.push(...validateConsent(body.consent));
+  errors.push(...validatePurchaseConfirmations(body.purchaseConfirmations));
 
   const payload = body.payload;
   if (!isObject(payload)) return { ok: false, errors: [...errors, "Missing payload."] };

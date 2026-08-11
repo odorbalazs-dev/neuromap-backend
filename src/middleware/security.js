@@ -114,7 +114,8 @@ export function createRateLimit({
   windowMs = DEFAULT_WINDOW_MS,
   max = 100,
   keyPrefix = "global",
-  skip = null
+  skip = null,
+  failClosed = false
 } = {}) {
   return async function rateLimit(req, res, next) {
     if (typeof skip === "function" && skip(req)) {
@@ -134,8 +135,22 @@ export function createRateLimit({
           return next();
         }
 
+        if (failClosed && env.NODE_ENV === "production") {
+          res.setHeader("Retry-After", "60");
+          return res.status(503).json({
+            ok: false,
+            error: "Request protection is temporarily unavailable. Please try again later."
+          });
+        }
+
         bucket = consumeMemoryBucket({ key, windowMs });
       }
+    } else if (failClosed && env.NODE_ENV === "production") {
+      res.setHeader("Retry-After", "60");
+      return res.status(503).json({
+        ok: false,
+        error: "Request protection is temporarily unavailable. Please try again later."
+      });
     } else {
       bucket = consumeMemoryBucket({ key, windowMs });
     }

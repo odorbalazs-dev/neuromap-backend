@@ -242,6 +242,11 @@ export async function createCheckoutSession({
   );
 }
 
+export async function expireCheckoutSession(stripeSessionId) {
+  if (!stripeSessionId) return null;
+  return stripe.checkout.sessions.expire(stripeSessionId);
+}
+
 export function constructStripeEvent(rawBody, signature) {
   if (!signature) throw new Error("Missing Stripe signature header.");
   if (!env.STRIPE_WEBHOOK_SECRET) throw new Error("Missing STRIPE_WEBHOOK_SECRET.");

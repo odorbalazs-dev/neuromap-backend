@@ -2,6 +2,8 @@ node_modules/
 .env
 .tmp.driveupload/
 .codex-tmp/
+.npm-cache/
+__pycache__/
 work/
 tmp/
 ~$*.docx

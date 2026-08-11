@@ -19,13 +19,31 @@ function main() {
     loaderHtml.includes("/public/webflow/engine.js"),
     "Webflow Engine loader should load the public engine file."
   );
-  const currentEngineVersion = "20260810-checkout-payload-v1";
+  const currentEngineVersion = "20260811-step-scroll-v1";
   assert(
     loaderHtml.includes(currentEngineVersion),
     "Webflow Engine loader should include the current questionnaire shell cache-busting version."
   );
   assert(script.includes("ENGINE_VERSION"), "Engine should expose an engine version.");
   assert(script.includes(currentEngineVersion), "Engine should expose the current questionnaire shell version.");
+  assert(script.includes("scheduleQuestionnaireTopScroll"), "Engine should defer questionnaire step scrolling until rendering is complete.");
+  assert(script.includes("requestAnimationFrame"), "Engine should schedule step scrolling after browser layout.");
+
+  const renderStart = script.indexOf("function renderCurrentStep()");
+  const nextStepStart = script.indexOf("function nextStep()", renderStart);
+  const renderCurrentStep = script.slice(renderStart, nextStepStart);
+  const packageUpdateIndex = renderCurrentStep.lastIndexOf("updatePackageCheckoutButtons()");
+  const scheduledScrollIndex = renderCurrentStep.lastIndexOf("scheduleQuestionnaireTopScroll");
+
+  assert(renderStart >= 0 && nextStepStart > renderStart, "Engine should include the current-step renderer.");
+  assert(
+    scheduledScrollIndex > packageUpdateIndex,
+    "Engine should scroll only after the newly selected questionnaire step has rendered."
+  );
+  assert(
+    !renderCurrentStep.includes("scrollToQuestionnaireTop();"),
+    "Engine should not scroll before the questionnaire DOM has been updated."
+  );
   assert(script.includes("ANALYTICS_SCHEMA_VERSION"), "Engine should define an analytics schema version.");
   assert(script.includes("analytics-event-schema-v2"), "Engine should use analytics event schema v2.");
   assert(script.includes("trackSchemaEvent"), "Engine should send normalized analytics events.");

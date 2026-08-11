@@ -20,7 +20,7 @@ export function verifySecret(rawValue, storedHash) {
 export async function createAdminSession({ ip = "", userAgent = "" } = {}) {
   const sessionToken = randomBytes(32).toString("base64url");
   const csrfToken = randomBytes(32).toString("base64url");
-  const ttlMinutes = Number(env.ADMIN_SESSION_TTL_MINUTES || 480);
+  const ttlMinutes = Number(env.ADMIN_SESSION_TTL_MINUTES || 60);
 
   const result = await db.query(
     `
@@ -56,22 +56,51 @@ export async function createAdminSession({ ip = "", userAgent = "" } = {}) {
   };
 }
 
-export async function getAdminSession(sessionToken) {
+export async function getAdminSession(sessionToken, { ip = "", userAgent = "" } = {}) {
   const tokenHash = hashSecret(sessionToken);
 
-  const result = await db.query(
+  const lookup = await db.query(
     `
-    UPDATE admin_sessions
-    SET last_seen_at = NOW()
+    SELECT id, csrf_token_hash, ip_hash, user_agent_hash, expires_at, created_at, last_seen_at
+    FROM admin_sessions
     WHERE session_token_hash = $1
       AND revoked_at IS NULL
       AND expires_at > NOW()
-    RETURNING id, csrf_token_hash, expires_at, created_at, last_seen_at
     `,
     [tokenHash]
   );
 
-  return result.rows[0] || null;
+  const session = lookup.rows[0] || null;
+  if (!session) return null;
+
+  const userAgentMatches = session.user_agent_hash
+    ? verifySecret(userAgent, session.user_agent_hash)
+    : false;
+  const ipMatches = !env.ADMIN_SESSION_BIND_IP || !session.ip_hash
+    ? true
+    : verifySecret(ip, session.ip_hash);
+
+  if (!userAgentMatches || !ipMatches) {
+    await db.query(
+      `UPDATE admin_sessions SET revoked_at = COALESCE(revoked_at, NOW()) WHERE id = $1`,
+      [session.id]
+    );
+    return null;
+  }
+
+  const refreshed = await db.query(
+    `
+    UPDATE admin_sessions
+    SET last_seen_at = NOW()
+    WHERE id = $1
+      AND revoked_at IS NULL
+      AND expires_at > NOW()
+    RETURNING id, csrf_token_hash, expires_at, created_at, last_seen_at
+    `,
+    [session.id]
+  );
+
+  return refreshed.rows[0] || null;
 }
 
 export async function revokeAdminSession(sessionToken) {

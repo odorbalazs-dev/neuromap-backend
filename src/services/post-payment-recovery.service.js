@@ -6,6 +6,7 @@ import {
 import { markAnalysisQueued } from "./session.service.js";
 import { retryReportEmailsBatch } from "./report-email-retry.service.js";
 import { retryContractConfirmationsBatch } from "./contract-confirmation.service.js";
+import { retryInvoicesBatch } from "./invoice.service.js";
 
 function normalizeNumber(value, fallback, min, max) {
   const number = Number(value);
@@ -189,6 +190,12 @@ export async function runPostPaymentRecoveryV2(options = {}) {
     staleSendingMinutes
   });
 
+  const invoiceRetry = await retryInvoicesBatch({
+    limit: emailLimit,
+    maxAttempts: maxEmailAttempts,
+    staleProcessingMinutes: staleSendingMinutes
+  });
+
   const checkoutRecovery = await findCheckoutRecoveryCandidates({
     limit: jobLimit,
     staleMinutes: retryAfterMinutes
@@ -215,7 +222,11 @@ export async function runPostPaymentRecoveryV2(options = {}) {
       reportEmailsFailed: emailRetry.failed,
       contractConfirmationsChecked: contractConfirmationRetry.checked,
       contractConfirmationsSent: contractConfirmationRetry.sent,
-      contractConfirmationsFailed: contractConfirmationRetry.failed
+      contractConfirmationsFailed: contractConfirmationRetry.failed,
+      invoicesChecked: invoiceRetry.checked,
+      invoicesIssued: invoiceRetry.issued,
+      invoicesFailed: invoiceRetry.failed,
+      invoicesDeferred: invoiceRetry.deferred
     },
     actions: [
       {
@@ -247,6 +258,12 @@ export async function runPostPaymentRecoveryV2(options = {}) {
         label: "Contract confirmation retry batch",
         count: contractConfirmationRetry.checked,
         items: contractConfirmationRetry.results
+      },
+      {
+        key: "invoice_retry",
+        label: "Paid sessions missing an issued invoice",
+        count: invoiceRetry.checked,
+        items: invoiceRetry.results
       }
     ]
   };

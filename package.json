@@ -21,8 +21,10 @@
     "smoke:two-tier-offer": "node scripts/smoke-two-tier-offer.js",
     "smoke:browser-engine": "node scripts/smoke-browser-engine-bundle.js",
     "smoke:engine-age-field": "node scripts/smoke-engine-age-field.js",
+    "smoke:safety-flow": "node scripts/smoke-safety-flow.js",
     "smoke:legal-consent": "node scripts/smoke-legal-consent.js",
     "smoke:legal-governance": "node scripts/smoke-legal-governance.js",
+    "smoke:privacy-rights": "node scripts/smoke-privacy-rights.js",
     "smoke:launch-gate": "node scripts/smoke-launch-gate.js",
     "smoke:checkout-pages": "node scripts/smoke-checkout-pages.js",
     "smoke:analysis-report": "node scripts/smoke-analysis-report-contract.js",
@@ -30,9 +32,11 @@
     "smoke:report-v2": "node scripts/smoke-report-v2.js",
     "smoke:pdf": "node scripts/smoke-pdf-report.js",
     "smoke:admin-dashboard": "node scripts/smoke-admin-dashboard.js",
-    "audit:all": "npm run audit:banks && npm run audit:bank-quality && npm run audit:engine-selection && npm run audit:language-quality && npm run audit:campaign-readiness && npm run audit:google-ads && npm run audit:security && npm run audit:hardening && npm run smoke:checkout-payload && npm run smoke:two-tier-offer && npm run smoke:browser-engine && npm run smoke:engine-age-field && npm run smoke:legal-consent && npm run smoke:legal-governance && npm run smoke:launch-gate && npm run smoke:checkout-pages && npm run smoke:analysis-report && npm run smoke:email-idempotency && npm run smoke:report-v2 && npm run smoke:pdf && npm run smoke:admin-dashboard"
+    "smoke:railway-runtime": "node scripts/smoke-railway-runtime.js",
+    "audit:all": "npm run audit:banks && npm run audit:bank-quality && npm run audit:engine-selection && npm run audit:language-quality && npm run audit:campaign-readiness && npm run audit:google-ads && npm run audit:security && npm run audit:hardening && npm run smoke:checkout-payload && npm run smoke:two-tier-offer && npm run smoke:browser-engine && npm run smoke:engine-age-field && npm run smoke:safety-flow && npm run smoke:legal-consent && npm run smoke:legal-governance && npm run smoke:privacy-rights && npm run smoke:launch-gate && npm run smoke:checkout-pages && npm run smoke:analysis-report && npm run smoke:email-idempotency && npm run smoke:report-v2 && npm run smoke:pdf && npm run smoke:admin-dashboard"
   },
   "dependencies": {
+    "body-parser": "1.20.6",
     "cors": "^2.8.6",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",

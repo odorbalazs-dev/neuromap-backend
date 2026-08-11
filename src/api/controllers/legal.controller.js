@@ -9,7 +9,8 @@ import { getSessionAccessTokenFromRequest } from "../../services/session.service
 import {
   createPrivacyRequest,
   getPrivacyRequestStatus,
-  privacyRequestTokenFromRequest
+  privacyRequestTokenFromRequest,
+  verifyPrivacyRequest
 } from "../../services/privacy-rights.service.js";
 
 function readReceipt(req) {
@@ -76,6 +77,19 @@ export async function inspectPrivacyRequest(req, res) {
       privacyRequestTokenFromRequest(req)
     );
     return res.status(200).json({ ok: true, request });
+  } catch (error) {
+    return handlePrivacyRequestError(error, res);
+  }
+}
+
+export async function confirmPrivacyRequest(req, res) {
+  try {
+    const result = await verifyPrivacyRequest({
+      requestId: req.params.id,
+      requestToken: privacyRequestTokenFromRequest(req),
+      code: req.body?.code
+    });
+    return res.status(200).json({ ok: true, ...result });
   } catch (error) {
     return handlePrivacyRequestError(error, res);
   }

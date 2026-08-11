@@ -2,7 +2,7 @@ import fs from "node:fs";
 import vm from "node:vm";
 
 const SUPPORTED_LANGS = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];
-const REQUIRED_ENGINE_VERSION = "20260810-checkout-payload-v1";
+const REQUIRED_ENGINE_VERSION = "20260811-step-scroll-v1";
 
 const checks = [
   {
@@ -49,7 +49,7 @@ const checks = [
   {
     file: "src/services/analysis.service.js",
     required: [
-      "A teljes riportot magyar nyelven írd",
+      "A teljes riportot természetes, helyes és igényes magyar nyelven írd",
       "natürlichem, korrektem Deutsch",
       "español natural",
       "自然、准确、专业的中文",

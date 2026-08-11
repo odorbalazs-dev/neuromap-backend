@@ -105,7 +105,8 @@ app.get("/", (_req, res) => {
 app.use("/checkout", createRateLimit({
   windowMs: 15 * 60 * 1000,
   max: 25,
-  keyPrefix: "checkout"
+  keyPrefix: "checkout",
+  failClosed: true
 }), checkoutRoutes);
 
 app.use("/session", createRateLimit({
@@ -120,10 +121,18 @@ app.use("/observation", createRateLimit({
   keyPrefix: "observation"
 }), observationRoutes);
 
+app.use("/legal/privacy-requests", createRateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  keyPrefix: "privacy-rights",
+  failClosed: true
+}));
+
 app.use("/legal", createRateLimit({
   windowMs: 15 * 60 * 1000,
   max: 80,
-  keyPrefix: "legal"
+  keyPrefix: "legal",
+  failClosed: true
 }), legalRoutes);
 
 app.use("/webhook", webhookRoutes);

@@ -91,6 +91,12 @@ function assertExpectedAdminToken(rawToken) {
     throw error;
   }
 
+  if (env.NODE_ENV === "production" && expectedToken.length < 32) {
+    const error = new Error("ADMIN_TOKEN must contain at least 32 characters in production");
+    error.status = 500;
+    throw error;
+  }
+
   if (!secureCompare(token, expectedToken)) {
     const error = new Error("Unauthorized");
     error.status = 401;
@@ -155,7 +161,10 @@ export async function adminAuth(req, res, next) {
     const sessionToken = cookies[SESSION_COOKIE];
 
     if (sessionToken) {
-      const adminSession = await getAdminSession(sessionToken);
+      const adminSession = await getAdminSession(sessionToken, {
+        ip: req.ip || req.socket?.remoteAddress || "",
+        userAgent: req.headers["user-agent"] || ""
+      });
 
       if (adminSession) {
         if (isUnsafeMethod(req.method)) {

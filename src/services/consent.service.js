@@ -8,18 +8,21 @@ const SUPPORTED_LANGS = new Set([
   "hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"
 ]);
 
-const REQUIRED_CONFIRMATIONS = [
+const INITIAL_REQUIRED_CONFIRMATIONS = [
   "adultConfirmation",
   "guardianAuthority",
   "termsAcknowledged",
   "informationalPurposeAcknowledged",
-  "digitalPerformanceRequested",
-  "withdrawalRightAcknowledged",
   "privacyNoticeAcknowledged",
   "specialCategoryExplicitConsent",
   "aiTransparencyAcknowledged",
   "termsScrollCompleted",
   "privacyScrollCompleted"
+];
+
+const PURCHASE_REQUIRED_CONFIRMATIONS = [
+  "digitalPerformanceRequested",
+  "withdrawalRightAcknowledged"
 ];
 
 export class ConsentError extends Error {
@@ -53,7 +56,7 @@ function normalizeLanguage(value) {
 }
 
 function validateConsentInput(input = {}) {
-  const missing = REQUIRED_CONFIRMATIONS.filter((key) => input[key] !== true);
+  const missing = INITIAL_REQUIRED_CONFIRMATIONS.filter((key) => input[key] !== true);
   const actorRole = String(input.actorRole || "").trim();
 
   if (!["parent_or_legal_guardian", "adult_authorized_purchaser"].includes(actorRole)) {
@@ -75,6 +78,16 @@ function validateConsentInput(input = {}) {
   }
 
   return actorRole;
+}
+
+function validatePurchaseConfirmations(input = {}) {
+  const missing = PURCHASE_REQUIRED_CONFIRMATIONS.filter((key) => input[key] !== true);
+  if (missing.length) {
+    throw new ConsentError("Required purchase confirmations are missing.", {
+      code: "PURCHASE_CONFIRMATIONS_MISSING",
+      details: missing
+    });
+  }
 }
 
 function toConsentSnapshot(row) {
@@ -139,10 +152,11 @@ export async function createConsentReceipt(input = {}) {
   );
 
   const evidence = {
-    schemaVersion: "explicit-consent-receipt-v1",
+    schemaVersion: "explicit-consent-receipt-v2",
     legalUiVersion: String(input.legalUiVersion || "webflow-legal-v1").slice(0, 80),
-    termsScrollCompleted: true,
-    privacyScrollCompleted: true,
+    termsScrollCompleted: input.termsScrollCompleted === true,
+    privacyScrollCompleted: input.privacyScrollCompleted === true,
+    purchaseConfirmationsCollectedAtCheckout: false,
     locale: language
   };
 
@@ -160,7 +174,7 @@ export async function createConsentReceipt(input = {}) {
     VALUES (
       $1, $2, $3, $4, TRUE,
       TRUE, TRUE, TRUE,
-      TRUE, TRUE,
+      FALSE, FALSE,
       TRUE, TRUE,
       TRUE, $5, FALSE,
       $6, $7, $8,
@@ -261,13 +275,20 @@ export async function inspectConsentReceipt(receipt = {}) {
   }));
 }
 
-export async function claimConsentReceipt(receipt = {}) {
+export async function claimConsentReceipt(receipt = {}, purchaseConfirmations = {}) {
+  validatePurchaseConfirmations(purchaseConfirmations);
   const { id, token } = validateReceiptShape(receipt);
   const tokenHash = hashToken(token);
   const result = await db.query(
     `
     UPDATE consent_events
-    SET used_at = NOW()
+    SET used_at = NOW(),
+        digital_performance_requested = TRUE,
+        withdrawal_right_acknowledged = TRUE,
+        evidence = COALESCE(evidence, '{}'::jsonb) || jsonb_build_object(
+          'purchaseConfirmationsCollectedAtCheckout', TRUE,
+          'purchaseConfirmedAt', NOW()
+        )
     WHERE id = $1
       AND token_hash = $2
       AND used_at IS NULL
@@ -305,7 +326,12 @@ export async function releaseConsentReceipt(id) {
   await db.query(
     `
     UPDATE consent_events
-    SET used_at = NULL
+    SET used_at = NULL,
+        digital_performance_requested = FALSE,
+        withdrawal_right_acknowledged = FALSE,
+        evidence = COALESCE(evidence, '{}'::jsonb) || jsonb_build_object(
+          'purchaseConfirmationsCollectedAtCheckout', FALSE
+        )
     WHERE id = $1
       AND withdrawn_at IS NULL
     `,

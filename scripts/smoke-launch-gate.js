@@ -30,7 +30,7 @@ function expectBlocked(runtimeEnv, expectedMissing) {
   }
 }
 
-const advisoryEnv = {
+const incompleteProductionEnv = {
   NODE_ENV: "production",
   LAUNCH_GATE_ENFORCED: false,
   PRODUCTION_CHECKOUT_ENABLED: true,
@@ -39,31 +39,39 @@ const advisoryEnv = {
   CONSENT_POLICY_VERSION: "test"
 };
 
-const advisoryStatus = getLaunchGateStatus(advisoryEnv);
-assert(!advisoryStatus.ready, "Incomplete approvals must remain visible");
-assert(!advisoryStatus.blocking, "Advisory approvals must not silently block checkout");
-assertCheckoutLaunchReady(advisoryEnv);
+const incompleteStatus = getLaunchGateStatus(incompleteProductionEnv);
+assert(!incompleteStatus.ready, "Incomplete approvals must remain visible");
+assert(incompleteStatus.blocking, "Production must block checkout when approvals are incomplete");
+expectBlocked(incompleteProductionEnv, "legal_review");
 
 expectBlocked(
-  { ...advisoryEnv, PRODUCTION_CHECKOUT_ENABLED: false },
+  { ...incompleteProductionEnv, PRODUCTION_CHECKOUT_ENABLED: false },
   "production_checkout"
 );
 expectBlocked(
-  { ...advisoryEnv, LAUNCH_GATE_ENFORCED: true },
+  { ...incompleteProductionEnv, NODE_ENV: "test", LAUNCH_GATE_ENFORCED: true },
   "legal_review"
 );
 
 const readyEnv = {
-  ...advisoryEnv,
+  ...incompleteProductionEnv,
   LAUNCH_GATE_ENFORCED: true,
   LEGAL_REVIEW_APPROVED: true,
+  LEGAL_REVIEW_EVIDENCE: "review-legal-001",
   DPIA_APPROVED: true,
+  DPIA_EVIDENCE: "review-dpia-001",
   CLINICAL_CONTENT_REVIEW_APPROVED: true,
+  CLINICAL_CONTENT_REVIEW_EVIDENCE: "review-clinical-001",
   PRIVACY_POLICY_PUBLISHED: true,
+  PRIVACY_POLICY_EVIDENCE: "https://example.com/privacy",
   TERMS_PUBLISHED: true,
+  TERMS_EVIDENCE: "https://example.com/terms",
   CONSENT_MANAGER_CONFIGURED: true,
+  CONSENT_MANAGER_EVIDENCE: "review-consent-001",
   VENDOR_DPA_REVIEWED: true,
+  VENDOR_DPA_EVIDENCE: "review-vendors-001",
   SECURITY_REVIEW_APPROVED: true,
+  SECURITY_REVIEW_EVIDENCE: "review-security-001",
   PRIVACY_POLICY_URL: "https://example.com/privacy",
   TERMS_URL: "https://example.com/terms",
   DATA_CONTROLLER_NAME: "Example Ltd.",

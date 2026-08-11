@@ -1,20 +1,42 @@
 import pg from "pg";
 import { env } from "../config/env.js";
+import { resolveDatabaseSslConfig } from "../config/database-ssl.js";
 
 function buildSslConfig() {
-  const mode = String(env.DATABASE_SSL_MODE || "disable").toLowerCase();
+  return sslDecision.ssl;
+}
 
-  if (mode === "disable") return false;
+const sslDecision = resolveDatabaseSslConfig({
+  connectionString: env.DATABASE_URL,
+  mode: env.DATABASE_SSL_MODE,
+  caBase64: env.DATABASE_SSL_CA_BASE64
+});
 
-  const ssl = {
-    rejectUnauthorized: mode !== "no-verify"
-  };
+console.log("[db] SSL configuration", {
+  host: sslDecision.host || "unavailable",
+  requestedMode: sslDecision.requestedMode,
+  normalizedMode: sslDecision.normalizedMode,
+  effectiveMode: sslDecision.effectiveMode,
+  certificateVerified: sslDecision.certificateVerified,
+  reason: sslDecision.reason
+});
 
-  if (env.DATABASE_SSL_CA_BASE64) {
-    ssl.ca = Buffer.from(env.DATABASE_SSL_CA_BASE64, "base64").toString("utf8");
-  }
+if (sslDecision.deprecatedMode) {
+  console.warn(
+    "[db] DATABASE_SSL_MODE=no-verify is deprecated and was treated as auto. " +
+      "Remove the Railway Shared/Reference Variable or set the service variable to auto."
+  );
+}
 
-  return ssl;
+if (
+  sslDecision.host?.endsWith(".proxy.rlwy.net") &&
+  !sslDecision.certificateVerified
+) {
+  console.warn(
+    "[db] Railway public proxy detected. The connection is encrypted, but the " +
+      "provider certificate is not verified. Prefer a Railway Postgres DATABASE_URL " +
+      "variable reference/private network for service-to-service traffic."
+  );
 }
 
 // Pool is only created when a valid DATABASE_URL is available.  When the

@@ -17,7 +17,23 @@ function main() {
 
   const withAge = {
     childAge: "7",
-    detectedRisk: "ADHD"
+    detectedRisk: "ADHD",
+    secondaryRisk: "ANXIETY",
+    specificScoring: {
+      normalizedAverage: 1.8,
+      subdomains: {
+        executive_function: {
+          average: 2.2,
+          itemCount: 6,
+          totalWeight: 6
+        },
+        emotional_regulation: {
+          average: 1.4,
+          itemCount: 5,
+          totalWeight: 5
+        }
+      }
+    }
   };
 
   assert(extractChildAgeYears(withAge) === 7, "Should extract numeric child age.");
@@ -38,6 +54,30 @@ function main() {
   );
   assert(promptContext.observationFocus, "Prompt context should include observation guidance.");
   assert(promptContext.escalationNote, "Prompt context should include an escalation note.");
+  assert(
+    promptContext.primaryFocusLabel.includes("Figyelmi és aktivitásszabályozási terület") &&
+      promptContext.primaryFocusLabel.includes("(ADHD-related attention and activity regulation)"),
+    "Hungarian primary focus should include its English professional equivalent."
+  );
+  assert(
+    promptContext.secondaryFocusLabel.includes("Szorongásos terület") &&
+      promptContext.secondaryFocusLabel.includes("(anxiety-related area)"),
+    "Hungarian secondary focus should include its English professional equivalent."
+  );
+  assert(
+    promptContext.focusSubdomains[0]?.label ===
+      "Végrehajtó működés (executive functioning)",
+    "Hungarian focus areas should use bilingual professional labels."
+  );
+  assert(
+    !promptContext.focusSubdomains.some((item) => item.label.includes("_")),
+    "Focus area labels must not expose internal underscore keys."
+  );
+  assert(
+    promptContext.observationFocus.includes("Végrehajtó működés (executive functioning)") &&
+      !promptContext.observationFocus.includes("executive_function"),
+    "Observation guidance should use bilingual labels instead of internal keys."
+  );
 
   const emailContext = buildReportV2EmailContext(withAge, "hu");
   assert(emailContext.title, "Email context should include a title.");

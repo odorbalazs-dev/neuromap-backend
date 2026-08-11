@@ -33,6 +33,13 @@ function normalizeConsent(consent = {}) {
   };
 }
 
+function normalizePurchaseConfirmations(confirmations = {}) {
+  return {
+    digitalPerformanceRequested: confirmations.digitalPerformanceRequested === true,
+    withdrawalRightAcknowledged: confirmations.withdrawalRightAcknowledged === true
+  };
+}
+
 function stripQuestionMetadata(questions) {
   if (!Array.isArray(questions)) return questions;
   return questions.map((question) => ({
@@ -69,6 +76,7 @@ export function normalizeCheckoutPayload(body = {}) {
     lang: cleanText(body.lang || "en", 10).toLowerCase(),
     packageCode: normalizePackageCode(body.packageCode) || null,
     consent: normalizeConsent(body.consent),
+    purchaseConfirmations: normalizePurchaseConfirmations(body.purchaseConfirmations),
     payload: {
       childAge,
       ageYears: childAge,
