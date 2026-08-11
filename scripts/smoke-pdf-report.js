@@ -1,6 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
-import { generatePdfBuffer } from "../src/services/pdf.service.js";
+import {
+  generatePdfBuffer,
+  polishHungarianReportWording
+} from "../src/services/pdf.service.js";
 import {
   REPORT_SUBDOMAIN_KEYS,
   formatProfessionalTerm,
@@ -21,48 +24,48 @@ function countPdfPages(buffer) {
 function buildSampleReportText() {
   const sections = [
     [
-      "### 1. Rovid nyito osszefoglalo",
-      "A valaszok alapjan a legerosebb jelzes a figyelmi onszabalyozas, a feladattartas es a vegrehajto viselkedes teruleten jelenik meg. Ez nem diagnosztikus megallapitas, hanem egy strukturalt eloszuresi kep, amely segit abban, hogy a szulo lassa, mely helyzetekben erdemes tovabb figyelni a gyermek mindennapi viselkedeset."
+      "### 1. Rövid nyitó összefoglaló",
+      "A válaszok alapján a legerősebb jelzés a figyelmi önszabályozás, a feladattartás és a végrehajtó viselkedés területén jelenik meg. Ez nem diagnosztikus megállapítás, hanem egy strukturált előszűrési kép, amely segít abban, hogy a szülő lássa, mely helyzetekben érdemes tovább figyelni a gyermek mindennapi működését."
     ],
     [
-      "2. Fo megfigyelt mintazatok",
-      "A profilban visszatero elem, hogy a gyermek teljesitmenye hullamzo lehet akkor is, amikor a feladatot alapvetoen megerti. A nehezseg gyakran nem a kepesseg hianyabol, hanem a figyelmi terhelesbol, a valtasokbol, a frusztracio gyors emelkedesebol vagy a feladat befejezesenek nehezsegebol ered. Ez kulonosen akkor lathato, amikor sok inger, idonyomas vagy tobb lepesbol allo elvaras jelenik meg egyszerre."
+      "2. Fő megfigyelt mintázatok",
+      "A profilban visszatérő elem, hogy a gyermek teljesítménye hullámzó lehet akkor is, amikor a feladatot alapvetően megérti. A nehézség gyakran nem a képesség hiányából, hanem a figyelmi terhelésből, a váltásokból, a frusztráció gyors emelkedéséből vagy a feladat befejezésének nehézségéből ered. Ez különösen akkor látható, amikor sok inger, időnyomás vagy több lépésből álló elvárás jelenik meg egyszerre."
     ],
     [
-      "3. Mindennapi helyzetekben varhato megjelenes",
-      "Otthoni helyzetben ez gyakran ugy jelenhet meg, hogy a gyermek elkezd egy tevekenyseget, de kozben mas inger elviszi a figyelmet. Tanulasi vagy ovodai-iskolai helyzetben nagyobb lehet a kulonbseg a rovid, egyertelmu feladatok es a hosszan fenntartott figyelmet igenylo feladatok kozott. A szulo szamara fontos jelzes, hogy a nehezseg nem minden pillanatban latszik egyforman, ezert a jo napok nem zarjak ki a valos terhelest."
+      "3. Mindennapi helyzetekben várható megjelenés",
+      "Otthoni helyzetben ez gyakran úgy jelenhet meg, hogy a gyermek elkezd egy tevékenységet, de közben más inger elviszi a figyelmét. Tanulási vagy óvodai-iskolai helyzetben nagyobb lehet a különbség a rövid, egyértelmű feladatok és a hosszan fenntartott figyelmet igénylő feladatok között. A szülő számára fontos jelzés, hogy a nehézség nem minden pillanatban látszik egyformán, ezért a jó napok nem zárják ki a valós terhelést."
     ],
     [
       "4. Strengths and protective factors",
       "A Primary area of concern az executive_function és az emotional regulation területeihez kapcsolódik. A kérdőív mintázata alapján külön figyelmet érdemelnek azok a helyzetek, ahol a gyermek érdeklődése, mozgásigénye vagy vizuális támogatása segíti a jobb teljesítményt."
     ],
     [
-      "5. Szuloi tamogatasi iranyok",
-      "A legfontosabb tamogatasi irany nem a tobb figyelmeztetes, hanem a kornyezet okosabb strukturaja.\n- Hasznos lehet a rovid, egyertelmu instrukcio.\n- A vizualis lista segitheti a feladatkezdest.\n- A befejezes elott adott konkret visszajelzes csokkentheti az elakadast.\nA cel az, hogy a gyermek ne csak hallja, mit kell tennie, hanem lassa es kovetni is tudja a folyamatot."
+      "5. Szülői támogatási irányok",
+      "A legfontosabb támogatási irány nem a több figyelmeztetés, hanem a környezet okosabb struktúrája.\n- Hasznos lehet a rövid, egyértelmű instrukció.\n- A vizuális lista segítheti a feladatkezdést.\n- A befejezés előtt adott konkrét visszajelzés csökkentheti az elakadást.\nA cél az, hogy a gyermek ne csak hallja, mit kell tennie, hanem lássa és követni is tudja a folyamatot."
     ],
     [
-      "6. Erzelmi es viselkedesi kovetkezmenyek",
-      "Ha a gyermek sokszor tapasztalja meg, hogy nem sikerul idoben befejeznie vagy kovetnie a feladatot, masodlagosan frusztracio, elkerules vagy onertekelesi bizonytalansag is kialakulhat. Ezert erdemes a viselkedest nem pusztan engedetlensegkent ertelmezni, hanem azt is megnezni, milyen terheles elozi meg a reakciot."
+      "6. Érzelmi és viselkedési következmények",
+      "Ha a gyermek sokszor tapasztalja meg, hogy nem sikerül időben befejeznie vagy követnie a feladatot, másodlagosan frusztráció, elkerülés vagy önértékelési bizonytalanság is kialakulhat. Ezért érdemes a viselkedést nem pusztán engedetlenségként értelmezni, hanem azt is megnézni, milyen terhelés előzi meg a reakciót."
     ],
     [
-      "7. Kommunikacio az ovodaval vagy iskolaval",
-      "A pedagogusok fele erdemes konkret helyzeteket megfogalmazni: mikor romlik a figyelem, mi segit, hogyan reagal a gyermek valtasnal, es milyen feladatformatumban teljesit jobban. A leghasznosabb visszajelzes nem altalanos cimke, hanem megfigyelheto viselkedesek listaja."
+      "7. Kommunikáció az óvodával vagy iskolával",
+      "A pedagógusok felé érdemes konkrét helyzeteket megfogalmazni: mikor romlik a figyelem, mi segít, hogyan reagál a gyermek váltásnál, és milyen feladatformátumban teljesít jobban. A leghasznosabb visszajelzés nem általános címke, hanem megfigyelhető viselkedések listája."
     ],
     [
-      "8. Mikor erdemes szakemberhez fordulni",
-      "Ha a nehezsegek tobb kornyezetben, tartosan es a mindennapi viselkedest erdemben befolyasolva jelennek meg, erdemes gyermekpszichologus, gyermekpszichiater, gyogypedagogus vagy fejleszto szakember bevonasat megfontolni. Kulonosen fontos ez akkor, ha a gyermek onbizalma csokken, gyakori a konfliktus, vagy a csaladi elet jelentos terheles ala kerul."
+      "8. Mikor érdemes szakemberhez fordulni",
+      "Ha a nehézségek több környezetben, tartósan és a mindennapi viselkedést érdemben befolyásolva jelennek meg, érdemes gyermekpszichológus, gyermekpszichiáter, gyógypedagógus vagy fejlesztő szakember bevonását megfontolni. Különösen fontos ez akkor, ha a gyermek önbizalma csökken, gyakori a konfliktus, vagy a családi élet jelentős terhelés alá kerül."
     ],
     [
-      "9. Kovetkezo harminc nap javasolt fokusza",
-      "A kovetkezo idoszakban erdemes egyetlen, jol korulhatarolt celra fokuszalni. Peldaul a reggeli keszulodes, a hazi feladat elkezdese vagy az esti rutin lehet olyan terulet, ahol a struktura merhetoen segithet. A tul sok egyszerre bevezetett valtoztatas gyakran csokkenti a kovetkezetesseget."
+      "9. Következő harminc nap javasolt fókusza",
+      "A következő időszakban érdemes egyetlen, jól körülhatárolt célra fókuszálni. Például a reggeli készülődés, a házi feladat elkezdése vagy az esti rutin lehet olyan terület, ahol a struktúra mérhetően segíthet. A túl sok egyszerre bevezetett változtatás gyakran csökkenti a következetességet."
     ],
     [
-      "10. Mit ne vonjunk le kovetkezteteskent",
-      "A riport alapjan nem mondhato ki diagnozis, es nem kovetkezik belole, hogy a gyermek kepessegei gyengek. A mintazat inkabb arra utal, hogy bizonyos onszabalyozasi es figyelmi feltetelek mellett a teljesitmeny erosen valtozhat. Ez a kulonbseg sokszor jol tamogathato, ha a kornyezet megfeleloen alkalmazkodik."
+      "10. Mit ne vonjunk le következtetésként",
+      "A riport alapján nem mondható ki diagnózis, és nem következik belőle, hogy a gyermek képességei gyengék. A mintázat inkább arra utal, hogy bizonyos önszabályozási és figyelmi feltételek mellett a teljesítmény erősen változhat. Ez a különbség sokszor jól támogatható, ha a környezet megfelelően alkalmazkodik."
     ],
     [
-      "11. Zaro megjegyzes",
-      "**Fontos:** ez az anyag tajekoztato jellegu. A pontos ertelmezeshez a gyermek eletkora, fejlodestortenete, csaladi helyzete, ovodai vagy iskolai visszajelzesei, valamint szemelyes szakemberi vizsgalat is szukseges. --- A riport celja, hogy a szulo rendezettebb kepet kapjon, es magabiztosabban tudja megtenni a kovetkezo lepest."
+      "11. Záró megjegyzés",
+      "**Fontos:** ez az anyag tájékoztató jellegű. A pontos értelmezéshez a gyermek életkora, fejlődéstörténete, családi helyzete, óvodai vagy iskolai visszajelzései, valamint személyes szakemberi vizsgálat is szükséges. --- A riport célja, hogy a szülő rendezettebb képet kapjon, és magabiztosabban tudja megtenni a következő lépést."
     ]
   ];
 
@@ -72,22 +75,22 @@ function buildSampleReportText() {
 function buildStressReportText() {
   const longParagraph = Array.from({ length: 26 }, (_, index) => {
     const step = index + 1;
-    return `Stressz bekezdes ${step}: a riportnak akkor is kulturaltan kell oldalt torni, ha egy szakmai magyarazat hosszan folytatodik, tobb peldat, szuloi javaslatot, ovodai vagy iskolai megfigyelest es kovetkezo lepeseket sorol fel egyetlen nagyobb gondolati egysegben.`;
+    return `Stresszbekezdés ${step}: a riportnak akkor is kulturáltan kell oldalt törni, ha egy szakmai magyarázat hosszan folytatódik, több példát, szülői javaslatot, óvodai vagy iskolai megfigyelést és következő lépéseket sorol fel egyetlen nagyobb gondolati egységben.`;
   }).join(" ");
 
   const longBullets = Array.from({ length: 7 }, (_, index) => {
     const step = index + 1;
-    return `- Hosszu javaslat ${step}: valassz egy konkret, hetkoznapi helyzetet, figyeld meg a kivaltokat, rogzitsd mi segit, es csak egyetlen kis valtoztatast vezess be, hogy a szulo es a gyermek szamara is kovetheto maradjon a folyamat.`;
+    return `- Hosszú javaslat ${step}: válassz egy konkrét, hétköznapi helyzetet, figyeld meg a kiváltókat, rögzítsd, mi segít, és csak egyetlen kis változtatást vezess be, hogy a szülő és a gyermek számára is követhető maradjon a folyamat.`;
   }).join("\n");
 
   return [
-    "1. Hosszu klinikai osszefoglalo",
+    "1. Hosszú szakmai összefoglaló",
     longParagraph,
-    "2. Hosszu szuloi javaslatlista",
+    "2. Hosszú szülői javaslatlista",
     longBullets,
-    "3. Hosszu megfigyelesi keret",
+    "3. Hosszú megfigyelési keret",
     longParagraph,
-    "4. Hosszu zaras",
+    "4. Hosszú zárás",
     longParagraph
   ].join("\n\n");
 }
@@ -164,7 +167,7 @@ function buildSamplePayload() {
       normalizedAverage: 1.52,
       signal: {
         key: "moderate",
-        hu: "kozepes jelzesszint",
+        hu: "közepes jelzésszint",
         en: "moderate signal level"
       },
       topSubdomains: Object.entries(subdomains).map(([key, value]) => ({
@@ -181,7 +184,7 @@ function buildSamplePayload() {
         LEARNING: 6
       },
       summaryText: {
-        hu: "A legerosebb minta a figyelmi es vegrehajto viselkedeshez kapcsolodik.",
+        hu: "A legerősebb minta a figyelmi és végrehajtó viselkedéshez kapcsolódik.",
         en: "The strongest pattern relates to attention and executive functioning."
       }
     },
@@ -191,6 +194,36 @@ function buildSamplePayload() {
 
 async function main() {
   console.log("\n=== PDF REPORT SMOKE ===");
+
+  const polishedWording = polishHungarianReportWording(
+    "A gyermek mindennapi m\u0171k\u00f6d\u00e9s\u00e9ben ez jelenhet meg. " +
+      "A gyerek m\u0171k\u00f6d\u00e9se v\u00e1ltoz\u00f3. " +
+      "A csal\u00e1di vagy iskolai m\u0171k\u00f6d\u00e9st \u00e9rdemben terheli. " +
+      "A V\u00e9grehajt\u00f3 m\u0171k\u00f6d\u00e9s (executive functioning) szakmai kifejez\u00e9s.",
+    "hu"
+  );
+  assert(
+    !/gyermek mindennapi m\u0171k\u00f6d\u00e9s\u00e9ben/iu.test(polishedWording),
+    `Child-facing wording should be localized: ${polishedWording}`
+  );
+  assert(
+    !/gyerek m\u0171k\u00f6d\u00e9se/iu.test(polishedWording),
+    `Colloquial child-facing wording should be localized: ${polishedWording}`
+  );
+  assert(
+    polishedWording.includes("csal\u00e1di vagy iskolai mindennapokat \u00e9rdemben megnehez\u00edti"),
+    `Everyday-impact wording should be natural: ${polishedWording}`
+  );
+  assert(
+    !/v[e\u00e9]grehajt[o\u00f3] viselked[e\u00e9]s/iu.test(
+      polishHungarianReportWording("A v\u00e9grehajt\u00f3 viselked\u00e9s ter\u00fclet\u00e9n.", "hu")
+    ),
+    "Executive functioning must retain its established professional term."
+  );
+  assert(
+    /v\u00e9grehajt\u00f3 m\u0171k\u00f6d\u00e9s \(executive functioning\)/iu.test(polishedWording),
+    `Established professional terms must remain unchanged: ${polishedWording}`
+  );
 
   REPORT_SUBDOMAIN_KEYS.forEach((key) => {
     const label = formatProfessionalTerm(key, "hu", key);
@@ -227,7 +260,7 @@ async function main() {
   );
 
   const pdf = await generatePdfBuffer({
-    name: "Teszt Szulo",
+    name: "Teszt Szülő",
     reportText: buildSampleReportText(),
     lang: "hu",
     payload: buildSamplePayload()

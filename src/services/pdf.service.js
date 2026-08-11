@@ -41,7 +41,7 @@ const PAGE_LAYOUT = {
 const PDF_VISUAL_KEEP_WITH_BODY_HEIGHT = 76;
 const PDF_SECTION_TITLE_KEEP_HEIGHT = 78;
 const PDF_MIN_TEXT_CHUNK_HEIGHT = 48;
-const PDF_REPORT_VERSION = "pdf_report_v13_orphan_guard";
+const PDF_REPORT_VERSION = "pdf_report_v15_wording_layout";
 const BODY_TEXT_COLOR = "#374151";
 const BULLET = "\u2022";
 
@@ -75,28 +75,50 @@ function stripMarkdown(value = "") {
     .replace(/\*\*/g, "")
     .replace(/^>\s?/gm, "")
     .replace(/^---+$/gm, "")
+    .replace(/[ \t]+---+[ \t]+/g, "\n\n")
     .replace(/[ \t]{2,}/g, " ")
     .replace(/\n{3,}/g, "\n\n")
     .trim();
 }
 
-function polishHungarianReportWording(value = "", lang = "en") {
+export function polishHungarianReportWording(value = "", lang = "en") {
   const cleaned = clean(value);
   if (lang !== "hu") return cleaned;
 
   return localizeHungarianReportTerminology(cleaned)
-    .replace(/gyermek\s+mindennapi\s+m\u0171k\u00f6d\u00e9s\u00e9t/giu, "gyermek mindennapi viselked\u00e9s\u00e9t")
-    .replace(/gyermek\s+m\u0171k\u00f6d\u00e9se/giu, "gyermek viselked\u00e9se")
-    .replace(/gyermek\s+m\u0171k\u00f6d\u00e9s\u00e9r\u0151l/giu, "gyermek viselked\u00e9s\u00e9r\u0151l")
-    .replace(/gyermek\s+m\u0171k\u00f6d\u00e9s\u00e9t/giu, "gyermek viselked\u00e9s\u00e9t")
-    .replace(/gyermek\s+m\u0171k\u00f6d\u00e9s\u00e9ben/giu, "gyermek viselked\u00e9s\u00e9ben")
-    .replace(/gyermek\s+m\u0171k\u00f6d\u00e9s\u00e9hez/giu, "gyermek viselked\u00e9s\u00e9hez")
-    .replace(/gyermek\s+mindennapi\s+mukodeset/giu, "gyermek mindennapi viselkedését")
-    .replace(/gyermek\s+mukodese/giu, "gyermek viselkedése")
-    .replace(/gyermek\s+mukodeserol/giu, "gyermek viselkedéséről")
-    .replace(/gyermek\s+mukodeset/giu, "gyermek viselkedését")
-    .replace(/gyermek\s+mukodeseben/giu, "gyermek viselkedésében")
-    .replace(/gyermek\s+mukodesehez/giu, "gyermek viselkedéséhez");
+    .replace(/\b(gyermek|gyerek)\s+mindennapi\s+m\u0171k\u00f6d\u00e9se\b/giu, "$1 mindennapi viselked\u00e9se")
+    .replace(/\b(gyermek|gyerek)\s+mindennapi\s+m\u0171k\u00f6d\u00e9s\u00e9r\u0151l\b/giu, "$1 mindennapi viselked\u00e9s\u00e9r\u0151l")
+    .replace(/\b(gyermek|gyerek)\s+mindennapi\s+m\u0171k\u00f6d\u00e9s\u00e9t\b/giu, "$1 mindennapi viselked\u00e9s\u00e9t")
+    .replace(/\b(gyermek|gyerek)\s+mindennapi\s+m\u0171k\u00f6d\u00e9s\u00e9ben\b/giu, "$1 mindennapi viselked\u00e9s\u00e9ben")
+    .replace(/\b(gyermek|gyerek)\s+mindennapi\s+m\u0171k\u00f6d\u00e9s\u00e9hez\b/giu, "$1 mindennapi viselked\u00e9s\u00e9hez")
+    .replace(/\b(gyermek|gyerek)\s+m\u0171k\u00f6d\u00e9se\b/giu, "$1 viselked\u00e9se")
+    .replace(/\b(gyermek|gyerek)\s+m\u0171k\u00f6d\u00e9s\u00e9r\u0151l\b/giu, "$1 viselked\u00e9s\u00e9r\u0151l")
+    .replace(/\b(gyermek|gyerek)\s+m\u0171k\u00f6d\u00e9s\u00e9t\b/giu, "$1 viselked\u00e9s\u00e9t")
+    .replace(/\b(gyermek|gyerek)\s+m\u0171k\u00f6d\u00e9s\u00e9ben\b/giu, "$1 viselked\u00e9s\u00e9ben")
+    .replace(/\b(gyermek|gyerek)\s+m\u0171k\u00f6d\u00e9s\u00e9hez\b/giu, "$1 viselked\u00e9s\u00e9hez")
+    .replace(/\b(gyermek|gyerek)\s+mindennapi\s+mukodese\b/giu, "$1 mindennapi viselked\u00e9se")
+    .replace(/\b(gyermek|gyerek)\s+mindennapi\s+mukodeserol\b/giu, "$1 mindennapi viselked\u00e9s\u00e9r\u0151l")
+    .replace(/\b(gyermek|gyerek)\s+mindennapi\s+mukodeset\b/giu, "$1 mindennapi viselked\u00e9s\u00e9t")
+    .replace(/\b(gyermek|gyerek)\s+mindennapi\s+mukodeseben\b/giu, "$1 mindennapi viselked\u00e9s\u00e9ben")
+    .replace(/\b(gyermek|gyerek)\s+mindennapi\s+mukodesehez\b/giu, "$1 mindennapi viselked\u00e9s\u00e9hez")
+    .replace(/\b(gyermek|gyerek)\s+mukodese\b/giu, "$1 viselked\u00e9se")
+    .replace(/\b(gyermek|gyerek)\s+mukodeserol\b/giu, "$1 viselked\u00e9s\u00e9r\u0151l")
+    .replace(/\b(gyermek|gyerek)\s+mukodeset\b/giu, "$1 viselked\u00e9s\u00e9t")
+    .replace(/\b(gyermek|gyerek)\s+mukodeseben\b/giu, "$1 viselked\u00e9s\u00e9ben")
+    .replace(/\b(gyermek|gyerek)\s+mukodesehez\b/giu, "$1 viselked\u00e9s\u00e9hez")
+    .replace(
+      /a csal\u00e1di vagy iskolai m\u0171k\u00f6d\u00e9st \u00e9rdemben terheli/giu,
+      (match) => `${match.startsWith("A") ? "A" : "a"} csal\u00e1di vagy iskolai mindennapokat \u00e9rdemben megnehez\u00edti`
+    )
+    .replace(
+      /a csaladi vagy iskolai mukodest erdemben terheli/giu,
+      (match) => `${match.startsWith("A") ? "A" : "a"} csal\u00e1di vagy iskolai mindennapokat \u00e9rdemben megnehez\u00edti`
+    )
+    .replace(/v\u00e9grehajt\u00f3 viselked\u00e9s/giu, "v\u00e9grehajt\u00f3 m\u0171k\u00f6d\u00e9s")
+    .replace(/vegrehajto viselkedes/giu, "v\u00e9grehajt\u00f3 m\u0171k\u00f6d\u00e9s")
+    .replace(/Val\u00f3sz\u00edn\u0171leg k\u00e9pes bizonyos helyzetekben \u00f6n\u00e1ll\u00f3an is j\u00f3l m\u0171k\u00f6dni/giu, "A v\u00e1laszok alapj\u00e1n bizonyos helyzetekben kevesebb neh\u00e9zs\u00e9g l\u00e1tszik; ezt \u00e9rdemes konkr\u00e9t megfigyel\u00e9sekkel meger\u0151s\u00edteni")
+    .replace(/\u00f6n\u00e1ll\u00f3an is j\u00f3l m\u0171k\u00f6dni/giu, "\u00f6n\u00e1ll\u00f3an is boldogulni")
+    .replace(/kiegyens\u00falyozott m\u0171k\u00f6d\u00e9shez/giu, "kiegyens\u00falyozottabb mindennapokhoz");
 }
 
 function ensureFontFile(filePath, label) {
@@ -153,7 +175,7 @@ function getLabels(lang = "en") {
       disclaimerTitle: "Fontos megjegyzés",
       disclaimer:
         "Ez az anyag nem minősül diagnózisnak, és nem helyettesíti a személyes szakértői vizsgálatot. A teljes értékeléshez szakemberrel történő konzultáció, fejlődéstörténet és tágabb kontextus szükséges.",
-      footer: "NeuroMap Kids - Screening report"
+      footer: "NeuroMap Kids | El\u0151sz\u0171r\u00e9si riport"
     },
     en: {
       title: "NeuroMap Kids Report",
@@ -490,6 +512,22 @@ function getDomainLabel(lang, domain, labels) {
   return names[lang]?.[value] || names.en[value] || formatKeyLabel(value, labels, lang);
 }
 
+function getCompactDomainLabel(lang, domain, labels) {
+  const value = clean(domain).toUpperCase();
+  if (!value) return labels.notAvailable;
+  if (lang !== "hu") return getDomainLabel(lang, value, labels);
+
+  const names = {
+    ADHD: "Figyelmi ter\u00fclet (ADHD)",
+    ASD: "Autizmus spektrum (ASD)",
+    ANXIETY: "Szorong\u00e1sos ter\u00fclet",
+    DEPRESSION: "Hangulati ter\u00fclet",
+    LEARNING: "Tanul\u00e1si ter\u00fclet"
+  };
+
+  return names[value] || getDomainLabel(lang, value, labels);
+}
+
 function getSeverityLabel(lang, severity, labels) {
   const value = clean(severity).toLowerCase();
   if (!value) return labels.notAvailable;
@@ -735,7 +773,7 @@ function addCoverPage(doc, { name, payload, labels, lang }) {
     miniY,
     miniW,
     labels.focusArea,
-    getDomainLabel(lang, summary.detectedRisk, labels),
+    getCompactDomainLabel(lang, summary.detectedRisk, labels),
     lang,
     BRAND.blue
   );
@@ -746,7 +784,7 @@ function addCoverPage(doc, { name, payload, labels, lang }) {
     miniY,
     miniW,
     labels.secondarySignal,
-    getDomainLabel(lang, summary.secondaryRisk, labels),
+    getCompactDomainLabel(lang, summary.secondaryRisk, labels),
     lang,
     BRAND.orange
   );
@@ -1206,36 +1244,6 @@ function addPremiumReadingGuide(doc, labels, lang, pageState = null) {
   doc.y = y + h + 14;
 }
 
-function addInfoCard(doc, { name, lang }) {
-  const labels = getLabels(lang);
-  const safeName = clean(name) || labels.parentFallback;
-
-  const x = 56;
-  const y = 138;
-  const w = doc.page.width - 112;
-  const h = 88;
-
-  doc.roundedRect(x, y, w, h, 16).fill("#FFFFFF");
-  doc.roundedRect(x, y, w, h, 16).strokeColor(BRAND.softBorder).lineWidth(1).stroke();
-  doc.rect(x, y, 8, h).fill(BRAND.orange);
-
-  doc.fillColor(BRAND.dark)
-    .font(getFont(lang, true))
-    .fontSize(14)
-    .text(`${labels.greeting} ${safeName}!`, x + 22, y + 20, {
-      width: w - 44,
-      align: getTextAlign(lang)
-    });
-
-  doc.fillColor(BRAND.muted)
-    .font(getFont(lang))
-    .fontSize(10)
-    .text(labels.summaryLabel, x + 22, y + 48, {
-      width: w - 44,
-      align: getTextAlign(lang)
-    });
-}
-
 function addMiniCard(doc, x, y, w, title, value, lang, color = BRAND.blue, height = 72) {
   const h = height;
   const textWidth = w - 28;
@@ -1279,7 +1287,9 @@ function addMiniCard(doc, x, y, w, title, value, lang, color = BRAND.blue, heigh
     .fontSize(valueFontSize)
     .text(safeValue, x + 16, valueY, {
       width: textWidth,
-      align
+      height: availableHeight,
+      align,
+      ellipsis: true
     });
 }
 
@@ -1724,12 +1734,18 @@ function addReportV2AgeBlock(doc, payload, labels, lang, pageState = null) {
   const w = doc.page.width - 112;
   const bodyWidth = w - 48;
   const align = getTextAlign(lang);
-  const recommendations = (context.recommendations || []).slice(0, 3);
-  const actionPlan = (context.actionPlan || []).slice(0, 3);
+  const polishBlockText = (value) =>
+    stripMarkdown(polishHungarianReportWording(value, lang));
+  const recommendations = (context.recommendations || [])
+    .slice(0, 3)
+    .map(polishBlockText);
+  const actionPlan = (context.actionPlan || [])
+    .slice(0, 3)
+    .map(polishBlockText);
 
-  const bodyText = clean(context.interpretation);
-  const observationText = clean(context.observationFocus);
-  const escalationText = clean(context.escalationNote);
+  const bodyText = polishBlockText(context.interpretation);
+  const observationText = polishBlockText(context.observationFocus);
+  const escalationText = polishBlockText(context.escalationNote);
 
   function addTextPanel({
     title,
@@ -2108,6 +2124,65 @@ function splitReportText(reportText) {
   return parts;
 }
 
+function foldForMatch(value = "") {
+  return clean(value)
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+}
+
+function removeDuplicatedClosingDisclaimer(parts, lang) {
+  if (lang !== "hu") return parts;
+
+  const result = parts.map((part) => ({ ...part }));
+  const neutralClosing =
+    "A riport célja, hogy a szülő rendezettebb képet kapjon, és magabiztosabban tudja megtenni a következő lépést.";
+
+  for (let index = 0; index < result.length; index += 1) {
+    const part = result[index];
+    if (part?.type !== "heading") continue;
+    if (!foldForMatch(part.text).includes("zaro megjegyzes")) continue;
+
+    let nextHeadingIndex = result.length;
+    for (let cursor = index + 1; cursor < result.length; cursor += 1) {
+      if (result[cursor]?.type === "heading") {
+        nextHeadingIndex = cursor;
+        break;
+      }
+    }
+
+    const closingParts = result.slice(index + 1, nextHeadingIndex);
+    const hasSeparateClosing = closingParts.some((candidate) =>
+      foldForMatch(candidate?.text).startsWith("a riport celja")
+    );
+
+    for (let cursor = index + 1; cursor < nextHeadingIndex; cursor += 1) {
+      const candidate = result[cursor];
+      if (candidate?.type !== "body") continue;
+
+      const folded = foldForMatch(candidate.text);
+      const isDisclaimer =
+        folded.includes("tajekoztato jelleg") ||
+        folded.includes("nem diagnozis") ||
+        folded.includes("nem minosul diagnozisnak") ||
+        folded.includes("nem helyettesiti");
+
+      if (!isDisclaimer) continue;
+
+      const embeddedClosing = clean(candidate.text).match(/A riport c[e\u00e9]lja\b[\s\S]*/iu);
+      if (embeddedClosing) {
+        candidate.text = clean(embeddedClosing[0]);
+      } else if (hasSeparateClosing) {
+        result[cursor] = null;
+      } else {
+        candidate.text = neutralClosing;
+      }
+    }
+  }
+
+  return result.filter(Boolean);
+}
+
 function splitLongParagraph(paragraph, lang) {
   const maxLength = lang === "zh" || lang === "ja" ? 360 : 620;
   const text = clean(paragraph);
@@ -2374,7 +2449,10 @@ function addReportParagraph(doc, paragraph, labels, lang, pageState = null) {
 }
 
 function addReportText(doc, reportText, labels, lang, pageState = null) {
-  const parts = splitReportText(polishHungarianReportWording(reportText, lang));
+  const parts = removeDuplicatedClosingDisclaimer(
+    splitReportText(polishHungarianReportWording(reportText, lang)),
+    lang
+  );
 
   let sectionCounter = 1;
 
@@ -2415,7 +2493,7 @@ export async function generatePdfBuffer({ name, reportText, lang = "en", payload
         info: {
           Title: labels.title,
           Author: "NeuroMap Kids",
-          Subject: `${labels.subtitle} (${PDF_REPORT_VERSION})`,
+          Subject: `NeuroMap Kids structured screening report (${PDF_REPORT_VERSION})`,
           Keywords: "NeuroMap Kids, screening report, parent report, pdf v4"
         }
       });
@@ -2434,9 +2512,7 @@ export async function generatePdfBuffer({ name, reportText, lang = "en", payload
       doc.addPage();
       pageState.current += 1;
       addHeader(doc, labels, safeLang);
-      addInfoCard(doc, { name, lang: safeLang });
-
-      doc.y = 246;
+      doc.y = PAGE_LAYOUT.contentTop;
 
       addPremiumReadingGuide(doc, labels, safeLang, pageState);
       addParentQuickSummaryBlock(doc, payload, labels, safeLang, pageState);

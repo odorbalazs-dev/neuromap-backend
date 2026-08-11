@@ -46,7 +46,7 @@ const LANG_COPY = {
     escalationHigh:
       "Ha a jelzés erős, több környezetben tartós, romló önértékelést, visszahúzódást, erős szorongást vagy biztonsági aggodalmat érint, ne csak megfigyelésben gondolkodj: érdemes szakemberrel egyeztetni.",
     escalationDefault:
-      "Ha a nehézség több környezetben tartósan fennáll, a családi vagy iskolai működést érdemben terheli, vagy a gyermek önbizalma csökken, szakember bevonása segíthet pontosabb képet adni."
+      "Ha a nehézség több környezetben tartósan fennáll, a családi vagy iskolai mindennapokat érdemben megnehezíti, vagy a gyermek önbizalma csökken, szakember bevonása segíthet pontosabb képet adni."
   },
   en: {
     emailTitle: "Age-group interpretation",

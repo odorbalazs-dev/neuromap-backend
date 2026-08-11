@@ -56,7 +56,7 @@ function getReportValidationOptions(lang) {
 
 function buildLanguageInstruction(lang) {
   const map = {
-    hu: "A teljes riportot természetes, helyes és igényes magyar nyelven írd. Kerüld a tükörfordításokat, a sablonos fordulatokat és az önálló angol címeket. Minden pszichológiai vagy funkcionális terület, nehézség, probléma, erősség és védő tényező megnevezésénél először a magyar kifejezést használd, majd közvetlenül utána zárójelben add meg az angol szakmai megfelelőjét, például: Végrehajtó működés (executive functioning). A magyarázó mondatok maradjanak magyarul; angol szöveg csak a szakmai területnevek zárójeles megfelelőjeként szerepelhet. Soha ne jeleníts meg belső kulcsokat, például executive_function, emotional_regulation vagy social_communication.",
+    hu: "A teljes riportot természetes, helyes és igényes magyar nyelven írd. Kerüld a tükörfordításokat, a sablonos fordulatokat és az önálló angol címeket. Minden pszichológiai vagy funkcionális terület, nehézség, probléma, erősség és védő tényező megnevezésénél először a magyar kifejezést használd, majd közvetlenül utána zárójelben add meg az angol szakmai megfelelőjét, például: Végrehajtó működés (executive functioning). A magyarázó mondatok maradjanak magyarul; angol szöveg csak a szakmai területnevek zárójeles megfelelőjeként szerepelhet. A gyermek általános leírásakor ne használd a gyermek működése, a gyermek mindennapi működése vagy jól működik fordulatokat; ezek helyett a jelentés szerint a gyermek viselkedése, mindennapjai, alkalmazkodása vagy boldogulása kifejezést válaszd. A bevett szakmai terminusokat, például a végrehajtó működés kifejezést viszont őrizd meg. Soha ne jeleníts meg belső kulcsokat, például executive_function, emotional_regulation vagy social_communication.",
     en: "Write the entire report in natural, polished English. Avoid generic, robotic, or template-like wording.",
     de: "Schreibe den gesamten Bericht in natürlichem, korrektem Deutsch. Vermeide wörtliche Übersetzungen und schablonenhafte Formulierungen.",
     it: "Scrivi l'intero report in italiano naturale, corretto e professionale. Evita frasi generiche o troppo schematiche.",
@@ -506,6 +506,8 @@ PREMIUM REPORT QUALITY RULES:
 - When giving advice, explain the parent move and the reason behind it. Avoid isolated tips that feel like a checklist copied from a brochure.
 - Include school/daycare communication only when it is relevant, but when relevant make it specific: what to tell adults, what to observe, and what accommodation or support to try.
 - Include strengths and protective factors as real stabilizing conditions, not empty praise.
+- Every claimed strength or coping ability must be traceable to the supplied answers or context. Do not infer that the child is independent, resilient, socially skilled, or functioning well without supporting evidence.
+- When evidence about strengths is limited, say so and describe supportive conditions that may help instead of inventing a positive child trait.
 
 REPORT V2 CONTENT REQUIREMENTS:
 - The report must read like a premium paid interpretation, not a generic screening summary.
@@ -516,7 +518,7 @@ REPORT V2 CONTENT REQUIREMENTS:
 - Make the primary area specific to the actual top subdomains and strongest patterns.
 - Explain why the secondary signal may appear together with the primary one, if present.
 - Include at least one paragraph on uncertainty, context, or overlap when the adaptive summary suggests it.
-- Include realistic protective factors based on low/medium items, coherent functioning, parent observation, or supportive conditions. If not enough data is available, say "the questionnaire gives limited information about strengths" and then identify likely support conditions instead.
+- Include realistic protective factors based on low/medium items, coherent response patterns, parent observation, or supportive conditions. If not enough data is available, say "the questionnaire gives limited information about strengths" and then identify likely support conditions instead.
 - Include a practical 30-day plan with observation, home support, school/daycare communication if relevant, and review.
 - Include a calm professional-support section that explains thresholds for seeking help without creating alarm.
 - Include at least one "this week" action and one "watch over the next month" observation.
@@ -659,7 +661,7 @@ Give a realistic, parent-friendly action plan for the next few weeks. Structure 
 Explain when to consider a pediatrician, psychologist, child psychiatrist, developmental specialist, school specialist, speech therapist, occupational therapist, or other qualified professional, depending on the pattern. Tie the recommendation to persistence, impairment, cross-context concerns, declining confidence, safety concerns, or educator observations.
 
 11. Important limitation and disclaimer
-Clearly state again that this is not a diagnosis and does not replace professional assessment. Explain that full assessment requires developmental history, observation, professional evaluation, and broader context.
+Keep this section concise. State that this is not a diagnosis and does not replace professional assessment, then explain briefly that full assessment requires developmental history, observation, professional evaluation, and broader context. Do not repeat a long disclaimer already covered elsewhere in the report.
 
 FINAL STYLE RULES:
 - Numbered headings only.
