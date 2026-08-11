@@ -234,6 +234,7 @@ export async function retryCheckout(req, res) {
     }
 
     if (error instanceof LaunchGateError) {
+      console.warn("retry checkout launch gate blocked:", error.missing);
       return res.status(503).json({
         ok: false,
         error: error.message,

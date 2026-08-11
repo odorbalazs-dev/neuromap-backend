@@ -13,7 +13,7 @@ const EMBEDS = [
     sourcePath: "public/webflow/engine.js",
     snippetPath: "web/engine-embed.full.html",
     publicPath: "/public/webflow/engine.js",
-    version: "20260811-step-scroll-v1",
+    version: "20260811-checkout-gate-v2",
     note: "External script loader. This avoids the Webflow 50k code embed limit."
   },
   {

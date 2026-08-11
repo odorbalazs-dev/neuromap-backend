@@ -165,7 +165,7 @@ assert(
 );
 
 assert(
-  engineSource.includes("20260811-step-scroll-v1") &&
+  engineSource.includes("20260811-checkout-gate-v2") &&
     engineSource.includes("ensureLegalConsentForCurrentLanguage") &&
     engineSource.includes("consentReceipt.token") &&
     engineSource.includes("sanitizeAnalyticsPayload") &&

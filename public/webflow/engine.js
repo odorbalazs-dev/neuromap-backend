@@ -5,7 +5,7 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260811-step-scroll-v1";
+  const ENGINE_VERSION = "20260811-checkout-gate-v2";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
   const LEGAL_CONSENT_VERSION = "20260726-verified-rights-v3";
   const LANGUAGE_CONFIRMED_KEY = "nm_language_confirmed_v1";
@@ -9383,7 +9383,19 @@
       return t.checkoutError || copy.fallback;
     }
     if (code === "CHECKOUT_NOT_READY" || /checkout is temporarily unavailable/i.test(message)) {
-      return t.checkoutError || copy.fallback;
+      return getCustomerCopy({
+        hu: "A fizetés átmenetileg nem érhető el. Kérjük, próbáld újra néhány perc múlva.",
+        en: "Checkout is temporarily unavailable. Please try again in a few minutes.",
+        de: "Die Zahlung ist vorübergehend nicht verfügbar. Bitte versuche es in einigen Minuten erneut.",
+        it: "Il pagamento è temporaneamente non disponibile. Riprova tra qualche minuto.",
+        es: "El pago no está disponible temporalmente. Inténtalo de nuevo en unos minutos.",
+        zh: "支付暂时不可用。请几分钟后重试。",
+        ja: "決済は一時的に利用できません。数分後にもう一度お試しください。",
+        ar: "الدفع غير متاح مؤقتًا. يرجى المحاولة مرة أخرى بعد بضع دقائق.",
+        pl: "Płatność jest chwilowo niedostępna. Spróbuj ponownie za kilka minut.",
+        pt: "O pagamento está temporariamente indisponível. Tente novamente em alguns minutos.",
+        fr: "Le paiement est temporairement indisponible. Réessayez dans quelques minutes."
+      });
     }
     return message || t.checkoutError || copy.fallback;
   }

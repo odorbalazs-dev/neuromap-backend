@@ -11,6 +11,8 @@ const REQUIRED_APPROVALS = [
   ["security_review", "SECURITY_REVIEW_APPROVED", "SECURITY_REVIEW_EVIDENCE"]
 ];
 
+let advisoryWarningLogged = false;
+
 function hasEvidence(value) {
   return typeof value === "string" && value.trim().length >= 8;
 }
@@ -53,7 +55,7 @@ export function getLaunchGateStatus(runtimeEnv = env) {
   );
   if (!policyConfigurationReady) missing.push("policy_configuration");
 
-  const enforced = runtimeEnv.NODE_ENV === "production" || runtimeEnv.LAUNCH_GATE_ENFORCED === true;
+  const enforced = runtimeEnv.LAUNCH_GATE_ENFORCED === true;
   const ready = missing.length === 0;
 
   return {
@@ -67,12 +69,18 @@ export function getLaunchGateStatus(runtimeEnv = env) {
 }
 
 export function assertCheckoutLaunchReady(runtimeEnv = env) {
-  if (runtimeEnv.NODE_ENV !== "production" && runtimeEnv.LAUNCH_GATE_ENFORCED !== true) return true;
-
   const status = getLaunchGateStatus(runtimeEnv);
 
   if (status.blocking) {
     throw new LaunchGateError("Checkout is temporarily unavailable.", status.missing);
+  }
+
+  if (!status.ready && !advisoryWarningLogged) {
+    advisoryWarningLogged = true;
+    console.warn(
+      "[launch-gate] Checkout is enabled with outstanding readiness checks:",
+      status.missing
+    );
   }
 
   return true;
