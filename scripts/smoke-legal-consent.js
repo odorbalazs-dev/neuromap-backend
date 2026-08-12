@@ -201,7 +201,7 @@ assert(
 });
 
 assert(
-  checkoutPagesSource.includes("20260811-status-sync-v1") &&
+  checkoutPagesSource.includes("20260812-status-truth-v2") &&
     checkoutPagesSource.includes("isAnalyticsAllowed") &&
     checkoutPagesSource.includes("sanitizeCheckoutAnalyticsPayload") &&
     checkoutPagesSource.includes("installPrivacyDefaults();"),

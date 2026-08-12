@@ -9,9 +9,10 @@ function assert(condition, message) {
 function main() {
   console.log("\n=== CHECKOUT PAGES SMOKE ===");
 
-  const currentVersion = "20260811-status-sync-v1";
+  const currentVersion = "20260812-status-truth-v2";
   const script = fs.readFileSync("public/webflow/checkout-pages.js", "utf8");
   const stripeService = fs.readFileSync("src/services/stripe.service.js", "utf8");
+  const sessionService = fs.readFileSync("src/services/session.service.js", "utf8");
   const sharedEmbed = fs.readFileSync("web/checkout-pages-embed.html", "utf8").trim();
   const successEmbed = fs.readFileSync("web/checkout-success-embed.html", "utf8").trim();
   const cancelEmbed = fs.readFileSync("web/checkout-cancel-embed.html", "utf8").trim();
@@ -56,6 +57,27 @@ function main() {
   assert(
     script.includes("removeSessionAccessHash"),
     "Success pages should remove persisted access tokens from the visible URL."
+  );
+  assert(
+    script.includes('sessionStorage.getItem("nm_last_session_access")'),
+    "Success pages should recover the tab-scoped access token after Stripe changes the public identifier."
+  );
+  assert(
+    script.includes("renderUnavailableStatusSteps"),
+    "Status lookup failures should not be shown as an analysis that is known to be in progress."
+  );
+  assert(
+    script.includes("nm_report_status_unavailable"),
+    "Status lookup failures should emit a privacy-safe diagnostic event."
+  );
+  assert(
+    sessionService.includes('? "id = $1::uuid"') &&
+      sessionService.includes(': "stripe_session_id = $1::text"'),
+    "Public session lookup should use type-safe UUID and Stripe identifier queries."
+  );
+  assert(
+    !sessionService.includes("OR stripe_session_id = $1"),
+    "Public session lookup must not infer one SQL placeholder as both UUID and text."
   );
   assert(
     script.includes("STATUS_POLL_MAX_ATTEMPTS"),

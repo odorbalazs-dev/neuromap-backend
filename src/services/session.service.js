@@ -254,12 +254,20 @@ export async function getSessionByPublicIdentifier(identifier) {
 
   if (!value) return null;
 
+  const isInternalSessionId =
+    /^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i.test(value);
+
+  // PostgreSQL cannot safely infer one placeholder as both uuid and text.
+  // Selecting the lookup column up front also keeps both indexes usable.
+  const whereClause = isInternalSessionId
+    ? "id = $1::uuid"
+    : "stripe_session_id = $1::text";
+
   const result = await db.query(
     `
     SELECT *
     FROM sessions
-    WHERE id = $1
-       OR stripe_session_id = $1
+    WHERE ${whereClause}
     LIMIT 1
     `,
     [value]

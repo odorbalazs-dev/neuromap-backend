@@ -5,7 +5,7 @@
 (function () {
   if (typeof window === "undefined" || typeof document === "undefined") return;
 
-  const CHECKOUT_PAGES_VERSION = "20260811-status-sync-v1";
+  const CHECKOUT_PAGES_VERSION = "20260812-status-truth-v2";
   const STATUS_POLL_INTERVAL_MS = 12000;
   const STATUS_POLL_MAX_ATTEMPTS = 10;
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
@@ -96,7 +96,7 @@
     reportStatusTitle: "Report status",
     reportStatusLead: "We are preparing your personalized PDF and email.",
     statusLoading: "Checking report status...",
-    statusUnavailable: "Status is not available yet. Your report is still being processed.",
+    statusUnavailable: "Live status could not be retrieved. Report delivery continues independently; check your email or refresh the status.",
     statusSent: "Your report email has been sent.",
     statusAttention: "The report needs a quick manual check. We will keep trying automatically.",
     statusPayment: "Payment",
@@ -191,7 +191,7 @@
       reportStatusTitle: "Riport \u00e1llapota",
       reportStatusLead: "K\u00e9sz\u00edtj\u00fck a szem\u00e9lyre szabott PDF-et \u00e9s az emailt.",
       statusLoading: "Riport \u00e1llapot ellen\u0151rz\u00e9se...",
-      statusUnavailable: "Az \u00e1llapot m\u00e9g nem el\u00e9rhet\u0151. A riport feldolgoz\u00e1sa folyamatban van.",
+      statusUnavailable: "Az \u00e9l\u0151 \u00e1llapotot most nem siker\u00fclt lek\u00e9rni. A riport k\u00e9zbes\u00edt\u00e9se ett\u0151l f\u00fcggetlen\u00fcl folytat\u00f3dik; ellen\u0151rizd az emailedet, vagy friss\u00edtsd az \u00e1llapotot.",
       statusSent: "A riport email elk\u00fcldve.",
       statusAttention: "A riport gyors ellen\u0151rz\u00e9st ig\u00e9nyel. Az automatikus \u00fajrapr\u00f3b\u00e1lkoz\u00e1s fut.",
       statusPayment: "Fizet\u00e9s",
@@ -378,7 +378,7 @@
       },
       status: {
         title: "Riport állapota", lead: "Készítjük a személyre szabott PDF-et és az emailt.", loading: "Riportállapot ellenőrzése...",
-        unavailable: "Az állapot még nem elérhető. A riport feldolgozása folyamatban lehet.", sent: "A riport emailt elküldtük.",
+        unavailable: "Az élő állapotot most nem sikerült lekérni. A riport kézbesítése ettől függetlenül folytatódik; ellenőrizd az emailedet, vagy frissítsd az állapotot.", sent: "A riport emailt elküldtük.",
         attention: "A riport ellenőrzést igényel. Az automatikus újrapróbálkozás tovább fut.",
         payment: "Fizetés", analysis: "Elemzés", report: "PDF riport", email: "Email",
         complete: "Kész", active: "Folyamatban", pending: "Várakozik", failed: "Figyelmet igényel"
@@ -414,7 +414,7 @@
       },
       status: {
         title: "Report status", lead: "We are preparing your personalized PDF and email.", loading: "Checking report status...",
-        unavailable: "Status is not available yet. Your report may still be processing.", sent: "Your report email has been sent.",
+        unavailable: "Live status could not be retrieved. Report delivery continues independently; check your email or refresh the status.", sent: "Your report email has been sent.",
         attention: "The report needs a check. Automatic retries are still running.", payment: "Payment", analysis: "Analysis",
         report: "PDF report", email: "Email", complete: "Done", active: "In progress", pending: "Waiting", failed: "Needs attention"
       },
@@ -449,7 +449,7 @@
       },
       status: {
         title: "Berichtsstatus", lead: "Wir erstellen dein persönliches PDF und die E-Mail.", loading: "Berichtsstatus wird geprüft...",
-        unavailable: "Der Status ist noch nicht verfügbar. Der Bericht wird möglicherweise noch verarbeitet.", sent: "Die Berichts-E-Mail wurde gesendet.",
+        unavailable: "Der Live-Status konnte nicht abgerufen werden. Die Zustellung läuft unabhängig davon weiter; prüfe deine E-Mails oder aktualisiere den Status.", sent: "Die Berichts-E-Mail wurde gesendet.",
         attention: "Der Bericht muss geprüft werden. Automatische Wiederholungen laufen weiter.", payment: "Zahlung", analysis: "Auswertung",
         report: "PDF-Bericht", email: "E-Mail", complete: "Fertig", active: "In Bearbeitung", pending: "Wartet", failed: "Prüfung nötig"
       },
@@ -480,7 +480,7 @@
       },
       status: {
         title: "Stato del report", lead: "Stiamo preparando il PDF personalizzato e l'email.", loading: "Controllo dello stato...",
-        unavailable: "Lo stato non è ancora disponibile. Il report potrebbe essere ancora in elaborazione.", sent: "L'email con il report è stata inviata.",
+        unavailable: "Non è stato possibile recuperare lo stato in tempo reale. La consegna continua comunque; controlla l'email o aggiorna lo stato.", sent: "L'email con il report è stata inviata.",
         attention: "Il report richiede un controllo. I tentativi automatici continuano.", payment: "Pagamento", analysis: "Analisi",
         report: "Report PDF", email: "Email", complete: "Completato", active: "In corso", pending: "In attesa", failed: "Richiede attenzione"
       },
@@ -511,7 +511,7 @@
       },
       status: {
         title: "Estado del informe", lead: "Estamos preparando el PDF personalizado y el email.", loading: "Comprobando el estado...",
-        unavailable: "El estado aún no está disponible. Es posible que el informe siga procesándose.", sent: "El email del informe se ha enviado.",
+        unavailable: "No se pudo consultar el estado en tiempo real. La entrega continúa de forma independiente; revisa tu email o actualiza el estado.", sent: "El email del informe se ha enviado.",
         attention: "El informe necesita revisión. Los reintentos automáticos continúan.", payment: "Pago", analysis: "Análisis",
         report: "Informe PDF", email: "Email", complete: "Listo", active: "En curso", pending: "En espera", failed: "Requiere atención"
       },
@@ -537,7 +537,7 @@
         missing: "没有会话标识时无法显示实时进度，但付款确认仍然有效。"
       },
       status: {
-        title: "报告状态", lead: "正在准备个性化 PDF 和电子邮件。", loading: "正在检查报告状态…", unavailable: "状态暂不可用，报告可能仍在处理中。",
+        title: "报告状态", lead: "正在准备个性化 PDF 和电子邮件。", loading: "正在检查报告状态…", unavailable: "暂时无法获取实时状态。报告发送会独立继续；请检查电子邮件或刷新状态。",
         sent: "报告邮件已发送。", attention: "报告需要检查，系统仍在自动重试。", payment: "付款", analysis: "分析", report: "PDF 报告",
         email: "电子邮件", complete: "完成", active: "处理中", pending: "等待中", failed: "需要处理"
       },
@@ -565,7 +565,7 @@
       },
       status: {
         title: "レポートの状態", lead: "個別の PDF とメールを準備しています。", loading: "レポートの状態を確認しています…",
-        unavailable: "状態はまだ確認できません。レポートは処理中の可能性があります。", sent: "レポートメールを送信しました。",
+        unavailable: "現在、リアルタイムの状態を取得できません。レポートの送信は継続されます。メールを確認するか、状態を更新してください。", sent: "レポートメールを送信しました。",
         attention: "レポートの確認が必要です。自動再試行は継続しています。", payment: "決済", analysis: "分析", report: "PDF レポート",
         email: "メール", complete: "完了", active: "処理中", pending: "待機中", failed: "確認が必要"
       },
@@ -592,7 +592,7 @@
       },
       status: {
         title: "حالة التقرير", lead: "نجهز ملف PDF المخصص والبريد الإلكتروني.", loading: "جار التحقق من حالة التقرير...",
-        unavailable: "الحالة غير متاحة بعد. قد يكون التقرير قيد المعالجة.", sent: "تم إرسال بريد التقرير.",
+        unavailable: "تعذر جلب الحالة المباشرة الآن. يستمر إرسال التقرير بشكل مستقل؛ تحقق من بريدك الإلكتروني أو حدّث الحالة.", sent: "تم إرسال بريد التقرير.",
         attention: "يحتاج التقرير إلى مراجعة. تستمر المحاولات التلقائية.", payment: "الدفع", analysis: "التحليل", report: "تقرير PDF",
         email: "البريد الإلكتروني", complete: "مكتمل", active: "قيد التنفيذ", pending: "قيد الانتظار", failed: "يحتاج إلى متابعة"
       },
@@ -621,7 +621,7 @@
       },
       status: {
         title: "Status raportu", lead: "Przygotowujemy spersonalizowany PDF i email.", loading: "Sprawdzanie statusu raportu...",
-        unavailable: "Status nie jest jeszcze dostępny. Raport może być nadal przetwarzany.", sent: "Email z raportem został wysłany.",
+        unavailable: "Nie udało się pobrać bieżącego statusu. Wysyłka raportu trwa niezależnie; sprawdź email lub odśwież status.", sent: "Email z raportem został wysłany.",
         attention: "Raport wymaga kontroli. Automatyczne ponowienia nadal działają.", payment: "Płatność", analysis: "Analiza", report: "Raport PDF",
         email: "Email", complete: "Gotowe", active: "W toku", pending: "Oczekuje", failed: "Wymaga uwagi"
       },
@@ -650,7 +650,7 @@
       },
       status: {
         title: "Estado do relatório", lead: "Estamos a preparar o PDF personalizado e o email.", loading: "A verificar o estado do relatório...",
-        unavailable: "O estado ainda não está disponível. O relatório pode continuar em processamento.", sent: "O email do relatório foi enviado.",
+        unavailable: "Não foi possível obter o estado em tempo real. A entrega continua de forma independente; verifica o email ou atualiza o estado.", sent: "O email do relatório foi enviado.",
         attention: "O relatório precisa de verificação. As novas tentativas automáticas continuam.", payment: "Pagamento", analysis: "Análise", report: "Relatório PDF",
         email: "Email", complete: "Concluído", active: "Em curso", pending: "Em espera", failed: "Requer atenção"
       },
@@ -679,7 +679,7 @@
       },
       status: {
         title: "Statut du rapport", lead: "Nous préparons le PDF personnalisé et l'email.", loading: "Vérification du statut du rapport...",
-        unavailable: "Le statut n'est pas encore disponible. Le rapport est peut-être toujours en cours de traitement.", sent: "L'email du rapport a été envoyé.",
+        unavailable: "Le statut en direct n'a pas pu être récupéré. L'envoi continue indépendamment ; vérifiez votre email ou actualisez le statut.", sent: "L'email du rapport a été envoyé.",
         attention: "Le rapport nécessite une vérification. Les nouvelles tentatives automatiques continuent.", payment: "Paiement", analysis: "Analyse", report: "Rapport PDF",
         email: "Email", complete: "Terminé", active: "En cours", pending: "En attente", failed: "À vérifier"
       },
@@ -835,13 +835,20 @@
     }
 
     try {
-      return (
-        sessionStorage.getItem(`nm_session_access:${sessionId}`) ||
-        (sessionStorage.getItem("nm_last_session_id") === sessionId
-          ? sessionStorage.getItem("nm_last_session_access")
-          : "") ||
-        ""
-      );
+      const exactToken = sessionStorage.getItem(`nm_session_access:${sessionId}`) || "";
+      if (exactToken) return exactToken;
+
+      // Before the Stripe redirect the token is stored with the internal UUID,
+      // while the success URL contains Stripe's cs_ identifier. sessionStorage
+      // is tab-scoped, so the latest token is a safe recovery path when a browser
+      // or privacy extension strips the URL fragment during the redirect.
+      const lastToken = sessionStorage.getItem("nm_last_session_access") || "";
+      if (lastToken) {
+        persistSessionAccessToken(sessionId, "", lastToken);
+        return lastToken;
+      }
+
+      return "";
     } catch (_error) {
       return "";
     }
@@ -1464,6 +1471,15 @@
     }).join("");
   }
 
+  function renderUnavailableStatusSteps(copy) {
+    return renderStatusSteps(copy, [
+      { key: "payment", label: copy.statusPayment, state: "complete" },
+      { key: "analysis", label: copy.statusAnalysis, state: "pending" },
+      { key: "report", label: copy.statusReport, state: "pending" },
+      { key: "email", label: copy.statusEmail, state: "pending" }
+    ]);
+  }
+
   function getStatusMessage(copy, status) {
     if (!status) return copy.statusLoading;
     if (status.overall === "sent") return copy.statusSent;
@@ -1793,7 +1809,10 @@
       const data = await response.json().catch(() => ({}));
 
       if (!response.ok || !data || !data.status) {
-        throw new Error(copy.statusUnavailable);
+        const statusError = new Error(data?.error || copy.statusUnavailable);
+        statusError.httpStatus = response.status;
+        statusError.errorCode = data?.code || "";
+        throw statusError;
       }
 
       lead.textContent = getStatusMessage(copy, data.status);
@@ -1822,12 +1841,29 @@
           STATUS_POLL_INTERVAL_MS
         );
       }
-    } catch (_error) {
+    } catch (error) {
+      const httpStatus = Number(error?.httpStatus || 0);
+
+      console.warn("[checkout-pages] report status lookup failed", {
+        httpStatus,
+        errorCode: error?.errorCode || "",
+        attempt
+      });
+
       lead.textContent = copy.statusUnavailable;
+      steps.innerHTML = renderUnavailableStatusSteps(copy);
       renderStatusMeta(copy, sessionId, null);
       updateDeliveryEstimate(copy, sessionId, null);
 
-      if (attempt < STATUS_POLL_MAX_ATTEMPTS) {
+      trackOnce("nm_report_status_unavailable", {
+        http_status: httpStatus,
+        attempt,
+        page_kind: "checkout_success"
+      });
+
+      const retryable = !httpStatus || httpStatus === 404 || httpStatus === 429 || httpStatus >= 500;
+
+      if (retryable && attempt < STATUS_POLL_MAX_ATTEMPTS) {
         window.setTimeout(
           () => loadReportStatus(sessionId, copy, attempt + 1),
           STATUS_POLL_INTERVAL_MS
