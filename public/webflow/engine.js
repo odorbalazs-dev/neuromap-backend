@@ -5,9 +5,9 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260811-checkout-gate-v2";
+  const ENGINE_VERSION = "20260814-legal-mobile-v2";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
-  const LEGAL_CONSENT_VERSION = "20260726-verified-rights-v3";
+  const LEGAL_CONSENT_VERSION = "20260814-mobile-scroll-v2";
   const LANGUAGE_CONFIRMED_KEY = "nm_language_confirmed_v1";
   const DRAFT_STORAGE_KEY = "nm_questionnaire_draft_v2";
   const LEGACY_DRAFT_STORAGE_KEY = "nm_questionnaire_draft_v1";
@@ -643,11 +643,17 @@
     return "https://neuromap-backend-production-969d.up.railway.app";
   }
 
-  function loadExternalScriptOnce(src, globalName) {
-    if (globalName && window[globalName]) return Promise.resolve(window[globalName]);
+  function loadExternalScriptOnce(src, globalName, options = {}) {
+    const forceReload = options.forceReload === true;
+
+    if (!forceReload && globalName && window[globalName]) {
+      return Promise.resolve(window[globalName]);
+    }
 
     return new Promise((resolve, reject) => {
-      const existing = Array.from(document.scripts).find((script) => script.src === src);
+      const existing = forceReload
+        ? null
+        : Array.from(document.scripts).find((script) => script.src === src);
 
       if (existing) {
         if (globalName && window[globalName]) {
@@ -669,19 +675,34 @@
     });
   }
 
+  function isCompatibleLegalManager(manager) {
+    return Boolean(
+      manager &&
+      typeof manager.ensureConsent === "function" &&
+      String(manager.version || "") === LEGAL_CONSENT_VERSION
+    );
+  }
+
   function ensureLegalManager() {
-    if (window.NM_LEGAL && typeof window.NM_LEGAL.ensureConsent === "function") {
+    if (isCompatibleLegalManager(window.NM_LEGAL)) {
       return Promise.resolve(window.NM_LEGAL);
     }
 
     if (!legalManagerPromise) {
       const src = `${getApiBaseUrl()}/public/webflow/legal-consent.js?v=${encodeURIComponent(LEGAL_CONSENT_VERSION)}`;
-      legalManagerPromise = loadExternalScriptOnce(src, "NM_LEGAL").then((manager) => {
-        if (!manager || typeof manager.ensureConsent !== "function") {
-          throw new Error("The legal consent module is unavailable.");
-        }
-        return manager;
-      });
+      const forceReload = Boolean(window.NM_LEGAL);
+
+      legalManagerPromise = loadExternalScriptOnce(src, "NM_LEGAL", { forceReload })
+        .then((manager) => {
+          if (!isCompatibleLegalManager(manager)) {
+            throw new Error("The legal consent module is unavailable or outdated.");
+          }
+          return manager;
+        })
+        .catch((error) => {
+          legalManagerPromise = null;
+          throw error;
+        });
     }
 
     return legalManagerPromise;

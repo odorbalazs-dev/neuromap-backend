@@ -19,7 +19,7 @@ function main() {
     loaderHtml.includes("/public/webflow/engine.js"),
     "Webflow Engine loader should load the public engine file."
   );
-  const currentEngineVersion = "20260811-checkout-gate-v2";
+  const currentEngineVersion = "20260814-legal-mobile-v2";
   assert(
     loaderHtml.includes(currentEngineVersion),
     "Webflow Engine loader should include the current questionnaire shell cache-busting version."

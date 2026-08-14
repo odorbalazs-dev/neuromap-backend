@@ -2,7 +2,7 @@ import fs from "node:fs";
 import vm from "node:vm";
 
 const SUPPORTED_LANGS = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];
-const REQUIRED_ENGINE_VERSION = "20260811-checkout-gate-v2";
+const REQUIRED_ENGINE_VERSION = "20260814-legal-mobile-v2";
 
 const checks = [
   {

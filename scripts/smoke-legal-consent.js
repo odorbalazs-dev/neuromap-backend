@@ -157,6 +157,18 @@ assert(
 );
 
 assert(
+  legalConsentSource.includes(".nm-legal-form-scroll") &&
+    legalConsentSource.includes("height: 100dvh") &&
+    legalConsentSource.includes("overscroll-behavior: contain") &&
+    legalConsentSource.includes("-webkit-overflow-scrolling: touch") &&
+    legalConsentSource.includes('@media (max-height: 560px)') &&
+    legalConsentSource.includes('const LEGAL_UI_VERSION = "20260814-mobile-scroll-v2"') &&
+    legalConsentSource.includes('const CONTENT_VERSION = "20260726-verified-rights-v3"') &&
+    engineSource.includes('20260814-mobile-scroll-v2'),
+  "Legal consent must remain scrollable with visible actions on mobile and short viewports"
+);
+
+assert(
   legalConsentSource.includes("/verify") &&
     legalConsentSource.includes('data-verification-code') &&
     legalConsentSource.includes("x-privacy-request-token") &&
@@ -165,7 +177,10 @@ assert(
 );
 
 assert(
-  engineSource.includes("20260811-checkout-gate-v2") &&
+  engineSource.includes("20260814-legal-mobile-v2") &&
+    engineSource.includes("isCompatibleLegalManager") &&
+    engineSource.includes('String(manager.version || "") === LEGAL_CONSENT_VERSION') &&
+    engineSource.includes("const forceReload = Boolean(window.NM_LEGAL)") &&
     engineSource.includes("ensureLegalConsentForCurrentLanguage") &&
     engineSource.includes("consentReceipt.token") &&
     engineSource.includes("sanitizeAnalyticsPayload") &&

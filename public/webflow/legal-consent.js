@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  const LEGAL_UI_VERSION = "20260726-verified-rights-v3";
+  const LEGAL_UI_VERSION = "20260814-mobile-scroll-v2";
   const RECEIPT_KEY = "nm_legal_receipt_v1";
   const ANALYTICS_KEY = "nm_analytics_consent_v1";
   const CONTENT_VERSION = "20260726-verified-rights-v3";
@@ -333,20 +333,21 @@
     const style = document.createElement("style");
     style.id = "nm-legal-consent-styles";
     style.textContent = `
-      html.nm-legal-open, body.nm-legal-open { overflow: hidden !important; }
-      #nmLegalOverlay { position: fixed; inset: 0; z-index: 2147483646; display: grid; place-items: center; padding: 16px; background: rgba(15, 29, 45, .76); font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #102033; }
-      .nm-legal-dialog { width: min(920px, 100%); max-height: calc(100vh - 32px); display: grid; grid-template-rows: auto minmax(180px, 1fr) auto; overflow: hidden; background: #fff; border: 1px solid #cfe3ef; border-radius: 8px; box-shadow: 0 24px 70px rgba(5, 25, 45, .28); }
-      .nm-legal-head { padding: 20px 22px 16px; border-bottom: 1px solid #dbe8f0; background: #f3f9fc; }
+      html.nm-legal-open, body.nm-legal-open { overflow: hidden !important; overscroll-behavior: none; }
+      #nmLegalOverlay { position: fixed; inset: 0; width: 100%; height: 100vh; height: 100dvh; z-index: 2147483646; display: flex; align-items: center; justify-content: center; box-sizing: border-box; overflow: hidden; padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); background: rgba(15, 29, 45, .76); font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #102033; }
+      .nm-legal-dialog { width: min(920px, 100%); height: min(860px, calc(100vh - 32px)); height: min(860px, calc(100dvh - 32px)); min-height: 0; display: flex; flex-direction: column; overflow: hidden; background: #fff; border: 1px solid #cfe3ef; border-radius: 8px; box-shadow: 0 24px 70px rgba(5, 25, 45, .28); }
+      .nm-legal-head { flex: 0 0 auto; padding: 20px 22px 16px; border-bottom: 1px solid #dbe8f0; background: #f3f9fc; }
       .nm-legal-headline { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
       .nm-legal-head h2 { margin: 0; font-size: 24px; line-height: 1.25; letter-spacing: 0; }
       .nm-legal-step { flex: 0 0 auto; padding: 5px 9px; border-radius: 999px; background: #dff3fb; color: #0877a7; font-size: 12px; font-weight: 800; }
       .nm-legal-meta { margin-top: 10px; font-size: 12px; line-height: 1.55; color: #52677d; overflow-wrap: anywhere; }
-      .nm-legal-scroll { overflow: auto; padding: 20px 22px 28px; scroll-behavior: smooth; }
+      .nm-legal-scroll { flex: 1 1 44%; min-height: 112px; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y; -webkit-overflow-scrolling: touch; scrollbar-gutter: stable; padding: 20px 22px 28px; scroll-behavior: smooth; }
       .nm-legal-section { margin: 0 0 18px; padding-bottom: 16px; border-bottom: 1px solid #e5edf3; }
       .nm-legal-section:last-child { border-bottom: 0; }
       .nm-legal-section h3 { margin: 0 0 7px; font-size: 17px; line-height: 1.35; letter-spacing: 0; }
       .nm-legal-section p { margin: 0; color: #334a60; font-size: 14px; line-height: 1.7; }
-      .nm-legal-foot { padding: 16px 22px 20px; border-top: 1px solid #dbe8f0; background: #fff; }
+      .nm-legal-foot { flex: 0 1 auto; min-height: 0; max-height: 56%; display: flex; flex-direction: column; overflow: hidden; padding: 16px 22px max(20px, env(safe-area-inset-bottom)); border-top: 1px solid #dbe8f0; background: #fff; }
+      .nm-legal-form-scroll { flex: 1 1 auto; min-height: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y; -webkit-overflow-scrolling: touch; scrollbar-gutter: stable; padding-right: 4px; }
       .nm-legal-read { margin: 0 0 12px; color: #9b4d00; font-size: 13px; font-weight: 750; }
       .nm-legal-read-gate { margin: 0 0 12px; padding: 10px 12px; border: 1px solid #f3c38d; border-radius: 6px; background: #fff7ed; color: #8b4513; font-size: 13px; font-weight: 750; line-height: 1.45; }
       .nm-legal-read-gate.done { border-color: #9bd7b5; background: #eefbf3; color: #16733d; }
@@ -356,7 +357,7 @@
       .nm-legal-check { display: flex; align-items: flex-start; gap: 9px; margin: 9px 0; color: #263d52; font-size: 13px; line-height: 1.45; cursor: pointer; }
       .nm-legal-check input { width: 18px; height: 18px; flex: 0 0 18px; margin: 1px 0 0; accent-color: #0799d2; }
       .nm-legal-optional { margin-top: 12px; padding: 12px; border: 1px solid #b8dcef; border-radius: 6px; background: #f2fbff; }
-      .nm-legal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 14px; }
+      .nm-legal-actions { flex: 0 0 auto; display: flex; justify-content: flex-end; gap: 10px; margin-top: 14px; padding-top: 12px; border-top: 1px solid #e5edf3; background: #fff; }
       .nm-legal-button { min-height: 44px; padding: 10px 17px; border: 1px solid #b9cddd; border-radius: 6px; background: #edf5fa; color: #102033; font: inherit; font-size: 14px; font-weight: 800; cursor: pointer; }
       .nm-legal-button.primary { border-color: #0799d2; background: #0799d2; color: #fff; }
       .nm-legal-button.cancel { margin-right: auto; background: #fff; }
@@ -378,7 +379,8 @@
       #nmLegalMenu button:hover { background: #eef8fc; }
       [dir="rtl"] #nmLegalLauncher, [dir="rtl"] #nmLegalMenu { right: auto; left: 16px; }
       [dir="rtl"] #nmLegalMenu button { text-align: right; }
-      @media (max-width: 640px) { #nmLegalOverlay { padding: 0; } .nm-legal-dialog { max-height: 100vh; height: 100vh; border-radius: 0; } .nm-legal-head, .nm-legal-scroll, .nm-legal-foot { padding-left: 16px; padding-right: 16px; } .nm-legal-head h2 { font-size: 20px; } .nm-legal-actions { flex-direction: column-reverse; } .nm-legal-button { width: 100%; } .nm-legal-verification-row { grid-template-columns: 1fr; } }
+      @media (max-width: 640px) { #nmLegalOverlay { padding: 0; } .nm-legal-dialog { width: 100%; height: 100vh; height: 100dvh; border: 0; border-radius: 0; } .nm-legal-head { padding: max(14px, env(safe-area-inset-top)) 16px 12px; } .nm-legal-scroll { flex-basis: 34%; min-height: 96px; padding: 14px 16px 18px; } .nm-legal-foot { max-height: 64%; padding: 12px 16px max(12px, env(safe-area-inset-bottom)); } .nm-legal-head h2 { font-size: 20px; } .nm-legal-meta { margin-top: 7px; line-height: 1.4; } .nm-legal-actions { flex-direction: column-reverse; gap: 8px; margin-top: 10px; padding-top: 10px; } .nm-legal-button { width: 100%; min-height: 46px; } .nm-legal-button.cancel { margin-right: 0; } .nm-legal-verification-row { grid-template-columns: 1fr; } }
+      @media (max-height: 560px) { .nm-legal-dialog { height: 100vh; height: 100dvh; border-radius: 0; } .nm-legal-head { padding-top: 10px; padding-bottom: 9px; } .nm-legal-head h2 { font-size: 18px; } .nm-legal-meta { display: none; } .nm-legal-scroll { min-height: 82px; padding-top: 10px; padding-bottom: 12px; } .nm-legal-foot { max-height: 68%; padding-top: 10px; } }
     `;
     document.head.appendChild(style);
   }
@@ -480,16 +482,18 @@
           </header>
           <div class="nm-legal-scroll" tabindex="0" data-autofocus>${sectionMarkup(content.terms)}</div>
           <footer class="nm-legal-foot">
-            <p class="nm-legal-read-gate" data-read-gate>${escapeHtml(readGateUi(lang).prompt)}</p>
-            <p class="nm-legal-read">${escapeHtml(ui.required || "Required acknowledgements")}</p>
-            <div class="nm-legal-actor">
-              <strong>${escapeHtml(content.actorLabel)}</strong>
-              <div class="nm-legal-options">
-                <label class="nm-legal-check"><input type="radio" name="nmActorRole" value="parent_or_legal_guardian"> <span>${escapeHtml(content.actorParent)}</span></label>
-                <label class="nm-legal-check"><input type="radio" name="nmActorRole" value="adult_authorized_purchaser"> <span>${escapeHtml(content.actorAdult)}</span></label>
+            <div class="nm-legal-form-scroll" tabindex="0">
+              <p class="nm-legal-read-gate" data-read-gate>${escapeHtml(readGateUi(lang).prompt)}</p>
+              <p class="nm-legal-read">${escapeHtml(ui.required || "Required acknowledgements")}</p>
+              <div class="nm-legal-actor">
+                <strong>${escapeHtml(content.actorLabel)}</strong>
+                <div class="nm-legal-options">
+                  <label class="nm-legal-check"><input type="radio" name="nmActorRole" value="parent_or_legal_guardian"> <span>${escapeHtml(content.actorParent)}</span></label>
+                  <label class="nm-legal-check"><input type="radio" name="nmActorRole" value="adult_authorized_purchaser"> <span>${escapeHtml(content.actorAdult)}</span></label>
+                </div>
               </div>
+              <div class="nm-legal-required">${(content.termsChecks || []).map((label, index) => `<label class="nm-legal-check"><input type="checkbox" data-required="true" data-term="${index}"> <span>${escapeHtml(label)}</span></label>`).join("")}</div>
             </div>
-            <div class="nm-legal-required">${(content.termsChecks || []).map((label, index) => `<label class="nm-legal-check"><input type="checkbox" data-required="true" data-term="${index}"> <span>${escapeHtml(label)}</span></label>`).join("")}</div>
             <div class="nm-legal-actions"><button class="nm-legal-button cancel" type="button" data-action="cancel">${escapeHtml(CANCEL_LABELS[lang] || CANCEL_LABELS.en)}</button><button class="nm-legal-button primary" type="button" disabled>${escapeHtml(ui.continue || "Continue")}</button></div>
           </footer>
         </div>`;
@@ -537,11 +541,13 @@
           </header>
           <div class="nm-legal-scroll" tabindex="0" data-autofocus>${sectionMarkup(content.privacy)}</div>
           <footer class="nm-legal-foot">
-            <p class="nm-legal-read-gate" data-read-gate>${escapeHtml(readGateUi(lang).prompt)}</p>
-            <p class="nm-legal-read">${escapeHtml(ui.required || "Required acknowledgements")}</p>
-            <div class="nm-legal-required">${(content.privacyChecks || []).map((label, index) => `<label class="nm-legal-check"><input type="checkbox" data-required="true" data-privacy="${index}"> <span>${escapeHtml(label)}</span></label>`).join("")}</div>
-            <div class="nm-legal-optional"><label class="nm-legal-check"><input id="nmAnalyticsConsent" type="checkbox"> <span><strong>${escapeHtml(ui.optional || "Optional")}:</strong> ${escapeHtml(content.analytics)}</span></label></div>
-            <div class="nm-legal-error" role="alert"></div>
+            <div class="nm-legal-form-scroll" tabindex="0">
+              <p class="nm-legal-read-gate" data-read-gate>${escapeHtml(readGateUi(lang).prompt)}</p>
+              <p class="nm-legal-read">${escapeHtml(ui.required || "Required acknowledgements")}</p>
+              <div class="nm-legal-required">${(content.privacyChecks || []).map((label, index) => `<label class="nm-legal-check"><input type="checkbox" data-required="true" data-privacy="${index}"> <span>${escapeHtml(label)}</span></label>`).join("")}</div>
+              <div class="nm-legal-optional"><label class="nm-legal-check"><input id="nmAnalyticsConsent" type="checkbox"> <span><strong>${escapeHtml(ui.optional || "Optional")}:</strong> ${escapeHtml(content.analytics)}</span></label></div>
+              <div class="nm-legal-error" role="alert"></div>
+            </div>
             <div class="nm-legal-actions"><button class="nm-legal-button cancel" type="button" data-action="cancel">${escapeHtml(CANCEL_LABELS[lang] || CANCEL_LABELS.en)}</button><button class="nm-legal-button" type="button" data-action="back">${escapeHtml(ui.back || "Back")}</button><button class="nm-legal-button primary" type="button" disabled>${escapeHtml(ui.accept || "I explicitly consent and continue")}</button></div>
           </footer>
         </div>`;
