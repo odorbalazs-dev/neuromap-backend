@@ -30,9 +30,14 @@ export async function runRecordedOperation(task, operation, source = "cron") {
   try {
     const result = await operation();
     const failed = hasFailures(result);
+    const summary = { ...countersOnly(result), ...countersOnly(result?.summary) };
+    for (const group of ["sessions", "webhooks", "observations", "operationalState"]) {
+      for (const [key, value] of Object.entries(countersOnly(result?.[group]))) summary[`${group}_${key}`] = value;
+    }
+    const errorCode = result?.reason === "missing_admin_alert_email" ? "MISSING_ALERT_RECIPIENT" : "PARTIAL_FAILURE";
     await db.query(`UPDATE operational_runs SET status = $2, finished_at = NOW(), duration_ms = $3,
       summary = $4, error_code = $5 WHERE id = $1`,
-    [id, failed ? "failed" : "succeeded", Date.now() - started, { ...countersOnly(result), ...countersOnly(result.summary) }, failed ? "PARTIAL_FAILURE" : null]);
+    [id, failed ? "failed" : "succeeded", Date.now() - started, summary, failed ? errorCode : null]);
     console.log("[operations] run complete", { runId: id, task, source, failed });
     return result;
   } catch (error) {

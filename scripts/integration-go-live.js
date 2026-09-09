@@ -51,9 +51,13 @@ try {
   assert.equal((await processNextPostPaymentTask()).processed,true);
   assert.equal((await db.query("SELECT status FROM post_payment_outbox WHERE id=$1",[pending.id])).rows[0].status,"done");
   await runRecordedOperation("integration_success",async()=>({ok:true,summary:{count:1,email:"must-not-be-stored"}}));
+  await runRecordedOperation("integration_lifecycle",async()=>({ok:true,sessions:{checked:2,erased:2,items:[{email:"must-not-be-stored"}]}}));
+  await runRecordedOperation("integration_alert",async()=>({ok:true,skipped:true,reason:"missing_admin_alert_email"}));
   await assert.rejects(runRecordedOperation("integration_failure",async()=>{throw new Error("private provider message");}));
   const runs=(await db.query("SELECT * FROM operational_runs WHERE task LIKE 'integration_%'")).rows;
   assert.ok(runs.some(r=>r.status==='succeeded')); assert.ok(runs.some(r=>r.status==='failed'));
+  assert.equal(runs.find(r=>r.task==='integration_lifecycle').summary.sessions_erased,2);
+  assert.equal(runs.find(r=>r.task==='integration_alert').error_code,'MISSING_ALERT_RECIPIENT');
   assert.ok(!JSON.stringify(runs).includes("must-not-be-stored")); assert.ok(!JSON.stringify(runs).includes("private provider"));
   await eraseSessionSensitiveData(id,"Synthetic integration test");
   assert.equal((await db.query("SELECT count(*)::int n FROM post_payment_outbox WHERE session_id=$1 AND payload <> '{}'",[id])).rows[0].n,0);

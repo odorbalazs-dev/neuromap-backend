@@ -841,20 +841,28 @@ async function buildLaunchReadinessChecks() {
   }));
 
   checks.push(readinessCheck({
-    id: "optional-marketing-env",
+    id: "operational-alert-env",
     group: "Konfiguracio",
-    label: "Marketing es riasztasi env",
-    status: env.META_PIXEL_ID && env.META_ACCESS_TOKEN && env.ADMIN_ALERT_EMAIL
+    label: "Üzemeltetési riasztás címzettje",
+    status: env.ADMIN_ALERT_EMAIL
       ? "pass"
-      : "warn",
-    detail: env.META_PIXEL_ID && env.META_ACCESS_TOKEN && env.ADMIN_ALERT_EMAIL
-      ? "Meta Conversions API es admin riasztasi email is konfiguralva."
-      : "A core termek mukodhet, de a Meta CAPI vagy az admin riasztasi email nincs teljesen konfiguralva.",
-    action: "Eles hirdetesek elott ellenorizd: META_PIXEL_ID, META_ACCESS_TOKEN, ADMIN_ALERT_EMAIL.",
+      : "fail",
+    detail: env.ADMIN_ALERT_EMAIL
+      ? "A riasztási email-cím be van állítva; a tényleges kézbesítést külön ellenőrizd."
+      : "Az ADMIN_ALERT_EMAIL hiányzik. A lefutó ellenőrzés nem tud riasztási emailt küldeni.",
+    action: "Állíts be ellenőrzött ADMIN_ALERT_EMAIL címzettet a backend és worker szolgáltatáson. Marketingpixel nem élesítési előfeltétel.",
     meta: {
-      metaConfigured: Boolean(env.META_PIXEL_ID && env.META_ACCESS_TOKEN),
       adminAlertEmailConfigured: Boolean(env.ADMIN_ALERT_EMAIL)
     }
+  }));
+
+  checks.push(readinessCheck({
+    id: "invoice-automation", group: "Számlázás", label: "Automatikus számlakibocsátás",
+    status: isInvoiceAutomationConfigured() ? "pass" : "fail",
+    detail: isInvoiceAutomationConfigured()
+      ? "A Számla Agent konfigurálva van. A kulcs érvényessége, kézbesítés és országos áfakezelés külön ellenőrzést igényel."
+      : "Az automatikus számlázás nincs teljesen konfigurálva.",
+    action: "Ellenőrizd az INVOICE_AUTO_CREATE és SZAMLAZZHU_AGENT_KEY értékét mindkét szolgáltatáson; az áfabeállítást könyvelő hagyja jóvá."
   }));
 
   if (env.DATABASE_ERROR) {
@@ -1144,8 +1152,8 @@ function buildLaunchManualChecks() {
       detail: "Eles inditas elott dontsd el, hogy test vagy live fizetesi mod megy ki, es ehhez illeszkedjen a STRIPE_SECRET_KEY."
     },
     {
-      label: "GTM / Meta esemenyek",
-      detail: "Tag Assistant es Meta Events Manager alatt ellenorizd legalabb a landing, checkout start es purchase esemenyeket."
+      label: "Marketing és hozzájárulás",
+      detail: "Elutasítás mellett ellenőrizd, hogy nincs marketing SDK vagy mérési kérés. Kérdőív-, egészségi és ügyfélazonosító adatot ne küldj Google, Meta vagy TikTok eszköznek; mérés csak külön jóváhagyott adatkörben engedhető."
     },
     {
       label: "Valos probavasarlas",
