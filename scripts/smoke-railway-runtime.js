@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
-import { resolveDatabaseSslConfig } from "../src/config/database-ssl.js";
+import { resolveDatabaseSslConfig, databaseConnectionWithoutSslOverrides } from "../src/config/database-ssl.js";
+import pg from "pg";
 import { resolveServiceRole } from "../src/config/service-role.js";
 
 const workerByName = resolveServiceRole(
@@ -63,4 +64,10 @@ const publicDatabase = resolveDatabaseSslConfig({
 assert.equal(publicDatabase.effectiveMode, "verify-full");
 assert.equal(publicDatabase.ssl.rejectUnauthorized, true);
 
+const sanitized = databaseConnectionWithoutSslOverrides("postgresql://user:secret@db.example.com/app?sslmode=no-verify&ssl=true&sslrootcert=untrusted&application_name=audit");
+const client = new pg.Client({ connectionString: sanitized, ssl: { rejectUnauthorized: true, ca: "trusted-test-ca" } });
+assert.equal(client.connectionParameters.ssl.rejectUnauthorized, true);
+assert.equal(client.connectionParameters.ssl.ca, "trusted-test-ca");
+assert.equal(new URL(sanitized).searchParams.get("application_name"), "audit");
+assert.equal(new URL(sanitized).searchParams.has("sslmode"), false);
 console.log("Railway runtime smoke tests passed.");

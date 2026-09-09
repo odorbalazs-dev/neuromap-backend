@@ -10,6 +10,8 @@ import {
 } from "../infrastructure/invoice/szamlazzhuClient.js";
 import { getSessionById } from "./session.service.js";
 import { getProductPackage } from "../config/products.js";
+import Stripe from "stripe";
+import { env } from "../config/env.js";
 
 function compactError(error) {
   return String(error?.message || error || "Invoice error").slice(0, 1000);
@@ -372,6 +374,25 @@ export async function createInvoiceForPaidSession({
 
   if (existing) {
     return existing;
+  }
+
+  // Recovery must use the paid checkout's billing snapshot, never blank fallbacks.
+  if (!checkoutSession?.customer_details?.address?.country) {
+    const queued = await db.query(`SELECT payload FROM post_payment_outbox
+      WHERE session_id = $1 AND task = 'invoice'`, [session.id]);
+    const snapshot = queued.rows[0]?.payload;
+    if (snapshot?.customer_details?.address?.country) checkoutSession = snapshot;
+    else if (session.stripe_session_id && env.STRIPE_SECRET_KEY) {
+      const stripe = new Stripe(env.STRIPE_SECRET_KEY, { timeout: env.STRIPE_TIMEOUT_MS, maxNetworkRetries: 2 });
+      checkoutSession = await stripe.checkout.sessions.retrieve(session.stripe_session_id);
+      if (checkoutSession.payment_status !== 'paid' ||
+          checkoutSession.metadata?.internalSessionId !== session.id) {
+        throw new Error("INVOICE_CHECKOUT_MISMATCH");
+      }
+    }
+  }
+  if (!checkoutSession?.customer_details?.address?.country) {
+    throw new Error("INVOICE_BILLING_ADDRESS_MISSING");
   }
 
   const invoiceClaim = await upsertInvoiceProcessing({ session, checkoutSession });

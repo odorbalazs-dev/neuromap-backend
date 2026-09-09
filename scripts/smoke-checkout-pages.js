@@ -9,7 +9,7 @@ function assert(condition, message) {
 function main() {
   console.log("\n=== CHECKOUT PAGES SMOKE ===");
 
-  const currentVersion = "20260812-status-truth-v2";
+  const currentVersion = "20260909-status-recovery-v3";
   const script = fs.readFileSync("public/webflow/checkout-pages.js", "utf8");
   const stripeService = fs.readFileSync("src/services/stripe.service.js", "utf8");
   const sessionService = fs.readFileSync("src/services/session.service.js", "utf8");
@@ -32,6 +32,13 @@ function main() {
   });
 
   assert(script.includes(currentVersion), "Checkout pages should expose the current stable version.");
+  assert(script.includes("ensureResponsiveViewport"), "Checkout pages should normalize the responsive viewport.");
+  assert(
+    script.includes("width=device-width, initial-scale=1, viewport-fit=cover"),
+    "Checkout pages should enforce a device-width viewport without disabling user zoom."
+  );
+  assert(script.includes("nm-checkout-root"), "Checkout pages should isolate responsive root styles.");
+  assert(script.includes("text-size-adjust: 100%"), "Checkout pages should prevent mobile text auto-enlargement.");
   assert(script.includes("ANALYTICS_SCHEMA_VERSION"), "Checkout pages should define an analytics schema version.");
   assert(script.includes("analytics-event-schema-v2"), "Checkout pages should use analytics event schema v2.");
   assert(script.includes("buildAnalyticsPayload"), "Checkout pages should build normalized analytics payloads.");
@@ -80,8 +87,8 @@ function main() {
     "Public session lookup must not infer one SQL placeholder as both UUID and text."
   );
   assert(
-    script.includes("STATUS_POLL_MAX_ATTEMPTS"),
-    "Success pages should keep polling after transient status failures."
+    !script.includes("STATUS_POLL_MAX_ATTEMPTS") && script.includes("scheduleStatusPoll") && script.includes('"pageshow"'),
+    "Success pages must poll without an attempt cap and resume after back navigation."
   );
   assert(
     stripeService.includes("includeSessionIdentifier: false"),

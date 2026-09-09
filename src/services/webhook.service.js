@@ -8,9 +8,7 @@ import {
   markAnalysisFailed,
   markCheckoutRecoveredOrPaid
 } from "./session.service.js";
-import { sendMetaPurchaseEvent } from "./meta.service.js";
-import { createInvoiceForPaidSession } from "./invoice.service.js";
-import { sendContractConfirmationForSession } from "./contract-confirmation.service.js";
+import { enqueuePostPaymentTasks } from "./post-payment-outbox.service.js";
 import {
   assertCheckoutMatchesPackage,
   getProductPackage
@@ -107,8 +105,12 @@ async function claimWebhookEvent(event) {
   };
 }
 
-async function markWebhookProcessed(eventId, processingToken) {
-  await db.query(
+async function markWebhookProcessed(eventId, processingToken, postPayment = null) {
+  const client = await db.connect();
+  try {
+    await client.query("BEGIN");
+    if (postPayment) await enqueuePostPaymentTasks(client, postPayment.sessionId, postPayment.checkoutSession);
+    const updated = await client.query(
     `
     UPDATE webhook_events
     SET status = 'processed',
@@ -117,9 +119,18 @@ async function markWebhookProcessed(eventId, processingToken) {
         processing_token = NULL
     WHERE event_id = $1
       AND processing_token = $2
+    RETURNING event_id
     `,
     [eventId, processingToken]
   );
+    if (!updated.rowCount) throw new Error("Webhook processing claim was lost");
+    await client.query("COMMIT");
+  } catch (error) {
+    await client.query("ROLLBACK");
+    throw error;
+  } finally {
+    client.release();
+  }
 }
 
 async function markWebhookFailed(eventId, processingToken, errorMessage) {
@@ -142,74 +153,6 @@ function isCheckoutPaid(checkoutSession) {
     checkoutSession.object === "checkout.session" &&
     checkoutSession.payment_status === "paid"
   );
-}
-
-async function runPostPaymentSideEffects({
-  session,
-  checkoutSession,
-  internalSessionId,
-  includeMeta = true,
-  includeInvoice = true,
-  includeContractConfirmation = true
-} = {}) {
-  if (includeContractConfirmation) {
-    try {
-      await sendContractConfirmationForSession(internalSessionId);
-    } catch (confirmationError) {
-      console.error("[contract-confirmation] step failed after webhook acknowledgement:", {
-        message: confirmationError?.message || confirmationError,
-        internalSessionId,
-        stripeSessionId: checkoutSession?.id
-      });
-    }
-  }
-
-  if (includeMeta) {
-    try {
-      await sendMetaPurchaseEvent({
-        eventId: checkoutSession?.id,
-        value: Number(checkoutSession?.amount_total || session?.amount_total || 0) / 100,
-        currency: String(checkoutSession?.currency || session?.currency || "usd").toUpperCase()
-      });
-    } catch (metaError) {
-      console.error("[meta] purchase event failed after webhook acknowledgement:", {
-        message: metaError?.message || metaError,
-        internalSessionId,
-        stripeSessionId: checkoutSession?.id
-      });
-    }
-  }
-
-  if (includeInvoice) {
-    try {
-      await createInvoiceForPaidSession({
-        session,
-        checkoutSession,
-        throwOnError: false
-      });
-    } catch (invoiceError) {
-      console.error("[invoice] invoice step failed after webhook acknowledgement:", {
-        message: invoiceError?.message || invoiceError,
-        internalSessionId,
-        stripeSessionId: checkoutSession?.id
-      });
-    }
-  }
-}
-
-function schedulePostPaymentSideEffects(options) {
-  console.log("[webhook] schedule_post_payment_side_effects", {
-    internalSessionId: options?.internalSessionId || null,
-    stripeSessionId: options?.checkoutSession?.id || null
-  });
-
-  void runPostPaymentSideEffects(options).catch((error) => {
-    console.error("[webhook] post_payment_side_effects_failed", {
-      message: error?.message || error,
-      internalSessionId: options?.internalSessionId || null,
-      stripeSessionId: options?.checkoutSession?.id || null
-    });
-  });
 }
 
 export async function handleStripeWebhook(rawBody, signature) {
@@ -280,22 +223,7 @@ export async function handleStripeWebhook(rawBody, signature) {
     assertCheckoutMatchesPackage(checkoutSession, productPackage);
 
     if (sessionRow.analysis_status === "done") {
-      const confirmationMissing =
-        sessionRow.contract_confirmation_status !== "sent";
-      const invoiceMissing = sessionRow.invoice_status !== "issued";
-
-      if (sessionRow.payment_status === "paid" && (invoiceMissing || confirmationMissing)) {
-        schedulePostPaymentSideEffects({
-          session: sessionRow,
-          checkoutSession,
-          internalSessionId,
-          includeMeta: false,
-          includeInvoice: invoiceMissing,
-          includeContractConfirmation: confirmationMissing
-        });
-      }
-
-      await markWebhookProcessed(event.id, processingToken);
+      await markWebhookProcessed(event.id, processingToken, { sessionId: internalSessionId, checkoutSession });
 
       return {
         received: true,
@@ -312,13 +240,7 @@ export async function handleStripeWebhook(rawBody, signature) {
     });
 
     phase = "clear_recovery_state";
-    const paidSession =
-      await markCheckoutRecoveredOrPaid(internalSessionId) || {
-        ...sessionRow,
-        payment_status: "paid",
-        amount_total: checkoutSession.amount_total,
-        currency: String(checkoutSession.currency || productPackage.currency).toLowerCase()
-      };
+    await markCheckoutRecoveredOrPaid(internalSessionId);
 
     phase = "queue_analysis";
 
@@ -330,16 +252,7 @@ export async function handleStripeWebhook(rawBody, signature) {
 
     await enqueueAnalysisJob(internalSessionId);
 
-    await markWebhookProcessed(event.id, processingToken);
-
-    schedulePostPaymentSideEffects({
-      session: paidSession,
-      checkoutSession,
-      internalSessionId,
-      includeMeta: true,
-      includeInvoice: true,
-      includeContractConfirmation: true
-    });
+    await markWebhookProcessed(event.id, processingToken, { sessionId: internalSessionId, checkoutSession });
 
     return {
       received: true,

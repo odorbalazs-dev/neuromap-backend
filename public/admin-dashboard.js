@@ -3678,7 +3678,8 @@
         postPaymentMonitoring,
         webflowEmbedManager,
         followUpEmails,
-        i18nQualityAudit
+        i18nQualityAudit,
+        operationalEvidence
       ] = await Promise.all([
         api("/admin/status"),
         api("/admin/production-health"),
@@ -3697,8 +3698,28 @@
         api("/admin/post-payment-monitoring?hours=168&limit=30"),
         api("/admin/webflow-embed-manager"),
         optionalApi("/admin/follow-up-emails?limit=20"),
-        optionalApi("/admin/i18n-quality-audit")
+        optionalApi("/admin/i18n-quality-audit"),
+        optionalApi("/admin/operational-evidence")
       ]);
+
+      const evidenceRoot = document.getElementById("operationalEvidence");
+      if (evidenceRoot) {
+        evidenceRoot.replaceChildren();
+        const labels = { data_lifecycle: "Adatmegőrzés és törlés", post_payment_recovery: "Fizetés utáni helyreállítás",
+          production_health_alert: "Működési riasztás", operational_alert: "Összesített riasztás" };
+        if (!operationalEvidence.checks) {
+          evidenceRoot.textContent = "A futások állapota nem érhető el.";
+        } else {
+          for (const check of operationalEvidence.checks) {
+            const row = document.createElement("p");
+            row.textContent = `${labels[check.task] || check.task}: ${check.healthy ? "rendben" : "ellenőrzést igényel"}. Utolsó sikeres futás: ${check.last_success_at ? new Date(check.last_success_at).toLocaleString("hu-HU") : "nincs igazolt futás"}. Futások / 24 óra: ${check.runs || 0}.`;
+            evidenceRoot.appendChild(row);
+          }
+          const row = document.createElement("p");
+          row.textContent = operationalEvidence.outboxHealthy ? "Számla és szerződés sor: rendben." : "Számla vagy szerződés sor: elakadt feladat, beavatkozás szükséges.";
+          evidenceRoot.appendChild(row);
+        }
+      }
 
       els.apiStatus.textContent = status.ok ? "Elérhető" : "Hiba";
       renderHealth(health);

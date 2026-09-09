@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import { createHash } from "node:crypto";
 import { env } from "../config/env.js";
 
 import { buildReportEmail } from "../templates/reportEmail.js";
@@ -138,6 +139,7 @@ export async function sendReportEmail({
   payload,
   productPackage = null,
   observationProgram = null,
+  onPdfState = async () => {},
   idempotencyKey = null
 }) {
   const recipients = normalizeRecipients(to);
@@ -145,6 +147,7 @@ export async function sendReportEmail({
   const safeLang = getSafeLang(lang);
 
   const cleanReportText = String(reportText || "").trim();
+  let generatingPdf = false;
 
   try {
     console.log("[email] start", {
@@ -183,6 +186,8 @@ export async function sendReportEmail({
     let html = template.html;
     let text = template.text;
 
+    await onPdfState("generating");
+    generatingPdf = true;
     const pdfBuffer = await generatePdfBuffer({
       name,
       reportText: cleanReportText,
@@ -217,6 +222,12 @@ export async function sendReportEmail({
         content: shareableSummary.toString("base64")
       });
     }
+
+    await onPdfState("ready", {
+      bytes: pdfBuffer.length,
+      sha256: createHash("sha256").update(pdfBuffer).digest("hex")
+    });
+    generatingPdf = false;
 
     if (productPackage?.entitlements?.observationDiary14Days === true) {
       const plusContent = buildPlusEmailContent({
@@ -260,6 +271,7 @@ export async function sendReportEmail({
     return response;
 
   } catch (error) {
+    if (generatingPdf) await onPdfState("failed").catch(() => {});
     console.error("[email] send failed", {
       message:
         error?.message || "Unknown email error",

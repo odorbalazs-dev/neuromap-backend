@@ -1,6 +1,7 @@
 import { createHash, randomBytes, randomUUID, timingSafeEqual } from "crypto";
 
 import { env } from "../config/env.js";
+import { LEGAL_DEFAULTS } from "../config/legal.js";
 import { db } from "../db/db.js";
 import { restrictSessionProcessing } from "./data-governance.service.js";
 
@@ -134,7 +135,24 @@ export function getPublicLegalConfiguration() {
     },
     supervisoryAuthority: {
       name: env.SUPERVISORY_AUTHORITY_NAME,
-      url: env.SUPERVISORY_AUTHORITY_URL
+      url: env.SUPERVISORY_AUTHORITY_URL,
+      address: LEGAL_DEFAULTS.authorityAddress,
+      postalAddress: LEGAL_DEFAULTS.authorityPostalAddress,
+      email: LEGAL_DEFAULTS.authorityEmail,
+      phone: LEGAL_DEFAULTS.authorityPhone
+    },
+    europeanAuthorities: {
+      directoryUrl: LEGAL_DEFAULTS.europeanAuthoritiesUrl,
+      boardUrl: LEGAL_DEFAULTS.europeanBoardUrl,
+      complaintsHandledBy: "national_supervisory_authorities"
+    },
+    support: {
+      email: LEGAL_DEFAULTS.supportEmail,
+      firstResponseBusinessDays: 2,
+      paymentIncidentResponseBusinessDays: 1,
+      timeZone: "Europe/Budapest",
+      hours: "Mon-Fri 09:00-17:00, excluding Hungarian public holidays",
+      policyUrl: `${env.BACKEND_PUBLIC_URL}/legal/support`
     },
     advertisingConsentAvailable: false,
     analyticsConsentOptional: true

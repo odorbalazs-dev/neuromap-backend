@@ -1,0 +1,13 @@
+:root { font: 17px/1.65 system-ui, sans-serif; color: #162b36; background: #fff; }
+* { box-sizing: border-box; }
+body { margin: 0; overflow-wrap: anywhere; }
+header, footer { padding: 20px max(20px, calc((100% - 850px)/2)); background: #f1f8f8; }
+header > a { font-weight: 700; font-size: 22px; }
+nav { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; }
+main { max-width: 850px; margin: auto; padding: 32px 20px 48px; }
+h1 { font-size: 30px; line-height: 1.25; }
+h2 { font-size: 21px; line-height: 1.4; margin-top: 28px; }
+a { color: #075d83; text-underline-offset: 3px; }
+a:focus-visible { outline: 3px solid #db8100; outline-offset: 3px; }
+address { font-style: normal; }
+@media (max-width: 480px) { h1 { font-size: 25px; } main { padding-top: 20px; } }

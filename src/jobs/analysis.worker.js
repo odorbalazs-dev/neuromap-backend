@@ -4,6 +4,8 @@ import { processNextAnalysisJob } from "../services/analysis-job.service.js";
 import { env } from "../config/env.js";
 import { runMigrations } from "../db/migrate.js";
 import { db } from "../db/db.js";
+import { runDueOperationalTasks } from "../services/operational-scheduler.service.js";
+import { processNextPostPaymentTask } from "../services/post-payment-outbox.service.js";
 
 const workerConfig = {
   concurrency: env.WORKER_CONCURRENCY,
@@ -28,8 +30,28 @@ async function workerLoop() {
     (_item, index) => workerLane(index + 1)
   );
 
-  await Promise.all(lanes);
+  await Promise.all([...lanes, maintenanceLoop(), outboxLoop()]);
   console.log("[worker] analysis worker stopped");
+}
+
+async function maintenanceLoop() {
+  while (!stopRequested) {
+    try { await runDueOperationalTasks(); }
+    catch (error) { console.error("[operations] scheduler cycle failed", { code: error.code || "SCHEDULER_FAILED" }); }
+    await sleep(10000);
+  }
+}
+
+async function outboxLoop() {
+  while (!stopRequested) {
+    try {
+      const result = await processNextPostPaymentTask();
+      if (!result.processed) await sleep(3000);
+    } catch (error) {
+      console.error("[outbox] cycle failed", { code: error.code || "OUTBOX_FAILED" });
+      await sleep(5000);
+    }
+  }
 }
 
 async function workerLane(laneId) {

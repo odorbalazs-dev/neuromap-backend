@@ -1,4 +1,4 @@
-const ADMIN_DASHBOARD_ASSET_VERSION = "20260604-customer-experience-v3";
+const ADMIN_DASHBOARD_ASSET_VERSION = "20260909-operations-evidence-v1";
 
 export function getAdminDashboard(_req, res) {
   res.setHeader(
@@ -51,6 +51,11 @@ export function getAdminDashboard(_req, res) {
         <button id="bankQualityAlertBtn" type="button" class="secondary">Bank audit riasztás</button>
         <span id="statusText" class="status-text" role="status"></span>
       </section>
+
+      <details class="operational-evidence" id="operationalEvidencePanel">
+        <summary>Automatikus feladatok és kézbesítési sor</summary>
+        <div id="operationalEvidence" role="status">Még nincs lekérdezett futási bizonyíték.</div>
+      </details>
 
       <nav class="quick-nav" aria-label="Dashboard gyors navigáció">
         <button type="button" data-scroll-target="controlPulsePanel">Pulzus</button>

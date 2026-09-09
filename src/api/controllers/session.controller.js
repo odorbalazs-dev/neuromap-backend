@@ -51,7 +51,7 @@ function parseEntitlements(value) {
   }
 }
 
-function buildCustomerStatus(session, observation = null) {
+export function buildCustomerStatus(session, observation = null) {
   const paymentPaid = session.payment_status === "paid";
   const analysisStatus = normalizeAnalysisStatus(session.analysis_status);
   const emailStatus = normalizeEmailStatus(session.report_email_status);
@@ -59,12 +59,14 @@ function buildCustomerStatus(session, observation = null) {
   const analysisFailed = analysisStatus === "failed";
   const emailSent = emailStatus === "sent";
   const emailFailed = emailStatus === "failed";
+  const pdfStatus = session.pdf_status || (emailSent ? "ready" : "pending");
+  const pdfFailed = pdfStatus === "failed";
 
   let overall = "processing";
 
   if (!paymentPaid) {
     overall = "waiting_payment";
-  } else if (analysisFailed || emailFailed) {
+  } else if (analysisFailed || emailFailed || pdfFailed) {
     overall = "attention";
   } else if (emailSent) {
     overall = "sent";
@@ -78,11 +80,11 @@ function buildCustomerStatus(session, observation = null) {
         ? "active"
         : "pending";
 
-  const reportState = analysisDone
+  const reportState = pdfStatus === "ready"
     ? "complete"
-    : analysisFailed
+    : pdfFailed
       ? "failed"
-      : paymentPaid
+      : pdfStatus === "generating"
         ? "active"
         : "pending";
 
@@ -90,7 +92,7 @@ function buildCustomerStatus(session, observation = null) {
     ? "complete"
     : emailFailed
       ? "failed"
-      : analysisDone || emailStatus === "sending"
+      : pdfStatus === "ready" && emailStatus === "sending"
         ? "active"
         : "pending";
 
@@ -102,6 +104,9 @@ function buildCustomerStatus(session, observation = null) {
     paymentStatus: session.payment_status || null,
     analysisStatus,
     reportEmailStatus: emailStatus,
+    pdfStatus,
+    pdfStartedAt: session.pdf_started_at || null,
+    pdfCompletedAt: session.pdf_completed_at || null,
     reportEmailAttempts: Number(session.report_email_attempts || 0),
     createdAt: session.created_at || null,
     updatedAt: session.updated_at || null,

@@ -1,4 +1,5 @@
 import { resolveServiceRole } from "./service-role.js";
+import { LEGAL_DEFAULTS } from "./legal.js";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -169,6 +170,9 @@ function logEnvDiagnostics() {
 logEnvDiagnostics();
 
 const dbResult = resolveDatabaseUrl();
+const legalBaseUrl = String(process.env.BACKEND_PUBLIC_URL ||
+  (process.env.RAILWAY_PUBLIC_DOMAIN ? `https://${process.env.RAILWAY_PUBLIC_DOMAIN}` :
+    "https://neuromap-backend-production-969d.up.railway.app")).replace(/\/+$/, "");
 
 if (dbResult.error) {
   console.error(`[env] DATABASE configuration error (app will start in degraded mode):\n${dbResult.error}`);
@@ -326,31 +330,31 @@ export const env = {
     max: 100000
   }),
 
-  PRIVACY_POLICY_URL: optional("PRIVACY_POLICY_URL", null),
-  PRIVACY_POLICY_VERSION: optional("PRIVACY_POLICY_VERSION", "2026-07-26"),
-  TERMS_URL: optional("TERMS_URL", null),
-  TERMS_VERSION: optional("TERMS_VERSION", "2026-07-26"),
-  CONSENT_POLICY_VERSION: optional("CONSENT_POLICY_VERSION", "2026-07-26"),
-  POLICY_EFFECTIVE_DATE: optional("POLICY_EFFECTIVE_DATE", "2026-07-26"),
+  PRIVACY_POLICY_URL: optional("PRIVACY_POLICY_URL", `${legalBaseUrl}/legal/privacy`),
+  PRIVACY_POLICY_VERSION: optional("PRIVACY_POLICY_VERSION", LEGAL_DEFAULTS.policyVersion),
+  TERMS_URL: optional("TERMS_URL", `${legalBaseUrl}/legal/terms`),
+  TERMS_VERSION: optional("TERMS_VERSION", LEGAL_DEFAULTS.policyVersion),
+  CONSENT_POLICY_VERSION: optional("CONSENT_POLICY_VERSION", LEGAL_DEFAULTS.policyVersion),
+  POLICY_EFFECTIVE_DATE: optional("POLICY_EFFECTIVE_DATE", LEGAL_DEFAULTS.policyVersion),
   CONSENT_RECEIPT_TTL_HOURS: optionalInt("CONSENT_RECEIPT_TTL_HOURS", 24, {
     min: 1,
     max: 168
   }),
-  DATA_CONTROLLER_NAME: optional("DATA_CONTROLLER_NAME", null),
-  DATA_CONTROLLER_ADDRESS: optional("DATA_CONTROLLER_ADDRESS", null),
-  DATA_CONTROLLER_COUNTRY: optional("DATA_CONTROLLER_COUNTRY", null),
-  PRIVACY_CONTACT_EMAIL: optional("PRIVACY_CONTACT_EMAIL", null),
+  DATA_CONTROLLER_NAME: optional("DATA_CONTROLLER_NAME", LEGAL_DEFAULTS.controllerName),
+  DATA_CONTROLLER_ADDRESS: optional("DATA_CONTROLLER_ADDRESS", LEGAL_DEFAULTS.controllerAddress),
+  DATA_CONTROLLER_COUNTRY: optional("DATA_CONTROLLER_COUNTRY", LEGAL_DEFAULTS.controllerCountry),
+  PRIVACY_CONTACT_EMAIL: optional("PRIVACY_CONTACT_EMAIL", LEGAL_DEFAULTS.privacyEmail),
   DPO_CONTACT_EMAIL: optional("DPO_CONTACT_EMAIL", null),
   EEA_REPRESENTATIVE: optional("EEA_REPRESENTATIVE", null),
-  SUPERVISORY_AUTHORITY_NAME: optional("SUPERVISORY_AUTHORITY_NAME", null),
-  SUPERVISORY_AUTHORITY_URL: optional("SUPERVISORY_AUTHORITY_URL", null),
+  SUPERVISORY_AUTHORITY_NAME: optional("SUPERVISORY_AUTHORITY_NAME", LEGAL_DEFAULTS.authorityName),
+  SUPERVISORY_AUTHORITY_URL: optional("SUPERVISORY_AUTHORITY_URL", LEGAL_DEFAULTS.authorityUrl),
   MARKETING_SERVER_EVENTS_ENABLED: optionalBoolean("MARKETING_SERVER_EVENTS_ENABLED", false),
   DATA_RETENTION_DAYS: optionalInt("DATA_RETENTION_DAYS", 90, { min: 7, max: 730 }),
   WEBHOOK_EVENT_PAYLOAD_RETENTION_DAYS: optionalInt("WEBHOOK_EVENT_PAYLOAD_RETENTION_DAYS", 14, {
     min: 1,
     max: 365
   }),
-  LAUNCH_GATE_ENFORCED: optionalBoolean("LAUNCH_GATE_ENFORCED", false),
+  LAUNCH_GATE_ENFORCED: optionalBoolean("LAUNCH_GATE_ENFORCED", true),
   PRODUCTION_CHECKOUT_ENABLED: optionalBoolean("PRODUCTION_CHECKOUT_ENABLED", true),
   LEGAL_REVIEW_APPROVED: optionalBoolean("LEGAL_REVIEW_APPROVED", false),
   LEGAL_REVIEW_EVIDENCE: optional("LEGAL_REVIEW_EVIDENCE", null),

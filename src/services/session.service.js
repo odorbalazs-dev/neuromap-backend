@@ -135,15 +135,24 @@ export async function incrementCheckoutAttempt(sessionId) {
   return Number(result.rows[0]?.checkout_attempt || 1);
 }
 
-export async function updateStripeSessionId(sessionId, stripeSessionId) {
+export async function linkStripeCheckoutSession({
+  sessionId,
+  stripeSessionId,
+  checkoutUrl
+}) {
+  const recoveryToken = randomBytes(32).toString("hex");
+
   const result = await db.query(
     `
     UPDATE sessions
-    SET stripe_session_id = $2
+    SET stripe_session_id = $2,
+        checkout_started_at = COALESCE(checkout_started_at, NOW()),
+        checkout_url = $3,
+        recovery_token = COALESCE(recovery_token, $4)
     WHERE id = $1
     RETURNING *
     `,
-    [sessionId, stripeSessionId]
+    [sessionId, stripeSessionId, checkoutUrl, recoveryToken]
   );
 
   return result.rows[0] || null;
@@ -160,24 +169,6 @@ export async function deletePendingCheckoutSession(sessionId) {
     RETURNING id, consent_event_id
     `,
     [sessionId]
-  );
-
-  return result.rows[0] || null;
-}
-
-export async function markCheckoutStarted(sessionId, checkoutUrl) {
-  const recoveryToken = randomBytes(32).toString("hex");
-
-  const result = await db.query(
-    `
-    UPDATE sessions
-    SET checkout_started_at = COALESCE(checkout_started_at, NOW()),
-        checkout_url = $2,
-        recovery_token = COALESCE(recovery_token, $3)
-    WHERE id = $1
-    RETURNING *
-    `,
-    [sessionId, checkoutUrl || null, recoveryToken]
   );
 
   return result.rows[0] || null;

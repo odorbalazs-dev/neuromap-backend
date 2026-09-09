@@ -688,6 +688,7 @@ export async function generateAnalysis(payload) {
   async function runGeneration(inputPrompt, attempt) {
     const response = await openai.responses.create({
       model: env.OPENAI_MODEL || "gpt-4.1-mini",
+      store: false,
       input: inputPrompt,
       temperature: attempt === 1 ? 0.28 : 0.22,
       max_output_tokens: env.OPENAI_MAX_OUTPUT_TOKENS

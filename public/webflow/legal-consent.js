@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  const LEGAL_UI_VERSION = "20260814-mobile-scroll-v2";
+  const LEGAL_UI_VERSION = "20260909-authority-support-v1";
   const RECEIPT_KEY = "nm_legal_receipt_v1";
   const ANALYTICS_KEY = "nm_analytics_consent_v1";
   const CONTENT_VERSION = "20260726-verified-rights-v3";
@@ -395,11 +395,18 @@
       controller.country,
       controller.privacyEmail,
       authority.name,
+      authority.address,
+      authority.postalAddress,
+      authority.email,
+      authority.phone,
       config.policyEffectiveDate,
       config.retentionDays ? String(config.retentionDays) : "",
       locale.toUpperCase()
     ].filter(Boolean);
-    return parts.map(escapeHtml).join(" &middot; ");
+    const links = [authority.url, config.europeanAuthorities && config.europeanAuthorities.directoryUrl]
+      .filter(url => /^https:\/\//.test(String(url || "")))
+      .map(url => `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(url)}</a>`);
+    return parts.map(escapeHtml).join(" &middot; ") + "<br>" + links.join(" &middot; ");
   }
 
   function sectionMarkup(sections) {

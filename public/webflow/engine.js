@@ -5,9 +5,9 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260814-legal-mobile-v2";
+  const ENGINE_VERSION = "20260909-go-live-v1";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
-  const LEGAL_CONSENT_VERSION = "20260814-mobile-scroll-v2";
+  const LEGAL_CONSENT_VERSION = "20260909-authority-support-v1";
   const LANGUAGE_CONFIRMED_KEY = "nm_language_confirmed_v1";
   const DRAFT_STORAGE_KEY = "nm_questionnaire_draft_v2";
   const LEGACY_DRAFT_STORAGE_KEY = "nm_questionnaire_draft_v1";
@@ -491,7 +491,7 @@
     if (messageEl) messageEl.textContent = engineStatus.message;
   }
 
-  function finishEngineBootGate(delayMs = 850) {
+  function finishEngineBootGate(delayMs = 0) {
     engineStatus.ready = true;
     engineStatus.error = null;
     setEngineBootStatus("ready", "Kész.");
@@ -499,6 +499,7 @@
     window.setTimeout(() => {
       document.documentElement.classList.remove("nm-engine-loading", "nm-engine-failed");
       document.documentElement.classList.add("nm-engine-ready");
+      if (typeof window.NM_FINISH_HEAD_BOOT === "function") window.NM_FINISH_HEAD_BOOT();
 
       window.setTimeout(() => {
         const gate = document.getElementById("nmEngineBootGate");
@@ -513,6 +514,7 @@
     setEngineBootStatus("failed", message || "A kérdőív betöltése nem sikerült.", "error");
     document.documentElement.classList.remove("nm-engine-ready");
     document.documentElement.classList.add("nm-engine-loading", "nm-engine-failed");
+    if (typeof window.NM_FINISH_HEAD_BOOT === "function") window.NM_FINISH_HEAD_BOOT();
   }
 
   installEngineBootGate();
@@ -9652,7 +9654,7 @@
         dedupeKey: `questionnaire_loaded:${state.lang}`
       });
 
-      finishEngineBootGate(650);
+      finishEngineBootGate(0);
     } catch (error) {
       console.error("NeuroMap engine init failed:", error);
       state.lang = state.lang || "hu";

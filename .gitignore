@@ -7,3 +7,5 @@ __pycache__/
 work/
 tmp/
 ~$*.docx
+# Internal launch evidence is not intended for the public repository.
+docs/Private-Review-2026-09-09/

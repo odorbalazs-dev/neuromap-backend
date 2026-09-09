@@ -1,8 +1,15 @@
 import fs from "node:fs";
 import vm from "node:vm";
+import assert from "node:assert/strict";
+import { polishHungarianReportWording } from "../src/services/pdf.service.js";
+
+for (const child of ["gyermek", "gyerek"]) {
+  assert.equal(polishHungarianReportWording(`${child} m\u0171k\u00f6d\u00e9se`, "hu"), `${child} viselked\u00e9se`);
+  assert.equal(polishHungarianReportWording(`${child} m\u0171k\u00f6d\u00e9se`, "en"), `${child} m\u0171k\u00f6d\u00e9se`);
+}
 
 const SUPPORTED_LANGS = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];
-const REQUIRED_ENGINE_VERSION = "20260814-legal-mobile-v2";
+const REQUIRED_ENGINE_VERSION = "20260909-go-live-v1";
 
 const checks = [
   {
@@ -101,7 +108,7 @@ const checks = [
   {
     file: "src/services/pdf.service.js",
     required: [
-      "gyermek viselked\\u00e9se",
+      "polishHungarianReportWording",
       "PDF_REPORT_VERSION",
       "getReportV2PdfLabels",
       "年齢段階に合わせた理解",

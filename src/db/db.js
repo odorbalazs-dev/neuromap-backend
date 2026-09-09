@@ -1,6 +1,6 @@
 import pg from "pg";
 import { env } from "../config/env.js";
-import { resolveDatabaseSslConfig } from "../config/database-ssl.js";
+import { resolveDatabaseSslConfig, databaseConnectionWithoutSslOverrides } from "../config/database-ssl.js";
 
 function buildSslConfig() {
   return sslDecision.ssl;
@@ -44,7 +44,7 @@ if (
 // module still loads so the rest of the app — including /health — can start.
 const pool = env.DATABASE_URL
   ? new pg.Pool({
-      connectionString: env.DATABASE_URL,
+      connectionString: databaseConnectionWithoutSslOverrides(env.DATABASE_URL),
       max: env.PG_POOL_MAX,
       connectionTimeoutMillis: env.PG_CONNECTION_TIMEOUT_MS,
       idleTimeoutMillis: env.PG_IDLE_TIMEOUT_MS,

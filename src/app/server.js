@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import compression from "compression";
 
 import { env } from "../config/env.js";
 import { db } from "../db/db.js";
@@ -69,6 +70,11 @@ app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
 app.use(securityHeaders);
 
+// Public assets only: private authenticated responses are never compressed.
+app.use("/public", compression(), express.static("public", {
+  setHeaders: res => res.setHeader("Cache-Control", "no-cache, must-revalidate")
+}));
+
 app.use(createRateLimit({
   windowMs: 15 * 60 * 1000,
   max: 300,
@@ -82,14 +88,6 @@ app.use(createRateLimit({
     );
   }
 }));
-
-app.use("/public/webflow", express.static("public/webflow", {
-  setHeaders: (res) => {
-    res.setHeader("Cache-Control", "no-cache, must-revalidate");
-  }
-}));
-
-app.use("/public", express.static("public"));
 
 app.use("/webhook", express.raw({ type: "application/json" }));
 app.use(express.json({ limit: env.HTTP_JSON_BODY_LIMIT_BYTES }));

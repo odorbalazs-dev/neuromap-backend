@@ -21,7 +21,7 @@ const checks = [
       return (
         source.includes("workerConfig.concurrency") &&
         source.includes("workerLane") &&
-        source.includes("Promise.all(lanes)")
+        source.includes("Promise.all([...lanes, maintenanceLoop(), outboxLoop()])")
       );
     }
   },
@@ -119,9 +119,10 @@ const checks = [
     run: () => {
       const source = read("src/services/webhook.service.js");
       return (
-        source.includes("schedulePostPaymentSideEffects") &&
-        source.includes("schedule_post_payment_side_effects") &&
-        source.includes("post_payment_side_effects_failed")
+        source.includes("enqueuePostPaymentTasks(client") &&
+        source.includes('await client.query("COMMIT")') &&
+        !source.includes("schedulePostPaymentSideEffects") &&
+        !source.includes("sendContractConfirmationForSession")
       );
     }
   },

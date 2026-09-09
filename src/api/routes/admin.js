@@ -7,6 +7,7 @@ import {
 } from "../../middleware/adminAuth.js";
 import { createRateLimit } from "../../middleware/security.js";
 import { getAdminDashboard } from "../controllers/admin-dashboard.controller.js";
+import { getOperationalEvidence } from "../../services/operational-scheduler.service.js";
 
 import {
   getAdminStatus,
@@ -65,6 +66,10 @@ router.post("/logout", adminLogout);
 router.get("/session", adminAuth, getAdminAuthStatus);
 
 router.use(adminAuth);
+router.get("/operational-evidence", async (_req, res) => {
+  try { res.json(await getOperationalEvidence()); }
+  catch (_error) { res.status(503).json({ ok: false, error: "Operational evidence unavailable" }); }
+});
 
 router.get("/status", getAdminStatus);
 router.get("/launch-readiness", getLaunchReadiness);

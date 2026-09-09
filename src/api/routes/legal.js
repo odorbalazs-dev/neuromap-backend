@@ -1,4 +1,5 @@
 import express from "express";
+import { renderLegalPage } from "../../services/legal-pages.service.js";
 
 import {
   createLegalConsent,
@@ -11,6 +12,13 @@ import {
 } from "../controllers/legal.controller.js";
 
 const router = express.Router();
+
+for (const kind of ["privacy", "terms", "support"]) {
+  router.get(`/${kind}`, (req, res) => {
+    res.setHeader("Cache-Control", "no-cache, must-revalidate");
+    res.type("html").send(renderLegalPage(kind, req.query.lang));
+  });
+}
 
 router.get("/config", getLegalConfig);
 router.post("/consent", createLegalConsent);

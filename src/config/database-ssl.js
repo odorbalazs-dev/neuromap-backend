@@ -6,6 +6,18 @@ const VALID_MODES = new Set([
   "verify-full"
 ]);
 
+export function databaseConnectionWithoutSslOverrides(connectionString) {
+  if (!connectionString) return connectionString;
+  const url = new URL(connectionString);
+  // pg otherwise replaces the explicit TLS policy with connection-string options.
+  for (const key of [...url.searchParams.keys()]) {
+    if (/^(ssl|sslmode|sslcert|sslkey|sslrootcert|sslnegotiation|uselibpqcompat)$/i.test(key)) {
+      url.searchParams.delete(key);
+    }
+  }
+  return url.href;
+}
+
 function getDatabaseHost(connectionString) {
   if (!connectionString) return null;
 
@@ -93,7 +105,7 @@ export function resolveDatabaseSslConfig({
       deprecatedMode,
       effectiveMode,
       certificateVerified: false,
-      reason: "encrypted connection with provider-managed certificate chain"
+      reason: "encrypted connection WITHOUT certificate or hostname verification"
     };
   }
 

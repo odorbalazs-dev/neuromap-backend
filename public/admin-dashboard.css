@@ -159,6 +159,19 @@ input:focus {
   margin-bottom: 18px;
 }
 
+.operational-evidence {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 18px;
+  background: #fff;
+  overflow-wrap: anywhere;
+}
+
+.operational-evidence summary { cursor: pointer; font-weight: 700; }
+.operational-evidence #operationalEvidence { margin-top: 10px; }
+.operational-evidence p + p { margin-top: 6px; }
+
 .quick-nav {
   align-items: center;
   background: rgba(245, 248, 251, 0.94);

@@ -5,13 +5,39 @@
 (function () {
   if (typeof window === "undefined" || typeof document === "undefined") return;
 
-  const CHECKOUT_PAGES_VERSION = "20260812-status-truth-v2";
+  const CHECKOUT_PAGES_VERSION = "20260909-status-recovery-v3";
   const STATUS_POLL_INTERVAL_MS = 12000;
-  const STATUS_POLL_MAX_ATTEMPTS = 10;
+  const STATUS_POLL_MAX_INTERVAL_MS = 60000;
+  let statusPollTimer = null;
+  let statusRequestInFlight = false;
+  let lastKnownStatus = null;
+  let statusContext = null;
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
   const ANALYTICS_CONSENT_KEY = "nm_analytics_consent_v1";
   const DEFAULT_API_BASE_URL = "https://neuromap-backend-production-969d.up.railway.app";
   const SUPPORTED_LANGS = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];
+
+  function ensureResponsiveViewport() {
+    const head = document.head || document.getElementsByTagName("head")[0];
+
+    if (head) {
+      let viewport = head.querySelector('meta[name="viewport"]');
+
+      if (!viewport) {
+        viewport = document.createElement("meta");
+        viewport.setAttribute("name", "viewport");
+        head.appendChild(viewport);
+      }
+
+      viewport.setAttribute(
+        "content",
+        "width=device-width, initial-scale=1, viewport-fit=cover"
+      );
+    }
+
+    document.documentElement.classList.add("nm-checkout-root");
+  }
+
   function installPrivacyDefaults() {
     window.dataLayer = window.dataLayer || [];
     window.gtag = window.gtag || function () {
@@ -34,7 +60,8 @@
       }
 
       const parsed = JSON.parse(localStorage.getItem(ANALYTICS_CONSENT_KEY) || "null");
-      return parsed && parsed.allowed === true;
+      return parsed && parsed.granted === true &&
+        Date.now() - Date.parse(parsed.updatedAt || "") < 180 * 24 * 60 * 60 * 1000;
     } catch (_error) {
       return false;
     }
@@ -964,12 +991,32 @@
     const style = document.createElement("style");
     style.id = "nm-checkout-pages-stable-v1";
     style.textContent = `
+      html.nm-checkout-root {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+        -webkit-text-size-adjust: 100% !important;
+        text-size-adjust: 100% !important;
+      }
+
       body.nm-checkout-enhanced {
         margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
         min-height: 100vh !important;
+        overflow-x: hidden !important;
+        transform: none !important;
+        zoom: 1 !important;
         background: #f3f8fc !important;
         color: #102033 !important;
         font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+      }
+
+      body.nm-checkout-enhanced *,
+      body.nm-checkout-enhanced *::before,
+      body.nm-checkout-enhanced *::after {
+        box-sizing: border-box;
       }
 
       body.nm-checkout-enhanced > :not(#nmCheckoutPage):not(script):not(style):not(noscript) {
@@ -977,15 +1024,20 @@
       }
 
       .nm-checkout-page {
+        width: 100%;
+        max-width: 100%;
         min-height: 100vh;
         display: grid;
         place-items: center;
         padding: 28px 16px;
         box-sizing: border-box;
+        overflow-x: clip;
       }
 
       .nm-checkout-card {
-        width: min(760px, 100%);
+        width: 100%;
+        max-width: 760px;
+        min-width: 0;
         border: 1px solid #dbe8f1;
         border-radius: 18px;
         background: #fff;
@@ -1398,13 +1450,58 @@
       }
 
       @media (max-width: 520px) {
+        .nm-checkout-page {
+          min-height: 100vh;
+          min-height: 100svh;
+          place-items: start center;
+          padding: 12px 10px 24px;
+        }
+
         .nm-checkout-card {
-          border-radius: 14px;
-          padding: 26px 18px;
+          width: 100%;
+          border-radius: 12px;
+          padding: 22px 14px;
+        }
+
+        .nm-checkout-card h1 {
+          font-size: clamp(24px, 8vw, 30px);
+          line-height: 1.15;
+        }
+
+        .nm-checkout-lead {
+          font-size: 16px;
+        }
+
+        .nm-checkout-body {
+          margin-bottom: 22px;
+          font-size: 14px;
+        }
+
+        .nm-checkout-next,
+        .nm-report-status-panel,
+        .nm-cancel-recovery,
+        .nm-customer-tip,
+        .nm-delivery-estimate,
+        .nm-status-shortcut,
+        .nm-inbox-checklist,
+        .nm-delayed-help,
+        .nm-follow-up-panel,
+        .nm-feedback-panel {
+          padding: 14px;
+          border-radius: 12px;
         }
 
         .nm-checkout-button {
           width: 100%;
+        }
+
+        .nm-status-step {
+          align-items: flex-start;
+        }
+
+        .nm-status-state {
+          white-space: normal;
+          text-align: right;
         }
 
         .nm-status-shortcut-row {
@@ -1781,7 +1878,26 @@
 
   }
 
-  async function loadReportStatus(sessionId, copy, attempt) {
+  function scheduleStatusPoll(sessionId, copy, attempt) {
+    window.clearTimeout(statusPollTimer);
+    const delay = document.hidden ? STATUS_POLL_MAX_INTERVAL_MS :
+      Math.min(STATUS_POLL_MAX_INTERVAL_MS, STATUS_POLL_INTERVAL_MS * Math.max(1, Math.floor(attempt / 10)));
+    statusPollTimer = window.setTimeout(() => loadReportStatus(sessionId, copy, attempt + 1), delay);
+  }
+
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden && statusContext && lastKnownStatus?.overall !== "sent") {
+      loadReportStatus(statusContext.sessionId, statusContext.copy, 0);
+    }
+  });
+  window.addEventListener("pagehide", () => window.clearTimeout(statusPollTimer));
+  window.addEventListener("pageshow", event => {
+    if (event.persisted && statusContext && lastKnownStatus?.overall !== "sent") {
+      loadReportStatus(statusContext.sessionId, statusContext.copy, 0);
+    }
+  });
+
+  async function loadReportStatus(sessionId, copy, attempt = 0) {
     const lead = document.getElementById("nmReportStatusLead");
     const steps = document.getElementById("nmReportStatusSteps");
     const refreshButton = document.getElementById("nmRefreshStatus");
@@ -1794,6 +1910,13 @@
       return;
     }
 
+    if (statusRequestInFlight) return;
+    statusRequestInFlight = true;
+    statusContext = { sessionId, copy };
+    window.clearTimeout(statusPollTimer);
+    const controller = new AbortController();
+    const requestTimeout = window.setTimeout(() => controller.abort(), 20000);
+
     try {
       if (refreshButton) {
         refreshButton.disabled = true;
@@ -1803,6 +1926,7 @@
       const response = await fetch(`${getApiBaseUrl()}/session/status/${encodeURIComponent(sessionId)}`, {
         method: "GET",
         headers: getSessionHeaders(sessionId),
+        signal: controller.signal,
         credentials: "omit"
       });
 
@@ -1815,6 +1939,7 @@
         throw statusError;
       }
 
+      lastKnownStatus = data.status;
       lead.textContent = getStatusMessage(copy, data.status);
       steps.innerHTML = renderStatusSteps(copy, data.status.stages);
       renderStatusMeta(copy, sessionId, data.status);
@@ -1831,15 +1956,8 @@
         page_kind: "checkout_success"
       });
 
-      if (
-        data.status.overall !== "sent" &&
-        data.status.overall !== "attention" &&
-        attempt < STATUS_POLL_MAX_ATTEMPTS
-      ) {
-        window.setTimeout(
-          () => loadReportStatus(sessionId, copy, attempt + 1),
-          STATUS_POLL_INTERVAL_MS
-        );
+      if (data.status.overall !== "sent") {
+        scheduleStatusPoll(sessionId, copy, attempt);
       }
     } catch (error) {
       const httpStatus = Number(error?.httpStatus || 0);
@@ -1851,9 +1969,11 @@
       });
 
       lead.textContent = copy.statusUnavailable;
-      steps.innerHTML = renderUnavailableStatusSteps(copy);
-      renderStatusMeta(copy, sessionId, null);
-      updateDeliveryEstimate(copy, sessionId, null);
+      if (!lastKnownStatus) {
+        steps.innerHTML = renderUnavailableStatusSteps(copy);
+        renderStatusMeta(copy, sessionId, null);
+        updateDeliveryEstimate(copy, sessionId, null);
+      }
 
       trackOnce("nm_report_status_unavailable", {
         http_status: httpStatus,
@@ -1863,13 +1983,12 @@
 
       const retryable = !httpStatus || httpStatus === 404 || httpStatus === 429 || httpStatus >= 500;
 
-      if (retryable && attempt < STATUS_POLL_MAX_ATTEMPTS) {
-        window.setTimeout(
-          () => loadReportStatus(sessionId, copy, attempt + 1),
-          STATUS_POLL_INTERVAL_MS
-        );
+      if (retryable) {
+        scheduleStatusPoll(sessionId, copy, attempt);
       }
     } finally {
+      window.clearTimeout(requestTimeout);
+      statusRequestInFlight = false;
       if (refreshButton) {
         refreshButton.disabled = false;
         refreshButton.textContent = copy.refreshStatus;
@@ -2041,6 +2160,7 @@
     const lang = getLang();
     const sessionId = getSessionId(kind);
 
+    ensureResponsiveViewport();
     installPrivacyDefaults();
 
     document.documentElement.lang = lang;
@@ -2073,6 +2193,8 @@
       });
     }
   }
+
+  ensureResponsiveViewport();
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", init, { once: true });

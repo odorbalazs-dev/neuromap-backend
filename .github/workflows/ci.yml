@@ -4,9 +4,30 @@ on:
   push:
   pull_request:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   quality:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_DB: neuromap_ci
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: local-ci-only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
 
     steps:
       - name: Checkout
@@ -15,7 +36,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Install
@@ -37,4 +58,12 @@ jobs:
         run: npm run audit:all
 
       - name: Dependency audit
-        run: npm audit --omit=dev --audit-level=high
+        run: npm audit --omit=dev --audit-level=moderate
+
+      - name: Go-live unit checks
+        run: node scripts/smoke-go-live.js
+
+      - name: Isolated PostgreSQL integration
+        env:
+          DATABASE_TEST_URL: postgresql://postgres:local-ci-only@127.0.0.1:5432/neuromap_ci
+        run: node scripts/integration-go-live.js

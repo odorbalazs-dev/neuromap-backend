@@ -8,6 +8,7 @@ import { getProductPackage } from "../config/products.js";
 import { ensureObservationProgram } from "./observation-program.service.js";
 import { assertSessionProcessingAllowed } from "./data-governance.service.js";
 import { buildReportEmailIdempotencyKey } from "./email-idempotency.service.js";
+import { recordPdfState } from "./pdf-status.service.js";
 
 export { buildReportEmailIdempotencyKey } from "./email-idempotency.service.js";
 
@@ -69,6 +70,7 @@ export async function deliverReportEmailForSession(
       payload: deliverableSession.payload,
       productPackage,
       observationProgram,
+      onPdfState: (state, details) => recordPdfState(sessionId, state, details),
       idempotencyKey: buildReportEmailIdempotencyKey(
         sessionId,
         deliverableSession.analysis_result

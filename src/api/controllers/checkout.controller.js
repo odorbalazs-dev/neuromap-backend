@@ -4,7 +4,7 @@ import {
   assertSessionAccess,
   getSessionAccessTokenFromRequest,
   incrementCheckoutAttempt,
-  updateStripeSessionId,
+  linkStripeCheckoutSession,
   deletePendingCheckoutSession
 } from "../../services/session.service.js";
 
@@ -81,7 +81,15 @@ export async function createCheckout(req, res) {
       checkoutAttempt: await incrementCheckoutAttempt(session.id)
     });
 
-    const updatedSession = await updateStripeSessionId(session.id, stripeSession.id);
+    if (!stripeSession?.id || !stripeSession?.url) {
+      throw new Error("Stripe checkout session response is incomplete.");
+    }
+
+    const updatedSession = await linkStripeCheckoutSession({
+      sessionId: session.id,
+      stripeSessionId: stripeSession.id,
+      checkoutUrl: stripeSession.url
+    });
     if (!updatedSession) {
       throw new Error("Checkout session could not be linked to the internal session.");
     }
@@ -212,7 +220,15 @@ export async function retryCheckout(req, res) {
       checkoutAttempt: await incrementCheckoutAttempt(session.id)
     });
 
-    const updatedSession = await updateStripeSessionId(session.id, stripeSession.id);
+    if (!stripeSession?.id || !stripeSession?.url) {
+      throw new Error("Stripe checkout session response is incomplete.");
+    }
+
+    const updatedSession = await linkStripeCheckoutSession({
+      sessionId: session.id,
+      stripeSessionId: stripeSession.id,
+      checkoutUrl: stripeSession.url
+    });
     if (!updatedSession) {
       throw new Error("Checkout session could not be linked to the internal session.");
     }

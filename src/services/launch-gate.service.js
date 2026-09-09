@@ -55,7 +55,8 @@ export function getLaunchGateStatus(runtimeEnv = env) {
   );
   if (!policyConfigurationReady) missing.push("policy_configuration");
 
-  const enforced = runtimeEnv.LAUNCH_GATE_ENFORCED === true;
+  // Production cannot opt out through a stale Railway variable.
+  const enforced = runtimeEnv.NODE_ENV === "production" || runtimeEnv.LAUNCH_GATE_ENFORCED !== false;
   const ready = missing.length === 0;
 
   return {

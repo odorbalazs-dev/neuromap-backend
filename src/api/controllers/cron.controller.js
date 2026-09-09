@@ -19,11 +19,13 @@ import { assertSessionProcessingAllowed } from "../../services/data-governance.s
 
 import { env } from "../../config/env.js";
 import { secureCompare } from "../../utils/secureCompare.js";
+import { runRecordedOperation } from "../../services/operational-scheduler.service.js";
 
 function isAuthorizedCron(req) {
   const headerSecret = req.headers["x-cron-secret"];
 
-  return Boolean(env.CRON_SECRET && secureCompare(headerSecret, env.CRON_SECRET));
+  const strongEnough = env.NODE_ENV !== "production" || String(env.CRON_SECRET || "").length >= 32;
+  return Boolean(strongEnough && env.CRON_SECRET && secureCompare(headerSecret, env.CRON_SECRET));
 }
 
 function normalizeNumber(value, fallback, min, max) {
@@ -231,10 +233,10 @@ export async function runPostPaymentRecovery(req, res) {
     }
 
     const result =
-      await runPostPaymentRecoveryV2({
+      await runRecordedOperation("post_payment_recovery", () => runPostPaymentRecoveryV2({
         ...(req.query || {}),
         ...(req.body || {})
-      });
+      }));
 
     return res.json(result);
 
@@ -284,12 +286,12 @@ export async function runDataLifecycleCron(req, res) {
       return res.status(401).json({ ok: false, error: "Unauthorized" });
     }
 
-    const result = await runDataLifecycle({
+    const result = await runRecordedOperation("data_lifecycle", () => runDataLifecycle({
       sessionLimit: normalizeNumber(req.query.sessionLimit, 50, 1, 200),
       webhookLimit: normalizeNumber(req.query.webhookLimit, 500, 1, 2000),
       observationLimit: normalizeNumber(req.query.observationLimit, 100, 1, 500),
       operationalLimit: normalizeNumber(req.query.operationalLimit, 1000, 1, 5000)
-    });
+    }));
 
     return res.status(result.ok ? 200 : 207).json(result);
   } catch (error) {
@@ -321,10 +323,10 @@ export async function sendProductionHealthAlert(req, res) {
       String(req.query.force || "false").toLowerCase() === "true";
 
     const result =
-      await runProductionHealthAlertCheck({
+      await runRecordedOperation("production_health_alert", () => runProductionHealthAlertCheck({
         cooldownMinutes,
         force
-      });
+      }));
 
     return res.status(result.ok === false ? 500 : 200).json(result);
 
@@ -370,12 +372,12 @@ export async function sendOperationalAlert(req, res) {
     const minLevel = String(req.query.minLevel || "warning").toLowerCase();
 
     const result =
-      await runOperationalAlertCheck({
+      await runRecordedOperation("operational_alert", () => runOperationalAlertCheck({
         cooldownMinutes,
         windowHours,
         force,
         minLevel
-      });
+      }));
 
     return res.status(result.ok === false ? 500 : 200).json(result);
 

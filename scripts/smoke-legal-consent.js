@@ -162,9 +162,9 @@ assert(
     legalConsentSource.includes("overscroll-behavior: contain") &&
     legalConsentSource.includes("-webkit-overflow-scrolling: touch") &&
     legalConsentSource.includes('@media (max-height: 560px)') &&
-    legalConsentSource.includes('const LEGAL_UI_VERSION = "20260814-mobile-scroll-v2"') &&
+    legalConsentSource.includes('const LEGAL_UI_VERSION = "20260909-authority-support-v1"') &&
     legalConsentSource.includes('const CONTENT_VERSION = "20260726-verified-rights-v3"') &&
-    engineSource.includes('20260814-mobile-scroll-v2'),
+    engineSource.includes('20260909-authority-support-v1'),
   "Legal consent must remain scrollable with visible actions on mobile and short viewports"
 );
 
@@ -177,7 +177,7 @@ assert(
 );
 
 assert(
-  engineSource.includes("20260814-legal-mobile-v2") &&
+  engineSource.includes("20260909-go-live-v1") &&
     engineSource.includes("isCompatibleLegalManager") &&
     engineSource.includes('String(manager.version || "") === LEGAL_CONSENT_VERSION') &&
     engineSource.includes("const forceReload = Boolean(window.NM_LEGAL)") &&
@@ -216,7 +216,7 @@ assert(
 });
 
 assert(
-  checkoutPagesSource.includes("20260812-status-truth-v2") &&
+  checkoutPagesSource.includes("20260909-status-recovery-v3") &&
     checkoutPagesSource.includes("isAnalyticsAllowed") &&
     checkoutPagesSource.includes("sanitizeCheckoutAnalyticsPayload") &&
     checkoutPagesSource.includes("installPrivacyDefaults();"),

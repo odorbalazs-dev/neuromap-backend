@@ -1,0 +1,33 @@
+<!-- Webflow Home: Inside <head>, before any analytics scripts.
+     Remove legacy advertising scripts and the native Google Analytics integration.
+     Keep the questionnaire markup and question-bank embeds. -->
+<style>
+html[data-nm-boot="loading"] body { visibility: hidden !important; }
+html[data-nm-boot="loading"]::after { content: "NeuroMap Kids"; position: fixed; inset: 0; display: grid; place-items: center; background: #f4fafb; color: #162b36; font: 600 24px system-ui,sans-serif; z-index: 2147483646; }
+html[data-nm-boot="loading"] #nmHeadBootError { visibility: visible !important; position: fixed; inset: 0; z-index: 2147483647; display: grid; place-content: center; gap: 16px; padding: 24px; background: #fff; color: #162b36; font: 18px/1.5 system-ui,sans-serif; }
+</style>
+<script>
+(function () {
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+  window.gtag("consent", "default", { analytics_storage: "denied", ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied" });
+  document.documentElement.setAttribute("data-nm-boot", "loading");
+  var timer = setTimeout(function () {
+    if (!document.documentElement.hasAttribute("data-nm-boot")) return;
+    var panel = document.createElement("section");
+    panel.id = "nmHeadBootError"; panel.setAttribute("role", "alert");
+    var title = document.createElement("strong"); title.textContent = "NeuroMap Kids";
+    var button = document.createElement("button"); button.type = "button";
+    button.textContent = "\u21bb"; button.setAttribute("aria-label", "Reload / \u00dajrat\u00f6lt\u00e9s");
+    button.onclick = function () { location.reload(); };
+    panel.appendChild(title); panel.appendChild(button); document.body.appendChild(panel);
+  }, 25000);
+  window.NM_FINISH_HEAD_BOOT = function () {
+    clearTimeout(timer); document.documentElement.removeAttribute("data-nm-boot");
+    var panel = document.getElementById("nmHeadBootError"); if (panel) panel.remove();
+  };
+})();
+</script>
+<link rel="preconnect" href="https://neuromap-backend-production-969d.up.railway.app" crossorigin>
+<link rel="preload" as="script" href="https://neuromap-backend-production-969d.up.railway.app/public/webflow/engine.js?v=20260909-go-live-v1">
+<noscript><p>NeuroMap Kids: JavaScript is required for the questionnaire.</p></noscript>

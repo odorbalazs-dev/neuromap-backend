@@ -41,9 +41,10 @@ const incompleteProductionEnv = {
 
 const incompleteStatus = getLaunchGateStatus(incompleteProductionEnv);
 assert(!incompleteStatus.ready, "Incomplete approvals must remain visible");
-assert(!incompleteStatus.enforced, "Production must not silently enable the strict launch gate");
-assert(!incompleteStatus.blocking, "Advisory launch checks must not block an enabled checkout");
-assertCheckoutLaunchReady(incompleteProductionEnv);
+assert(incompleteStatus.enforced, "Production must always enforce the launch gate");
+assert(incompleteStatus.blocking, "Incomplete production configuration must block checkout");
+expectBlocked(incompleteProductionEnv, "legal_review");
+assertCheckoutLaunchReady({ ...incompleteProductionEnv, NODE_ENV: "test" });
 
 expectBlocked(
   { ...incompleteProductionEnv, PRODUCTION_CHECKOUT_ENABLED: false },

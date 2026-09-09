@@ -38,6 +38,9 @@ function buildReason(key, count, label, recommendation) {
 
 function buildAlertReasons(metrics) {
   return [
+    buildReason("post_payment_outbox", metrics.outboxProblems,
+      "Elakadt számlázás vagy szerződés-visszaigazolás",
+      "Ellenőrizd a számlázó beállításait és az automatikus feladatok állapotát a dashboardon."),
     buildReason(
       "stale_processing_jobs",
       metrics.staleProcessingJobs,
@@ -522,7 +525,8 @@ async function getHealthMetrics() {
     jobCounts,
     webhookTiming,
     sessionCounts,
-    reportEmailTiming
+    reportEmailTiming,
+    outboxIssues
   ] = await Promise.all([
     db.query(`
       SELECT COUNT(*)::int AS count
@@ -577,7 +581,10 @@ async function getHealthMetrics() {
         MAX(report_email_last_attempt_at) AS last_attempt_at
       FROM sessions
       WHERE payment_status = 'paid'
-    `)
+    `),
+    db.query(`SELECT COUNT(*)::int AS count FROM post_payment_outbox
+      WHERE last_error_code IS DISTINCT FROM 'DATA_ERASED' AND
+        (status = 'failed' OR (status IN ('pending','processing') AND created_at < NOW() - INTERVAL '30 minutes'))`)
   ]);
 
   const jobs = jobCounts.rows.reduce((acc, row) => {
@@ -597,6 +604,7 @@ async function getHealthMetrics() {
   const emailRow = reportEmailTiming.rows[0] || {};
 
   const metrics = {
+    outboxProblems: Number(outboxIssues.rows[0]?.count || 0),
     staleProcessingJobs: Number(staleJobs.rows[0]?.count || 0),
     failedJobs: Number(jobs.failed || 0),
     failedWebhooks24h: Number(webhookRow.failed_last_24h || 0),

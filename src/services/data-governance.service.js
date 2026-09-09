@@ -187,6 +187,9 @@ export async function eraseSessionSensitiveData(
       "DELETE FROM observation_programs WHERE session_id = $1",
       [sessionId]
     );
+    await client.query(`UPDATE post_payment_outbox SET payload = '{}', status = 'failed',
+      last_error_code = 'DATA_ERASED', lease_token = NULL, locked_until = NULL
+      WHERE session_id = $1`, [sessionId]);
 
     const result = await client.query(
       `
@@ -206,6 +209,8 @@ export async function eraseSessionSensitiveData(
           contract_confirmation_provider_id = NULL,
           contract_confirmation_error = NULL,
           invoice_error = NULL,
+          pdf_sha256 = NULL,
+          pdf_error_code = NULL,
           data_redacted_at = COALESCE(data_redacted_at, NOW()),
           data_redaction_reason = $2,
           sensitive_data_erased_at = COALESCE(sensitive_data_erased_at, NOW()),
