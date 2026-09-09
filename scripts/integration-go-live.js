@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
+import { readFile } from "node:fs/promises";
 
 const url = new URL(process.env.DATABASE_TEST_URL || "postgresql://localhost/invalid");
 if (url.pathname !== "/neuromap_ci" || !["localhost", "127.0.0.1"].includes(url.hostname)) {
@@ -20,12 +21,12 @@ try {
   await runMigrations();
   const insert = async () => {
     const id=randomUUID(); ids.push(id);
-    await db.query(`INSERT INTO sessions(id,email,name,lang,payload,payment_status,contract_confirmation_status,invoice_status)
-      VALUES($1,'audit@example.invalid','Synthetic audit','hu','{}','paid','sent','issued')`,[id]);
+    await db.query(`INSERT INTO sessions(id,email,name,lang,payload,payment_status,contract_confirmation_status,invoice_status,stripe_session_id)
+      VALUES($1,'audit@example.invalid','Synthetic audit','hu','{}','paid','sent','issued',$2)`,[id,`cs_live_${id}`]);
     return id;
   };
   const id=await insert();
-  const checkout={id:"cs_test_synthetic",amount_total:999,currency:"usd",customer_details:{address:{country:"HU"}}};
+  const checkout={id:`cs_live_${id}`,livemode:true,payment_status:"paid",metadata:{internalSessionId:id},amount_total:999,currency:"usd",customer_details:{address:{country:"HU"}}};
   const client=await db.connect();
   try {
     await client.query("BEGIN"); await enqueuePostPaymentTasks(client,id,checkout); await client.query("ROLLBACK");
@@ -50,6 +51,44 @@ try {
   await db.query("UPDATE post_payment_outbox SET status='processing',locked_until=NOW()-INTERVAL '1 minute' WHERE id=$1",[pending.id]);
   assert.equal((await processNextPostPaymentTask()).processed,true);
   assert.equal((await db.query("SELECT status FROM post_payment_outbox WHERE id=$1",[pending.id])).rows[0].status,"done");
+
+  const testId = await insert();
+  await db.query("UPDATE sessions SET invoice_status='pending',stripe_session_id=$2 WHERE id=$1", [testId,`cs_test_${testId}`]);
+  const testCheckout = { ...checkout, id: `cs_test_${testId}`, livemode: false, metadata: { internalSessionId: testId } };
+  await enqueuePostPaymentTasks(db, testId, testCheckout);
+  assert.equal((await db.query("SELECT count(*)::int n FROM post_payment_outbox WHERE session_id=$1 AND task='invoice'",[testId])).rows[0].n,0);
+  assert.equal((await db.query("SELECT invoice_error FROM sessions WHERE id=$1",[testId])).rows[0].invoice_error,"STRIPE_TEST_PAYMENT_EXCLUDED");
+  await processNextPostPaymentTask(); // The contract task remains available in test mode.
+  await db.query("INSERT INTO post_payment_outbox(session_id,task,payload) VALUES($1,'invoice',$2)",[testId,testCheckout]);
+  const excludedJob=await processNextPostPaymentTask();
+  assert.equal(excludedJob.skipped,true);
+  assert.equal(excludedJob.failed,undefined);
+  assert.equal((await db.query("SELECT last_error_code FROM post_payment_outbox WHERE session_id=$1 AND task='invoice'",[testId])).rows[0].last_error_code,"STRIPE_TEST_PAYMENT_EXCLUDED");
+
+  const legacyId=await insert(), issuedTestId=await insert(), livePendingId=await insert();
+  await db.query("UPDATE sessions SET stripe_session_id=$2,invoice_status='failed' WHERE id=$1",[legacyId,`cs_test_${legacyId}`]);
+  await db.query("UPDATE sessions SET stripe_session_id=$2 WHERE id=$1",[issuedTestId,`cs_test_${issuedTestId}`]);
+  await db.query("UPDATE sessions SET invoice_status='failed' WHERE id=$1",[livePendingId]);
+  await db.query("INSERT INTO invoices(session_id,status,error_message) VALUES($1,'failed','previous provider error'),($2,'issued',NULL),($3,'failed','live failure')",[legacyId,issuedTestId,livePendingId]);
+  await db.query("INSERT INTO post_payment_outbox(session_id,task,status,payload) VALUES($1,'invoice','failed',$2)",[legacyId,{id:`cs_test_${legacyId}`,customer_details:{email:'test@example.invalid'}}]);
+  const exclusionSql=await readFile(new URL('../src/db/migrations/022_exclude_stripe_test_invoices.sql',import.meta.url),'utf8');
+  const migrationClient=await db.connect();
+  try {
+    for(let repeat=0;repeat<2;repeat++){
+      await migrationClient.query('BEGIN');
+      await migrationClient.query(exclusionSql);
+      await migrationClient.query('COMMIT');
+    }
+  } catch(error) { await migrationClient.query('ROLLBACK'); throw error; }
+  finally { migrationClient.release(); }
+  const excludedInvoice=(await db.query('SELECT * FROM invoices WHERE session_id=$1',[legacyId])).rows[0];
+  assert.equal(excludedInvoice.status,'skipped');
+  assert.equal(excludedInvoice.provider_response.excludedPreviousError,'previous provider error');
+  assert.equal((await db.query("SELECT status FROM invoices WHERE session_id=$1",[issuedTestId])).rows[0].status,'issued');
+  assert.equal((await db.query("SELECT status FROM invoices WHERE session_id=$1",[livePendingId])).rows[0].status,'failed');
+  const excludedOutbox=(await db.query("SELECT status,payload FROM post_payment_outbox WHERE session_id=$1",[legacyId])).rows[0];
+  assert.equal(excludedOutbox.status,'done');
+  assert.deepEqual(excludedOutbox.payload,{});
   await runRecordedOperation("integration_success",async()=>({ok:true,summary:{count:1,email:"must-not-be-stored"}}));
   await runRecordedOperation("integration_lifecycle",async()=>({ok:true,sessions:{checked:2,erased:2,items:[{email:"must-not-be-stored"}]}}));
   await runRecordedOperation("integration_alert",async()=>({ok:true,skipped:true,reason:"missing_admin_alert_email"}));

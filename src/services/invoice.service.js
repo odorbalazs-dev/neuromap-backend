@@ -12,6 +12,11 @@ import { getSessionById } from "./session.service.js";
 import { getProductPackage } from "../config/products.js";
 import Stripe from "stripe";
 import { env } from "../config/env.js";
+import {
+  TEST_INVOICE_EXCLUSION,
+  isTestInvoicePayment,
+  isVerifiedLiveInvoicePayment
+} from "./invoice-payment-policy.js";
 
 function compactError(error) {
   return String(error?.message || error || "Invoice error").slice(0, 1000);
@@ -363,6 +368,10 @@ export async function createInvoiceForPaidSession({
     return markInvoiceSkipped(session.id, "Session is not paid.");
   }
 
+  if (isTestInvoicePayment(session, checkoutSession)) {
+    return markInvoiceSkipped(session.id, TEST_INVOICE_EXCLUSION);
+  }
+
   if (!isInvoiceAutomationConfigured()) {
     return markInvoiceSkipped(
       session.id,
@@ -376,20 +385,27 @@ export async function createInvoiceForPaidSession({
     return existing;
   }
 
-  // Recovery must use the paid checkout's billing snapshot, never blank fallbacks.
-  if (!checkoutSession?.customer_details?.address?.country) {
+  // Legacy billing snapshots lack mode evidence: verify them with Stripe before invoicing.
+  if (!checkoutSession) {
     const queued = await db.query(`SELECT payload FROM post_payment_outbox
       WHERE session_id = $1 AND task = 'invoice'`, [session.id]);
-    const snapshot = queued.rows[0]?.payload;
-    if (snapshot?.customer_details?.address?.country) checkoutSession = snapshot;
-    else if (session.stripe_session_id && env.STRIPE_SECRET_KEY) {
+    checkoutSession = queued.rows[0]?.payload || null;
+  }
+  if (isTestInvoicePayment(session, checkoutSession)) {
+    return markInvoiceSkipped(session.id, TEST_INVOICE_EXCLUSION);
+  }
+  if (!isVerifiedLiveInvoicePayment(session, checkoutSession) ||
+      !checkoutSession?.customer_details?.address?.country) {
+    if (session.stripe_session_id?.startsWith("cs_live_") && env.STRIPE_SECRET_KEY) {
       const stripe = new Stripe(env.STRIPE_SECRET_KEY, { timeout: env.STRIPE_TIMEOUT_MS, maxNetworkRetries: 2 });
       checkoutSession = await stripe.checkout.sessions.retrieve(session.stripe_session_id);
-      if (checkoutSession.payment_status !== 'paid' ||
-          checkoutSession.metadata?.internalSessionId !== session.id) {
-        throw new Error("INVOICE_CHECKOUT_MISMATCH");
-      }
     }
+  }
+  if (isTestInvoicePayment(session, checkoutSession)) {
+    return markInvoiceSkipped(session.id, TEST_INVOICE_EXCLUSION);
+  }
+  if (!isVerifiedLiveInvoicePayment(session, checkoutSession)) {
+    throw Object.assign(new Error("INVOICE_LIVE_PAYMENT_UNVERIFIED"), { terminal: true });
   }
   if (!checkoutSession?.customer_details?.address?.country) {
     throw new Error("INVOICE_BILLING_ADDRESS_MISSING");
@@ -476,6 +492,12 @@ export async function retryInvoicesBatch({
       ON i.session_id = s.id
      AND i.provider = $1::text
     WHERE s.payment_status = 'paid'
+      AND LEFT(s.stripe_session_id, 8) = 'cs_live_'
+      AND NOT EXISTS (
+        SELECT 1 FROM post_payment_outbox o WHERE o.session_id = s.id AND o.task = 'invoice'
+          AND (o.payload->>'livemode' = 'false' OR LEFT(o.payload->>'id', 8) = 'cs_test_')
+      )
+      AND s.invoice_error IS DISTINCT FROM 'STRIPE_TEST_PAYMENT_EXCLUDED'
       AND COALESCE(s.invoice_status, 'pending') <> 'issued'
       AND s.processing_restricted_at IS NULL
       AND s.sensitive_data_erased_at IS NULL

@@ -61,7 +61,9 @@ jobs:
         run: npm audit --omit=dev --audit-level=moderate
 
       - name: Go-live unit checks
-        run: node scripts/smoke-go-live.js
+        run: |
+          node scripts/smoke-go-live.js
+          node scripts/smoke-invoice-payment-policy.js
 
       - name: Isolated PostgreSQL integration
         env:
