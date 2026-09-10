@@ -4,6 +4,7 @@ import { env } from "../config/env.js";
 import { LEGAL_DEFAULTS } from "../config/legal.js";
 import { db } from "../db/db.js";
 import { restrictSessionProcessing } from "./data-governance.service.js";
+import { legalContent, legalContentDigests, documentDigest } from "./legal-document.service.js";
 
 const SUPPORTED_LANGS = new Set([
   "hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"
@@ -110,13 +111,14 @@ function toConsentSnapshot(row) {
     privacyPolicyVersion: row.privacy_policy_version,
     termsVersion: row.terms_version,
     consentPolicyVersion: row.consent_policy_version,
+    documentRevisionId: row.evidence?.documentRevisionId || null,
     consentedAt: new Date(row.consented_at).toISOString(),
     source: row.source
   };
 }
 
 export function getPublicLegalConfiguration() {
-  return {
+  const configuration = {
     supportedLanguages: [...SUPPORTED_LANGS],
     privacyPolicyUrl: env.PRIVACY_POLICY_URL,
     privacyPolicyVersion: env.PRIVACY_POLICY_VERSION,
@@ -157,11 +159,24 @@ export function getPublicLegalConfiguration() {
     advertisingConsentAvailable: false,
     analyticsConsentOptional: true
   };
+  return { ...configuration, configurationDigest: documentDigest(configuration), documentDigests: legalContentDigests };
 }
 
 export async function createConsentReceipt(input = {}) {
   const language = normalizeLanguage(input.language);
   const actorRole = validateConsentInput(input);
+  const configuration = getPublicLegalConfiguration();
+  const fields = ["privacyPolicyVersion", "termsVersion", "consentPolicyVersion", "configurationDigest"];
+  if (fields.some(key => input[key] !== configuration[key]) ||
+      input.documentDigest !== legalContentDigests[language]) {
+    throw new ConsentError("The legal documents have changed. Please review them again.", {
+      status: 409, code: "CONSENT_POLICY_CHANGED"
+    });
+  }
+  const documentRevisionId = documentDigest([configuration.configurationDigest, input.documentDigest, language]);
+  await db.query(`INSERT INTO legal_document_revisions(revision_id, language, configuration, content)
+    VALUES ($1, $2, $3::jsonb, $4::jsonb) ON CONFLICT (revision_id) DO NOTHING`,
+  [documentRevisionId, language, JSON.stringify(configuration), JSON.stringify(legalContent[language])]);
   const id = randomUUID();
   const token = randomBytes(32).toString("base64url");
   const consentedAt = new Date();
@@ -170,7 +185,10 @@ export async function createConsentReceipt(input = {}) {
   );
 
   const evidence = {
-    schemaVersion: "explicit-consent-receipt-v2",
+    schemaVersion: "explicit-consent-receipt-v3",
+    documentRevisionId,
+    configurationDigest: configuration.configurationDigest,
+    documentDigest: input.documentDigest,
     legalUiVersion: String(input.legalUiVersion || "webflow-legal-v1").slice(0, 80),
     termsScrollCompleted: input.termsScrollCompleted === true,
     privacyScrollCompleted: input.privacyScrollCompleted === true,
@@ -240,8 +258,8 @@ function validateReceiptShape(receipt = {}) {
   return { id, token };
 }
 
-async function getReceiptRow(id) {
-  const result = await db.query(
+async function getReceiptRow(id, executor = db) {
+  const result = await executor.query(
     `SELECT * FROM consent_events WHERE id = $1 LIMIT 1`,
     [id]
   );
@@ -261,7 +279,7 @@ function assertReceiptUsable(row, token, { allowUsed = false } = {}) {
       code: "CONSENT_WITHDRAWN"
     });
   }
-  if (new Date(row.expires_at).getTime() <= Date.now()) {
+  if (!Number.isFinite(new Date(row.expires_at).getTime()) || new Date(row.expires_at).getTime() <= Date.now()) {
     throw new ConsentError("Consent receipt has expired.", {
       status: 410,
       code: "CONSENT_EXPIRED"
@@ -283,6 +301,7 @@ function assertReceiptUsable(row, token, { allowUsed = false } = {}) {
       code: "CONSENT_POLICY_CHANGED"
     });
   }
+  assertCheckoutConsentActive(row);
   return row;
 }
 
@@ -293,11 +312,12 @@ export async function inspectConsentReceipt(receipt = {}) {
   }));
 }
 
-export async function claimConsentReceipt(receipt = {}, purchaseConfirmations = {}) {
+export async function claimConsentReceipt(receipt = {}, purchaseConfirmations = {}, { executor = db } = {}) {
   validatePurchaseConfirmations(purchaseConfirmations);
   const { id, token } = validateReceiptShape(receipt);
   const tokenHash = hashToken(token);
-  const result = await db.query(
+  assertReceiptUsable(await getReceiptRow(id, executor), token);
+  const result = await executor.query(
     `
     UPDATE consent_events
     SET used_at = NOW(),
@@ -327,7 +347,7 @@ export async function claimConsentReceipt(receipt = {}, purchaseConfirmations = 
   );
 
   if (!result.rows[0]) {
-    assertReceiptUsable(await getReceiptRow(id), token);
+    assertReceiptUsable(await getReceiptRow(id, executor), token);
     throw new ConsentError("Consent receipt cannot be used.", {
       status: 409,
       code: "CONSENT_CLAIM_FAILED"
@@ -338,6 +358,26 @@ export async function claimConsentReceipt(receipt = {}, purchaseConfirmations = 
     id: result.rows[0].id,
     snapshot: toConsentSnapshot(result.rows[0])
   };
+}
+
+export function assertCheckoutConsentActive(row) {
+  if (!row || row.withdrawn_at || !row.special_category_explicit_consent || !row.terms_acknowledged) {
+    throw new ConsentError("Valid consent is required before starting payment.", {
+      status: 409, code: "CONSENT_WITHDRAWN"
+    });
+  }
+  if (!Number.isFinite(new Date(row.expires_at).getTime()) || new Date(row.expires_at).getTime() <= Date.now()) {
+    throw new ConsentError("Consent receipt has expired.", { status: 410, code: "CONSENT_EXPIRED" });
+  }
+  const config = getPublicLegalConfiguration();
+  if (row.privacy_policy_version !== config.privacyPolicyVersion || row.terms_version !== config.termsVersion ||
+      row.consent_policy_version !== config.consentPolicyVersion ||
+      row.evidence?.configurationDigest !== config.configurationDigest ||
+      row.evidence?.documentDigest !== config.documentDigests[row.language]) {
+    throw new ConsentError("The legal documents have changed. Please review them again.", {
+      status: 409, code: "CONSENT_POLICY_CHANGED"
+    });
+  }
 }
 
 export async function releaseConsentReceipt(id) {

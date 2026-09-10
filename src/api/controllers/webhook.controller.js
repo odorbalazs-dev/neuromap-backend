@@ -1,4 +1,5 @@
 import { handleStripeWebhook } from "../../services/webhook.service.js";
+import { safeError } from "../../utils/safeError.js";
 
 export async function stripeWebhookController(req, res) {
   try {
@@ -9,7 +10,7 @@ export async function stripeWebhookController(req, res) {
 
     return res.status(200).json(result);
   } catch (error) {
-    console.error("Webhook controller error:", error);
+    console.error("Webhook controller error:", safeError(error));
 
     const isSignatureError =
       error?.type === "StripeSignatureVerificationError" ||

@@ -1,4 +1,4 @@
-import { createHash, randomBytes, randomUUID } from "crypto";
+import { createHash, createHmac, randomBytes, randomUUID } from "crypto";
 import { db } from "../db/db.js";
 import { env } from "../config/env.js";
 import { secureCompare } from "../utils/secureCompare.js";
@@ -17,10 +17,21 @@ export function verifySecret(rawValue, storedHash) {
   return secureCompare(hashSecret(rawValue), storedHash);
 }
 
+function credentialBinding(sessionToken) {
+  const credential = String(env.ADMIN_TOKEN || "").normalize("NFKC")
+    .replace(/[\s\u200B-\u200D\uFEFF]/g, "")
+    .replace(/^["'`]+|["'`]+$/g, "");
+  if (!credential || (env.NODE_ENV === "production" && credential.length < 32)) return null;
+  return createHmac("sha256", credential)
+    .update(`admin-session-v1:${sessionToken}`, "utf8").digest("hex");
+}
+
 export async function createAdminSession({ ip = "", userAgent = "" } = {}) {
   const sessionToken = randomBytes(32).toString("base64url");
   const csrfToken = randomBytes(32).toString("base64url");
   const ttlMinutes = Number(env.ADMIN_SESSION_TTL_MINUTES || 60);
+  const binding = credentialBinding(sessionToken);
+  if (!binding) throw new Error("Admin credentials are not configured securely.");
 
   const result = await db.query(
     `
@@ -30,11 +41,12 @@ export async function createAdminSession({ ip = "", userAgent = "" } = {}) {
       csrf_token_hash,
       ip_hash,
       user_agent_hash,
-      expires_at
+      expires_at,
+      credential_binding
     )
     VALUES (
       $1, $2, $3, $4, $5,
-      NOW() + ($6::int * INTERVAL '1 minute')
+      NOW() + ($6::int * INTERVAL '1 minute'), $7
     )
     RETURNING id, expires_at
     `,
@@ -44,7 +56,8 @@ export async function createAdminSession({ ip = "", userAgent = "" } = {}) {
       hashSecret(csrfToken),
       hashOptional(ip),
       hashOptional(userAgent),
-      ttlMinutes
+      ttlMinutes,
+      binding
     ]
   );
 
@@ -61,7 +74,7 @@ export async function getAdminSession(sessionToken, { ip = "", userAgent = "" } 
 
   const lookup = await db.query(
     `
-    SELECT id, csrf_token_hash, ip_hash, user_agent_hash, expires_at, created_at, last_seen_at
+    SELECT id, csrf_token_hash, ip_hash, user_agent_hash, expires_at, created_at, last_seen_at, credential_binding
     FROM admin_sessions
     WHERE session_token_hash = $1
       AND revoked_at IS NULL
@@ -72,6 +85,9 @@ export async function getAdminSession(sessionToken, { ip = "", userAgent = "" } 
 
   const session = lookup.rows[0] || null;
   if (!session) return null;
+  const binding = credentialBinding(sessionToken);
+  const credentialMatches = Boolean(binding && session.credential_binding &&
+    secureCompare(binding, session.credential_binding));
 
   const userAgentMatches = session.user_agent_hash
     ? verifySecret(userAgent, session.user_agent_hash)
@@ -80,7 +96,7 @@ export async function getAdminSession(sessionToken, { ip = "", userAgent = "" } 
     ? true
     : verifySecret(ip, session.ip_hash);
 
-  if (!userAgentMatches || !ipMatches) {
+  if (!credentialMatches || !userAgentMatches || !ipMatches) {
     await db.query(
       `UPDATE admin_sessions SET revoked_at = COALESCE(revoked_at, NOW()) WHERE id = $1`,
       [session.id]

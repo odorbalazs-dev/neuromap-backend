@@ -1,4 +1,5 @@
 import { enqueueAnalysisJob } from "./analysis-queue.service.js";
+import { safeError } from "../utils/safeError.js";
 import { db } from "../db/db.js";
 import { constructStripeEvent } from "./stripe.service.js";
 import {
@@ -261,14 +262,14 @@ export async function handleStripeWebhook(rawBody, signature) {
       sessionId: internalSessionId
     };
   } catch (error) {
-    const message = `[${phase}] ${error?.message || "Webhook processing failed"}`;
+    const message = `[${phase}] ${safeError(error).type}`;
 
     console.error("Webhook processing failed:", {
       eventId: event?.id,
       eventType: event?.type,
       internalSessionId,
       phase,
-      error: error?.message || error
+      error: safeError(error)
     });
 
     if (internalSessionId) {
@@ -279,7 +280,7 @@ export async function handleStripeWebhook(rawBody, signature) {
           await markAnalysisFailed(internalSessionId, message);
         }
       } catch (nestedError) {
-        console.error("Failed to persist analysis failure:", nestedError);
+        console.error("Failed to persist analysis failure:", safeError(nestedError));
       }
     }
 

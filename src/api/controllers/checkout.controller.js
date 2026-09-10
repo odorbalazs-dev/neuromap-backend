@@ -1,5 +1,4 @@
 import {
-  createSession,
   getSessionById,
   assertSessionAccess,
   getSessionAccessTokenFromRequest,
@@ -28,10 +27,12 @@ import {
   LaunchGateError
 } from "../../services/launch-gate.service.js";
 import {
-  claimConsentReceipt,
   ConsentError,
   releaseConsentReceipt
 } from "../../services/consent.service.js";
+import { createConsentedSession, withCheckoutConsent } from "../../services/checkout-consent.service.js";
+import { ProcessingRestrictedError } from "../../services/data-governance.service.js";
+import { safeError } from "../../utils/safeError.js";
 
 export async function createCheckout(req, res) {
   let claimedConsent = null;
@@ -59,40 +60,41 @@ export async function createCheckout(req, res) {
     const { email, name, lang, packageCode, consent, purchaseConfirmations } = normalized;
     const payload = canonicalizeQuestionnairePayload(normalized.payload, lang);
     const productPackage = getProductPackage(packageCode);
-    claimedConsent = await claimConsentReceipt(consent, purchaseConfirmations);
-
-    session = await createSession({
+    const created = await createConsentedSession({
       email,
       name,
       lang,
       payload,
-      productPackage,
-      consent: claimedConsent.snapshot,
-      consentEventId: claimedConsent.id
-    });
+      productPackage
+    }, consent, purchaseConfirmations);
+    session = created.session;
+    claimedConsent = created.claimed;
 
-    stripeSession = await createCheckoutSession({
-      internalSessionId: session.id,
-      email,
-      name,
-      lang,
-      productPackage,
-      sessionAccessToken: session.publicAccessToken,
-      checkoutAttempt: await incrementCheckoutAttempt(session.id)
-    });
+    const checkoutAttempt = await incrementCheckoutAttempt(session.id);
+    await withCheckoutConsent(session.id, async (_lockedSession, executor) => {
+      stripeSession = await createCheckoutSession({
+        internalSessionId: session.id,
+        email,
+        name,
+        lang,
+        productPackage,
+        sessionAccessToken: session.publicAccessToken,
+        checkoutAttempt
+      });
 
-    if (!stripeSession?.id || !stripeSession?.url) {
-      throw new Error("Stripe checkout session response is incomplete.");
-    }
+      if (!stripeSession?.id || !stripeSession?.url) {
+        throw new Error("Stripe checkout session response is incomplete.");
+      }
 
-    const updatedSession = await linkStripeCheckoutSession({
-      sessionId: session.id,
-      stripeSessionId: stripeSession.id,
-      checkoutUrl: stripeSession.url
+      const updatedSession = await linkStripeCheckoutSession({
+        sessionId: session.id,
+        stripeSessionId: stripeSession.id,
+        checkoutUrl: stripeSession.url
+      }, { executor });
+      if (!updatedSession) {
+        throw new Error("Checkout session could not be linked to the internal session.");
+      }
     });
-    if (!updatedSession) {
-      throw new Error("Checkout session could not be linked to the internal session.");
-    }
     checkoutLinked = true;
 
     return res.status(200).json({
@@ -105,25 +107,25 @@ export async function createCheckout(req, res) {
       currency: productPackage.currency
     });
   } catch (error) {
-    console.error("checkout controller error:", error);
+    console.error("checkout controller error:", safeError(error));
 
     if (stripeSession?.id && !checkoutLinked) {
       await expireCheckoutSession(stripeSession.id).catch((expireError) => {
-        console.error("failed to expire orphaned Stripe checkout session:", expireError);
+        console.error("failed to expire orphaned Stripe checkout session:", safeError(expireError));
       });
     }
 
     let deletedSession = null;
     if (session?.id) {
       deletedSession = await deletePendingCheckoutSession(session.id).catch((deleteError) => {
-        console.error("failed to delete incomplete checkout session:", deleteError);
+        console.error("failed to delete incomplete checkout session:", safeError(deleteError));
         return null;
       });
     }
 
     if (claimedConsent?.id && (!session || deletedSession)) {
       await releaseConsentReceipt(claimedConsent.id).catch((releaseError) => {
-        console.error("failed to release consent receipt after checkout failure:", releaseError);
+        console.error("failed to release consent receipt after checkout failure:", safeError(releaseError));
       });
     }
 
@@ -142,6 +144,10 @@ export async function createCheckout(req, res) {
         error: error.message,
         code: "CHECKOUT_NOT_READY"
       });
+    }
+
+    if (error instanceof ProcessingRestrictedError) {
+      return res.status(409).json({ ok: false, error: "Processing is restricted. Payment cannot be started.", code: "PROCESSING_RESTRICTED" });
     }
 
     if (error instanceof ConsentError) {
@@ -210,28 +216,31 @@ export async function retryCheckout(req, res) {
     }
     assertCurrentPolicyAcceptance(session.consent_record);
 
-    stripeSession = await createCheckoutSession({
-      internalSessionId: session.id,
-      email: session.email,
-      name: session.name,
-      lang: session.lang,
-      productPackage: getProductPackage(session.package_code),
-      sessionAccessToken,
-      checkoutAttempt: await incrementCheckoutAttempt(session.id)
-    });
+    const checkoutAttempt = await incrementCheckoutAttempt(session.id);
+    await withCheckoutConsent(session.id, async (lockedSession, executor) => {
+      stripeSession = await createCheckoutSession({
+        internalSessionId: session.id,
+        email: lockedSession.email,
+        name: lockedSession.name,
+        lang: lockedSession.lang,
+        productPackage: getProductPackage(lockedSession.package_code),
+        sessionAccessToken,
+        checkoutAttempt
+      });
 
-    if (!stripeSession?.id || !stripeSession?.url) {
-      throw new Error("Stripe checkout session response is incomplete.");
-    }
+      if (!stripeSession?.id || !stripeSession?.url) {
+        throw new Error("Stripe checkout session response is incomplete.");
+      }
 
-    const updatedSession = await linkStripeCheckoutSession({
-      sessionId: session.id,
-      stripeSessionId: stripeSession.id,
-      checkoutUrl: stripeSession.url
+      const updatedSession = await linkStripeCheckoutSession({
+        sessionId: session.id,
+        stripeSessionId: stripeSession.id,
+        checkoutUrl: stripeSession.url
+      }, { executor });
+      if (!updatedSession) {
+        throw new Error("Checkout session could not be linked to the internal session.");
+      }
     });
-    if (!updatedSession) {
-      throw new Error("Checkout session could not be linked to the internal session.");
-    }
     checkoutLinked = true;
 
     return res.status(200).json({
@@ -241,11 +250,11 @@ export async function retryCheckout(req, res) {
       checkoutUrl: stripeSession.url
     });
   } catch (error) {
-    console.error("retry checkout error:", error);
+    console.error("retry checkout error:", safeError(error));
 
     if (stripeSession?.id && !checkoutLinked) {
       await expireCheckoutSession(stripeSession.id).catch((expireError) => {
-        console.error("failed to expire orphaned retry checkout session:", expireError);
+        console.error("failed to expire orphaned retry checkout session:", safeError(expireError));
       });
     }
 
@@ -256,6 +265,14 @@ export async function retryCheckout(req, res) {
         error: error.message,
         code: "CHECKOUT_NOT_READY"
       });
+    }
+
+    if (error instanceof ConsentError) {
+      return res.status(error.status).json({ ok: false, error: error.message, code: error.code });
+    }
+
+    if (error instanceof ProcessingRestrictedError) {
+      return res.status(409).json({ ok: false, error: "Processing is restricted. Payment cannot be started.", code: "PROCESSING_RESTRICTED" });
     }
 
     if (error.status === 403) {

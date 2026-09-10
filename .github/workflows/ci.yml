@@ -62,10 +62,13 @@ jobs:
 
       - name: Go-live unit checks
         run: |
+          npm run smoke:consent-security
           node scripts/smoke-go-live.js
           node scripts/smoke-invoice-payment-policy.js
 
       - name: Isolated PostgreSQL integration
         env:
           DATABASE_TEST_URL: postgresql://postgres:local-ci-only@127.0.0.1:5432/neuromap_ci
-        run: node scripts/integration-go-live.js
+        run: |
+          node scripts/integration-go-live.js
+          node scripts/integration-consent-security.js

@@ -24,6 +24,7 @@
     "smoke:engine-age-field": "node scripts/smoke-engine-age-field.js",
     "smoke:safety-flow": "node scripts/smoke-safety-flow.js",
     "smoke:legal-consent": "node scripts/smoke-legal-consent.js",
+    "smoke:consent-security": "node scripts/smoke-consent-security.js",
     "smoke:legal-governance": "node scripts/smoke-legal-governance.js",
     "smoke:privacy-rights": "node scripts/smoke-privacy-rights.js",
     "smoke:launch-gate": "node scripts/smoke-launch-gate.js",

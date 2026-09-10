@@ -56,12 +56,12 @@ export async function createSession({
   productPackage,
   consent,
   consentEventId
-}) {
+}, { executor = db } = {}) {
   const id = randomUUID();
   const publicAccessToken = createPublicSessionToken();
   const publicAccessTokenHash = hashSessionAccessToken(publicAccessToken);
 
-  const result = await db.query(
+  const result = await executor.query(
     `
     INSERT INTO sessions (
       id,
@@ -139,10 +139,10 @@ export async function linkStripeCheckoutSession({
   sessionId,
   stripeSessionId,
   checkoutUrl
-}) {
+}, { executor = db } = {}) {
   const recoveryToken = randomBytes(32).toString("hex");
 
-  const result = await db.query(
+  const result = await executor.query(
     `
     UPDATE sessions
     SET stripe_session_id = $2,

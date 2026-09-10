@@ -96,7 +96,12 @@ async function consumeDatabaseBucket({ key, windowMs }) {
   };
 }
 
-export function securityHeaders(_req, res, next) {
+export function securityHeaders(req, res, next) {
+  if (/^\/admin(?:\/|-|$)/i.test(req.path || "")) {
+    res.setHeader("Cache-Control", "no-store, private, max-age=0");
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("Expires", "0");
+  }
   res.setHeader("X-Content-Type-Options", "nosniff");
   res.setHeader("X-Frame-Options", "DENY");
   res.setHeader("Referrer-Policy", "no-referrer");

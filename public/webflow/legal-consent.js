@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  const LEGAL_UI_VERSION = "20260909-authority-support-v1";
+  const LEGAL_UI_VERSION = "20260909-consent-security-v2";
   const RECEIPT_KEY = "nm_legal_receipt_v1";
   const ANALYTICS_KEY = "nm_analytics_consent_v1";
   const CONTENT_VERSION = "20260726-verified-rights-v3";
@@ -105,6 +105,7 @@
   let activeFlow = null;
   let legalConfig = null;
   let currentReceipt = null;
+  let analyticsVerified = false;
   let restoreFocusTarget = null;
   let modalKeydownCleanup = null;
 
@@ -120,6 +121,20 @@
     pl: "Anuluj",
     pt: "Cancelar",
     fr: "Annuler"
+  });
+
+  const POLICY_CHANGED = Object.freeze({
+    hu: "A jogi dokumentumok frissültek. Kérjük, olvasd el és fogadd el az új változatot.",
+    en: "The legal documents have changed. Please read and accept the updated version.",
+    de: "Die rechtlichen Dokumente wurden aktualisiert. Bitte lies und akzeptiere die neue Fassung.",
+    it: "I documenti legali sono stati aggiornati. Leggi e accetta la nuova versione.",
+    es: "Los documentos legales se han actualizado. Lee y acepta la nueva versión.",
+    zh: "法律文件已更新。请阅读并接受新版本。",
+    ja: "法的文書が更新されました。新しい版を読み、同意してください。",
+    ar: "تم تحديث المستندات القانونية. يرجى قراءة النسخة الجديدة والموافقة عليها.",
+    pl: "Dokumenty prawne zostały zaktualizowane. Przeczytaj i zaakceptuj nową wersję.",
+    pt: "Os documentos legais foram atualizados. Lê e aceita a nova versão.",
+    fr: "Les documents juridiques ont été mis à jour. Veuillez lire et accepter la nouvelle version."
   });
 
   window.dataLayer = window.dataLayer || [];
@@ -209,11 +224,29 @@
     return data;
   }
 
-  async function getConfig() {
-    if (legalConfig) return legalConfig;
-    const data = await fetchJson("/legal/config");
+  async function getConfig(refresh = false) {
+    if (legalConfig && !refresh) return legalConfig;
+    const data = await fetchJson("/legal/config", { cache: "no-store" });
     legalConfig = data;
     return legalConfig;
+  }
+
+  async function contentDigest(content) {
+    const bytes = new TextEncoder().encode(JSON.stringify(content));
+    const digest = await window.crypto.subtle.digest("SHA-256", bytes);
+    return Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, "0")).join("");
+  }
+
+  async function verifiedContent(lang, config) {
+    await ensureContent();
+    const expected = config.documentDigests && config.documentDigests[lang];
+    if (!expected || !config.configurationDigest) throw new Error(POLICY_CHANGED[lang]);
+    if (await contentDigest(getContent(lang)) !== expected) {
+      await loadScript(`${apiBase()}/public/webflow/legal-content.js?revision=${encodeURIComponent(expected)}`);
+    }
+    const content = JSON.parse(JSON.stringify(getContent(lang)));
+    if (await contentDigest(content) !== expected) throw new Error(POLICY_CHANGED[lang]);
+    return content;
   }
 
   function readStoredReceipt() {
@@ -237,6 +270,7 @@
   }
 
   function readAnalyticsPreference() {
+    if (!analyticsVerified) return false;
     try {
       const parsed = JSON.parse(localStorage.getItem(ANALYTICS_KEY) || "null");
       if (!parsed || parsed.version !== LEGAL_UI_VERSION) return false;
@@ -248,6 +282,7 @@
 
   function applyAnalyticsPreference(granted, lang) {
     const allowed = granted === true;
+    analyticsVerified = allowed;
     try {
       localStorage.setItem(ANALYTICS_KEY, JSON.stringify({
         version: LEGAL_UI_VERSION,
@@ -473,7 +508,7 @@
     return () => completed;
   }
 
-  function runTermsStep(lang, content, config) {
+  function runTermsStep(lang, content, config, notice = "") {
     return new Promise((resolve, reject) => {
       installStyles();
       removeModal(false);
@@ -487,7 +522,7 @@
             <div class="nm-legal-headline"><h2 id="nmLegalTitle">${escapeHtml(ui.termsTitle)}</h2><span class="nm-legal-step">1 / 2</span></div>
             <div class="nm-legal-meta">${legalMeta(config, lang)} &middot; ${escapeHtml(config.termsVersion || "")}</div>
           </header>
-          <div class="nm-legal-scroll" tabindex="0" data-autofocus>${sectionMarkup(content.terms)}</div>
+          <div class="nm-legal-scroll" tabindex="0" data-autofocus>${notice ? `<p role="status">${escapeHtml(notice)}</p>` : ""}${sectionMarkup(content.terms)}</div>
           <footer class="nm-legal-foot">
             <div class="nm-legal-form-scroll" tabindex="0">
               <p class="nm-legal-read-gate" data-read-gate>${escapeHtml(readGateUi(lang).prompt)}</p>
@@ -607,7 +642,12 @@
             privacyScrollCompleted: isReadComplete(),
             analyticsConsent: overlay.querySelector("#nmAnalyticsConsent").checked === true,
             advertisingConsent: false,
-            legalUiVersion: LEGAL_UI_VERSION
+            legalUiVersion: LEGAL_UI_VERSION,
+            privacyPolicyVersion: config.privacyPolicyVersion,
+            termsVersion: config.termsVersion,
+            consentPolicyVersion: config.consentPolicyVersion,
+            configurationDigest: config.configurationDigest,
+            documentDigest: await contentDigest(content)
           };
           const result = await fetchJson("/legal/consent", {
             method: "POST",
@@ -617,6 +657,11 @@
           removeModal();
           resolve({ receipt: result.receipt, analyticsConsent: payload.analyticsConsent });
         } catch (error) {
+          if (error.code === "CONSENT_POLICY_CHANGED") {
+            removeModal(false);
+            resolve({ policyChanged: true });
+            return;
+          }
           errorBox.textContent = error.message || "The consent could not be saved. Please try again.";
           button.disabled = false;
           backButton.disabled = false;
@@ -635,6 +680,7 @@
       });
       if (normalizeLang(result.consent && result.consent.language) !== normalizeLang(lang)) {
         storeReceipt(null);
+        applyAnalyticsPreference(false, lang);
         return null;
       }
       currentReceipt = receipt;
@@ -642,6 +688,7 @@
       return receipt;
     } catch (_error) {
       storeReceipt(null);
+      applyAnalyticsPreference(false, lang);
       return null;
     }
   }
@@ -651,16 +698,22 @@
     if (activeFlow) return activeFlow;
     activeFlow = (async () => {
       await ensureContent();
-      const config = await getConfig();
+      let config = await getConfig(true);
       installLauncher(language);
       const existing = await inspectStoredReceipt(language);
       if (existing) return existing;
-      const content = getContent(language);
-      if (!content) throw new Error("The legal information is unavailable in this language.");
+      let content = await verifiedContent(language, config);
 
       let termsResult = await runTermsStep(language, content, config);
       while (true) {
         const privacyResult = await runPrivacyStep(language, content, config, termsResult);
+        if (privacyResult.policyChanged) {
+          applyAnalyticsPreference(false, language);
+          config = await getConfig(true);
+          content = await verifiedContent(language, config);
+          termsResult = await runTermsStep(language, content, config, POLICY_CHANGED[language]);
+          continue;
+        }
         if (privacyResult.restart) {
           termsResult = privacyResult.terms;
           continue;
@@ -1118,5 +1171,5 @@
     installLauncher: (lang) => installLauncher(normalizeLang(lang))
   });
 
-  applyAnalyticsPreference(readAnalyticsPreference(), readStoredLanguage());
+  applyAnalyticsPreference(false, readStoredLanguage());
 })();

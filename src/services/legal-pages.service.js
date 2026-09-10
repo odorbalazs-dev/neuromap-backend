@@ -1,12 +1,7 @@
-import { readFileSync } from "node:fs";
-import vm from "node:vm";
+import { legalContent as content } from "./legal-document.service.js";
 import { getPublicLegalConfiguration } from "./consent.service.js";
 import { SUPPORT_COPY } from "../config/support.js";
 
-// Render the same reviewed translations as the consent dialog, without browser scripts.
-const context = { window: {} };
-vm.runInNewContext(readFileSync(new URL("../../public/webflow/legal-content.js", import.meta.url), "utf8"), context, { timeout: 1000 });
-const content = context.window.NM_LEGAL_CONTENT;
 const escape = value => String(value ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
 export function renderLegalPage(kind, requestedLang) {
