@@ -3649,6 +3649,77 @@
     );
   }
 
+  function renderPaymentReviews(data) {
+    const root = document.getElementById("paymentReviewRows");
+    if (!root) return;
+    root.replaceChildren();
+    if (!Array.isArray(data?.reviews) || !data.reviews.length) {
+      emptyRow(root, 5, data?.ok ? "Nincs nyitott fizetési ügy." : "A fizetési ügyek listája nem érhető el.");
+      return;
+    }
+    const reasons = { duplicate_payment: "Ismételt fizetés", payment_after_consent_restriction: "Fizetés visszavont vagy korlátozott hozzájárulás után",
+      financial_review: "Pénzügyi ellenőrzés", dispute_review: "Vitatott fizetés", refund_invoice_correction: "Visszatérítés és számlakorrekció",
+      invoice_reconciliation_required: "Számlakiállítás egyeztetése" };
+    for (const review of data.reviews) {
+      const row = document.createElement("tr");
+      for (const value of [reasons[review.reason] || review.reason, review.session_id || "-",
+        review.amount == null ? "-" : `${(review.amount / 100).toFixed(2)} ${String(review.currency || "").toUpperCase()}`,
+        new Date(review.created_at).toLocaleString("hu-HU")]) {
+        const cell = document.createElement("td");
+        cell.textContent = value;
+        row.appendChild(cell);
+      }
+      const actions = document.createElement("td");
+      if (review.session_id) {
+        const detail = document.createElement("button");
+        detail.type = "button";
+        detail.textContent = "Részletek";
+        detail.dataset.action = "detail";
+        detail.dataset.sessionId = review.session_id;
+        actions.appendChild(detail);
+      }
+      const disclosure = document.createElement("details");
+      const summary = document.createElement("summary");
+      summary.textContent = "Ügy lezárása";
+      const form = document.createElement("form");
+      form.className = "payment-review-form";
+      const label = document.createElement("label");
+      label.textContent = "Elvégzett intézkedés és bizonyíték hivatkozása";
+      const note = document.createElement("textarea");
+      note.required = true;
+      note.minLength = 20;
+      note.maxLength = 1000;
+      note.rows = 4;
+      label.appendChild(note);
+      const confirmation = document.createElement("label");
+      const verified = document.createElement("input");
+      verified.type = "checkbox";
+      verified.required = true;
+      confirmation.append(verified, document.createTextNode(" Ellenőriztem az intézkedést. A lezárás nem oldja fel a korlátozásokat."));
+      const submit = document.createElement("button");
+      submit.type = "submit";
+      submit.textContent = "Lezárás rögzítése";
+      form.append(label, confirmation, submit);
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        if (!form.reportValidity()) return;
+        submit.disabled = true;
+        try {
+          await api(`/admin/payment-reviews/${encodeURIComponent(review.id)}/resolve`, {
+            method: "POST", body: JSON.stringify({ resolution: note.value.trim(), verified: verified.checked })
+          });
+          await refreshDashboard();
+          setStatus("A fizetési ügy lezárása rögzítve.");
+        } catch (error) { setStatus(error.message, true); }
+        finally { submit.disabled = false; }
+      });
+      disclosure.append(summary, form);
+      actions.appendChild(disclosure);
+      row.appendChild(actions);
+      root.appendChild(row);
+    }
+  }
+
   async function refreshDashboard() {
     setBusy(true);
     setStatus("Frissítés...");
@@ -3679,7 +3750,8 @@
         webflowEmbedManager,
         followUpEmails,
         i18nQualityAudit,
-        operationalEvidence
+        operationalEvidence,
+        paymentReviews
       ] = await Promise.all([
         api("/admin/status"),
         api("/admin/production-health"),
@@ -3699,7 +3771,8 @@
         api("/admin/webflow-embed-manager"),
         optionalApi("/admin/follow-up-emails?limit=20"),
         optionalApi("/admin/i18n-quality-audit"),
-        optionalApi("/admin/operational-evidence")
+        optionalApi("/admin/operational-evidence"),
+        optionalApi("/admin/payment-reviews")
       ]);
 
       const evidenceRoot = document.getElementById("operationalEvidence");
@@ -3740,6 +3813,7 @@
       renderEmailDeliveryCenter(emailDeliveryCenter);
       renderEmailDeliverability(emailDeliverability);
       renderPostPaymentMonitoring(postPaymentMonitoring);
+      renderPaymentReviews(paymentReviews);
       renderWebflowEmbedManager(webflowEmbedManager);
       renderFollowUpEmails(followUpEmails);
       renderI18nQualityAudit(i18nQualityAudit);

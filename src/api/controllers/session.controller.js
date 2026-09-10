@@ -5,6 +5,7 @@ import {
   getSessionByPublicIdentifier
 } from "../../services/session.service.js";
 import { getObservationStatusForSession } from "../../services/observation-program.service.js";
+import { TEST_INVOICE_EXCLUSION } from "../../services/invoice-payment-policy.js";
 
 function maskEmail(email = "") {
   const value = String(email || "").trim();
@@ -59,6 +60,10 @@ export function buildCustomerStatus(session, observation = null) {
   const analysisFailed = analysisStatus === "failed";
   const emailSent = emailStatus === "sent";
   const emailFailed = emailStatus === "failed";
+  const deliveryFailed = ['bounced','complained','failed'].includes(session.report_email_delivery_status);
+  const invoiceDone = session.invoice_status === 'issued' || (session.invoice_status === 'skipped' && session.invoice_error === TEST_INVOICE_EXCLUSION);
+  const invoiceFailed = session.invoice_status === 'failed' || (session.invoice_status === 'skipped' && !invoiceDone);
+  const documentsDone = invoiceDone && session.contract_confirmation_status === 'sent';
   const pdfStatus = session.pdf_status || (emailSent ? "ready" : "pending");
   const pdfFailed = pdfStatus === "failed";
 
@@ -66,9 +71,9 @@ export function buildCustomerStatus(session, observation = null) {
 
   if (!paymentPaid) {
     overall = "waiting_payment";
-  } else if (analysisFailed || emailFailed || pdfFailed) {
+  } else if (analysisFailed || emailFailed || pdfFailed || deliveryFailed || invoiceFailed || session.contract_confirmation_status === 'failed' || (session.financial_status && session.financial_status !== 'clear')) {
     overall = "attention";
-  } else if (emailSent) {
+  } else if (emailSent && documentsDone) {
     overall = "sent";
   }
 
@@ -102,6 +107,10 @@ export function buildCustomerStatus(session, observation = null) {
     lang: session.lang || "en",
     overall,
     paymentStatus: session.payment_status || null,
+    financialStatus: session.financial_status || 'clear',
+    invoiceStatus: session.invoice_status || 'pending',
+    contractStatus: session.contract_confirmation_status || 'pending',
+    reportEmailDeliveryStatus: session.report_email_delivery_status || (emailSent ? 'accepted' : 'pending'),
     analysisStatus,
     reportEmailStatus: emailStatus,
     pdfStatus,
@@ -151,8 +160,10 @@ export function buildCustomerStatus(session, observation = null) {
       buildStage({
         key: "email",
         label: "Email delivery",
-        state: emailState
-      })
+        state: deliveryFailed ? 'failed' : emailState
+      }),
+      buildStage({ key: 'invoice', label: 'Invoice', state: invoiceDone ? 'complete' : invoiceFailed ? 'failed' : 'pending' }),
+      buildStage({ key: 'contract', label: 'Order confirmation', state: session.contract_confirmation_status === 'sent' ? 'complete' : session.contract_confirmation_status === 'failed' ? 'failed' : 'pending' })
     ]
   };
 }

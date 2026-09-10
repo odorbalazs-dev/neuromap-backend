@@ -140,6 +140,9 @@ async function expireObservationPrograms(limit) {
 }
 
 async function purgeExpiredOperationalState(limit) {
+  const deliveryEvents = await db.query(`DELETE FROM email_delivery_events WHERE event_id IN
+    (SELECT event_id FROM email_delivery_events WHERE created_at < NOW() - INTERVAL '90 days'
+      ORDER BY created_at LIMIT $1)`, [limit]);
   const [rateLimits, adminSessions, unusedConsentReceipts] = await Promise.all([
     db.query(
       `
@@ -188,6 +191,7 @@ async function purgeExpiredOperationalState(limit) {
   ]);
 
   return {
+    deletedEmailDeliveryEvents: deliveryEvents.rowCount,
     deletedRateLimitBuckets: rateLimits.rowCount,
     deletedAdminSessions: adminSessions.rowCount,
     deletedUnusedConsentReceipts: unusedConsentReceipts.rowCount

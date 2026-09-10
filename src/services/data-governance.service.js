@@ -17,6 +17,7 @@ export function isSessionProcessingRestricted(session) {
     session?.processing_restricted_at ||
     session?.sensitive_data_erased_at ||
     session?.data_redacted_at
+    || (session?.financial_status && session.financial_status !== 'clear')
   );
 }
 
@@ -46,6 +47,7 @@ export async function assertSessionProcessingAllowed(
       id,
       processing_restricted_at,
       processing_restriction_reason,
+      financial_status,
       sensitive_data_erased_at,
       data_redacted_at
     FROM sessions

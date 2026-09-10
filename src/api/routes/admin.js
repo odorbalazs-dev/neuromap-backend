@@ -8,6 +8,7 @@ import {
 import { createRateLimit } from "../../middleware/security.js";
 import { getAdminDashboard } from "../controllers/admin-dashboard.controller.js";
 import { getOperationalEvidence } from "../../services/operational-scheduler.service.js";
+import { db } from "../../db/db.js";
 
 import {
   getAdminStatus,
@@ -66,6 +67,26 @@ router.post("/logout", adminLogout);
 router.get("/session", adminAuth, getAdminAuthStatus);
 
 router.use(adminAuth);
+router.get('/payment-reviews', async (_req, res) => {
+  try {
+    const result = await db.query(`SELECT id,session_id,reason,amount,currency,state,created_at
+      FROM payment_reviews WHERE state='open' ORDER BY created_at LIMIT 100`);
+    res.json({ ok: true, reviews: result.rows });
+  } catch { res.status(503).json({ ok: false, error: 'Payment review list unavailable' }); }
+});
+router.post('/payment-reviews/:id/resolve', async (req, res) => {
+  const { resolution, verified } = req.body || {};
+  if (!/^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i.test(req.params.id) || verified !== true
+      || typeof resolution !== 'string' || resolution.trim().length < 20 || resolution.length > 1000) {
+    return res.status(400).json({ ok: false, error: 'A verified resolution and evidence reference are required.' });
+  }
+  try {
+    // Closing a work item never changes payment, consent or processing restrictions.
+    const result = await db.query(`UPDATE payment_reviews SET state='resolved',resolution=$2,resolved_at=NOW(),resolved_by=$3
+      WHERE id=$1 AND state='open' RETURNING id`, [req.params.id,resolution.trim(),req.adminSession?.id || 'admin-token']);
+    res.status(result.rowCount ? 200 : 404).json({ ok: Boolean(result.rowCount) });
+  } catch { res.status(503).json({ ok: false, error: 'Payment review update unavailable' }); }
+});
 router.get("/operational-evidence", async (_req, res) => {
   try { res.json(await getOperationalEvidence()); }
   catch (_error) { res.status(503).json({ ok: false, error: "Operational evidence unavailable" }); }

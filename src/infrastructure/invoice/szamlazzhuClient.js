@@ -1,3 +1,11 @@
+import { XMLParser, XMLValidator } from 'fast-xml-parser';
+
+const xmlParser = new XMLParser({ removeNSPrefix: true, parseTagValue: false, processEntities: false });
+function parseProviderXml(text) {
+  if (/<!DOCTYPE|<!ENTITY/i.test(text) || XMLValidator.validate(text) !== true) throw new Error('INVOICE_RESPONSE_INVALID');
+  return xmlParser.parse(text);
+}
+
 function escapeXml(value) {
   return String(value ?? "")
     .replace(/&/g, "&amp;")
@@ -62,7 +70,8 @@ export function buildBillingInfo({ session, checkoutSession }) {
     city: address.city || "",
     addressLine1: address.line1 || "",
     addressLine2: address.line2 || "",
-    taxId: getTaxId(customerDetails)
+    taxId: getTaxId(customerDetails),
+    taxIdType: customerDetails.tax_ids?.[0]?.type || null
   };
 }
 
@@ -91,7 +100,7 @@ export function buildInvoiceAmounts({ session, checkoutSession, config }) {
   };
 }
 
-function buildInvoiceXml({
+export function buildInvoiceXml({
   session,
   checkoutSession,
   billing,
@@ -101,14 +110,13 @@ function buildInvoiceXml({
   productComment
 }) {
   const today = formatDate();
-  const invoiceNote = [
-    "NeuroMap Kids online kérdőív riport.",
-    checkoutSession?.id ? `Stripe checkout session: ${checkoutSession.id}` : null,
-    session?.id ? `Belső session: ${session.id}` : null
-  ].filter(Boolean).join(" ");
+  const invoiceNote = productComment;
+  const paidDate = session.paid_at ? formatDate(new Date(session.paid_at)) : today;
+  if (billing.taxId && !['hu_tin', 'eu_vat'].includes(billing.taxIdType)) {
+    throw new Error('INVOICE_TAX_ID_REVIEW_REQUIRED');
+  }
 
   const sellerXml = [
-    config.sellerName ? `<nev>${escapeXml(config.sellerName)}</nev>` : "",
     config.sellerEmailReplyTo
       ? `<emailReplyto>${escapeXml(config.sellerEmailReplyTo)}</emailReplyto>`
       : ""
@@ -124,27 +132,33 @@ function buildInvoiceXml({
     <szamlaagentkulcs>${escapeXml(config.agentKey)}</szamlaagentkulcs>
     <eszamla>${config.eInvoice ? "true" : "false"}</eszamla>
     <szamlaLetoltes>${config.downloadPdf ? "true" : "false"}</szamlaLetoltes>
-    <szamlaLetoltesPld>1</szamlaLetoltesPld>
     <valaszVerzio>2</valaszVerzio>
+    <szamlaKulsoAzon>${escapeXml(config.externalId || 'nm-' + session.id)}</szamlaKulsoAzon>
   </beallitasok>
   <fejlec>
     <keltDatum>${today}</keltDatum>
-    <teljesitesDatum>${today}</teljesitesDatum>
-    <fizetesiHataridoDatum>${today}</fizetesiHataridoDatum>
+    <teljesitesDatum>${paidDate}</teljesitesDatum>
+    <fizetesiHataridoDatum>${paidDate}</fizetesiHataridoDatum>
     <fizmod>${escapeXml(config.paymentMethod)}</fizmod>
     <penznem>${escapeXml(amounts.currency)}</penznem>
     <szamlaNyelve>${escapeXml(config.invoiceLanguage)}</szamlaNyelve>
     <megjegyzes>${escapeXml(invoiceNote)}</megjegyzes>
+    ${amounts.currency !== 'HUF' ? `<arfolyamBank>${escapeXml(config.exchangeRateBank || 'MNB')}</arfolyamBank>` : ''}
+    <rendelesSzam>${escapeXml(config.externalId || 'nm-' + session.id)}</rendelesSzam>
+    <fizetve>true</fizetve>
+    ${config.euVat === true ? '<eusAfa>true</eusAfa>' : ''}
   </fejlec>
   <elado>${sellerXml}</elado>
   <vevo>
     <nev>${escapeXml(billing.name)}</nev>
+    <orszag>${escapeXml(billing.country)}</orszag>
     <irsz>${escapeXml(billing.zip)}</irsz>
     <telepules>${escapeXml(billing.city)}</telepules>
     <cim>${escapeXml(fullAddress)}</cim>
     <email>${escapeXml(billing.email)}</email>
     <sendEmail>${config.sendEmail ? "true" : "false"}</sendEmail>
-    ${billing.taxId ? `<adoszam>${escapeXml(billing.taxId)}</adoszam>` : ""}
+    ${billing.taxId && billing.taxIdType === 'hu_tin' ? `<adoszam>${escapeXml(billing.taxId)}</adoszam>` : ''}
+    ${billing.taxId && billing.taxIdType === 'eu_vat' ? `<adoszamEU>${escapeXml(billing.taxId)}</adoszamEU>` : ''}
   </vevo>
   <tetelek>
     <tetel>
@@ -163,9 +177,11 @@ function buildInvoiceXml({
 }
 
 function readXmlTag(text, tagName) {
-  const pattern = new RegExp(`<(?:[^:>]+:)?${tagName}>([\\s\\S]*?)<\\/(?:[^:>]+:)?${tagName}>`, "i");
-  const match = String(text || "").match(pattern);
-  return match ? match[1].trim() : null;
+  if (!text) return null;
+  const parsed = parseProviderXml(text);
+  const root = parsed.xmlszamlavalasz;
+  const value = root?.[tagName];
+  return typeof value === 'string' ? value.trim() : null;
 }
 
 function readProviderHeaders(response) {
@@ -193,7 +209,8 @@ export async function createSzamlazzHuInvoice({
   checkoutSession,
   config,
   productName,
-  productComment
+  productComment,
+  beforeSubmit = async () => {}
 }) {
   if (!config.agentKey) {
     throw new Error("Missing SZAMLAZZHU_AGENT_KEY.");
@@ -211,6 +228,7 @@ export async function createSzamlazzHuInvoice({
     productName,
     productComment
   });
+  await beforeSubmit();
 
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), config.timeoutMs || 15000);
@@ -240,7 +258,7 @@ export async function createSzamlazzHuInvoice({
       readXmlTag(responseText, "hibauzenet") ||
       readXmlTag(responseText, "error");
 
-    if (!response.ok || providerError) {
+    if (!response.ok || providerError || readXmlTag(responseText, 'sikeres') === 'false') {
       throw new Error(
         providerError ||
           `Szamlazz.hu invoice request failed with HTTP ${response.status}.`
@@ -251,6 +269,9 @@ export async function createSzamlazzHuInvoice({
       headers.invoiceNumber ||
       readXmlTag(responseText, "szamlaszam") ||
       readXmlTag(responseText, "szlahu_szamlaszam");
+    if (!invoiceNumber || invoiceNumber.length > 100 || /[<>\r\n]/.test(invoiceNumber)) {
+      throw new Error('INVOICE_RESPONSE_UNVERIFIED');
+    }
 
     return {
       providerInvoiceId: invoiceNumber || null,
@@ -267,4 +288,23 @@ export async function createSzamlazzHuInvoice({
   } finally {
     clearTimeout(timeout);
   }
+}
+
+export async function findSzamlazzHuInvoice({ config, externalId, expectedAmount, expectedCurrency }) {
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<xmlszamlaxml xmlns="http://www.szamlazz.hu/xmlszamlaxml">
+<szamlaagentkulcs>${escapeXml(config.agentKey)}</szamlaagentkulcs>
+<pdf>false</pdf><szamlaKulsoAzon>${escapeXml(externalId)}</szamlaKulsoAzon></xmlszamlaxml>`;
+  const form = new FormData();
+  form.append('action-szamla_agent_xml', new Blob([xml], { type: 'application/xml' }), 'lookup.xml');
+  const response = await fetch(config.endpoint, { method: 'POST', body: form, signal: AbortSignal.timeout(config.timeoutMs || 15000) });
+  if (!response.ok) throw new Error('INVOICE_LOOKUP_UNAVAILABLE');
+  const parsed = parseProviderXml(await response.text());
+  if (parsed.xmlszamlavalasz?.sikeres === 'false' && parsed.xmlszamlavalasz?.hibakod === '7') return null;
+  const invoice = parsed.szamla;
+  const number = invoice?.alap?.szamlaszam;
+  if (!number || String(invoice.alap.devizanem).toUpperCase() !== String(expectedCurrency).toUpperCase() ||
+      Math.round(Number(invoice.osszegek?.totalossz?.brutto) * 100) !== expectedAmount ||
+      ['true','1'].includes(invoice.alap.teszt)) throw new Error('INVOICE_LOOKUP_UNVERIFIED');
+  return { providerInvoiceId: number, invoiceNumber: number, providerResponse: { recovered: true, externalId } };
 }

@@ -305,9 +305,9 @@ function assertReceiptUsable(row, token, { allowUsed = false } = {}) {
   return row;
 }
 
-export async function inspectConsentReceipt(receipt = {}) {
+export async function inspectConsentReceipt(receipt = {}, { executor = db } = {}) {
   const { id, token } = validateReceiptShape(receipt);
-  return toConsentSnapshot(assertReceiptUsable(await getReceiptRow(id), token, {
+  return toConsentSnapshot(assertReceiptUsable(await getReceiptRow(id, executor), token, {
     allowUsed: true
   }));
 }
@@ -437,6 +437,9 @@ export async function withdrawConsentReceipt(receipt = {}) {
     }
 
     await client.query("COMMIT");
+    // Restriction is durable even if Stripe is unavailable; recovery retries expiry.
+    await import('./payment-attempt.service.js').then(module => module.expireRestrictedPayments({ consentId: id }))
+      .catch(() => console.error('[consent] payment expiry deferred to recovery'));
     return {
       id,
       withdrawnAt: new Date(result.rows[0].withdrawn_at).toISOString(),

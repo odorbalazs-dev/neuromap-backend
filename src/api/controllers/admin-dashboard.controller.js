@@ -1,4 +1,4 @@
-const ADMIN_DASHBOARD_ASSET_VERSION = "20260909-operations-evidence-v1";
+const ADMIN_DASHBOARD_ASSET_VERSION = "20260910-payment-review-v4";
 
 export function getAdminDashboard(_req, res) {
   res.setHeader(
@@ -361,6 +361,15 @@ export function getAdminDashboard(_req, res) {
               </tr>
             </thead>
             <tbody id="postPaymentIssueRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="paymentReviewPanel" class="panel" aria-label="Fizetési ügyek">
+        <div class="panel-head"><h2>Ellenőrzendő fizetési ügyek</h2></div>
+        <div class="table-wrap">
+          <table><thead><tr><th>Ügy</th><th>Session</th><th>Összeg</th><th>Létrehozva</th><th>Intézkedés</th></tr></thead>
+            <tbody id="paymentReviewRows"><tr><td colspan="5">Az állapot betöltéséhez jelentkezz be.</td></tr></tbody>
           </table>
         </div>
       </section>

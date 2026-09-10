@@ -25,6 +25,7 @@
     "smoke:safety-flow": "node scripts/smoke-safety-flow.js",
     "smoke:legal-consent": "node scripts/smoke-legal-consent.js",
     "smoke:consent-security": "node scripts/smoke-consent-security.js",
+    "test:payment-lifecycle": "node scripts/test-payment-lifecycle.js",
     "smoke:legal-governance": "node scripts/smoke-legal-governance.js",
     "smoke:privacy-rights": "node scripts/smoke-privacy-rights.js",
     "smoke:launch-gate": "node scripts/smoke-launch-gate.js",
@@ -45,10 +46,15 @@
     "cors": "^2.8.6",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "fast-xml-parser": "^5.11.1",
     "openai": "^4.104.0",
     "pdfkit": "^0.18.0",
     "pg": "^8.13.1",
     "resend": "^4.0.1",
-    "stripe": "^18.0.0"
+    "stripe": "^18.0.0",
+    "svix": "^2.4.0"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8"
   }
 }

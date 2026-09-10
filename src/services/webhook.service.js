@@ -1,19 +1,9 @@
-import { enqueueAnalysisJob } from "./analysis-queue.service.js";
 import { safeError } from "../utils/safeError.js";
 import { db } from "../db/db.js";
-import { constructStripeEvent } from "./stripe.service.js";
-import {
-  getSessionById,
-  markSessionPaid,
-  markAnalysisQueued,
-  markAnalysisFailed,
-  markCheckoutRecoveredOrPaid
-} from "./session.service.js";
+import { constructStripeEvent, isLiveStripeRuntime, retrieveStripeEvent } from "./stripe.service.js";
 import { enqueuePostPaymentTasks } from "./post-payment-outbox.service.js";
-import {
-  assertCheckoutMatchesPackage,
-  getProductPackage
-} from "../config/products.js";
+import { fulfillVerifiedCheckout } from "./payment-fulfillment.service.js";
+import { synchronizePaymentAdjustment } from "./payment-adjustment.service.js";
 
 function sanitizeWebhookPayload(event) {
   const object = event?.data?.object || {};
@@ -148,144 +138,50 @@ async function markWebhookFailed(eventId, processingToken, errorMessage) {
   );
 }
 
-function isCheckoutPaid(checkoutSession) {
-  return (
-    checkoutSession &&
-    checkoutSession.object === "checkout.session" &&
-    checkoutSession.payment_status === "paid"
-  );
+
+export async function processVerifiedStripeEvent(event) {
+  if (event.livemode !== isLiveStripeRuntime()) throw new Error('PAYMENT_EVENT_MODE_MISMATCH');
+  const claim = await claimWebhookEvent(event);
+  if (!claim.processingToken) {
+    return { received: true, duplicate: true, alreadyProcessed: claim.row?.status === 'processed' };
+  }
+  try {
+    let outcome = { ignored: true };
+    if (event.type === 'checkout.session.completed') {
+      outcome = await fulfillVerifiedCheckout(event.data.object);
+    } else if (/^(refund\.|charge\.refunded$|charge\.dispute\.)/.test(event.type)) {
+      outcome = await synchronizePaymentAdjustment(event);
+    }
+    await markWebhookProcessed(event.id, claim.processingToken);
+    return { received: true, ...outcome };
+  } catch (error) {
+    await markWebhookFailed(event.id, claim.processingToken, safeError(error).type);
+    console.error('[webhook] processing failed', { eventId: event.id, error: safeError(error) });
+    throw error;
+  }
 }
 
 export async function handleStripeWebhook(rawBody, signature) {
-  const event = constructStripeEvent(rawBody, signature);
-  const webhookClaim = await claimWebhookEvent(event);
-  const webhookRow = webhookClaim.row;
-  const processingToken = webhookClaim.processingToken;
+  return processVerifiedStripeEvent(constructStripeEvent(rawBody, signature));
+}
 
-  if (!processingToken) {
-    return {
-      received: true,
-      duplicate: true,
-      alreadyProcessed: webhookRow?.status === "processed",
-      inProgress: webhookRow?.status === "processing",
-      eventType: event.type
-    };
+export async function recoverStripeEvents({ limit = 20 } = {}) {
+  const pending = await db.query(`SELECT event_id FROM webhook_events WHERE provider='stripe'
+    AND (status IN ('received','failed') OR (status='processing' AND processing_started_at < NOW()-INTERVAL '15 minutes'))
+    AND created_at > NOW()-INTERVAL '28 days'
+    ORDER BY last_recovery_at ASC NULLS FIRST,created_at ASC LIMIT $1`, [limit]);
+  let recovered = 0, failed = 0;
+  for (const row of pending.rows) {
+    try {
+      // Re-fetch the authenticated provider object rather than trusting a reduced stored snapshot.
+      await processVerifiedStripeEvent(await retrieveStripeEvent(row.event_id));
+      recovered += 1;
+    } catch (error) {
+      failed++;
+      console.error('[webhook-recovery] deferred', safeError(error));
+    } finally {
+      await db.query('UPDATE webhook_events SET last_recovery_at=NOW() WHERE event_id=$1', [row.event_id]);
+    }
   }
-
-  let internalSessionId = null;
-  let phase = "received";
-
-  try {
-    if (event.type !== "checkout.session.completed") {
-      await markWebhookProcessed(event.id, processingToken);
-
-      return {
-        received: true,
-        ignored: true,
-        eventType: event.type
-      };
-    }
-
-    const checkoutSession = event.data.object;
-    internalSessionId = checkoutSession.metadata?.internalSessionId || null;
-
-    if (!internalSessionId) {
-      throw new Error("Missing internalSessionId in Stripe metadata.");
-    }
-
-    if (!isCheckoutPaid(checkoutSession)) {
-      await markWebhookProcessed(event.id, processingToken);
-
-      return {
-        received: true,
-        skipped: true,
-        reason: "checkout_not_paid",
-        paymentStatus: checkoutSession.payment_status || null
-      };
-    }
-
-    phase = "load_session";
-    const sessionRow = await getSessionById(internalSessionId);
-
-    if (!sessionRow) {
-      throw new Error("Session not found.");
-    }
-
-    phase = "verify_product";
-    const productPackage = getProductPackage(sessionRow.package_code);
-    const metadataPackageCode = checkoutSession.metadata?.packageCode || "legacy_500_v1";
-
-    if (metadataPackageCode !== productPackage.code) {
-      throw new Error(
-        `Stripe package mismatch: expected ${productPackage.code}, received ${metadataPackageCode}.`
-      );
-    }
-
-    assertCheckoutMatchesPackage(checkoutSession, productPackage);
-
-    if (sessionRow.analysis_status === "done") {
-      await markWebhookProcessed(event.id, processingToken, { sessionId: internalSessionId, checkoutSession });
-
-      return {
-        received: true,
-        skipped: true,
-        reason: "analysis_already_done"
-      };
-    }
-
-    phase = "mark_paid";
-    await markSessionPaid(internalSessionId, {
-      amountTotal: checkoutSession.amount_total,
-      currency: String(checkoutSession.currency || productPackage.currency).toLowerCase(),
-      stripePriceId: checkoutSession.metadata?.stripePriceId || null
-    });
-
-    phase = "clear_recovery_state";
-    await markCheckoutRecoveredOrPaid(internalSessionId);
-
-    phase = "queue_analysis";
-
-    const queuedRow = await markAnalysisQueued(internalSessionId);
-
-    if (!queuedRow) {
-      throw new Error("Could not queue analysis job.");
-    }
-
-    await enqueueAnalysisJob(internalSessionId);
-
-    await markWebhookProcessed(event.id, processingToken, { sessionId: internalSessionId, checkoutSession });
-
-    return {
-      received: true,
-      processed: true,
-      queued: true,
-      sessionId: internalSessionId
-    };
-  } catch (error) {
-    const message = `[${phase}] ${safeError(error).type}`;
-
-    console.error("Webhook processing failed:", {
-      eventId: event?.id,
-      eventType: event?.type,
-      internalSessionId,
-      phase,
-      error: safeError(error)
-    });
-
-    if (internalSessionId) {
-      try {
-        const latestSession = await getSessionById(internalSessionId);
-
-        if (latestSession?.analysis_status !== "done") {
-          await markAnalysisFailed(internalSessionId, message);
-        }
-      } catch (nestedError) {
-        console.error("Failed to persist analysis failure:", safeError(nestedError));
-      }
-    }
-
-    await markWebhookFailed(event.id, processingToken, message);
-
-    throw error;
-  }
+  return { checked: pending.rowCount, recovered, failed };
 }

@@ -13,7 +13,7 @@ const EMBEDS = [
     sourcePath: "public/webflow/engine.js",
     snippetPath: "web/engine-embed.full.html",
     publicPath: "/public/webflow/engine.js",
-    version: "20260909-consent-security-v2",
+    version: "20260910-payment-integrity-v4",
     note: "External script loader. This avoids the Webflow 50k code embed limit."
   },
   {
@@ -24,7 +24,7 @@ const EMBEDS = [
     sourcePath: "public/webflow/checkout-pages.js",
     snippetPath: "web/checkout-pages-embed.html",
     publicPath: "/public/webflow/checkout-pages.js",
-    version: "20260909-status-recovery-v3",
+    version: "20260910-payment-integrity-v4",
     note: "Use the same loader on every language-specific success and cancel page."
   },
   {

@@ -20,7 +20,8 @@ const Stripe = (await import("stripe")).default;
 const prototype = Object.getPrototypeOf(new Stripe("sk_test_placeholder").checkout.sessions);
 const originalCreate = prototype.create;
 let stripeCalls = 0;
-prototype.create = async () => { stripeCalls++; return { id: "cs_test_mocked", url: "https://checkout.example.invalid/mock" }; };
+prototype.create = async params => { stripeCalls++; return { id: "cs_test_mocked", object: 'checkout.session', status: 'open', livemode: false,
+  metadata: params.metadata, client_reference_id: params.client_reference_id, url: "https://checkout.stripe.com/mock" }; };
 const { retryCheckout } = await import("../src/api/controllers/checkout.controller.js");
 const { stripeWebhookController } = await import("../src/api/controllers/webhook.controller.js");
 const originalQuery = db.query, originalConnect = db.connect;
@@ -28,7 +29,7 @@ const originalError = console.error, originalWarn = console.warn;
 const messages = [];
 console.error = (...args) => messages.push(args);
 console.warn = (...args) => messages.push(args);
-const response = () => ({ statusCode: 200, status(code) { this.statusCode = code; return this; }, json(body) { this.body = body; return this; } });
+const response = () => ({ statusCode: 200, setHeader() {}, status(code) { this.statusCode = code; return this; }, json(body) { this.body = body; return this; } });
 
 try {
   env.LAUNCH_GATE_ENFORCED = false;

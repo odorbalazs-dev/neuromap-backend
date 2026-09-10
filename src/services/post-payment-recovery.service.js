@@ -7,6 +7,12 @@ import { markAnalysisQueued } from "./session.service.js";
 import { retryReportEmailsBatch } from "./report-email-retry.service.js";
 import { retryContractConfirmationsBatch } from "./contract-confirmation.service.js";
 import { retryInvoicesBatch } from "./invoice.service.js";
+import { expireRestrictedPayments } from './payment-attempt.service.js';
+import { retrieveCheckoutSession, isLiveStripeRuntime } from './stripe.service.js';
+import { fulfillVerifiedCheckout } from './payment-fulfillment.service.js';
+import { recoverStripeEvents } from './webhook.service.js';
+import { reconcileEmailDelivery } from './email-delivery-webhook.service.js';
+import { discoverStripePayments } from './payment-discovery.service.js';
 
 function normalizeNumber(value, fallback, min, max) {
   const number = Number(value);
@@ -32,6 +38,9 @@ async function enqueuePaidSessionsWithoutActiveJobs({ limit = 20 } = {}) {
       AND s.processing_restricted_at IS NULL
       AND s.sensitive_data_erased_at IS NULL
       AND s.data_redacted_at IS NULL
+      AND s.financial_status = 'clear'
+      AND NOT EXISTS (SELECT 1 FROM analysis_jobs terminal WHERE terminal.session_id=s.id AND terminal.status='failed')
+      AND COALESCE((SELECT SUM(history.attempts) FROM analysis_jobs history WHERE history.session_id=s.id),0) < 8
       AND NOT EXISTS (
         SELECT 1
         FROM analysis_jobs j
@@ -57,8 +66,8 @@ async function enqueuePaidSessionsWithoutActiveJobs({ limit = 20 } = {}) {
   const results = [];
 
   for (const session of result.rows) {
-    const queuedSession = await markAnalysisQueued(session.id);
     const job = await enqueueAnalysisJob(session.id);
+    const queuedSession = job ? await markAnalysisQueued(session.id) : null;
 
     results.push({
       sessionId: session.id,
@@ -123,6 +132,31 @@ async function findCheckoutRecoveryCandidates({
 }
 
 export async function runPostPaymentRecoveryV2(options = {}) {
+  await reconcileEmailDelivery();
+  let discovery = { checked: 0, recovered: 0, failed: 0 };
+  try { discovery = { ...discovery, ...await discoverStripePayments() }; }
+  catch (error) {
+    discovery.failed = 1;
+    console.error('[payment-discovery] deferred', { type: error?.name || 'Error' });
+  }
+  const paymentExpiry = await expireRestrictedPayments();
+  const webhookRecovery = await recoverStripeEvents();
+  const payments = await db.query(`SELECT p.* FROM payment_attempts p JOIN sessions s ON s.id=p.session_id
+    WHERE p.livemode=$1 AND (s.payment_status='pending' OR p.status='open')
+      AND p.created_at > NOW()-INTERVAL '28 days'
+    ORDER BY p.checked_at ASC NULLS FIRST LIMIT 20`, [isLiveStripeRuntime()]);
+  let paymentsRecovered = 0, paymentsFailed = 0;
+  for (const attempt of payments.rows) {
+    try {
+      const checkout = await retrieveCheckoutSession(attempt.stripe_session_id);
+      if (checkout.payment_status === 'paid') { await fulfillVerifiedCheckout(checkout); paymentsRecovered += 1; }
+      await db.query('UPDATE payment_attempts SET checked_at=NOW(),status=$2 WHERE stripe_session_id=$1', [checkout.id,checkout.status]);
+    } catch (error) {
+      paymentsFailed++;
+      await db.query('UPDATE payment_attempts SET checked_at=NOW() WHERE stripe_session_id=$1', [attempt.stripe_session_id]);
+      console.error('[payment-recovery] deferred', { type: error?.name || 'Error' });
+    }
+  }
   const staleJobMinutes = normalizeNumber(
     options.staleJobMinutes,
     20,
@@ -214,6 +248,15 @@ export async function runPostPaymentRecoveryV2(options = {}) {
       staleSendingMinutes
     },
     summary: {
+      discoveryChecked: discovery.checked,
+      discoveryRecovered: discovery.recovered,
+      discoveryFailed: discovery.failed,
+      paymentExpiryFailed: paymentExpiry.failed,
+      webhookRecoveryFailed: webhookRecovery.failed,
+      paymentsFailed,
+      expiredPayments: paymentExpiry.expired,
+      webhookEventsRecovered: webhookRecovery.recovered,
+      paymentsRecovered,
       staleJobsRequeued: requeuedStaleJobs.length,
       paidSessionsQueued: missingJobRecovery.queued,
       checkoutRecoveryCandidates: checkoutRecovery.checked,

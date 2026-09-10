@@ -5,7 +5,7 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260909-consent-security-v2";
+  const ENGINE_VERSION = "20260910-payment-integrity-v4";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
   const LEGAL_CONSENT_VERSION = "20260909-consent-security-v2";
   const LANGUAGE_CONFIRMED_KEY = "nm_language_confirmed_v1";
@@ -5016,11 +5016,34 @@
     });
   }
 
+  function getCheckoutMaintenanceCopy() { return getCustomerCopy({"hu":"A vásárlás jelenleg nem érhető el. Kérjük, egy későbbi időpontban térj vissza, vagy írj az ügyfélszolgálatnak.","en":"Purchases are currently unavailable. Please return later or contact support.","de":"Käufe sind derzeit nicht verfügbar. Bitte komm später wieder oder kontaktiere den Support.","it":"Gli acquisti non sono attualmente disponibili. Torna più tardi o contatta l’assistenza.","es":"Las compras no están disponibles actualmente. Vuelve más tarde o contacta con soporte.","fr":"Les achats sont actuellement indisponibles. Revenez plus tard ou contactez l’assistance.","pl":"Zakupy są obecnie niedostępne. Wróć później lub skontaktuj się z pomocą.","pt":"As compras estão indisponíveis neste momento. Volte mais tarde ou contacte o apoio.","ja":"現在購入をご利用いただけません。時間をおいて再度アクセスするか、サポートにお問い合わせください。","zh":"目前暂不支持购买。请稍后返回或联系支持。","ar":"الشراء غير متاح حاليًا. يرجى العودة لاحقًا أو التواصل مع الدعم."}); }
+
+  async function checkCheckoutAvailability() {
+    let available = false;
+    try {
+      const response = await fetch(getApiBaseUrl() + '/checkout/availability', { signal: AbortSignal.timeout(8000), credentials: 'omit' });
+      available = response.ok && (await response.json()).available === true;
+    } catch (_error) {}
+    let notice = document.getElementById('nmCheckoutAvailability');
+    if (!available && !notice) {
+      notice = document.createElement('p');
+      notice.id = 'nmCheckoutAvailability';
+      notice.setAttribute('role', 'status');
+      notice.style.cssText = 'max-width:760px;margin:16px auto;padding:16px;color:#762e12;background:#fff4e8;border:1px solid #e8b988;border-radius:8px;';
+      const hero = document.getElementById('nmLanding') || document.getElementById('nmApp') || document.body;
+      hero.prepend(notice);
+    }
+    if (notice) { notice.hidden = available; notice.textContent = getCheckoutMaintenanceCopy(); }
+    return available;
+  }
+
   async function showQuestionnaireFromLanding() {
     if (!hasConfirmedLanguage()) {
       showModal(true);
       return false;
     }
+
+    if (!await checkCheckoutAvailability()) { alert(getCheckoutMaintenanceCopy()); return false; }
 
     try {
       await ensureLegalConsentForCurrentLanguage();
@@ -9405,22 +9428,10 @@
     if (code === "INVALID_CHECKOUT_PAYLOAD" || /invalid checkout payload/i.test(message)) {
       return t.checkoutError || copy.fallback;
     }
-    if (code === "CHECKOUT_NOT_READY" || /checkout is temporarily unavailable/i.test(message)) {
-      return getCustomerCopy({
-        hu: "A fizetés átmenetileg nem érhető el. Kérjük, próbáld újra néhány perc múlva.",
-        en: "Checkout is temporarily unavailable. Please try again in a few minutes.",
-        de: "Die Zahlung ist vorübergehend nicht verfügbar. Bitte versuche es in einigen Minuten erneut.",
-        it: "Il pagamento è temporaneamente non disponibile. Riprova tra qualche minuto.",
-        es: "El pago no está disponible temporalmente. Inténtalo de nuevo en unos minutos.",
-        zh: "支付暂时不可用。请几分钟后重试。",
-        ja: "決済は一時的に利用できません。数分後にもう一度お試しください。",
-        ar: "الدفع غير متاح مؤقتًا. يرجى المحاولة مرة أخرى بعد بضع دقائق.",
-        pl: "Płatność jest chwilowo niedostępna. Spróbuj ponownie za kilka minut.",
-        pt: "O pagamento está temporariamente indisponível. Tente novamente em alguns minutos.",
-        fr: "Le paiement est temporairement indisponible. Réessayez dans quelques minutes."
-      });
-    }
-    return message || t.checkoutError || copy.fallback;
+    if (code === "CHECKOUT_NOT_READY") return getCheckoutMaintenanceCopy();
+    if (/^CONSENT_|^PURCHASE_CONFIRMATIONS|^PROCESSING_RESTRICTED/.test(code)) return getLegalStartErrorMessage();
+    if (error?.name === 'TimeoutError' || error?.name === 'AbortError' || code === 'CHECKOUT_RETRY_SAFE') return copy.network;
+    return t.checkoutError || copy.fallback;
   }
 
   async function startCheckout() {
@@ -9466,9 +9477,7 @@
       consentReceipt = await ensureLegalConsentForCurrentLanguage();
     } catch (error) {
       console.error("Checkout blocked because legal consent is missing:", error);
-      alert(state.lang === "hu"
-        ? "A fizetés előtt kérjük, hagyd jóvá a jogi és adatvédelmi tájékoztatót."
-        : "Please review and approve the legal and privacy information before checkout.");
+      alert(getLegalStartErrorMessage());
       return;
     }
 
@@ -9490,17 +9499,19 @@
       if (button) button.disabled = true;
       setStatus(t.loading || "Loading...");
 
-      const response = await fetch(`${config.API_BASE_URL}/checkout`, {
+      const response = await fetch(`${getApiBaseUrl()}/checkout`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
+        signal: AbortSignal.timeout(25000),
+        credentials: 'omit'
       });
 
       const data = await response.json();
 
-      console.log("CHECKOUT RESPONSE:", data);
+      // Never log the checkout URL or session access token.
 
       if (!response.ok) {
         const checkoutError = new Error(
@@ -9519,9 +9530,10 @@
       }
 
       try {
-        new URL(data.checkoutUrl);
+        const target = new URL(data.checkoutUrl);
+        if (target.protocol !== 'https:' || target.hostname !== 'checkout.stripe.com') throw new Error('Invalid checkout URL');
       } catch (_error) {
-        console.error("Invalid checkoutUrl:", data.checkoutUrl);
+        console.error("Invalid checkout URL received");
         throw new Error("Not a valid URL");
       }
 
@@ -9541,7 +9553,7 @@
       clearDraft();
       window.location.href = data.checkoutUrl;
     } catch (error) {
-      console.error("Checkout error:", error);
+      console.error("Checkout error:", { code: error?.code || error?.name || "CHECKOUT_FAILED" });
       setStatus(getCheckoutErrorMessage(error, t));
       if (button) button.disabled = false;
     }
@@ -9588,6 +9600,7 @@
       bindLanguageSwitchers();
       ensureChildAgeField();
       state.lang = getLang();
+      void checkCheckoutAvailability();
       state.packageCode = getStoredPackageCode();
       installPackageSelectorStyles();
       scheduleLandingTextRescue(state.lang);

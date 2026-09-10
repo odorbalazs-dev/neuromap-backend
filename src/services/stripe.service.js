@@ -252,6 +252,30 @@ export async function expireCheckoutSession(stripeSessionId) {
   return stripe.checkout.sessions.expire(stripeSessionId);
 }
 
+export function retrieveCheckoutSession(id) {
+  return stripe.checkout.sessions.retrieve(id);
+}
+
+export function listCheckoutSessions(params) {
+  return stripe.checkout.sessions.list({ ...params, limit: 100 });
+}
+
+export function retrieveStripeEvent(id) {
+  return stripe.events.retrieve(id);
+}
+
+export function retrieveStripeCharge(id) {
+  return stripe.charges.retrieve(id);
+}
+
+export function retrieveStripeRefund(id) { return stripe.refunds.retrieve(id); }
+export function retrieveStripeDispute(id) { return stripe.disputes.retrieve(id); }
+export function listStripeRefunds(paymentIntent) { return stripe.refunds.list({ payment_intent: paymentIntent, limit: 100 }); }
+
+export function isLiveStripeRuntime() {
+  return /^(sk|rk)_live_/.test(env.STRIPE_SECRET_KEY || '');
+}
+
 export function constructStripeEvent(rawBody, signature) {
   if (!signature) throw new Error("Missing Stripe signature header.");
   if (!env.STRIPE_WEBHOOK_SECRET) throw new Error("Missing STRIPE_WEBHOOK_SECRET.");

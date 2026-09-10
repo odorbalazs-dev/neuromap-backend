@@ -17,8 +17,8 @@ export function calculateRetryDelaySeconds({
   return Math.min(safeMax, Math.round(safeBase * (2 ** exponent)));
 }
 
-export async function enqueueAnalysisJob(sessionId) {
-  const result = await db.query(
+export async function enqueueAnalysisJob(sessionId, { executor = db, manualRetry = false } = {}) {
+  const result = await executor.query(
     `
     INSERT INTO analysis_jobs (
       session_id,
@@ -29,24 +29,28 @@ export async function enqueueAnalysisJob(sessionId) {
     SELECT id, 'queued', NOW(), NULL
     FROM sessions
     WHERE id = $1
+      AND payment_status = 'paid'
       AND processing_restricted_at IS NULL
       AND sensitive_data_erased_at IS NULL
       AND data_redacted_at IS NULL
+      AND financial_status = 'clear'
+      AND ($2::boolean OR NOT EXISTS (SELECT 1 FROM analysis_jobs history WHERE history.session_id = sessions.id AND history.status = 'failed'))
+      AND COALESCE((SELECT SUM(history.attempts) FROM analysis_jobs history WHERE history.session_id = sessions.id),0) < 8
     ON CONFLICT (session_id)
     WHERE status IN ('queued', 'processing')
     DO NOTHING
     RETURNING *
     `,
-    [sessionId]
+    [sessionId, manualRetry === true]
   );
 
   if (result.rows[0]) {
     return result.rows[0];
   }
 
-  const existing = await db.query(
+  const existing = await executor.query(
     `
-    SELECT *
+    SELECT job.*
     FROM analysis_jobs job
     JOIN sessions session ON session.id = job.session_id
     WHERE job.session_id = $1
@@ -54,7 +58,9 @@ export async function enqueueAnalysisJob(sessionId) {
       AND session.processing_restricted_at IS NULL
       AND session.sensitive_data_erased_at IS NULL
       AND session.data_redacted_at IS NULL
-    ORDER BY created_at ASC
+      AND session.payment_status = 'paid'
+      AND session.financial_status = 'clear'
+    ORDER BY job.created_at ASC
     LIMIT 1
     `,
     [sessionId]
@@ -84,6 +90,10 @@ export async function claimNextAnalysisJob() {
         AND session.processing_restricted_at IS NULL
         AND session.sensitive_data_erased_at IS NULL
         AND session.data_redacted_at IS NULL
+        AND session.financial_status = 'clear'
+        AND session.payment_status = 'paid'
+        AND COALESCE((SELECT SUM(history.attempts) FROM analysis_jobs history WHERE history.session_id=session.id),0) < 8
+        AND job.attempts < 8
       ORDER BY job.created_at ASC
       LIMIT 1
       FOR UPDATE SKIP LOCKED
@@ -208,7 +218,8 @@ export async function requeueStaleJobs({
     `
     UPDATE analysis_jobs job
     SET
-      status = 'queued',
+      status = CASE WHEN job.attempts >= 8 THEN 'failed' ELSE 'queued' END,
+      failed_at = CASE WHEN job.attempts >= 8 THEN NOW() ELSE NULL END,
       locked_at = NULL,
       locked_by = NULL,
       lease_token = NULL,

@@ -19,6 +19,7 @@ import cronRoutes from "../api/routes/cron.js";
 import jobsRoutes from "../api/routes/jobs.js";
 import observationRoutes from "../api/routes/observation.js";
 import legalRoutes from "../api/routes/legal.js";
+import { receiveEmailDelivery } from '../services/email-delivery-webhook.service.js';
 
 const app = express();
 
@@ -60,6 +61,7 @@ const corsOptions = {
     "x-admin-token",
     "x-admin-csrf",
     "x-session-token",
+    "x-checkout-key",
     "x-cron-secret",
     "x-consent-token",
     "x-privacy-request-token"
@@ -83,13 +85,16 @@ app.use(createRateLimit({
     const path = req.path || "";
     return (
       path === "/admin/dashboard" ||
+      path === "/webhook" || path === "/webhook/" || path === "/webhooks/resend" ||
       path === "/public/admin-dashboard.css" ||
       path === "/public/admin-dashboard.js"
     );
   }
 }));
 
-app.use("/webhook", express.raw({ type: "application/json" }));
+app.use("/webhook", createRateLimit({ windowMs: 60 * 1000, max: 1200, keyPrefix: 'stripe-webhook', failClosed: true }), express.raw({ type: "application/json", limit: '256kb' }));
+app.post('/webhooks/resend', createRateLimit({ windowMs: 60000, max: 1200, keyPrefix: 'resend-webhook', failClosed: true }),
+  express.raw({ type: 'application/json', limit: '128kb' }), receiveEmailDelivery);
 app.use(express.json({ limit: env.HTTP_JSON_BODY_LIMIT_BYTES }));
 
 app.get("/", (_req, res) => {

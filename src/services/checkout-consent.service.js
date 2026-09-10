@@ -1,14 +1,33 @@
 import { db } from "../db/db.js";
-import { claimConsentReceipt, assertCheckoutConsentActive, ConsentError } from "./consent.service.js";
-import { createSession } from "./session.service.js";
+import { claimConsentReceipt, inspectConsentReceipt, assertCheckoutConsentActive, ConsentError } from "./consent.service.js";
+import { createSession, assertSessionAccess } from "./session.service.js";
+import { createHash } from "crypto";
 import { assertSessionProcessingAllowedRecord } from "./data-governance.service.js";
 
 export async function createConsentedSession(input, receipt, confirmations) {
   const client = await db.connect();
   try {
     await client.query("BEGIN");
+    await client.query("SELECT id FROM consent_events WHERE id = $1 FOR UPDATE", [receipt.id]);
+    await inspectConsentReceipt(receipt, { executor: client });
+    const requestHash = createHash('sha256').update(JSON.stringify([
+      input.email, input.name, input.lang, input.productPackage.code, input.payload
+    ])).digest('hex');
+    if (input.resumeToken) {
+      const existing = await client.query("SELECT * FROM sessions WHERE consent_event_id = $1 FOR UPDATE", [receipt.id]);
+      if (existing.rows[0]) {
+        const session = existing.rows[0];
+        assertSessionAccess(session, input.resumeToken);
+        if (session.checkout_request_hash !== requestHash) {
+          throw new ConsentError("Checkout contents have changed.", { status: 409, code: "CHECKOUT_CONTENT_CHANGED" });
+        }
+        await client.query("COMMIT");
+        return { session: { ...session, publicAccessToken: input.resumeToken }, resumed: true };
+      }
+    }
     const claimed = await claimConsentReceipt(receipt, confirmations, { executor: client });
     const session = await createSession({ ...input, consent: claimed.snapshot, consentEventId: claimed.id }, { executor: client });
+    await client.query("UPDATE sessions SET checkout_request_hash = $2 WHERE id = $1", [session.id, requestHash]);
     await client.query("COMMIT");
     return { session, claimed };
   } catch (error) {

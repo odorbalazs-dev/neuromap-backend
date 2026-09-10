@@ -1,11 +1,13 @@
 import { db } from "../db/db.js";
 import {
   invoiceConfig,
+  resolveInvoiceTaxPolicy,
   isInvoiceAutomationConfigured
 } from "../config/invoice.js";
 import {
   buildBillingInfo,
   buildInvoiceAmounts,
+  findSzamlazzHuInvoice,
   createSzamlazzHuInvoice
 } from "../infrastructure/invoice/szamlazzhuClient.js";
 import { getSessionById } from "./session.service.js";
@@ -22,9 +24,13 @@ function compactError(error) {
   return String(error?.message || error || "Invoice error").slice(0, 1000);
 }
 
-const SZAMLAZZHU_SUPPORTED_INVOICE_LANGS = new Set(["hu", "en", "de"]);
+const SZAMLAZZHU_SUPPORTED_INVOICE_LANGS = new Set(["hu", "en", "de", "it", "fr", "es", "pl"]);
 
 const PACKAGE_INVOICE_COPY = {
+  it: { standard_v1: 'Report NeuroMap Kids Standard', plus_v1: 'Report NeuroMap Kids Plus e programma di osservazione' },
+  fr: { standard_v1: 'Rapport NeuroMap Kids Standard', plus_v1: 'Rapport NeuroMap Kids Plus et programme d’observation' },
+  es: { standard_v1: 'Informe NeuroMap Kids Standard', plus_v1: 'Informe NeuroMap Kids Plus y programa de observación' },
+  pl: { standard_v1: 'Raport NeuroMap Kids Standard', plus_v1: 'Raport NeuroMap Kids Plus i program obserwacji' },
   hu: {
     standard_v1: "NeuroMap Kids Standard riport",
     plus_v1: "NeuroMap Kids Plus riport és megfigyelési program"
@@ -45,7 +51,7 @@ function resolveSzamlazzHuInvoiceLanguage(sessionLang) {
     .toLowerCase();
 
   if (configured && configured !== "auto") {
-    return configured;
+    return SZAMLAZZHU_SUPPORTED_INVOICE_LANGS.has(configured) ? configured : 'en';
   }
 
   const normalized = String(sessionLang || "")
@@ -59,9 +65,10 @@ function resolveSzamlazzHuInvoiceLanguage(sessionLang) {
   return normalized === "hu" ? "hu" : "en";
 }
 
-function getSzamlazzHuConfigForSession(session) {
+function getSzamlazzHuConfigForSession(session, country) {
   return {
     ...invoiceConfig.szamlazzhu,
+    ...resolveInvoiceTaxPolicy(country),
     invoiceLanguage: resolveSzamlazzHuInvoiceLanguage(session?.lang)
   };
 }
@@ -78,14 +85,7 @@ function getInvoiceProductCopy(session) {
       localized[packageCode] ||
       invoiceConfig.productName ||
       "NeuroMap Kids report",
-    comment:
-      packageCode === "plus_v1"
-        ? lang === "hu"
-          ? "Egyszeri digitális riport és 14 napos automatikus megfigyelési program, online kérdőív alapján."
-          : lang === "de"
-            ? "Einmaliger digitaler Bericht und automatisches 14-Tage-Beobachtungsprogramm auf Grundlage eines Online-Fragebogens."
-            : "One-time digital report and automated 14-day observation program based on an online questionnaire."
-        : invoiceConfig.productComment
+    comment: localized[packageCode] || PACKAGE_INVOICE_COPY.en[packageCode] || invoiceConfig.productComment
   };
 }
 
@@ -107,7 +107,7 @@ async function getIssuedInvoice(sessionId) {
 
 async function upsertInvoiceProcessing({ session, checkoutSession }) {
   const billing = buildBillingInfo({ session, checkoutSession });
-  const szamlazzhuConfig = getSzamlazzHuConfigForSession(session);
+  const szamlazzhuConfig = getSzamlazzHuConfigForSession(session, billing.country);
   const amounts = buildInvoiceAmounts({
     session,
     checkoutSession,
@@ -253,10 +253,11 @@ async function markInvoiceSkipped(sessionId, reason) {
   return invoiceRow;
 }
 
-async function markInvoiceIssued(sessionId, invoiceId, invoiceResult) {
+async function markInvoiceIssued(sessionId, invoiceId, invoiceResult, processingToken) {
+  if (!invoiceResult?.invoiceNumber) throw new Error('INVOICE_RESPONSE_UNVERIFIED');
   const result = await db.query(
     `
-    UPDATE invoices
+    WITH updated_invoice AS (UPDATE invoices
     SET status = 'issued',
         provider_invoice_id = $3,
         invoice_number = $4,
@@ -272,8 +273,14 @@ async function markInvoiceIssued(sessionId, invoiceId, invoiceResult) {
     WHERE session_id = $1
       AND provider = $2
       AND id = $7
+      AND processing_token = $8::uuid
       AND status = 'processing'
-    RETURNING *
+    RETURNING *), updated_session AS (
+      UPDATE sessions s SET invoice_status='issued',invoice_id=i.id,
+        invoice_number=i.invoice_number,invoice_error=NULL,
+        invoice_sent_at=CASE WHEN $6::boolean THEN COALESCE(s.invoice_sent_at,NOW()) ELSE s.invoice_sent_at END
+      FROM updated_invoice i WHERE s.id=i.session_id RETURNING s.id
+    ) SELECT i.* FROM updated_invoice i JOIN updated_session s ON s.id=i.session_id
     `,
     [
       sessionId,
@@ -282,46 +289,20 @@ async function markInvoiceIssued(sessionId, invoiceId, invoiceResult) {
       invoiceResult.invoiceNumber || null,
       invoiceResult.providerResponse || {},
       Boolean(invoiceConfig.szamlazzhu.sendEmail),
-      invoiceId
+      invoiceId,
+      processingToken
     ]
   );
 
-  const invoiceRow = result.rows[0] || null;
-
-  if (!invoiceRow) {
-    return null;
-  }
-
-  await db.query(
-    `
-    UPDATE sessions
-    SET invoice_status = 'issued',
-        invoice_id = $2,
-        invoice_number = $3,
-        invoice_error = NULL,
-        invoice_sent_at = CASE
-          WHEN $4::boolean THEN COALESCE(invoice_sent_at, NOW())
-          ELSE invoice_sent_at
-        END
-    WHERE id = $1
-    `,
-    [
-      sessionId,
-      invoiceRow.id,
-      invoiceResult.invoiceNumber || null,
-      Boolean(invoiceConfig.szamlazzhu.sendEmail)
-    ]
-  );
-
-  return invoiceRow;
+  return result.rows[0] || null;
 }
 
-async function markInvoiceFailed(sessionId, invoiceId, error) {
+async function markInvoiceFailed(sessionId, invoiceId, error, processingToken) {
   const message = compactError(error);
 
   const result = await db.query(
     `
-    UPDATE invoices
+    WITH updated_invoice AS (UPDATE invoices
     SET status = 'failed',
         error_message = $3,
         processing_token = NULL,
@@ -329,30 +310,17 @@ async function markInvoiceFailed(sessionId, invoiceId, error) {
     WHERE session_id = $1
       AND provider = $2
       AND id = $4
+      AND processing_token = $5::uuid
       AND status = 'processing'
-    RETURNING *
+    RETURNING *), updated_session AS (
+      UPDATE sessions s SET invoice_status='failed',invoice_id=i.id,invoice_error=i.error_message
+      FROM updated_invoice i WHERE s.id=i.session_id RETURNING s.id
+    ) SELECT i.* FROM updated_invoice i JOIN updated_session s ON s.id=i.session_id
     `,
-    [sessionId, invoiceConfig.provider, message, invoiceId]
+    [sessionId, invoiceConfig.provider, message, invoiceId, processingToken]
   );
 
-  const invoiceRow = result.rows[0] || null;
-
-  if (!invoiceRow) {
-    return null;
-  }
-
-  await db.query(
-    `
-    UPDATE sessions
-    SET invoice_status = 'failed',
-        invoice_id = COALESCE($2, invoice_id),
-        invoice_error = $3
-    WHERE id = $1
-    `,
-    [sessionId, invoiceRow.id, message]
-  );
-
-  return invoiceRow;
+  return result.rows[0] || null;
 }
 
 export async function createInvoiceForPaidSession({
@@ -418,20 +386,36 @@ export async function createInvoiceForPaidSession({
   }
 
   try {
-    const szamlazzhuConfig = getSzamlazzHuConfigForSession(session);
+    const szamlazzhuConfig = getSzamlazzHuConfigForSession(session, checkoutSession.customer_details.address.country);
     const productCopy = getInvoiceProductCopy(session);
+    const externalId = invoiceClaim.external_id || 'nm-' + session.id;
+    if (invoiceClaim.submission_started_at || invoiceClaim.attempts > 1) {
+      if (!invoiceClaim.external_id) throw Object.assign(new Error('INVOICE_LEGACY_REVIEW_REQUIRED'), { terminal: true });
+      const recovered = await findSzamlazzHuInvoice({ config: szamlazzhuConfig, externalId,
+        expectedAmount: checkoutSession.amount_total, expectedCurrency: checkoutSession.currency });
+      if (!recovered) throw Object.assign(new Error('INVOICE_OUTCOME_UNKNOWN'), { terminal: true });
+      return await markInvoiceIssued(session.id, invoiceClaim.id, recovered, invoiceClaim.processing_token);
+    }
 
     const invoiceResult = await createSzamlazzHuInvoice({
       session,
       checkoutSession,
-      config: szamlazzhuConfig,
+      config: { ...szamlazzhuConfig, externalId },
       productName: productCopy.name,
-      productComment: productCopy.comment
+      productComment: productCopy.comment,
+      beforeSubmit: async () => {
+        const marked = await db.query(`UPDATE invoices SET external_id=$3,submission_started_at=NOW()
+          WHERE id=$1 AND processing_token=$2::uuid AND status='processing' RETURNING id`,
+        [invoiceClaim.id,invoiceClaim.processing_token,externalId]);
+        if (!marked.rowCount) throw new Error('INVOICE_CLAIM_LOST');
+      }
     });
 
-    return await markInvoiceIssued(session.id, invoiceClaim.id, invoiceResult);
+    return await markInvoiceIssued(session.id, invoiceClaim.id, invoiceResult, invoiceClaim.processing_token);
   } catch (error) {
-    await markInvoiceFailed(session.id, invoiceClaim.id, error);
+    await markInvoiceFailed(session.id, invoiceClaim.id, error, invoiceClaim.processing_token);
+    await db.query(`INSERT INTO payment_reviews(session_id,provider_event_id,reason)
+      VALUES ($1,$2,'invoice_reconciliation_required') ON CONFLICT DO NOTHING`, [session.id,'invoice:' + invoiceClaim.id]);
 
     if (throwOnError) {
       throw error;
@@ -440,7 +424,8 @@ export async function createInvoiceForPaidSession({
     console.error("[invoice] creation failed, continuing:", {
       sessionId: session.id,
       provider: invoiceConfig.provider,
-      message: compactError(error)
+      type: error?.name || 'Error',
+      code: /^[A-Z_]{5,80}$/.test(error?.message || '') ? error.message : 'INVOICE_PROVIDER_FAILURE'
     });
 
     return null;

@@ -39,12 +39,13 @@ db.query = async (sql, params = []) => {
     if (sql.includes("'skipped'")) {
       if (invoice?.status === "issued") return { rows: [] };
       invoice = { id: "unit-invoice", status: "skipped", error_message: params[2] };
-    } else invoice = { id: "unit-invoice", status: "processing" };
+    } else invoice = { id: "unit-invoice", status: "processing", processing_token: '00000000-0000-4000-8000-000000000001', attempts: 1 };
     return { rows: [invoice] };
   }
   if (/UPDATE invoices/.test(sql) && sql.includes("status = 'issued'")) {
     invoice = { ...invoice, status: "issued", invoice_number: params[3] }; return { rows: [invoice] };
   }
+  if (/UPDATE invoices SET external_id/.test(sql)) return { rowCount: 1, rows: [{ id: invoice.id }] };
   if (/UPDATE sessions/.test(sql)) return { rows: [] };
   throw new Error("Unexpected database operation in invoice unit test");
 };

@@ -65,6 +65,7 @@ jobs:
           npm run smoke:consent-security
           node scripts/smoke-go-live.js
           node scripts/smoke-invoice-payment-policy.js
+          npm run test:payment-lifecycle
 
       - name: Isolated PostgreSQL integration
         env:

@@ -1,4 +1,5 @@
 import { env } from "../config/env.js";
+import { isInvoiceTaxPolicyValid } from '../config/invoice.js';
 
 const REQUIRED_APPROVALS = [
   ["legal_review", "LEGAL_REVIEW_APPROVED", "LEGAL_REVIEW_EVIDENCE"],
@@ -32,6 +33,17 @@ export function getLaunchGateStatus(runtimeEnv = env) {
     checks[name] = runtimeEnv[envKey] === true;
     evidenceChecks[`${name}_evidence`] = hasEvidence(runtimeEnv[evidenceKey]);
   });
+  if (runtimeEnv.NODE_ENV === 'production') {
+    checks.tax_configuration = runtimeEnv.TAX_CONFIGURATION_APPROVED === true;
+    evidenceChecks.tax_configuration_evidence = hasEvidence(runtimeEnv.TAX_CONFIGURATION_EVIDENCE);
+    checks.payment_review_owner = Boolean(runtimeEnv.PAYMENT_REVIEW_OWNER?.trim());
+    try {
+      const rules = JSON.parse(runtimeEnv.INVOICE_TAX_POLICY_JSON || '{}');
+      checks.tax_policy = isInvoiceTaxPolicyValid(rules);
+      // Checkout collects an unrestricted billing country; an explicit reviewed default is required.
+      checks.tax_country_coverage = Boolean(rules?.['*']);
+    } catch { checks.tax_policy = false; }
+  }
 
   const checkoutEnabled = runtimeEnv.PRODUCTION_CHECKOUT_ENABLED !== false;
   checks.production_checkout = checkoutEnabled;

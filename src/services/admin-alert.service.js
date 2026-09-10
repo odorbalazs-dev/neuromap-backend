@@ -38,6 +38,12 @@ function buildReason(key, count, label, recommendation) {
 
 function buildAlertReasons(metrics) {
   return [
+    buildReason("payment_reviews", metrics.paymentReviews,
+      "Fizetési egyeztetést igénylő ügyek",
+      "Ellenőrizd a /admin/payment-reviews listát, a Stripe fizetést és a számla helyesbítését. Ne indíts automatikus új terhelést."),
+    buildReason("email_delivery_failures", metrics.emailDeliveryFailures,
+      "Visszapattant vagy panasszal érintett riportemail",
+      "Ellenőrizd a címzettet és a Resend kézbesítési eseményt. Panasz után ne küldj automatikusan új levelet."),
     buildReason("post_payment_outbox", metrics.outboxProblems,
       "Elakadt számlázás vagy szerződés-visszaigazolás",
       "Ellenőrizd a számlázó beállításait és az automatikus feladatok állapotát a dashboardon."),
@@ -582,7 +588,10 @@ async function getHealthMetrics() {
       FROM sessions
       WHERE payment_status = 'paid'
     `),
-    db.query(`SELECT COUNT(*)::int AS count FROM post_payment_outbox
+    db.query(`SELECT COUNT(*)::int AS count,
+      (SELECT COUNT(*)::int FROM payment_reviews WHERE state='open') AS payment_reviews,
+      (SELECT COUNT(*)::int FROM sessions WHERE report_email_delivery_status IN ('bounced','complained','failed')) AS delivery_failures
+      FROM post_payment_outbox
       WHERE last_error_code IS DISTINCT FROM 'DATA_ERASED' AND
         (status = 'failed' OR (status IN ('pending','processing') AND created_at < NOW() - INTERVAL '30 minutes'))`)
   ]);
@@ -605,6 +614,8 @@ async function getHealthMetrics() {
 
   const metrics = {
     outboxProblems: Number(outboxIssues.rows[0]?.count || 0),
+    paymentReviews: Number(outboxIssues.rows[0]?.payment_reviews || 0),
+    emailDeliveryFailures: Number(outboxIssues.rows[0]?.delivery_failures || 0),
     staleProcessingJobs: Number(staleJobs.rows[0]?.count || 0),
     failedJobs: Number(jobs.failed || 0),
     failedWebhooks24h: Number(webhookRow.failed_last_24h || 0),

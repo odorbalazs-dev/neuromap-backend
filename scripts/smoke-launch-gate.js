@@ -56,6 +56,10 @@ expectBlocked(
 );
 
 const readyEnv = {
+  TAX_CONFIGURATION_APPROVED: true,
+  TAX_CONFIGURATION_EVIDENCE: 'synthetic-tax-review-001',
+  PAYMENT_REVIEW_OWNER: 'fixture@example.invalid',
+  INVOICE_TAX_POLICY_JSON: JSON.stringify({ '*': { vatRate: '27' } }),
   ...incompleteProductionEnv,
   LAUNCH_GATE_ENFORCED: true,
   LEGAL_REVIEW_APPROVED: true,
@@ -88,5 +92,8 @@ const readyStatus = getLaunchGateStatus(readyEnv);
 assert(readyStatus.ready, `Strict gate should be ready: ${readyStatus.missing.join(", ")}`);
 assert(!readyStatus.blocking, "Ready strict gate must allow checkout");
 assertCheckoutLaunchReady(readyEnv);
+expectBlocked({ ...readyEnv, TAX_CONFIGURATION_APPROVED: false }, 'tax_configuration');
+expectBlocked({ ...readyEnv, INVOICE_TAX_POLICY_JSON: '{"HU":{"vatRate":"27"}}' }, 'tax_country_coverage');
+expectBlocked({ ...readyEnv, INVOICE_TAX_POLICY_JSON: '{"*":{"vatRate":"invalid"}}' }, 'tax_policy');
 
 console.log("Launch gate smoke test passed.");

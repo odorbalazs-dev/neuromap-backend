@@ -216,7 +216,7 @@ assert(
 });
 
 assert(
-  checkoutPagesSource.includes("20260909-status-recovery-v3") &&
+  checkoutPagesSource.includes("20260910-payment-integrity-v4") &&
     checkoutPagesSource.includes("isAnalyticsAllowed") &&
     checkoutPagesSource.includes("sanitizeCheckoutAnalyticsPayload") &&
     checkoutPagesSource.includes("installPrivacyDefaults();"),

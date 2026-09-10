@@ -9,7 +9,7 @@ function assert(condition, message) {
 function main() {
   console.log("\n=== CHECKOUT PAGES SMOKE ===");
 
-  const currentVersion = "20260909-status-recovery-v3";
+  const currentVersion = "20260910-payment-integrity-v4";
   const script = fs.readFileSync("public/webflow/checkout-pages.js", "utf8");
   const stripeService = fs.readFileSync("src/services/stripe.service.js", "utf8");
   const sessionService = fs.readFileSync("src/services/session.service.js", "utf8");
@@ -46,7 +46,7 @@ function main() {
   assert(!script.includes("client_session_id"), "Checkout analytics should not include a client session id.");
   assert(script.includes("nm-checkout-pages-stable-v1"), "Checkout pages should install the stable design layer.");
   assert(!/(Ã|Â|Ă|Ĺ|Å|Ä|â€|�)/.test(script), "Checkout pages should not contain mojibake characters.");
-  assert(script.includes("&#10003;"), "Success page should render a safe checkmark entity.");
+  assert(script.includes("verifiedPaid") && script.includes("paymentPendingTitle"), "Success page should only confirm a verified payment.");
   assert(script.includes("trackPurchaseFromStatus"), "Success page should validate server status before sending purchase.");
   assert(script.includes('status?.paymentStatus !== "paid"'), "Purchase tracking should require a paid session.");
   assert(script.includes("status?.amountTotal"), "Purchase tracking should use the server-confirmed amount.");
@@ -79,7 +79,7 @@ function main() {
   );
   assert(
     sessionService.includes('? "id = $1::uuid"') &&
-      sessionService.includes(': "stripe_session_id = $1::text"'),
+      sessionService.includes("stripe_session_id = $1::text"),
     "Public session lookup should use type-safe UUID and Stripe identifier queries."
   );
   assert(

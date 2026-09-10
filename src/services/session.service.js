@@ -55,10 +55,11 @@ export async function createSession({
   payload,
   productPackage,
   consent,
-  consentEventId
+  consentEventId,
+  resumeToken
 }, { executor = db } = {}) {
   const id = randomUUID();
-  const publicAccessToken = createPublicSessionToken();
+  const publicAccessToken = resumeToken || createPublicSessionToken();
   const publicAccessTokenHash = hashSessionAccessToken(publicAccessToken);
 
   const result = await executor.query(
@@ -252,7 +253,7 @@ export async function getSessionByPublicIdentifier(identifier) {
   // Selecting the lookup column up front also keeps both indexes usable.
   const whereClause = isInternalSessionId
     ? "id = $1::uuid"
-    : "stripe_session_id = $1::text";
+    : "(stripe_session_id = $1::text OR id IN (SELECT session_id FROM payment_attempts WHERE stripe_session_id = $1::text))";
 
   const result = await db.query(
     `
@@ -396,6 +397,8 @@ export async function markReportEmailSending(
       AND sensitive_data_erased_at IS NULL
       AND data_redacted_at IS NULL
       AND payment_status = 'paid'
+      AND financial_status = 'clear'
+      AND report_email_delivery_status IS DISTINCT FROM 'complained'
       AND analysis_status = 'done'
       AND analysis_result IS NOT NULL
       AND LENGTH(TRIM(analysis_result)) > 0
@@ -426,6 +429,8 @@ export async function markReportEmailSent(sessionId, providerId = null) {
         report_email_sent_at = NOW(),
         report_email_last_attempt_at = COALESCE(report_email_last_attempt_at, NOW()),
         report_email_error = NULL,
+        report_email_delivery_status = CASE WHEN report_email_provider_id IS DISTINCT FROM $2 THEN 'accepted' ELSE report_email_delivery_status END,
+        report_email_delivery_at = CASE WHEN report_email_provider_id IS DISTINCT FROM $2 THEN NULL ELSE report_email_delivery_at END,
         report_email_provider_id = $2
     WHERE id = $1
       AND report_email_status = 'sending'

@@ -5,7 +5,7 @@
 (function () {
   if (typeof window === "undefined" || typeof document === "undefined") return;
 
-  const CHECKOUT_PAGES_VERSION = "20260909-status-recovery-v3";
+  const CHECKOUT_PAGES_VERSION = "20260910-payment-integrity-v4";
   const STATUS_POLL_INTERVAL_MS = 12000;
   const STATUS_POLL_MAX_INTERVAL_MS = 60000;
   let statusPollTimer = null;
@@ -769,13 +769,123 @@
     };
   }
 
+  const PAYMENT_STATUS_COPY = {
+  "hu": [
+    "Fizetés állapota",
+    "A fizetési eredmény még nincs ellenőrizve. Frissítsd az állapotot, vagy keresd az ügyfélszolgálatot. Ne fizess újra, ha már terhelést látsz.",
+    "Számla",
+    "Rendelés-visszaigazolás",
+    "Email elküldve",
+    "Email kézbesítve",
+    "A fizetés vagy kézbesítés ellenőrzést igényel. Kérj segítséget."
+  ],
+  "en": [
+    "Payment status",
+    "The payment result is not verified yet. Refresh the status or contact support. Do not pay again if you already see a charge.",
+    "Invoice",
+    "Order confirmation",
+    "Email sent",
+    "Email delivered",
+    "Payment or delivery needs review. Please contact support."
+  ],
+  "de": [
+    "Zahlungsstatus",
+    "Die Zahlung ist noch nicht bestätigt. Aktualisiere den Status oder kontaktiere den Support. Bezahle nicht erneut, wenn du bereits eine Belastung siehst.",
+    "Rechnung",
+    "Bestellbestätigung",
+    "E-Mail gesendet",
+    "E-Mail zugestellt",
+    "Die Zahlung oder Zustellung muss geprüft werden. Bitte kontaktiere den Support."
+  ],
+  "it": [
+    "Stato del pagamento",
+    "Il pagamento non è ancora verificato. Aggiorna lo stato o contatta l’assistenza. Non pagare di nuovo se vedi già un addebito.",
+    "Fattura",
+    "Conferma dell’ordine",
+    "Email inviata",
+    "Email consegnata",
+    "Il pagamento o la consegna richiede una verifica. Contatta l’assistenza."
+  ],
+  "es": [
+    "Estado del pago",
+    "El pago aún no está verificado. Actualiza el estado o contacta con soporte. No vuelvas a pagar si ya aparece un cargo.",
+    "Factura",
+    "Confirmación del pedido",
+    "Email enviado",
+    "Email entregado",
+    "El pago o la entrega requiere revisión. Contacta con soporte."
+  ],
+  "fr": [
+    "Statut du paiement",
+    "Le paiement n’est pas encore vérifié. Actualisez le statut ou contactez l’assistance. Ne payez pas à nouveau si un débit apparaît déjà.",
+    "Facture",
+    "Confirmation de commande",
+    "Email envoyé",
+    "Email remis",
+    "Le paiement ou la livraison nécessite une vérification. Contactez l’assistance."
+  ],
+  "pl": [
+    "Status płatności",
+    "Płatność nie została jeszcze potwierdzona. Odśwież status lub skontaktuj się z pomocą. Nie płać ponownie, jeśli widzisz już obciążenie.",
+    "Faktura",
+    "Potwierdzenie zamówienia",
+    "Email wysłany",
+    "Email dostarczony",
+    "Płatność lub dostarczenie wymaga sprawdzenia. Skontaktuj się z pomocą."
+  ],
+  "pt": [
+    "Estado do pagamento",
+    "O pagamento ainda não foi verificado. Atualize o estado ou contacte o apoio. Não pague novamente se já houver uma cobrança.",
+    "Fatura",
+    "Confirmação da encomenda",
+    "Email enviado",
+    "Email entregue",
+    "O pagamento ou a entrega precisa de verificação. Contacte o apoio."
+  ],
+  "ja": [
+    "お支払い状況",
+    "お支払い結果はまだ確認できていません。状況を更新するか、サポートにお問い合わせください。すでに請求がある場合は再度支払わないでください。",
+    "請求書",
+    "注文確認",
+    "メール送信済み",
+    "メール配信済み",
+    "お支払いまたは配信状況の確認が必要です。サポートにお問い合わせください。"
+  ],
+  "zh": [
+    "支付状态",
+    "支付结果尚未核实。请刷新状态或联系支持。如果已看到扣款，请勿再次支付。",
+    "发票",
+    "订单确认",
+    "邮件已发送",
+    "邮件已送达",
+    "支付或送达状态需要核查。请联系支持。"
+  ],
+  "ar": [
+    "حالة الدفع",
+    "لم يتم التحقق من نتيجة الدفع بعد. حدّث الحالة أو تواصل مع الدعم. لا تدفع مرة أخرى إذا ظهر خصم بالفعل.",
+    "الفاتورة",
+    "تأكيد الطلب",
+    "تم إرسال البريد",
+    "تم تسليم البريد",
+    "تحتاج حالة الدفع أو التسليم إلى مراجعة. يرجى التواصل مع الدعم."
+  ]
+};
+  function paymentStatusCopy(lang) {
+    const c = PAYMENT_STATUS_COPY[lang] || PAYMENT_STATUS_COPY.en;
+    return { paymentPendingTitle: c[0], paymentUnknown: c[1], invoiceLabel: c[2], contractLabel: c[3],
+      emailAccepted: c[4], emailDelivered: c[5], financialAttention: c[6],
+      noSession: c[1], deliveryEstimateNoSession: c[1], cancelLead: c[1], cancelBody: '',
+      cancelSafeNote: c[1], cancelRecoveryItems: [c[1]], cancelTitle: c[0], statusAttention: c[6] };
+  }
+
   function getCopy(lang) {
     return Object.assign(
       {},
       BASE_COPY,
       COPY.en,
       COPY[lang] || {},
-      flattenCustomerJourneyCopy(lang)
+      flattenCustomerJourneyCopy(lang),
+      paymentStatusCopy(lang)
     );
   }
 
@@ -967,7 +1077,7 @@
 
     window.dataLayer = window.dataLayer || [];
 
-    const key = ["nm_track", eventName, getPageKind(), payload?.package_code || "", payload?.status || ""].join(":");
+    const key = ["nm_track", eventName, getPageKind(), getSessionId(getPageKind()), payload?.package_code || "", payload?.status || ""].join(":");
 
     try {
       if (window.sessionStorage && window.sessionStorage.getItem(key)) return;
@@ -1535,7 +1645,10 @@
       payment: copy.statusPayment,
       analysis: copy.statusAnalysis,
       report: copy.statusReport,
-      email: copy.statusEmail
+      invoice: copy.invoiceLabel,
+      contract: copy.contractLabel,
+      email: lastKnownStatus?.reportEmailDeliveryStatus === 'delivered' ? copy.emailDelivered
+        : lastKnownStatus?.reportEmailDeliveryStatus === 'accepted' ? copy.emailAccepted : copy.statusEmail
     };
 
     return labels[key] || fallback || key;
@@ -1545,8 +1658,8 @@
     const safeStages = Array.isArray(stages) && stages.length
       ? stages
       : [
-          { key: "payment", label: copy.statusPayment, state: "complete" },
-          { key: "analysis", label: copy.statusAnalysis, state: "active" },
+          { key: "payment", label: copy.statusPayment, state: "pending" },
+          { key: "analysis", label: copy.statusAnalysis, state: "pending" },
           { key: "report", label: copy.statusReport, state: "pending" },
           { key: "email", label: copy.statusEmail, state: "pending" }
         ];
@@ -1570,7 +1683,7 @@
 
   function renderUnavailableStatusSteps(copy) {
     return renderStatusSteps(copy, [
-      { key: "payment", label: copy.statusPayment, state: "complete" },
+      { key: "payment", label: copy.statusPayment, state: "pending" },
       { key: "analysis", label: copy.statusAnalysis, state: "pending" },
       { key: "report", label: copy.statusReport, state: "pending" },
       { key: "email", label: copy.statusEmail, state: "pending" }
@@ -1578,7 +1691,8 @@
   }
 
   function getStatusMessage(copy, status) {
-    if (!status) return copy.statusLoading;
+    if (!status || status.paymentStatus !== 'paid') return copy.paymentUnknown;
+    if (status.financialStatus && status.financialStatus !== 'clear') return copy.financialAttention;
     if (status.overall === "sent") return copy.statusSent;
     if (status.overall === "attention") return copy.statusAttention;
     return copy.reportStatusLead;
@@ -1594,7 +1708,7 @@
   }
 
   function getDeliveryEstimate(copy, status, hasSessionId) {
-    if (!hasSessionId) {
+    if (!hasSessionId || !status || status.paymentStatus !== "paid") {
       return {
         tone: "attention",
         message: copy.deliveryEstimateNoSession
@@ -1771,7 +1885,7 @@
     const nextItems = Array.isArray(copy.nextItems) ? copy.nextItems : BASE_COPY.nextItems;
 
     return `
-      <div class="nm-checkout-next">
+      <div class="nm-checkout-next" id="nmVerifiedNextSteps" hidden>
         <h2>${escapeHtml(copy.nextTitle)}</h2>
         <ol>
           ${nextItems.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
@@ -1833,7 +1947,7 @@
     const copy = getCopy(lang);
     const isSuccess = kind === "success";
     const root = document.getElementById("nmCheckoutPage") || document.createElement("main");
-    const icon = isSuccess ? "&#10003;" : "!";
+    const icon = "&#8230;";
 
     root.id = "nmCheckoutPage";
     root.className = "nm-checkout-page";
@@ -1843,11 +1957,11 @@
     root.innerHTML = `
       <section class="nm-checkout-card" aria-labelledby="nmCheckoutTitle">
         <div class="nm-checkout-icon ${isSuccess ? "success" : "cancel"}" aria-hidden="true">${icon}</div>
-        <h1 id="nmCheckoutTitle">${escapeHtml(isSuccess ? copy.successTitle : copy.cancelTitle)}</h1>
-        <p class="nm-checkout-lead">${escapeHtml(isSuccess ? copy.successLead : copy.cancelLead)}</p>
-        <p class="nm-checkout-body">${escapeHtml(isSuccess ? copy.successBody : copy.cancelBody)}</p>
+        <h1 id="nmCheckoutTitle">${escapeHtml(copy.paymentPendingTitle)}</h1>
+        <p class="nm-checkout-lead">${escapeHtml(copy.paymentUnknown)}</p>
+        <p class="nm-checkout-body"></p>
         ${sessionId ? `<div class="nm-checkout-meta">${escapeHtml(copy.sessionLabel)}: ${escapeHtml(sessionId)}</div>` : ""}
-        ${isSuccess ? renderSuccessExtras(copy) : renderCancelExtras(copy)}
+        ${renderSuccessExtras(copy)}
         <div class="nm-checkout-actions">
           <a class="nm-checkout-button dark" href="${escapeHtml(safeHref(getHomeHref(lang), "/"))}">${escapeHtml(copy.home)}</a>
           ${!isSuccess ? `<button class="nm-checkout-button" type="button" id="nmRetryCheckout">${escapeHtml(copy.retry)}</button>` : ""}
@@ -1940,6 +2054,16 @@
       }
 
       lastKnownStatus = data.status;
+      const verifiedPaid = data.status.paymentStatus === 'paid' && (!data.status.financialStatus || data.status.financialStatus === 'clear');
+      document.getElementById('nmCheckoutTitle').textContent = verifiedPaid ? copy.successTitle : copy.paymentPendingTitle;
+      const pageLead = document.querySelector('.nm-checkout-lead');
+      if (pageLead) pageLead.textContent = verifiedPaid ? copy.successLead : (data.status.financialStatus && data.status.financialStatus !== 'clear') ? copy.financialAttention : copy.paymentUnknown;
+      const nextSteps = document.getElementById('nmVerifiedNextSteps');
+      if (nextSteps) nextSteps.hidden = !verifiedPaid;
+      const icon = document.querySelector('.nm-checkout-icon');
+      if (icon) icon.textContent = verifiedPaid ? '\u2713' : '\u2026';
+      const retry = document.getElementById('nmRetryCheckout');
+      if (retry) retry.hidden = data.status.paymentStatus === 'paid';
       lead.textContent = getStatusMessage(copy, data.status);
       steps.innerHTML = renderStatusSteps(copy, data.status.stages);
       renderStatusMeta(copy, sessionId, data.status);
@@ -1968,7 +2092,7 @@
         attempt
       });
 
-      lead.textContent = copy.statusUnavailable;
+      lead.textContent = lastKnownStatus?.paymentStatus === 'paid' ? copy.statusUnavailable : copy.paymentUnknown;
       if (!lastKnownStatus) {
         steps.innerHTML = renderUnavailableStatusSteps(copy);
         renderStatusMeta(copy, sessionId, null);
@@ -2068,19 +2192,21 @@
       const response = await fetch(`${getApiBaseUrl()}/checkout/retry/${encodeURIComponent(sessionId)}`, {
         method: "POST",
         headers: getSessionHeaders(sessionId, { "Content-Type": "application/json" }),
-        credentials: "omit"
+        credentials: "omit",
+        signal: AbortSignal.timeout(25000)
       });
 
       const data = await response.json().catch(() => ({}));
 
       if (!response.ok) {
-        throw new Error(data && data.error ? data.error : copy.retryError);
+        throw new Error(copy.retryError);
       }
 
       const checkoutUrl = String(data && data.checkoutUrl ? data.checkoutUrl : "");
 
       try {
-        new URL(checkoutUrl);
+        const target = new URL(checkoutUrl);
+        if (target.protocol !== 'https:' || target.hostname !== 'checkout.stripe.com') throw new Error(copy.retryError);
       } catch (_error) {
         throw new Error(copy.retryError);
       }
@@ -2091,7 +2217,7 @@
 
       window.location.href = checkoutUrl;
     } catch (error) {
-      setRuntimeStatus(error && error.message ? error.message : copy.retryError);
+      setRuntimeStatus(copy.retryError + " " + copy.paymentUnknown);
       if (button) button.disabled = false;
     }
   }
@@ -2103,6 +2229,7 @@
 
     if (
       status?.paymentStatus !== "paid" ||
+      (status?.financialStatus && status.financialStatus !== 'clear') ||
       !Number.isInteger(amountTotal) ||
       amountTotal <= 0 ||
       !/^[A-Z]{3}$/.test(currency)
@@ -2171,7 +2298,7 @@
     renderPage(kind, lang, sessionId);
     trackPage(kind, lang, sessionId);
 
-    if (kind === "success") {
+    {
       const copy = getCopy(lang);
       const refreshButton = document.getElementById("nmRefreshStatus");
 
@@ -2186,7 +2313,8 @@
       }
 
       loadReportStatus(sessionId, copy, 1);
-    } else {
+    }
+    if (kind !== "success") {
       trackOnce("checkout_recovery_view", {
         lang,
         page_kind: "checkout_cancel"

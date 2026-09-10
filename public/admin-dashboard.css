@@ -1347,6 +1347,26 @@ input:focus {
   color: #fff;
 }
 
+.payment-review-form {
+  display: grid;
+  gap: 12px;
+  width: 280px;
+  max-width: 100%;
+  padding-block: 12px;
+}
+
+.payment-review-form textarea {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  resize: vertical;
+  font: inherit;
+}
+
+.payment-review-form input[type="checkbox"] {
+  width: auto;
+}
+
 .table-wrap {
   overflow-x: auto;
 }

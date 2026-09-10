@@ -2589,13 +2589,15 @@ export async function retryAnalysis(req, res) {
       });
     }
 
-    await markAnalysisQueued(sessionId);
-    await enqueueAnalysisJob(sessionId);
+    const job = await enqueueAnalysisJob(sessionId, { manualRetry: true });
+    if (!job) return res.status(409).json({ ok: false, code: 'ANALYSIS_REVIEW_REQUIRED',
+      error: 'Az újrapróbálási keret elfogyott, vagy az adatfeldolgozás korlátozott. Kézi ellenőrzés szükséges.' });
+    if (job.status === 'queued') await markAnalysisQueued(sessionId);
 
     return res.status(200).json({
       ok: true,
       sessionId,
-      analysisStatus: "queued"
+      analysisStatus: job.status
     });
   } catch (error) {
     console.error("Admin retry analysis error:", error);
