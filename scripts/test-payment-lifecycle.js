@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { randomBytes } from 'node:crypto';
+import { readFile } from 'node:fs/promises';
 import { PGlite } from '@electric-sql/pglite';
 import { pgcrypto } from '@electric-sql/pglite/contrib/pgcrypto';
 import Stripe from 'stripe';
@@ -18,6 +19,7 @@ let creates = 0;
 let loseNextResponse = false;
 const stripePrototype = Object.getPrototypeOf(new Stripe('sk_test_fixture').checkout.sessions);
 stripePrototype.create = async (params, options) => {
+  assert.equal(params.invoice_creation?.enabled, false, 'Stripe must not issue a second invoice');
   if (provider.has(options.idempotencyKey)) return provider.get(options.idempotencyKey);
   creates += 1;
   const result = { id: 'cs_test_' + creates, object: 'checkout.session', status: 'open', payment_status: 'unpaid',
@@ -75,6 +77,14 @@ const start = session => withCheckoutConsent(session.id,(locked,executor)=>start
 try {
   await test('all migrations apply on isolated PostgreSQL',runMigrations);
   await test('migration replay is idempotent',runMigrations);
+  const runtimeRole = process.argv.find(arg=>arg.startsWith('--runtime-role='))?.split('=')[1];
+  if (runtimeRole) {
+    assert.ok(['neuromap_web_runtime','neuromap_worker_runtime'].includes(runtimeRole));
+    await pg.exec(await readFile(new URL('../ops/database/runtime-grants.sql',import.meta.url),'utf8'));
+    await pg.exec(`SET SESSION AUTHORIZATION ${runtimeRole}`);
+    const { verifyRuntimeDatabase } = await import('../src/db/startup.js');
+    await test('least-privilege runtime schema verification',()=>verifyRuntimeDatabase());
+  }
   const first = await order();
   await test('lost HTTP response resumes the same consent-bound order', async () => {
     const resumed=await createConsentedSession(first.input,first.receipt,confirmations);

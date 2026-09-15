@@ -225,6 +225,8 @@ export async function createCheckoutSession({
   return stripe.checkout.sessions.create(
     {
       mode: "payment",
+      // Szamlazz.hu is the sole invoice issuer for this checkout flow.
+      invoice_creation: { enabled: false },
       payment_method_types: ["card"],
       client_reference_id: internalSessionId,
       customer_email: email,

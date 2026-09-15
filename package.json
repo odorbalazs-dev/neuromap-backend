@@ -8,6 +8,8 @@
     "dev": "node --watch src/app/server.js",
     "worker": "node src/jobs/analysis.worker.js",
     "railway:start": "node scripts/railway-start.js",
+    "db:migrate": "node scripts/migrate.js",
+    "test:database-privileges": "node scripts/test-database-privileges.js",
     "audit:banks": "node scripts/audit-banks.js",
     "audit:bank-quality": "node scripts/audit-bank-quality.js",
     "audit:engine-selection": "node scripts/audit-engine-selection.js",

@@ -8,6 +8,20 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const MIGRATIONS_DIR = join(__dirname, "migrations");
 const MIGRATION_LOCK_ID = 719_420_613;
 
+export async function verifyAppliedMigrations(client) {
+  const files = (await readdir(MIGRATIONS_DIR)).filter(file => file.endsWith(".sql")).sort();
+  if (!files.length) throw new Error("DATABASE_MIGRATION_MANIFEST_EMPTY");
+  const result = await client.query("SELECT filename, checksum FROM public.schema_migrations");
+  const applied = new Map(result.rows.map(row => [row.filename, row.checksum]));
+  for (const file of files) {
+    const checksum = createHash("sha256").update(await readFile(join(MIGRATIONS_DIR, file))).digest("hex");
+    if (applied.get(file) !== checksum) {
+      throw new Error(`DATABASE_MIGRATION_REQUIRED: ${file}`);
+    }
+  }
+  return files.length;
+}
+
 export async function runMigrations() {
   console.log("[migrate] Starting database migrations...");
 

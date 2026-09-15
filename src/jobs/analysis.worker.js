@@ -2,7 +2,7 @@ import { requeueStaleJobs } from "../services/analysis-queue.service.js";
 import { processNextAnalysisJob } from "../services/analysis-job.service.js";
 
 import { env } from "../config/env.js";
-import { runMigrations } from "../db/migrate.js";
+import { initializeDatabase } from "../db/startup.js";
 import { db } from "../db/db.js";
 import { runDueOperationalTasks } from "../services/operational-scheduler.service.js";
 import { processNextPostPaymentTask } from "../services/post-payment-outbox.service.js";
@@ -138,7 +138,7 @@ async function main() {
     source: env.SERVICE_ROLE_SOURCE
   });
 
-  await runMigrations();
+  await initializeDatabase();
   await workerLoop();
   await db.close();
 }

@@ -67,6 +67,12 @@ jobs:
           node scripts/smoke-invoice-payment-policy.js
           npm run test:payment-lifecycle
 
+      - name: Least-privilege database checks
+        run: |
+          npm run test:database-privileges
+          npm run test:payment-lifecycle -- --runtime-role=neuromap_web_runtime
+          npm run test:payment-lifecycle -- --runtime-role=neuromap_worker_runtime
+
       - name: Isolated PostgreSQL integration
         env:
           DATABASE_TEST_URL: postgresql://postgres:local-ci-only@127.0.0.1:5432/neuromap_ci

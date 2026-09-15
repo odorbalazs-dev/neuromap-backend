@@ -4,7 +4,7 @@ import compression from "compression";
 
 import { env } from "../config/env.js";
 import { db } from "../db/db.js";
-import { runMigrations } from "../db/migrate.js";
+import { initializeDatabase } from "../db/startup.js";
 import {
   createRateLimit,
   securityHeaders
@@ -196,7 +196,7 @@ let server = null;
 let shutdownStarted = false;
 
 async function start() {
-  await runMigrations();
+  await initializeDatabase();
 
   server = app.listen(Number(env.PORT), () => {
     console.log(`Server running on port ${env.PORT}`);
