@@ -31,6 +31,7 @@
     "smoke:legal-governance": "node scripts/smoke-legal-governance.js",
     "smoke:privacy-rights": "node scripts/smoke-privacy-rights.js",
     "smoke:launch-gate": "node scripts/smoke-launch-gate.js",
+    "smoke:landing-start-gate": "node scripts/smoke-landing-start-gate.js",
     "smoke:checkout-pages": "node scripts/smoke-checkout-pages.js",
     "smoke:analysis-report": "node scripts/smoke-analysis-report-contract.js",
     "smoke:email-idempotency": "node scripts/smoke-email-idempotency.js",

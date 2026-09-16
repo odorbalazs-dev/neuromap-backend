@@ -63,6 +63,7 @@ jobs:
       - name: Go-live unit checks
         run: |
           npm run smoke:consent-security
+          npm run smoke:landing-start-gate
           node scripts/smoke-go-live.js
           node scripts/smoke-invoice-payment-policy.js
           npm run test:payment-lifecycle

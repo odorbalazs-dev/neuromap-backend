@@ -1,5 +1,14 @@
 # Uzemeletetes es deployment
 
+## 2026-09-16 indulasi dontes
+
+A tulajdonos kerte a szakmai/klinikai felulvizsgalat kulon indulasi kovetelmenyenek
+eltavolitasat. A helyi `launch-gate.service.js` mar nem ker klinikai jovahagyast;
+ez nem elvegzett vagy sikeres klinikai validalas. A jogi, DPIA, adatfeldolgozoi,
+hozzajarulasi, biztonsagi, adozasi es checkout-kapuk tovabbra is ervenyesek.
+A modositas eles telepiteset kulon igazolni kell; a szerkesztes nem deployment.
+Aktualis szolgaltatoi pontositas: `docs/VENDOR_AND_TRANSFER_REGISTER.md`.
+
 ## Railway topologia
 
 Egy Railway projecten belul harom fontos service van:
@@ -190,7 +199,6 @@ LAUNCH_GATE_ENFORCED
 PRODUCTION_CHECKOUT_ENABLED
 LEGAL_REVIEW_APPROVED
 DPIA_APPROVED
-CLINICAL_CONTENT_REVIEW_APPROVED
 PRIVACY_POLICY_PUBLISHED
 TERMS_PUBLISHED
 CONSENT_MANAGER_CONFIGURED

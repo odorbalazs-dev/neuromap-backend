@@ -4,7 +4,6 @@ import { isInvoiceTaxPolicyValid } from '../config/invoice.js';
 const REQUIRED_APPROVALS = [
   ["legal_review", "LEGAL_REVIEW_APPROVED", "LEGAL_REVIEW_EVIDENCE"],
   ["dpia", "DPIA_APPROVED", "DPIA_EVIDENCE"],
-  ["clinical_content_review", "CLINICAL_CONTENT_REVIEW_APPROVED", "CLINICAL_CONTENT_REVIEW_EVIDENCE"],
   ["privacy_policy", "PRIVACY_POLICY_PUBLISHED", "PRIVACY_POLICY_EVIDENCE"],
   ["terms", "TERMS_PUBLISHED", "TERMS_EVIDENCE"],
   ["consent_manager", "CONSENT_MANAGER_CONFIGURED", "CONSENT_MANAGER_EVIDENCE"],

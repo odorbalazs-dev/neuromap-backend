@@ -5030,7 +5030,9 @@
       notice.id = 'nmCheckoutAvailability';
       notice.setAttribute('role', 'status');
       notice.style.cssText = 'max-width:760px;margin:16px auto;padding:16px;color:#762e12;background:#fff4e8;border:1px solid #e8b988;border-radius:8px;';
-      const hero = document.getElementById('nmLanding') || document.getElementById('nmApp') || document.body;
+      const hero = document.querySelector('#nmSocialLanding .nm-hero') ||
+        document.getElementById('nmLanding') || document.getElementById('nmSocialLanding') ||
+        document.getElementById('nmApp') || document.body;
       hero.prepend(notice);
     }
     if (notice) { notice.hidden = available; notice.textContent = getCheckoutMaintenanceCopy(); }
@@ -5110,8 +5112,10 @@
       element.dataset.nmEngineStartBound = "1";
       element.addEventListener("click", (event) => {
         event.preventDefault();
+        // Legacy Webflow handlers must not open the form before the async gates finish.
+        event.stopImmediatePropagation();
         void showQuestionnaireFromLanding();
-      });
+      }, true);
     });
   }
 

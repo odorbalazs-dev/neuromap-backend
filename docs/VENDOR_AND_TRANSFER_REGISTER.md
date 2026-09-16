@@ -2,13 +2,39 @@
 
 > **Status: controller evidence working paper - not a vendor approval record**
 >
-> Version: 2026-07-26-draft-4
-> Public-source review date: 2026-07-26
+> Version: 2026-09-16-draft-6
+> Public-source review dates: 2026-07-26 baseline; 2026-09-16 targeted update below
 > Scope: the production questionnaire, payment, report, email, invoice, frontend and optional marketing measurement flows.
 
 This register records what can be supported by current public vendor documents and what still requires account-level, contractual or configuration evidence from the controller. A public privacy page, trust-centre badge or standard DPA does **not** prove that the NeuroMap Kids account has accepted the relevant terms, uses the reviewed region and retention settings, or is contractually permitted to submit intentionally collected child-related health inferences.
 
 The controller must preserve signed or accepted agreements, account exports and dated screenshots in its own controlled evidence repository. Links below are references, not archived copies of the source documents.
+
+## 2026-09-16 clarification and decision
+
+This section supersedes an implication in the baseline that every processor needs a separately signed, bespoke DPA. An incorporated, electronically accepted agreement can provide the required contractual arrangement. Establish the account/entity, applicable version, acceptance mechanism and actual processing scope; do not mistake a provider's blank template for customer acceptance.
+
+**Owner's subsequent scope decision (2026-09-16):** remove requests for individual provider confirmation letters and bespoke signed certificates from the active launch task list. Their status is **not pursued**, not **received**, **approved** or **legally unnecessary**. Use the existing published/incorporated terms and account records for the controller's review. No automatic vendor-approval flag or checkout activation follows from this administrative decision. A material mismatch between the documented processing scope and actual data flow remains a recorded risk; it can be addressed by a supported interpretation of the existing terms or by changing the data flow, without an open-ended task to obtain a special letter.
+
+| Provider | Current public evidence | What remains to be linked or resolved |
+| --- | --- | --- |
+| OpenAI | [DPA](https://openai.com/policies/data-processing-addendum/), effective 2026-01-01, incorporated into the services agreement | Production organization/entity and applicable acceptance; Schedule 1 sensitive-data description versus intentional questionnaire inferences; actual retention and regional settings |
+| Railway | [DPA](https://railway.com/legal/dpa) and [execution guidance](https://docs.railway.com/enterprise/compliance) | Account-specific execution/acceptance and processing schedule; the public sensitive-data category remains `None` |
+| Resend | [DPA](https://resend.com/legal/dpa), updated 2026-08-27; binding through agreement acceptance or execution. Authenticated Documents page also states sign-up executes the provider-signed version | The existence/acceptance mechanism is now evidenced in-account. Company/entity linkage and sensitive PDF coverage remain distinct questions: Exhibit A still lists sensitive data as not applicable |
+| Stripe | [DPA FAQ](https://stripe.com/legal/dpa/faqs): DPA forms part of the Services Agreement | Retain the business account's accepted terms/version and transfer record; no new bespoke signature inferred as mandatory |
+| Webflow | [DPA](https://webflow.com/legal/dpa) reviewed | Tie applicable version to workspace/entity and confirm questionnaire data remain outside Forms, CMS and tracking |
+| Backblaze B2 | [DPA explanation](https://help.backblaze.com/hc/en-us/articles/360004146953-Data-Processing-Addendum) and [EEA DPA](https://www.backblaze.com/company/policy/dpa-for-eea-eu-residents) | Owner has stated that the account and terms are in the company's name. Preserve that statement with account, region, terms and retention evidence; encrypted backups do not become anonymous merely through encryption |
+| Google Workspace | [Cloud Data Processing Addendum](https://cloud.google.com/terms/data-processing-addendum/) reached from the Workspace DPA link | Archive the actual tenant's agreement/acceptance and recovery/access controls. Include support mail and any encrypted recovery-file storage in the inventory, separately from Analytics |
+| Squarespace | [DPA](https://www.squarespace.com/dpa), effective 2026-07-15, forms part of the Terms | Tie the public landing/domain account to the company and terms; do not submit questionnaire answers to its forms/chat/analytics |
+| Szamlazz.hu | Existing [terms](https://www.szamlazz.hu/aszf/) and [privacy](https://www.szamlazz.hu/adatvedelem/) references | Automated re-fetch returned HTTP 403 on 2026-09-16, so no new version verification is claimed; use the authenticated account's accepted documents |
+
+The original lawyer-authored notice, the later expanded working notice and provider agreements are different evidence types. A statement that counsel reviewed the notice is recorded as the owner's statement, not a forged provider acceptance or independent certification. Retain any written counsel conclusion with its exact scope and document identifiers.
+
+The owner has approved the DPIA in conversation. That decision is retained; it does not by itself resolve missing processor scope/account evidence. `VENDOR_DPA_REVIEWED` must not be switched on until the applicable arrangement and its coverage are supported.
+
+The owner has chosen not to commission professional/clinical review. The corresponding operational launch-gate requirement is removed in the local code on 2026-09-16, not marked as passed. Non-diagnostic limitations and the prohibition on unsupported clinical-validation claims remain. This is not a conclusion about medical-device classification or legal compliance.
+
+Detailed account findings and evidence files belong in the controller's private evidence repository, not the public GitHub repository. The operational evidence package for this review is kept in the ignored local `work/launch-closure-2026-09-16/` directory; arrange controlled off-machine retention before relying on it as a durable archive.
 
 ## 1. Production data-flow inventory
 
@@ -16,7 +42,7 @@ The controller must preserve signed or accepted agreements, account exports and 
 | --- | --- | --- | --- |
 | Railway | API, worker, PostgreSQL database and runtime hosting | adult contact data; questionnaire answers; child-related observations and inferred screening results; reports; consent and operational records | **Launch blocker unresolved:** standard DPA schedule describes no intended sensitive/special-category data |
 | OpenAI API | Generates the narrative report from structured questionnaire context | translated question text and answers; detected focus/secondary focus; scoring, ranking, profile, age context and report instructions; no billing data required | **Launch blocker unresolved:** standard DPA schedule does not describe intentional sensitive-data submission; account retention and region evidence missing |
-| Resend | Sends transactional report email and PDF attachment | adult recipient email; localized message; personalized PDF containing child-related observations and inferences; delivery metadata | **High-risk evidence gap:** written confirmation or contracted coverage for the sensitive attachment is missing |
+| Resend | Sends transactional report email and PDF attachment | adult recipient email; localized message; personalized PDF containing child-related observations and inferences; delivery metadata | **Scope review open:** evaluate sensitive-attachment coverage under existing terms or a secure-link alternative; no individual confirmation-letter task |
 | Stripe | Checkout, payment, tax/billing collection and webhook | adult email and billing data; package, amount, currency; internal session reference; language; no questionnaire answers or report content | Conditional approval only after account/DPA/security evidence |
 | Számlázz.hu / KBOSS.hu Kft. | Invoice generation | adult invoice name, email, address and tax data; paid amount/currency; product description; Stripe and internal transaction references; no questionnaire content | Conditional approval only after role, contract and retention evidence |
 | Webflow | Public frontend and script/embed delivery | intended: page requests, consent state and non-sensitive frontend telemetry only; questionnaire payload should post directly to Railway | Conditional approval only after network/form/analytics inspection proves exclusion of questionnaire data |
@@ -30,7 +56,7 @@ The controller must preserve signed or accepted agreements, account exports and 
 - **Account evidence:** dated screenshot/export of the actual production account, entity, region, retention, training/data-use, tracking, access-control and notification settings.
 - **Contract evidence:** executed or electronically accepted DPA/terms, correct contracting entity, service schedule, SCC/UK addendum where relevant and any negotiated sensitive-data wording.
 - **Operational evidence:** network capture, payload sample, deletion/export test, restore test, access review, breach-contact test and subprocessor-change monitoring.
-- **Launch blocker:** the DPIA must not be approved until the issue is closed or the data flow is redesigned so the vendor no longer receives the affected data.
+- **Launch blocker:** the affected production data flow remains blocked until the evidence gap is closed or the flow is redesigned. A recorded owner DPIA approval does not automatically close this separate check.
 
 ## 3. Core processor due diligence
 
@@ -42,7 +68,7 @@ The controller must preserve signed or accepted agreements, account exports and 
 
 **Finding.** That standard schedule does not match the intentional production processing of child-related health-like observations and inferences. General infrastructure security statements do not cure a scope mismatch in the processing description.
 
-**Required private evidence before approval.** Executed DPA and service schedule; written Railway confirmation or negotiated schedule expressly covering the actual categories and data subjects; production region; infrastructure/subprocessor chain; access and MFA evidence; database encryption; backup retention/deletion and restore evidence; incident contact/SLA; SCC module and transfer impact assessment; termination/export/deletion procedure.
+**Existing-document and configuration review.** Applicable DPA/service schedule and account acceptance mechanism; controller's assessment of the actual categories and data subjects against those terms; production region; infrastructure/subprocessor chain; access and MFA evidence; database encryption; backup retention/deletion and restore evidence; incident contact/SLA; SCC module and transfer impact assessment; termination/export/deletion procedure. A request for a new individual Railway confirmation or negotiated certificate is not an active task.
 
 **Decision.** Launch blocker until the contract/schedule is aligned or the sensitive data is moved to an approved architecture.
 
@@ -54,7 +80,7 @@ The controller must preserve signed or accepted agreements, account exports and 
 
 **Finding.** The production prompt intentionally contains potentially Article 9 health-related observations/inferences. Default no-training language is valuable but is not the same as zero retention, an approved region, or contractual permission for the intended sensitive-data category.
 
-**Required private evidence before approval.** Executed DPA with the correct entity; written/custom coverage for the actual sensitive categories and child data subject; production project screenshots/exports showing model, region, data-sharing/training status, retention, `store` behaviour and any Modified Abuse Monitoring or Zero Data Retention approval; current subprocessor notice subscription; SCC/TIA; access/MFA and API-key rotation evidence; prompt/payload minimization sample; model/change-control owner.
+**Existing-document and configuration review.** Applicable DPA and correct entity; controller's assessment of the sensitive categories/data subjects against the existing schedule; production project screenshots/exports showing model, region, data-sharing/training status, retention and `store` behaviour; evidence for Modified Abuse Monitoring or Zero Data Retention only if actually enabled/claimed; current subprocessor notice subscription; SCC/TIA; access/MFA and API-key rotation evidence; prompt/payload minimization sample; model/change-control owner. No task remains to obtain an individual confirmation letter or bespoke certificate.
 
 **Decision.** Launch blocker until the DPA scope and production data-control configuration are evidenced.
 
@@ -66,7 +92,7 @@ The controller must preserve signed or accepted agreements, account exports and 
 
 **Finding.** A public DPA and security page do not establish that the production account has accepted the DPA or that sending a special-category report as an email attachment is within the contracted, suitable use. Email misdelivery has high impact and an attachment persists outside the controller's system.
 
-**Required private evidence before approval.** Accepted/executed DPA; contracting entity; written suitability/coverage for the report attachment; production account MFA/access list; tracking/open/click settings; log/content retention; subprocessor notice subscription; SCC/TIA; bounce/suppression/deletion process; incident contact; misdelivery correction process. Prefer a short-lived authenticated download link over a full sensitive attachment if suitable contractual coverage is not obtained.
+**Existing-document and configuration review.** Incorporated DPA and contracting entity; controller's assessment of report attachments against the existing terms; production account MFA/access list; tracking/open/click settings; log/content retention; subprocessor notice subscription; SCC/TIA; bounce/suppression/deletion process; incident contact; misdelivery correction process. An individual suitability-letter request is removed. A short-lived authenticated download link is an architectural alternative when the existing terms do not support the intended attachment flow.
 
 **Decision.** High-risk evidence gap; block sensitive attachments until closed or replace attachment delivery with a controlled secure-link design.
 
@@ -134,7 +160,7 @@ TikTok remains outside the approved production flow. Adding a pixel, Events API,
 
 For each core vendor, store the following under a controlled evidence ID rather than only a web link:
 
-1. signed or electronically accepted agreement/DPA, acceptance date and contracting entity;
+1. applicable incorporated or electronically accepted agreement/DPA, acceptance mechanism, available acceptance date and contracting entity; a separate signature is not universally required;
 2. service schedule that accurately lists data subjects and categories, including intentional Article 9-like data where applicable;
 3. production region and transfer-mechanism record, SCC module and dated TIA;
 4. current subprocessor list plus change-notification subscription;
@@ -187,7 +213,7 @@ All sources below were accessed or rechecked on 2026-07-26. The controller must 
 
 ## 7. Approval and change control
 
-No row is approved merely because public evidence exists. The privacy owner, security owner, service owner and controller must sign the vendor record after the required private evidence is attached. Railway and OpenAI scope mismatches, and Resend's sensitive-attachment suitability, must be resolved before the DPIA can be approved.
+No row is approved merely because public evidence exists. The accountable controller must record its approval after the relevant contract, account and scope evidence is attached. Role owners may be the same person in a small company; multiple invented signatures are not required. Railway and OpenAI scope questions, and Resend's sensitive-attachment suitability, remain separate from the owner's recorded DPIA approval.
 
 A new model, region, subprocessor, telemetry feature, email-delivery method, Webflow embed, marketing tag or fallback provider is a material vendor change. Block production use until this register, the ROPA, privacy notice, transfer assessment and DPIA are reviewed. At least annually, verify that every link and account setting remains current and that actual network traffic still matches the approved data flow.
 
@@ -197,4 +223,4 @@ This register is an internal working paper. It records implementation evidence a
 
 The following statements must not appear on the landing page, report, checkout, email or advertising unless the corresponding signed and dated independent evidence is retained and linked from the approval record: "GDPR certified", "legally approved", "clinically validated", "psychometrically validated", "medical-grade", "secure/penetration-tested", "WCAG compliant", or an equivalent translated claim.
 
-Public claims may describe only verifiable product behavior, for example that the output is a non-diagnostic screening summary, that a privacy-rights request uses email verification, or that the controller has implemented specified technical controls. Final approval requires the independent validation activities listed in `docs/INDEPENDENT_VALIDATION_PLAN.md`.
+Public claims may describe only verifiable product behavior, for example that the output is a non-diagnostic screening summary, that a privacy-rights request uses email verification, or that the controller has implemented specified technical controls. The historical `docs/INDEPENDENT_VALIDATION_PLAN.md` records recommendations, not proof that the activities occurred; apply the dated scope decision above to the operational clinical-review item.
