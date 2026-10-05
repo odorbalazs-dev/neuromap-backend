@@ -1,5 +1,6 @@
 import { db } from "../db/db.js";
 import { sendContractConfirmationEmail } from "./email.service.js";
+import { buildContractEvidence } from "./contract-evidence.service.js";
 
 function normalizeInteger(value, fallback, min, max) {
   const number = Number(value);
@@ -64,6 +65,9 @@ export async function sendContractConfirmationForSession(sessionId, options = {}
   const attempt = Number(claimed.contract_confirmation_attempts || 0);
 
   try {
+    const archived = await db.query('SELECT * FROM legal_document_revisions WHERE revision_id = $1',
+      [claimed.consent_record?.documentRevisionId || null]);
+    const legalEvidence = buildContractEvidence(claimed, archived.rows[0]);
     const response = await sendContractConfirmationEmail({
       to: claimed.email,
       lang: claimed.lang,
@@ -72,7 +76,8 @@ export async function sendContractConfirmationForSession(sessionId, options = {}
       packageCode: claimed.package_code,
       amountTotal: claimed.amount_total,
       currency: claimed.currency,
-      paidAt: claimed.paid_at
+      paidAt: claimed.paid_at,
+      legalEvidence
     });
 
     await db.query(
@@ -97,6 +102,8 @@ export async function sendContractConfirmationForSession(sessionId, options = {}
       providerId: providerId(response)
     };
   } catch (error) {
+    const errorCode = error?.message === 'CONTRACT_EVIDENCE_UNAVAILABLE'
+      ? 'CONTRACT_EVIDENCE_UNAVAILABLE' : 'CONTRACT_CONFIRMATION_SEND_FAILED';
     await db.query(
       `
       UPDATE sessions
@@ -107,14 +114,14 @@ export async function sendContractConfirmationForSession(sessionId, options = {}
         AND contract_confirmation_status = 'sending'
         AND contract_confirmation_attempts = $2::int
       `,
-      [claimed.id, attempt, error?.message || "Contract confirmation failed"]
+      [claimed.id, attempt, errorCode]
     );
 
     return {
       sessionId: claimed.id,
       status: "failed",
       attempt,
-      error: error?.message || "Contract confirmation failed"
+      error: errorCode
     };
   }
 }

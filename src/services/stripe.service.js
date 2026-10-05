@@ -1,6 +1,7 @@
 import Stripe from "stripe";
 import { env } from "../config/env.js";
 import { getProductPackage } from "../config/products.js";
+import { MANAGED_PAYMENTS_API_VERSION, managedPaymentsTestEnabled, validateManagedTestPrice } from './managed-payments-policy.js';
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
   apiVersion: "2024-06-20",
@@ -193,6 +194,13 @@ export async function createCheckoutSession({
   const safeLang = getSafeLang(lang);
   const productPackage = getProductPackage(requestedPackage?.code || requestedPackage);
   const { lineItem, stripePriceId } = buildLineItem({ productPackage, lang: safeLang });
+  const managedTest = managedPaymentsTestEnabled(env);
+  if (managedTest) {
+    if (!stripePriceId) throw new Error('MANAGED_PAYMENTS_PRICE_REQUIRED');
+    const price = await stripe.prices.retrieve(stripePriceId, { expand: ['product'] },
+      { apiVersion: MANAGED_PAYMENTS_API_VERSION });
+    validateManagedTestPrice(price, productPackage);
+  }
   const successUrl = appendSessionAccessFragment(
     `${getLocalizedSuccessUrl(safeLang)}?session_id={CHECKOUT_SESSION_ID}`,
     { internalSessionId, sessionAccessToken, includeSessionIdentifier: false }
@@ -225,13 +233,15 @@ export async function createCheckoutSession({
   return stripe.checkout.sessions.create(
     {
       mode: "payment",
-      // Szamlazz.hu is the sole invoice issuer for this checkout flow.
-      invoice_creation: { enabled: false },
-      payment_method_types: ["card"],
+      // Standard checkout uses Szamlazz.hu; Managed Payments owns its invoices.
+      ...(managedTest ? { managed_payments: { enabled: true } } : {
+        invoice_creation: { enabled: false },
+        payment_method_types: ["card"],
+        tax_id_collection: { enabled: true }
+      }),
       client_reference_id: internalSessionId,
       customer_email: email,
       billing_address_collection: "required",
-      tax_id_collection: { enabled: true },
       line_items: [lineItem],
       locale: getStripeCheckoutLocale(safeLang),
       success_url: successUrl,
@@ -240,11 +250,12 @@ export async function createCheckoutSession({
       payment_intent_data: { metadata }
     },
     {
+      ...(managedTest ? { apiVersion: MANAGED_PAYMENTS_API_VERSION } : {}),
       idempotencyKey: buildCheckoutIdempotencyKey({
         internalSessionId,
         productPackage,
         checkoutAttempt
-      })
+      }) + (managedTest ? '-managed-test' : '')
     }
   );
 }

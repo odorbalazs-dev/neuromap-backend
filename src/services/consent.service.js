@@ -112,6 +112,7 @@ function toConsentSnapshot(row) {
     termsVersion: row.terms_version,
     consentPolicyVersion: row.consent_policy_version,
     documentRevisionId: row.evidence?.documentRevisionId || null,
+    purchaseConfirmedAt: row.evidence?.purchaseConfirmedAt || null,
     consentedAt: new Date(row.consented_at).toISOString(),
     source: row.source
   };

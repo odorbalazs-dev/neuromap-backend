@@ -2,6 +2,8 @@
 
 Version: `2026-07-26-v1`
 
+Historical register: consult `CONSUMER_PRIVACY_REMEDIATION_2026-09-30.md` for the later implementation and evidence reconciliation. Do not interpret every external review listed below as an unconditional statutory requirement or as a fresh finding about production.
+
 This register distinguishes internal implementation evidence from independent approval. Blank evidence or signature fields mean the item remains open.
 
 | Evidence ID | Area | Current engineering evidence | Independent validator | Required signed evidence | Status |

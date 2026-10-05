@@ -290,6 +290,20 @@ const COPY = {
   }
 };
 
+const ATTACHMENT_NOTE = {
+  hu: 'Az elfogadott jogi dokumentumokat és a vásárlási nyilatkozatok bizonylatát mellékeltük. Őrizd meg a mellékleteket is.',
+  en: 'The accepted legal documents and purchase declaration receipt are attached. Please retain the attachments.',
+  de: 'Die akzeptierten rechtlichen Dokumente und der Beleg Ihrer Kauferklärungen sind beigefügt. Bitte bewahren Sie die Anhänge auf.',
+  it: 'Sono allegati i documenti legali accettati e la ricevuta delle dichiarazioni di acquisto. Conserva gli allegati.',
+  es: 'Se adjuntan los documentos legales aceptados y el comprobante de las declaraciones de compra. Conserva los archivos adjuntos.',
+  fr: 'Les documents juridiques acceptés et le justificatif des déclarations d’achat sont joints. Conservez les pièces jointes.',
+  pt: 'Os documentos legais aceites e o comprovativo das declarações de compra estão anexados. Guarda os anexos.',
+  pl: 'Załączono zaakceptowane dokumenty prawne oraz potwierdzenie oświadczeń zakupowych. Zachowaj załączniki.',
+  ja: '同意した法的文書と購入時の意思表示の記録を添付しています。添付ファイルも保管してください。',
+  zh: '已附上您接受的法律文件和购买声明记录。请保留附件。',
+  ar: 'أرفقنا المستندات القانونية التي وافقت عليها وسجل إقرارات الشراء. يرجى الاحتفاظ بالمرفقات.'
+};
+
 function escapeHtml(value) {
   return String(value ?? "")
     .replaceAll("&", "&amp;")
@@ -344,10 +358,12 @@ export function buildContractConfirmationEmail({
   termsVersion,
   privacyUrl,
   privacyVersion,
-  privacyContact
+  privacyContact,
+  performanceText
 }) {
   const safeLang = Object.hasOwn(COPY, lang) ? lang : "en";
-  const copy = COPY[safeLang];
+  const copy = { ...COPY[safeLang], performance: performanceText || COPY[safeLang].performance };
+  const performance = copy.performance;
   const isPlus = packageCode === "plus_v1";
   const packageName = isPlus ? copy.plusName : copy.standardName;
   const items = isPlus ? copy.plusItems : copy.standardItems;
@@ -363,7 +379,7 @@ export function buildContractConfirmationEmail({
   const termsDocument = policyLink(termsUrl, copy.terms, termsVersion);
   const privacyDocument = policyLink(privacyUrl, copy.privacy, privacyVersion);
 
-  return {
+  const message = {
     subject: copy.subject,
     html: `<!doctype html>
       <html lang="${safeLang}" dir="${direction}">
@@ -385,13 +401,14 @@ export function buildContractConfirmationEmail({
               <ul style="margin:0 0 20px;padding-inline-start:22px;line-height:1.55;">${itemHtml}</ul>
               <section style="margin:18px 0;padding:16px;border:1px solid #f1d6b7;border-left:5px solid #ff7a00;border-radius:6px;background:#fff9f2;">
                 <h2 style="margin:0 0 8px;font-size:17px;">${escapeHtml(copy.performanceTitle)}</h2>
-                <p style="margin:0;line-height:1.62;font-size:14px;">${escapeHtml(copy.performance)}</p>
+                <p style="margin:0;line-height:1.62;font-size:14px;">${escapeHtml(performance)}</p>
               </section>
               <section style="margin:18px 0;padding:16px;border:1px solid #cfe7f3;border-left:5px solid #72be00;border-radius:6px;background:#f4fbff;">
                 <h2 style="margin:0 0 8px;font-size:17px;">${escapeHtml(copy.informationTitle)}</h2>
                 <p style="margin:0;line-height:1.62;font-size:14px;">${escapeHtml(copy.information)}</p>
               </section>
               <h2 style="margin:24px 0 10px;font-size:17px;">${escapeHtml(copy.policies)}</h2>
+              <p>${escapeHtml(ATTACHMENT_NOTE[safeLang])}</p>
               <p style="margin:7px 0;line-height:1.5;">${termsDocument}</p>
               <p style="margin:7px 0;line-height:1.5;">${privacyDocument}</p>
               <p style="margin:22px 0 5px;line-height:1.55;font-size:13px;color:#52677d;">${escapeHtml(copy.contact)}: <a href="mailto:${escapeHtml(contact)}" style="color:#0877a7;">${escapeHtml(contact)}</a></p>
@@ -402,4 +419,6 @@ export function buildContractConfirmationEmail({
       </html>`,
     text: `${copy.title}\n\n${greeting}\n${copy.intro}\n\n${copy.order}\n${copy.package}: ${packageName}\n${copy.amount}: ${amount}\n${copy.date}: ${purchaseDate}\n${copy.reference}: ${sessionId}\n\n${copy.includes}\n${itemText}\n\n${copy.performanceTitle}\n${copy.performance}\n\n${copy.informationTitle}\n${copy.information}\n\n${copy.policies}\n${copy.terms}: ${termsUrl || "-"} (${termsVersion || "-"})\n${copy.privacy}: ${privacyUrl || "-"} (${privacyVersion || "-"})\n\n${copy.contact}: ${contact}\n${copy.invoice}`
   };
+  message.text += `\n\n${ATTACHMENT_NOTE[safeLang]}`;
+  return message;
 }

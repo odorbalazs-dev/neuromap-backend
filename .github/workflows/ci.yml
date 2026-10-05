@@ -67,6 +67,8 @@ jobs:
           node scripts/smoke-go-live.js
           node scripts/smoke-invoice-payment-policy.js
           npm run test:payment-lifecycle
+          npm run test:contract-evidence
+          npm run test:managed-payments
 
       - name: Least-privilege database checks
         run: |

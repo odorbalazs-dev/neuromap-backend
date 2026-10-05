@@ -242,5 +242,33 @@ try {
     assert.equal((await read(input.session.id)).invoice_status,'processing');
     assert.equal((await query('SELECT status FROM invoices WHERE session_id=$1',[input.session.id])).rows[0].status,'processing');
   });
+  await test('accepted contract survives JSONB round-trip and contains checkout confirmation time', async () => {
+    const { buildContractEvidence } = await import('../src/services/contract-evidence.service.js');
+    const item = await order();
+    const stored = await read(item.session.id);
+    const revision = (await query('SELECT * FROM legal_document_revisions WHERE revision_id=$1',
+      [stored.consent_record.documentRevisionId])).rows[0];
+    assert.ok(stored.consent_record.purchaseConfirmedAt);
+    assert.equal(buildContractEvidence(stored, revision).attachments.length, 2);
+  });
+  await test('sensitive erasure removes payload and access and cancels pending outbox work', async () => {
+    const { eraseSessionSensitiveData } = await import('../src/services/data-governance.service.js');
+    const item = await order();
+    const checkout = await start(item.session);
+    checkout.payment_status='paid';checkout.status='complete';checkout.payment_intent='pi_erasure_fixture';
+    await fulfillVerifiedCheckout(checkout);
+    await eraseSessionSensitiveData(item.session.id, 'Synthetic erasure verification');
+    const erased = await read(item.session.id);
+    assert.deepEqual(erased.payload, {});
+    assert.deepEqual(erased.consent_record, {});
+    assert.equal(erased.name, '');
+    assert.equal(erased.public_access_token_hash, null);
+    assert.ok(erased.sensitive_data_erased_at);
+    assert.equal(erased.payment_status, 'paid', 'Erasure must not falsify financial history');
+    const tasks = (await query('SELECT * FROM post_payment_outbox WHERE session_id=$1', [item.session.id])).rows;
+    assert.ok(tasks.length);
+    assert.ok(tasks.every(task => task.status === 'failed' && task.last_error_code === 'DATA_ERASED' && Object.keys(task.payload).length === 0));
+    await assert.rejects(start(item.session));
+  });
   console.log(JSON.stringify({passed,isolatedPostgres:true,externalProviderCalls:0}));
 } finally { await pg.close(); await db.close(); }

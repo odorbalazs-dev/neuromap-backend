@@ -14,6 +14,7 @@ import { getSessionById } from "./session.service.js";
 import { getProductPackage } from "../config/products.js";
 import Stripe from "stripe";
 import { env } from "../config/env.js";
+import { MANAGED_INVOICE_EXCLUSION, isManagedCheckout } from './managed-payments-policy.js';
 import {
   TEST_INVOICE_EXCLUSION,
   isTestInvoicePayment,
@@ -375,6 +376,9 @@ export async function createInvoiceForPaidSession({
   if (!isVerifiedLiveInvoicePayment(session, checkoutSession)) {
     throw Object.assign(new Error("INVOICE_LIVE_PAYMENT_UNVERIFIED"), { terminal: true });
   }
+  if (isManagedCheckout(checkoutSession)) {
+    return markInvoiceSkipped(session.id, MANAGED_INVOICE_EXCLUSION);
+  }
   if (!checkoutSession?.customer_details?.address?.country) {
     throw new Error("INVOICE_BILLING_ADDRESS_MISSING");
   }
@@ -483,6 +487,7 @@ export async function retryInvoicesBatch({
           AND (o.payload->>'livemode' = 'false' OR LEFT(o.payload->>'id', 8) = 'cs_test_')
       )
       AND s.invoice_error IS DISTINCT FROM 'STRIPE_TEST_PAYMENT_EXCLUDED'
+      AND s.invoice_error IS DISTINCT FROM 'STRIPE_MANAGED_PAYMENT_INVOICE_EXCLUDED'
       AND COALESCE(s.invoice_status, 'pending') <> 'issued'
       AND s.processing_restricted_at IS NULL
       AND s.sensitive_data_erased_at IS NULL

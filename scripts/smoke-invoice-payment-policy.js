@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { MANAGED_INVOICE_EXCLUSION } from '../src/services/managed-payments-policy.js';
 import { TEST_INVOICE_EXCLUSION, isTestInvoicePayment, isVerifiedLiveInvoicePayment } from "../src/services/invoice-payment-policy.js";
 
 process.env.NODE_ENV = "test";
@@ -95,9 +96,18 @@ try {
   await createInvoiceForPaidSession({ session, checkoutSession: liveCheckout });
   assert.equal(providerCalls, 1, "An issued invoice must not be issued again");
 
+  reset();
+  const managedCheckout = { ...liveCheckout, managed_payments: { enabled: true } };
+  assert.equal((await createInvoiceForPaidSession({ session, checkoutSession: managedCheckout })).error_message, MANAGED_INVOICE_EXCLUSION);
+  assert.equal(providerCalls, 0, 'Managed Payments must never issue a Szamlazz.hu invoice');
+  reset(); snapshot = managedCheckout;
+  assert.equal((await createInvoiceForSessionId(session.id)).error_message, MANAGED_INVOICE_EXCLUSION);
+  assert.equal(providerCalls, 0, 'Manual/recovery paths must also exclude managed payments');
+
   reset(); await retryInvoicesBatch();
   assert.ok(batchSql.includes("LEFT(s.stripe_session_id, 8) = 'cs_live_'"));
   assert.ok(batchSql.includes("STRIPE_TEST_PAYMENT_EXCLUDED"));
+  assert.ok(batchSql.includes(MANAGED_INVOICE_EXCLUSION));
   assert.ok(batchSql.includes("o.payload->>'livemode' = 'false'"));
   assert.equal(providerCalls, 0);
   console.log("Invoice payment guard passed: test IDs/modes, manual retries, cached snapshots, unknown evidence, paid live issuance, idempotency and recovery selection.");
