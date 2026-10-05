@@ -43,6 +43,32 @@ No live checkout, refund, bank payout or tax approval is evidenced by unit tests
 
 ## Required before activation
 
+### Provisioning evidence, 2026-10-05
+
+- Created the EMPTY Railway environment `managed-payments-test`. A fresh
+  `Postgres-1Vfj` database is online; no production data was restored.
+- Created `neuromap-test-backend` and `neuromap-test-worker`. These are empty
+  service shells, not running deployments. Source, private test credentials,
+  public endpoint and webhook configuration remain outstanding.
+- Both services retain `PRODUCTION_CHECKOUT_ENABLED=false` and
+  `INVOICE_AUTO_CREATE=false`; the test-only Managed Payments flag is enabled.
+  The worker concurrency is 1. No production configuration was changed.
+- The existing Stripe sandbox now displays `Ready to use`. Default activation
+  remains off; no Managed Payments transaction has yet been executed.
+- Sandbox Standard: `prod_VO3wIxiD0plNj7`, price
+  `price_1UNHoEHNvQLFQQSmvlKIkHaY`, USD 7.99 one-time, tax inclusive.
+- Sandbox Plus: `prod_VO3yKqJWZVWIzu`, price
+  `price_1UNHqAHNvQLFQQSmvx3JYwGK`, USD 9.99 one-time, tax inclusive.
+- Both sandbox products use `txcd_10503000` and show Managed Payments
+  eligibility. This is not tax-adviser approval.
+- Owner entry of the sandbox Stripe key was requested privately in Railway.
+  Separate AI/email access, webhook signing secret and administrative secrets
+  must also be configured before deployment. No credentials are in this file.
+- Both GitHub workflows for commit `7f37c30` completed successfully. This is
+  automated code verification, not proof of a successful hosted checkout.
+
+### Outstanding acceptance checks
+
 - Real sandbox checkout for both packages and actual webhook delivery; verify
   amount/currency/package, duplicate-event safety and failed/cancelled payments.
 - Verify Managed Payments field availability on webhook and recovery API reads;
