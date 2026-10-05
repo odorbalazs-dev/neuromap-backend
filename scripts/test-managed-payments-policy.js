@@ -49,13 +49,31 @@ Object.getPrototypeOf(client.checkout.sessions).create = async (params, options)
   assert.equal(params.line_items[0].quantity, 1);
   return { id: 'cs_test_managed_fixture', livemode: false };
 };
-const { createCheckoutSession } = await import('../src/services/stripe.service.js');
+const { createCheckoutSession, retrieveCheckoutSession, listCheckoutSessions } = await import('../src/services/stripe.service.js');
 const { env } = await import('../src/config/env.js');
 for (const code of ['standard_v1', 'plus_v1']) {
   await createCheckoutSession({ internalSessionId: 'fixture-session', email: 'fixture@example.invalid', lang: 'hu', productPackage: code });
 }
 assert.equal(calls, 2);
+let readCalls = 0;
+Object.getPrototypeOf(client.checkout.sessions).retrieve = async (id, params, options) => {
+  assert.equal(id, 'cs_test_managed_fixture');
+  assert.equal(options.apiVersion, '2025-03-31.basil');
+  readCalls++;
+  return { id, managed_payments: { enabled: true } };
+};
+Object.getPrototypeOf(client.checkout.sessions).list = async (params, options) => {
+  assert.equal(params.limit, 100);
+  assert.equal(options.apiVersion, '2025-03-31.basil');
+  readCalls++;
+  return { data: [{ id: 'cs_test_managed_fixture', managed_payments: { enabled: true } }] };
+};
+assert.equal(isManagedCheckout(await retrieveCheckoutSession('cs_test_managed_fixture')), true);
+assert.equal(isManagedCheckout((await listCheckoutSessions({})).data[0]), true);
+assert.equal(readCalls, 2);
 env.STRIPE_SECRET_KEY = 'sk_live_fixture';
 await assert.rejects(createCheckoutSession({ internalSessionId: 'fixture-session', email: 'fixture@example.invalid', productPackage: 'standard_v1' }), /TEST_KEY_REQUIRED/);
 assert.equal(calls, 2, 'Live attempt must stop before creating a Checkout');
+assert.throws(() => retrieveCheckoutSession('cs_live_fixture'), /TEST_KEY_REQUIRED/);
+assert.equal(readCalls, 2, 'Live credentials must stop sandbox recovery reads');
 console.log('Managed Checkout request contract passed for both packages; no external requests made.');

@@ -266,11 +266,15 @@ export async function expireCheckoutSession(stripeSessionId) {
 }
 
 export function retrieveCheckoutSession(id) {
-  return stripe.checkout.sessions.retrieve(id);
+  const options = managedPaymentsTestEnabled(env)
+    ? { apiVersion: MANAGED_PAYMENTS_API_VERSION } : {};
+  return stripe.checkout.sessions.retrieve(id, {}, options);
 }
 
 export function listCheckoutSessions(params) {
-  return stripe.checkout.sessions.list({ ...params, limit: 100 });
+  const options = managedPaymentsTestEnabled(env)
+    ? { apiVersion: MANAGED_PAYMENTS_API_VERSION } : {};
+  return stripe.checkout.sessions.list({ ...params, limit: 100 }, options);
 }
 
 export function retrieveStripeEvent(id) {

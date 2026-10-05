@@ -12,7 +12,7 @@ import {
 } from "../infrastructure/invoice/szamlazzhuClient.js";
 import { getSessionById } from "./session.service.js";
 import { getProductPackage } from "../config/products.js";
-import Stripe from "stripe";
+import { retrieveCheckoutSession } from './stripe.service.js';
 import { env } from "../config/env.js";
 import { MANAGED_INVOICE_EXCLUSION, isManagedCheckout } from './managed-payments-policy.js';
 import {
@@ -366,8 +366,7 @@ export async function createInvoiceForPaidSession({
   if (!isVerifiedLiveInvoicePayment(session, checkoutSession) ||
       !checkoutSession?.customer_details?.address?.country) {
     if (session.stripe_session_id?.startsWith("cs_live_") && env.STRIPE_SECRET_KEY) {
-      const stripe = new Stripe(env.STRIPE_SECRET_KEY, { timeout: env.STRIPE_TIMEOUT_MS, maxNetworkRetries: 2 });
-      checkoutSession = await stripe.checkout.sessions.retrieve(session.stripe_session_id);
+      checkoutSession = await retrieveCheckoutSession(session.stripe_session_id);
     }
   }
   if (isTestInvoicePayment(session, checkoutSession)) {

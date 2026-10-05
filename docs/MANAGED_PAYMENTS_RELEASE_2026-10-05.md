@@ -14,6 +14,9 @@ No live checkout, refund, bank payout or tax approval is evidenced by unit tests
 - Accepted legal documents attached to contract confirmation from their archived
   revision in all 11 locales, rather than substituting current policy versions.
 - Missing legal evidence fails explicitly; provider failures use sanitized codes.
+- Sandbox checkout creation and subsequent session retrieval/listing use the
+  same API version. Invoice recovery uses that shared adapter, and sanitized
+  webhook evidence retains the Managed Payments marker.
 
 ## Verified locally
 
@@ -62,17 +65,31 @@ No live checkout, refund, bank payout or tax approval is evidenced by unit tests
 - Both sandbox products use `txcd_10503000` and show Managed Payments
   eligibility. This is not tax-adviser approval.
 - Owner entry of the sandbox Stripe key was requested privately in Railway.
-  Separate AI/email access, webhook signing secret and administrative secrets
-  must also be configured before deployment. No credentials are in this file.
+  Its test prefix and the presence of the owner-supplied AI key, email key,
+  sender address and administrative token were checked without exposing values.
+  The administrative token meets the minimum length. These checks do not prove
+  provider authentication, sender-domain verification or restricted key scope.
+  Worker references to the sandbox credentials were saved. Webhook signing
+  secret, endpoint URLs and restricted runtime database access remain pending.
+  No credentials are in this file.
 - Both GitHub workflows for commit `7f37c30` completed successfully. This is
   automated code verification, not proof of a successful hosted checkout.
+- A request to register a temporary account-level Railway SSH key for test
+  database maintenance was blocked by the approval review. Explicit owner
+  authorization is pending; the blocked command did not create or register
+  that key. Database TLS verification, migrations and runtime roles have not
+  yet been completed for this new sandbox database.
+- Following the retrieval/recovery API-version correction, the local mocked
+  Managed Payments tests and all 23 isolated payment-lifecycle cases passed.
+  Hosted webhook/PDF/email acceptance checks have not yet run.
 
 ### Outstanding acceptance checks
 
 - Real sandbox checkout for both packages and actual webhook delivery; verify
   amount/currency/package, duplicate-event safety and failed/cancelled payments.
 - Verify Managed Payments field availability on webhook and recovery API reads;
-  the legacy API reads must not silently drop the merchant-of-record marker.
+  the shared versioned adapter is covered by local request-contract tests, but
+  actual provider responses must still be inspected through the hosted trial.
 - Verify PDF, report email, accepted legal attachments, final customer status,
   retry/recovery and monitoring through actual service interactions.
 - Rehearse refund and customer-support routes with synthetic orders; ensure

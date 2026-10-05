@@ -23,6 +23,7 @@ function sanitizeWebhookPayload(event) {
         amount_total: object.amount_total ?? null,
         currency: object.currency || null,
         client_reference_id: object.client_reference_id || null,
+        managed_payments: { enabled: object.managed_payments?.enabled === true },
         metadata: {
           internalSessionId: metadata.internalSessionId || null,
           lang: metadata.lang || null,
