@@ -132,6 +132,33 @@ No live checkout, refund, bank payout or tax approval is evidenced by unit tests
 
 ### Outstanding acceptance checks
 
+### Remote operator evidence and dependency correction, 2026-10-06
+
+- Backend and worker successfully deployed commit `fc8afa1`. Actual HTTPS
+  health and Hungarian return pages responded with 200; public checkout stayed
+  closed. Unauthenticated operator requests returned 401, missing CSRF returned
+  403, and non-allowlisted recipients could not create an order.
+- The four scheduled lifecycle/recovery/alert operations reported healthy.
+  Resend accepted a sandbox-labelled alert to the configured helpdesk mailbox;
+  mailbox delivery has not been independently verified.
+- Actual Standard and Plus Checkout sessions were created in the isolated
+  Stripe sandbox. Provider reads confirmed Managed Payments enabled, test mode,
+  correct internal order references and inclusive USD totals of 799/999 cents.
+  Neither transaction has been submitted at this checkpoint. The Standard
+  hosted form awaits owner approval of the displayed checkout terms.
+- GitHub CI for `fc8afa1` failed its dependency audit. Updated `compression` to
+  1.8.2 and the compatible transitive `proxy-addr` dependency to 2.0.8, addressing
+  GHSA-vc2v-76pw-4v95 and GHSA-jqcg-44mw-7w3h. Audit thresholds and certificate
+  verification were retained. The production dependency set is not changed by
+  this sandbox-branch update and needs a separate reviewed release.
+- After the updates, the production-dependency npm audit reported zero known
+  vulnerabilities. Local Managed Payments tests (including 19 operator cases),
+  23 payment-lifecycle cases, 11-locale contract evidence and consent-security
+  checks passed. Remote CI and deployment are checked separately from these
+  local results; no completed purchase or report delivery is inferred from them.
+
+### Remaining hosted acceptance
+
 - Real sandbox checkout for both packages and actual webhook delivery; verify
   amount/currency/package, duplicate-event safety and failed/cancelled payments.
 - Verify Managed Payments field availability on webhook and recovery API reads;
