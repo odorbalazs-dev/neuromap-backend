@@ -36,6 +36,7 @@ globalThis.fetch = async () => { throw new Error('Network forbidden in payment t
 
 const pg = new PGlite({ extensions: { pgcrypto } });
 const { db } = await import('../src/db/db.js');
+const { env } = await import('../src/config/env.js');
 const query = async (sql, params) => {
   const result = params?.length ? await pg.query(sql,params) : (await pg.exec(sql)).at(-1) || { rows: [] };
   return { ...result, rowCount: Math.max(result.affectedRows || 0, result.rows?.length || 0) };
@@ -137,6 +138,25 @@ try {
     assert.equal((await read(delayed.session.id)).payment_status,'paid');
     assert.equal((await query('SELECT * FROM analysis_jobs WHERE session_id=$1',[delayed.session.id])).rowCount,1);
     assert.equal((await query('SELECT * FROM post_payment_outbox WHERE session_id=$1',[delayed.session.id])).rowCount,1);
+  });
+  await test('legacy webhook snapshots cannot trigger a duplicate local managed invoice',async()=>{
+    const managed=await order(), checkout=await start(managed.session);
+    const oldId=checkout.id;
+    Object.assign(checkout,{id:'cs_live_managed_fixture',livemode:true,status:'complete',payment_status:'paid',managed_payments:{enabled:true}});
+    provider.set(checkout.id,checkout);
+    await query('UPDATE payment_attempts SET stripe_session_id=$2,livemode=true WHERE stripe_session_id=$1',[oldId,checkout.id]);
+    await query('UPDATE sessions SET stripe_session_id=$2 WHERE id=$1',[managed.session.id,checkout.id]);
+    const snapshot={...checkout}; delete snapshot.managed_payments;
+    const event={id:'evt_legacy_managed_fixture',type:'checkout.session.completed',livemode:true,data:{object:snapshot}};
+    const oldKey=env.STRIPE_SECRET_KEY; env.STRIPE_SECRET_KEY='sk_live_fixture';
+    try {
+      assert.equal((await processVerifiedStripeEvent(event)).processed,true);
+      const task=(await query("SELECT * FROM post_payment_outbox WHERE session_id=$1 AND task='invoice'",[managed.session.id])).rows[0];
+      assert.equal(task.payload.managed_payments.enabled,true);
+      const invoice=await createInvoiceForPaidSession({session:await read(managed.session.id),checkoutSession:task.payload});
+      assert.equal(invoice.error_message,'STRIPE_MANAGED_PAYMENT_INVOICE_EXCLUDED');
+      assert.equal((await read(managed.session.id)).invoice_status,'skipped');
+    } finally { env.STRIPE_SECRET_KEY=oldKey; }
   });
   await test('active-job fallback SQL returns correct job',async()=>{
     const a=await enqueueAnalysisJob(first.session.id),b=await enqueueAnalysisJob(first.session.id);assert.equal(a.id,b.id);

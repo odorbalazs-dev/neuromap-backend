@@ -341,7 +341,7 @@ purchase statements above. It does not assert that public sales are enabled.
 - Successful delayed payments now enter the same atomic, idempotent fulfillment
   path as immediate payments. A completed but unpaid Checkout does not queue a
   report; a later `checkout.session.async_payment_succeeded` queues it once.
-  The isolated payment-lifecycle suite now has 24 passing cases. Hosted delayed
+  The isolated payment-lifecycle suite now has 25 passing cases. Hosted delayed
   payment failure/retry acceptance remains outstanding; do not assume it passed.
 - Live readiness additionally requires a dedicated Managed Payments approval
   with evidence and both price IDs. The general tax approval remains required:
@@ -358,9 +358,14 @@ purchase statements above. It does not assert that public sales are enabled.
   The actual backend key was identified against its masked provider request,
   not its name. No credentials were copied, rotated, exposed or broadened to
   webhook administration. Webhook changes must use the authenticated dashboard.
+- Legacy webhook snapshots cannot decide invoice ownership: fulfillment
+  re-fetches the authenticated Checkout using a Managed Payments-capable API
+  version. This preserves the existing endpoint and signing secret without
+  granting API webhook-administration rights or issuing a duplicate invoice.
+  A regression test exercises an old snapshot without the managed field.
 - At this checkpoint production checkout remains closed. The live endpoint
-  still uses API version `2024-06-20` and the original 10 events; its version
-  and delayed-success subscription must be updated with the tested deployment.
+  uses API version `2024-06-20` and the original 10 events; its delayed-success
+  subscription must be updated with the tested deployment.
   New merchant-of-record customer disclosures, outstanding approval evidence,
   hosted decline/local-currency checks and owner live acceptance must be
   resolved before claiming unrestricted production launch.

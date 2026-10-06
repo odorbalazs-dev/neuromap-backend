@@ -1,6 +1,6 @@
 import { safeError } from "../utils/safeError.js";
 import { db } from "../db/db.js";
-import { constructStripeEvent, isLiveStripeRuntime, retrieveStripeEvent } from "./stripe.service.js";
+import { constructStripeEvent, isLiveStripeRuntime, retrieveStripeEvent, retrieveCheckoutSession } from "./stripe.service.js";
 import { enqueuePostPaymentTasks } from "./post-payment-outbox.service.js";
 import { fulfillVerifiedCheckout } from "./payment-fulfillment.service.js";
 import { synchronizePaymentAdjustment } from "./payment-adjustment.service.js";
@@ -149,7 +149,9 @@ export async function processVerifiedStripeEvent(event) {
   try {
     let outcome = { ignored: true };
     if (['checkout.session.completed', 'checkout.session.async_payment_succeeded'].includes(event.type)) {
-      outcome = await fulfillVerifiedCheckout(event.data.object);
+      // Older webhook versions omit Managed Payments invoice ownership.
+      const checkout = await retrieveCheckoutSession(event.data.object.id);
+      outcome = await fulfillVerifiedCheckout(checkout);
     } else if (/^(refund\.|charge\.refunded$|charge\.dispute\.)/.test(event.type)) {
       outcome = await synchronizePaymentAdjustment(event);
     }
