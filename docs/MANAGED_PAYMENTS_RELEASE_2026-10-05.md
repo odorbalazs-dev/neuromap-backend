@@ -495,6 +495,31 @@ purchase statements above. It does not assert that public sales are enabled.
   Hosted decline/delayed failure/local presentment acceptance remains separate
   from mocked regression coverage. These pending items are not certifications.
 
+## Remaining feasible launch repairs - 2026-10-06
+
+- Added translated retention, effective-date and version labels for all 11 legal
+  locales. The actual configured general retention period now appears on hosted
+  privacy pages and in the consent modal's scrollable body, including short
+  screens where header metadata is hidden. No new retention period is invented.
+- New purchase-confirmation attachments include retention from the accepted
+  archive. Historical archives lacking the field are not supplemented from live
+  policy settings. Existing accepted document versions are not rewritten.
+- Changing the landing language now updates an existing closed-checkout notice;
+  it does not reopen sales or fetch additional customer data. Regression tests
+  cover all 11 language changes, runtime retention, units, escaping and archived
+  configuration separation.
+- Loader versions are aligned: engine `20261006-launch-retention-v6`, legal UI
+  `20261006-legal-retention-v4`, content `20261006-legal-retention-v2`. Return-page
+  version is unchanged. Content digests invalidate obsolete acceptance as designed.
+- Rechecked current provider DPA execution and scope clauses in the vendor
+  register; added a dated Hungarian DPIA supplement. Incorporated agreements
+  are distinguished from Railway's explicit execution requirement. Intentional
+  sensitive-data scope is unresolved, not falsely approved.
+- No approval flags or public-checkout gate were relaxed. Technical regression
+  coverage does not replace live Link invoice, local-presentment, decline or
+  delayed-payment acceptance. Controller approval, applicable vendor scope,
+  Railway MFA assurance and reviewed launch tax markets still need completion.
+
 ## External references
 
 - https://docs.stripe.com/payments/managed-payments/eligibility

@@ -17,7 +17,10 @@ export function buildContractEvidence(session, revision) {
     throw new Error('CONTRACT_EVIDENCE_UNAVAILABLE');
   }
   const lang = revision.language;
-  const sections = ['terms', 'privacy'].map(kind => `<section><h1>${escape(content.ui[`${kind}Title`])}</h1>${content[kind].map(([heading, text]) => `<h2>${escape(heading)}</h2><p>${escape(text)}</p>`).join('')}</section>`).join('');
+  // Older archives may lack these labels; never fill them from today's policy.
+  const retention = content.ui.retentionLabel && content.ui.retentionDaysUnit && Number.isSafeInteger(config.retentionDays)
+    ? `<p data-retention-period>${escape(content.ui.retentionLabel)}: ${escape(config.retentionDays)} ${escape(content.ui.retentionDaysUnit)}</p>` : '';
+  const sections = ['terms', 'privacy'].map(kind => `<section><h1>${escape(content.ui[`${kind}Title`])}</h1>${kind === 'privacy' ? retention : ''}${content[kind].map(([heading, text]) => `<h2>${escape(heading)}</h2><p>${escape(text)}</p>`).join('')}</section>`).join('');
   const controller = config.controller || {};
   const html = `<!doctype html><html lang="${escape(lang)}" dir="${lang === 'ar' ? 'rtl' : 'ltr'}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NeuroMap Kids</title><style>body{max-width:800px;margin:auto;padding:24px;font:16px/1.6 Arial,sans-serif;overflow-wrap:anywhere}h1{font-size:24px}h2{font-size:18px}section{break-before:page}</style></head><body><header><h1>NeuroMap Kids</h1><p>${escape(controller.name)}<br>${escape(controller.address)}<br>${escape(controller.privacyEmail)}</p><p>${escape(config.termsVersion)} / ${escape(config.privacyPolicyVersion)}</p></header>${sections}</body></html>`;
   // Deliberately exclude answers, health inferences, receipt secrets and access tokens.

@@ -45,7 +45,11 @@ const requiredUiKeys = [
   "required",
   "legalLinks",
   "termsLink",
-  "privacyLink"
+  "privacyLink",
+  "versionLabel",
+  "effectiveDateLabel",
+  "retentionLabel",
+  "retentionDaysUnit"
 ];
 
 supportedLangs.forEach((lang) => {
@@ -164,9 +168,9 @@ assert(
     legalConsentSource.includes("overscroll-behavior: contain") &&
     legalConsentSource.includes("-webkit-overflow-scrolling: touch") &&
     legalConsentSource.includes('@media (max-height: 560px)') &&
-    legalConsentSource.includes('const LEGAL_UI_VERSION = "20261006-managed-disclosures-v3"') &&
-    legalConsentSource.includes('const CONTENT_VERSION = "20261006-managed-disclosures-v1"') &&
-    engineSource.includes('20261006-managed-disclosures-v3'),
+    legalConsentSource.includes('const LEGAL_UI_VERSION = "20261006-legal-retention-v4"') &&
+    legalConsentSource.includes('const CONTENT_VERSION = "20261006-legal-retention-v2"') &&
+    engineSource.includes('20261006-legal-retention-v4'),
   "Legal consent must remain scrollable with visible actions on mobile and short viewports"
 );
 
@@ -174,12 +178,12 @@ assert(
   legalConsentSource.includes("/verify") &&
     legalConsentSource.includes('data-verification-code') &&
     legalConsentSource.includes("x-privacy-request-token") &&
-    legalConsentSource.includes("20261006-managed-disclosures-v1"),
+    legalConsentSource.includes("20261006-legal-retention-v2"),
   "Verified privacy-rights workflow or legal version marker is incomplete"
 );
 
 assert(
-  engineSource.includes("20261006-managed-disclosures-v3") &&
+  engineSource.includes("20261006-legal-retention-v4") &&
     engineSource.includes("isCompatibleLegalManager") &&
     engineSource.includes('String(manager.version || "") === LEGAL_CONSENT_VERSION') &&
     engineSource.includes("const forceReload = Boolean(window.NM_LEGAL)") &&
@@ -239,4 +243,19 @@ assert(
   );
 });
 
+const retentionStart = legalConsentSource.indexOf('  function privacyRetentionMarkup(');
+const retentionEnd = legalConsentSource.indexOf('  function sectionMarkup(', retentionStart);
+assert(retentionStart >= 0 && retentionEnd > retentionStart, 'Retention renderer must be testable');
+const retentionContext = vm.createContext({
+  getContent: lang => legalContent[lang],
+  escapeHtml: value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]))
+});
+vm.runInContext(legalConsentSource.slice(retentionStart, retentionEnd), retentionContext);
+for (const lang of supportedLangs) {
+  const markup = vm.runInContext(`privacyRetentionMarkup({retentionDays: 123}, '${lang}')`, retentionContext);
+  assert(markup.includes(`${legalContent[lang].ui.retentionLabel}: 123 ${legalContent[lang].ui.retentionDaysUnit}`), `${lang}: modal retention label/unit missing`);
+}
+const escapedRetention = vm.runInContext("privacyRetentionMarkup({retentionDays: '<script>'}, 'hu')", retentionContext);
+assert(escapedRetention.includes('&lt;script&gt;') && !escapedRetention.includes('<script>'), 'Retention metadata must be escaped');
+assert(legalConsentSource.includes('${privacyRetentionMarkup(config, lang)}${sectionMarkup(content.privacy)}'), 'Retention must remain in the scrollable privacy body on short screens');
 console.log("[smoke:legal-consent] OK");

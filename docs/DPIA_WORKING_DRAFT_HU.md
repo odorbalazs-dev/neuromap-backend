@@ -415,3 +415,33 @@ A TikTok iránymutatása tiltja a gyermekekre, egészségre, pénzügyekre és m
 ### 20.4 Kötelező technikai korlát
 
 A marketing eseménysémának allow-list alapúnak kell lennie, alapértelmezett consent `denied` állapottal. A tiltást automatizált build/smoke ellenőrzés, böngészőhálózati vizsgálat és GTM/Webflow custom-code leltár igazolja. A marketinges teljesítménymérés nem kapcsolható össze kérdőív-, riport-, email-, fizetési vagy stabil session-azonosítóval.
+
+## 21. Dátumozott indulási kiegészítés - 2026-10-06
+
+Ez a kiegészítés műszaki és szolgáltatói forrásellenőrzés, nem új ügyvédi
+hitelesítés. A korábbi adatkezelői jóváhagyás történeti bizonyíték marad; az új
+Managed Payments-szerepek és a módosult tájékoztató aktuális jóváhagyása külön
+rögzítendő. Link a tranzakció eladója és számlázója, NeuroMap Kids a riport
+előállítója és kézbesítője; azonos tranzakcióról nem készül második számla.
+
+Az általános megőrzési idő most a tényleges konfigurációból, felirattal és
+nap-egységgel jelenik meg mind a 11 nyelven a tájékoztatóban és a hozzájárulási
+ablak görgethető törzsében. Az új vásárlás szerződés-visszaigazolása kizárólag az
+elfogadott archívumból veszi ezt az időt. Régi archívumhoz nem írunk hozzá mai
+adatot. A meghatározott jogi/könyvelési megőrzési kivételeket ez nem törli el.
+
+A friss hivatalos szolgáltatói feltételek ellenőrzését a
+`docs/VENDOR_AND_TRANSFER_REGISTER.md` 2026-10-06-i kiegészítése tartalmazza.
+OpenAI, Resend és Backblaze esetében a szolgáltatási szerződéshez kapcsolódó
+DPA elfogadása releváns, nem feltétlenül külön aláírás. Railwaynél a közzétett
+végrehajtási feltétel DocuSign-beküldést és szolgáltatói aláírást kér. Railway,
+OpenAI és Resend érzékenyadat-mellékletét a tényleges, szándékos adatúthoz kell
+igazítani; a becenév és az email külön kezelése nem bizonyít anonimitást.
+
+A 2026-10-06-i éles műszaki ellenőrzés külön web/worker adatbázisszerepet,
+sikeres tanúsítvány-ellenőrzést és admin `no-store` védelmet igazolt. A legfrissebb
+titkosított EU-mentés időbélyege 2026-10-06 03:16:52 UTC volt. A korábbi
+teljes visszaállítási próba külön történeti bizonyíték; ez az ellenőrzés nem új
+restore próba. A Railway natív MFA nem igazolt; külső identitásszolgáltatói MFA
+védelmét külön kell bizonyítani. Az értékesítés lezárt állapota megmarad a
+hiányzó igazolások és valódi éles elfogadási vásárlás lezárásáig.

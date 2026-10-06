@@ -19,7 +19,7 @@ function main() {
     loaderHtml.includes("/public/webflow/engine.js"),
     "Webflow Engine loader should load the public engine file."
   );
-  const currentEngineVersion = "20261006-managed-launch-v5";
+  const currentEngineVersion = "20261006-launch-retention-v6";
   assert(
     loaderHtml.includes(currentEngineVersion),
     "Webflow Engine loader should include the current questionnaire shell cache-busting version."
