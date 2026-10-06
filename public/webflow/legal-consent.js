@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  const LEGAL_UI_VERSION = "20261006-legal-retention-v4";
+  const LEGAL_UI_VERSION = "20261006-public-legal-v5";
   const RECEIPT_KEY = "nm_legal_receipt_v1";
   const ANALYTICS_KEY = "nm_analytics_consent_v1";
   const CONTENT_VERSION = "20261006-legal-retention-v2";
@@ -704,7 +704,7 @@
     activeFlow = (async () => {
       await ensureContent();
       let config = await getConfig(true);
-      installLauncher(language);
+      await installLauncher(language);
       const existing = await inspectStoredReceipt(language);
       if (existing) return existing;
       let content = await verifiedContent(language, config);
@@ -1113,8 +1113,12 @@
     return true;
   }
 
-  function installLauncher(lang) {
+  async function installLauncher(lang) {
+    await ensureContent();
+    lang = normalizeLang(lang);
     installStyles();
+    const existingMenu = document.getElementById("nmLegalMenu");
+    if (existingMenu) existingMenu.remove();
     let button = document.getElementById("nmLegalLauncher");
     if (!button) {
       button = document.createElement("button");
