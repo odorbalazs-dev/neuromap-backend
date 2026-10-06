@@ -370,6 +370,54 @@ purchase statements above. It does not assert that public sales are enabled.
   hosted decline/local-currency checks and owner live acceptance must be
   resolved before claiming unrestricted production launch.
 
+## Verified gated production deployment, 2026-10-06 12:19 UTC
+
+- Pushed implementation commits `72d3a57` and `385fe08` on the existing
+  `fix/launch-gates-2026-09-16` branch. GitHub CI runs `37461569749` and
+  `37461564282` completed successfully for
+  `385fe08758bd4fa539932acdb00e72730716ef7b`.
+- Both sandbox services automatically deployed that exact commit successfully.
+  Read-only rechecks still showed Plus payment clear, report sent, PDF ready,
+  one report-email attempt, and its observation program active with zero entries.
+  The previously refunded Standard order correctly remained restricted.
+- Configured the verified live price IDs in both production application services,
+  with live mode on and test mode off. Public checkout and live launch approval
+  remain false. No ordinary-invoice automation flag or existing credential was
+  removed; historical ordinary orders retain their existing recovery path.
+- Deployed the exact CI-verified commit explicitly to production worker
+  `6716afce-645a-4efc-80c5-4de3ca5b38d9` and the production backend. Both latest
+  deployments reported `SUCCESS` with the expected commit. `verify-full` TLS
+  settings remained unchanged. No database, backup service or source branch was
+  reconfigured. The source still tracks `main`; PR #13 must be integrated through
+  normal protected-branch checks before relying on later automatic deployments.
+- Updated the existing live webhook destination in the authenticated Stripe
+  dashboard: added only `checkout.session.async_payment_succeeded`, preserving
+  all 10 existing refund/dispute/completion events, endpoint and signing secret.
+  The saved destination showed `Active` and 11 events. Its historical API
+  version is retained; authenticated fulfillment reads now preserve managed
+  invoice ownership independently of the webhook snapshot version.
+- Actual hosted checks returned `/health` HTTP 200 and public `/checkout` HTTP
+  503 with `CHECKOUT_NOT_READY`. Admin status responses had `no-store` protection;
+  the verification session was logged out. Schema, database connection, runtime
+  assets and critical production-state checks passed. These are deployment and
+  operational checks, not a real-money acceptance purchase.
+- Production operational evidence showed healthy lifecycle (24/24 successful
+  runs), recovery (287/287), production-health alerts (287/287) and operational
+  alerts (95/95), plus a healthy confirmation/invoice outbox. Last recovery and
+  production-health success was 12:18:59 UTC. Run success does not prove that an
+  alert was emailed on every interval: cooldown/no-alert skips are expected.
+- The actual launch gate still listed `vendor_dpa`, `security_review`,
+  `tax_configuration`, `managed_payments_live`, `production_checkout`,
+  `vendor_dpa_evidence` and `tax_configuration_evidence` as missing. These are
+  recorded configuration/evidence states, not a new demand for bespoke provider
+  letters. Existing accepted provider terms and reviews should be reconciled
+  against genuine applicable evidence, never replaced by invented approval.
+- Remaining launch work: reflect the new merchant-of-record roles in accepted
+  customer documents, review supported selling markets/tax scope, reconcile
+  outstanding approval evidence, integrate PR #13, and complete the owner-led
+  live acceptance. Hosted decline, delayed-failure/retry and local-presentment
+  acceptance remain distinct checks. No real funds were moved in this rollout.
+
 ## External references
 
 - https://docs.stripe.com/payments/managed-payments/eligibility
