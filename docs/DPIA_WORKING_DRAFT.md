@@ -408,3 +408,35 @@ TikTok guidance prohibits sharing children's, health, financial and other sensit
 ### 20.4 Mandatory technical boundary
 
 Marketing events must use an explicit allow-list with consent defaulting to `denied`. Automated build/smoke checks, browser-network inspection and a GTM/Webflow custom-code inventory must evidence the restriction. Marketing performance measurement must not be linked with questionnaire or report data, email, payment data or a stable session identifier.
+
+## 21. Managed Payments change assessment - 2026-10-06
+
+This amendment records a technical and processing-scope change, not a new lawyer
+signature or retrospective approval. The owner's earlier DPIA approval remains
+historical evidence; it does not automatically approve this changed payment route.
+
+The report provider remains NeuroMap Kids. For managed transactions the
+customer-facing merchant of record is the Link provider identified at checkout.
+Stripe/Link supplies transaction invoices, receipts and transaction support.
+Ordinary historical purchases retain their existing local invoice recovery path.
+The active privacy/terms source now identifies this distinction in all 11 locales,
+including encrypted-backup recipient Backblaze. The proposed policy version is
+2026-10-06; actual deployed environment versions must be reconciled on rollout.
+
+| Risk | Technical control/evidence | Residual action |
+| --- | --- | --- |
+| Questionnaire information leaks to payment provider | Checkout metadata contains order/package/language/payment references, not answers, child age or findings; no advertising payload expansion | Review any later metadata change against this boundary |
+| Duplicate invoice after legacy webhook | Authenticated provider read establishes managed ownership; managed invoice exclusion tested; ordinary invoice automation retained | Verify actual Link invoice in owner-led live acceptance |
+| Failed delayed payment remains stuck or charges twice | Only a processed authenticated failure for the bound Checkout authorizes replacement; pending settlement blocks replacement; late second settlement enters payment review | Hosted delayed failure/retry acceptance remains pending |
+| Reordered failure downgrades a paid order | Fresh Checkout read and locked paid-state guard; isolated database regression tests | Monitor financial review queue and attend support mailbox |
+| Accepted terms are silently rewritten | Changed content hashes reject stale acceptance; self-contained archived documents used for confirmations | Controller review of this amendment and current terms before public release |
+| Global tax coverage is overstated | General tax approval remains a enforced launch requirement | Record actual selling-market coverage; uncovered markets remain seller responsibility |
+
+Internal verification: audit:all, consent-security, 11-language contract evidence,
+29 isolated payment-lifecycle cases (30 under each runtime role), managed-payment
+policy/operator tests, and zero known production dependency vulnerabilities in the
+2026-10-06 npm advisory check. These are internal technical results, not a
+penetration-test certificate, clinical validation or legal certification.
+
+Reference: https://docs.stripe.com/payments/managed-payments/how-it-works and
+https://docs.stripe.com/payments/managed-payments/tax-compliance, checked 2026-10-06.

@@ -49,7 +49,7 @@ export async function withCheckoutConsent(sessionId, action) {
     const session = result.rows[0];
     assertCheckoutConsentActive(consent.rows[0]);
     assertSessionProcessingAllowedRecord(session);
-    if (session.consent_event_id !== consent.rows[0].id || session.payment_status !== "pending" ||
+    if (session.consent_event_id !== consent.rows[0].id || !["pending", "failed"].includes(session.payment_status) ||
         session.analysis_status === "done") {
       throw new ConsentError("This session cannot start a new payment.", { status: 409, code: "CHECKOUT_SESSION_UNAVAILABLE" });
     }

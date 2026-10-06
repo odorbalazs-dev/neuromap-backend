@@ -55,6 +55,7 @@ function parseEntitlements(value) {
 
 export function buildCustomerStatus(session, observation = null) {
   const paymentPaid = session.payment_status === "paid";
+  const paymentFailed = session.payment_status === "failed";
   const analysisStatus = normalizeAnalysisStatus(session.analysis_status);
   const emailStatus = normalizeEmailStatus(session.report_email_status);
   const analysisDone = analysisStatus === "done";
@@ -73,7 +74,7 @@ export function buildCustomerStatus(session, observation = null) {
   let overall = "processing";
 
   if (!paymentPaid) {
-    overall = "waiting_payment";
+    overall = paymentFailed ? "payment_failed" : "waiting_payment";
   } else if (analysisFailed || emailFailed || pdfFailed || deliveryFailed || invoiceFailed || session.contract_confirmation_status === 'failed' || (session.financial_status && session.financial_status !== 'clear')) {
     overall = "attention";
   } else if (emailSent && documentsDone) {
@@ -149,7 +150,7 @@ export function buildCustomerStatus(session, observation = null) {
       buildStage({
         key: "payment",
         label: "Payment",
-        state: paymentPaid ? "complete" : "pending"
+        state: paymentPaid ? "complete" : paymentFailed ? "failed" : "pending"
       }),
       buildStage({
         key: "analysis",

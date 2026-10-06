@@ -10,7 +10,7 @@ function assert(condition, message) {
 function main() {
   console.log("\n=== CHECKOUT PAGES SMOKE ===");
 
-  const currentVersion = "20261006-invoice-disposition-v1";
+  const currentVersion = "20261006-managed-failure-v2";
   const script = fs.readFileSync("public/webflow/checkout-pages.js", "utf8");
   const stripeService = fs.readFileSync("src/services/stripe.service.js", "utf8");
   const sessionService = fs.readFileSync("src/services/session.service.js", "utf8");
@@ -22,9 +22,11 @@ function main() {
   const boundary = '\n  ensureResponsiveViewport();\n\n  if (document.readyState';
   assert(script.split(boundary).length === 2, 'The test must intercept exactly one bootstrap boundary.');
   const context = { window: { addEventListener() {} }, document: { addEventListener() {} } };
-  vm.runInNewContext(script.replace(boundary, '\n  window.testApi = { getCopy, renderStatusSteps }; return;' + boundary), context);
+  vm.runInNewContext(script.replace(boundary, '\n  window.testApi = { getCopy, renderStatusSteps, getStatusMessage }; return;' + boundary), context);
   for (const lang of ['hu', 'en', 'de', 'it', 'es', 'fr', 'pl', 'pt', 'ja', 'zh', 'ar']) {
     const copy = context.window.testApi.getCopy(lang);
+    assert(copy.paymentFailed && context.window.testApi.getStatusMessage(copy, { paymentStatus: 'failed' }) === copy.paymentFailed, `Failed payment message missing for ${lang}.`);
+    assert(context.window.testApi.getStatusMessage(copy, { paymentStatus: 'pending' }) === copy.paymentUnknown, `Pending payment must not imply success for ${lang}.`);
     assert(Boolean(copy.invoiceTestExcluded && copy.invoiceProviderManaged), `Invoice status translations missing for ${lang}.`);
     if (lang !== 'en') {
       assert(copy.invoiceTestExcluded !== 'Not issued (test)' && copy.invoiceProviderManaged !== 'Handled by payment provider', `English invoice fallback in ${lang}.`);

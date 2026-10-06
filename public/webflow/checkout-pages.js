@@ -5,7 +5,7 @@
 (function () {
   if (typeof window === "undefined" || typeof document === "undefined") return;
 
-  const CHECKOUT_PAGES_VERSION = "20261006-invoice-disposition-v1";
+  const CHECKOUT_PAGES_VERSION = "20261006-managed-failure-v2";
   const STATUS_POLL_INTERVAL_MS = 12000;
   const STATUS_POLL_MAX_INTERVAL_MS = 60000;
   let statusPollTimer = null;
@@ -887,7 +887,20 @@
   function paymentStatusCopy(lang) {
     const c = PAYMENT_STATUS_COPY[lang] || PAYMENT_STATUS_COPY.en;
     const invoice = INVOICE_STATUS_COPY[lang] || INVOICE_STATUS_COPY.en;
-    return { paymentPendingTitle: c[0], paymentUnknown: c[1], invoiceLabel: c[2], contractLabel: c[3],
+    const failure = {
+      hu: 'A fizetés sikertelen lett. Újrapróbálhatod a kérdőív ismételt kitöltése nélkül.',
+      en: 'The payment failed. You can retry without completing the questionnaire again.',
+      de: 'Die Zahlung ist fehlgeschlagen. Du kannst es erneut versuchen, ohne den Fragebogen neu auszufüllen.',
+      it: 'Il pagamento non è riuscito. Puoi riprovare senza compilare nuovamente il questionario.',
+      es: 'El pago ha fallado. Puedes reintentarlo sin volver a completar el cuestionario.',
+      fr: 'Le paiement a échoué. Vous pouvez réessayer sans remplir à nouveau le questionnaire.',
+      pt: 'O pagamento falhou. Pode tentar novamente sem preencher de novo o questionário.',
+      pl: 'Płatność nie powiodła się. Możesz spróbować ponownie bez ponownego wypełniania kwestionariusza.',
+      ja: '決済に失敗しました。質問票を再入力せずに支払いをやり直せます。',
+      zh: '支付失败。您可以重试，无需重新填写问卷。',
+      ar: 'فشلت عملية الدفع. يمكنك المحاولة مجددًا دون إعادة تعبئة الاستبيان.'
+    };
+    return { paymentPendingTitle: c[0], paymentUnknown: c[1], paymentFailed: failure[lang] || failure.en, invoiceLabel: c[2], contractLabel: c[3],
       invoiceTestExcluded: invoice[0], invoiceProviderManaged: invoice[1],
       emailAccepted: c[4], emailDelivered: c[5], financialAttention: c[6],
       noSession: c[1], deliveryEstimateNoSession: c[1], cancelLead: c[1], cancelBody: '',
@@ -1715,6 +1728,7 @@
   }
 
   function getStatusMessage(copy, status) {
+    if (status?.paymentStatus === 'failed') return copy.paymentFailed;
     if (!status || status.paymentStatus !== 'paid') return copy.paymentUnknown;
     if (status.financialStatus && status.financialStatus !== 'clear') return copy.financialAttention;
     if (status.overall === "sent") return copy.statusSent;
@@ -1988,7 +2002,7 @@
         ${renderSuccessExtras(copy)}
         <div class="nm-checkout-actions">
           <a class="nm-checkout-button dark" href="${escapeHtml(safeHref(getHomeHref(lang), "/"))}">${escapeHtml(copy.home)}</a>
-          ${!isSuccess ? `<button class="nm-checkout-button" type="button" id="nmRetryCheckout">${escapeHtml(copy.retry)}</button>` : ""}
+          <button class="nm-checkout-button" type="button" id="nmRetryCheckout" ${isSuccess ? 'hidden' : ''}>${escapeHtml(copy.retry)}</button>
           ${sessionId ? `<button class="nm-checkout-button secondary" type="button" id="nmCopySession">${escapeHtml(copy.copySession)}</button>` : ""}
           <a class="nm-checkout-button secondary" id="nmSupportLink" href="${escapeHtml(buildSupportHref(copy, sessionId, kind, isSuccess ? "success_page" : "cancel_page"))}">${escapeHtml(copy.support)}</a>
         </div>
@@ -2081,13 +2095,13 @@
       const verifiedPaid = data.status.paymentStatus === 'paid' && (!data.status.financialStatus || data.status.financialStatus === 'clear');
       document.getElementById('nmCheckoutTitle').textContent = verifiedPaid ? copy.successTitle : copy.paymentPendingTitle;
       const pageLead = document.querySelector('.nm-checkout-lead');
-      if (pageLead) pageLead.textContent = verifiedPaid ? copy.successLead : (data.status.financialStatus && data.status.financialStatus !== 'clear') ? copy.financialAttention : copy.paymentUnknown;
+      if (pageLead) pageLead.textContent = verifiedPaid ? copy.successLead : data.status.paymentStatus === 'failed' ? copy.paymentFailed : (data.status.financialStatus && data.status.financialStatus !== 'clear') ? copy.financialAttention : copy.paymentUnknown;
       const nextSteps = document.getElementById('nmVerifiedNextSteps');
       if (nextSteps) nextSteps.hidden = !verifiedPaid;
       const icon = document.querySelector('.nm-checkout-icon');
       if (icon) icon.textContent = verifiedPaid ? '\u2713' : '\u2026';
       const retry = document.getElementById('nmRetryCheckout');
-      if (retry) retry.hidden = data.status.paymentStatus === 'paid';
+      if (retry) retry.hidden = (data.status.paymentStatus !== 'failed' && getPageKind() === 'success') || data.status.paymentStatus === 'paid';
       lead.textContent = getStatusMessage(copy, data.status);
       steps.innerHTML = renderStatusSteps(copy, data.status.stages);
       renderStatusMeta(copy, sessionId, data.status);

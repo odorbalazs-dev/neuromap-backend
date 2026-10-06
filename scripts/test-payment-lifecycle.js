@@ -158,6 +158,53 @@ try {
       assert.equal((await read(managed.session.id)).invoice_status,'skipped');
     } finally { env.STRIPE_SECRET_KEY=oldKey; }
   });
+  await test('unsettled delayed payment cannot create a second payment attempt',async()=>{
+    const pendingOrder=await order(), pending=await start(pendingOrder.session);
+    pending.status='complete';
+    const before=creates;
+    await assert.rejects(start(pendingOrder.session),{code:'PAYMENT_ALREADY_COMPLETED'});
+    assert.equal(creates,before);
+  });
+  await test('verified delayed failure permits one new attempt and preserves history',async()=>{
+    const failedOrder=await order(), failed=await start(failedOrder.session);
+    failed.status='complete';
+    const event={id:'evt_async_failed_fixture',type:'checkout.session.async_payment_failed',livemode:false,data:{object:failed}};
+    assert.equal((await processVerifiedStripeEvent(event)).paymentFailed,true);
+    assert.equal((await processVerifiedStripeEvent(event)).alreadyProcessed,true);
+    const status=buildCustomerStatus(await read(failedOrder.session.id));
+    assert.equal(status.overall,'payment_failed');
+    assert.equal(status.stages[0].state,'failed');
+    assert.equal((await query('SELECT * FROM analysis_jobs WHERE session_id=$1',[failedOrder.session.id])).rowCount,0);
+    const next=await start(failedOrder.session);
+    assert.notEqual(next.id,failed.id);
+    assert.equal((await read(failedOrder.session.id)).payment_status,'pending');
+    assert.equal((await start(failedOrder.session)).id,next.id);
+    // A late replay for the older failed attempt cannot downgrade the retry.
+    await processVerifiedStripeEvent({...event,id:'evt_async_failed_again_fixture'});
+    assert.equal((await read(failedOrder.session.id)).payment_status,'pending');
+    next.status='complete'; next.payment_status='paid'; next.payment_intent='pi_retry_fixture';
+    await fulfillVerifiedCheckout(next);
+    failed.payment_status='paid'; failed.payment_intent='pi_late_old_fixture';
+    assert.equal((await fulfillVerifiedCheckout(failed)).reviewRequired,true);
+    assert.equal((await query('SELECT * FROM analysis_jobs WHERE session_id=$1',[failedOrder.session.id])).rowCount,1);
+    assert.equal((await query("SELECT * FROM payment_reviews WHERE session_id=$1 AND reason='duplicate_payment'",[failedOrder.session.id])).rowCount,1);
+  });
+  await test('reordered failure observes settled provider state and never downgrades paid',async()=>{
+    const settledOrder=await order(), settled=await start(settledOrder.session);
+    settled.status='complete'; settled.payment_status='paid';
+    const oldSnapshot={...settled,payment_status:'unpaid'};
+    await processVerifiedStripeEvent({id:'evt_reordered_failure_fixture',type:'checkout.session.async_payment_failed',livemode:false,data:{object:oldSnapshot}});
+    assert.equal((await read(settledOrder.session.id)).payment_status,'paid');
+    assert.equal((await query('SELECT * FROM analysis_jobs WHERE session_id=$1',[settledOrder.session.id])).rowCount,1);
+  });
+  await test('unbound delayed failure cannot authorize retry or change another order',async()=>{
+    const failedOrder=await order(), failed=await start(failedOrder.session);
+    failed.status='complete';
+    const fake={...failed,id:'cs_test_unbound_failure'}; provider.set(fake.id,fake);
+    await assert.rejects(processVerifiedStripeEvent({id:'evt_unbound_failure_fixture',type:'checkout.session.async_payment_failed',livemode:false,data:{object:fake}}),/CHECKOUT_MISMATCH/);
+    assert.equal((await read(failedOrder.session.id)).payment_status,'pending');
+    await assert.rejects(start(failedOrder.session),{code:'PAYMENT_ALREADY_COMPLETED'});
+  });
   await test('active-job fallback SQL returns correct job',async()=>{
     const a=await enqueueAnalysisJob(first.session.id),b=await enqueueAnalysisJob(first.session.id);assert.equal(a.id,b.id);
   });

@@ -418,6 +418,44 @@ purchase statements above. It does not assert that public sales are enabled.
   live acceptance. Hosted decline, delayed-failure/retry and local-presentment
   acceptance remain distinct checks. No real funds were moved in this rollout.
 
+## Public release preparation - 2026-10-06
+
+- Added authenticated delayed-payment-failure handling and safe retry. A completed
+  unpaid Checkout remains non-retryable unless the bound provider failure event
+  was processed. Failure does not enqueue reports; retry preserves attempt
+  history; late duplicate settlement enters review rather than generating a
+  second report. No schema or runtime-role privilege expansion is required.
+- Customer status now exposes failed payment accurately. Success return pages
+  can offer retry after verified failure; all 11 locales have failure copy.
+- Reconciled Link/NeuroMap invoice, report and support responsibilities in all 11
+  canonical legal locales. Added encrypted backup recipient and payment-data
+  minimization disclosures. Proposed legal version: 2026-10-06. Changed content
+  digests require fresh acceptance; archived purchased documents are preserved.
+- Updated matching engine/consent/checkout loaders, embed-manager versions and
+  smoke checks. Engine: 20261006-managed-launch-v5; return pages:
+  20261006-managed-failure-v2.
+- Local audit:all passed. Payment-lifecycle: 29 cases; both least-privilege
+  runtime roles: 30 cases each. Managed-payment/operator, contract-evidence and
+  consent-security tests passed. Production dependency advisory audit: zero
+  vulnerabilities using system trust roots, without disabling TLS validation.
+- Existing live webhook saved as Active with 12 events, adding only
+  checkout.session.async_payment_failed. Endpoint, signing secret and API version
+  are unchanged. This proves subscription configuration, not hosted failure
+  acceptance or a real purchase.
+- At 19:15 UTC the production health, schema, worker, outbox and scheduled
+  operations checks passed; checkout remained closed. Missing configured gates:
+  vendor review/evidence, security approval, tax review/evidence, live managed
+  acceptance and production checkout. No approvals are invented by this patch.
+- Stripe's tax coverage documentation lists Hungary and all EU member states.
+  Other listed markets are also covered subject to provider conditions; outside
+  coverage the seller remains responsible. This is not an all-world tax approval
+  or a way to label all buyers EU residents. Tax source checked 2026-10-06:
+  https://docs.stripe.com/payments/managed-payments/tax-compliance.
+- Outstanding release acceptance: current controller/legal/vendor/tax evidence,
+  normal protected PR integration, hosted decline/delayed-failure/local-currency
+  checks and owner-led live purchase verifying Link invoice, report and return
+  status. Only then may public checkout be described as open.
+
 ## External references
 
 - https://docs.stripe.com/payments/managed-payments/eligibility

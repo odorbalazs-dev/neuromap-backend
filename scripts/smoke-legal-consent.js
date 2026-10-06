@@ -51,7 +51,9 @@ const requiredUiKeys = [
 supportedLangs.forEach((lang) => {
   const locale = legalContent[lang];
   assert(locale && typeof locale === "object", `Missing evaluated legal locale: ${lang}`);
-  assert(locale.terms.length === 11, `${lang} terms must contain 11 sections`);
+  assert(locale.terms.length === 12, `${lang} terms must contain 12 sections`);
+  assert(locale.terms[5][1].includes('Link') && locale.privacy[7][1].includes('Backblaze'), `${lang} payment and backup roles must be disclosed`);
+  assert(locale.terms[11][1].includes('https://support.link.com/topics/sold-through-link'), `${lang} transaction support is missing`);
   assert(locale.privacy.length === 16, `${lang} privacy notice must contain 16 sections`);
   assert(locale.termsChecks.length === 3, `${lang} terms must contain 3 acknowledgements`);
   assert(locale.privacyChecks.length === 2, `${lang} privacy notice must contain 2 consents`);
@@ -162,9 +164,9 @@ assert(
     legalConsentSource.includes("overscroll-behavior: contain") &&
     legalConsentSource.includes("-webkit-overflow-scrolling: touch") &&
     legalConsentSource.includes('@media (max-height: 560px)') &&
-    legalConsentSource.includes('const LEGAL_UI_VERSION = "20260909-consent-security-v2"') &&
-    legalConsentSource.includes('const CONTENT_VERSION = "20260726-verified-rights-v3"') &&
-    engineSource.includes('20260909-consent-security-v2'),
+    legalConsentSource.includes('const LEGAL_UI_VERSION = "20261006-managed-disclosures-v3"') &&
+    legalConsentSource.includes('const CONTENT_VERSION = "20261006-managed-disclosures-v1"') &&
+    engineSource.includes('20261006-managed-disclosures-v3'),
   "Legal consent must remain scrollable with visible actions on mobile and short viewports"
 );
 
@@ -172,12 +174,12 @@ assert(
   legalConsentSource.includes("/verify") &&
     legalConsentSource.includes('data-verification-code') &&
     legalConsentSource.includes("x-privacy-request-token") &&
-    legalConsentSource.includes("20260726-verified-rights-v3"),
+    legalConsentSource.includes("20261006-managed-disclosures-v1"),
   "Verified privacy-rights workflow or legal version marker is incomplete"
 );
 
 assert(
-  engineSource.includes("20260909-consent-security-v2") &&
+  engineSource.includes("20261006-managed-disclosures-v3") &&
     engineSource.includes("isCompatibleLegalManager") &&
     engineSource.includes('String(manager.version || "") === LEGAL_CONSENT_VERSION') &&
     engineSource.includes("const forceReload = Boolean(window.NM_LEGAL)") &&
@@ -216,7 +218,7 @@ assert(
 });
 
 assert(
-  checkoutPagesSource.includes("20261006-invoice-disposition-v1") &&
+  checkoutPagesSource.includes("20261006-managed-failure-v2") &&
     checkoutPagesSource.includes("isAnalyticsAllowed") &&
     checkoutPagesSource.includes("sanitizeCheckoutAnalyticsPayload") &&
     checkoutPagesSource.includes("installPrivacyDefaults();"),

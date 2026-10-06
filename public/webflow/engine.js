@@ -5,9 +5,9 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20260910-payment-integrity-v4";
+  const ENGINE_VERSION = "20261006-managed-launch-v5";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
-  const LEGAL_CONSENT_VERSION = "20260909-consent-security-v2";
+  const LEGAL_CONSENT_VERSION = "20261006-managed-disclosures-v3";
   const LANGUAGE_CONFIRMED_KEY = "nm_language_confirmed_v1";
   const DRAFT_STORAGE_KEY = "nm_questionnaire_draft_v2";
   const LEGACY_DRAFT_STORAGE_KEY = "nm_questionnaire_draft_v1";
