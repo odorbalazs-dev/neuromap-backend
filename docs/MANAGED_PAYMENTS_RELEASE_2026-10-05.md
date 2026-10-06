@@ -201,10 +201,39 @@ No live checkout, refund, bank payout or tax approval is evidenced by unit tests
   web and worker, verify provider configuration and perform an authorized live
   acceptance purchase. A bank payout requires a settled available balance.
 
+## Standard mailbox review and corrections, 2026-10-06
+
+- Verified in the company Gmail inbox: Standard purchase confirmation arrived
+  at 10:59 local time with the archived legal HTML and purchase receipt JSON;
+  report arrived at 11:00 with an opening, 11-page PDF attachment. This closes
+  mailbox arrival for this synthetic Standard order, not Plus or live delivery.
+- Tightened report instructions: weak/zero/unassessed signals cannot establish
+  absence of a condition, and parental answers are not direct observation.
+  Added narrow known-phrase regression guards for 11 languages. A flagged draft
+  is rewritten once; a repeated failure keeps `REPORT_CONTRACT_INVALID` and is
+  not returned for delivery. These guards are not clinical validation or a
+  guarantee that all possible misleading paraphrases will be detected.
+- Purchase confirmations now use localized Europe/Budapest time, including
+  explicit zone and UTC offset with seasonal daylight-saving adjustment.
+  Missing/invalid timestamps show a placeholder rather than an invented time.
+- Resend rewrote legal URLs to tracking redirects in the delivered email.
+  Tracking is controlled at the sending-domain level, not through a supported
+  per-email option in the installed SDK. Domain click/open tracking must be
+  disabled and verified in a new synthetic email. The current browser requires
+  owner sign-in; this provider configuration is still pending, not fixed by
+  the code commit. Do not broaden the runtime sending key for domain management.
+- Offline regression tests cover all 11 safety guard examples, cautious text,
+  actual generation retry/rejection with a mocked transport, and all 11
+  localized confirmations including summer/winter timestamps. Remote CI,
+  sandbox deployment and a fresh generated-email check are separate evidence.
+- No production checkout activation or rewrite of existing delivered reports
+  is included in these corrections.
+
 ## External references
 
 - https://docs.stripe.com/payments/managed-payments/eligibility
 - https://docs.stripe.com/tax/tax-codes
 - https://support.stripe.com/questions/understand-managed-payments-payout-speed
+- https://resend.com/changelog/update-click-open-tracking-via-api
 
 No secrets, customer records or backup identities belong in this release.

@@ -116,6 +116,24 @@ export function validateReportStructure(text = "", options = {}) {
     pattern.lastIndex = 0;
   });
 
+  const prohibitedPatterns = Array.isArray(options.prohibitedPatterns)
+    ? options.prohibitedPatterns
+    : [];
+  prohibitedPatterns.forEach((requirement, index) => {
+    const pattern = requirement?.pattern;
+    const label = requirement?.label || `prohibited content ${index + 1}`;
+    if (!(pattern instanceof RegExp)) {
+      errors.push(`Invalid validation pattern for ${label}.`);
+      return;
+    }
+    pattern.lastIndex = 0;
+    if (pattern.test(cleaned)) {
+      // Never put generated personal content into retry logs or error messages.
+      errors.push(`Report contains ${label}. Rewrite using questionnaire-limited evidence and uncertainty.`);
+    }
+    pattern.lastIndex = 0;
+  });
+
   return {
     ok: errors.length === 0,
     errors,

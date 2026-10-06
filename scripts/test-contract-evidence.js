@@ -47,6 +47,8 @@ for (const lang of Object.keys(legalContent)) {
   assert.ok(mail.text.includes(result.performanceText));
   assert.ok(mail.html.includes(`lang="${lang}"`));
   assert.ok(!mail.text.includes('undefined'));
+  assert.ok(mail.text.includes('(Europe/Budapest)'));
+  assert.ok(mail.html.includes('(Europe/Budapest)'));
   assert.equal(JSON.parse(Buffer.from(result.attachments[1].content, 'base64')).purchaseConfirmedAt, session.consent_record.purchaseConfirmedAt);
   for (const change of [undefined, { ...revision, language: 'invalid' }, { ...revision, revision_id: 'wrong' },
     { ...revision, configuration: { ...revision.configuration, termsVersion: 'newer-policy' } }]) {
@@ -56,6 +58,18 @@ for (const lang of Object.keys(legalContent)) {
   // JSONB changes key order; the archived digest is the receipt's stable identity.
   const reordered = Object.fromEntries(Object.entries(revision.content).reverse());
   assert.doesNotThrow(() => buildContractEvidence(session, { ...revision, content: reordered }));
+}
+for (const [paidAt, time] of [
+  ['2026-10-06T08:59:00Z', '10:59'],
+  ['2026-12-06T08:59:00Z', '09:59']
+]) {
+  const mail = buildContractConfirmationEmail({ lang: 'hu', paidAt });
+  assert.ok(mail.text.includes(time), 'Purchase time must follow Budapest daylight saving time');
+  assert.ok(mail.text.includes('(Europe/Budapest)'));
+}
+for (const paidAt of [undefined, 'invalid-date']) {
+  const mail = buildContractConfirmationEmail({ lang: 'hu', paidAt });
+  assert.ok(mail.text.includes('Vásárlás időpontja: -'), 'Never invent a missing purchase time');
 }
 const { db } = await import('../src/db/db.js');
 const { env } = await import('../src/config/env.js');

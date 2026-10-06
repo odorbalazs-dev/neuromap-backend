@@ -6,6 +6,7 @@ import {
   validateReportStructure
 } from "./report-contract.service.js";
 import { buildReportV2PromptContext } from "./report-v2.service.js";
+import { getReportSafetyRequirements } from "./report-safety.service.js";
 import {
   formatProfessionalTerm,
   formatReportDomain
@@ -45,6 +46,7 @@ function getReportValidationOptions(lang) {
     minSectionLength: 160,
     maxHeadingLength: 180,
     requireBlankLine: true,
+    prohibitedPatterns: getReportSafetyRequirements(safeLang),
     requiredPatterns: [
       {
         label: `a non-diagnostic disclaimer in ${safeLang}`,
@@ -469,6 +471,10 @@ ${buildLanguageInstruction(safeLang)}
 NON-NEGOTIABLE SAFETY RULES:
 - This is NOT a diagnosis.
 - Do NOT say the child has ADHD, autism, anxiety, depression, learning disorder, or any condition.
+- Do NOT state that a condition is absent, excluded, irrelevant, or ruled out, or that the child is completely healthy.
+- Low, zero, missing, or weak questionnaire signals do not prove the absence of a difficulty or condition. Distinguish a low signal from insufficient information.
+- Describe only what the supplied parental answers suggest. Do not claim direct observation of the child, including categorical statements that the child does not show particular behavioral patterns.
+- A ranked secondary domain is not by itself a positive finding. Calibrate it to the actual answers, score strength, and number of questions available for that domain.
 - Do NOT recommend medication.
 - Do NOT use alarming, deterministic, or fear-based wording.
 - Do NOT mention AI, prompts, scoring internals, bank names, hidden logic, item IDs, or implementation details.
@@ -640,7 +646,7 @@ Describe the main behavioral, emotional, regulatory, social, or learning pattern
 Explain the primary screening area. Describe how it may appear at home, in learning situations, routines, play, and relationships. Do not diagnose.
 
 4. Secondary or overlapping signals
-Explain the secondary signal carefully. If it is weak, say it is weak. If it overlaps with the primary pattern, explain the overlap in plain language.
+Explain the secondary signal carefully. If it is weak, say the supplied answers provide limited indication in this area, not that the child has no difficulty. If this area was not assessed in detail, say so. Weak signals cannot rule out a condition. If it overlaps with the primary pattern, explain the overlap in plain language.
 
 5. Possible impact on everyday life
 Describe possible effects on home life, learning, peer relationships, routines, transitions, independence, and emotional wellbeing.

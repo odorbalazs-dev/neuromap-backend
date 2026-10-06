@@ -326,13 +326,19 @@ function formatAmount(amountTotal, currency, lang) {
 }
 
 function formatDate(value, lang) {
-  const date = value ? new Date(value) : new Date();
+  if (!value) return "-";
+  const date = new Date(value);
+  if (!Number.isFinite(date.getTime())) return "-";
   try {
     return new Intl.DateTimeFormat(LOCALES[lang] || LOCALES.en, {
-      dateStyle: "long",
-      timeStyle: "short",
-      timeZone: "UTC"
-    }).format(date);
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZone: "Europe/Budapest",
+      timeZoneName: "shortOffset"
+    }).format(date) + " (Europe/Budapest)";
   } catch (_error) {
     return date.toISOString();
   }
