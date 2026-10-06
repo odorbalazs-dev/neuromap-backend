@@ -75,4 +75,22 @@ vm.runInContext(section('  async function checkCheckoutAvailability()', '  async
 assert.equal(await vm.runInContext('checkCheckoutAvailability()', unavailableSandbox), false);
 assert.equal(hero.notice.textContent, 'Unavailable');
 assert.equal(hero.notice.hidden, false);
+const translatedNotice = { textContent: 'Unavailable', hidden: false };
+const languageState = { lang: 'en' };
+const languageSandbox = vm.createContext({
+  state: languageState,
+  localStorage: { setItem() {} },
+  getUI: () => ({}),
+  getAgeUiText: () => ({}),
+  getCheckoutMaintenanceCopy: () => `Unavailable-${languageState.lang}`,
+  document: { documentElement: {}, getElementById: id => id === 'nmCheckoutAvailability' ? translatedNotice : null },
+  buildLangButtons() {}, syncLanguageButtonState() {}, ensureChildAgeField() {},
+  updateChildAgeFieldLanguage() {}, renderCurrentStep() {}
+});
+vm.runInContext(section('  function applyLang(lang)', '  function updateQuestionProgress('), languageSandbox);
+for (const lang of ['hu', 'en', 'de', 'it', 'es', 'fr', 'pt', 'pl', 'ja', 'zh', 'ar']) {
+  vm.runInContext(`applyLang('${lang}')`, languageSandbox);
+  assert.equal(translatedNotice.textContent, `Unavailable-${lang}`);
+  assert.equal(translatedNotice.hidden, false, 'Language changes must not open a closed checkout');
+}
 console.log('Landing start gate passed: legacy handlers intercepted, closed gates keep form hidden, visible maintenance notice (mocked DOM/I/O).');

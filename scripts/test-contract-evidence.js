@@ -17,7 +17,7 @@ globalThis.fetch = async (url, request) => {
 };
 function fixture(lang) {
   const configuration = { configurationDigest: 'accepted-config', documentDigests: { [lang]: documentDigest(legalContent[lang]) },
-    termsVersion: 'accepted-terms', privacyPolicyVersion: 'accepted-privacy', consentPolicyVersion: 'accepted-consent',
+    termsVersion: 'accepted-terms', privacyPolicyVersion: 'accepted-privacy', consentPolicyVersion: 'accepted-consent', retentionDays: 75,
     controller: { name: '<script>invalid</script>', address: 'Fixture', privacyEmail: 'privacy@example.invalid' },
     termsUrl: 'https://example.invalid/terms', privacyPolicyUrl: 'https://example.invalid/privacy' };
   const revision = { revision_id: documentDigest([configuration.configurationDigest, configuration.documentDigests[lang], lang]),
@@ -38,6 +38,12 @@ for (const lang of Object.keys(legalContent)) {
   assert.ok(html.includes(`lang="${lang}"`));
   assert.ok(html.includes(lang === 'ar' ? 'dir="rtl"' : 'dir="ltr"'));
   assert.ok(html.includes('&lt;script&gt;invalid&lt;/script&gt;'));
+  assert.ok(html.includes(`data-retention-period>${revision.content.ui.retentionLabel}: 75 ${revision.content.ui.retentionDaysUnit}</p>`));
+  const legacyUi = { ...revision.content.ui };
+  delete legacyUi.retentionLabel;
+  delete legacyUi.retentionDaysUnit;
+  const legacy = buildContractEvidence(session, { ...revision, content: { ...revision.content, ui: legacyUi } });
+  assert.ok(!Buffer.from(legacy.attachments[0].content, 'base64').toString().includes('data-retention-period'));
   assert.ok(!html.includes('<script>'));
   assert.equal(result.attachments.length, 2);
   assert.ok(!JSON.stringify(result).includes('must-not-be-exported'));
@@ -87,6 +93,20 @@ try {
   const { renderLegalPage } = await import('../src/services/legal-pages.service.js');
   assert.ok(renderLegalPage('terms', 'hu').includes('changed-after-purchase'));
   assert.ok(!renderLegalPage('privacy', 'hu').includes('changed-after-purchase'));
+  env.DATA_RETENTION_DAYS = 123;
+  for (const [lang, copy] of Object.entries(legalContent)) {
+    const html = renderLegalPage('privacy', lang);
+    const labels = copy.ui;
+    assert.ok([labels.versionLabel, labels.effectiveDateLabel, labels.retentionLabel, labels.retentionDaysUnit].every(label => typeof label === 'string' && label.length));
+    assert.ok(html.includes(`data-retention-period>${labels.retentionLabel}: 123 ${labels.retentionDaysUnit}</p>`));
+    assert.ok(html.includes(`${labels.versionLabel}: `));
+    assert.ok(html.includes(`${labels.effectiveDateLabel}: `));
+    assert.ok(!renderLegalPage('terms', lang).includes('data-retention-period'));
+    assert.ok(!html.includes('undefined'));
+  }
+  env.PRIVACY_POLICY_VERSION = '<script>policy</script>';
+  assert.ok(renderLegalPage('privacy', 'hu').includes('&lt;script&gt;policy&lt;/script&gt;'));
+  assert.ok(!renderLegalPage('privacy', 'hu').includes('<script>'));
   assert.equal((await sendContractConfirmationForSession(session.id)).status, 'sent');
   assert.equal(sent.length, 1);
   assert.equal(sent[0].attachments.length, 2);

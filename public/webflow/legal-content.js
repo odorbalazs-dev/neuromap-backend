@@ -334,5 +334,25 @@
     common[code].terms.push([common[code].ui.legalLinks + ' - Link', value[2]]);
   });
 
+  const metadataLabels = {
+    hu: ['Verzió', 'Hatálybalépés', 'Általános adatmegőrzési idő', 'nap'],
+    en: ['Version', 'Effective date', 'General data retention period', 'days'],
+    de: ['Version', 'Gültig ab', 'Allgemeine Aufbewahrungsfrist', 'Tage'],
+    it: ['Versione', 'Data di entrata in vigore', 'Periodo generale di conservazione dei dati', 'giorni'],
+    es: ['Versión', 'Fecha de entrada en vigor', 'Plazo general de conservación de datos', 'días'],
+    fr: ['Version', 'Date d’entrée en vigueur', 'Durée générale de conservation des données', 'jours'],
+    pt: ['Versão', 'Data de entrada em vigor', 'Prazo geral de conservação dos dados', 'dias'],
+    pl: ['Wersja', 'Data wejścia w życie', 'Ogólny okres przechowywania danych', 'dni'],
+    ja: ['バージョン', '施行日', '一般的なデータ保存期間', '日'],
+    zh: ['版本', '生效日期', '一般数据保留期限', '天'],
+    ar: ['الإصدار', 'تاريخ السريان', 'مدة الاحتفاظ العامة بالبيانات', 'يومًا']
+  };
+  Object.entries(metadataLabels).forEach(([code, labels]) => {
+    Object.assign(common[code].ui, {
+      versionLabel: labels[0], effectiveDateLabel: labels[1],
+      retentionLabel: labels[2], retentionDaysUnit: labels[3]
+    });
+  });
+
   window.NM_LEGAL_CONTENT = Object.freeze(common);
 })();

@@ -1,10 +1,10 @@
 (function () {
   "use strict";
 
-  const LEGAL_UI_VERSION = "20261006-managed-disclosures-v3";
+  const LEGAL_UI_VERSION = "20261006-legal-retention-v4";
   const RECEIPT_KEY = "nm_legal_receipt_v1";
   const ANALYTICS_KEY = "nm_analytics_consent_v1";
-  const CONTENT_VERSION = "20261006-managed-disclosures-v1";
+  const CONTENT_VERSION = "20261006-legal-retention-v2";
   const SUPPORTED_LANGS = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];
   const PRIVACY_RIGHTS_UI = {
     hu: {
@@ -424,6 +424,7 @@
     const controller = config.controller || {};
     const authority = config.supervisoryAuthority || {};
     const locale = normalizeLang(lang);
+    const ui = getContent(locale).ui;
     const parts = [
       controller.name,
       controller.address,
@@ -434,14 +435,18 @@
       authority.postalAddress,
       authority.email,
       authority.phone,
-      config.policyEffectiveDate,
-      config.retentionDays ? String(config.retentionDays) : "",
+      config.policyEffectiveDate ? `${ui.effectiveDateLabel}: ${config.policyEffectiveDate}` : "",
       locale.toUpperCase()
     ].filter(Boolean);
     const links = [authority.url, config.europeanAuthorities && config.europeanAuthorities.directoryUrl]
       .filter(url => /^https:\/\//.test(String(url || "")))
       .map(url => `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(url)}</a>`);
     return parts.map(escapeHtml).join(" &middot; ") + "<br>" + links.join(" &middot; ");
+  }
+
+  function privacyRetentionMarkup(config, lang) {
+    const ui = getContent(lang).ui;
+    return `<p data-retention-period>${escapeHtml(ui.retentionLabel)}: ${escapeHtml(config.retentionDays)} ${escapeHtml(ui.retentionDaysUnit)}</p>`;
   }
 
   function sectionMarkup(sections) {
@@ -520,7 +525,7 @@
         <div class="nm-legal-dialog" role="dialog" aria-modal="true" aria-labelledby="nmLegalTitle">
           <header class="nm-legal-head">
             <div class="nm-legal-headline"><h2 id="nmLegalTitle">${escapeHtml(ui.termsTitle)}</h2><span class="nm-legal-step">1 / 2</span></div>
-            <div class="nm-legal-meta">${legalMeta(config, lang)} &middot; ${escapeHtml(config.termsVersion || "")}</div>
+            <div class="nm-legal-meta">${legalMeta(config, lang)} &middot; ${escapeHtml(ui.versionLabel)}: ${escapeHtml(config.termsVersion || "")}</div>
           </header>
           <div class="nm-legal-scroll" tabindex="0" data-autofocus>${notice ? `<p role="status">${escapeHtml(notice)}</p>` : ""}${sectionMarkup(content.terms)}</div>
           <footer class="nm-legal-foot">
@@ -579,9 +584,9 @@
         <div class="nm-legal-dialog" role="dialog" aria-modal="true" aria-labelledby="nmLegalTitle">
           <header class="nm-legal-head">
             <div class="nm-legal-headline"><h2 id="nmLegalTitle">${escapeHtml(ui.privacyTitle)}</h2><span class="nm-legal-step">2 / 2</span></div>
-            <div class="nm-legal-meta">${legalMeta(config, lang)} &middot; ${escapeHtml(config.privacyPolicyVersion || "")}</div>
+            <div class="nm-legal-meta">${legalMeta(config, lang)} &middot; ${escapeHtml(ui.versionLabel)}: ${escapeHtml(config.privacyPolicyVersion || "")}</div>
           </header>
-          <div class="nm-legal-scroll" tabindex="0" data-autofocus>${sectionMarkup(content.privacy)}</div>
+          <div class="nm-legal-scroll" tabindex="0" data-autofocus>${privacyRetentionMarkup(config, lang)}${sectionMarkup(content.privacy)}</div>
           <footer class="nm-legal-foot">
             <div class="nm-legal-form-scroll" tabindex="0">
               <p class="nm-legal-read-gate" data-read-gate>${escapeHtml(readGateUi(lang).prompt)}</p>
@@ -742,7 +747,7 @@
       overlay.innerHTML = `
         <div class="nm-legal-dialog" role="dialog" aria-modal="true" aria-labelledby="nmLegalTitle">
           <header class="nm-legal-head"><div class="nm-legal-headline"><h2 id="nmLegalTitle">${escapeHtml(isPrivacy ? ui.privacyTitle : ui.termsTitle)}</h2></div><div class="nm-legal-meta">${legalMeta(config, lang)}</div></header>
-          <div class="nm-legal-scroll" tabindex="0">${sectionMarkup(isPrivacy ? content.privacy : content.terms)}</div>
+          <div class="nm-legal-scroll" tabindex="0">${isPrivacy ? privacyRetentionMarkup(config, lang) : ""}${sectionMarkup(isPrivacy ? content.privacy : content.terms)}</div>
           <footer class="nm-legal-foot"><div class="nm-legal-actions"><button class="nm-legal-button primary" type="button">${escapeHtml(ui.close || "Close")}</button></div></footer>
         </div>`;
       document.body.appendChild(overlay);

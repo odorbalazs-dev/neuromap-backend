@@ -219,6 +219,35 @@ A new model, region, subprocessor, telemetry feature, email-delivery method, Web
 
 ## 8. Evidence boundary and public claims
 
+### Current-source reconciliation - 2026-10-06
+
+This dated review supersedes earlier source-version assumptions, not historical
+acceptance records. Standard incorporated terms can establish an agreement; a
+bespoke provider letter is not universally required. Scope and account linkage
+must still match actual processing.
+
+| Provider | Verified current mechanism | Remaining scope/evidence action |
+| --- | --- | --- |
+| Railway | Its DPA execution section requires submission through the linked DocuSign form and Railway execution. | Do not mark executed without the resulting agreement. Exhibit A lists no special-category data; reconcile intentional behaviour/health-inference processing before signing an inaccurate schedule. |
+| OpenAI | Current DPA, effective 2026-01-01, is incorporated into the Services Agreement; acceptance can occur through service use. EEA customers contract under the stated Irish entity. | Link the company API account to applicable terms. Schedule 1 still describes sensitive data as unexpected unstructured input, not intentionally solicited structured responses. Establish applicable scope or change the data flow; standard incorporation alone does not settle this mismatch. |
+| Resend | The current DPA is incorporated upon agreement acceptance; its signature blocks are reference-only. | Retain account/company evidence. Exhibit A says sensitive transfers are not applicable, while a report attachment may contain health inferences. Resolve that scope or adopt authenticated report retrieval with neutral email; do not silently change delivery promises. |
+| Backblaze | Its official help page confirms the DPA is part of existing/new customers' accepted Terms of Service. The owner separately confirmed company-representative acceptance. | This is a recorded acceptance basis, not a newly signed certificate. Retain the account evidence, EU backup configuration, encryption and actual scope assessment. No separate bespoke letter is assumed necessary. |
+
+Official sources checked on this date:
+
+- https://railway.com/legal/dpa
+- https://docs.railway.com/enterprise/compliance
+- https://openai.com/policies/data-processing-addendum/
+- https://resend.com/legal/dpa
+- https://help.backblaze.com/hc/en-us/articles/360004146953-Data-Processing-Addendum
+- https://www.backblaze.com/company/policy/dpa-for-eea-eu-residents
+
+No actual customer responses, PDFs, account secrets or contractual signatures are
+included in this public repository. Provider clarification drafts and eventual
+signed evidence belong in restricted storage. Global vendor approval remains
+pending; neither the owner's historical lawyer-document attestation nor this
+source review is a substitute for resolving an inconsistent processing schedule.
+
 This register is an internal working paper. It records implementation evidence and unresolved controller obligations; it is not legal advice, a conformity assessment, a penetration-test certificate, a clinical validation, a psychometric validation or a vendor approval certificate.
 
 The following statements must not appear on the landing page, report, checkout, email or advertising unless the corresponding signed and dated independent evidence is retained and linked from the approval record: "GDPR certified", "legally approved", "clinically validated", "psychometrically validated", "medical-grade", "secure/penetration-tested", "WCAG compliant", or an equivalent translated claim.

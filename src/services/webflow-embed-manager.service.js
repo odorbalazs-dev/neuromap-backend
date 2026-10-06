@@ -1,4 +1,4 @@
-﻿import fs from "fs";
+import fs from "fs";
 import path from "path";
 import { env } from "../config/env.js";
 
@@ -13,7 +13,7 @@ const EMBEDS = [
     sourcePath: "public/webflow/engine.js",
     snippetPath: "web/engine-embed.full.html",
     publicPath: "/public/webflow/engine.js",
-    version: "20261006-managed-launch-v5",
+    version: "20261006-launch-retention-v6",
     note: "External script loader. This avoids the Webflow 50k code embed limit."
   },
   {
