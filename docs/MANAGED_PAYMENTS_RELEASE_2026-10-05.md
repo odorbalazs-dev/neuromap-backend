@@ -216,16 +216,25 @@ No live checkout, refund, bank payout or tax approval is evidenced by unit tests
 - Purchase confirmations now use localized Europe/Budapest time, including
   explicit zone and UTC offset with seasonal daylight-saving adjustment.
   Missing/invalid timestamps show a placeholder rather than an invented time.
-- Resend rewrote legal URLs to tracking redirects in the delivered email.
-  Tracking is controlled at the sending-domain level, not through a supported
-  per-email option in the installed SDK. Domain click/open tracking must be
-  disabled and verified in a new synthetic email. The current browser requires
-  owner sign-in; this provider configuration is still pending, not fixed by
-  the code commit. Do not broaden the runtime sending key for domain management.
+- Resend rewrote legal URLs to tracking redirects in the original email.
+  Disabled domain click tracking for `neuromapkids.com`; open tracking was
+  already off and remains off. Verified both switches on the domain settings
+  page without broadening the runtime sending key. Tracking remains a provider
+  configuration, not a per-email option in the installed SDK.
+- A new, explicitly labelled technical email arrived in the company Gmail
+  inbox at 12:04 local time. Its two actual legal link targets were direct
+  sandbox `/legal/terms?lang=hu` and `/legal/privacy?lang=hu` URLs, without
+  tracking redirects. The synthetic purchase timestamp displayed the localized
+  date with `10:59 GMT+2 (Europe/Budapest)`. This was not a new purchase, invoice
+  or contract.
 - Offline regression tests cover all 11 safety guard examples, cautious text,
   actual generation retry/rejection with a mocked transport, and all 11
-  localized confirmations including summer/winter timestamps. Remote CI,
-  sandbox deployment and a fresh generated-email check are separate evidence.
+  localized confirmations including summer/winter timestamps. Local
+  `audit:all`, `test:report-safety`, `test:contract-evidence` and
+  `test:managed-payments` passed. GitHub CI run `37447084327` for `64bae01`
+  passed all quality steps, including dependency audit and isolated PostgreSQL
+  integration. Both sandbox backend and worker successfully deployed that
+  commit. These checks do not claim a fresh full purchase or generated report.
 - No production checkout activation or rewrite of existing delivered reports
   is included in these corrections.
 
