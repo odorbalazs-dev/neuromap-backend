@@ -74,11 +74,15 @@ No live checkout, refund, bank payout or tax approval is evidenced by unit tests
   No credentials are in this file.
 - Both GitHub workflows for commit `7f37c30` completed successfully. This is
   automated code verification, not proof of a successful hosted checkout.
-- A request to register a temporary account-level Railway SSH key for test
-  database maintenance was blocked by the approval review. Explicit owner
-  authorization is pending; the blocked command did not create or register
-  that key. Database TLS verification, migrations and runtime roles have not
-  yet been completed for this new sandbox database.
+- On 2026-10-06 the owner explicitly authorized a temporary account-level SSH
+  key for the test database. It was registered, but the connection failed host
+  key verification before any database command ran. The temporary key was then
+  revoked, its absence checked through the Railway API, and its local files
+  removed. No account-level SSH key from this attempt remains active.
+- A subsequent certificate-verified TLS relay attempt timed out without a
+  command result. It is not evidence of successful database access. Database
+  TLS verification, migrations and runtime roles remain outstanding for this
+  new sandbox database. No production configuration was changed.
 - Following the retrieval/recovery API-version correction, the local mocked
   Managed Payments tests and all 23 isolated payment-lifecycle cases passed.
   Hosted webhook/PDF/email acceptance checks have not yet run.
