@@ -24,12 +24,25 @@ export async function startOrResumePayment(session, token, executor) {
   let attempt = Math.max(1, Number(session.checkout_attempt || 1));
   if (session.stripe_session_id) {
     const previous = await retrieveCheckoutSession(session.stripe_session_id);
-    if (previous.payment_status === 'paid' || previous.status === 'complete') {
+    if (previous.payment_status === 'paid') {
       throw new ConsentError('Payment is being verified.', { status: 409, code: 'PAYMENT_ALREADY_COMPLETED' });
     }
     await recordPaymentAttempt(previous, session.id, attempt, executor);
+    // An unpaid completed Checkout can still settle. Only an authenticated,
+    // processed failure event authorizes replacing that particular attempt.
+    const failure = previous.status === 'complete' && previous.payment_status === 'unpaid'
+      ? await executor.query(`SELECT event_id FROM webhook_events
+          WHERE provider='stripe' AND event_type='checkout.session.async_payment_failed'
+            AND status='processed' AND payload #>> '{data,object,id}'=$1
+            AND payload #>> '{data,object,metadata,internalSessionId}'=$2
+            AND payload ->> 'livemode'=$3 LIMIT 1`,
+        [previous.id, session.id, String(previous.livemode)])
+      : null;
+    if (previous.status === 'complete' && !failure?.rowCount) {
+      throw new ConsentError('Payment is being verified.', { status: 409, code: 'PAYMENT_ALREADY_COMPLETED' });
+    }
     if (previous.status === 'open' && previous.url) return previous;
-    if (previous.status !== 'expired') throw new Error('CHECKOUT_STATE_UNKNOWN');
+    if (previous.status !== 'expired' && !failure?.rowCount) throw new Error('CHECKOUT_STATE_UNKNOWN');
     attempt += 1;
   } else if (Date.now() - new Date(session.created_at).getTime() > 23 * 3600000) {
     // Stripe's idempotency retention is finite. Do not guess after an uncertain old request.
@@ -42,7 +55,7 @@ export async function startOrResumePayment(session, token, executor) {
   if (!checkout?.id || !checkout?.url || checkout.status !== 'open') throw new Error('CHECKOUT_RESPONSE_INVALID');
   await recordPaymentAttempt(checkout, session.id, attempt, executor);
   await linkStripeCheckoutSession({ sessionId: session.id, stripeSessionId: checkout.id, checkoutUrl: checkout.url }, { executor });
-  await executor.query('UPDATE sessions SET checkout_attempt = $2 WHERE id = $1', [session.id, attempt]);
+  await executor.query("UPDATE sessions SET checkout_attempt = $2, payment_status='pending' WHERE id = $1", [session.id, attempt]);
   return checkout;
 }
 

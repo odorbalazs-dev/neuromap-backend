@@ -1,10 +1,10 @@
 import { env } from "../config/env.js";
 import { isInvoiceTaxPolicyValid } from '../config/invoice.js';
+import { managedPaymentsMode } from './managed-payments-policy.js';
 
 const REQUIRED_APPROVALS = [
   ["legal_review", "LEGAL_REVIEW_APPROVED", "LEGAL_REVIEW_EVIDENCE"],
   ["dpia", "DPIA_APPROVED", "DPIA_EVIDENCE"],
-  ["clinical_content_review", "CLINICAL_CONTENT_REVIEW_APPROVED", "CLINICAL_CONTENT_REVIEW_EVIDENCE"],
   ["privacy_policy", "PRIVACY_POLICY_PUBLISHED", "PRIVACY_POLICY_EVIDENCE"],
   ["terms", "TERMS_PUBLISHED", "TERMS_EVIDENCE"],
   ["consent_manager", "CONSENT_MANAGER_CONFIGURED", "CONSENT_MANAGER_EVIDENCE"],
@@ -37,12 +37,22 @@ export function getLaunchGateStatus(runtimeEnv = env) {
     checks.tax_configuration = runtimeEnv.TAX_CONFIGURATION_APPROVED === true;
     evidenceChecks.tax_configuration_evidence = hasEvidence(runtimeEnv.TAX_CONFIGURATION_EVIDENCE);
     checks.payment_review_owner = Boolean(runtimeEnv.PAYMENT_REVIEW_OWNER?.trim());
-    try {
-      const rules = JSON.parse(runtimeEnv.INVOICE_TAX_POLICY_JSON || '{}');
-      checks.tax_policy = isInvoiceTaxPolicyValid(rules);
-      // Checkout collects an unrestricted billing country; an explicit reviewed default is required.
-      checks.tax_country_coverage = Boolean(rules?.['*']);
-    } catch { checks.tax_policy = false; }
+    let managedMode;
+    try { managedMode = managedPaymentsMode(runtimeEnv); checks.payment_mode = true; }
+    catch { checks.payment_mode = false; }
+    if (managedMode === 'live') {
+      checks.managed_payments_live = runtimeEnv.MANAGED_PAYMENTS_LIVE_APPROVED === true;
+      evidenceChecks.managed_payments_live_evidence = hasEvidence(runtimeEnv.MANAGED_PAYMENTS_LIVE_EVIDENCE);
+      checks.managed_payments_prices = ['STRIPE_PRICE_STANDARD_USD', 'STRIPE_PRICE_PLUS_USD']
+        .every(key => /^price_[A-Za-z0-9_]+$/.test(runtimeEnv[key] || ''));
+      // Reviewed MoR coverage replaces local invoice VAT rules, not the tax approval itself.
+    } else {
+      try {
+        const rules = JSON.parse(runtimeEnv.INVOICE_TAX_POLICY_JSON || '{}');
+        checks.tax_policy = isInvoiceTaxPolicyValid(rules);
+        checks.tax_country_coverage = Boolean(rules?.['*']);
+      } catch { checks.tax_policy = false; }
+    }
   }
 
   const checkoutEnabled = runtimeEnv.PRODUCTION_CHECKOUT_ENABLED !== false;

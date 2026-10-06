@@ -66,8 +66,6 @@ const readyEnv = {
   LEGAL_REVIEW_EVIDENCE: "review-legal-001",
   DPIA_APPROVED: true,
   DPIA_EVIDENCE: "review-dpia-001",
-  CLINICAL_CONTENT_REVIEW_APPROVED: true,
-  CLINICAL_CONTENT_REVIEW_EVIDENCE: "review-clinical-001",
   PRIVACY_POLICY_PUBLISHED: true,
   PRIVACY_POLICY_EVIDENCE: "https://example.com/privacy",
   TERMS_PUBLISHED: true,
@@ -92,8 +90,48 @@ const readyStatus = getLaunchGateStatus(readyEnv);
 assert(readyStatus.ready, `Strict gate should be ready: ${readyStatus.missing.join(", ")}`);
 assert(!readyStatus.blocking, "Ready strict gate must allow checkout");
 assertCheckoutLaunchReady(readyEnv);
+assert(!('clinical_content_review' in readyStatus.checks), 'Do not publish a clinical approval that was not performed');
+assert(!('clinical_content_review_evidence' in readyStatus.checks), 'Removed approval must not require evidence');
+const legacyClinicalStatus = getLaunchGateStatus({
+  ...readyEnv,
+  CLINICAL_CONTENT_REVIEW_APPROVED: false,
+  CLINICAL_CONTENT_REVIEW_EVIDENCE: ''
+});
+assert(legacyClinicalStatus.ready, 'Legacy clinical variables must not block an otherwise ready deployment');
+for (const [name, approval, evidence] of [
+  ['legal_review', 'LEGAL_REVIEW_APPROVED', 'LEGAL_REVIEW_EVIDENCE'],
+  ['dpia', 'DPIA_APPROVED', 'DPIA_EVIDENCE'],
+  ['privacy_policy', 'PRIVACY_POLICY_PUBLISHED', 'PRIVACY_POLICY_EVIDENCE'],
+  ['terms', 'TERMS_PUBLISHED', 'TERMS_EVIDENCE'],
+  ['consent_manager', 'CONSENT_MANAGER_CONFIGURED', 'CONSENT_MANAGER_EVIDENCE'],
+  ['vendor_dpa', 'VENDOR_DPA_REVIEWED', 'VENDOR_DPA_EVIDENCE'],
+  ['security_review', 'SECURITY_REVIEW_APPROVED', 'SECURITY_REVIEW_EVIDENCE']
+]) {
+  expectBlocked({ ...readyEnv, [approval]: false }, name);
+  expectBlocked({ ...readyEnv, [evidence]: '' }, `${name}_evidence`);
+}
+expectBlocked({ ...readyEnv, PRODUCTION_CHECKOUT_ENABLED: false }, 'production_checkout');
+expectBlocked({ ...readyEnv, PAYMENT_REVIEW_OWNER: '' }, 'payment_review_owner');
+expectBlocked({ ...readyEnv, TAX_CONFIGURATION_EVIDENCE: '' }, 'tax_configuration_evidence');
+expectBlocked({ ...readyEnv, PRIVACY_POLICY_URL: '' }, 'policy_configuration');
 expectBlocked({ ...readyEnv, TAX_CONFIGURATION_APPROVED: false }, 'tax_configuration');
 expectBlocked({ ...readyEnv, INVOICE_TAX_POLICY_JSON: '{"HU":{"vatRate":"27"}}' }, 'tax_country_coverage');
 expectBlocked({ ...readyEnv, INVOICE_TAX_POLICY_JSON: '{"*":{"vatRate":"invalid"}}' }, 'tax_policy');
+
+const managedEnv = { ...readyEnv, STRIPE_MANAGED_PAYMENTS_LIVE_ENABLED: true,
+  STRIPE_SECRET_KEY: 'rk_live_fixture', MANAGED_PAYMENTS_LIVE_APPROVED: true,
+  MANAGED_PAYMENTS_LIVE_EVIDENCE: 'synthetic-managed-review-001',
+  STRIPE_PRICE_STANDARD_USD: 'price_standard_fixture', STRIPE_PRICE_PLUS_USD: 'price_plus_fixture',
+  INVOICE_TAX_POLICY_JSON: '' };
+assert(getLaunchGateStatus(managedEnv).ready, 'Reviewed live MoR does not require a local invoice VAT default');
+expectBlocked({ ...managedEnv, MANAGED_PAYMENTS_LIVE_APPROVED: false }, 'managed_payments_live');
+expectBlocked({ ...managedEnv, MANAGED_PAYMENTS_LIVE_EVIDENCE: '' }, 'managed_payments_live_evidence');
+expectBlocked({ ...managedEnv, STRIPE_PRICE_PLUS_USD: '' }, 'managed_payments_prices');
+expectBlocked({ ...managedEnv, STRIPE_SECRET_KEY: 'rk_test_fixture' }, 'payment_mode');
+expectBlocked({ ...managedEnv, STRIPE_MANAGED_PAYMENTS_TEST_ENABLED: true }, 'payment_mode');
+expectBlocked({ ...managedEnv, TAX_CONFIGURATION_APPROVED: false }, 'tax_configuration');
+expectBlocked({ ...managedEnv, TAX_CONFIGURATION_EVIDENCE: '' }, 'tax_configuration_evidence');
+expectBlocked({ ...managedEnv, LEGAL_REVIEW_APPROVED: false }, 'legal_review');
+expectBlocked({ ...managedEnv, PRODUCTION_CHECKOUT_ENABLED: false }, 'production_checkout');
 
 console.log("Launch gate smoke test passed.");

@@ -5,6 +5,11 @@ import { buildBankQualityAudit } from "./bank-quality-audit.service.js";
 import { buildEmailDeliverabilityMonitor } from "./email-deliverability.service.js";
 import { buildPostPaymentMonitor } from "./post-payment-monitoring.service.js";
 
+export function adminAlertPrefix(config = env) {
+  return config.STRIPE_MANAGED_PAYMENTS_TEST_ENABLED === true && /^(sk|rk)_test_/.test(config.STRIPE_SECRET_KEY || '')
+    ? '[NeuroMap sandbox]' : '[NeuroMap]';
+}
+
 function normalizeNumber(value, fallback, min, max) {
   const number = Number(value);
 
@@ -139,7 +144,7 @@ function escapeHtml(value) {
 
 function buildEmailContent({ level, metrics, reasons, generatedAt }) {
   const dashboardUrl = `${env.APP_BASE_URL}/admin/dashboard`;
-  const subject = `[NeuroMap] ${level.toUpperCase()} production alert`;
+  const subject = `${adminAlertPrefix()} ${level.toUpperCase()} production alert`;
   const summary = reasons.length
     ? reasons.map((reason) => `${reason.label}: ${reason.count}`).join("; ")
     : `Production health is ${level}.`;
@@ -252,7 +257,7 @@ function buildBankQualityEmailContent({ level, audit, threshold }) {
   const recommendations = summary.recommendations || [];
   const dashboardUrl = `${env.APP_BASE_URL}/admin/dashboard`;
 
-  const subject = `[NeuroMap] ${level.toUpperCase()} bank quality audit`;
+  const subject = `${adminAlertPrefix()} ${level.toUpperCase()} bank quality audit`;
   const textLines = [
     `NeuroMap bank quality audit: ${level}`,
     "",
@@ -446,7 +451,7 @@ function buildOperationalEmailContent({ snapshot, threshold }) {
   });
 
   const metrics = snapshot.metrics || {};
-  const subject = `[NeuroMap] ${snapshot.level.toUpperCase()} operational alert`;
+  const subject = `${adminAlertPrefix()} ${snapshot.level.toUpperCase()} operational alert`;
   const summary = snapshot.issues.length
     ? snapshot.issues
         .slice(0, 4)

@@ -36,6 +36,7 @@ globalThis.fetch = async () => { throw new Error('Network forbidden in payment t
 
 const pg = new PGlite({ extensions: { pgcrypto } });
 const { db } = await import('../src/db/db.js');
+const { env } = await import('../src/config/env.js');
 const query = async (sql, params) => {
   const result = params?.length ? await pg.query(sql,params) : (await pg.exec(sql)).at(-1) || { rows: [] };
   return { ...result, rowCount: Math.max(result.affectedRows || 0, result.rows?.length || 0) };
@@ -47,6 +48,7 @@ const { getPublicLegalConfiguration, createConsentReceipt, withdrawConsentReceip
 const { createConsentedSession, withCheckoutConsent } = await import('../src/services/checkout-consent.service.js');
 const { startOrResumePayment } = await import('../src/services/payment-attempt.service.js');
 const { fulfillVerifiedCheckout } = await import('../src/services/payment-fulfillment.service.js');
+const { processVerifiedStripeEvent } = await import('../src/services/webhook.service.js');
 const { discoverStripePayments } = await import('../src/services/payment-discovery.service.js');
 const { synchronizePaymentAdjustment } = await import('../src/services/payment-adjustment.service.js');
 const { receiveEmailDelivery, reconcileEmailDelivery } = await import('../src/services/email-delivery-webhook.service.js');
@@ -121,6 +123,87 @@ try {
     assert.equal((await query('SELECT * FROM analysis_jobs WHERE session_id=$1',[first.session.id])).rowCount,1);
     assert.equal((await query('SELECT * FROM post_payment_outbox WHERE session_id=$1',[first.session.id])).rowCount,1);
     assert.equal((await read(first.session.id)).invoice_status,'skipped');
+  });
+  await test('delayed managed payment is fulfilled only after async success and stays idempotent',async()=>{
+    const delayed=await order(), pending=await start(delayed.session);
+    pending.status='complete'; pending.managed_payments={enabled:true};
+    const completed={id:'evt_delayed_complete_fixture',type:'checkout.session.completed',livemode:false,data:{object:{...pending}}};
+    assert.equal((await processVerifiedStripeEvent(completed)).reason,'checkout_not_paid');
+    assert.equal((await read(delayed.session.id)).payment_status,'pending');
+    assert.equal((await query('SELECT * FROM analysis_jobs WHERE session_id=$1',[delayed.session.id])).rowCount,0);
+    pending.payment_status='paid'; pending.payment_intent='pi_delayed_fixture';
+    const success={id:'evt_delayed_success_fixture',type:'checkout.session.async_payment_succeeded',livemode:false,data:{object:pending}};
+    assert.equal((await processVerifiedStripeEvent(success)).processed,true);
+    assert.equal((await processVerifiedStripeEvent(success)).alreadyProcessed,true);
+    assert.equal((await read(delayed.session.id)).payment_status,'paid');
+    assert.equal((await query('SELECT * FROM analysis_jobs WHERE session_id=$1',[delayed.session.id])).rowCount,1);
+    assert.equal((await query('SELECT * FROM post_payment_outbox WHERE session_id=$1',[delayed.session.id])).rowCount,1);
+  });
+  await test('legacy webhook snapshots cannot trigger a duplicate local managed invoice',async()=>{
+    const managed=await order(), checkout=await start(managed.session);
+    const oldId=checkout.id;
+    Object.assign(checkout,{id:'cs_live_managed_fixture',livemode:true,status:'complete',payment_status:'paid',managed_payments:{enabled:true}});
+    provider.set(checkout.id,checkout);
+    await query('UPDATE payment_attempts SET stripe_session_id=$2,livemode=true WHERE stripe_session_id=$1',[oldId,checkout.id]);
+    await query('UPDATE sessions SET stripe_session_id=$2 WHERE id=$1',[managed.session.id,checkout.id]);
+    const snapshot={...checkout}; delete snapshot.managed_payments;
+    const event={id:'evt_legacy_managed_fixture',type:'checkout.session.completed',livemode:true,data:{object:snapshot}};
+    const oldKey=env.STRIPE_SECRET_KEY; env.STRIPE_SECRET_KEY='sk_live_fixture';
+    try {
+      assert.equal((await processVerifiedStripeEvent(event)).processed,true);
+      const task=(await query("SELECT * FROM post_payment_outbox WHERE session_id=$1 AND task='invoice'",[managed.session.id])).rows[0];
+      assert.equal(task.payload.managed_payments.enabled,true);
+      const invoice=await createInvoiceForPaidSession({session:await read(managed.session.id),checkoutSession:task.payload});
+      assert.equal(invoice.error_message,'STRIPE_MANAGED_PAYMENT_INVOICE_EXCLUDED');
+      assert.equal((await read(managed.session.id)).invoice_status,'skipped');
+    } finally { env.STRIPE_SECRET_KEY=oldKey; }
+  });
+  await test('unsettled delayed payment cannot create a second payment attempt',async()=>{
+    const pendingOrder=await order(), pending=await start(pendingOrder.session);
+    pending.status='complete';
+    const before=creates;
+    await assert.rejects(start(pendingOrder.session),{code:'PAYMENT_ALREADY_COMPLETED'});
+    assert.equal(creates,before);
+  });
+  await test('verified delayed failure permits one new attempt and preserves history',async()=>{
+    const failedOrder=await order(), failed=await start(failedOrder.session);
+    failed.status='complete';
+    const event={id:'evt_async_failed_fixture',type:'checkout.session.async_payment_failed',livemode:false,data:{object:failed}};
+    assert.equal((await processVerifiedStripeEvent(event)).paymentFailed,true);
+    assert.equal((await processVerifiedStripeEvent(event)).alreadyProcessed,true);
+    const status=buildCustomerStatus(await read(failedOrder.session.id));
+    assert.equal(status.overall,'payment_failed');
+    assert.equal(status.stages[0].state,'failed');
+    assert.equal((await query('SELECT * FROM analysis_jobs WHERE session_id=$1',[failedOrder.session.id])).rowCount,0);
+    const next=await start(failedOrder.session);
+    assert.notEqual(next.id,failed.id);
+    assert.equal((await read(failedOrder.session.id)).payment_status,'pending');
+    assert.equal((await start(failedOrder.session)).id,next.id);
+    // A late replay for the older failed attempt cannot downgrade the retry.
+    await processVerifiedStripeEvent({...event,id:'evt_async_failed_again_fixture'});
+    assert.equal((await read(failedOrder.session.id)).payment_status,'pending');
+    next.status='complete'; next.payment_status='paid'; next.payment_intent='pi_retry_fixture';
+    await fulfillVerifiedCheckout(next);
+    failed.payment_status='paid'; failed.payment_intent='pi_late_old_fixture';
+    assert.equal((await fulfillVerifiedCheckout(failed)).reviewRequired,true);
+    assert.equal((await query('SELECT * FROM analysis_jobs WHERE session_id=$1',[failedOrder.session.id])).rowCount,1);
+    assert.equal((await query("SELECT * FROM payment_reviews WHERE session_id=$1 AND reason='duplicate_payment'",[failedOrder.session.id])).rowCount,1);
+  });
+  await test('reordered failure observes settled provider state and never downgrades paid',async()=>{
+    const settledOrder=await order(), settled=await start(settledOrder.session);
+    settled.status='complete'; settled.payment_status='paid';
+    const oldSnapshot={...settled,payment_status:'unpaid'};
+    await processVerifiedStripeEvent({id:'evt_reordered_failure_fixture',type:'checkout.session.async_payment_failed',livemode:false,data:{object:oldSnapshot}});
+    assert.equal((await read(settledOrder.session.id)).payment_status,'paid');
+    assert.equal((await query('SELECT * FROM analysis_jobs WHERE session_id=$1',[settledOrder.session.id])).rowCount,1);
+  });
+  await test('unbound delayed failure cannot authorize retry or change another order',async()=>{
+    const failedOrder=await order(), failed=await start(failedOrder.session);
+    failed.status='complete';
+    const fake={...failed,id:'cs_test_unbound_failure'}; provider.set(fake.id,fake);
+    await assert.rejects(processVerifiedStripeEvent({id:'evt_unbound_failure_fixture',type:'checkout.session.async_payment_failed',livemode:false,data:{object:fake}}),/CHECKOUT_MISMATCH/);
+    assert.equal((await read(failedOrder.session.id)).payment_status,'pending');
+    await assert.rejects(start(failedOrder.session),{code:'PAYMENT_ALREADY_COMPLETED'});
   });
   await test('active-job fallback SQL returns correct job',async()=>{
     const a=await enqueueAnalysisJob(first.session.id),b=await enqueueAnalysisJob(first.session.id);assert.equal(a.id,b.id);
@@ -241,6 +324,34 @@ try {
     assert.equal(await createInvoiceForPaidSession(input),null);
     assert.equal((await read(input.session.id)).invoice_status,'processing');
     assert.equal((await query('SELECT status FROM invoices WHERE session_id=$1',[input.session.id])).rows[0].status,'processing');
+  });
+  await test('accepted contract survives JSONB round-trip and contains checkout confirmation time', async () => {
+    const { buildContractEvidence } = await import('../src/services/contract-evidence.service.js');
+    const item = await order();
+    const stored = await read(item.session.id);
+    const revision = (await query('SELECT * FROM legal_document_revisions WHERE revision_id=$1',
+      [stored.consent_record.documentRevisionId])).rows[0];
+    assert.ok(stored.consent_record.purchaseConfirmedAt);
+    assert.equal(buildContractEvidence(stored, revision).attachments.length, 2);
+  });
+  await test('sensitive erasure removes payload and access and cancels pending outbox work', async () => {
+    const { eraseSessionSensitiveData } = await import('../src/services/data-governance.service.js');
+    const item = await order();
+    const checkout = await start(item.session);
+    checkout.payment_status='paid';checkout.status='complete';checkout.payment_intent='pi_erasure_fixture';
+    await fulfillVerifiedCheckout(checkout);
+    await eraseSessionSensitiveData(item.session.id, 'Synthetic erasure verification');
+    const erased = await read(item.session.id);
+    assert.deepEqual(erased.payload, {});
+    assert.deepEqual(erased.consent_record, {});
+    assert.equal(erased.name, '');
+    assert.equal(erased.public_access_token_hash, null);
+    assert.ok(erased.sensitive_data_erased_at);
+    assert.equal(erased.payment_status, 'paid', 'Erasure must not falsify financial history');
+    const tasks = (await query('SELECT * FROM post_payment_outbox WHERE session_id=$1', [item.session.id])).rows;
+    assert.ok(tasks.length);
+    assert.ok(tasks.every(task => task.status === 'failed' && task.last_error_code === 'DATA_ERASED' && Object.keys(task.payload).length === 0));
+    await assert.rejects(start(item.session));
   });
   console.log(JSON.stringify({passed,isolatedPostgres:true,externalProviderCalls:0}));
 } finally { await pg.close(); await db.close(); }

@@ -1,4 +1,5 @@
 import fs from "fs";
+import vm from "node:vm";
 
 function assert(condition, message) {
   if (!condition) {
@@ -9,7 +10,7 @@ function assert(condition, message) {
 function main() {
   console.log("\n=== CHECKOUT PAGES SMOKE ===");
 
-  const currentVersion = "20260910-payment-integrity-v4";
+  const currentVersion = "20261006-managed-failure-v2";
   const script = fs.readFileSync("public/webflow/checkout-pages.js", "utf8");
   const stripeService = fs.readFileSync("src/services/stripe.service.js", "utf8");
   const sessionService = fs.readFileSync("src/services/session.service.js", "utf8");
@@ -18,6 +19,24 @@ function main() {
   const cancelEmbed = fs.readFileSync("web/checkout-cancel-embed.html", "utf8").trim();
 
   new Function(script);
+  const boundary = '\n  ensureResponsiveViewport();\n\n  if (document.readyState';
+  assert(script.split(boundary).length === 2, 'The test must intercept exactly one bootstrap boundary.');
+  const context = { window: { addEventListener() {} }, document: { addEventListener() {} } };
+  vm.runInNewContext(script.replace(boundary, '\n  window.testApi = { getCopy, renderStatusSteps, getStatusMessage }; return;' + boundary), context);
+  for (const lang of ['hu', 'en', 'de', 'it', 'es', 'fr', 'pl', 'pt', 'ja', 'zh', 'ar']) {
+    const copy = context.window.testApi.getCopy(lang);
+    assert(copy.paymentFailed && context.window.testApi.getStatusMessage(copy, { paymentStatus: 'failed' }) === copy.paymentFailed, `Failed payment message missing for ${lang}.`);
+    assert(context.window.testApi.getStatusMessage(copy, { paymentStatus: 'pending' }) === copy.paymentUnknown, `Pending payment must not imply success for ${lang}.`);
+    assert(Boolean(copy.invoiceTestExcluded && copy.invoiceProviderManaged), `Invoice status translations missing for ${lang}.`);
+    if (lang !== 'en') {
+      assert(copy.invoiceTestExcluded !== 'Not issued (test)' && copy.invoiceProviderManaged !== 'Handled by payment provider', `English invoice fallback in ${lang}.`);
+    }
+    for (const [state, label] of [['skipped', copy.invoiceTestExcluded], ['external', copy.invoiceProviderManaged]]) {
+      const html = context.window.testApi.renderStatusSteps(copy, [{ key: 'invoice', state }]);
+      assert(html.includes(`data-state="${state}"`) && html.includes(label), `Invoice disposition render failed for ${lang}/${state}.`);
+      assert(!html.includes(`>${copy.stateComplete}</span>`), `Excluded invoice falsely rendered complete for ${lang}.`);
+    }
+  }
 
   [sharedEmbed, successEmbed, cancelEmbed].forEach((embed, index) => {
     assert(embed.length < 50000, `Checkout embed ${index + 1} should stay below the Webflow 50k limit.`);
@@ -95,6 +114,9 @@ function main() {
     "New Stripe success URLs should avoid mixing internal and public session identifiers."
   );
   assert(script.includes("nmReportStatusPanel"), "Success page should render a report status panel.");
+  assert(script.includes('invoiceTestExcluded') && script.includes('invoiceProviderManaged'), "Excluded invoices must not be labelled complete.");
+  assert(script.includes('"skipped", "external"'), "Provider-managed and test invoice states must survive rendering.");
+  assert(/\.nm-status-meta\s*\{[^}]*overflow-wrap:\s*anywhere;[^}]*word-break:\s*break-word;/s.test(script), "Long support references must wrap within the status panel on narrow screens.");
   assert(script.includes("What happens next?"), "Success page should explain the post-payment next steps.");
   assert(script.includes("nmRefreshStatus"), "Success page should allow manual report status refresh.");
   assert(script.includes("nm_report_status_refresh"), "Manual report status refreshes should be measured.");

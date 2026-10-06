@@ -292,10 +292,13 @@ export async function sendContractConfirmationEmail({
   packageCode,
   amountTotal,
   currency,
-  paidAt
+  paidAt,
+  legalEvidence
 }) {
   const recipients = normalizeRecipients(to);
-  const safeLang = getSafeLang(lang);
+  if (!legalEvidence?.config || !legalEvidence.attachments?.length) throw new Error('CONTRACT_EVIDENCE_UNAVAILABLE');
+  const safeLang = getSafeLang(legalEvidence.lang);
+  const acceptedConfig = legalEvidence.config;
 
   if (!env.RESEND_API_KEY) throw new Error("Missing RESEND_API_KEY.");
   if (!env.EMAIL_FROM) throw new Error("Missing EMAIL_FROM.");
@@ -310,11 +313,12 @@ export async function sendContractConfirmationEmail({
     amountTotal,
     currency,
     paidAt,
-    termsUrl: env.TERMS_URL,
-    termsVersion: env.TERMS_VERSION,
-    privacyUrl: env.PRIVACY_POLICY_URL,
-    privacyVersion: env.PRIVACY_POLICY_VERSION,
-    privacyContact: env.PRIVACY_CONTACT_EMAIL || env.DPO_CONTACT_EMAIL
+    termsUrl: acceptedConfig.termsUrl,
+    termsVersion: acceptedConfig.termsVersion,
+    privacyUrl: acceptedConfig.privacyPolicyUrl,
+    privacyVersion: acceptedConfig.privacyPolicyVersion,
+    privacyContact: acceptedConfig.controller?.privacyEmail,
+    performanceText: legalEvidence.performanceText
   });
 
   const response = await resend.emails.send(
@@ -323,7 +327,8 @@ export async function sendContractConfirmationEmail({
       to: recipients,
       subject,
       html,
-      text
+      text,
+      attachments: legalEvidence.attachments
     },
     {
       idempotencyKey: `contract-confirmation/${sessionId}`

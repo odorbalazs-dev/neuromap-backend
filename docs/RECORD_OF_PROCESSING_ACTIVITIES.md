@@ -31,3 +31,15 @@ For each processor record entity, role, processing location, sub-processors, tra
 ## Review
 
 Review at least annually and before a new country, model, processor, purpose, data category, retention period or automated decision feature. Link the approved ROPA revision to the privacy notice and DPIA approval record.
+
+## Managed payment route amendment - 2026-10-06
+
+For new Stripe Managed Payments transactions, Link is the customer-facing merchant
+of record identified at checkout. Stripe/Link processes adult payment/billing data
+under its applicable roles and notice and supplies transaction invoices/receipts.
+NeuroMap Kids continues report delivery and product/privacy support. Do not send
+questionnaire answers, child age or report findings to the payment provider.
+Szamlazz.hu remains relevant to ordinary historical invoices, not a second invoice
+for a managed purchase. Backblaze holds purpose-limited encrypted database backups;
+restore and erasure safeguards continue to apply. See DPIA section 21 and the
+canonical 2026-10-06 privacy content; controller approval of this change is pending.

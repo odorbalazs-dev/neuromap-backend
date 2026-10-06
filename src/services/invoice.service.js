@@ -12,8 +12,9 @@ import {
 } from "../infrastructure/invoice/szamlazzhuClient.js";
 import { getSessionById } from "./session.service.js";
 import { getProductPackage } from "../config/products.js";
-import Stripe from "stripe";
+import { retrieveCheckoutSession } from './stripe.service.js';
 import { env } from "../config/env.js";
+import { MANAGED_INVOICE_EXCLUSION, isManagedCheckout } from './managed-payments-policy.js';
 import {
   TEST_INVOICE_EXCLUSION,
   isTestInvoicePayment,
@@ -365,8 +366,7 @@ export async function createInvoiceForPaidSession({
   if (!isVerifiedLiveInvoicePayment(session, checkoutSession) ||
       !checkoutSession?.customer_details?.address?.country) {
     if (session.stripe_session_id?.startsWith("cs_live_") && env.STRIPE_SECRET_KEY) {
-      const stripe = new Stripe(env.STRIPE_SECRET_KEY, { timeout: env.STRIPE_TIMEOUT_MS, maxNetworkRetries: 2 });
-      checkoutSession = await stripe.checkout.sessions.retrieve(session.stripe_session_id);
+      checkoutSession = await retrieveCheckoutSession(session.stripe_session_id);
     }
   }
   if (isTestInvoicePayment(session, checkoutSession)) {
@@ -374,6 +374,9 @@ export async function createInvoiceForPaidSession({
   }
   if (!isVerifiedLiveInvoicePayment(session, checkoutSession)) {
     throw Object.assign(new Error("INVOICE_LIVE_PAYMENT_UNVERIFIED"), { terminal: true });
+  }
+  if (isManagedCheckout(checkoutSession)) {
+    return markInvoiceSkipped(session.id, MANAGED_INVOICE_EXCLUSION);
   }
   if (!checkoutSession?.customer_details?.address?.country) {
     throw new Error("INVOICE_BILLING_ADDRESS_MISSING");
@@ -483,6 +486,7 @@ export async function retryInvoicesBatch({
           AND (o.payload->>'livemode' = 'false' OR LEFT(o.payload->>'id', 8) = 'cs_test_')
       )
       AND s.invoice_error IS DISTINCT FROM 'STRIPE_TEST_PAYMENT_EXCLUDED'
+      AND s.invoice_error IS DISTINCT FROM 'STRIPE_MANAGED_PAYMENT_INVOICE_EXCLUDED'
       AND COALESCE(s.invoice_status, 'pending') <> 'issued'
       AND s.processing_restricted_at IS NULL
       AND s.sensitive_data_erased_at IS NULL

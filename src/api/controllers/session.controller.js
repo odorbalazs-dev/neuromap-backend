@@ -6,6 +6,7 @@ import {
 } from "../../services/session.service.js";
 import { getObservationStatusForSession } from "../../services/observation-program.service.js";
 import { TEST_INVOICE_EXCLUSION } from "../../services/invoice-payment-policy.js";
+import { MANAGED_INVOICE_EXCLUSION } from "../../services/managed-payments-policy.js";
 
 function maskEmail(email = "") {
   const value = String(email || "").trim();
@@ -54,6 +55,7 @@ function parseEntitlements(value) {
 
 export function buildCustomerStatus(session, observation = null) {
   const paymentPaid = session.payment_status === "paid";
+  const paymentFailed = session.payment_status === "failed";
   const analysisStatus = normalizeAnalysisStatus(session.analysis_status);
   const emailStatus = normalizeEmailStatus(session.report_email_status);
   const analysisDone = analysisStatus === "done";
@@ -61,7 +63,9 @@ export function buildCustomerStatus(session, observation = null) {
   const emailSent = emailStatus === "sent";
   const emailFailed = emailStatus === "failed";
   const deliveryFailed = ['bounced','complained','failed'].includes(session.report_email_delivery_status);
-  const invoiceDone = session.invoice_status === 'issued' || (session.invoice_status === 'skipped' && session.invoice_error === TEST_INVOICE_EXCLUSION);
+  const invoiceSkipped = session.invoice_status === 'skipped' && session.invoice_error === TEST_INVOICE_EXCLUSION;
+  const invoiceExternal = session.invoice_status === 'skipped' && session.invoice_error === MANAGED_INVOICE_EXCLUSION;
+  const invoiceDone = session.invoice_status === 'issued' || invoiceSkipped || invoiceExternal;
   const invoiceFailed = session.invoice_status === 'failed' || (session.invoice_status === 'skipped' && !invoiceDone);
   const documentsDone = invoiceDone && session.contract_confirmation_status === 'sent';
   const pdfStatus = session.pdf_status || (emailSent ? "ready" : "pending");
@@ -70,7 +74,7 @@ export function buildCustomerStatus(session, observation = null) {
   let overall = "processing";
 
   if (!paymentPaid) {
-    overall = "waiting_payment";
+    overall = paymentFailed ? "payment_failed" : "waiting_payment";
   } else if (analysisFailed || emailFailed || pdfFailed || deliveryFailed || invoiceFailed || session.contract_confirmation_status === 'failed' || (session.financial_status && session.financial_status !== 'clear')) {
     overall = "attention";
   } else if (emailSent && documentsDone) {
@@ -109,6 +113,7 @@ export function buildCustomerStatus(session, observation = null) {
     paymentStatus: session.payment_status || null,
     financialStatus: session.financial_status || 'clear',
     invoiceStatus: session.invoice_status || 'pending',
+    invoiceDisposition: invoiceExternal ? 'provider_managed' : invoiceSkipped ? 'test_excluded' : 'local',
     contractStatus: session.contract_confirmation_status || 'pending',
     reportEmailDeliveryStatus: session.report_email_delivery_status || (emailSent ? 'accepted' : 'pending'),
     analysisStatus,
@@ -145,7 +150,7 @@ export function buildCustomerStatus(session, observation = null) {
       buildStage({
         key: "payment",
         label: "Payment",
-        state: paymentPaid ? "complete" : "pending"
+        state: paymentPaid ? "complete" : paymentFailed ? "failed" : "pending"
       }),
       buildStage({
         key: "analysis",
@@ -162,7 +167,7 @@ export function buildCustomerStatus(session, observation = null) {
         label: "Email delivery",
         state: deliveryFailed ? 'failed' : emailState
       }),
-      buildStage({ key: 'invoice', label: 'Invoice', state: invoiceDone ? 'complete' : invoiceFailed ? 'failed' : 'pending' }),
+      buildStage({ key: 'invoice', label: 'Invoice', state: invoiceExternal ? 'external' : invoiceSkipped ? 'skipped' : invoiceDone ? 'complete' : invoiceFailed ? 'failed' : 'pending' }),
       buildStage({ key: 'contract', label: 'Order confirmation', state: session.contract_confirmation_status === 'sent' ? 'complete' : session.contract_confirmation_status === 'failed' ? 'failed' : 'pending' })
     ]
   };

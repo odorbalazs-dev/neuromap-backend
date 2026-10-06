@@ -1,6 +1,7 @@
 import Stripe from "stripe";
 import { env } from "../config/env.js";
 import { getProductPackage } from "../config/products.js";
+import { MANAGED_PAYMENTS_API_VERSION, managedPaymentsMode, validateManagedPrice, validateManagedCheckout } from './managed-payments-policy.js';
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
   apiVersion: "2024-06-20",
@@ -193,6 +194,13 @@ export async function createCheckoutSession({
   const safeLang = getSafeLang(lang);
   const productPackage = getProductPackage(requestedPackage?.code || requestedPackage);
   const { lineItem, stripePriceId } = buildLineItem({ productPackage, lang: safeLang });
+  const managedMode = managedPaymentsMode(env);
+  if (managedMode) {
+    if (!stripePriceId) throw new Error('MANAGED_PAYMENTS_PRICE_REQUIRED');
+    const price = await stripe.prices.retrieve(stripePriceId, { expand: ['product'] },
+      { apiVersion: MANAGED_PAYMENTS_API_VERSION });
+    validateManagedPrice(price, productPackage, managedMode);
+  }
   const successUrl = appendSessionAccessFragment(
     `${getLocalizedSuccessUrl(safeLang)}?session_id={CHECKOUT_SESSION_ID}`,
     { internalSessionId, sessionAccessToken, includeSessionIdentifier: false }
@@ -222,16 +230,18 @@ export async function createCheckoutSession({
     usesConfiguredPrice: Boolean(stripePriceId)
   });
 
-  return stripe.checkout.sessions.create(
+  const checkout = await stripe.checkout.sessions.create(
     {
       mode: "payment",
-      // Szamlazz.hu is the sole invoice issuer for this checkout flow.
-      invoice_creation: { enabled: false },
-      payment_method_types: ["card"],
+      // Standard checkout uses Szamlazz.hu; Managed Payments owns its invoices.
+      ...(managedMode ? { managed_payments: { enabled: true } } : {
+        invoice_creation: { enabled: false },
+        payment_method_types: ["card"],
+        tax_id_collection: { enabled: true }
+      }),
       client_reference_id: internalSessionId,
       customer_email: email,
       billing_address_collection: "required",
-      tax_id_collection: { enabled: true },
       line_items: [lineItem],
       locale: getStripeCheckoutLocale(safeLang),
       success_url: successUrl,
@@ -240,13 +250,16 @@ export async function createCheckoutSession({
       payment_intent_data: { metadata }
     },
     {
+      ...(managedMode ? { apiVersion: MANAGED_PAYMENTS_API_VERSION } : {}),
       idempotencyKey: buildCheckoutIdempotencyKey({
         internalSessionId,
         productPackage,
         checkoutAttempt
-      })
+      }) + (managedMode ? `-managed-${managedMode}` : '')
     }
   );
+  if (managedMode) validateManagedCheckout(checkout, managedMode);
+  return checkout;
 }
 
 export async function expireCheckoutSession(stripeSessionId) {
@@ -255,11 +268,14 @@ export async function expireCheckoutSession(stripeSessionId) {
 }
 
 export function retrieveCheckoutSession(id) {
-  return stripe.checkout.sessions.retrieve(id);
+  managedPaymentsMode(env);
+  // Keep provider invoice ownership visible during recovery even after a mode rollback.
+  return stripe.checkout.sessions.retrieve(id, {}, { apiVersion: MANAGED_PAYMENTS_API_VERSION });
 }
 
 export function listCheckoutSessions(params) {
-  return stripe.checkout.sessions.list({ ...params, limit: 100 });
+  managedPaymentsMode(env);
+  return stripe.checkout.sessions.list({ ...params, limit: 100 }, { apiVersion: MANAGED_PAYMENTS_API_VERSION });
 }
 
 export function retrieveStripeEvent(id) {

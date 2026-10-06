@@ -14,5 +14,5 @@ export const LEGAL_DEFAULTS = Object.freeze({
   authorityPhone: "+36 1 391 1400",
   europeanAuthoritiesUrl: "https://www.edpb.europa.eu/about-edpb/our-members_en",
   europeanBoardUrl: "https://www.edpb.europa.eu/contact_en",
-  policyVersion: "2026-09-09"
+  policyVersion: "2026-10-06"
 });

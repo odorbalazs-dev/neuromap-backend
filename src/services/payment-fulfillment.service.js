@@ -5,6 +5,39 @@ import { enqueueAnalysisJob } from './analysis-queue.service.js';
 import { enqueuePostPaymentTasks } from './post-payment-outbox.service.js';
 import { recordPaymentAttempt } from './payment-attempt.service.js';
 
+export async function recordVerifiedPaymentFailure(checkout) {
+  if (checkout?.object !== 'checkout.session' || checkout.livemode !== isLiveStripeRuntime()) {
+    throw new Error('PAYMENT_MODE_MISMATCH');
+  }
+  // A reordered failure must not downgrade a payment that has since settled.
+  if (checkout.payment_status === 'paid') return fulfillVerifiedCheckout(checkout);
+  const id = checkout.metadata?.internalSessionId;
+  if (!/^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i.test(id || '') || checkout.client_reference_id !== id) {
+    throw new Error('PAYMENT_REFERENCE_INVALID');
+  }
+  if (checkout.status !== 'complete' || checkout.payment_status !== 'unpaid') throw new Error('PAYMENT_FAILURE_STATE_INVALID');
+  const client = await db.connect();
+  try {
+    await client.query('BEGIN');
+    const ref = await client.query('SELECT consent_event_id FROM sessions WHERE id=$1', [id]);
+    await client.query('SELECT id FROM consent_events WHERE id=$1 FOR UPDATE', [ref.rows[0]?.consent_event_id]);
+    const { rows: [session] } = await client.query('SELECT * FROM sessions WHERE id=$1 FOR UPDATE', [id]);
+    if (!session) throw new Error('PAYMENT_ORDER_NOT_FOUND');
+    const known = await client.query('SELECT * FROM payment_attempts WHERE stripe_session_id=$1 AND session_id=$2', [checkout.id, id]);
+    if (!known.rowCount || known.rows[0].livemode !== checkout.livemode) throw new Error('PAYMENT_CHECKOUT_MISMATCH');
+    if (checkout.metadata.packageCode !== session.package_code) throw new Error('PAYMENT_PACKAGE_MISMATCH');
+    assertCheckoutMatchesPackage(checkout, getProductPackage(session.package_code));
+    await recordPaymentAttempt(checkout, id, known.rows[0].attempt, client);
+    const result = await client.query(`UPDATE sessions SET payment_status='failed', updated_at=NOW()
+      WHERE id=$1 AND stripe_session_id=$2 AND payment_status <> 'paid' RETURNING id`, [id, checkout.id]);
+    await client.query('COMMIT');
+    return { processed: true, paymentFailed: Boolean(result.rowCount) };
+  } catch (error) {
+    await client.query('ROLLBACK');
+    throw error;
+  } finally { client.release(); }
+}
+
 export async function fulfillVerifiedCheckout(checkout) {
   if (checkout?.object !== 'checkout.session' || checkout.livemode !== isLiveStripeRuntime()) {
     throw new Error('PAYMENT_MODE_MISMATCH');

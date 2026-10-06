@@ -10,6 +10,8 @@ import { ProcessingRestrictedError } from '../../services/data-governance.servic
 import { startOrResumePayment } from '../../services/payment-attempt.service.js';
 import { safeError } from '../../utils/safeError.js';
 import { createHash } from 'crypto';
+import { env } from '../../config/env.js';
+import { assertSandboxCheckout } from '../../services/sandbox-checkout-policy.js';
 
 function privateResponse(res) {
   res.setHeader('Cache-Control', 'no-store, private, max-age=0');
@@ -40,9 +42,18 @@ export function checkoutAvailability(_req, res) {
 }
 
 export async function createCheckout(req, res) {
+  return createCheckoutRequest(req, res, false);
+}
+
+export async function createSandboxCheckout(req, res) {
+  return createCheckoutRequest(req, res, true);
+}
+
+async function createCheckoutRequest(req, res, sandbox) {
   privateResponse(res);
   try {
-    assertCheckoutLaunchReady();
+    if (sandbox) assertSandboxCheckout(env, req.adminSession, req.body?.email);
+    else assertCheckoutLaunchReady();
     const validationInput = stripCheckoutQuestionMetadata(req.body || {});
     const validation = validateCheckoutPayload(validationInput);
     if (!validation.ok) return res.status(400).json({ ok: false, code: 'INVALID_CHECKOUT_PAYLOAD', error: 'Invalid checkout payload', details: validation.errors });
@@ -66,9 +77,18 @@ export async function createCheckout(req, res) {
 }
 
 export async function retryCheckout(req, res) {
+  return retryCheckoutRequest(req, res, false);
+}
+
+export async function retrySandboxCheckout(req, res) {
+  return retryCheckoutRequest(req, res, true);
+}
+
+async function retryCheckoutRequest(req, res, sandbox) {
   privateResponse(res);
   try {
-    assertCheckoutLaunchReady();
+    if (sandbox) assertSandboxCheckout(env, req.adminSession, req.body?.email);
+    else assertCheckoutLaunchReady();
     if (!/^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i.test(req.params.id || '')) {
       return res.status(400).json({ ok: false, code: 'INVALID_SESSION', error: 'Invalid session.' });
     }
@@ -76,6 +96,7 @@ export async function retryCheckout(req, res) {
     if (!session) return res.status(404).json({ ok: false, code: 'SESSION_NOT_FOUND', error: 'Session not found.' });
     const token = getSessionAccessTokenFromRequest(req);
     assertSessionAccess(session, token);
+    if (sandbox) assertSandboxCheckout(env, req.adminSession, session.email);
     if (session.payment_status === 'paid' || session.analysis_status === 'done') {
       return res.status(409).json({ ok: false, code: 'PAYMENT_ALREADY_COMPLETED', error: 'Payment is already complete.' });
     }

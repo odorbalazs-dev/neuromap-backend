@@ -1,5 +1,7 @@
 # Legal Release Sign-off
 
+Current reconciliation: see `CONSUMER_PRIVACY_REMEDIATION_2026-09-30.md`. This blank template is not proof that later owner approvals did not occur. Bind approvals to exact versions; distinguish statutory requirements from stricter internal release policies.
+
 Release version/date: ____________________
 
 This record is a launch gate, not a compliance certificate. Every required item must have a named approver and evidence link. Keep `LEGAL_REVIEW_APPROVED`, `DPIA_APPROVED`, `PROCESSOR_AGREEMENTS_APPROVED` and `PRIVACY_POLICY_PUBLISHED` false until the corresponding evidence is complete.

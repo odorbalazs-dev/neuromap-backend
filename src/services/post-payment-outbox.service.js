@@ -3,12 +3,14 @@ import { getSessionById } from "./session.service.js";
 import { sendContractConfirmationForSession } from "./contract-confirmation.service.js";
 import { createInvoiceForPaidSession } from "./invoice.service.js";
 import { TEST_INVOICE_EXCLUSION, isTestInvoicePayment } from "./invoice-payment-policy.js";
+import { MANAGED_INVOICE_EXCLUSION, isManagedCheckout } from './managed-payments-policy.js';
 
 export async function enqueuePostPaymentTasks(client, sessionId, checkout) {
   const billing = checkout?.customer_details || {};
   const payload = {
     id: checkout?.id, amount_total: checkout?.amount_total, currency: checkout?.currency,
     livemode: checkout?.livemode, payment_status: checkout?.payment_status,
+    managed_payments: checkout?.managed_payments,
     metadata: { internalSessionId: checkout?.metadata?.internalSessionId },
     customer_details: { name: billing.name, email: billing.email,
       address: billing.address, tax_ids: billing.tax_ids }
@@ -52,12 +54,12 @@ export async function processNextPostPaymentTask() {
       }
     } else if (session.invoice_status !== "issued") {
       const checkout = job.payload;
-      if (!isTestInvoicePayment(session, checkout) && !checkout.customer_details?.address?.country) {
+      if (!isTestInvoicePayment(session, checkout) && !isManagedCheckout(checkout) && !checkout.customer_details?.address?.country) {
         throw new Error("INVOICE_BILLING_ADDRESS_MISSING");
       }
       const invoice = await createInvoiceForPaidSession({ session, checkoutSession: checkout, throwOnError: true });
-      if (invoice?.status === "skipped" && invoice.error_message === TEST_INVOICE_EXCLUSION) {
-        exclusion = TEST_INVOICE_EXCLUSION;
+      if (invoice?.status === "skipped" && [TEST_INVOICE_EXCLUSION, MANAGED_INVOICE_EXCLUSION].includes(invoice.error_message)) {
+        exclusion = invoice.error_message;
       } else if (invoice?.status !== "issued") throw new Error("INVOICE_NOT_ISSUED");
     }
     await db.query(`UPDATE post_payment_outbox SET status = 'done', completed_at = NOW(),

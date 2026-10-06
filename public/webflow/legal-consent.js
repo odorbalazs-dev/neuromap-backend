@@ -1,10 +1,10 @@
 (function () {
   "use strict";
 
-  const LEGAL_UI_VERSION = "20260909-consent-security-v2";
+  const LEGAL_UI_VERSION = "20261006-managed-disclosures-v3";
   const RECEIPT_KEY = "nm_legal_receipt_v1";
   const ANALYTICS_KEY = "nm_analytics_consent_v1";
-  const CONTENT_VERSION = "20260726-verified-rights-v3";
+  const CONTENT_VERSION = "20261006-managed-disclosures-v1";
   const SUPPORTED_LANGS = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];
   const PRIVACY_RIGHTS_UI = {
     hu: {
