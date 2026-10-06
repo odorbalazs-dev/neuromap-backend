@@ -77,12 +77,15 @@ assert.equal(hero.notice.textContent, 'Unavailable');
 assert.equal(hero.notice.hidden, false);
 const translatedNotice = { textContent: 'Unavailable', hidden: false };
 const languageState = { lang: 'en' };
+const legalNavigationLanguages = [];
 const languageSandbox = vm.createContext({
   state: languageState,
   localStorage: { setItem() {} },
   getUI: () => ({}),
   getAgeUiText: () => ({}),
   getCheckoutMaintenanceCopy: () => `Unavailable-${languageState.lang}`,
+  isCompatibleLegalManager: () => true,
+  window: {NM_LEGAL: {installLauncher: lang => {legalNavigationLanguages.push(lang); return Promise.resolve();}}},
   document: { documentElement: {}, getElementById: id => id === 'nmCheckoutAvailability' ? translatedNotice : null },
   buildLangButtons() {}, syncLanguageButtonState() {}, ensureChildAgeField() {},
   updateChildAgeFieldLanguage() {}, renderCurrentStep() {}
@@ -92,5 +95,6 @@ for (const lang of ['hu', 'en', 'de', 'it', 'es', 'fr', 'pt', 'pl', 'ja', 'zh', 
   vm.runInContext(`applyLang('${lang}')`, languageSandbox);
   assert.equal(translatedNotice.textContent, `Unavailable-${lang}`);
   assert.equal(translatedNotice.hidden, false, 'Language changes must not open a closed checkout');
+  assert.equal(legalNavigationLanguages.at(-1), lang, 'Legal navigation must follow the selected language without consent or payment');
 }
 console.log('Landing start gate passed: legacy handlers intercepted, closed gates keep form hidden, visible maintenance notice (mocked DOM/I/O).');

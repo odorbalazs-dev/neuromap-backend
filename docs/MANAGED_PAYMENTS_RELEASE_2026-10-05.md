@@ -520,6 +520,20 @@ purchase statements above. It does not assert that public sales are enabled.
   delayed-payment acceptance. Controller approval, applicable vendor scope,
   Railway MFA assurance and reviewed launch tax markets still need completion.
 
+### Public legal navigation follow-up - 2026-10-06
+
+Browser inspection found that the legal launcher was only installed inside the
+questionnaire consent flow. A closed checkout therefore prevented navigation to
+the legal notices. The engine now installs the read-only launcher on startup,
+independently of checkout availability or consent acceptance. It loads its own
+content first, follows subsequent language changes and removes stale-language
+menus. Reading a document does not record consent or enable optional tracking.
+
+Focused regressions cover all 11 launcher languages and independent startup.
+Final loader versions for this follow-up: engine `20261006-public-legal-v7`, legal
+UI `20261006-public-legal-v5`; legal content remains `20261006-legal-retention-v2`.
+The public checkout gate is unchanged.
+
 ## External references
 
 - https://docs.stripe.com/payments/managed-payments/eligibility

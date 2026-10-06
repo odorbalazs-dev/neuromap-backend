@@ -9,7 +9,7 @@ for (const child of ["gyermek", "gyerek"]) {
 }
 
 const SUPPORTED_LANGS = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];
-const REQUIRED_ENGINE_VERSION = "20261006-launch-retention-v6";
+const REQUIRED_ENGINE_VERSION = "20261006-public-legal-v7";
 const REQUIRED_CHECKOUT_VERSION = "20261006-managed-failure-v2";
 
 const checks = [

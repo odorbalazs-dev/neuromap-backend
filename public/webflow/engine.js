@@ -5,9 +5,9 @@
 
 (function () {
   const DISORDERS = ["ADHD", "ASD", "ANXIETY", "DEPRESSION", "LEARNING"];
-  const ENGINE_VERSION = "20261006-launch-retention-v6";
+  const ENGINE_VERSION = "20261006-public-legal-v7";
   const ANALYTICS_SCHEMA_VERSION = "analytics-event-schema-v2";
-  const LEGAL_CONSENT_VERSION = "20261006-legal-retention-v4";
+  const LEGAL_CONSENT_VERSION = "20261006-public-legal-v5";
   const LANGUAGE_CONFIRMED_KEY = "nm_language_confirmed_v1";
   const DRAFT_STORAGE_KEY = "nm_questionnaire_draft_v2";
   const LEGACY_DRAFT_STORAGE_KEY = "nm_questionnaire_draft_v1";
@@ -6828,6 +6828,11 @@
 
     const checkoutNotice = document.getElementById("nmCheckoutAvailability");
     if (checkoutNotice) checkoutNotice.textContent = getCheckoutMaintenanceCopy();
+    if (isCompatibleLegalManager(window.NM_LEGAL)) {
+      window.NM_LEGAL.installLauncher(lang).catch(() => {
+        console.error("[legal] Unable to refresh legal navigation");
+      });
+    }
 
     const mapText = [
       ["pageTitle", t.pageTitle],
@@ -9639,7 +9644,8 @@
       ) {
         setTimeout(showImmediateSafetySupport, 0);
       }
-      await ensureLegalManager();
+      const legalManager = await ensureLegalManager();
+      await legalManager.installLauncher(state.lang);
 
       if (!hasConfirmedLanguage()) {
         showModal(true);

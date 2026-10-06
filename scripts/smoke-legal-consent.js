@@ -168,9 +168,9 @@ assert(
     legalConsentSource.includes("overscroll-behavior: contain") &&
     legalConsentSource.includes("-webkit-overflow-scrolling: touch") &&
     legalConsentSource.includes('@media (max-height: 560px)') &&
-    legalConsentSource.includes('const LEGAL_UI_VERSION = "20261006-legal-retention-v4"') &&
+    legalConsentSource.includes('const LEGAL_UI_VERSION = "20261006-public-legal-v5"') &&
     legalConsentSource.includes('const CONTENT_VERSION = "20261006-legal-retention-v2"') &&
-    engineSource.includes('20261006-legal-retention-v4'),
+    engineSource.includes('20261006-public-legal-v5'),
   "Legal consent must remain scrollable with visible actions on mobile and short viewports"
 );
 
@@ -183,7 +183,7 @@ assert(
 );
 
 assert(
-  engineSource.includes("20261006-legal-retention-v4") &&
+  engineSource.includes("20261006-public-legal-v5") &&
     engineSource.includes("isCompatibleLegalManager") &&
     engineSource.includes('String(manager.version || "") === LEGAL_CONSENT_VERSION') &&
     engineSource.includes("const forceReload = Boolean(window.NM_LEGAL)") &&
@@ -258,4 +258,24 @@ for (const lang of supportedLangs) {
 const escapedRetention = vm.runInContext("privacyRetentionMarkup({retentionDays: '<script>'}, 'hu')", retentionContext);
 assert(escapedRetention.includes('&lt;script&gt;') && !escapedRetention.includes('<script>'), 'Retention metadata must be escaped');
 assert(legalConsentSource.includes('${privacyRetentionMarkup(config, lang)}${sectionMarkup(content.privacy)}'), 'Retention must remain in the scrollable privacy body on short screens');
+const launcherStart = legalConsentSource.indexOf('  async function installLauncher(');
+const launcherEnd = legalConsentSource.indexOf('  function getReceipt()', launcherStart);
+assert(launcherStart >= 0 && launcherEnd > launcherStart, 'Legal launcher must load content independently of purchase');
+let navigationButton;
+let staleMenuRemoved = false;
+const launcherContext = vm.createContext({
+  ensureContent: async () => {}, normalizeLang: lang => lang, installStyles() {},
+  getContent: lang => legalContent[lang], privacyRightsUi: () => ({menu:'Rights'}),
+  document: {
+    getElementById: id => id === 'nmLegalLauncher' ? navigationButton : id === 'nmLegalMenu' ? {remove() {staleMenuRemoved=true;}} : null,
+    createElement: () => ({}), body: {appendChild(button) {navigationButton=button;}}
+  }
+});
+vm.runInContext(legalConsentSource.slice(launcherStart, launcherEnd), launcherContext);
+for (const lang of supportedLangs) {
+  await vm.runInContext(`installLauncher('${lang}')`, launcherContext);
+  assert(navigationButton.textContent === legalContent[lang].ui.legalLinks, `${lang}: public legal launcher must follow selected language`);
+}
+assert(staleMenuRemoved, 'An open menu must not keep stale-language labels');
+assert(engineSource.includes('await legalManager.installLauncher(state.lang);'), 'Closed checkout must not prevent legal navigation at startup');
 console.log("[smoke:legal-consent] OK");
