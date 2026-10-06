@@ -79,6 +79,23 @@ try {
     assert.equal(headers.Pragma, "no-cache");
   }
 
+  const { default: legalRoutes } = await import("../src/api/routes/legal.js");
+  for (const kind of ["privacy", "terms", "support"]) {
+    const headers = {};
+    let html;
+    const res = { setHeader: (key, value) => { headers[key] = value; },
+      type() { return this; }, send(value) { html = value; } };
+    securityHeaders({ path: `/legal/${kind}` }, res, () => {});
+    assert.equal(headers["Content-Security-Policy"], "default-src 'none'; frame-ancestors 'none'");
+    const route = legalRoutes.stack.find(layer => layer.route?.path === `/${kind}`);
+    assert.ok(route, "All legal document routes must be present");
+    route.route.stack[0].handle({ query: { lang: "hu" } }, res);
+    assert.equal(headers["Content-Security-Policy"], "default-src 'none'; style-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'");
+    assert.match(html, /href="\/public\/legal-pages\.css"/);
+    assert.match(html, /name="viewport"/);
+    assert.doesNotMatch(html, /<script\b|<iframe\b/i);
+  }
+
   const token = "synthetic-public-access-token-for-tests";
   const consentToken = "synthetic-consent-access-token-for-tests";
   const consentId = "00000000-0000-4000-8000-000000000002";

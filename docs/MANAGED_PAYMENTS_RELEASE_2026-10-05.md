@@ -456,6 +456,45 @@ purchase statements above. It does not assert that public sales are enabled.
   checks and owner-led live purchase verifying Link invoice, report and return
   status. Only then may public checkout be described as open.
 
+## Hosted release verification - 2026-10-06 19:33 UTC
+
+- Implementation `3892d967ecee917ed9ba2a7ad38ae30ba41630dc` passed both required
+  GitHub quality checks. PR #13 was merged normally, without bypassing protection,
+  as `f66d827d99890cc118ab5f845183b1626c88e71d`. That merge passed CI run
+  `37519051781`. Local tracked content matched `origin/main` at this checkpoint.
+- Both production services deployed the merge successfully. Privacy, terms and
+  consent versions were reconciled to `2026-10-06` in both environments. The
+  historical lawyer-supplied-notice attestation was preserved separately; current
+  changed-document approval is pending, not retrospectively attributed to a lawyer.
+- All 33 hosted legal pages returned HTTP 200. Four hosted frontend scripts
+  matched the committed Git bytes exactly; the local Windows files differed only
+  in line-ending representation. Current configuration and document versions
+  matched. Historical receipt archives were not rewritten.
+- Anonymous admin status and invoice requests returned 401 with no-store headers;
+  `.env`, `.git/config` and internal DPIA paths returned 404. Invalid webhook
+  signatures returned 400. No real payment or customer-data export was initiated.
+- Metadata-only read-only database checks authenticated separately as
+  `neuromap_web_runtime` and `neuromap_worker_runtime`. Both lacked superuser,
+  role/database creation, replication and RLS-bypass rights. Certificate
+  verification succeeded on both connections; no role permissions were expanded.
+- Latest hosted lifecycle, recovery, production-health and operational checks
+  were healthy (24/24, 287/287, 287/287 and 96/96 runs respectively). Outbox was
+  healthy. The paid Plus sandbox order remained sent/clear with one report-email
+  attempt; the refunded Standard order remained correctly restricted.
+- Railway's native MFA query returned `isVerified=false` and
+  `hasRecoveryCodes=false`. This does not establish whether external identity-provider
+  MFA is enforced, but native Railway MFA cannot be marked verified. Reconcile
+  the account control or document the actual federated authentication assurance.
+- Mobile inspection exposed a separate CSP defect: legal-page styling was blocked
+  by the API's `default-src 'none'` policy. The targeted repair allows only the
+  same-origin stylesheet on privacy/terms/support pages, preserving script/embed
+  restrictions, no forms and frame denial. Regression tests cover all three routes.
+- Public checkout remains closed. Current gate still needs changed-document
+  approval, applicable vendor-review evidence, current security closure, reviewed
+  selling-market/tax scope, owner live acceptance and final public enablement.
+  Hosted decline/delayed failure/local presentment acceptance remains separate
+  from mocked regression coverage. These pending items are not certifications.
+
 ## External references
 
 - https://docs.stripe.com/payments/managed-payments/eligibility

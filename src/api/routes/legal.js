@@ -15,6 +15,8 @@ const router = express.Router();
 
 for (const kind of ["privacy", "terms", "support"]) {
   router.get(`/${kind}`, (req, res) => {
+    // Legal documents need only our stylesheet; scripts and embeds stay blocked.
+    res.setHeader("Content-Security-Policy", "default-src 'none'; style-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'");
     res.setHeader("Cache-Control", "no-cache, must-revalidate");
     res.type("html").send(renderLegalPage(kind, req.query.lang));
   });
