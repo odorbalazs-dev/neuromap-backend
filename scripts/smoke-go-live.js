@@ -23,6 +23,21 @@ assert.equal(buildCustomerStatus({...session,pdf_status:"ready",report_email_sta
 assert.equal(buildCustomerStatus({...session,pdf_status:"failed"}).overall,"attention");
 assert.equal(buildCustomerStatus({...session,pdf_status:"ready",report_email_status:"sent"}).overall,"processing");
 assert.equal(buildCustomerStatus({...session,pdf_status:"ready",report_email_status:"sent",invoice_status:'issued',contract_confirmation_status:'sent'}).overall,"sent");
+const delivered = {...session, pdf_status: 'ready', report_email_status: 'sent', contract_confirmation_status: 'sent', invoice_status: 'skipped'};
+for (const [reason, disposition, state] of [
+  ['STRIPE_TEST_PAYMENT_EXCLUDED', 'test_excluded', 'skipped'],
+  ['STRIPE_MANAGED_PAYMENT_INVOICE_EXCLUDED', 'provider_managed', 'external']
+]) {
+  const status = buildCustomerStatus({...delivered, invoice_error: reason});
+  assert.equal(status.overall, 'sent');
+  assert.equal(status.invoiceStatus, 'skipped');
+  assert.equal(status.invoiceDisposition, disposition);
+  assert.equal(status.stages.find(stage => stage.key === 'invoice').state, state);
+  assert.equal(buildCustomerStatus({...delivered, invoice_error: reason, financial_status: 'refunded'}).overall, 'attention');
+  assert.equal(buildCustomerStatus({...delivered, invoice_error: reason, contract_confirmation_status: 'failed'}).overall, 'attention');
+}
+assert.equal(buildCustomerStatus({...delivered, invoice_error: 'UNKNOWN_EXCLUSION'}).overall, 'attention');
+assert.equal(buildCustomerStatus({...delivered, invoice_error: 'UNKNOWN_EXCLUSION'}).stages.find(stage => stage.key === 'invoice').state, 'failed');
 const analysis=fs.readFileSync("src/services/analysis.service.js","utf8");
 assert.ok(/responses\.create\(\{[^}]*\bstore:\s*false/s.test(analysis), "Responses requests must disable application state storage");
 const head=fs.readFileSync("web/landing-head.html","utf8");

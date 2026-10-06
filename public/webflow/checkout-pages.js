@@ -5,7 +5,7 @@
 (function () {
   if (typeof window === "undefined" || typeof document === "undefined") return;
 
-  const CHECKOUT_PAGES_VERSION = "20261006-status-mobile-wrap-v1";
+  const CHECKOUT_PAGES_VERSION = "20261006-invoice-disposition-v1";
   const STATUS_POLL_INTERVAL_MS = 12000;
   const STATUS_POLL_MAX_INTERVAL_MS = 60000;
   let statusPollTimer = null;
@@ -870,9 +870,25 @@
     "تحتاج حالة الدفع أو التسليم إلى مراجعة. يرجى التواصل مع الدعم."
   ]
 };
+  const INVOICE_STATUS_COPY = {
+    hu: ['Nem készül (teszt)', 'A fizetési szolgáltató kezeli'],
+    en: ['Not issued (test)', 'Handled by payment provider'],
+    de: ['Nicht ausgestellt (Test)', 'Vom Zahlungsanbieter verwaltet'],
+    it: ['Non emessa (test)', 'Gestita dal fornitore di pagamento'],
+    es: ['No emitida (prueba)', 'Gestionada por el proveedor de pagos'],
+    fr: ['Non émise (test)', 'Gérée par le prestataire de paiement'],
+    pl: ['Nie wystawiono (test)', 'Obsługiwana przez dostawcę płatności'],
+    pt: ['Não emitida (teste)', 'Gerida pelo prestador de pagamentos'],
+    ja: ['発行されません（テスト）', '決済事業者が対応'],
+    zh: ['不出具（测试）', '由支付服务商处理'],
+    ar: ['لا تُصدر (اختبار)', 'يتولاها مزود الدفع']
+  };
+
   function paymentStatusCopy(lang) {
     const c = PAYMENT_STATUS_COPY[lang] || PAYMENT_STATUS_COPY.en;
+    const invoice = INVOICE_STATUS_COPY[lang] || INVOICE_STATUS_COPY.en;
     return { paymentPendingTitle: c[0], paymentUnknown: c[1], invoiceLabel: c[2], contractLabel: c[3],
+      invoiceTestExcluded: invoice[0], invoiceProviderManaged: invoice[1],
       emailAccepted: c[4], emailDelivered: c[5], financialAttention: c[6],
       noSession: c[1], deliveryEstimateNoSession: c[1], cancelLead: c[1], cancelBody: '',
       cancelSafeNote: c[1], cancelRecoveryItems: [c[1]], cancelTitle: c[0], statusAttention: c[6] };
@@ -1469,7 +1485,10 @@
       .nm-status-state {
         color: #506780;
         font-size: 12px;
-        white-space: nowrap;
+        max-width: 55%;
+        min-width: 0;
+        overflow-wrap: anywhere;
+        text-align: end;
       }
 
       .nm-status-meta {
@@ -1614,7 +1633,7 @@
 
         .nm-status-state {
           white-space: normal;
-          text-align: right;
+          text-align: end;
         }
 
         .nm-status-shortcut-row {
@@ -1640,6 +1659,8 @@
     if (state === "complete") return copy.stateComplete;
     if (state === "active") return copy.stateActive;
     if (state === "failed") return copy.stateFailed;
+    if (state === "skipped") return copy.invoiceTestExcluded;
+    if (state === "external") return copy.invoiceProviderManaged;
     return copy.statePending;
   }
 
@@ -1668,7 +1689,7 @@
         ];
 
     return safeStages.map((stage) => {
-      const state = ["complete", "active", "pending", "failed"].includes(stage.state)
+      const state = ["complete", "active", "pending", "failed", "skipped", "external"].includes(stage.state)
         ? stage.state
         : "pending";
 

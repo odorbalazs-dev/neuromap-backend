@@ -238,6 +238,48 @@ No live checkout, refund, bank payout or tax approval is evidenced by unit tests
 - No production checkout activation or rewrite of existing delivered reports
   is included in these corrections.
 
+## Hosted lifecycle rehearsal and invoice status correction, 2026-10-06
+
+- Created a separate, synthetic unpaid sandbox fixture. Actual hosted API and
+  Stripe checks passed: duplicate creation reuses the order; an invalid access
+  token is rejected; an open Checkout is reused; no analysis is queued before
+  payment; an expired Checkout gets a new attempt; an already paid Standard
+  order cannot be retried; consent withdrawal blocks retry and expires the
+  provider Checkout. No payment was submitted for this disposable fixture.
+- The Plus form was prepared with Stripe test-card data. Final submission was
+  handed to the owner because Checkout displays Link terms. Until that
+  submission and subsequent verification, Plus purchase/PDF/email acceptance
+  remains outstanding. A fixture creation is not a completed transaction.
+- Corrected customer invoice states: test-excluded invoices use `skipped` and
+  provider-managed invoices use `external`, rather than pretending a local
+  invoice was issued. Only known exclusion reasons finish the local document
+  task; unknown exclusions, failed confirmation and financial restrictions
+  remain attention states. Provider-managed status is not proof that the buyer
+  received a provider invoice. Added render checks in all 11 languages.
+- Checkout return script version: `20261006-invoice-disposition-v1`.
+  The questionnaire engine version is unchanged. Long invoice state labels wrap
+  within their rows with direction-aware alignment.
+- Read-only production configuration check found checkout still closed, live
+  Stripe credentials, certificate verification `verify-full`, and no production
+  source change. Production lacks configured Standard/Plus Stripe price IDs;
+  local invoicing remains enabled. Vendor DPA review and security review flags
+  are false; tax approval/evidence and reviewed local-tax default are absent.
+  Existing privacy/terms approval flags do not prove review of a new
+  merchant-of-record arrangement. Do not forge evidence or turn these flags on
+  to bypass readiness.
+- The adapter currently accepts Managed Payments only with test credentials.
+  Production activation requires an explicitly gated live adapter, verified live
+  products/prices and merchant eligibility, matching live webhook/recovery
+  behavior, and reviewed customer documents. Do not enable the test flag with a
+  live key or fall back silently to ordinary Checkout/local invoice issuance.
+- Hosted refund, payment-decline and duplicate-webhook acceptance remain open.
+  The separate 23-case payment-lifecycle suite passed using isolated PostgreSQL
+  and mocked providers; this is not hosted refund evidence.
+- Local full product audit, Managed Payments policy/operator checks, invoice
+  status unit checks and all 11-locale invoice rendering checks passed. An
+  initial test-harness failure was fixed by supplying inert DOM event listeners;
+  the full audit was rerun successfully on the corrected files.
+
 ## External references
 
 - https://docs.stripe.com/payments/managed-payments/eligibility

@@ -10,7 +10,7 @@ for (const child of ["gyermek", "gyerek"]) {
 
 const SUPPORTED_LANGS = ["hu", "en", "de", "it", "es", "zh", "ja", "ar", "pl", "pt", "fr"];
 const REQUIRED_ENGINE_VERSION = "20260910-payment-integrity-v4";
-const REQUIRED_CHECKOUT_VERSION = "20261006-status-mobile-wrap-v1";
+const REQUIRED_CHECKOUT_VERSION = "20261006-invoice-disposition-v1";
 
 const checks = [
   {

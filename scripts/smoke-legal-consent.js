@@ -216,7 +216,7 @@ assert(
 });
 
 assert(
-  checkoutPagesSource.includes("20261006-status-mobile-wrap-v1") &&
+  checkoutPagesSource.includes("20261006-invoice-disposition-v1") &&
     checkoutPagesSource.includes("isAnalyticsAllowed") &&
     checkoutPagesSource.includes("sanitizeCheckoutAnalyticsPayload") &&
     checkoutPagesSource.includes("installPrivacyDefaults();"),
