@@ -148,7 +148,7 @@ export async function processVerifiedStripeEvent(event) {
   }
   try {
     let outcome = { ignored: true };
-    if (event.type === 'checkout.session.completed') {
+    if (['checkout.session.completed', 'checkout.session.async_payment_succeeded'].includes(event.type)) {
       outcome = await fulfillVerifiedCheckout(event.data.object);
     } else if (/^(refund\.|charge\.refunded$|charge\.dispute\.)/.test(event.type)) {
       outcome = await synchronizePaymentAdjustment(event);

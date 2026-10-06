@@ -313,6 +313,58 @@ No live checkout, refund, bank payout or tax approval is evidenced by unit tests
   tokens and synthetic payload files must not be committed or included in a
   public release archive.
 
+## Live binding preparation and completed Plus acceptance, 2026-10-06
+
+This section supersedes the historical test-only adapter and outstanding Plus
+purchase statements above. It does not assert that public sales are enabled.
+
+- The owner completed the hosted Plus sandbox purchase. Read-only provider and
+  application checks confirmed payment `paid`, `managed_payments.enabled=true`,
+  amount 999 USD minor units, one completed analysis attempt, PDF `ready`, report
+  email `sent`/provider accepted, and contract confirmation `sent`. The local
+  invoice task was excluded, not falsely marked as an issued invoice. Analysis
+  and report submission finished about 22 seconds after the recorded payment.
+- The actual stored Plus analysis generated a 10-page, 47,063-byte PDF with
+  SHA-256 `7f5ba42642057bf8e26241a2e198d439e09c0ce947add81e07b3538e92d0afbe`.
+  Rendered first and last pages were checked for layout and Hungarian glyphs.
+  This is not professional validation of every clinical statement, proof of
+  inbox delivery, or proof of the 14-day follow-up program's complete lifecycle.
+- Added an explicit live Managed Payments flag. Test/live flags are mutually
+  exclusive and require matching credential modes. Both live packages must use
+  configured active, one-time, inclusive USD prices on an active eligible
+  product. Missing or mismatched prices cannot silently use inline ordinary
+  Checkout. The provider response must confirm Managed Payments and its mode.
+- A distinct live idempotency suffix prevents a previous ordinary or sandbox
+  request from being reused as an apparently managed live Checkout. Recovery
+  reads retain a Managed Payments-capable API version even after a flag rollback
+  so provider invoice ownership is not lost.
+- Successful delayed payments now enter the same atomic, idempotent fulfillment
+  path as immediate payments. A completed but unpaid Checkout does not queue a
+  report; a later `checkout.session.async_payment_succeeded` queues it once.
+  The isolated payment-lifecycle suite now has 24 passing cases. Hosted delayed
+  payment failure/retry acceptance remains outstanding; do not assume it passed.
+- Live readiness additionally requires a dedicated Managed Payments approval
+  with evidence and both price IDs. The general tax approval remains required:
+  reviewed merchant-of-record coverage replaces local VAT defaults for managed
+  live purchases, not the obligation to review supported markets. Existing
+  legal/privacy/vendor/security approvals are not bypassed or forged.
+- Stripe's live dashboard showed `Ready to use`, not an already transacting
+  `Active` merchant-of-record service. Both products were eligible. After the
+  owner's approval and authenticator confirmation, only the actual backend
+  restricted key received Prices Read. The worker credential was unchanged.
+  Provider requests confirmed both live prices as active, inclusive, one-time
+  USD 799/999 with tax code `txcd_10503000`.
+- Existing Stripe key display names do not match the deployed service roles.
+  The actual backend key was identified against its masked provider request,
+  not its name. No credentials were copied, rotated, exposed or broadened to
+  webhook administration. Webhook changes must use the authenticated dashboard.
+- At this checkpoint production checkout remains closed. The live endpoint
+  still uses API version `2024-06-20` and the original 10 events; its version
+  and delayed-success subscription must be updated with the tested deployment.
+  New merchant-of-record customer disclosures, outstanding approval evidence,
+  hosted decline/local-currency checks and owner live acceptance must be
+  resolved before claiming unrestricted production launch.
+
 ## External references
 
 - https://docs.stripe.com/payments/managed-payments/eligibility

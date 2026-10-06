@@ -47,6 +47,7 @@ const { getPublicLegalConfiguration, createConsentReceipt, withdrawConsentReceip
 const { createConsentedSession, withCheckoutConsent } = await import('../src/services/checkout-consent.service.js');
 const { startOrResumePayment } = await import('../src/services/payment-attempt.service.js');
 const { fulfillVerifiedCheckout } = await import('../src/services/payment-fulfillment.service.js');
+const { processVerifiedStripeEvent } = await import('../src/services/webhook.service.js');
 const { discoverStripePayments } = await import('../src/services/payment-discovery.service.js');
 const { synchronizePaymentAdjustment } = await import('../src/services/payment-adjustment.service.js');
 const { receiveEmailDelivery, reconcileEmailDelivery } = await import('../src/services/email-delivery-webhook.service.js');
@@ -121,6 +122,21 @@ try {
     assert.equal((await query('SELECT * FROM analysis_jobs WHERE session_id=$1',[first.session.id])).rowCount,1);
     assert.equal((await query('SELECT * FROM post_payment_outbox WHERE session_id=$1',[first.session.id])).rowCount,1);
     assert.equal((await read(first.session.id)).invoice_status,'skipped');
+  });
+  await test('delayed managed payment is fulfilled only after async success and stays idempotent',async()=>{
+    const delayed=await order(), pending=await start(delayed.session);
+    pending.status='complete'; pending.managed_payments={enabled:true};
+    const completed={id:'evt_delayed_complete_fixture',type:'checkout.session.completed',livemode:false,data:{object:{...pending}}};
+    assert.equal((await processVerifiedStripeEvent(completed)).reason,'checkout_not_paid');
+    assert.equal((await read(delayed.session.id)).payment_status,'pending');
+    assert.equal((await query('SELECT * FROM analysis_jobs WHERE session_id=$1',[delayed.session.id])).rowCount,0);
+    pending.payment_status='paid'; pending.payment_intent='pi_delayed_fixture';
+    const success={id:'evt_delayed_success_fixture',type:'checkout.session.async_payment_succeeded',livemode:false,data:{object:pending}};
+    assert.equal((await processVerifiedStripeEvent(success)).processed,true);
+    assert.equal((await processVerifiedStripeEvent(success)).alreadyProcessed,true);
+    assert.equal((await read(delayed.session.id)).payment_status,'paid');
+    assert.equal((await query('SELECT * FROM analysis_jobs WHERE session_id=$1',[delayed.session.id])).rowCount,1);
+    assert.equal((await query('SELECT * FROM post_payment_outbox WHERE session_id=$1',[delayed.session.id])).rowCount,1);
   });
   await test('active-job fallback SQL returns correct job',async()=>{
     const a=await enqueueAnalysisJob(first.session.id),b=await enqueueAnalysisJob(first.session.id);assert.equal(a.id,b.id);

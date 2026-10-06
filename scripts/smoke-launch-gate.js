@@ -118,4 +118,20 @@ expectBlocked({ ...readyEnv, TAX_CONFIGURATION_APPROVED: false }, 'tax_configura
 expectBlocked({ ...readyEnv, INVOICE_TAX_POLICY_JSON: '{"HU":{"vatRate":"27"}}' }, 'tax_country_coverage');
 expectBlocked({ ...readyEnv, INVOICE_TAX_POLICY_JSON: '{"*":{"vatRate":"invalid"}}' }, 'tax_policy');
 
+const managedEnv = { ...readyEnv, STRIPE_MANAGED_PAYMENTS_LIVE_ENABLED: true,
+  STRIPE_SECRET_KEY: 'rk_live_fixture', MANAGED_PAYMENTS_LIVE_APPROVED: true,
+  MANAGED_PAYMENTS_LIVE_EVIDENCE: 'synthetic-managed-review-001',
+  STRIPE_PRICE_STANDARD_USD: 'price_standard_fixture', STRIPE_PRICE_PLUS_USD: 'price_plus_fixture',
+  INVOICE_TAX_POLICY_JSON: '' };
+assert(getLaunchGateStatus(managedEnv).ready, 'Reviewed live MoR does not require a local invoice VAT default');
+expectBlocked({ ...managedEnv, MANAGED_PAYMENTS_LIVE_APPROVED: false }, 'managed_payments_live');
+expectBlocked({ ...managedEnv, MANAGED_PAYMENTS_LIVE_EVIDENCE: '' }, 'managed_payments_live_evidence');
+expectBlocked({ ...managedEnv, STRIPE_PRICE_PLUS_USD: '' }, 'managed_payments_prices');
+expectBlocked({ ...managedEnv, STRIPE_SECRET_KEY: 'rk_test_fixture' }, 'payment_mode');
+expectBlocked({ ...managedEnv, STRIPE_MANAGED_PAYMENTS_TEST_ENABLED: true }, 'payment_mode');
+expectBlocked({ ...managedEnv, TAX_CONFIGURATION_APPROVED: false }, 'tax_configuration');
+expectBlocked({ ...managedEnv, TAX_CONFIGURATION_EVIDENCE: '' }, 'tax_configuration_evidence');
+expectBlocked({ ...managedEnv, LEGAL_REVIEW_APPROVED: false }, 'legal_review');
+expectBlocked({ ...managedEnv, PRODUCTION_CHECKOUT_ENABLED: false }, 'production_checkout');
+
 console.log("Launch gate smoke test passed.");
