@@ -9,6 +9,7 @@ import { createRateLimit } from "../../middleware/security.js";
 import { getAdminDashboard } from "../controllers/admin-dashboard.controller.js";
 import { getOperationalEvidence } from "../../services/operational-scheduler.service.js";
 import { db } from "../../db/db.js";
+import { createSandboxCheckout, retrySandboxCheckout } from '../controllers/checkout.controller.js';
 
 import {
   getAdminStatus,
@@ -67,6 +68,12 @@ router.post("/logout", adminLogout);
 router.get("/session", adminAuth, getAdminAuthStatus);
 
 router.use(adminAuth);
+router.post('/sandbox/checkout', createRateLimit({
+  windowMs: 15 * 60 * 1000, max: 10, keyPrefix: 'sandbox-checkout', failClosed: true
+}), createSandboxCheckout);
+router.post('/sandbox/checkout/retry/:id', createRateLimit({
+  windowMs: 15 * 60 * 1000, max: 10, keyPrefix: 'sandbox-checkout', failClosed: true
+}), retrySandboxCheckout);
 router.get('/payment-reviews', async (_req, res) => {
   try {
     const result = await db.query(`SELECT id,session_id,reason,amount,currency,state,created_at

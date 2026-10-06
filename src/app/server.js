@@ -19,6 +19,7 @@ import cronRoutes from "../api/routes/cron.js";
 import jobsRoutes from "../api/routes/jobs.js";
 import observationRoutes from "../api/routes/observation.js";
 import legalRoutes from "../api/routes/legal.js";
+import sandboxReturnRoutes from '../api/routes/sandbox-return.js';
 import { receiveEmailDelivery } from '../services/email-delivery-webhook.service.js';
 
 const app = express();
@@ -96,6 +97,7 @@ app.use("/webhook", createRateLimit({ windowMs: 60 * 1000, max: 1200, keyPrefix:
 app.post('/webhooks/resend', createRateLimit({ windowMs: 60000, max: 1200, keyPrefix: 'resend-webhook', failClosed: true }),
   express.raw({ type: 'application/json', limit: '128kb' }), receiveEmailDelivery);
 app.use(express.json({ limit: env.HTTP_JSON_BODY_LIMIT_BYTES }));
+app.use(sandboxReturnRoutes);
 
 app.get("/", (_req, res) => {
   return res.status(200).json({

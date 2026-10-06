@@ -29,7 +29,7 @@
     "smoke:consent-security": "node scripts/smoke-consent-security.js",
     "test:payment-lifecycle": "node scripts/test-payment-lifecycle.js",
     "test:contract-evidence": "node scripts/test-contract-evidence.js",
-    "test:managed-payments": "node scripts/test-managed-payments-policy.js && node scripts/smoke-invoice-payment-policy.js",
+    "test:managed-payments": "node scripts/test-managed-payments-policy.js && node scripts/smoke-invoice-payment-policy.js && node scripts/test-sandbox-checkout.js",
     "smoke:legal-governance": "node scripts/smoke-legal-governance.js",
     "smoke:privacy-rights": "node scripts/smoke-privacy-rights.js",
     "smoke:launch-gate": "node scripts/smoke-launch-gate.js",

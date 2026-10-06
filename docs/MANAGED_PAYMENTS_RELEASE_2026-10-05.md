@@ -50,9 +50,9 @@ No live checkout, refund, bank payout or tax approval is evidenced by unit tests
 
 - Created the EMPTY Railway environment `managed-payments-test`. A fresh
   `Postgres-1Vfj` database is online; no production data was restored.
-- Created `neuromap-test-backend` and `neuromap-test-worker`. These are empty
-  service shells, not running deployments. Source, private test credentials,
-  public endpoint and webhook configuration remain outstanding.
+- Created `neuromap-test-backend` and `neuromap-test-worker`. On 2026-10-06,
+  both deployed successfully from the same reviewed commit; startup verified
+  runtime privileges and all migration checksums. The worker started normally.
 - Both services retain `PRODUCTION_CHECKOUT_ENABLED=false` and
   `INVOICE_AUTO_CREATE=false`; the test-only Managed Payments flag is enabled.
   The worker concurrency is 1. No production configuration was changed.
@@ -69,8 +69,9 @@ No live checkout, refund, bank payout or tax approval is evidenced by unit tests
   sender address and administrative token were checked without exposing values.
   The administrative token meets the minimum length. These checks do not prove
   provider authentication, sender-domain verification or restricted key scope.
-  Worker references to the sandbox credentials were saved. Webhook signing
-  secret, endpoint URLs and restricted runtime database access remain pending.
+  Worker references to the sandbox credentials were saved. A sandbox webhook
+  endpoint and signing secret were subsequently configured privately. Restricted
+  runtime database access was verified as described below.
   No credentials are in this file.
 - Both GitHub workflows for commit `7f37c30` completed successfully. This is
   automated code verification, not proof of a successful hosted checkout.
@@ -81,11 +82,53 @@ No live checkout, refund, bank payout or tax approval is evidenced by unit tests
   removed. No account-level SSH key from this attempt remains active.
 - A subsequent certificate-verified TLS relay attempt timed out without a
   command result. It is not evidence of successful database access. Database
-  TLS verification, migrations and runtime roles remain outstanding for this
-  new sandbox database. No production configuration was changed.
+  TLS verification, migrations and runtime roles were subsequently completed
+  through the isolated database maintenance deployment below. No production
+  configuration was changed.
 - Following the retrieval/recovery API-version correction, the local mocked
   Managed Payments tests and all 23 isolated payment-lifecycle cases passed.
   Hosted webhook/PDF/email acceptance checks have not yet run.
+
+### Database and hosted-service evidence, 2026-10-06
+
+- Maintenance deployment `23fc245b-9195-4f64-8349-65b0b44ac2cd` applied all 26
+  Git-normalized migrations to the empty test database and installed separate
+  SCRAM credentials for `neuromap_web_runtime` and `neuromap_worker_runtime`.
+  Neither runtime role has schema-management or database-owner privileges.
+- The existing certificate authority signed a server certificate with the
+  actual private hostname. Application connections use `verify-full`; the
+  authority was not rotated and certificate validation was never disabled.
+- Verification deployment `ca7e3fb4-385a-4e80-acba-069ae0025ce0` authenticated
+  both actual runtime roles over verified TLS and rejected both an unencrypted
+  connection and an invalid certificate authority.
+- Removed every temporary `NM_TEST_*` maintenance variable. Railway's null
+  start-command update did not clear the override, so the original image
+  wrapper command was explicitly restored and checked. Database deployment
+  `4bfe8854-e3f6-4c61-b421-286eaed17ea4` became ready for connections.
+- Backend deployment `c4a76c14-fda4-4507-ac82-bded2380a828` and worker deployment
+  `92fbc70e-91e9-4df5-898d-29519d7f132d` both succeeded at commit `49d2697`.
+  HTTPS `/health` returned 200. Public checkout availability remained false.
+- Test services run from `fix/launch-gates-2026-09-16`; production web/worker
+  remain on `main`. Test database region is US West: synthetic fixtures only,
+  not an approved location for production customer records.
+
+### Operator checkout and return-page correction, 2026-10-06
+
+- Added default-off, admin-session/CSRF-protected sandbox checkout and retry
+  endpoints. Exact project and test-environment IDs, sandbox Stripe credentials,
+  disabled production checkout/invoicing and a recipient allowlist are required.
+  Legacy raw-token admin authentication alone cannot use these endpoints.
+- Public checkout and its production approval gate remain unchanged and closed
+  in this sandbox. No production legal or tax approvals are fabricated.
+- All 11 test success/cancel locales use the existing responsive status script
+  with a same-origin API configuration, a nonce-scoped script policy, no-store
+  responses and no tracking scripts or administrative credentials.
+- Sandbox alerts use a distinct subject prefix. The test-only alert recipient
+  is the owner's requested helpdesk mailbox. Successful scheduling is not proof
+  of actual email delivery; that is a separate acceptance check.
+- `npm run test:managed-payments` now includes 19 isolated operator/CSRF/guard
+  and return-page cases. Full `audit:all` and 23 payment-lifecycle cases passed
+  locally. Hosted purchase acceptance remains outstanding at this checkpoint.
 
 ### Outstanding acceptance checks
 
