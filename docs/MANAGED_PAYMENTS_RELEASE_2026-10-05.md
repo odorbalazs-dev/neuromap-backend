@@ -272,13 +272,46 @@ No live checkout, refund, bank payout or tax approval is evidenced by unit tests
   products/prices and merchant eligibility, matching live webhook/recovery
   behavior, and reviewed customer documents. Do not enable the test flag with a
   live key or fall back silently to ordinary Checkout/local invoice issuance.
-- Hosted refund, payment-decline and duplicate-webhook acceptance remain open.
-  The separate 23-case payment-lifecycle suite passed using isolated PostgreSQL
-  and mocked providers; this is not hosted refund evidence.
+- Fetched the actual processed Standard test event from Stripe, then replayed
+  it twice with an operator-generated signature using the sandbox webhook
+  secret. Both calls returned an already-processed result without another
+  analysis job, report email attempt or provider email ID. An invalid signature
+  was rejected with HTTP 400. This was an operator-signed replay of a real test
+  event, not a Dashboard resend or a fabricated successful purchase event.
+- Refunded the entire synthetic Standard payment through the Stripe sandbox
+  API: 799 USD minor units, provider refund status `succeeded`. Verified the
+  actual refund webhook subsequently changed the customer's financial state to
+  `refunded` and overall state to `attention`. No real funds were moved. The
+  previous sent PDF/email checkpoint remains historical; this test order is
+  now refunded. The refund does not erase already delivered email attachments.
+- Hosted payment-decline acceptance and Plus purchase/PDF/email acceptance
+  remain open. The separate 23-case payment-lifecycle suite passed using
+  isolated PostgreSQL and mocked providers; it is not substituted for those
+  outstanding hosted checks.
 - Local full product audit, Managed Payments policy/operator checks, invoice
   status unit checks and all 11-locale invoice rendering checks passed. An
   initial test-harness failure was fixed by supplying inert DOM event listeners;
   the full audit was rerun successfully on the corrected files.
+- Fix commit `dc774d5` was pushed and successfully deployed to both sandbox
+  services. GitHub CI runs `37451281950` and `37451277466` passed. Verified the
+  actual return page at a 393-pixel mobile viewport: document width 378 pixels,
+  invoice row width 298 pixels, no invoice/reference overflow. Its excluded
+  invoice label displayed `Nem keszul (teszt)` with the localized accents.
+  The viewport override was reset after the check.
+- Sandbox operation logs at 10:46 UTC showed successful current lifecycle,
+  post-payment recovery and alert runs, plus a healthy confirmation outbox.
+  These are sandbox observations, not evidence of production scheduling.
+- Stripe documents Adaptive Pricing's Checkout and PaymentIntent amounts in
+  the original integration currency; local presentment uses a separate
+  `presentment_details` field. The strict USD package comparison is therefore
+  not, by itself, evidence of a conversion bug. A completed local-currency
+  purchase remains a separate acceptance check. Do not send `adaptive_pricing`
+  overrides to Managed Payments: that Checkout parameter is unsupported there.
+- Safe evidence files are retained locally under the gitignored
+  `work/managed-payments-tools/` directory: lifecycle evidence, webhook replay,
+  refund evidence and production gate check dated 2026-10-06. Private access
+  tokens and synthetic payload files must not be committed or included in a
+  public release archive.
 
 ## External references
 
@@ -286,5 +319,8 @@ No live checkout, refund, bank payout or tax approval is evidenced by unit tests
 - https://docs.stripe.com/tax/tax-codes
 - https://support.stripe.com/questions/understand-managed-payments-payout-speed
 - https://resend.com/changelog/update-click-open-tracking-via-api
+- https://docs.stripe.com/payments/managed-payments/how-it-works
+- https://docs.stripe.com/payments/managed-payments/update-checkout
+- https://docs.stripe.com/payments/currencies/localize-prices/adaptive-pricing?payment-ui=stripe-hosted
 
 No secrets, customer records or backup identities belong in this release.
