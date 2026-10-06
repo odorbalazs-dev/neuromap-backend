@@ -159,6 +159,30 @@ No live checkout, refund, bank payout or tax approval is evidenced by unit tests
 
 ### Remaining hosted acceptance
 
+### Standard hosted acceptance, 2026-10-06
+
+- The owner completed the Standard sandbox Checkout. The actual Stripe session
+  was complete/paid, Managed Payments enabled and livemode false. Total USD 799
+  cents included 170 cents of sandbox tax; this is not a production tax ruling.
+- The actual checkout completion webhook was processed. One analysis job
+  completed on its first attempt. Payment was recorded at 08:59:50 UTC and the
+  report email was submitted at 09:00:16 UTC, approximately 26 seconds later.
+- The customer API reached `sent`, PDF `ready`, order confirmation `sent` and
+  report email `sent` with delivery status `accepted`. Szamlazz.hu issuance was
+  skipped. Resend retrieval returned 401 with the existing limited test key;
+  no additional access was granted and mailbox delivery is not yet evidenced.
+- Downloaded the synthetic report through authenticated admin access. The PDF
+  had 11 A4 pages; all page renders were inspected without observed text overlap.
+  Content review found overly definite wording about absent secondary signals;
+  this needs a report-safety correction before claiming launch readiness.
+- The actual success page showed completion rather than remaining in processing.
+  A 393-pixel mobile trial exposed an overflowing support reference. Added
+  bounded wrapping and a regression check; the checkout loader version is now
+  `20261006-status-mobile-wrap-v1`. The questionnaire engine version is unchanged.
+- Plus purchase, hosted refund/cancellation/retry checks, mailbox verification,
+  final production release and live acceptance are still outstanding. One
+  successful synthetic Standard purchase does not close these checks.
+
 - Real sandbox checkout for both packages and actual webhook delivery; verify
   amount/currency/package, duplicate-event safety and failed/cancelled payments.
 - Verify Managed Payments field availability on webhook and recovery API reads;

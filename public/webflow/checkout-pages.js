@@ -5,7 +5,7 @@
 (function () {
   if (typeof window === "undefined" || typeof document === "undefined") return;
 
-  const CHECKOUT_PAGES_VERSION = "20260910-payment-integrity-v4";
+  const CHECKOUT_PAGES_VERSION = "20261006-status-mobile-wrap-v1";
   const STATUS_POLL_INTERVAL_MS = 12000;
   const STATUS_POLL_MAX_INTERVAL_MS = 60000;
   let statusPollTimer = null;
@@ -1474,6 +1474,9 @@
 
       .nm-status-meta {
         display: grid;
+        min-width: 0;
+        overflow-wrap: anywhere;
+        word-break: break-word;
         gap: 7px;
         margin: 13px 0 0;
         padding-top: 13px;

@@ -216,7 +216,7 @@ assert(
 });
 
 assert(
-  checkoutPagesSource.includes("20260910-payment-integrity-v4") &&
+  checkoutPagesSource.includes("20261006-status-mobile-wrap-v1") &&
     checkoutPagesSource.includes("isAnalyticsAllowed") &&
     checkoutPagesSource.includes("sanitizeCheckoutAnalyticsPayload") &&
     checkoutPagesSource.includes("installPrivacyDefaults();"),

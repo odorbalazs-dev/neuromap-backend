@@ -9,7 +9,7 @@ function assert(condition, message) {
 function main() {
   console.log("\n=== CHECKOUT PAGES SMOKE ===");
 
-  const currentVersion = "20260910-payment-integrity-v4";
+  const currentVersion = "20261006-status-mobile-wrap-v1";
   const script = fs.readFileSync("public/webflow/checkout-pages.js", "utf8");
   const stripeService = fs.readFileSync("src/services/stripe.service.js", "utf8");
   const sessionService = fs.readFileSync("src/services/session.service.js", "utf8");
@@ -95,6 +95,7 @@ function main() {
     "New Stripe success URLs should avoid mixing internal and public session identifiers."
   );
   assert(script.includes("nmReportStatusPanel"), "Success page should render a report status panel.");
+  assert(/\.nm-status-meta\s*\{[^}]*overflow-wrap:\s*anywhere;[^}]*word-break:\s*break-word;/s.test(script), "Long support references must wrap within the status panel on narrow screens.");
   assert(script.includes("What happens next?"), "Success page should explain the post-payment next steps.");
   assert(script.includes("nmRefreshStatus"), "Success page should allow manual report status refresh.");
   assert(script.includes("nm_report_status_refresh"), "Manual report status refreshes should be measured.");

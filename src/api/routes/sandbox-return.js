@@ -15,7 +15,7 @@ router.get(/^\/(hu|en|de|it|es|zh|ja|ar|pl|pt|fr)-checkout-(success|cancel)$/, (
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>NeuroMap Kids - sandbox</title></head><body>
 <script nonce="${nonce}">window.NM_CONFIG={API_BASE_URL:window.location.origin};</script>
-<script src="/public/webflow/checkout-pages.js?v=20260910-payment-integrity-v4" defer></script>
+<script src="/public/webflow/checkout-pages.js?v=20261006-status-mobile-wrap-v1" defer></script>
 </body></html>`);
 });
 export default router;
