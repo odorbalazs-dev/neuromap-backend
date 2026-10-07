@@ -23,6 +23,7 @@
     "smoke:checkout-measurement": "node scripts/smoke-checkout-measurement.js",
     "smoke:two-tier-offer": "node scripts/smoke-two-tier-offer.js",
     "smoke:browser-engine": "node scripts/smoke-browser-engine-bundle.js",
+    "smoke:social-landing-embed": "node scripts/smoke-social-landing-embed.js",
     "smoke:engine-age-field": "node scripts/smoke-engine-age-field.js",
     "smoke:safety-flow": "node scripts/smoke-safety-flow.js",
     "smoke:legal-consent": "node scripts/smoke-legal-consent.js",
@@ -42,7 +43,7 @@
     "smoke:pdf": "node scripts/smoke-pdf-report.js",
     "smoke:admin-dashboard": "node scripts/smoke-admin-dashboard.js",
     "smoke:railway-runtime": "node scripts/smoke-railway-runtime.js",
-    "audit:all": "npm run audit:banks && npm run audit:bank-quality && npm run audit:engine-selection && npm run audit:language-quality && npm run audit:campaign-readiness && npm run audit:google-ads && npm run audit:security && npm run audit:hardening && npm run smoke:checkout-payload && npm run smoke:checkout-measurement && npm run smoke:two-tier-offer && npm run smoke:browser-engine && npm run smoke:engine-age-field && npm run smoke:safety-flow && npm run smoke:legal-consent && npm run smoke:legal-governance && npm run smoke:privacy-rights && npm run smoke:launch-gate && npm run smoke:checkout-pages && npm run smoke:analysis-report && npm run smoke:email-idempotency && npm run smoke:report-v2 && npm run smoke:pdf && npm run smoke:admin-dashboard"
+    "audit:all": "npm run audit:banks && npm run audit:bank-quality && npm run audit:engine-selection && npm run audit:language-quality && npm run audit:campaign-readiness && npm run audit:google-ads && npm run audit:security && npm run audit:hardening && npm run smoke:checkout-payload && npm run smoke:checkout-measurement && npm run smoke:two-tier-offer && npm run smoke:browser-engine && npm run smoke:social-landing-embed && npm run smoke:engine-age-field && npm run smoke:safety-flow && npm run smoke:legal-consent && npm run smoke:legal-governance && npm run smoke:privacy-rights && npm run smoke:launch-gate && npm run smoke:checkout-pages && npm run smoke:analysis-report && npm run smoke:email-idempotency && npm run smoke:report-v2 && npm run smoke:pdf && npm run smoke:admin-dashboard"
   },
   "overrides": {
     "qs": "6.16.0"
